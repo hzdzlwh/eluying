@@ -1,0 +1,44 @@
+body, h1, h2, h3, h4, h5, h6, hr, p,
+ul, ol, li,
+button, input, textarea,
+table, tr, th, td {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+button, input, select, textarea { /* for ie */
+  font: 14px Helvetica, Arial, Microsoft YaHei;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: underline;
+  color: #4A90E2;
+}
+
+
+
+button, input, select, textarea {
+  font-size: 100%;
+}
+
+img {
+  border: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+label,
+input[type=button],
+input[type=submit],
+input[type=file],
+button {
+  cursor: pointer;
+}
