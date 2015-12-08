@@ -16,12 +16,12 @@ gulp.task('styles',function(){
 });
 gulp.task('scripts', function() {
 	return gulp.src('static/js/angular/controller/*.js')
-		.pipe(concat('controller.js'))    
+		.pipe(concat('controllers.js'))    
 		.pipe(gulp.dest('static/js/angular'))       
 		.pipe(notify({ message: 'Scripts task complete' }));
 });
 gulp.task('watch',function(){
-	gulp.watch('static/sass/*.scss',['styles']);
+	gulp.watch('static/sass/**/*.scss',['styles']);
 	gulp.watch('static/js/angular/**/*.js',['scripts']);
 });
 gulp.task('default',['watch'],function(){

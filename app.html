@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>易露云</title>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="static/css/main.min.css">
+  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
+  <script src="/eluyun/bower_components/angular/angular.min.js"></script>
+  <script src="/eluyun/bower_components/angular-route/angular-route.min.js"></script>
+  <script src="/eluyun/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/eluyun/bower_components/angular-animate/angular-animate.js"></script>
 
-  <script src="bower_components/angular/angular.min.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-  <script src="bower_components/angular-route/angular-route.min.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="/eluyun/static/js/angular/app.js"></script>
+  <script src="/eluyun/static/js/angular/controllers.js"></script>
 
-  <script src="static/js/angular/app.js"></script>
-  <script src="static/js/angular/controller.js"></script>
 </head>
 <body ng-app="app">
   <nav>
@@ -21,9 +21,9 @@
       <ul>
         <li><a href="#">库存管理</a></li>
         <li><a href="#">价格维护</a></li>
-        <li><a href="#">品类管理</a></li>
+        <li><a href="#/category/room">品类管理</a></li>
       </ul>
-      <div class="userPhoto"><a href="#"><img src="static/image/timg.jpg" alt="头像"></a></div>
+      <div class="userPhoto"><a href="#"><img src="/eluyun/static/image/timg.jpg" alt="头像"></a></div>
       <div class="userName">
         <a href="#">同上不在线</a>
       </div>
@@ -36,13 +36,14 @@
   <div class="myContainer">
     <div class="menu">
       <ul>
-        <li><a href="#">住宿</a></li>
-        <li><a href="#">餐饮</a></li>
-        <li><a href="#">娱乐</a></li>
-        <li><a href="#">商超</a></li>
+        <li><a href="#/category/room">住宿</a></li>
+        <li><a href="#/category/food">餐饮</a></li>
+        <li><a href="#/category/entertainment">娱乐</a></li>
+        <li><a href="#/category/shop">商超</a></li>
       </ul>
     </div>
-    <div ng-view></div>
+    <div class="content" ng-view></div>
   </div>
+
 </body>
 </html>
