@@ -6,9 +6,56 @@
     <form>
       <label for="name">项目名称</label>
       <input type="text" id="name" placeholder="用于展示给客户">
+      <label for="shortName">简称</label>
+      <input type="text" id="shortName" placeholder="用于自己管理">
+      <label for="category">单位</label>
+      <input type="text" id="category" placeholder="例如： /次">
+      <label for="number">适用人数</label>
+      <input type="text" id="number" placeholder="请填写纯数字">
+      <label for="description">描述或备注</label>
+      <textarea name="description" id="description" cols="30" rows="10"></textarea>
     </form>
   </div>
   <div class="line"></div>
-  <div class="photo"></div>
-  <div class="operate"></div>
+  <div class="photo">
+    <h2>图片管理</h2>
+    <div class="cover">
+      <span>封面</span>
+      <img src="static/image/icon_xinjian.png" alt="新建">
+      <span>上传图片</span>
+      <div></div>
+    </div>
+    <div class="detail">
+      <span>详细图片</span>
+      <img src="static/image/icon_xinjian.png" alt="新建">
+      <span>上传图片</span>
+      <div></div>
+    </div>
+  </div>
+  <div class="operate">
+    <div class="first">
+      <div class="leftOperate">
+        <img src="static/image/icon_bianjijibenxinxi.png" alt="">
+        <p>替换图片</p>
+      </div>
+      <div class="rightOperate">
+        <img src="static/image/icon_shanchu.png" alt="">
+        <p>删除</p>
+      </div>
+    </div>
+    <div class="second">
+      <div class="leftOperate">
+        <img src="static/image/icon_bianjijibenxinxi.png" alt="">
+        <p>替换图片</p>
+      </div>
+      <div class="rightOperate">
+        <img src="static/image/icon_shanchu.png" alt="">
+        <p>删除</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <button class="btn-cancel">取消修改</button>
+    <button class="btn-ok">下一步</button>
+  </div>
 </div>

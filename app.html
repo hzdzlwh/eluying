@@ -4,46 +4,25 @@
   <meta charset="UTF-8">
   <title>易露云</title>
   <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!--[if lte IE 6]>
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.css">
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
+  <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
-  <script src="/eluyun/bower_components/angular/angular.min.js"></script>
-  <script src="/eluyun/bower_components/angular-route/angular-route.min.js"></script>
-  <script src="/eluyun/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="/eluyun/bower_components/angular-animate/angular-animate.js"></script>
-
-  <script src="/eluyun/static/js/angular/app.js"></script>
-  <script src="/eluyun/static/js/angular/controllers.js"></script>
-
 </head>
-<body ng-app="app">
-  <nav>
-    <div class="myContainer">
-      <a class="logo" href="#">易露云</a>
-      <ul>
-        <li><a href="#">库存管理</a></li>
-        <li><a href="#">价格维护</a></li>
-        <li><a href="#/category/room">品类管理</a></li>
-      </ul>
-      <div class="userPhoto"><a href="#"><img src="/eluyun/static/image/timg.jpg" alt="头像"></a></div>
-      <div class="userName">
-        <a href="#">同上不在线</a>
-      </div>
-      <div class="line"></div>
-      <div class="logout">
-        <a href="#">退出账户</a>
-      </div>
-    </div>
-  </nav>
-  <div class="myContainer">
-    <div class="menu">
-      <ul>
-        <li><a href="#/category/room">住宿</a></li>
-        <li><a href="#/category/food">餐饮</a></li>
-        <li><a href="#/category/entertainment">娱乐</a></li>
-        <li><a href="#/category/shop">商超</a></li>
-      </ul>
-    </div>
-    <div class="content" ng-view></div>
-  </div>
+<body>
 
+  <div class="mainContainer">
+
+  </div>
+  <!--[if lte IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
+  <![endif]-->
+  <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/js/bootstrap.min.js"></script>
+  <!--[if lte IE 6]>
+  <script type="/eluyun/text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
+  <![endif]-->
+  <script src="/eluyun/static/js/main.js"></script>
 </body>
 </html>

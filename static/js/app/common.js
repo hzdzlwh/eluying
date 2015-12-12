@@ -1,0 +1,20 @@
+$(document).ready(function(){
+    $("body").prepend("<nav>"
+        + "<div class='myContainer'>"
+        + "<a class='logo' href='#'>易露云</a>"
+        + "<ul>"
+        + "<li><a href='#'>库存管理</a></li>"
+        + "<li><a href='#'>价格维护</a></li>"
+        + "<li><a href='/eluyun/view/category/room/room.html'>品类管理</a></li>"
+        + "</ul>"
+        + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
+        + "<div class='userName'>"
+        + "<a href='#'>同上不在线</a>"
+        + "</div>"
+        + "<div class='line'></div>"
+        + "<div class='logout'>"
+        + "<a href='#'>退出账户</a>"
+        + "</div>"
+        + "</div>"
+        + "</nav>")
+})

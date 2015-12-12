@@ -1,0 +1,89 @@
+.createRoom {
+    .inputFiled {
+        float: left;
+        width: 455px;
+        height: 581px;
+        border-right: 1px solid #979797;
+        margin-right: 40px;
+        ul {
+            li {
+                margin: 20px 0;
+                label {
+                    width: 75px;
+                    text-align: right;
+                    margin-right: 13px;
+                    color: #666;
+                }
+                input {
+                    border: 1px #CCC solid;
+                    border-radius: 5px;
+                    width: 348px;
+                    height: 43px;
+                    text-indent: 9px;
+                    line-height: 43px;
+                }
+                p {
+                    font-size: 12px;
+                    color: #909090;
+                    margin-left: 90px;
+                }
+            }
+        }
+    }
+    .mid {
+        float: left;
+        width: 337px;
+        .title {
+            h2 {
+                display: inline-block;
+                float: left;
+            }
+            .create{
+                cursor: pointer;
+                float: right;
+                color: #4A90E2;
+                height: 36px;
+                line-height: 36px;
+                img {
+                    margin-right: 15px;
+                }
+            }
+        }
+        .grid {
+            margin-top: 50px;
+            width: 337px;
+            table {
+                width: 337px;
+            }
+        }
+    }
+    .operate {
+        margin-top: 50px;
+    }
+    .footer {
+        position: absolute;
+        bottom: 30px;
+        right: 40px;
+        button {
+            margin-left: 24px;
+        }
+    }
+}
+
+#editDisplayInfo {
+    .nav-tabs {
+        margin-bottom: 20px;
+    }
+    #facility {
+        .inputFiled {
+            li {
+                margin: 0;
+                label {
+                    float: none;
+                }
+            }
+        }
+
+
+    }
+}

@@ -1,37 +1,542 @@
-<div class="mid">
-  <span class="campName">千岛湖星空帐篷营地</span>
-  <div ng-controller="modalCtrl" class="create" ng-click="open('view/category/createRoom.html', 'w1130')">
-    <img src="static/image/icon_xinjian.png" alt="新建">
-    <span>新建房型</span>
-  </div>
-  <div class="categoryGrid"></div>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>易露云</title>
+  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!--[if lte IE 6]>
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.css">
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
+  <![endif]-->
+  <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
+  <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <!--[if lte IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
+  <![endif]-->
+  <script src="/eluyun/static/js/bootstrap.min.js"></script>
+  <!--[if lte IE 6]>
+  <script type="text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
+  <![endif]-->
+  <script src="/eluyun/static/js/main.js"></script>
+  <script src="/eluyun/static/js/app/category/room/room.js"></script>
+  <style>
 
-</div>
-<div class="operate">
-  <div class="first">
-    <div class="leftOperate">
-      <img src="static/image/icon_zileiguanli.png" alt="">
-      <p>子类管理</p>
-    </div>
-    <div class="rightOperate">
-      <img src="static/image/icon_bianjijibenxinxi.png" alt="">
-      <p>编辑基本信息</p>
-    </div>
-    <div class="leftOperate">
-      <img src="static/image/icon_shanchu.png" alt="">
-      <p>删除</p>
+  </style>
+</head>
+<body>
+  <!-- 新建房型模态框 -->
+  <div class="modal fade" role="dialog" id="createRoom">
+    <div class="modal-dialog modal-w1130">
+      <div class="modal-content clearfloat">
+        <div class="createRoom clearfloat">
+          <div class="inputFiled rightBorder">
+              <h1>新增房型</h1>
+              <h2>基本信息</h2>
+              <ul>
+                <li><label for="roomName">房型名称</label>
+                  <input id="roomName" type="text" placeholder="用于展示给客户" /></li>
+                <li><label for="shortName">简称</label>
+                  <input type="text" id="shortName" placeholder="用于自己管理" /></li>
+                <li><label for="price">价格</label>
+                  <input type="text" id="price" placeholder="请填写纯数字" />
+                  <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
+                <li><label for="population">可容纳人数</label>
+                  <input type="text" id="population" placeholder="请填写纯数字" /></li>
+                <li><label for="category">单位</label>
+                  <input type="text" id="category" placeholder="请填写单位" /></li>
+                <li><label for="quantity">默认房间数</label>
+                  <input type="text" id="quantity" placeholder="请填写纯数字" />
+                  <p>可以在房态管理中，管理每天的房间库存</p></li>
+              </ul>
+          </div>
+          <div class="mid clearfloat">
+            <div class="title">
+              <h2>管理子类</h2>
+              <div class="create" data-toggle="modal" data-target="#createSubclass">
+                <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+                <span>新建子类</span>
+              </div>
+            </div>
+            <div class="border-top-4px grid">
+              <table>
+                <tr class="head">
+                  <th>名称</th>
+                  <th>简称</th>
+                  <th>房间数</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="operate">
+            <div class="first">
+              <div class="leftOperate">
+                <div class="clickDiv"  data-toggle="modal" data-target="#editSubclass">
+                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                  <p>编辑信息</p>
+                </div>
+              </div>
+              <div class="rightOperate">
+                <div class="clickDiv">
+                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                  <p>删除</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <button class="btn-cancel" id="createRoomCancel">取消新增</button>
+          <button class="btn-ok" id="createRoomOk">确认新增</button>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="second">
-    <div class="leftOperate">
-      <img src="static/image/icon_bianjijibenxinxi.png" alt="">
-      <p>编辑展示信息</p>
-    </div>
-    <div class="rightOperate">
-      <img src="static/image/icon_shangjia.png" alt="">
-      <p>上架</p>
-      <p class="putaway">目前未上架</p>
+  <!-- 编辑基本信息 -->
+  <!-- 子类管理模态框 -->
+  <div class="modal fade" role="dialog" id="subclassManagement">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="subclassManagement clearfloat">
+          <div class="mid clearfloat">
+            <div class="title">
+              <h2>管理子类</h2>
+              <div class="create" data-toggle="modal" data-target="#createSubclass">
+                <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+                <span>新建子类</span>
+              </div>
+            </div>
+            <div class="border-top-4px grid">
+              <table>
+                <tr class="head">
+                  <th>名称</th>
+                  <th>简称</th>
+                  <th>房间数</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="operate">
+            <div class="first">
+              <div class="leftOperate">
+                <div class="clickDiv" data-toggle="modal" data-target="#editSubclass">
+                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                  <p>编辑信息</p>
+                </div>
+              </div>
+              <div class="rightOperate">
+                <div class="clickDiv">
+                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                  <p>删除</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <button class="btn-cancel" id="subclassManagementCancel">取消新增</button>
+          <button class="btn-ok" id="subclassManagementOk">确认新增</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
+  <!-- 新建子类模态框 -->
+  <div class="modal fade" role="dialog" id="createSubclass">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="createSubclass clearfloat">
+          <form class="inputFiled">
+            <h1>新增子类</h1>
+            <ul>
+              <li>
+                <label for="name3">名称</label>
+                <input type="text" id="name3" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="shortName3">简称</label>
+                <input type="text" id="shortName3" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="quantity3">房间数</label>
+                <input type="text" id="quantity3" placeholder="请填写纯数字">
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消新增</button>
+            <button class="btn-ok">确认新增</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑子类模态框 -->
+  <div class="modal fade" role="dialog" id="editSubclass">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="createSubclass clearfloat">
+          <form class="inputFiled">
+            <h1>编辑子类</h1>
+            <ul>
+              <li>
+                <label for="name3">名称</label>
+                <input type="text" id="name4" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="shortName3">简称</label>
+                <input type="text" id="shortName4" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="quantity3">房间数</label>
+                <input type="text" id="quantity4" placeholder="请填写纯数字">
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel" id="editSubclassCancel">取消新增</button>
+            <button class="btn-ok">确认新增</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑展示信息 -->
+  <div class="modal fade" role="dialog" id="editDisplayInfo">
+    <div class="modal-dialog modal-w1130">
+      <div class="modal-content clearfloat">
+        <div class="editDisplayInfo clearfloat">
+            <h1>编辑展示信息-双人帐篷</h1>
+            <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active leftTab"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
+              <li role="presentation" class="rightTab"><a class="rightTab" href="#facility" aria-controls="facility" role="tab" data-toggle="tab">房型设施</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <!-- 房型规格 -->
+              <div role="tabpanel" class="tab-pane active" id="type">
+                <form class="inputFiled rightBorder">
+                  <h2>基本规格</h2>
+                  <ul>
+                    <li>
+                      <label for="number">可容纳人数</label>
+                      <input type="text" id="number" placeholder="请填写纯数字">
+                    </li>
+                    <li>
+                      <label for="area">房间面积</label>
+                      <input type="text" id="area" placeholder="单位：平方米">
+                    </li>
+                    <li>
+                      <label for="bed">床型</label>
+                      <input type="text" id="bed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
+                    </li>
+                    <li>
+                      <label for="number">描述或备注</label>
+                      <textarea name="description" id="description" placeholder="最长70个汉字"></textarea>
+                    </li>
+                  </ul>
+                </form>
+                <div class="photo mid">
+                  <h2>图片管理</h2>
+                  <div class="cover">
+                    <span>封面</span>
+                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+                    <span>上传图片</span>
+                    <div></div>
+                  </div>
+                  <div class="detail">
+                    <span>详细图片</span>
+                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+                    <span>上传图片</span>
+                    <div></div>
+                  </div>
+                </div>
+                <div class="operate">
+                  <div class="first">
+                    <div class="leftOperate">
+                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                      <p>替换图片</p>
+                    </div>
+                    <div class="rightOperate">
+                      <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                      <p>删除</p>
+                    </div>
+                  </div>
+                  <div class="first">
+                    <div class="leftOperate">
+                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                      <p>替换图片</p>
+                    </div>
+                    <div class="rightOperate">
+                      <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                      <p>删除</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 房型设施 -->
+              <div role="tabpanel" class="tab-pane" id="facility">
+                <form class="inputFiled rightBorder">
+                  <h2>基础设施</h2>
+                  <ul>
+                    <li>
+                      <label>热水供应</label>
+                      <input type="radio" name="hotWater">有，请描述时间段
+                      <input type="radio" name="hotWater">无<br/>
+                      <label>描述</label>
+                      <input type="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
+                    </li>
+                    <li>
+                      <label>早餐</label>
+                      <input type="radio" name="">有，请描述
+                      <input type="radio" name="">无<br />
+                      <label>描述</label>
+                      <input type="text" id="" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                    </li>
+                    <li>
+                      <label>浴室</label>
+                      <input type="radio" name="">公共浴室
+                      <input type="radio" name="">独立浴室
+                      <input type="radio" name="">无
+                    </li>
+                    <li>
+                      <label>厕所</label>
+                      <input type="radio" name="">公共厕所
+                      <input type="radio" name="">独立厕所
+                      <input type="radio" name="">无
+                    </li>
+                    <li>
+                      <label>营地管家</label>
+                      <input type="radio" name="">有
+                      <input type="radio" name="">无
+                    </li>
+                    <li>
+                      <label>网络</label>
+                      <input type="radio" name="">有
+                      <input type="radio" name="">无<br/>
+                      <label>描述</label>
+                      <input type="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
+                    </li>
+                  </ul>
+                </form>
+                <div class="mid clearfloat">
+                  <div class="title">
+                    <h2>其他设施</h2>
+                    <div class="create">
+                      <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+                      <span>新建设施</span>
+                    </div>
+                  </div>
+                  <div class="border-top-4px grid">
+                    <table>
+                      <tr class="head">
+                        <th>名称</th>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="operate">
+                  <div class="first">
+                    <div class="leftOperate">
+                      <div class="clickDiv">
+                        <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑信息</p>
+                      </div>
+                    </div>
+                    <div class="rightOperate">
+                      <div class="clickDiv">
+                        <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                        <p>删除</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="footer clearfloat">
+          <button class="btn-cancel" id="editDisplayInfoCancel">取消修改</button>
+          <button class="btn-ok">确认修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 页面主体 -->
+  <div class="mainContainer">
+    <div class="content clearfloat">
+      <div class="title">
+        <span class="campName">千岛湖星空帐篷营地</span>
+        <div class="create" data-toggle="modal" data-target="#createRoom">
+          <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
+          <span>新建房型</span>
+        </div>
+      </div>
+      <div class="categoryGrid grid">
+        <table>
+          <tr class="head">
+            <th>房型</th>
+            <th>简称</th>
+            <th>单位</th>
+            <th>可用人数</th>
+            <th>默认库存</th>
+            <th>默认价格</th>
+          </tr>
+          <tr class="mainClass">
+            <td><span>双人帐篷</span><img src="/eluyun/static/image/rotate.png">
+            </td>
+            <td>帐2</td>
+            <td>顶</td>
+            <td>2</td>
+            <td>100</td>
+            <td>120</td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+          <tr class="mainClass">
+            <td><span>雅致红豆木屋</span><img src="/eluyun/static/image/rotate.png"></td>
+            <td>木屋</td>
+            <td>间</td>
+            <td>3</td>
+            <td>2334</td>
+            <td>200</td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+          <tr class="subclass">
+            <td><div>河边</div></td>
+            <td><div>河边</div></td>
+            <td><div>顶</div></td>
+            <td><div>2</div></td>
+            <td><div>50</div></td>
+            <td><div>200</div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="operate">
+        <div class="first clearfloat">
+          <div class="leftOperate">
+            <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement">
+              <img src="/eluyun/static/image/icon_zileiguanli.png" alt="">
+              <p>子类管理</p>
+            </div>
+          </div>
+          <div class="rightOperate">
+            <div class="clickDiv">
+              <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑基本信息</p>
+            </div>
+          </div>
+          <div class="leftOperate">
+            <div class="clickDiv">
+              <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+              <p>删除</p>
+            </div>
+          </div>
+          <div class="rightOperate">
+            <div class="clickDiv">
+              <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑房间</p>
+            </div>
+          </div>
+        </div>
+        <div class="second clearfloat">
+          <div class="leftOperate">
+            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
+              <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑展示信息</p></div>
+          </div>
+          <div class="rightOperate">
+            <div class="clickDiv">
+              <img src="/eluyun/static/image/icon_shangjia.png" alt="">
+              <p>上架</p>
+              <p class="putaway">目前未上架</p></div>
+          </div>
+        </div>
+      </div>
+      <script type="text/ng-template" id="myModalContent.html">
+        <div class="editRoom">
+          <div class="room">
+            <img src="/eluyun/static/image/ic_close.png">
+            <span>房间001</span>
+          </div>
+          <div class="room">
+            <img src="/eluyun/static/image/ic_close.png">
+            <span>房间001</span>
+          </div>
+          <div class="/eluyun/room">
+            <img src="static/image/ic_close.png">
+            <span>房间001</span>
+          </div>
+          <div class="/eluyun/room">
+            <img src="static/image/ic_close.png">
+            <span>房间001</span>
+          </div>
+          <div class="room">
+            <img src="/eluyun/static/image/ic_close.png">
+            <span>房间001</span>
+          </div>
+        </div>
+      </script>
+    </div>
+  </div>
+  <script>
+    $(function(){
+      $(".subclass").hide();
+      $(".subclass div").hide();
+    });
+    $(".mainClass").click(function(){
+      var that = $(this);
+      if ($(this).nextUntil(".mainClass").css("display") == "none") {
+        $(this).find("img").addClass("rotate");
+        $(this).nextUntil(".mainClass").show();
+        $(this).nextUntil(".mainClass").find("div").slideDown(300);
+      } else{
+        $(this).find("img").removeClass("rotate");
+        $(this).nextUntil(".mainClass").find("div").slideUp(300);
+        setTimeout(function(){
+          that.nextUntil(".mainClass").hide();
+        }, 300);
+      }
+    });
+    $(".btn-cancel").click(function(){
+      $(this).parents(".modal").modal("hide");
+    });
+  </script>
+</body>
+</html>

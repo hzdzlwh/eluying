@@ -1,11 +1,17 @@
-.create{
-    cursor: pointer;
-    float: right;
-    color: #4A90E2;
-    height: 36px;
-    line-height: 36px;
-    img {
-        margin-right: 15px;
+.content{
+    .title{
+        .create{
+            cursor: pointer;
+            position: absolute;
+            top: 0px;
+            right: 205px;
+            color: #4A90E2;
+            height: 36px;
+            line-height: 36px;
+            img {
+                margin-right: 15px;
+            }
+        }
     }
 }
 
@@ -14,4 +20,51 @@
     border-top:4px solid #4A90E2;
     margin-top: 40px;
     float: left;
+    table {
+        width: 100%;
+        .head {
+            background-color: #F7F7F7;
+            height: 49px;
+            th {
+                font-weight: bold;
+                padding-left: 17px;
+                border-bottom: 1px solid #D9D9D9;
+            }
+        }
+        .mainClass {
+            height: 59px;
+            cursor: pointer;
+            td {
+                padding-left: 17px;
+                border-bottom: 1px solid #D9D9D9;
+                line-height: 58px;
+                span{
+                    float: left;
+                }
+                img{
+                    margin: 26px 0 26px 0;
+                    float: right;
+                    transition: 300ms linear;
+                }
+                .rotate {
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+        .subclass {
+            background-color: #4A90E2;
+            cursor: pointer;
+            color: #FFF;
+            td {
+                border-bottom: 1px solid #3E79BF;
+                div {
+                    padding-left: 17px;
+                    height: 59px;
+                    line-height: 59px;
+                }
+            }
+            z-index: 10;
+        }
+    }
 }
+
