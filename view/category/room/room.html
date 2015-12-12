@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
   <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
-  <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/bower_components/jquery/dist/jquery.min.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -92,6 +92,38 @@
     </div>
   </div>
   <!-- 编辑基本信息 -->
+  <div class="modal fade" role="dialog" id="editRoom">
+      <div class="modal-dialog modal-w506">
+          <div class="modal-content clearfloat">
+              <div class="editRoom clearfloat">
+                  <div class="inputFiled">
+                      <h1>编辑房型</h1>
+                      <h2>基本信息</h2>
+                      <ul>
+                          <li><label for="">房型名称</label>
+                              <input id="" type="text" placeholder="用于展示给客户" /></li>
+                          <li><label for="">简称</label>
+                              <input type="text" id="" placeholder="用于自己管理" /></li>
+                          <li><label for="price">价格</label>
+                              <input type="text" id="" placeholder="请填写纯数字" />
+                              <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
+                          <li><label for="">可容纳人数</label>
+                              <input type="text" id="" placeholder="请填写纯数字" /></li>
+                          <li><label for="">单位</label>
+                              <input type="text" id="" placeholder="请填写单位" /></li>
+                          <li><label for="">默认房间数</label>
+                              <input type="text" id="" placeholder="请填写纯数字" />
+                              <p>可以在房态管理中，管理每天的房间库存</p></li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="footer">
+                  <button class="btn-cancel">取消新增</button>
+                  <button class="btn-ok">确认新增</button>
+              </div>
+          </div>
+      </div>
+  </div>
   <!-- 子类管理模态框 -->
   <div class="modal fade" role="dialog" id="subclassManagement">
     <div class="modal-dialog modal-w626">
@@ -281,38 +313,38 @@
                   <ul>
                     <li>
                       <label>热水供应</label>
-                      <input type="radio" name="hotWater">有，请描述时间段
+                      <input type="radio" name="hotWater">有，请描述时间段&nbsp
                       <input type="radio" name="hotWater">无<br/>
                       <label>描述</label>
                       <input type="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
                     </li>
                     <li>
                       <label>早餐</label>
-                      <input type="radio" name="">有，请描述
+                      <input type="radio" name="">有，请描述&nbsp
                       <input type="radio" name="">无<br />
                       <label>描述</label>
-                      <input type="text" id="" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                      <input type="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
                     </li>
                     <li>
                       <label>浴室</label>
-                      <input type="radio" name="">公共浴室
-                      <input type="radio" name="">独立浴室
+                      <input type="radio" name="">公共浴室&nbsp
+                      <input type="radio" name="">独立浴室&nbsp
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>厕所</label>
-                      <input type="radio" name="">公共厕所
-                      <input type="radio" name="">独立厕所
+                      <input type="radio" name="">公共厕所&nbsp
+                      <input type="radio" name="">独立厕所&nbsp
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>营地管家</label>
-                      <input type="radio" name="">有
+                      <input type="radio" name="">有&nbsp
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>网络</label>
-                      <input type="radio" name="">有
+                      <input type="radio" name="">有&nbsp
                       <input type="radio" name="">无<br/>
                       <label>描述</label>
                       <input type="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
@@ -457,7 +489,7 @@
             </div>
           </div>
           <div class="rightOperate">
-            <div class="clickDiv">
+            <div class="clickDiv" data-toggle="modal" data-target="#editRoom">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
@@ -469,7 +501,7 @@
             </div>
           </div>
           <div class="rightOperate">
-            <div class="clickDiv">
+            <div class="clickDiv" data-toggle="modal" data-target="">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑房间</p>
             </div>

@@ -5,8 +5,7 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename'),
 	notify = require('gulp-notify'),
-	concat = require('gulp-concat'),
-	browserSync = require('browser-sync').create();
+	concat = require('gulp-concat')
 
 gulp.task('styles',function(){
 	return sass('static/sass/main.scss', {style: 'compressed'})
