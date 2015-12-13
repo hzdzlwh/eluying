@@ -21,13 +21,171 @@
   <script src="/eluyun/static/js/app/category/entertainment/entertainment.js"></script>
 </head>
 <body>
+  <!-- 新增娱乐 -->
+  <div class="modal fade" role="dialog" id="createEnt">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="createEnt clearfloat">
+        <form class="inputFiled">
+          <h1>新增娱乐</h1>
+          <h2>基本信息</h2>
+          <ul>
+            <li>
+              <label for="name">娱乐名称</label>
+              <input type="text" class="text" id="name" placeholder="用于展示给客户">
+            </li>
+            <li>
+              <label for="shortName">简称</label>
+              <input type="text" class="text" id="shortName" placeholder="用于自己管理">
+            </li>
+            <li>
+              <label for="unit">单位</label>
+              <input type="text" class="text" id="unit" placeholder="例如：次/辆">
+            </li>
+            <li>
+              <label for="number">适用人数</label>
+              <input type="text" class="text" id="number" placeholder="请填写纯数字">
+            </li>
+            <li>
+              <label for="inventory">默认库存</label>
+              <input type="text" class="text" id="inventory" placeholder="请填写纯数字">
+            </li>
+            <li>
+              <label for="price">单价</label>
+              <input type="text" class="text" id="price" placeholder="请填写纯数字">
+            </li>
+            <li>
+              <label for="description">描述</label>
+              <textarea name="description" id="description" placeholder="请填写描述"></textarea>
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-cancel">取消</button>
+          <button class="btn-ok">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- 编辑基本信息 -->
+  <div class="modal fade" role="dialog" id="editBasicInfo">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editBasicInfo clearfloat">
+          <form class="inputFiled">
+            <h1>新增娱乐</h1>
+            <h2>基本信息</h2>
+            <ul>
+              <li>
+                <label for="name2">娱乐名称</label>
+                <input type="text" class="text" id="name2" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="shortName2">简称</label>
+                <input type="text" class="text" id="shortName2" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="unit2">单位</label>
+                <input type="text" class="text" id="unit2" placeholder="例如：次/辆">
+              </li>
+              <li>
+                <label for="number2">适用人数</label>
+                <input type="text" class="text" id="number2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="inventory2">默认库存</label>
+                <input type="text" class="text" id="inventory2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="price2">单价</label>
+                <input type="text" class="text" id="price2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="description2">描述</label>
+                <textarea name="description" id="description2" placeholder="请填写描述"></textarea>
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑展示信息 -->
+  <div class="modal fade" role="dialog" id="editDisplayInfo">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editDisplayInfo clearfloat">
+          <h1>编辑展示信息-烧烤</h1>
+          <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+          <div class="clearfloat">
+            <div class="photo">
+              <h2>图片管理</h2>
+              <div class="cover">
+                <div class="title clearfloat">
+                  <span>封面</span>
+                  <div class="create">
+                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                    <span>上传图片</span>
+                  </div>
+                </div>
+                <div class="photoContainer">
+                </div>
+              </div>
+              <div class="detail">
+                <div class="title clearfloat">
+                  <span>详细图片</span>
+                  <div class="create">
+                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                    <span>上传图片</span>
+                  </div>
+                </div>
+                <div class="photoContainer">
+                </div>
+              </div>
+            </div>
+            <div class="operate">
+              <div class="first">
+                <div class="leftOperate">
+                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                  <p>替换图片</p>
+                </div>
+                <div class="rightOperate">
+                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                  <p>删除</p>
+                </div>
+              </div>
+              <div class="second">
+                <div class="leftOperate">
+                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                  <p>替换图片</p>
+                </div>
+                <div class="rightOperate">
+                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                  <p>删除</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="mainContainer">
     <div class="content">
       <div class="title">
         <span class="campName">千岛湖星空帐篷营地</span>
-        <div class="create">
-          <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-          <span>新建娱乐</span>
+        <div class="create" data-toggle="modal" data-target="#createEnt">
+          <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+          <span>新增娱乐</span>
         </div>
       </div>
         <div class="categoryGrid">
@@ -47,7 +205,7 @@
       <div class="operate">
         <div class="first clearfloat">
           <div class="leftOperate">
-            <div class="clickDiv">
+            <div class="clickDiv" data-toggle="modal" data-target="#editBasicInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
@@ -61,7 +219,7 @@
         </div>
         <div class="second clearfloat">
           <div class="leftOperate">
-            <div class="clickDiv">
+            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p>
             </div>

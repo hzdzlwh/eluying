@@ -29,9 +29,10 @@ nav {
                 text-align: center;
                 cursor: pointer;
             }
-            a:hover {
+            a:hover,a.active {
                 background-color: #2677D1;
             }
+
             a {
                 display: inline-block;
                 width: 100%;

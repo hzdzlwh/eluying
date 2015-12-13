@@ -122,3 +122,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 a:focus {
   outline: none;
 }
+
+p,span {
+  cursor: default;
+}

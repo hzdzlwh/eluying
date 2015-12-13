@@ -7,8 +7,13 @@
 }
 
 .modal-w506 {
-  width: 506px;
+    width: 506px;
 }
+
+.modal-w485 {
+    width: 485px;
+}
+
 .modal-dialog {
     margin-left: auto;
     margin-right: auto;
@@ -90,6 +95,9 @@
 .clickDiv {
     cursor: pointer;
     display: inline-block;
+    p {
+        cursor: pointer;
+    }
 }
 
 .myGrid {
@@ -184,7 +192,11 @@
         width: 455px;
         margin-right: 40px;
         ul {
+            li:after {
+                display:block;clear:both;content:"";visibility:hidden;height:0
+            }
             li {
+                zoom: 1;
                 margin: 20px 0;
                 label {
                     width: 75px;
@@ -195,7 +207,7 @@
                     height: 43px;
                     line-height: 43px;
                 }
-                input[type=text] {
+                .text {
                     border: 1px #CCC solid;
                     border-radius: 5px;
                     width: 348px;
@@ -241,6 +253,9 @@
                 img {
                     margin-right: 15px;
                 }
+                span {
+                    cursor: pointer;
+                }
             }
         }
         .grid {
@@ -262,3 +277,6 @@
     }
 }
 
+.placeholder {
+    color: #aaa;
+}

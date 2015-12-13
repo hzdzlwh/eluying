@@ -11,6 +11,9 @@
             img {
                 margin-right: 15px;
             }
+            span {
+                cursor: pointer;
+            }
         }
     }
 }
@@ -40,6 +43,7 @@
                 line-height: 58px;
                 span{
                     float: left;
+                    cursor: pointer;
                 }
                 img{
                     margin: 26px 0 26px 0;
@@ -67,4 +71,46 @@
         }
     }
 }
-
+.editDisplayInfo {
+    .photo {
+        float: left;
+    }
+    .title {
+        width: 368px;
+        span {
+            height: 36px;
+            line-height: 36px;
+            float: left;
+            color: #4A90E2;
+        }
+        .create{
+            cursor: pointer;
+            float: right;
+            color: #4A90E2;
+            height: 36px;
+            line-height: 36px;
+            img {
+                margin-right: 15px;
+            }
+            span {
+                cursor: pointer;
+                float: none;
+            }
+        }
+    }
+    .photoContainer {
+        margin-top: 17px;
+        margin-bottom: 27px;
+        width: 368px;
+        height: 207px;
+        background-color: #FBFBFB;
+        border: 1px #CFCFCF solid;
+    }
+    .operate {
+        margin-top: 75px;
+        .second {
+            border-top: solid 4px #4A90E2;
+            margin-top: 167px;
+        }
+    }
+}

@@ -9,8 +9,14 @@
   <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
   <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
-  <script src="/eluyun/static/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/eluyun/bower_components/jquery.min.js"></script>
   <!--[if lte IE 9]>
+  <script src="/eluyun/static/js/jquery.placeholder.min.js"></script>
+  <script>
+    $(function() {
+      $('input, textarea').placeholder();
+    });
+  </script>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/bootstrap.min.js"></script>
@@ -19,12 +25,10 @@
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
   <script src="/eluyun/static/js/app/category/room/room.js"></script>
-  <style>
 
-  </style>
 </head>
 <body>
-  <!-- 新建房型模态框 -->
+  <!-- 新增房型模态框 -->
   <div class="modal fade" role="dialog" id="createRoom">
     <div class="modal-dialog modal-w1130">
       <div class="modal-content clearfloat">
@@ -34,18 +38,18 @@
               <h2>基本信息</h2>
               <ul>
                 <li><label for="roomName">房型名称</label>
-                  <input id="roomName" type="text" placeholder="用于展示给客户" /></li>
+                  <input id="roomName" type="text" class="text" placeholder="用于展示给客户" /></li>
                 <li><label for="shortName">简称</label>
-                  <input type="text" id="shortName" placeholder="用于自己管理" /></li>
+                  <input type="text" class="text" id="shortName" placeholder="用于自己管理" /></li>
                 <li><label for="price">价格</label>
-                  <input type="text" id="price" placeholder="请填写纯数字" />
+                  <input type="text" class="text" id="price" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                 <li><label for="population">可容纳人数</label>
-                  <input type="text" id="population" placeholder="请填写纯数字" /></li>
+                  <input type="text" class="text" id="population" placeholder="请填写纯数字" /></li>
                 <li><label for="category">单位</label>
-                  <input type="text" id="category" placeholder="请填写单位" /></li>
+                  <input type="text" class="text" id="category" placeholder="请填写单位" /></li>
                 <li><label for="quantity">默认房间数</label>
-                  <input type="text" id="quantity" placeholder="请填写纯数字" />
+                  <input type="text" class="text" id="quantity" placeholder="请填写纯数字" />
                   <p>可以在房态管理中，管理每天的房间库存</p></li>
               </ul>
           </div>
@@ -53,8 +57,8 @@
             <div class="title">
               <h2>管理子类</h2>
               <div class="create" data-toggle="modal" data-target="#createSubclass">
-                <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-                <span>新建子类</span>
+                <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                <span>新增子类</span>
               </div>
             </div>
             <div class="border-top-4px grid">
@@ -85,41 +89,41 @@
           </div>
         </div>
         <div class="footer">
-          <button class="btn-cancel" id="createRoomCancel">取消新增</button>
-          <button class="btn-ok" id="createRoomOk">确认新增</button>
+          <button class="btn-cancel" id="createRoomCancel">取消</button>
+          <button class="btn-ok" id="createRoomOk">确认</button>
         </div>
       </div>
     </div>
   </div>
   <!-- 编辑基本信息 -->
-  <div class="modal fade" role="dialog" id="editRoom">
+  <div class="modal fade" role="dialog" id="editBasicInfo">
       <div class="modal-dialog modal-w506">
           <div class="modal-content clearfloat">
-              <div class="editRoom clearfloat">
+              <div class="editBasicInfo clearfloat">
                   <div class="inputFiled">
                       <h1>编辑房型</h1>
                       <h2>基本信息</h2>
                       <ul>
-                          <li><label for="">房型名称</label>
-                              <input id="" type="text" placeholder="用于展示给客户" /></li>
-                          <li><label for="">简称</label>
-                              <input type="text" id="" placeholder="用于自己管理" /></li>
+                          <li><label>房型名称</label>
+                              <input type="text" class="text" placeholder="用于展示给客户" /></li>
+                          <li><label>简称</label>
+                              <input type="text" class="text" placeholder="用于自己管理" /></li>
                           <li><label for="price">价格</label>
-                              <input type="text" id="" placeholder="请填写纯数字" />
+                              <input type="text" class="text" placeholder="请填写纯数字" />
                               <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
-                          <li><label for="">可容纳人数</label>
-                              <input type="text" id="" placeholder="请填写纯数字" /></li>
-                          <li><label for="">单位</label>
-                              <input type="text" id="" placeholder="请填写单位" /></li>
-                          <li><label for="">默认房间数</label>
-                              <input type="text" id="" placeholder="请填写纯数字" />
+                          <li><label>可容纳人数</label>
+                              <input type="text" class="text" placeholder="请填写纯数字" /></li>
+                          <li><label>单位</label>
+                              <input type="text" class="text" placeholder="请填写单位" /></li>
+                          <li><label>默认房间数</label>
+                              <input type="text" class="text" placeholder="请填写纯数字" />
                               <p>可以在房态管理中，管理每天的房间库存</p></li>
                       </ul>
                   </div>
               </div>
               <div class="footer">
-                  <button class="btn-cancel">取消新增</button>
-                  <button class="btn-ok">确认新增</button>
+                  <button class="btn-cancel">取消</button>
+                  <button class="btn-ok">确认</button>
               </div>
           </div>
       </div>
@@ -133,8 +137,8 @@
             <div class="title">
               <h2>管理子类</h2>
               <div class="create" data-toggle="modal" data-target="#createSubclass">
-                <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-                <span>新建子类</span>
+                <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                <span>新增子类</span>
               </div>
             </div>
             <div class="border-top-4px grid">
@@ -165,13 +169,13 @@
           </div>
         </div>
         <div class="footer">
-          <button class="btn-cancel" id="subclassManagementCancel">取消新增</button>
-          <button class="btn-ok" id="subclassManagementOk">确认新增</button>
+          <button class="btn-cancel" id="subclassManagementCancel">取消</button>
+          <button class="btn-ok" id="subclassManagementOk">确认</button>
         </div>
       </div>
     </div>
   </div>
-  <!-- 新建子类模态框 -->
+  <!-- 新增子类模态框 -->
   <div class="modal fade" role="dialog" id="createSubclass">
     <div class="modal-dialog modal-w626">
       <div class="modal-content clearfloat">
@@ -181,21 +185,21 @@
             <ul>
               <li>
                 <label for="name3">名称</label>
-                <input type="text" id="name3" placeholder="用于展示给客户">
+                <input type="text" class="text" id="name3" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="shortName3">简称</label>
-                <input type="text" id="shortName3" placeholder="用于自己管理">
+                <input type="text" class="text" id="shortName3" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="quantity3">房间数</label>
-                <input type="text" id="quantity3" placeholder="请填写纯数字">
+                <input type="text" class="text" id="quantity3" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
           <div class="footer">
-            <button class="btn-cancel">取消新增</button>
-            <button class="btn-ok">确认新增</button>
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
           </div>
         </div>
       </div>
@@ -210,22 +214,22 @@
             <h1>编辑子类</h1>
             <ul>
               <li>
-                <label for="name3">名称</label>
-                <input type="text" id="name4" placeholder="用于展示给客户">
+                <label for="name4">名称</label>
+                <input type="text" class="text" id="name4" placeholder="用于展示给客户">
               </li>
               <li>
-                <label for="shortName3">简称</label>
-                <input type="text" id="shortName4" placeholder="用于自己管理">
+                <label for="shortName4">简称</label>
+                <input type="text" class="text" id="shortName4" placeholder="用于自己管理">
               </li>
               <li>
-                <label for="quantity3">房间数</label>
-                <input type="text" id="quantity4" placeholder="请填写纯数字">
+                <label for="quantity4">房间数</label>
+                <input type="text" class="text" id="quantity4" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
           <div class="footer">
-            <button class="btn-cancel" id="editSubclassCancel">取消新增</button>
-            <button class="btn-ok">确认新增</button>
+            <button class="btn-cancel" id="editSubclassCancel">取消</button>
+            <button class="btn-ok">取消</button>
           </div>
         </div>
       </div>
@@ -252,15 +256,15 @@
                   <ul>
                     <li>
                       <label for="number">可容纳人数</label>
-                      <input type="text" id="number" placeholder="请填写纯数字">
+                      <input type="text" class="text" id="number" placeholder="请填写纯数字">
                     </li>
                     <li>
                       <label for="area">房间面积</label>
-                      <input type="text" id="area" placeholder="单位：平方米">
+                      <input type="text" class="text" id="area" placeholder="单位：平方米">
                     </li>
                     <li>
                       <label for="bed">床型</label>
-                      <input type="text" id="bed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
+                      <input type="text" class="text" id="bed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
                     </li>
                     <li>
                       <label for="number">描述或备注</label>
@@ -268,40 +272,52 @@
                     </li>
                   </ul>
                 </form>
-                <div class="photo mid">
-                  <h2>图片管理</h2>
-                  <div class="cover">
-                    <span>封面</span>
-                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-                    <span>上传图片</span>
-                    <div></div>
-                  </div>
-                  <div class="detail">
-                    <span>详细图片</span>
-                    <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-                    <span>上传图片</span>
-                    <div></div>
-                  </div>
-                </div>
-                <div class="operate">
-                  <div class="first">
-                    <div class="leftOperate">
-                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                      <p>替换图片</p>
+                <div class="clearfloat">
+                  <div class="photo">
+                    <h2>图片管理</h2>
+                    <div class="cover">
+                      <div class="title clearfloat">
+                        <span>封面</span>
+                        <div class="create">
+                          <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                          <span>上传图片</span>
+                        </div>
+                      </div>
+                      <div class="photoContainer">
+                      </div>
                     </div>
-                    <div class="rightOperate">
-                      <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                      <p>删除</p>
+                    <div class="detail">
+                      <div class="title clearfloat">
+                        <span>详细图片</span>
+                        <div class="create">
+                          <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                          <span>上传图片</span>
+                        </div>
+                      </div>
+                      <div class="photoContainer">
+                      </div>
                     </div>
                   </div>
-                  <div class="first">
-                    <div class="leftOperate">
-                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                      <p>替换图片</p>
+                  <div class="operate">
+                    <div class="first">
+                      <div class="leftOperate">
+                        <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>替换图片</p>
+                      </div>
+                      <div class="rightOperate">
+                        <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                        <p>删除</p>
+                      </div>
                     </div>
-                    <div class="rightOperate">
-                      <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                      <p>删除</p>
+                    <div class="second">
+                      <div class="leftOperate">
+                        <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>替换图片</p>
+                      </div>
+                      <div class="rightOperate">
+                        <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                        <p>删除</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -313,41 +329,41 @@
                   <ul>
                     <li>
                       <label>热水供应</label>
-                      <input type="radio" name="hotWater">有，请描述时间段&nbsp
+                      <input type="radio" name="hotWater">有，请描述时间段&nbsp;
                       <input type="radio" name="hotWater">无<br/>
                       <label>描述</label>
-                      <input type="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
+                      <input type="text" class="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
                     </li>
                     <li>
                       <label>早餐</label>
-                      <input type="radio" name="">有，请描述&nbsp
+                      <input type="radio" name="">有，请描述&nbsp;
                       <input type="radio" name="">无<br />
                       <label>描述</label>
-                      <input type="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                      <input type="text" class="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
                     </li>
                     <li>
                       <label>浴室</label>
-                      <input type="radio" name="">公共浴室&nbsp
-                      <input type="radio" name="">独立浴室&nbsp
+                      <input type="radio" name="">公共浴室&nbsp;
+                      <input type="radio" name="">独立浴室&nbsp;
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>厕所</label>
-                      <input type="radio" name="">公共厕所&nbsp
-                      <input type="radio" name="">独立厕所&nbsp
+                      <input type="radio" name="">公共厕所&nbsp;
+                      <input type="radio" name="">独立厕所&nbsp;
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>营地管家</label>
-                      <input type="radio" name="">有&nbsp
+                      <input type="radio" name="">有&nbsp;
                       <input type="radio" name="">无
                     </li>
                     <li>
                       <label>网络</label>
-                      <input type="radio" name="">有&nbsp
+                      <input type="radio" name="">有&nbsp;
                       <input type="radio" name="">无<br/>
                       <label>描述</label>
-                      <input type="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
+                      <input type="text" class="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
                     </li>
                   </ul>
                 </form>
@@ -355,8 +371,8 @@
                   <div class="title">
                     <h2>其他设施</h2>
                     <div class="create">
-                      <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-                      <span>新建设施</span>
+                      <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+                      <span>新增设施</span>
                     </div>
                   </div>
                   <div class="border-top-4px grid">
@@ -387,8 +403,124 @@
             </div>
         </div>
         <div class="footer clearfloat">
-          <button class="btn-cancel" id="editDisplayInfoCancel">取消修改</button>
-          <button class="btn-ok">确认修改</button>
+          <button class="btn-cancel" id="editDisplayInfoCancel">取消</button>
+          <button class="btn-ok">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑房间 -->
+  <div class="modal fade" role="dialog" id="editRoom">
+    <div class="modal-dialog modal-w485">
+      <div class="modal-content clearfloat">
+        <div class="editRoom clearfloat">
+          <div class="roomContainer clearfloat">
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+              <input type="hidden" />
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+            <div class="room">
+              <img src="/eluyun/static/image/ic_close.png">
+              <p>房间001</p>
+            </div>
+          </div>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
+          </div>
         </div>
       </div>
     </div>
@@ -399,10 +531,11 @@
       <div class="title">
         <span class="campName">千岛湖星空帐篷营地</span>
         <div class="create" data-toggle="modal" data-target="#createRoom">
-          <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-          <span>新建房型</span>
+          <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+          <span>新增房型</span>
         </div>
       </div>
+      <input type="text" placeholder="sadasdasdasd" />
       <div class="categoryGrid grid">
         <table>
           <tr class="head">
@@ -489,7 +622,7 @@
             </div>
           </div>
           <div class="rightOperate">
-            <div class="clickDiv" data-toggle="modal" data-target="#editRoom">
+            <div class="clickDiv" data-toggle="modal" data-target="#editBasicInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
@@ -501,7 +634,7 @@
             </div>
           </div>
           <div class="rightOperate">
-            <div class="clickDiv" data-toggle="modal" data-target="">
+            <div class="clickDiv" data-toggle="modal" data-target="#editRoom">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑房间</p>
             </div>
@@ -517,34 +650,11 @@
             <div class="clickDiv">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
-              <p class="putaway">目前未上架</p></div>
+            </div>
+            <p class="putaway">目前未上架</p>
           </div>
         </div>
       </div>
-      <script type="text/ng-template" id="myModalContent.html">
-        <div class="editRoom">
-          <div class="room">
-            <img src="/eluyun/static/image/ic_close.png">
-            <span>房间001</span>
-          </div>
-          <div class="room">
-            <img src="/eluyun/static/image/ic_close.png">
-            <span>房间001</span>
-          </div>
-          <div class="/eluyun/room">
-            <img src="static/image/ic_close.png">
-            <span>房间001</span>
-          </div>
-          <div class="/eluyun/room">
-            <img src="static/image/ic_close.png">
-            <span>房间001</span>
-          </div>
-          <div class="room">
-            <img src="/eluyun/static/image/ic_close.png">
-            <span>房间001</span>
-          </div>
-        </div>
-      </script>
     </div>
   </div>
   <script>
@@ -565,9 +675,6 @@
           that.nextUntil(".mainClass").hide();
         }, 300);
       }
-    });
-    $(".btn-cancel").click(function(){
-      $(this).parents(".modal").modal("hide");
     });
   </script>
 </body>

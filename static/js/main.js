@@ -3,9 +3,9 @@ $(document).ready(function(){
         + "<div class='myContainer'>"
         + "<a class='logo' href='#'>易露云</a>"
         + "<ul>"
-        + "<li><a href='#'>库存管理</a></li>"
-        + "<li><a href='#'>价格维护</a></li>"
-        + "<li><a href='/eluyun/view/category/room/room.html'>品类管理</a></li>"
+        + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"
+        + "<li><a id='priceMenu' href='#'>价格维护</a></li>"
+        + "<li><a id='categoryMenu' href='/eluyun/view/category/room/room.html'>品类管理</a></li>"
         + "</ul>"
         + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
         + "<div class='userName'>"
@@ -51,4 +51,7 @@ $(document).ready(function(){
     }
     $('.modal').on('show.bs.modal', centerModals);
     $(window).on('resize', centerModals);
+    $(".btn-cancel").click(function(){
+        $(this).parents(".modal").modal("hide");
+    });
 })

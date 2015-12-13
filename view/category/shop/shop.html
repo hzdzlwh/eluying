@@ -16,19 +16,121 @@
   <script src="/eluyun/static/js/bootstrap.min.js"></script>
   <!--[if lte IE 6]>
   <script type="text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
-  <script src="/eluyun/static/js/DD_belatedPNG_0.0.8a-min.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
   <script src="/eluyun/static/js/app/category/shop/shop.js"></script>
 </head>
 <body>
+  <!-- 新增商超 -->
+  <div class="modal fade" role="dialog" id="createShop">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="createShop clearfloat">
+          <form class="inputFiled">
+            <h1>新增商超</h1>
+            <h2>基本信息</h2>
+            <ul>
+              <li>
+                <label for="name">商品名称</label>
+                <input type="text" class="text" id="name" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="shortName">简称</label>
+                <input type="text" class="text" id="shortName" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="category">单位</label>
+                <input type="text" class="text" id="category" placeholder="请填写单位">
+              </li>
+              <li>
+                <label for="number">适用人数</label>
+                <input type="text" class="text" id="number" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="inventory">默认库存</label>
+                <input type="text" class="text" id="inventory" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="price">单价</label>
+                <input type="text" class="text" id="price" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="brand">品牌厂商</label>
+                <input type="text" class="text" id="brand" placeholder="请填写厂商名称">
+              </li>
+              <li>
+                <label for="description">描述</label>
+                <textarea name="description" id="description" placeholder="请填写描述"></textarea>
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑基本信息 -->
+  <div class="modal fade" role="dialog" id="editBasicInfo">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editShop clearfloat">
+          <form class="inputFiled">
+            <h1>编辑商超</h1>
+            <h2>基本信息</h2>
+            <ul>
+              <li>
+                <label for="name2">商品名称</label>
+                <input type="text" class="text" id="name2" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="shortName2">简称</label>
+                <input type="text" class="text" id="shortName2" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="category2">单位</label>
+                <input type="text" class="text" id="category2" placeholder="例如：瓶/包">
+              </li>
+              <li>
+                <label for="number2">适用人数</label>
+                <input type="text" class="text" id="number2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="inventory2">默认库存</label>
+                <input type="text" class="text" id="inventory2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="price2">单价</label>
+                <input type="text" class="text" id="price2" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="brand2">品牌厂商</label>
+                <input type="text" class="text" id="brand2" placeholder="请填写厂商名称">
+              </li>
+              <li>
+                <label for="description2">描述</label>
+                <textarea name="description" id="description2" placeholder="请填写描述"></textarea>
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 页面主体 -->
   <div class="mainContainer">
     <div class="content">
       <div class="title clearfloat">
         <span class="campName">千岛湖星空帐篷营地</span>
-        <div class="create">
-          <img src="/eluyun/static/image/icon_xinjian.png" alt="新建">
-          <span>新建商品</span>
+        <div class="create" data-toggle="modal" data-target="#createShop">
+          <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
+          <span>新增商品</span>
         </div>
       </div>
       <div class="categoryGrid">
@@ -182,23 +284,16 @@
       <div class="operate">
         <div class="first clearfloat">
           <div class="leftOperate">
-            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-            <p>编辑基本信息</p>
+            <div class="clickDiv" data-toggle="modal" data-target="#editBasicInfo">
+              <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑基本信息</p>
+            </div>
           </div>
           <div class="rightOperate">
-            <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-            <p>删除</p>
-          </div>
-        </div>
-        <div class="second clearfloat">
-          <div class="leftOperate">
-            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-            <p>编辑展示信息</p>
-          </div>
-          <div class="rightOperate">
-            <img src="/eluyun/static/image/icon_shangjia.png" alt="">
-            <p>上架</p>
-            <p class="putaway">目前未上架</p>
+            <div class="clickDiv">
+              <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+              <p>删除</p>
+            </div>
           </div>
         </div>
       </div>
