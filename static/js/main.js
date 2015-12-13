@@ -5,11 +5,11 @@ $(document).ready(function(){
         + "<ul>"
         + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"
         + "<li><a id='priceMenu' href='#'>价格维护</a></li>"
-        + "<li><a id='categoryMenu' href='/eluyun/view/category/room/room.html'>品类管理</a></li>"
+        + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
         + "</ul>"
         + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
         + "<div class='userName'>"
-        + "<a href='#'>同上不在线</a>"
+        + "<a href='#'></a>"
         + "</div>"
         + "<div class='line'></div>"
         + "<div class='logout'>"
@@ -19,10 +19,10 @@ $(document).ready(function(){
         + "</nav>")
     $(".mainContainer").prepend("<div class='menu'>"
         + "<ul>"
-        + "<li><a id='roomMenu' class='pie' href='/eluyun/view/category/room/room.html'>住宿</a></li>"
-        + "<li><a id='foodMenu' href='/eluyun/view/category/food/food.html'>餐饮</a></li>"
-        + "<li><a id='enterMenu' href='/eluyun/view/category/entertainment/entertainment.html'>娱乐</a></li>"
-        + "<li><a id='shopMenu' href='/eluyun/view/category/shop/shop.html'>商超</a></li>"
+        + "<li><a id='roomMenu' class='pie' href='/eluyun/view/category/room.html'>住宿</a></li>"
+        + "<li><a id='foodMenu' href='/eluyun/view/category/food.html'>餐饮</a></li>"
+        + "<li><a id='enterMenu' href='/eluyun/view/category/entertainment.html'>娱乐</a></li>"
+        + "<li><a id='shopMenu' href='/eluyun/view/category/shop.html'>商超</a></li>"
         + "</ul>"
         + "</div>")
     $(".mainClass").click(function(){

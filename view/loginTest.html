@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>易露云</title>
+  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!--[if lte IE 6]>
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.css">
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
+  <![endif]-->
+  <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
+  <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/js/jquery.cookie.js"></script>
+  <!--[if lte IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
+  <![endif]-->
+  <script src="/eluyun/static/js/bootstrap.min.js"></script>
+  <!--[if lte IE 6]>
+  <script type="text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <button id="login">登录</button>
+  <script>
+    $("#login").click(function(){
+      $.ajax({
+        url: "http://192.168.1.2:8082/mg/user/login",
+        data: {loginName:"18268823900",password:"af9c5a5d3d9f"},
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function(d){
+          $.cookie("campName", d.data.camps[0].name, {path: "/"});
+          $.cookie("userName", d.data.userName, {path: "/"});
+          location.href="/eluyun/view/category/room.html";
+        }
+      })
+    })
+  </script>
+</body>
+</html>

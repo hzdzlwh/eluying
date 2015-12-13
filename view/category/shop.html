@@ -10,6 +10,7 @@
   <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/js/jquery.cookie.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -299,5 +300,11 @@
       </div>
     </div>
   </div>
+  <script>
+  $(function(){
+    $(".campName").html($.cookie("campName"));
+    $(".userName").find("a").html($.cookie("userName"));
+  })
+  </script>
 </body>
 </html>

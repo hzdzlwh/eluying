@@ -10,13 +10,8 @@
   <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/js/jquery.cookie.js"></script>
   <!--[if lte IE 9]>
-  <script src="/eluyun/static/js/jquery.placeholder.min.js"></script>
-  <script>
-    $(function() {
-      $('input, textarea').placeholder();
-    });
-  </script>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/bootstrap.min.js"></script>
@@ -25,7 +20,6 @@
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
   <script src="/eluyun/static/js/app/category/room/room.js"></script>
-
 </head>
 <body>
   <!-- 新增房型模态框 -->
@@ -529,13 +523,12 @@
   <div class="mainContainer">
     <div class="content clearfloat">
       <div class="title">
-        <span class="campName">千岛湖星空帐篷营地</span>
+        <span class="campName"></span>
         <div class="create" data-toggle="modal" data-target="#createRoom">
           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
           <span>新增房型</span>
         </div>
       </div>
-      <input type="text" placeholder="sadasdasdasd" />
       <div class="categoryGrid grid">
         <table>
           <tr class="head">
@@ -661,6 +654,8 @@
     $(function(){
       $(".subclass").hide();
       $(".subclass div").hide();
+      $(".campName").html($.cookie("campName"));
+      $(".userName").find("a").html($.cookie("userName"));
     });
     $(".mainClass").click(function(){
       var that = $(this);
