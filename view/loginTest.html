@@ -26,8 +26,6 @@
       $.ajax({
         url: "http://192.168.1.2:8082/mg/user/login",
         data: {loginName:"18268823900",password:"af9c5a5d3d9f"},
-        dataType: "jsonp",
-        jsonp: "callback",
         success: function(d){
           $.cookie("campName", d.data.camps[0].name, {path: "/"});
           $.cookie("userName", d.data.userName, {path: "/"});
