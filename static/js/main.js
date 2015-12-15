@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $("body").prepend("<nav>"
-        + "<div class='myContainer'>"
+        + "<div class='myContainer clearfloat'>"
         + "<a class='logo' href='#'>易露云</a>"
         + "<ul>"
         + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"

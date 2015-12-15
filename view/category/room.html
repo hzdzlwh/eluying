@@ -237,14 +237,14 @@
             <h1>编辑展示信息-双人帐篷</h1>
             <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs clearfloat" role="tablist">
               <li role="presentation" class="active leftTab"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
               <li role="presentation" class="rightTab"><a class="rightTab" href="#facility" aria-controls="facility" role="tab" data-toggle="tab">房型设施</a></li>
             </ul>
             <!-- Tab panes -->
-            <div class="tab-content">
+            <div class="tab-content clearfloat">
               <!-- 房型规格 -->
-              <div role="tabpanel" class="tab-pane active" id="type">
+              <div role="tabpanel" class="tab-pane active clearfloat" id="type">
                 <form class="inputFiled rightBorder">
                   <h2>基本规格</h2>
                   <ul>
@@ -317,7 +317,7 @@
                 </div>
               </div>
               <!-- 房型设施 -->
-              <div role="tabpanel" class="tab-pane" id="facility">
+              <div role="tabpanel" class="tab-pane clearfloat" id="facility">
                 <form class="inputFiled rightBorder">
                   <h2>基础设施</h2>
                   <ul>
@@ -539,71 +539,9 @@
             <th>默认库存</th>
             <th>默认价格</th>
           </tr>
-          <tr class="mainClass">
-            <td><span>双人帐篷</span><img src="/eluyun/static/image/rotate.png">
-            </td>
-            <td>帐2</td>
-            <td>顶</td>
-            <td>2</td>
-            <td>100</td>
-            <td>120</td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
-          <tr class="mainClass">
-            <td><span>雅致红豆木屋</span><img src="/eluyun/static/image/rotate.png"></td>
-            <td>木屋</td>
-            <td>间</td>
-            <td>3</td>
-            <td>2334</td>
-            <td>200</td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
-          <tr class="subclass">
-            <td><div>河边</div></td>
-            <td><div>河边</div></td>
-            <td><div>顶</div></td>
-            <td><div>2</div></td>
-            <td><div>50</div></td>
-            <td><div>200</div></td>
-          </tr>
+          <tbody id="roomCategoryList">
+
+          </tbody>
         </table>
       </div>
       <div class="operate">
@@ -656,6 +594,25 @@
       $(".subclass div").hide();
       $(".campName").html($.cookie("campName"));
       $(".userName").find("a").html($.cookie("userName"));
+      $.ajax({
+        xhrFields: { withCredentials: true },
+        url: "http://192.168.1.2:8082/mg/category/getRoomCategoryList",
+        success: function(result){
+          console.log(result);
+          var str = "";
+          $.each(result.data.list, function(index,element){
+            str += "<tr class='mainClass'><td><span>" + element.name + "</span>";
+            if (element.hasSub) {
+              str += "<img src='/eluyun/static/image/rotate.png'>";
+            }
+            str += "</td><td>" + element.shortName + "</td><td>"
+                  + element.unit + "</td><td>" + element.fitNum
+                  + "</td><td>" + element.inventory + "</td><td>"
+                  + element.price + "</td></tr>";
+          })
+          $("#roomCategoryList").html(str);
+        }
+      })
     });
     $(".mainClass").click(function(){
       var that = $(this);

@@ -9,7 +9,6 @@ nav {
     @include minWidth();
     .myContainer {
         width: 1200px;
-        overflow: hidden;
         margin: 0 auto;
         .logo {
             margin-left: 32px;
