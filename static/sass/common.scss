@@ -67,6 +67,10 @@
         border-top: solid 4px #4A90E2;
         padding-bottom: 30px;
         overflow: hidden;
+        height: 120px;
+    }
+    #roomCategoryFirst {
+        height: 203px;
     }
     .second{
         border-top: solid 2px #4A90E2;
@@ -134,7 +138,14 @@
 }
 
 .subActive {
-    border: 2px #000 solid;
+    div {
+        border-top: 2px #FFF solid;
+        border-bottom: 2px #FFF solid;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        padding-top: -2px;
+        padding-bottom: -2px;
+    }
 }
 
 .tip {

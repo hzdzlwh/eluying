@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <script src="/eluyun/bower_components/jquery.min.js"></script>
   <script src="/eluyun/static/js/jquery.cookie.js"></script>
+  <script src="/eluyun/static/js/jquery.validate.min.js"></script>
+  <script src="/eluyun/static/js/validation.js"></script>
+  <script src="/eluyun/static/js/ajaxurl.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -32,85 +35,85 @@
           <h2>基本信息</h2>
           <ul>
             <li>
-              <label for="name">娱乐名称</label>
-              <input type="text" class="text" id="name" placeholder="用于展示给客户">
+              <label for="createETName">娱乐名称</label>
+              <input type="text" class="text" id="createETName" placeholder="用于展示给客户">
             </li>
             <li>
-              <label for="shortName">简称</label>
-              <input type="text" class="text" id="shortName" placeholder="用于自己管理">
+              <label for="createETShortName">简称</label>
+              <input type="text" class="text" id="createETShortName" placeholder="用于自己管理">
             </li>
             <li>
-              <label for="unit">单位</label>
-              <input type="text" class="text" id="unit" placeholder="例如：次/辆">
+              <label for="createETUnit">单位</label>
+              <input type="text" class="text" id="createETUnit" placeholder="例如：次/辆">
             </li>
             <li>
-              <label for="number">适用人数</label>
-              <input type="text" class="text" id="number" placeholder="请填写纯数字">
+              <label for="createETFitNum">适用人数</label>
+              <input type="text" class="text" id="createETFitNum" placeholder="请填写纯数字">
             </li>
             <li>
-              <label for="inventory">默认库存</label>
-              <input type="text" class="text" id="inventory" placeholder="请填写纯数字">
+              <label for="createETInventory">默认库存</label>
+              <input type="text" class="text" id="createETInventory" placeholder="请填写纯数字">
             </li>
             <li>
-              <label for="price">单价</label>
-              <input type="text" class="text" id="price" placeholder="请填写纯数字">
+              <label for="createETPrice">单价</label>
+              <input type="text" class="text" id="createETPrice" placeholder="请填写纯数字">
             </li>
             <li>
-              <label for="description">描述</label>
-              <textarea name="description" id="description" placeholder="请填写描述"></textarea>
+              <label for="createETDescription">描述</label>
+              <textarea name="description" id="createETDescription" placeholder="请填写描述"></textarea>
             </li>
           </ul>
         </form>
         <div class="footer">
           <button class="btn-cancel">取消</button>
-          <button class="btn-ok">确认</button>
+          <button class="btn-ok" id="createETOk">确认</button>
         </div>
       </div>
     </div>
   </div>
 </div>
   <!-- 编辑基本信息 -->
-  <div class="modal fade" role="dialog" id="editBasicInfo">
+  <div class="modal fade" role="dialog" id="editET">
     <div class="modal-dialog modal-w626">
       <div class="modal-content clearfloat">
-        <div class="editBasicInfo clearfloat">
+        <div class="editET clearfloat">
           <form class="inputFiled">
             <h1>新增娱乐</h1>
             <h2>基本信息</h2>
             <ul>
               <li>
-                <label for="name2">娱乐名称</label>
-                <input type="text" class="text" id="name2" placeholder="用于展示给客户">
+                <label for="editETName">娱乐名称</label>
+                <input type="text" class="text" id="editETName" placeholder="用于展示给客户">
               </li>
               <li>
-                <label for="shortName2">简称</label>
-                <input type="text" class="text" id="shortName2" placeholder="用于自己管理">
+                <label for="editETShortName">简称</label>
+                <input type="text" class="text" id="editETShortName" placeholder="用于自己管理">
               </li>
               <li>
-                <label for="unit2">单位</label>
-                <input type="text" class="text" id="unit2" placeholder="例如：次/辆">
+                <label for="editETUnit">单位</label>
+                <input type="text" class="text" id="editETUnit" placeholder="例如：次/辆">
               </li>
               <li>
-                <label for="number2">适用人数</label>
-                <input type="text" class="text" id="number2" placeholder="请填写纯数字">
+                <label for="editETFitNum">适用人数</label>
+                <input type="text" class="text" id="editETFitNum" placeholder="请填写纯数字">
               </li>
               <li>
-                <label for="inventory2">默认库存</label>
-                <input type="text" class="text" id="inventory2" placeholder="请填写纯数字">
+                <label for="editETInventory">默认库存</label>
+                <input type="text" class="text" id="editETInventory" placeholder="请填写纯数字">
               </li>
               <li>
-                <label for="price2">单价</label>
-                <input type="text" class="text" id="price2" placeholder="请填写纯数字">
+                <label for="editETPrice">单价</label>
+                <input type="text" class="text" id="editETPrice" placeholder="请填写纯数字">
               </li>
               <li>
-                <label for="description2">描述</label>
-                <textarea name="description" id="description2" placeholder="请填写描述"></textarea>
+                <label for="editETDescription">描述</label>
+                <textarea name="description" id="editETDescription" placeholder="请填写描述"></textarea>
               </li>
             </ul>
           </form>
           <div class="footer">
             <button class="btn-cancel">取消</button>
-            <button class="btn-ok">确认</button>
+            <button class="btn-ok" id="editETOk">确认</button>
           </div>
         </div>
       </div>
@@ -183,7 +186,7 @@
   <div class="mainContainer">
     <div class="content">
       <div class="title">
-        <span class="campName">千岛湖星空帐篷营地</span>
+        <span class="campName"></span>
         <div class="create" data-toggle="modal" data-target="#createEnt">
           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
           <span>新增娱乐</span>
@@ -191,41 +194,43 @@
       </div>
         <div class="categoryGrid">
           <table>
-            <tr class="head">
-              <th>娱乐</th>
-              <th>简称</th>
-              <th>单位</th>
-              <th>适用人数</th>
-              <th>默认库存</th>
-              <th>单价</th>
-              <th>描述</th>
-            </tr>
-            </tr>
+            <thead>
+              <tr class="head">
+                <th>娱乐</th>
+                <th>简称</th>
+                <th>单位</th>
+                <th>适用人数</th>
+                <th>默认库存</th>
+                <th>单价</th>
+                <th>描述</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
           </table>
         </div>
       <div class="operate">
         <div class="first clearfloat">
-          <div class="operateItem">
-            <div class="clickDiv" data-toggle="modal" data-target="#editBasicInfo">
+          <div class="operateItem hide">
+            <div class="clickDiv" id="editETButton" data-toggle="modal" data-target="#editBasicInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
           </div>
-          <div class="operateItem">
-            <div class="clickDiv">
+          <div class="operateItem hide">
+            <div class="clickDiv" id="deleteETButton">
               <img src="/eluyun//static/image/icon_shanchu.png" alt="">
               <p>删除</p>
             </div>
           </div>
         </div>
         <div class="second clearfloat">
-          <div class="operateItem">
+          <div class="operateItem hide">
             <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p>
             </div>
           </div>
-          <div class="operateItem">
+          <div class="operateItem hide">
             <div class="clickDiv">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
@@ -236,5 +241,164 @@
       </div>
     </div>
   </div>
+  <script>
+    //列表对象
+    var ETCategoryList = new Object;
+    //渲染
+    ETCategoryList.render = function(){
+      var str = "";
+      $.each(ETCategoryList.list, function(index, element){
+        str += "<tr class='mainClass'>" +
+                "<td>" + element.name + "</td>" +
+                "<td>" + element.shortName + "</td>" +
+                "<td>" + element.unit + "</td>" +
+                "<td>" + element.fitNum + "</td>" +
+                "<td>" + element.inventory + "</td>" +
+                "<td>" + element.price + "</td>" +
+                "<td>" + element.description + "</td>" +
+                "<input type='hidden' value=" + element.id + " /></tr>";
+      });
+      $(".categoryGrid tbody").html(str);
+      $(".mainClass").on("click", function(){
+        $(".mainClass").removeClass("mainActive");
+        $(".subclass").removeClass("subActive");
+        $(this).addClass("mainActive");
+        $(".operateItem").removeClass("hide");
+      })
+    };
+    //判断空属性
+    function emptyFilter(data){
+      $.each(data, function(index, element){
+        for (var name in element) {
+          if (element[name] == null || element[name] == undefined) {
+            element[name] = "";
+          }
+        }
+      });
+      return data;
+    }
+    //session失效验证
+    function sessionValidate(data){
+      if (data.code == 14) {
+        location.href = "/eluyun/view/loginTest.html";
+      }
+    }
+    //读取娱乐品类列表
+    function loadETCategoryList(){
+      $.ajax({
+        url: host + pullOtherCategoryListUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {type: 2},
+        success: function(result){
+          ETCategoryList.list = result.data.list;
+          ETCategoryList.render();
+        },
+        dataFilter: function(result){
+          result = JSON.parse(result);
+          sessionValidate(result);
+          result.data.list = emptyFilter(result.data.list);
+          return JSON.stringify(result);
+        }
+      });
+    }
+    //添加
+    function addETCategory(){
+      var item = {
+        name: $("#createETName").val(),
+        shortName: $("#createETShortName").val(),
+        unit: $("#createETUnit").val(),
+        fitNum: $("#createETFitNum").val(),
+        inventory: $("#createETInventory").val(),
+        price: $("#createETPrice").val(),
+        description: $("#createETDescription").val(),
+        type: 2
+      };
+      $.ajax({
+        url: host + addOrEditExtraCategory + ";jsessionid=" + $.cookie("jsessionid"),
+        type: "POST",
+        data: item,
+        success: function(result){
+          item.id = result.data.id;
+          ETCategoryList.list.push(item);
+          ETCategoryList.render();
+        }
+      })
+    }
+    //编辑基本信息
+    function editETCategory(){
+      var item = {
+        id: $(".mainActive input").val(),
+        name: $("#editETName").val(),
+        shortName: $("#editETShortName").val(),
+        unit: $("#editETUnit").val(),
+        fitNum: $("#editETFitNum").val(),
+        inventory: $("#editETInventory").val(),
+        price: $("#editETPrice").val(),
+        description: $("#editETDescription").val(),
+        type: 2
+      };
+      $.ajax({
+        url: host + addOrEditExtraCategory + ";jsessionid=" + $.cookie("jsessionid"),
+        type: "POST",
+        data: item,
+        success: function(){
+          $.each(ETCategoryList.list, function(index, element){
+            if (element.id == item.id) {
+              ETCategoryList.list[index] = item;
+              return false; //等于break
+            }
+          });
+          ETCategoryList.render();
+        }
+      });
+    }
+    //删除
+    function deleteETCategory(){
+      var id = $(".mainActive input").val();
+      $.ajax({
+        url: host + deleteOtherCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {id: id},
+        success: function(){
+          $.each(ETCategoryList.list, function(index, element){
+            if (element.id == id) {
+              ETCategoryList.list.splice(index, 1);
+              return false; //等于break
+            }
+          });
+          ETCategoryList.render();
+        }
+      });
+    }
+    $(function(){
+      $("form").validate();
+      //读取营地名称和用户名
+      $(".campName").html(localStorage.getItem("campName"));
+      $(".userName").find("a").html(localStorage.getItem("userName"));
+      loadETCategoryList();
+    });
+    $("#createETOk").on("click", function(){
+      var that = this;
+      addETCategory();
+      clearModal(that);
+    });
+    $("#editETOk").on("click", function(){
+      var that = this;
+      editETCategory();
+      clearModal(that);
+    });
+    $("#editETButton").on("click", function(){
+      $("#editETName").val($(".mainActive td:eq(0)").html());
+      $("#editETShortName").val($(".mainActive td:eq(1)").html());
+      $("#editETUnit").val($(".mainActive td:eq(2)").html());
+      $("#editETFitNum").val($(".mainActive td:eq(3)").html());
+      $("#ediETInventory").val($(".mainActive td:eq(4)").html());
+      $("#editETPrice").val($(".mainActive td:eq(5)").html());
+      $("#editETDescription").val($(".mainActive td:eq(6)").html());
+    });
+    $("#deleteETButton").on("click", function(){
+      confirmCallback = deleteETCategory;
+      dialogConfig = {title:"提示", message:"您确定要删除吗？"};
+      confirmDialog(dialogConfig,confirmCallback);
+    })
+  </script>
 </body>
 </html>

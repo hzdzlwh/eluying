@@ -80,7 +80,8 @@ nav {
     }
 }
 .mainContainer {
-    position: relative;
+    position: absolute;
+    top: 52px;
     left: 50%;
     width: 1200px;
     margin-left: -600px;
@@ -120,11 +121,13 @@ nav {
         }
     }
     .content {
-        position: relative;
+        position: absolute;
+        left: 65px;
         float: left;
         margin: 40px 0 0 30px;
         width: 1105px;
             .title {
+                height: 41px;
                 .campName {
                     color: #4A90E2;
                     font-size: 31px;

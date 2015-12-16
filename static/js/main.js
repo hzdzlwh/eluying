@@ -28,6 +28,7 @@ function centerModals(){
 function clearModal(that){
     $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find("input").val(""); //将输入框清空
+    $(that).parents(".modal").find("textarea").html("");
     $(that).parents(".modal").find("tbody").html(""); //将表单清空
     if ($(that).parents(".modal").find("form").length != 0) {
         $(that).parents(".modal").find("form").validate().resetForm();
@@ -58,6 +59,9 @@ function confirmDialog(dialogConfig,confirmCallback){
     centerModals();
     $('#confirmDialogOk').on("click", function(){
         confirmCallback&&confirmCallback();
+        $("#confirmDialog").modal("hide");
+        $(".modal-backdrop").remove();
+        $("#confirmDialog").remove();
     });
     $('#confirmDialogCancel').on("click", function(){
         $("#confirmDialog").modal("hide");
@@ -114,7 +118,7 @@ $(document).ready(function(){
 
     //退出登录
     $('#logout').click(function(){
-        $.get("http://192.168.0.2:8082/mg/user/logout;jsessionid=" + $.cookie("jsessionid"));
+        $.get(host + logout + ";jsessionid=" + $.cookie("jsessionid"));
         $.cookie("campName", "", {path: "/"});
         $.cookie("userName", "", {path: "/"});
         $.cookie("jsessionid", "", {path: "/"});

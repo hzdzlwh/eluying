@@ -14,8 +14,6 @@
                 }
             }
         }
-
-
     }
 }
 
@@ -46,5 +44,11 @@
             text-align: center;
             color: #FFF;
         }
+    }
+}
+
+#roomCategoryList {
+    div {
+        display: none;
     }
 }
