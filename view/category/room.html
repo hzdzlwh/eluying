@@ -31,19 +31,19 @@
               <h1>新增房型</h1>
               <h2>基本信息</h2>
               <ul>
-                <li><label for="roomName">房型名称</label>
-                  <input id="roomName" type="text" class="text" placeholder="用于展示给客户" /></li>
-                <li><label for="shortName">简称</label>
-                  <input type="text" class="text" id="shortName" placeholder="用于自己管理" /></li>
-                <li><label for="price">价格</label>
-                  <input type="text" class="text" id="price" placeholder="请填写纯数字" />
+                <li><label for="createRoomName">房型名称</label>
+                  <input id="createRoomName" type="text" class="text" placeholder="用于展示给客户" /></li>
+                <li><label for="createRoomshortName">简称</label>
+                  <input type="text" class="text" id="createRoomshortName" placeholder="用于自己管理" /></li>
+                <li><label for="createRoomPrice">价格</label>
+                  <input type="text" class="text" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
-                <li><label for="population">可容纳人数</label>
-                  <input type="text" class="text" id="population" placeholder="请填写纯数字" /></li>
-                <li><label for="category">单位</label>
-                  <input type="text" class="text" id="category" placeholder="请填写单位" /></li>
-                <li><label for="quantity">默认房间数</label>
-                  <input type="text" class="text" id="quantity" placeholder="请填写纯数字" />
+                <li><label for="createRoomFitNum">可容纳人数</label>
+                  <input type="text" class="text" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
+                <li><label for="createRoomUnit">单位</label>
+                  <input type="text" class="text" id="createRoomUnit" placeholder="请填写单位" /></li>
+                <li><label for="createRoomInventory">默认房间数</label>
+                  <input type="text" class="text" id="createRoomInventory" placeholder="请填写纯数字" />
                   <p>可以在房态管理中，管理每天的房间库存</p></li>
               </ul>
           </div>
@@ -57,24 +57,27 @@
             </div>
             <div class="border-top-4px grid">
               <table>
-                <tr class="head">
-                  <th>名称</th>
-                  <th>简称</th>
-                  <th>房间数</th>
-                </tr>
+                <thead>
+                  <tr class="head">
+                    <th>名称</th>
+                    <th>简称</th>
+                    <th>房间数</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
               </table>
             </div>
           </div>
           <div class="operate">
             <div class="first">
-              <div class="leftOperate">
-                <div class="clickDiv"  data-toggle="modal" data-target="#editSubclass">
+              <div class="operateItem hide">
+                <div class="clickDiv" id="createRoomEdit" data-toggle="modal" data-target="#editSubclass">
                   <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                   <p>编辑信息</p>
                 </div>
               </div>
-              <div class="rightOperate">
-                <div class="clickDiv">
+              <div class="operateItem hide">
+                <div id="createRoomDelete" class="clickDiv">
                   <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                   <p>删除</p>
                 </div>
@@ -147,13 +150,13 @@
           </div>
           <div class="operate">
             <div class="first">
-              <div class="leftOperate">
+              <div class="operateItem">
                 <div class="clickDiv" data-toggle="modal" data-target="#editSubclass">
                   <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                   <p>编辑信息</p>
                 </div>
               </div>
-              <div class="rightOperate">
+              <div class="operateItem">
                 <div class="clickDiv">
                   <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                   <p>删除</p>
@@ -178,22 +181,22 @@
             <h1>新增子类</h1>
             <ul>
               <li>
-                <label for="name3">名称</label>
-                <input type="text" class="text" id="name3" placeholder="用于展示给客户">
+                <label for="createSubclassName">名称</label>
+                <input type="text" class="text" id="createSubclassName" placeholder="用于展示给客户">
               </li>
               <li>
-                <label for="shortName3">简称</label>
-                <input type="text" class="text" id="shortName3" placeholder="用于自己管理">
+                <label for="createSubclassShortName">简称</label>
+                <input type="text" class="text" id="createSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
-                <label for="quantity3">房间数</label>
-                <input type="text" class="text" id="quantity3" placeholder="请填写纯数字">
+                <label for="createSubclassInventory">房间数</label>
+                <input type="text" class="text" id="createSubclassInventory" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
           <div class="footer">
             <button class="btn-cancel">取消</button>
-            <button class="btn-ok">确认</button>
+            <button class="btn-ok" id="createSubclassOk">确认</button>
           </div>
         </div>
       </div>
@@ -208,22 +211,22 @@
             <h1>编辑子类</h1>
             <ul>
               <li>
-                <label for="name4">名称</label>
-                <input type="text" class="text" id="name4" placeholder="用于展示给客户">
+                <label for="editSubclassName">名称</label>
+                <input type="text" class="text" id="editSubclassName" placeholder="用于展示给客户">
               </li>
               <li>
-                <label for="shortName4">简称</label>
-                <input type="text" class="text" id="shortName4" placeholder="用于自己管理">
+                <label for="editSubclassShortName">简称</label>
+                <input type="text" class="text" id="editSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
-                <label for="quantity4">房间数</label>
-                <input type="text" class="text" id="quantity4" placeholder="请填写纯数字">
+                <label for="editSubclassInventory">房间数</label>
+                <input type="text" class="text" id="editSubclassInventory" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
           <div class="footer">
             <button class="btn-cancel" id="editSubclassCancel">取消</button>
-            <button class="btn-ok">取消</button>
+            <button class="btn-ok" id="editSubclassOk">确认</button>
           </div>
         </div>
       </div>
@@ -238,8 +241,8 @@
             <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs clearfloat" role="tablist">
-              <li role="presentation" class="active leftTab"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
-              <li role="presentation" class="rightTab"><a class="rightTab" href="#facility" aria-controls="facility" role="tab" data-toggle="tab">房型设施</a></li>
+              <li role="presentation" class="active leftTab nav-tabs-li"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
+              <li role="presentation" class="rightTab nav-tabs-li"><a class="rightTab" href="#facility" aria-controls="facility" role="tab" data-toggle="tab">房型设施</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content clearfloat">
@@ -294,21 +297,21 @@
                   </div>
                   <div class="operate">
                     <div class="first">
-                      <div class="leftOperate">
+                      <div class="operateItem">
                         <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                         <p>替换图片</p>
                       </div>
-                      <div class="rightOperate">
+                      <div class="operateItem">
                         <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
                       </div>
                     </div>
                     <div class="second">
-                      <div class="leftOperate">
+                      <div class="operateItem">
                         <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                         <p>替换图片</p>
                       </div>
-                      <div class="rightOperate">
+                      <div class="operateItem">
                         <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
                       </div>
@@ -379,13 +382,13 @@
                 </div>
                 <div class="operate">
                   <div class="first">
-                    <div class="leftOperate">
+                    <div class="operateItem">
                       <div class="clickDiv">
                         <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                         <p>编辑信息</p>
                       </div>
                     </div>
-                    <div class="rightOperate">
+                    <div class="operateItem">
                       <div class="clickDiv">
                         <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
@@ -522,7 +525,7 @@
   <!-- 页面主体 -->
   <div class="mainContainer">
     <div class="content clearfloat">
-      <div class="title">
+      <div class="title clearfloat">
         <span class="campName"></span>
         <div class="create" data-toggle="modal" data-target="#createRoom">
           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
@@ -546,25 +549,25 @@
       </div>
       <div class="operate">
         <div class="first clearfloat">
-          <div class="leftOperate">
+          <div class="operateItem">
             <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement">
               <img src="/eluyun/static/image/icon_zileiguanli.png" alt="">
               <p>子类管理</p>
             </div>
           </div>
-          <div class="rightOperate">
+          <div class="operateItem">
             <div class="clickDiv" data-toggle="modal" data-target="#editBasicInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
           </div>
-          <div class="leftOperate">
-            <div class="clickDiv">
+          <div class="operateItem">
+            <div class="clickDiv" id="delete">
               <img src="/eluyun/static/image/icon_shanchu.png" alt="">
               <p>删除</p>
             </div>
           </div>
-          <div class="rightOperate">
+          <div class="operateItem">
             <div class="clickDiv" data-toggle="modal" data-target="#editRoom">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑房间</p>
@@ -572,12 +575,12 @@
           </div>
         </div>
         <div class="second clearfloat">
-          <div class="leftOperate">
+          <div class="operateItem">
             <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p></div>
           </div>
-          <div class="rightOperate">
+          <div class="operateItem">
             <div class="clickDiv">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
@@ -590,30 +593,12 @@
   </div>
   <script>
     $(function(){
-      $(".subclass").hide();
-      $(".subclass div").hide();
+      //读取营地名称和用户名
       $(".campName").html($.cookie("campName"));
       $(".userName").find("a").html($.cookie("userName"));
-      $.ajax({
-        xhrFields: { withCredentials: true },
-        url: "http://192.168.1.2:8082/mg/category/getRoomCategoryList",
-        success: function(result){
-          console.log(result);
-          var str = "";
-          $.each(result.data.list, function(index,element){
-            str += "<tr class='mainClass'><td><span>" + element.name + "</span>";
-            if (element.hasSub) {
-              str += "<img src='/eluyun/static/image/rotate.png'>";
-            }
-            str += "</td><td>" + element.shortName + "</td><td>"
-                  + element.unit + "</td><td>" + element.fitNum
-                  + "</td><td>" + element.inventory + "</td><td>"
-                  + element.price + "</td></tr>";
-          })
-          $("#roomCategoryList").html(str);
-        }
-      })
+      loadRoomCategoryList();
     });
+    //点击房型主类，展开
     $(".mainClass").click(function(){
       var that = $(this);
       if ($(this).nextUntil(".mainClass").css("display") == "none") {
@@ -628,6 +613,100 @@
         }, 300);
       }
     });
+    //点击新增子类的确定按钮
+    $("#createSubclassOk").on("click", function(){
+      $("#createRoom tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
+              + "</td><td>"+ $("#createSubclassShortName").val()+"</td><td>"+ $("#createSubclassInventory").val()+"</td></tr>");
+      bindMainActive();
+      $("#createRoom tr").on("click", function(){
+        $("#createRoomEdit").parent().removeClass("hide");
+        $("#createRoomDelete").parent().removeClass("hide");
+      });
+      $("#createSubclass").modal("hide");
+      $("#createSubclass").find("input").val("");
+    });
+    //新增房型确认按钮
+    $("#createRoomOk").on("click", function(){
+      var that = this;
+      var subList = [];
+      $("#createRoom tbody tr").each(function(){
+        subList.push({
+          name: $(this).find("td:eq(0)").html(),
+          shortName: $(this).find("td:eq(1)").html(),
+          inventory: $(this).find("td:eq(2)").html()
+        });
+      });
+      $.ajax({
+        url: "http://192.168.0.2:8082/mg/category/addAccommodation;jsessionid=" + $.cookie("jsessionid"),
+        type: "POST",
+        data: {
+          name: $("#createRoomName").val(),
+          shortName: $("#createRoomshortName").val(),
+          price: $("#createRoomPrice").val(),
+          fitNum: $("#createRoomFitNum").val(),
+          unit: $("#createRoomUnit").val(),
+          inventory: $("#createRoomInventory").val(),
+          subTypeList: subList
+        },
+        success: function(){
+          clearModal(that);
+        }
+      });
+    });
+    //新增房型的时候编辑子类按钮
+    $("#createRoomEdit").on("click", function(){
+      $("#editSubclassName").val($("#createRoom tbody tr.mainActive").find("td:eq(0)").html());
+      $("#editSubclassShortName").val($("#createRoom tbody tr.mainActive").find("td:eq(1)").html());
+      $("#editSubclassInventory").val($("#createRoom tbody tr.mainActive").find("td:eq(2)").html());
+    });
+    //新增房型的时候删除子类按钮
+    $("#createRoomDelete").on("click", function(){
+      $("#createRoom tbody tr.mainActive").remove();
+    });
+    //编辑子类确定按钮
+    $("#editSubclassOk").on("click", function(){
+      var that = this;
+      $("#createRoom tbody tr.mainActive").html("<td>" + $("#editSubclassName").val()
+      + "</td><td>"+ $("#editSubclassShortName").val()+"</td><td>"+ $("#editSubclassInventory").val()+"</td>");
+      clearModal(that);
+    });
+    //删除
+    $("#delete").on("click", function(){
+      var dialogConfig = {title:"提示", message:"您确定要删除这条记录吗？"};
+      var confirmCallback = function(){
+        $(".categoryGrid .tr.active input").val();
+        alert("nihao");
+      };
+      confirmDialog(dialogConfig,confirmCallback);
+    });
+    //读取房型列表
+    function loadRoomCategoryList(){
+      $.ajax({
+        url: "http://121.41.109.105:8081/mg/category/getRoomCategoryList;jsessionid=" + $.cookie("jsessionid"),
+        success: function(result){
+          var str = "";
+          $.each(result.data.list, function(index,element){
+            str += "<tr class='mainClass'><td><span>" + element.name + "</span>"
+                    + "<img src='/eluyun/static/image/rotate.png'>"
+                    + "</td><td>" + element.shortName + "</td><td>"
+                    + element.unit + "</td><td>" + element.fitNum
+                    + "</td><td>" + element.inventory + "</td><td>"
+                    + element.price + "</td><input type='hidden' value=" + element.typeId + " /></tr>";
+          });
+          $("#roomCategoryList").html(str);
+          $(".mainClass").on("click", function(){
+            $(".mainClass").removeClass("mainActive");
+            $(".subclass").removeClass("subActive");
+            $(this).addClass("mainActive");
+          });
+          $(".subclass").on("click", function(){
+            $(".mainClass").removeClass("mainActive");
+            $(".subclass").removeClass("subActive");
+            $(this).addClass("subActive");
+          });
+        }
+      })
+    }
   </script>
 </body>
 </html>

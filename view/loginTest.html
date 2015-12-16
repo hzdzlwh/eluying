@@ -24,13 +24,12 @@
   <script>
     $("#login").click(function(){
       $.ajax({
-        xhrFields: { withCredentials: true },
-        url: "http://192.168.1.2:8082/mg/user/login",
+        url: "http://121.41.109.105:8081/mg/user/login",
         data: {loginName:"18268823900",password:"af9c5a5d3d9f"},
         success: function(result){
           $.cookie("campName", result.data.camps[0].name, {path: "/"});
           $.cookie("userName", result.data.userName, {path: "/"});
-          $.cookie("JSESSIONID", result.data.jsessionid, {path: "/"});
+          $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
           location.href="/eluyun/view/category/room.html";
         }
       })
