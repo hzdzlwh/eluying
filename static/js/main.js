@@ -29,6 +29,9 @@ function clearModal(that){
     $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find("input").val(""); //将输入框清空
     $(that).parents(".modal").find("tbody").html(""); //将表单清空
+    if ($(that).parents(".modal").find("form").length != 0) {
+        $(that).parents(".modal").find("form").validate().resetForm();
+    }
 }
 
 //确认弹出框

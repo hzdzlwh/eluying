@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <script src="/eluyun/bower_components/jquery.min.js"></script>
   <script src="/eluyun/static/js/jquery.cookie.js"></script>
+  <script src="/eluyun/static/js/jquery.validate.min.js"></script>
+  <script src="/eluyun/static/js/validation.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -20,6 +22,9 @@
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
   <script src="/eluyun/static/js/app/category/room/room.js"></script>
+  <script>
+
+  </script>
 </head>
 <body>
   <!-- 新增房型模态框 -->
@@ -27,26 +32,26 @@
     <div class="modal-dialog modal-w1130">
       <div class="modal-content clearfloat">
         <div class="createRoom clearfloat">
-          <div class="inputFiled rightBorder">
+          <form class="inputFiled rightBorder">
               <h1>新增房型</h1>
               <h2>基本信息</h2>
               <ul>
                 <li><label for="createRoomName">房型名称</label>
-                  <input id="createRoomName" type="text" class="text" placeholder="用于展示给客户" /></li>
-                <li><label for="createRoomshortName">简称</label>
-                  <input type="text" class="text" id="createRoomshortName" placeholder="用于自己管理" /></li>
+                  <input id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
+                <li><label for="createRoomShortName">简称</label>
+                  <input type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
-                  <input type="text" class="text" id="createRoomPrice" placeholder="请填写纯数字" />
+                  <input type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                 <li><label for="createRoomFitNum">可容纳人数</label>
-                  <input type="text" class="text" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
+                  <input type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
                 <li><label for="createRoomUnit">单位</label>
-                  <input type="text" class="text" id="createRoomUnit" placeholder="请填写单位" /></li>
+                  <input type="text" name="createRoomUnit" class="text required" id="createRoomUnit" placeholder="请填写单位" /></li>
                 <li><label for="createRoomInventory">默认房间数</label>
-                  <input type="text" class="text" id="createRoomInventory" placeholder="请填写纯数字" />
+                  <input type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
                   <p>可以在房态管理中，管理每天的房间库存</p></li>
               </ul>
-          </div>
+          </form>
           <div class="mid clearfloat">
             <div class="title">
               <h2>管理子类</h2>
@@ -593,6 +598,13 @@
   </div>
   <script>
     $(function(){
+      $("form").validate({
+        debug: true,
+        submitHandler: function(form)
+        {
+          $(form).ajaxSubmit();
+        }
+    });
       //读取营地名称和用户名
       $(".campName").html($.cookie("campName"));
       $(".userName").find("a").html($.cookie("userName"));
@@ -627,6 +639,9 @@
     });
     //新增房型确认按钮
     $("#createRoomOk").on("click", function(){
+      if (!$("#createRoom form").valid()) {
+        return;
+      }
       var that = this;
       var subList = [];
       $("#createRoom tbody tr").each(function(){
@@ -641,7 +656,7 @@
         type: "POST",
         data: {
           name: $("#createRoomName").val(),
-          shortName: $("#createRoomshortName").val(),
+          shortName: $("#createRoomShortName").val(),
           price: $("#createRoomPrice").val(),
           fitNum: $("#createRoomFitNum").val(),
           unit: $("#createRoomUnit").val(),

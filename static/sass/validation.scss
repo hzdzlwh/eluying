@@ -1,0 +1,17 @@
+.inputFiled {
+    input.error {
+        border: 1px solid red !important;
+    }
+    label.error {
+        display: block !important;
+        color: red !important;
+        font-size: 12px !important;
+        width: 350px !important;
+        text-align: left !important;
+        height: 16px !important;
+        margin-top: -14px !important;
+        margin-bottom: 10px !important;
+        _margin-bottom: -10px !important;
+    }
+}
+
