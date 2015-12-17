@@ -418,107 +418,6 @@
       <div class="modal-content clearfloat">
         <div class="editRoom clearfloat">
           <div class="roomContainer clearfloat">
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-              <input type="hidden" />
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
-            <div class="room">
-              <img src="/eluyun/static/image/ic_close.png">
-              <p>房间001</p>
-            </div>
           </div>
           <div class="footer">
             <button class="btn-cancel">取消</button>
@@ -576,7 +475,7 @@
             </div>
           </div>
           <div class="operateItem hide editSubRoomButton">
-            <div class="clickDiv" data-toggle="modal" data-target="#editRoom" id="editSubRoom">
+            <div class="clickDiv" data-toggle="modal" data-target="#editRoom" id="editSubRoomButton">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑房间</p>
             </div>
@@ -602,6 +501,7 @@
   <script>
     //列表对象
     var roomCategoryList = {};
+    var subRoomList = {};
     //渲染
     roomCategoryList.render = function() {
       var str = "";
@@ -680,6 +580,27 @@
       }
     }
 
+    //读取房间列表
+    function loadSubRoom(id){
+      var str = "";
+      $.ajax({
+        url: host + loadSubRoomUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {id: id},
+        success: function(result){
+          $.each(result.data.list, function(index, element){
+            str = "<div class='room'><img src='/eluyun/static/image/ic_close.png' /><p>"
+            + element.serialNum + "</p><input type='hidden' value='" + element.id + "' /><input type='hidden' value='0'></div>"
+          });
+          $(".roomContainer").html(str);
+        },
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        }
+      })
+    }
+
     //读取房型列表
     function loadRoomCategoryList() {
       $.ajax({
@@ -713,7 +634,6 @@
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
           sessionValidate(result);
-          result.data.list = emptyFilter(result.data.list);
           return JSON.stringify(result); //再转为字符串传回去
         }
       });
@@ -739,7 +659,6 @@
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
           sessionValidate(result);
-          result.data.list = emptyFilter(result.data.list);
           return JSON.stringify(result); //再转为字符串传回去
         }
       });
@@ -954,6 +873,13 @@
     $("#createRoomButton").on("click", function(){
       $("#createRoom tbody").html("");
     });
+
+    //点击编辑房间
+    $("#editSubRoomButton").on("click", function(){
+      var id = $(".subActive .id").val();
+      loadSubRoom(id);
+    });
+
     $(function() {
       $("form").validate();
       //读取营地名称和用户名
