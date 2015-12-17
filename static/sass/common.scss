@@ -138,13 +138,24 @@
 }
 
 .subActive {
+    div.first {
+        border-left: 2px solid #FFF;
+        margin-left: 2px;
+        padding-left: 13px !important;
+    }
+
+    div.last {
+        border-right: 2px solid #FFF;
+        margin-right: 2px;
+    }
+
     div {
         border-top: 2px #FFF solid;
         border-bottom: 2px #FFF solid;
         margin-top: 2px;
         margin-bottom: 2px;
-        padding-top: -2px;
-        padding-bottom: -2px;
+        height: 55px !important;
+        line-height: 51px !important;
     }
 }
 

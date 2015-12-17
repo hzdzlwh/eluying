@@ -30,6 +30,9 @@
       $.ajax({
         url: host + loginUrl,
         data: {loginName:"13588361419",password:"123456"},
+        error: function(){
+          alert("服务器挂了")
+        },
         success: function(result){
           localStorage.setItem("campName", result.data.camps[0].name);
           localStorage.setItem("userName", result.data.userName);

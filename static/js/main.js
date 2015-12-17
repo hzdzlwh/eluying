@@ -68,30 +68,42 @@ function confirmDialog(dialogConfig,confirmCallback){
         $(".modal-backdrop").remove();
         $("#confirmDialog").remove();
     });
-};
+}
+
+function mainContainer(){
+    var width = document.body.clientWidth - 65;
+    if (width < 1135) {
+        width = 1135;
+    }
+    $(".mainContainer").css("width", width);
+
+}
 
 $(document).ready(function(){
+    mainContainer();
     //顶部导航栏
-    $("body").prepend("<nav>"
-        + "<div class='myContainer clearfloat'>"
-        + "<a class='logo' href='#'>易露云</a>"
-        + "<ul>"
-        + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"
-        + "<li><a id='priceMenu' href='#'>价格维护</a></li>"
-        + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
-        + "</ul>"
-        + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
-        + "<div class='userName'>"
-        + "<a href='#'></a>"
+    $("body").prepend("<div class='header clearfloat'>"
+            + "<a class='logo' href='#'>易露云</a>"
+            + "<ul>"
+                + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"
+                + "<li><a id='priceMenu' href='#'>价格维护</a></li>"
+                + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
+            + "</ul>"
+            + "<div class='right'>"
+                + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
+                + "<div class='userName'>"
+                    + "<a href='#'></a>"
+                + "</div>"
+                + "<div class='line'></div>"
+                + "<div class='logout'>"
+                    + "<a href='javascript:void(0)' id='logout'>退出账户</a>"
+                + "</div>"
+            + "</div>"
         + "</div>"
-        + "<div class='line'></div>"
-        + "<div class='logout'>"
-        + "<a href='javascript:void(0)' id='logout'>退出账户</a>"
-        + "</div>"
-        + "</div>"
-        + "</nav>");
+        );
+
     //左侧菜单
-    $(".mainContainer").prepend("<div class='menu'>"
+    $(".header").after("<div class='leftMenu'>"
         + "<ul>"
         + "<li><a id='roomMenu' class='pie' href='/eluyun/view/category/room.html'>住宿</a></li>"
         + "<li><a id='foodMenu' href='/eluyun/view/category/food.html'>餐饮</a></li>"
@@ -108,7 +120,10 @@ $(document).ready(function(){
 
     //绑定模态框居中
     $('.modal').on('show.bs.modal', centerModals);
-    $(window).on('resize', centerModals);
+    $(window).on('resize', function(){
+        centerModals();
+        mainContainer();
+    });
 
     //绑定模态框取消按钮
     $(".btn-cancel").on("click", function(){
@@ -118,7 +133,7 @@ $(document).ready(function(){
 
     //退出登录
     $('#logout').click(function(){
-        $.get(host + logout + ";jsessionid=" + $.cookie("jsessionid"));
+        $.get(host + logoutUrl + ";jsessionid=" + $.cookie("jsessionid"));
         $.cookie("campName", "", {path: "/"});
         $.cookie("userName", "", {path: "/"});
         $.cookie("jsessionid", "", {path: "/"});
