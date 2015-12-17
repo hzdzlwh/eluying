@@ -26,6 +26,7 @@ function centerModals(){
 
 //关闭模态框
 function clearModal(that){
+    $(that).parents(".modal").find(".operateItem").addClass("hide");
     $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find("input").val(""); //将输入框清空
     $(that).parents(".modal").find("textarea").html("");

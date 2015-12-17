@@ -6,4 +6,6 @@ var pullOtherCategoryListUrl = "/category/pullOtherCategoryList";
 var deleteOtherCategoryUrl = "/category/deleteOtherCategory";
 var addOrEditExtraCategoryUrl = "/category/addOrEditOtherCategory";
 var editRoomBasicUrl = "/category/modifyAccommodationBaseInfo";
+var deleteRoomUrl = "/category/deleteAccommodationCategory";
+var subclassManageUrl = "/category/modifySubCategory";
 var logoutUrl = "/mg/user/logout";

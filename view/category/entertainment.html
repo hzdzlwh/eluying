@@ -163,7 +163,7 @@
                   <p>删除</p>
                 </div>
               </div>
-              <div class="second">
+              <div class="second hide">
                 <div class="operateItem">
                   <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                   <p>替换图片</p>
@@ -223,7 +223,7 @@
             </div>
           </div>
         </div>
-        <div class="second clearfloat">
+        <div class="second clearfloat hide">
           <div class="operateItem hide">
             <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
@@ -259,11 +259,14 @@
                 "<input type='hidden' value=" + element.id + " /></tr>";
       });
       $(".categoryGrid tbody").html(str);
+      $(".operateItem").addClass("hide");
+      $(".second").addClass("hide");
       $(".mainClass").on("click", function(){
         $(".mainClass").removeClass("mainActive");
         $(".subclass").removeClass("subActive");
         $(this).addClass("mainActive");
         $(".operateItem").removeClass("hide");
+        $(".second").removeClass("hide");
       })
     };
     //判断空属性

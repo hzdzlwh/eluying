@@ -118,9 +118,6 @@
                               <input type="text" id="editRoomFitNum" class="text" placeholder="请填写纯数字" /></li>
                           <li><label for="editRoomUnit">单位</label>
                               <input type="text" id="editRoomUnit" class="text" placeholder="请填写单位" /></li>
-                          <li><label for="editRoomInventory">默认房间数</label>
-                              <input type="text" id="editRoomInventory" class="text" placeholder="请填写纯数字" />
-                              <p>可以在房态管理中，管理每天的房间库存</p></li>
                       </ul>
                   </div>
               </div>
@@ -146,24 +143,27 @@
             </div>
             <div class="border-top-4px grid">
               <table>
+                <thead>
                 <tr class="head">
                   <th>名称</th>
                   <th>简称</th>
                   <th>房间数</th>
                 </tr>
+                </thead>
+                <tbody></tbody>
               </table>
             </div>
           </div>
           <div class="operate">
             <div class="first">
-              <div class="operateItem">
-                <div class="clickDiv" data-toggle="modal" data-target="#editSubclass">
+              <div class="operateItem hide">
+                <div class="clickDiv" data-toggle="modal" data-target="#editSubclass" id="subManageEditButton">
                   <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                   <p>编辑信息</p>
                 </div>
               </div>
-              <div class="operateItem">
-                <div class="clickDiv">
+              <div class="operateItem hide">
+                <div class="clickDiv" id="deleteSubclassButton">
                   <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                   <p>删除</p>
                 </div>
@@ -533,7 +533,7 @@
     <div class="content clearfloat">
       <div class="title clearfloat">
         <span class="campName"></span>
-        <div class="create" data-toggle="modal" data-target="#createRoom">
+        <div class="create" data-toggle="modal" data-target="#createRoom" id="createRoomButton">
           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
           <span>新增房型</span>
         </div>
@@ -555,40 +555,40 @@
           </tbody>
         </table>
       </div>
-      <div class="operate">
+      <div class="operate mainOperate">
         <div class="first clearfloat" id="roomCategoryFirst">
-          <div class="operateItem">
-            <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement">
+          <div class="operateItem hide subclassManageButton">
+            <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement" id="subclassManageButton">
               <img src="/eluyun/static/image/icon_zileiguanli.png" alt="">
               <p>子类管理</p>
             </div>
           </div>
-          <div class="operateItem">
+          <div class="operateItem hide editBasicInfoButton">
             <div class="clickDiv" id="editBasicInfoButton" data-toggle="modal" data-target="#editBasicInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑基本信息</p>
             </div>
           </div>
-          <div class="operateItem">
-            <div class="clickDiv" id="delete">
+          <div class="operateItem hide deleteRoomButton">
+            <div class="clickDiv" id="deleteRoomButton">
               <img src="/eluyun/static/image/icon_shanchu.png" alt="">
               <p>删除</p>
             </div>
           </div>
-          <div class="operateItem">
-            <div class="clickDiv" data-toggle="modal" data-target="#editRoom">
+          <div class="operateItem hide editSubRoomButton">
+            <div class="clickDiv" data-toggle="modal" data-target="#editRoom" id="editSubRoom">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑房间</p>
             </div>
           </div>
         </div>
-        <div class="second clearfloat">
-          <div class="operateItem">
+        <div class="second clearfloat hide">
+          <div class="operateItem hide">
             <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p></div>
           </div>
-          <div class="operateItem">
+          <div class="operateItem hide">
             <div class="clickDiv">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
@@ -614,7 +614,7 @@
                 "<td>" + element.fitNum + "</td>" +
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
-                "<input type='hidden' value=" + element.id + " /></tr>";
+                "<input type='hidden' class='id' value=" + element.id + " /></tr>";
         $.each(element.subTypeList, function (index, subElement) {
           str += "<tr class='subclass hide'>" +
                   "<td><div class='first'>" + subElement.name + "</div></td>" +
@@ -623,10 +623,13 @@
                   "<td><div>" + element.fitNum + "</div></td>" +
                   "<td><div>" + subElement.inventory + "</div></td>" +
                   "<td><div class='last'>" + element.price + "</div></td>" +
-                  "<input type='hidden' value=" + subElement.id + " /></tr>";
+                  "<input type='hidden' class='id' value=" + subElement.id + " /></tr>";
         })
       });
       $(".categoryGrid tbody").html(str);
+      $(".operateItem").addClass("hide");
+      $(".second").addClass("hide");
+      //点击主类
       $(".mainClass").on("click", function(){
         $(".mainClass").removeClass("mainActive");
         $(".subclass").removeClass("subActive");
@@ -643,13 +646,21 @@
             that.nextUntil(".mainClass").addClass("hide");
           }, 300);
         }
+        $(".mainOperate .operateItem").removeClass("hide");
+        $(".mainOperate .second").removeClass("hide");
+        $(".mainOperate .editSubRoomButton").addClass("hide");
       });
+      //点击子类
       $(".subclass").on("click", function(){
         $(".mainClass").removeClass("mainActive");
         $(".subclass").removeClass("subActive");
         $(this).addClass("subActive");
+        $(".mainOperate .operateItem").addClass("hide");
+        $(".mainOperate .second").addClass("hide");
+        $(".mainOperate .editSubRoomButton").removeClass("hide")
       });
     };
+
     //判断空属性
     function emptyFilter(data){
       $.each(data, function(index, element){
@@ -661,12 +672,14 @@
       });
       return data;
     }
+
     //session失效验证
     function sessionValidate(data){
       if (data.code == 14) {
         location.href = "/eluyun/view/loginTest.html";
       }
     }
+
     //读取房型列表
     function loadRoomCategoryList() {
       $.ajax({
@@ -683,6 +696,7 @@
         }
       });
     }
+
     //新增房型
     function addRoom(data, that){
       data.subTypeList = JSON.stringify(data.subTypeList);
@@ -695,9 +709,16 @@
           roomCategoryList.list.push(data);
           roomCategoryList.render();
           clearModal(that);
+        },
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          result.data.list = emptyFilter(result.data.list);
+          return JSON.stringify(result); //再转为字符串传回去
         }
       });
     }
+
     //编辑房型基本信息
     function editRoomBasic(item){
       $.ajax({
@@ -707,14 +728,123 @@
         success: function(){
           $.each(roomCategoryList.list, function(index, element){
             if (element.id == item.id) {
-              roomCategoryList.list[index] = item;
+              for (var name in item) {
+                roomCategoryList.list[index][name] = item[name];
+              }
+              return false; //等于break
+            }
+          });
+          roomCategoryList.render();
+        },
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          result.data.list = emptyFilter(result.data.list);
+          return JSON.stringify(result); //再转为字符串传回去
+        }
+      });
+    }
+
+    //删除房型
+    function deleteRoom(){
+      var id = $(".mainActive input").val();
+      $.ajax({
+        url: host + deleteRoomUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {id: id},
+        success: function(){
+          $.each(roomCategoryList.list, function(index, element){
+            if (element.id == id) {
+              roomCategoryList.list.splice(index, 1);
+              return false; //等于break
+            }
+          });
+          roomCategoryList.render();
+        },
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        }
+      });
+    }
+
+    //子类管理
+    function subclassManage(item){
+      $.ajax({
+        url: host + subclassManageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        type: "POST",
+        data: {
+          id: item.id,
+          subTypeList: JSON.stringify(item.subTypeList)
+        },
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(){
+          $.each(roomCategoryList.list, function(index, element){
+            if (element.id == item.id) {
+              roomCategoryList.list[index].subTypeList = item.subTypeList;
               return false; //等于break
             }
           });
           roomCategoryList.render();
         }
-      });
+      })
     }
+
+    //点击子类管理按钮
+    $("#subclassManageButton").on("click", function(){
+      var str = "";
+      $(".mainActive").nextUntil(".mainClass").each(function(){
+        str += "<tr class='mainClass'><td>" + $(this).find("td:eq(0) div").html()
+                + "</td><td>"+ $(this).find("td:eq(1) div").html() +"</td><td>"+ $(this).find("td:eq(4) div").html() +"</td>"
+                + "<input type='hidden' class='id' value='" + $(this).find(".id").val()
+                + "'><input type='hidden' class='status' value='0'></tr>"
+      });
+      $("#subclassManagement").find("tbody").html(str);
+      $(".subclassManagement .mainClass").on("click", function() {
+        $("#subclassManagement .mainClass").removeClass("mainActive");
+        $(this).addClass("mainActive");
+        $(".subclassManagement .operateItem").removeClass("hide");
+      });
+    });
+    //子类管理编辑信息
+    $("#subManageEditButton").on("click", function(){
+      $("#editSubclassName").val($("#subclassManagement tr.mainActive").find("td:eq(0)").html());
+      $("#editSubclassShortName").val($("#subclassManagement tr.mainActive").find("td:eq(1)").html());
+      $("#editSubclassInventory").val($("#subclassManagement tr.mainActive").find("td:eq(2)").html());
+    });
+
+    //子类删除按钮
+    $("#deleteSubclassButton").on("click", function(){
+      $("#subclassManagement tr.mainActive .status").val("1");
+      $("#subclassManagement tr.mainActive").hide();
+      $("#subclassManagement tr.mainActive").removeClass("mainActive");
+    });
+
+    //子类管理确认按钮
+    $("#subclassManagementOk").on("click", function(){
+      var subTypeList = [];
+      $("#subclassManagement .mainClass").each(function(){
+        subTypeList.push({
+          id: $(this).find(".id").val(),
+          inventory: $(this).find("td:eq(2)").html(),
+          name: $(this).find("td:eq(0)").html(),
+          shortName: $(this).find("td:eq(1)").html(),
+          status: $(this).find(".status").val()
+        })
+      });
+      var item = {
+        id: $("#roomCategoryList .mainActive .id").val(),
+        subTypeList: subTypeList
+      };
+      subclassManage(item);
+      var that = this;
+      clearModal(that);
+    });
+
     //点击编辑房型基本信息
     $("#editBasicInfoButton").on("click", function(){
       $("#editRoomName").val($(".mainActive td:eq(0) span").html());
@@ -722,33 +852,45 @@
       $("#editRoomPrice").val($(".mainActive td:eq(5)").html());
       $("#editRoomFitNum").val($(".mainActive td:eq(3)").html());
       $("#editRoomUnit").val($(".mainActive td:eq(2)").html());
-      $("#editFoodInventory").val($(".mainActive td:eq(4)").html());
     });
+
     //点击编辑房型基本信息确认按钮
     $("#editRoomBasicOk").on("click", function(){
+      var that = this;
       var item = {
         name: $("#editRoomName").val(),
         shortName: $("#editRoomShortName").val(),
         price: $("#editRoomPrice").val(),
         fitNum: $("#editRoomFitNum").val(),
         unit: $("#editRoomUnit").val(),
-        inventory: $("#editFoodInventory").val(),
         id: $(".mainActive input").val()
       };
       editRoomBasic(item);
+      clearModal(that);
     });
+
     //点击新增子类的确定按钮
     $("#createSubclassOk").on("click", function(){
       $("#createRoom tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
-              + "</td><td>"+ $("#createSubclassShortName").val()+"</td><td>"+ $("#createSubclassInventory").val()+"</td></tr>");
-      bindMainActive();
+              + "</td><td>" + $("#createSubclassShortName").val() + "</td><td>" + $("#createSubclassInventory").val() + "</td></tr>");
+      $("#subclassManagement tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
+              + "</td><td>" + $("#createSubclassShortName").val() + "</td><td>" + $("#createSubclassInventory").val()
+              + "</td><input class='id' type='hidden'><input class='status' type='hidden' value='0'></tr>");
+      $(".subclassManagement .mainClass").on("click", function() {
+        $("#subclassManagement .mainClass").removeClass("mainActive");
+        $(this).addClass("mainActive");
+        $(".subclassManagement .operateItem").removeClass("hide");
+      });
       $("#createRoom tr").on("click", function(){
+        $("#createRoom .mainClass").removeClass("mainActive");
+        $(this).addClass("mainActive");
         $("#createRoomEdit").parent().removeClass("hide");
         $("#createRoomDelete").parent().removeClass("hide");
       });
       $("#createSubclass").modal("hide");
       $("#createSubclass").find("input").val("");
     });
+
     //新增房型确认按钮
     $("#createRoomOk").on("click", function(){
       if (!$("#createRoom form").valid()) {
@@ -791,21 +933,26 @@
     $("#createRoomDelete").on("click", function(){
       $("#createRoom tbody tr.mainActive").remove();
     });
+
     //编辑子类确定按钮
     $("#editSubclassOk").on("click", function(){
       var that = this;
       $("#createRoom tbody tr.mainActive").html("<td>" + $("#editSubclassName").val()
       + "</td><td>"+ $("#editSubclassShortName").val()+"</td><td>"+ $("#editSubclassInventory").val()+"</td>");
+      $("#subclassManagement .mainActive td:eq(0)").html($("#createSubclassName").val());
+      $("#subclassManagement .mainActive td:eq(1)").html($("#createSubclassShortName").val());
+      $("#subclassManagement .mainActive td:eq(2)").html($("#createSubclassInventory").val());
+
       clearModal(that);
     });
-    //删除
-    $("#delete").on("click", function(){
-      var dialogConfig = {title:"提示", message:"您确定要删除这条记录吗？"};
-      var confirmCallback = function(){
-        $(".categoryGrid .tr.active input").val();
-        alert("nihao");
-      };
+    //点击删除按钮
+    $("#deleteRoomButton").on("click", function(){
+      var confirmCallback = deleteRoom;
+      var dialogConfig = {title:"提示", message:"您确定要删除吗？"};
       confirmDialog(dialogConfig,confirmCallback);
+    });
+    $("#createRoomButton").on("click", function(){
+      $("#createRoom tbody").html("");
     });
     $(function() {
       $("form").validate();
