@@ -231,7 +231,7 @@
             </div>
           </div>
           <div class="operateItem hide">
-            <div class="clickDiv">
+            <div class="clickDiv" id="modifyStateButton">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
             </div>
@@ -256,6 +256,7 @@
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
                 "<td>" + element.description + "</td>" +
+                "<input type='hidden' class='state' value=" + element.state + " />" +
                 "<input type='hidden' value=" + element.id + " /></tr>";
       });
       $(".categoryGrid tbody").html(str);
@@ -390,6 +391,13 @@
       $(".campName").html(localStorage.getItem("campName"));
       $(".userName").find("a").html(localStorage.getItem("userName"));
       loadETCategoryList();
+    });
+    $("#modifyStateButton").on("click", function(){
+      var item = {
+        id: $(".mainActive .id").val(),
+        state: 1 - $(".mainActive .state").val()
+      };
+      modifyState(item);
     });
     $("#createETOk").on("click", function(){
       var that = this;
