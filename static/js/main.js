@@ -29,11 +29,44 @@ function clearModal(that){
     $(that).parents(".modal").find(".operateItem").addClass("hide");
     $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find("input").val(""); //将输入框清空
-    $(that).parents(".modal").find("textarea").html("");
+    $(that).parents(".modal").find("textarea").val("");
     $(that).parents(".modal").find("tbody").html(""); //将表单清空
     if ($(that).parents(".modal").find("form").length != 0) {
         $(that).parents(".modal").find("form").validate().resetForm();
     }
+}
+
+//错误验证
+function errorHandler(result){
+    if (result.code != 1) {
+        somethingAlert(result.msg);
+        return false;
+    } else {
+        somethingAlert("操作成功");
+        return true;
+    }
+}
+
+//错误提示框
+function somethingAlert(message){
+    $("body").prepend(
+        "<div class='modal fade' role='dialog' id='errorAlert'>" +
+        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-content clearfloat'>" +
+        "<div class='modal-header'>" +
+        "<p>" + "提示" + "</p>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<p>" + message + "</p>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>");
+    $("#errorAlert").modal("show");
+    centerModals();
+    setTimeout(function(){
+        $("#errorAlert").modal("hide");
+    }, 1000);
 }
 
 //确认弹出框

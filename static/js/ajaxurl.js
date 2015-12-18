@@ -9,4 +9,7 @@ var editRoomBasicUrl = "/category/modifyAccommodationBaseInfo";
 var deleteRoomUrl = "/category/deleteAccommodationCategory";
 var subclassManageUrl = "/category/modifySubCategory";
 var loadSubRoomUrl = "/category/pullRoomList";
+var editSubRoomUrl = "/category/modifyRooms";
+var modifyStateUrl = "/category/modifyState";
+var pullShowInfoUrl = "/category/pullShowInfo";
 var logoutUrl = "/mg/user/logout";

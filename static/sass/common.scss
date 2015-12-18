@@ -359,3 +359,21 @@
     }
 
 }
+
+#errorAlert {
+    z-index: 9999;
+    .modal-content {
+        font-size: 16px;
+        padding: 20px;
+        text-align: center;
+        .modal-header {
+            margin-bottom: 20px;
+            p {
+                color: #4A90E2;
+            }
+        }
+        .modal-body {
+            margin-bottom: 20px;
+        }
+    }
+}

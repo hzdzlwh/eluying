@@ -38,7 +38,7 @@
               <h2>基本信息</h2>
               <ul>
                 <li><label for="createRoomName">房型名称</label>
-                  <input id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
+                  <input maxlength="" id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
                 <li><label for="createRoomShortName">简称</label>
                   <input type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
@@ -258,20 +258,20 @@
                   <h2>基本规格</h2>
                   <ul>
                     <li>
-                      <label for="number">可容纳人数</label>
-                      <input type="text" class="text" id="number" placeholder="请填写纯数字">
+                      <label for="roomShowFitNum">可容纳人数</label>
+                      <input type="text" class="text" id="roomShowFitNum" placeholder="请填写纯数字">
                     </li>
                     <li>
-                      <label for="area">房间面积</label>
-                      <input type="text" class="text" id="area" placeholder="单位：平方米">
+                      <label for="roomShowArea">房间面积</label>
+                      <input type="text" class="text" id="roomShowArea" placeholder="单位：平方米">
                     </li>
                     <li>
-                      <label for="bed">床型</label>
-                      <input type="text" class="text" id="bed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
+                      <label for="roomShowBed">床型</label>
+                      <input type="text" class="text" id="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
                     </li>
                     <li>
-                      <label for="number">描述或备注</label>
-                      <textarea name="description" id="description" placeholder="最长70个汉字"></textarea>
+                      <label for="roomShowDescription">描述或备注</label>
+                      <textarea name="description" id="roomShowDescription" placeholder="最长70个汉字"></textarea>
                     </li>
                   </ul>
                 </form>
@@ -332,57 +332,67 @@
                   <ul>
                     <li>
                       <label>热水供应</label>
-                      <input type="radio" name="hotWater">有，请描述时间段&nbsp;
-                      <input type="radio" name="hotWater">无<br/>
-                      <label>描述</label>
-                      <input type="text" class="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
+                      <input type="radio" class="Y" id="hotWaterY" name="hotWater" value="1">有，请描述时间段&nbsp;
+                      <input type="radio" class="N" id="hotWaterN" name="hotWater" value="0">无<br/>
+                      <div>
+                        <label for="hotWaterDescription">描述</label>
+                        <input type="text" id="hotWaterDescription" class="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
+                      </div>
                     </li>
                     <li>
                       <label>早餐</label>
-                      <input type="radio" name="">有，请描述&nbsp;
-                      <input type="radio" name="">无<br />
-                      <label>描述</label>
-                      <input type="text" class="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                      <input type="radio" class="Y" id="breakfastY" name="breakfast" value="1">有，请描述&nbsp;
+                      <input type="radio" class="N" id="breakfastN" name="breakfast" value="0">无<br />
+                      <div>
+                        <label>描述</label>
+                        <input type="text" id="breakfastDescription" class="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                      </div>
                     </li>
                     <li>
                       <label>浴室</label>
-                      <input type="radio" name="">公共浴室&nbsp;
-                      <input type="radio" name="">独立浴室&nbsp;
-                      <input type="radio" name="">无
+                      <input type="radio" id="publicBathroom" name="bathroom" value="公共浴室">公共浴室&nbsp;
+                      <input type="radio" id="independentBathroom" name="bathroom" value="独立浴室">独立浴室&nbsp;
+                      <input type="radio" id="bathroomN" name="bathroom" value="0">无
                     </li>
                     <li>
                       <label>厕所</label>
-                      <input type="radio" name="">公共厕所&nbsp;
-                      <input type="radio" name="">独立厕所&nbsp;
-                      <input type="radio" name="">无
+                      <input type="radio" id="publicToilet" name="toilet" value="公共厕所">公共厕所&nbsp;
+                      <input type="radio" id="independentToilet" name="toilet" value="独立厕所">独立厕所&nbsp;
+                      <input type="radio" id="toiletN" name="toilet" value="0">无
                     </li>
                     <li>
                       <label>营地管家</label>
-                      <input type="radio" name="">有&nbsp;
-                      <input type="radio" name="">无
+                      <input type="radio" id="butlerY" name="butler" value="1">有&nbsp;
+                      <input type="radio" id="butlerN" name="butler" value="0">无
                     </li>
                     <li>
                       <label>网络</label>
-                      <input type="radio" name="">有&nbsp;
-                      <input type="radio" name="">无<br/>
-                      <label>描述</label>
-                      <input type="text" class="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
+                      <input type="radio" class="Y" id="networkY" name="network" value="1">有&nbsp;
+                      <input type="radio" class="N" id="networkN" name="network" value="0">无<br/>
+                      <div>
+                        <label>描述</label>
+                        <input type="text" id="networkDescription" class="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
+                      </div>
                     </li>
                   </ul>
                 </form>
                 <div class="mid clearfloat">
                   <div class="title">
                     <h2>其他设施</h2>
-                    <div class="create">
+                    <div class="create" data-toggle="modal" data-target="#createFacility">
                       <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                       <span>新增设施</span>
                     </div>
                   </div>
                   <div class="border-top-4px grid">
                     <table>
-                      <tr class="head">
-                        <th>名称</th>
-                      </tr>
+                      <thead>
+                        <tr class="head">
+                          <th>名称</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -412,6 +422,46 @@
       </div>
     </div>
   </div>
+  <!-- 新增设施 -->
+  <div class="modal fade" role="dialog" id="createFacility">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <form class="inputFiled">
+          <h1>新增设施</h1>
+          <ul>
+            <li>
+              <label for="createSubclassName">名称</label>
+              <input type="text" class="text" id="createFacilityName">
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-cancel">取消</button>
+          <button class="btn-ok" id="createFacilityOk">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑设施 -->
+  <div class="modal fade" role="dialog" id="editFacility">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <form class="inputFiled">
+          <h1>编辑设施</h1>
+          <ul>
+            <li>
+              <label for="createSubclassName">名称</label>
+              <input type="text" class="text" id="editFacilityName">
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-cancel">取消</button>
+          <button class="btn-ok" id="editFacilityOk">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- 编辑房间 -->
   <div class="modal fade" role="dialog" id="editRoom">
     <div class="modal-dialog modal-w485">
@@ -419,10 +469,10 @@
         <div class="editRoom clearfloat">
           <div class="roomContainer clearfloat">
           </div>
-          <p class="tip">点击房间名可修改房间名</p>
+          <p class="tip">点击房间名可修改房间名哦</p>
           <div class="footer">
             <button class="btn-cancel">取消</button>
-            <button class="btn-ok">确认</button>
+            <button class="btn-ok" id="editRoomOk">确认</button>
           </div>
         </div>
       </div>
@@ -484,12 +534,12 @@
         </div>
         <div class="second clearfloat hide">
           <div class="operateItem hide">
-            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
+            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo" id="editRoomDisplayInfoButton">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p></div>
           </div>
           <div class="operateItem hide">
-            <div class="clickDiv">
+            <div class="clickDiv" id="modifyStateButton">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
             </div>
@@ -502,11 +552,23 @@
   <script>
     //列表对象
     var roomCategoryList = {};
-    var subRoomList = {};
+    //重新计算库存
+    roomCategoryList.countInventory = function(id){
+      $.each(roomCategoryList.list, function(index, element){
+        if (element.id == id) {
+          var inventory = 0;
+          $.each(element.subTypeList, function(index, element){
+            inventory += Number(element.inventory);
+          });
+          roomCategoryList.list[index].inventory = inventory;
+          return false;
+        }
+      })
+    };
     //渲染
-    roomCategoryList.render = function() {
+    roomCategoryList.render = function(){
       var str = "";
-      $.each(roomCategoryList.list, function (index, element) {
+      $.each(roomCategoryList.list, function(index, element) {
         str += "<tr class='mainClass'>" +
                 "<td><span>" + element.name + "</span>"
                 + "<img src='/eluyun/static/image/rotate.png'></td>" +
@@ -515,8 +577,9 @@
                 "<td>" + element.fitNum + "</td>" +
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
+                "<input type='hidden' class='state' value=" + element.state + " />" +
                 "<input type='hidden' class='id' value=" + element.id + " /></tr>";
-        $.each(element.subTypeList, function (index, subElement) {
+        $.each(element.subTypeList, function(index, subElement) {
           str += "<tr class='subclass hide'>" +
                   "<td><div class='first'>" + subElement.name + "</div></td>" +
                   "<td><div>" + element.shortName + "</div></td>" +
@@ -581,6 +644,31 @@
       }
     }
 
+    //上架或者下架
+    function modifyState(item){
+      $.ajax({
+        url: host + modifyStateUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: item,
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function (result) {
+          if (!errorHandler(result)) {
+            return;
+          }
+          $.each(roomCategoryList.list, function(index, element){
+            if (element.id == item.id) {
+              roomCategoryList.list[index].state = item.state;
+              return false; //等于break
+            }
+          });
+          roomCategoryList.render();
+        }
+      })
+    }
+
     //读取子房间列表
     function loadSubRoom(id){
       var str = "";
@@ -591,10 +679,22 @@
           $.each(result.data.list, function(index, element){
             str += "<div class='room'><img src='/eluyun/static/image/ic_close.png' /><p>"
                     + element.serialNum + "</p>"
-                    + "<input type='text' class='hide editName'>"
-                    + "<input type='hidden' value='" + element.id + "' /><input type='hidden' value='0'></div>"
+                    + "<input type='text' class='hide editName' value=''>"
+                    + "<input type='hidden' class='id' value='" + element.id + "' /><input type='hidden' value='0' class='status'></div>"
           });
           $(".roomContainer").html(str);
+          //点击子类房间名
+          $("#editRoom .room p").on("click", function(){
+            $(this).next(".editName").removeClass("hide").focus().val($(this).html());
+          });
+          $("#editRoom .editName").on("blur", function(){
+            $(this).addClass("hide");
+            $(this).parent(".room").find("p").html($(this).val());
+          });
+          $("#editRoom img").on("click", function(){
+            $(this).parent(".room").addClass("hide");
+            $(this).parent(".room").find(".status").val("1");
+          });
         },
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -628,11 +728,15 @@
         url: host + addAccommodationUrl + ";jsessionid=" + $.cookie("jsessionid"),
         type: "POST",
         data: data,
-        success: function(){
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
           data.subTypeList = JSON.parse(data.subTypeList);
           roomCategoryList.list.push(data);
           roomCategoryList.render();
-          clearModal(that);
         },
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -643,12 +747,17 @@
     }
 
     //编辑房型基本信息
-    function editRoomBasic(item){
+    function editRoomBasic(that, item){
       $.ajax({
         url: host + editRoomBasicUrl + ";jsessionid=" + $.cookie("jsessionid"),
         type: "POST",
         data: item,
-        success: function(){
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
           $.each(roomCategoryList.list, function(index, element){
             if (element.id == item.id) {
               for (var name in item) {
@@ -669,11 +778,14 @@
 
     //删除房型
     function deleteRoom(){
-      var id = $(".mainActive input").val();
+      var id = $(".mainActive .id").val();
       $.ajax({
         url: host + deleteRoomUrl + ";jsessionid=" + $.cookie("jsessionid"),
         data: {id: id},
-        success: function(){
+        success: function(result){
+          if(!errorHandler(result)){
+            return;
+          }
           $.each(roomCategoryList.list, function(index, element){
             if (element.id == id) {
               roomCategoryList.list.splice(index, 1);
@@ -691,7 +803,7 @@
     }
 
     //子类管理
-    function subclassManage(item){
+    function subclassManage(that, item){
       $.ajax({
         url: host + subclassManageUrl + ";jsessionid=" + $.cookie("jsessionid"),
         type: "POST",
@@ -704,7 +816,12 @@
           sessionValidate(result);
           return JSON.stringify(result); //再转为字符串传回去
         },
-        success: function(){
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
           $.each(item.subTypeList, function(index, element){
             if (element.status == 1) {
               item.subTypeList.splice(index, 1);//删除多余子类
@@ -716,9 +833,110 @@
               return false; //等于break
             }
           });
+          roomCategoryList.countInventory(item.id);
           roomCategoryList.render();
         }
       })
+    }
+
+    //房间编辑
+    function editSubRoom(that, item){
+      $.ajax({
+        url: host + editSubRoomUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {rooms: JSON.stringify(item)},
+        type: "POST",
+        dataFilter: function(result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
+          $("#editRoom .roomContainer").html("");
+        }
+      })
+    }
+
+    //读取展示信息
+    function pullRoomShowInfo(id){
+      $.ajax({
+        url: host +pullShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {id: id},
+        dataFilter: function(result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(result){
+          showRoomShowInfo(result.data);
+        }
+      })
+    }
+
+    //显示展示信息
+    function showRoomShowInfo(data){
+      $("#roomShowFitNum").val(data.fitNum);
+      $("#roomShowArea").val(data.area);
+      $("#roomShowBed").val(data.bedType);
+      $("#roomShowDescription").val(data.remark);
+      if (data.facilities.hotWater.status == 1) {
+        $("#hotWaterY").prop("checked", true);
+        $("#hotWaterDescription").val(data.facilities.hotWater.description);
+        $("#hotWaterN").nextAll("div").removeClass("hide");
+      } else {
+        $("#hotWaterN").prop("checked", true);
+        $("#hotWaterN").nextAll("div").addClass("hide");
+      }
+      if (data.facilities.breakfast.status == 1) {
+        $("#breakfastY").prop("checked", true);
+        $("#breakfastDescription").val(data.facilities.breakfast.description);
+        $("#breakfastN").nextAll("div").removeClass("hide");
+      } else {
+        $("#breakfastN").prop("checked", true);
+        $("#breakfastN").nextAll("div").addClass("hide");
+      }
+      if (data.facilities.bathroom.status == 1) {
+        if (data.facilities.bathroom.description == "公共浴室") {
+          $("#publicBathroom").prop("checked", true);
+        } else {
+          $("#independentBathroom").prop("checked", true);
+        }
+      } else {
+        $("#bathroomN").prop("checked", true);
+      }
+      if (data.facilities.toilet.status == 1) {
+        if (data.facilities.toilet.description == "公共浴室") {
+          $("#publicToilet").prop("checked", true);
+        } else {
+          $("#independentToilet").prop("checked", true);
+        }
+      } else {
+        $("#toiletN").prop("checked", true);
+      }
+      if (data.facilities.manager.status == 1) {
+        $("#butlerY").prop("checked", true);
+      } else {
+        $("#butlerN").prop("checked", true);
+      }
+      if (data.facilities.network.status == 1) {
+        $("#networkY").prop("checked", true);
+        $("#networkN").nextAll("div").removeClass("hide");
+        $("#networkDescription").val(data.facilities.hotWater.description);
+      } else {
+        $("#networkN").prop("checked", true);
+        $("#networkN").nextAll("div").addClass("hide");
+      }
+      if (!data.extraFacilities == null) {
+        var str = "";
+        $.each(data.extraFacilities, function(index, element){
+          str += "<tr><td>" + element.name + "</td></tr>"
+        });
+        $("#editDisplayInfo tbody").html(str);
+      }
     }
 
     //点击子类管理按钮
@@ -737,6 +955,7 @@
         $(".subclassManagement .operateItem").removeClass("hide");
       });
     });
+
     //子类管理编辑信息
     $("#subManageEditButton").on("click", function(){
       $("#editSubclassName").val($("#subclassManagement tr.mainActive").find("td:eq(0)").html());
@@ -754,6 +973,7 @@
     //子类管理确认按钮
     $("#subclassManagementOk").on("click", function(){
       var subTypeList = [];
+      var that = this;
       $("#subclassManagement .mainClass").each(function(){
         subTypeList.push({
           id: $(this).find(".id").val(),
@@ -767,9 +987,7 @@
         id: $("#roomCategoryList .mainActive .id").val(),
         subTypeList: subTypeList
       };
-      subclassManage(item);
-      var that = this;
-      clearModal(that);
+      subclassManage(that, item);
     });
 
     //点击编辑房型基本信息
@@ -792,8 +1010,7 @@
         unit: $("#editRoomUnit").val(),
         id: $(".mainActive input").val()
       };
-      editRoomBasic(item);
-      clearModal(that);
+      editRoomBasic(that, item);
     });
 
     //点击新增子类的确定按钮
@@ -850,12 +1067,14 @@
       };
       addRoom(data, that);
     });
+
     //新增房型的时候编辑子类按钮
     $("#createRoomEdit").on("click", function(){
       $("#editSubclassName").val($("#createRoom tbody tr.mainActive").find("td:eq(0)").html());
       $("#editSubclassShortName").val($("#createRoom tbody tr.mainActive").find("td:eq(1)").html());
       $("#editSubclassInventory").val($("#createRoom tbody tr.mainActive").find("td:eq(2)").html());
     });
+
     //新增房型的时候删除子类按钮
     $("#createRoomDelete").on("click", function(){
       $("#createRoom tbody tr.mainActive").remove();
@@ -869,15 +1088,16 @@
       $("#subclassManagement .mainActive td:eq(0)").html($("#editSubclassName").val());
       $("#subclassManagement .mainActive td:eq(1)").html($("#editSubclassShortName").val());
       $("#subclassManagement .mainActive td:eq(2)").html($("#editSubclassInventory").val());
-
       clearModal(that);
     });
+
     //点击删除按钮
     $("#deleteRoomButton").on("click", function(){
       var confirmCallback = deleteRoom;
       var dialogConfig = {title:"提示", message:"您确定要删除吗？"};
       confirmDialog(dialogConfig,confirmCallback);
     });
+
     $("#createRoomButton").on("click", function(){
       $("#createRoom tbody").html("");
     });
@@ -886,6 +1106,42 @@
     $("#editSubRoomButton").on("click", function(){
       var id = $(".subActive .id").val();
       loadSubRoom(id);
+    });
+
+    //编辑房间确定
+    $("#editRoomOk").on("click", function(){
+      var that = this;
+      var rooms = [];
+      $(".room").each(function(){
+        rooms.push({
+          id: $(this).find(".id").val(),
+          serialNum: $(this).find("p").html(),
+          status: $(this).find(".status").val()
+        });
+      });
+      editSubRoom(that, rooms);
+    });
+
+    //上架或下架
+    $("#modifyStateButton").on("click", function(){
+      var item = {
+        id: $(".mainActive .id").val(),
+        state: 1 - $(".mainActive .state").val()
+      };
+      modifyState(item);
+    });
+
+    $(".Y").on("click", function(){
+      $(this).nextAll("div").removeClass("hide");
+    });
+    $(".N").on("click", function(){
+      $(this).nextAll("div").addClass("hide");
+    });
+
+    //编辑房间展示信息
+    $("#editRoomDisplayInfoButton").on("click", function(){
+      var id = $(".mainActive .id").val();
+      pullRoomShowInfo(id);
     });
 
     $(function() {

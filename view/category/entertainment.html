@@ -304,7 +304,7 @@
       });
     }
     //添加
-    function addETCategory(){
+    function addETCategory(that){
       var item = {
         name: $("#createETName").val(),
         shortName: $("#createETShortName").val(),
@@ -320,6 +320,11 @@
         type: "POST",
         data: item,
         success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
           item.id = result.data.id;
           ETCategoryList.list.push(item);
           ETCategoryList.render();
@@ -327,7 +332,7 @@
       })
     }
     //编辑基本信息
-    function editETCategory(){
+    function editETCategory(that){
       var item = {
         id: $(".mainActive input").val(),
         name: $("#editETName").val(),
@@ -343,7 +348,12 @@
         url: host + addOrEditExtraCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
         type: "POST",
         data: item,
-        success: function(){
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          } else {
+            return;
+          }
           $.each(ETCategoryList.list, function(index, element){
             if (element.id == item.id) {
               ETCategoryList.list[index] = item;
@@ -360,7 +370,10 @@
       $.ajax({
         url: host + deleteOtherCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
         data: {id: id},
-        success: function(){
+        success: function(result){
+          if (!errorHandler(result)) {
+            return;
+          }
           $.each(ETCategoryList.list, function(index, element){
             if (element.id == id) {
               ETCategoryList.list.splice(index, 1);
@@ -380,20 +393,18 @@
     });
     $("#createETOk").on("click", function(){
       var that = this;
-      addETCategory();
-      clearModal(that);
+      addETCategory(that);
     });
     $("#editETOk").on("click", function(){
       var that = this;
-      editETCategory();
-      clearModal(that);
+      editETCategory(that);
     });
     $("#editETButton").on("click", function(){
       $("#editETName").val($(".mainActive td:eq(0)").html());
       $("#editETShortName").val($(".mainActive td:eq(1)").html());
       $("#editETUnit").val($(".mainActive td:eq(2)").html());
       $("#editETFitNum").val($(".mainActive td:eq(3)").html());
-      $("#ediETInventory").val($(".mainActive td:eq(4)").html());
+      $("#editETInventory").val($(".mainActive td:eq(4)").html());
       $("#editETPrice").val($(".mainActive td:eq(5)").html());
       $("#editETDescription").val($(".mainActive td:eq(6)").html());
     });

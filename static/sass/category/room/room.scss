@@ -1,6 +1,6 @@
 #editDisplayInfo {
     form {
-        height: 570px;
+        height: 480px;
     }
     .nav-tabs {
         margin-bottom: 20px;
@@ -40,9 +40,12 @@
             cursor: pointer;
         }
         p {
-            line-height: 90px;
+            line-height: 20px;
             text-align: center;
             color: #FFF;
+            width: 50px;
+            height: 20px;
+            margin: 35px 20px;
         }
         .editName {
             position: absolute;
@@ -50,7 +53,12 @@
             height: 20px;
             top: 35px;
             left: 20px;
+            background-color: #4A90E2;
             border: 0;
+            border-bottom: 1px solid #fff;
+            text-align: center;
+            outline: none;
+            color: #FFF;
         }
     }
 }
