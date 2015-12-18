@@ -419,6 +419,7 @@
         <div class="editRoom clearfloat">
           <div class="roomContainer clearfloat">
           </div>
+          <p class="tip">点击房间名可修改房间名</p>
           <div class="footer">
             <button class="btn-cancel">取消</button>
             <button class="btn-ok">确认</button>
@@ -580,7 +581,7 @@
       }
     }
 
-    //读取房间列表
+    //读取子房间列表
     function loadSubRoom(id){
       var str = "";
       $.ajax({
@@ -588,8 +589,10 @@
         data: {id: id},
         success: function(result){
           $.each(result.data.list, function(index, element){
-            str = "<div class='room'><img src='/eluyun/static/image/ic_close.png' /><p>"
-            + element.serialNum + "</p><input type='hidden' value='" + element.id + "' /><input type='hidden' value='0'></div>"
+            str += "<div class='room'><img src='/eluyun/static/image/ic_close.png' /><p>"
+                    + element.serialNum + "</p>"
+                    + "<input type='text' class='hide editName'>"
+                    + "<input type='hidden' value='" + element.id + "' /><input type='hidden' value='0'></div>"
           });
           $(".roomContainer").html(str);
         },
@@ -702,6 +705,11 @@
           return JSON.stringify(result); //再转为字符串传回去
         },
         success: function(){
+          $.each(item.subTypeList, function(index, element){
+            if (element.status == 1) {
+              item.subTypeList.splice(index, 1);//删除多余子类
+            }
+          });
           $.each(roomCategoryList.list, function(index, element){
             if (element.id == item.id) {
               roomCategoryList.list[index].subTypeList = item.subTypeList;
@@ -858,9 +866,9 @@
       var that = this;
       $("#createRoom tbody tr.mainActive").html("<td>" + $("#editSubclassName").val()
       + "</td><td>"+ $("#editSubclassShortName").val()+"</td><td>"+ $("#editSubclassInventory").val()+"</td>");
-      $("#subclassManagement .mainActive td:eq(0)").html($("#createSubclassName").val());
-      $("#subclassManagement .mainActive td:eq(1)").html($("#createSubclassShortName").val());
-      $("#subclassManagement .mainActive td:eq(2)").html($("#createSubclassInventory").val());
+      $("#subclassManagement .mainActive td:eq(0)").html($("#editSubclassName").val());
+      $("#subclassManagement .mainActive td:eq(1)").html($("#editSubclassShortName").val());
+      $("#subclassManagement .mainActive td:eq(2)").html($("#editSubclassInventory").val());
 
       clearModal(that);
     });

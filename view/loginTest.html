@@ -34,6 +34,9 @@
           alert("服务器挂了")
         },
         success: function(result){
+          if (result.code != 1) {
+            alert("服务器挂了")
+          }
           localStorage.setItem("campName", result.data.camps[0].name);
           localStorage.setItem("userName", result.data.userName);
           $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
