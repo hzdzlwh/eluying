@@ -14,4 +14,5 @@ var loadSubRoomUrl = "/category/pullRoomList";
 var editSubRoomUrl = "/category/modifyRooms";
 var modifyStateUrl = "/category/modifyState";
 var pullShowInfoUrl = "/category/pullShowInfo";
+var uploadImage = "/image/upload";
 var logoutUrl = "/mg/user/logout";

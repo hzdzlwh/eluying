@@ -14,6 +14,9 @@
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
+    <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
+    <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
+  <script src="/eluyun/static/js/jquery.fileupload.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -285,6 +288,7 @@
                           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                           <span>上传图片</span>
                         </div>
+                          <input id="cover" type="file" name="file" class="hide" multiple>
                       </div>
                       <div class="photoContainer">
                       </div>
@@ -930,13 +934,32 @@
         $("#networkN").prop("checked", true);
         $("#networkN").nextAll("div").addClass("hide");
       }
-      if (!data.extraFacilities == null) {
+      if (data.extraFacilities != null) {
         var str = "";
         $.each(data.extraFacilities, function(index, element){
           str += "<tr><td>" + element.name + "</td></tr>"
         });
         $("#editDisplayInfo tbody").html(str);
       }
+        if (data.coverUrl != null) {
+            $(".cover .photoContainer").html("<img src='" + data.coverUrl + "' />");
+        }
+        if (data.detailImgUrl != null) {
+            var detailStr = "";
+
+            $.each(data.detailImgUrl, function(index, element){
+                detailStr += "<img src='" + element + "' />"
+            });
+        }
+
+      $(".cover .photoContainer").html(detailStr);
+        $("#cover").fileupload({
+            url: host + uploadImage + ";jsessionid=" + $.cookie("jsessionid"),
+            done: function (e, result) {
+                console.log(result);
+                $(".cover .photoContainer").html("<img height='205px' src='" + result.result.data.url + "' />");
+            }
+        })
     }
 
     //点击子类管理按钮
@@ -1137,7 +1160,9 @@
     $(".N").on("click", function(){
       $(this).nextAll("div").addClass("hide");
     });
-
+    $(".cover .create").on("click", function(){
+        $("#cover").click();
+    })
     //编辑房间展示信息
     $("#editRoomDisplayInfoButton").on("click", function(){
       var id = $(".mainActive .id").val();
