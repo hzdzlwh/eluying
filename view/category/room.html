@@ -286,7 +286,7 @@
                           <span>上传图片</span>
                         </div>
                       </div>
-                      <div class="photoContainer">
+                      <div id="cover" class="photoContainer">
                       </div>
                     </div>
                     <div class="detail">
@@ -297,7 +297,7 @@
                           <span>上传图片</span>
                         </div>
                       </div>
-                      <div class="photoContainer">
+                      <div id="detail" class="photoContainer">
                       </div>
                     </div>
                   </div>
@@ -937,6 +937,11 @@
         });
         $("#editDisplayInfo tbody").html(str);
       }
+      $("#cover").html("<img height='205' src='" + data.coverUrl + "' />");
+      var detailStr = "";
+      $.each(data.detailImgUrl, function(index, element){
+        detailStr += "img"
+      })
     }
 
     //点击子类管理按钮
