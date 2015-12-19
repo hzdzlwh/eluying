@@ -48,10 +48,25 @@
     top: 76px;
     border-radius: 5px;
     background: white;
+    .errorTips{
+      background-color: #FFF2F2;
+      width: 250px;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      margin: auto;
+      padding-left: 10px;
+      //border-radius: 5px;
+      border: #ff8e8e thin solid;
+      font-size: 12px;
+      display: none;
+    };
     .text {
       height: 25px;
       text-align: center;
       margin-top: 44px;
+      //margin-top: 30px;
+      margin-bottom: 15px;
       font-size: 18px;
     }
     .group {
@@ -83,26 +98,30 @@
       background: transparent;
     }
     .username {
-      margin-top: 27px;
+      margin-top: 12px;
     }
     .pwd {
       margin-top: 9px;
     }
     .checkbox {
-      padding-left: 69px;
-      padding-top: 4px;
+      position: relative;
       height: 17px;
       font-size: 12px;
       margin-top: 0;
       input {
         margin-right: 8px;
       }
+      label{
+        position: absolute;
+        left: 69px;
+        top: 9px;
+      }
     }
     .forget {
       cursor: pointer;
       position: absolute;
-      top: 200px;
       right: 77px;
+      top: 9px;
       color: #4A90E2;
       text-decoration: underline;
       font-size: 12px;
@@ -234,6 +253,19 @@
     margin-top: 47px;
     margin-bottom: 43px;
   }
+  .errorTips{
+    background-color: #FFF2F2;
+    width: 420px;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    margin: auto;
+    margin-top: 20px;
+    padding-left: 10px;
+    //border-radius: 5px;
+    border: #ff8e8e thin solid;
+    font-size: 12px;
+  }
 }
 
 #loginRegister {
@@ -316,6 +348,19 @@
       }
     }
   }
+  .errorTips{
+    background-color: #FFF2F2;
+    width: 481px;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    margin: auto;
+    margin-top: 20px;
+    padding-left: 10px;
+    //border-radius: 5px;
+    border: #ff8e8e thin solid;
+    font-size: 12px;
+  }
 }
 
 #loginForgetPwd, #loginRegister {
@@ -354,7 +399,7 @@
   }
 }
 
-#loginRegSuccess, #loginLogSuccess, #loginApplySuccess{
+#loginRegSuccess, #loginLogSuccess, #loginApplySuccess, #resetSuccess{
   .modal-dialog {
     width: 318px;
   }
@@ -402,5 +447,17 @@
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+
+#loginFooter {
+  min-width: 565px;
+  height: 40px;
+  color: white;
+  background: #303030;
+  border: thin #979797 solid;
+  font-size: 14px;
+  line-height: 40px;
+  text-align: center;
 }
 
