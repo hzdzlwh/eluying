@@ -34,6 +34,9 @@ function clearModal(that){
     if ($(that).parents(".modal").find("form").length != 0) {
         $(that).parents(".modal").find("form").validate().resetForm();
     }
+    if ($(".photoContainer").html() != "") {
+        $(".photoContainer").html("");
+    }
 }
 
 //错误验证

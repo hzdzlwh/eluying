@@ -14,8 +14,8 @@
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
-    <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
-    <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
+  <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
+  <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
   <script src="/eluyun/static/js/jquery.fileupload.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
@@ -41,18 +41,18 @@
               <h2>基本信息</h2>
               <ul>
                 <li><label for="createRoomName">房型名称</label>
-                  <input maxlength="" id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
+                  <input maxlength="16" required id="createRoomName" name="createRoomName" type="text" class="text" placeholder="用于展示给客户" /></li>
                 <li><label for="createRoomShortName">简称</label>
-                  <input type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
+                  <input maxlength="8" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
-                  <input type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
+                  <input range="[0,99999999]" maxlength="8" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                 <li><label for="createRoomFitNum">可容纳人数</label>
-                  <input type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
+                  <input range="[1,99999999]" maxlength="8" digits type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
                 <li><label for="createRoomUnit">单位</label>
-                  <input type="text" name="createRoomUnit" class="text required" id="createRoomUnit" placeholder="请填写单位" /></li>
+                  <input maxlength="8" type="text" name="createRoomUnit" class="text required" id="createRoomUnit" placeholder="请填写单位" /></li>
                 <li><label for="createRoomInventory">默认房间数</label>
-                  <input type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
+                  <input range="[1,99999999]" maxlength="8" digits type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
                   <p>可以在房态管理中，管理每天的房间库存</p></li>
               </ul>
           </form>
@@ -300,6 +300,7 @@
                           <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                           <span>上传图片</span>
                         </div>
+                        <input id="detail" type="file" name="file" class="hide" multiple>
                       </div>
                       <div class="photoContainer">
                       </div>
@@ -307,23 +308,32 @@
                   </div>
                   <div class="operate">
                     <div class="first">
-                      <div class="operateItem">
-                        <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                        <p>替换图片</p>
+                      <div class="operateItem hide">
+                        <div id="replaceCover" class="clickDiv">
+                          <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                          <p>替换图片</p>
+                        </div>
                       </div>
-                      <div class="operateItem">
-                        <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                        <p>删除</p>
+                      <div class="operateItem hide">
+                        <div id="deleteCover" class="clickDiv">
+                          <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                          <p>删除</p>
+                        </div>
                       </div>
                     </div>
                     <div class="second">
-                      <div class="operateItem">
-                        <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                        <p>替换图片</p>
+                      <div class="operateItem hide">
+                        <div id="replaceDetail" class="clickDiv">
+                          <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                          <p>替换图片</p>
+                        </div>
+                        <input type="file" class="hide" name="file" id="replaceDetailImg"/>
                       </div>
-                      <div class="operateItem">
-                        <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                        <p>删除</p>
+                      <div class="operateItem hide">
+                        <div id="deleteDetail" class="clickDiv">
+                          <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                          <p>删除</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -403,13 +413,13 @@
                 <div class="operate">
                   <div class="first">
                     <div class="operateItem">
-                      <div class="clickDiv">
+                      <div class="clickDiv" id="editFacilityButton" data-toggle="modal" data-target="#editFacility">
                         <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                         <p>编辑信息</p>
                       </div>
                     </div>
                     <div class="operateItem">
-                      <div class="clickDiv">
+                      <div class="clickDiv" id="deleteFacility">
                         <img src="/eluyun/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
                       </div>
@@ -421,7 +431,7 @@
         </div>
         <div class="footer clearfloat">
           <button class="btn-cancel" id="editDisplayInfoCancel">取消</button>
-          <button class="btn-ok">确认</button>
+          <button class="btn-ok" id="editRoomShowOk">确认</button>
         </div>
       </div>
     </div>
@@ -542,12 +552,19 @@
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p></div>
           </div>
-          <div class="operateItem hide">
-            <div class="clickDiv" id="modifyStateButton">
+          <div class="operateItem hide shangjia">
+            <div class="clickDiv modifyStateButton">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
             </div>
             <p class="putaway">目前未上架</p>
+          </div>
+          <div class="operateItem hide xiajia">
+            <div class="clickDiv modifyStateButton">
+              <img src="/eluyun/static/image/icon_xiajia.png" alt="">
+              <p>下架</p>
+            </div>
+            <p class="putaway">已上架</p>
           </div>
         </div>
       </div>
@@ -595,8 +612,8 @@
         })
       });
       $(".categoryGrid tbody").html(str);
-      $(".operateItem").addClass("hide");
-      $(".second").addClass("hide");
+      $(".mainOperate .operateItem").addClass("hide");
+      $(".mainOperate .second").addClass("hide");
       //点击主类
       $(".mainClass").on("click", function(){
         $(".mainClass").removeClass("mainActive");
@@ -617,6 +634,11 @@
         $(".mainOperate .operateItem").removeClass("hide");
         $(".mainOperate .second").removeClass("hide");
         $(".mainOperate .editSubRoomButton").addClass("hide");
+        if ($(this).find(".state").val() == 0) {
+          $(".xiajia").addClass("hide");
+        } else {
+          $(".shangjia").addClass("hide");
+        }
       });
       //点击子类
       $(".subclass").on("click", function(){
@@ -913,7 +935,7 @@
         $("#bathroomN").prop("checked", true);
       }
       if (data.facilities.toilet.status == 1) {
-        if (data.facilities.toilet.description == "公共浴室") {
+        if (data.facilities.toilet.description == "公共厕所") {
           $("#publicToilet").prop("checked", true);
         } else {
           $("#independentToilet").prop("checked", true);
@@ -937,29 +959,135 @@
       if (data.extraFacilities != null) {
         var str = "";
         $.each(data.extraFacilities, function(index, element){
-          str += "<tr><td>" + element.name + "</td></tr>"
+          str += "<tr class='mainClass'><td>" + element.name + "</td></tr>"
         });
         $("#editDisplayInfo tbody").html(str);
+        $("#editDisplayInfo .mainClass").on("click", function(){
+          $("#editDisplayInfo .mainClass").removeClass("mainActive");
+          $(this).addClass("mainActive");
+          $("#editDisplayInfo .operateItem").removeClass("hide");
+        });
       }
-        if (data.coverUrl != null) {
-            $(".cover .photoContainer").html("<img src='" + data.coverUrl + "' />");
+      if (data.coverUrl != null) {
+        $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + data.coverUrl + "' />");
+        $(".cover .create").hide();
+      } else {
+        $(".cover .create").show();
+      }
+      if (data.detailImgUrl != null) {
+        var detailStr = "";
+        $.each(data.detailImgUrl, function(index, element){
+          detailStr += "<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + element + "' />"
+        });
+        $(".detail .photoContainer").html(detailStr);
+        if ($(".detailImg").length == 6) {
+          $(".detail .create").hide();
+        } else {
+          $(".detail .create").show();
         }
-        if (data.detailImgUrl != null) {
-            var detailStr = "";
-
-            $.each(data.detailImgUrl, function(index, element){
-                detailStr += "<img src='" + element + "' />"
-            });
+      } else {
+        $(".detail .create").show();
+      }
+      //上传图片
+      $("#cover").fileupload({
+          url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+          done: function (e, result) {
+            $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
+            $(".cover .create").hide();
+          }
+      });
+      $("#detail").fileupload({
+        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        done: function (e, result) {
+          $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.result.data.url + "' />");
+          if ($(".detailImg").length == 6) {
+            $(".detail .create").hide();
+          }
         }
+      })
+    }
 
-      $(".cover .photoContainer").html(detailStr);
-        $("#cover").fileupload({
-            url: host + uploadImage + ";jsessionid=" + $.cookie("jsessionid"),
-            done: function (e, result) {
-                console.log(result);
-                $(".cover .photoContainer").html("<img height='205px' src='" + result.result.data.url + "' />");
-            }
+    //准备展示信息数据
+    function makeRoomShowInfo(that){
+      var detailImgUrl = [];
+      $(".detailImg").each(function(){
+        detailImgUrl.push($(this).attr("src"));
+      });
+      var extraFacilities = [];
+      $("#editDisplayInfo .mainClass").each(function() {
+        extraFacilities.push({
+          name: $(this).find("td").html(),
+          description: ""
         })
+      });
+      var facilities = {
+        hotWater: {
+          status: $("#hotWaterY").prop("checked") ? 1 : 0,
+          description: $("#hotWaterY").prop("checked") ? $("#hotWaterDescription").val() : ""
+        },
+        breakfast: {
+          status: $("#breakfastY").prop("checked") ? 1 : 0,
+          description: $("#breakfastY").prop("checked") ? $("#breakfastDescription").val() : ""
+        },
+        bathroom: {
+          status: $("#bathroomN").prop("checked") ? 0 : 1,
+          description: $("#publicBathroom").prop("checked") ? "公共浴室" : ($("#independentBathroom").prop("checked") ? "独立浴室" : "")
+        },
+        toilet: {
+          status: $("#toiletN").prop("checked") ? 0 : 1,
+          description: $("#publicToilet").prop("checked") ? "公共厕所" : ($("#independentToilet").prop("checked") ? "独立厕所" : "")
+        },
+        manager: {
+          status: $("#butlerY").prop("checked") ? 1 : 0,
+          description: ""
+        },
+        network: {
+          status: $("#networkY").prop("checked") ? 1 : 0,
+          description: ""
+        }
+      };
+      var item = {
+        area: $("#roomShowArea").val(),
+        bedType: $("#roomShowBed").val(),
+        coverUrl: $(".coverImg").attr("src"),
+        detailImgUrl: JSON.stringify(detailImgUrl),
+        extraFacilities: JSON.stringify(extraFacilities),
+        fitNum: $("#roomShowFitNum").val(),
+        remark: $("#roomShowDescription").val(),
+        id: $("#roomCategoryList").find(".mainActive").find(".id").val(),
+        facilities: JSON.stringify(facilities)
+      };
+      sendRoomShowInfo(item, that);
+    }
+
+    //选择图片
+    function selectPhoto(obj){
+      if ($(obj).hasClass("coverImg")) {
+        $(obj).addClass("photoSelected");
+        $("#editDisplayInfo .first .operateItem").removeClass("hide");
+      } else {
+        $(".detailImg").removeClass("photoSelected");
+        $(obj).addClass("photoSelected");
+        $("#editDisplayInfo .second .operateItem").removeClass("hide");
+      }
+    }
+
+    //发送展示信息
+    function sendRoomShowInfo(item, that){
+      $.ajax({
+        url: host + editShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: item,
+        dataFilter: function(result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          }
+        }
+      })
     }
 
     //点击子类管理按钮
@@ -991,6 +1119,7 @@
       $("#subclassManagement tr.mainActive .status").val("1");
       $("#subclassManagement tr.mainActive").hide();
       $("#subclassManagement tr.mainActive").removeClass("mainActive");
+      $("#subclassManagement .operateItem").addClass("hide");
     });
 
     //子类管理确认按钮
@@ -1146,7 +1275,7 @@
     });
 
     //上架或下架
-    $("#modifyStateButton").on("click", function(){
+    $(".modifyStateButton").on("click", function(){
       var item = {
         id: $(".mainActive .id").val(),
         state: 1 - $(".mainActive .state").val()
@@ -1161,12 +1290,80 @@
       $(this).nextAll("div").addClass("hide");
     });
     $(".cover .create").on("click", function(){
-        $("#cover").click();
-    })
+      $("#cover").click();
+    });
+    $(".detail .create").on("click", function(){
+      $("#detail").click();
+    });
     //编辑房间展示信息
     $("#editRoomDisplayInfoButton").on("click", function(){
+      $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0) span").html());
       var id = $(".mainActive .id").val();
       pullRoomShowInfo(id);
+    });
+    //编辑展示信息确认
+    $("#editRoomShowOk").on("click", function(){
+      var that = this;
+      makeRoomShowInfo(that);
+    });
+    //新增设施确定
+    $("#createFacilityOk").on("click", function(){
+      var that = this;
+      $("#editDisplayInfo tbody").append("<tr class='mainClass'><td>" + $("#createFacilityName").val() + "</td></tr>");
+      $("#editDisplayInfo .mainClass").on("click", function(){
+        $("#editDisplayInfo .mainClass").removeClass("mainActive");
+        $(this).addClass("mainActive");
+        $("#editDisplayInfo .operateItem").removeClass("hide");
+      });
+      clearModal(that);
+    });
+
+    //删除设施
+    $("#deleteFacility").on("click", function(){
+      $("#editDisplayInfo .mainActive").remove();
+      $("#editDisplayInfo .operateItem").addClass("hide");
+    });
+
+    //编辑设施
+    $("#editFacilityButton").on("click", function(){
+      $("#editFacilityName").val($("#editDisplayInfo .mainActive").find("td").html());
+    });
+
+    //编辑设施确认
+    $("#editFacilityOk").on("click", function(){
+      var that = this;
+      $("#editDisplayInfo .mainActive").find("td").html($("#editFacilityName").val());
+      clearModal(that);
+    });
+
+    //删除封面
+    $("#deleteCover").on("click", function(){
+      $(".cover .photoSelected").remove();
+      $("#editDisplayInfo .first .operateItem").addClass("hide");
+      $(".cover .create").show();
+    });
+
+    //替换封面
+    $("#replaceCover").on("click", function(){
+      $("#cover").click();
+    });
+
+    //删除详细图片
+    $("#deleteDetail").on("click", function(){
+      $(".detail .photoSelected").remove();
+      $("#editDisplayInfo .second .operateItem").addClass("hide");
+      $(".detail .create").show();
+    });
+
+    //替换详细图片
+    $("#replaceDetail").on("click", function(){
+      $("#replaceDetailImg").click();
+      $("#replaceDetailImg").fileupload({
+        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        done: function (e, result) {
+          $(".detail .photoSelected").attr("src" ,result.result.data.url);
+        }
+      });
     });
 
     $(function() {

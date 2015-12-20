@@ -14,6 +14,9 @@
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
+  <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
+  <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
+  <script src="/eluyun/static/js/jquery.fileupload.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -136,6 +139,7 @@
                     <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                     <span>上传图片</span>
                   </div>
+                  <input id="cover" type="file" name="file" class="hide" multiple>
                 </div>
                 <div class="photoContainer">
                 </div>
@@ -147,6 +151,7 @@
                     <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                     <span>上传图片</span>
                   </div>
+                  <input id="detail" type="file" name="file" class="hide" multiple>
                 </div>
                 <div class="photoContainer">
                 </div>
@@ -154,30 +159,39 @@
             </div>
             <div class="operate">
               <div class="first">
-                <div class="operateItem">
-                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                  <p>替换图片</p>
+                <div class="operateItem hide">
+                  <div id="replaceCover" class="clickDiv">
+                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                    <p>替换图片</p>
+                  </div>
                 </div>
-                <div class="operateItem">
-                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                  <p>删除</p>
+                <div class="operateItem hide">
+                  <div id="deleteCover" class="clickDiv">
+                    <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                    <p>删除</p>
+                  </div>
                 </div>
               </div>
-              <div class="second hide">
-                <div class="operateItem">
-                  <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
-                  <p>替换图片</p>
+              <div class="second">
+                <div class="operateItem hide">
+                  <div id="replaceDetail" class="clickDiv">
+                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
+                    <p>替换图片</p>
+                  </div>
+                  <input type="file" class="hide" name="file" id="replaceDetailImg"/>
                 </div>
-                <div class="operateItem">
-                  <img src="/eluyun/static/image/icon_shanchu.png" alt="">
-                  <p>删除</p>
+                <div class="operateItem hide">
+                  <div id="deleteDetail" class="clickDiv">
+                    <img src="/eluyun/static/image/icon_shanchu.png" alt="">
+                    <p>删除</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="footer">
             <button class="btn-cancel">取消</button>
-            <button class="btn-ok">确认</button>
+            <button class="btn-ok" id="editETShowOk">确认</button>
           </div>
         </div>
       </div>
@@ -208,7 +222,7 @@
             <tbody></tbody>
           </table>
         </div>
-      <div class="operate">
+      <div class="mainOperate operate">
         <div class="first clearfloat">
           <div class="operateItem hide">
             <div class="clickDiv" id="editETButton" data-toggle="modal" data-target="#editET">
@@ -225,17 +239,24 @@
         </div>
         <div class="second clearfloat hide">
           <div class="operateItem hide">
-            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo">
+            <div class="clickDiv" id="editETShowInfoButton" data-toggle="modal" data-target="#editDisplayInfo">
               <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
               <p>编辑展示信息</p>
             </div>
           </div>
-          <div class="operateItem hide">
-            <div class="clickDiv" id="modifyStateButton">
+          <div class="operateItem hide shangjia">
+            <div class="clickDiv modifyStateButton">
               <img src="/eluyun/static/image/icon_shangjia.png" alt="">
               <p>上架</p>
             </div>
             <p class="putaway">目前未上架</p>
+          </div>
+          <div class="operateItem hide xiajia">
+            <div class="clickDiv modifyStateButton">
+              <img src="/eluyun/static/image/icon_xiajia.png" alt="">
+              <p>下架</p>
+            </div>
+            <p class="putaway">已上架</p>
           </div>
         </div>
       </div>
@@ -257,17 +278,22 @@
                 "<td>" + element.price + "</td>" +
                 "<td>" + element.description + "</td>" +
                 "<input type='hidden' class='state' value=" + element.state + " />" +
-                "<input type='hidden' value=" + element.id + " /></tr>";
+                "<input type='hidden' class='id' value=" + element.id + " /></tr>";
       });
       $(".categoryGrid tbody").html(str);
-      $(".operateItem").addClass("hide");
-      $(".second").addClass("hide");
+      $(".mainOperate .operateItem").addClass("hide");
+      $(".mainOperate .second").addClass("hide");
       $(".mainClass").on("click", function(){
         $(".mainClass").removeClass("mainActive");
         $(".subclass").removeClass("subActive");
         $(this).addClass("mainActive");
-        $(".operateItem").removeClass("hide");
-        $(".second").removeClass("hide");
+        $(".mainOperate .operateItem").removeClass("hide");
+        $(".mainOperate .second").removeClass("hide");
+        if ($(this).find(".state").val() == 0) {
+          $(".xiajia").addClass("hide");
+        } else {
+          $(".shangjia").addClass("hide");
+        }
       })
     };
     //判断空属性
@@ -365,6 +391,32 @@
         }
       });
     }
+
+    //上架或者下架
+    function modifyState(item){
+      $.ajax({
+        url: host + modifyStateUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: item,
+        dataFilter: function (result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function (result) {
+          if (!errorHandler(result)) {
+            return;
+          }
+          $.each(ETCategoryList.list, function(index, element){
+            if (element.id == item.id) {
+              ETCategoryList.list[index].state = item.state;
+              return false; //等于break
+            }
+          });
+          ETCategoryList.render();
+        }
+      })
+    }
+
     //删除
     function deleteETCategory(){
       var id = $(".mainActive input").val();
@@ -384,6 +436,107 @@
           ETCategoryList.render();
         }
       });
+    }
+
+    //读取展示信息
+    function pullETShowInfo(id){
+      $.ajax({
+        url: host +pullShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: {id: id},
+        dataFilter: function(result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(result){
+          showETShowInfo(result.data);
+        }
+      })
+    }
+
+    //显示展示信息
+    function showETShowInfo(data){
+      if (data.coverUrl != null) {
+        $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + data.coverUrl + "' />");
+        $(".cover .create").hide();
+      } else {
+        $(".cover .create").show();
+      }
+      if (data.detailImgUrl != null) {
+        var detailStr = "";
+        $.each(data.detailImgUrl, function(index, element){
+          detailStr += "<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + element + "' />"
+        });
+        $(".detail .photoContainer").html(detailStr);
+        if ($(".detailImg").length == 6) {
+          $(".detail .create").hide();
+        } else {
+          $(".detail .create").show();
+        }
+      } else {
+        $(".detail .create").show();
+      }
+      //上传图片
+      $("#cover").fileupload({
+        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        done: function (e, result) {
+          $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
+          $(".cover .create").hide();
+        }
+      });
+      $("#detail").fileupload({
+        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        done: function (e, result) {
+          $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.result.data.url + "' />");
+          if ($(".detailImg").length == 6) {
+            $(".detail .create").hide();
+          }
+        }
+      })
+    }
+
+    //准备展示信息数据
+    function makeETShowInfo(that){
+      var detailImgUrl = [];
+      $(".detailImg").each(function(){
+        detailImgUrl.push($(this).attr("src"));
+      });
+      var item = {
+        coverUrl: $(".coverImg").attr("src"),
+        detailImgUrl: JSON.stringify(detailImgUrl),
+        id: $(".categoryGrid").find(".mainActive").find(".id").val()
+      };
+      sendETShowInfo(item, that);
+    }
+
+    //选择图片
+    function selectPhoto(obj){
+      if ($(obj).hasClass("coverImg")) {
+        $(obj).addClass("photoSelected");
+        $("#editDisplayInfo .first .operateItem").removeClass("hide");
+      } else {
+        $(".detailImg").removeClass("photoSelected");
+        $(obj).addClass("photoSelected");
+        $("#editDisplayInfo .second .operateItem").removeClass("hide");
+      }
+    }
+
+    //发送展示信息
+    function sendETShowInfo(item, that){
+      $.ajax({
+        url: host + editShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        data: item,
+        dataFilter: function(result) {
+          result = JSON.parse(result); //先转为json
+          sessionValidate(result);
+          return JSON.stringify(result); //再转为字符串传回去
+        },
+        success: function(result){
+          if (errorHandler(result)) {
+            clearModal(that);
+          }
+        }
+      })
     }
     $(function(){
       $("form").validate();
@@ -420,7 +573,65 @@
       confirmCallback = deleteETCategory;
       dialogConfig = {title:"提示", message:"您确定要删除吗？"};
       confirmDialog(dialogConfig,confirmCallback);
-    })
+    });
+    //上架或下架
+    $(".modifyStateButton").on("click", function(){
+      var item = {
+        id: $(".mainActive .id").val(),
+        state: 1 - $(".mainActive .state").val()
+      };
+      modifyState(item);
+    });
+
+    //编辑展示信息
+    $("#editETShowInfoButton").on("click", function(){
+      $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0)").html());
+      var id = $(".mainActive .id").val();
+      pullETShowInfo(id);
+    });
+
+    //删除封面
+    $("#deleteCover").on("click", function(){
+      $(".cover .photoSelected").remove();
+      $("#editDisplayInfo .first .operateItem").addClass("hide");
+      $(".cover .create").show();
+    });
+
+    //替换封面
+    $("#replaceCover").on("click", function(){
+      $("#cover").click();
+    });
+
+    //删除详细图片
+    $("#deleteDetail").on("click", function(){
+      $(".detail .photoSelected").remove();
+      $("#editDisplayInfo .second .operateItem").addClass("hide");
+      $(".detail .create").show();
+    });
+
+    //替换详细图片
+    $("#replaceDetail").on("click", function(){
+      $("#replaceDetailImg").click();
+      $("#replaceDetailImg").fileupload({
+        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        done: function (e, result) {
+          $(".detail .photoSelected").attr("src" ,result.result.data.url);
+        }
+      });
+    });
+
+    $(".cover .create").on("click", function(){
+      $("#cover").click();
+    });
+    $(".detail .create").on("click", function(){
+      $("#detail").click();
+    });
+
+    //编辑展示信息确认
+    $("#editETShowOk").on("click", function(){
+      var that = this;
+      makeETShowInfo(that);
+    });
   </script>
 </body>
 </html>

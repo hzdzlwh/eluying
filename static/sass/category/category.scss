@@ -107,6 +107,12 @@
         height: 207px;
         background-color: #FBFBFB;
         border: 1px #CFCFCF solid;
+        .photoSelected {
+            border: 2px solid #4a90e2;
+        }
+        img {
+            cursor: pointer;
+        }
     }
     .operate {
         margin-top: 75px;
