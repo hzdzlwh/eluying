@@ -41,18 +41,18 @@
               <h2>基本信息</h2>
               <ul>
                 <li><label for="createRoomName">房型名称</label>
-                  <input maxlength="16" required id="createRoomName" name="createRoomName" type="text" class="text" placeholder="用于展示给客户" /></li>
+                  <input maxlength="16" required id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
                 <li><label for="createRoomShortName">简称</label>
                   <input maxlength="8" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
                   <input range="[0,99999999]" maxlength="8" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                 <li><label for="createRoomFitNum">可容纳人数</label>
-                  <input range="[1,99999999]" maxlength="8" digits type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
+                  <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
                 <li><label for="createRoomUnit">单位</label>
                   <input maxlength="8" type="text" name="createRoomUnit" class="text required" id="createRoomUnit" placeholder="请填写单位" /></li>
                 <li><label for="createRoomInventory">默认房间数</label>
-                  <input range="[1,99999999]" maxlength="8" digits type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
+                  <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
                   <p>可以在房态管理中，管理每天的房间库存</p></li>
               </ul>
           </form>
@@ -106,23 +106,23 @@
       <div class="modal-dialog modal-w506">
           <div class="modal-content clearfloat">
               <div class="editBasicInfo clearfloat">
-                  <div class="inputFiled">
+                  <form class="inputFiled">
                       <h1>编辑房型</h1>
                       <h2>基本信息</h2>
                       <ul>
                           <li><label for="editRoomName">房型名称</label>
-                              <input type="text" id="editRoomName" class="text" placeholder="用于展示给客户" /></li>
+                              <input maxlength="16" type="text" id="editRoomName" name="editRoomName" class="text required" placeholder="用于展示给客户" /></li>
                           <li><label for="editRoomShortName">简称</label>
-                              <input type="text" id="editRoomShortName" class="text" placeholder="用于自己管理" /></li>
+                              <input maxlength="8" type="text" id="editRoomShortName" name="editRoomShortName" class="text required" placeholder="用于自己管理" /></li>
                           <li><label for="editRoomPrice">价格</label>
-                              <input type="text" id="editRoomPrice" class="text" placeholder="请填写纯数字" />
+                              <input maxlength="8" range="[0,99999999]" type="text" id="editRoomPrice" name="editRoomPrice" class="text required" placeholder="请填写纯数字" />
                               <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                           <li><label for="editRoomFitNum">可容纳人数</label>
-                              <input type="text" id="editRoomFitNum" class="text" placeholder="请填写纯数字" /></li>
+                              <input maxlength="8" range="[0,99999999]" digits="true" type="text" id="editRoomFitNum" name="editRoomFitNum" class="text required" placeholder="请填写纯数字" /></li>
                           <li><label for="editRoomUnit">单位</label>
-                              <input type="text" id="editRoomUnit" class="text" placeholder="请填写单位" /></li>
+                              <input maxlength="8" type="text" id="editRoomUnit" name="editRoomUnit" class="text required" placeholder="请填写单位" /></li>
                       </ul>
-                  </div>
+                  </form>
               </div>
               <div class="footer">
                   <button class="btn-cancel">取消</button>
@@ -191,15 +191,15 @@
             <ul>
               <li>
                 <label for="createSubclassName">名称</label>
-                <input type="text" class="text" id="createSubclassName" placeholder="用于展示给客户">
+                <input maxlength="16" type="text" class="text required" id="createSubclassName" name="createSubclassName" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="createSubclassShortName">简称</label>
-                <input type="text" class="text" id="createSubclassShortName" placeholder="用于自己管理">
+                <input maxlength="8" type="text" class="text required" id="createSubclassShortName" name="createSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="createSubclassInventory">房间数</label>
-                <input type="text" class="text" id="createSubclassInventory" placeholder="请填写纯数字">
+                <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required" id="createSubclassInventory" name="createSubclassInventory" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
@@ -221,15 +221,15 @@
             <ul>
               <li>
                 <label for="editSubclassName">名称</label>
-                <input type="text" class="text" id="editSubclassName" placeholder="用于展示给客户">
+                <input maxlength="16" type="text" class="text required" id="editSubclassName" name="editSubclassName" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="editSubclassShortName">简称</label>
-                <input type="text" class="text" id="editSubclassShortName" placeholder="用于自己管理">
+                <input maxlength="8" type="text" class="text required" id="editSubclassShortName" name="editSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="editSubclassInventory">房间数</label>
-                <input type="text" class="text" id="editSubclassInventory" placeholder="请填写纯数字">
+                <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required" id="editSubclassInventory" name="editSubclassInventory" placeholder="请填写纯数字">
               </li>
             </ul>
           </form>
@@ -262,19 +262,19 @@
                   <ul>
                     <li>
                       <label for="roomShowFitNum">可容纳人数</label>
-                      <input type="text" class="text" id="roomShowFitNum" placeholder="请填写纯数字">
+                      <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="roomShowFitNum" name="roomShowFitNum" placeholder="请填写纯数字">
                     </li>
                     <li>
                       <label for="roomShowArea">房间面积</label>
-                      <input type="text" class="text" id="roomShowArea" placeholder="单位：平方米">
+                      <input maxlength="8" range="[1,99999999]" type="text" class="text required" id="roomShowArea" name="roomShowArea" placeholder="单位：平方米">
                     </li>
                     <li>
                       <label for="roomShowBed">床型</label>
-                      <input type="text" class="text" id="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长6个汉字">
+                      <input maxlength="8" type="text" class="text required" id="roomShowBed" name="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长8个汉字">
                     </li>
                     <li>
                       <label for="roomShowDescription">描述或备注</label>
-                      <textarea name="description" id="roomShowDescription" placeholder="最长70个汉字"></textarea>
+                      <textarea maxlength="140" name="description" id="roomShowDescription" name="roomShowDescription" placeholder="最长140个汉字"></textarea>
                     </li>
                   </ul>
                 </form>
@@ -290,8 +290,8 @@
                         </div>
                           <input id="cover" type="file" name="file" class="hide" multiple>
                       </div>
-                      <div class="photoContainer">
-                      </div>
+                      <div class="photoContainer"></div>
+                      <p class="coverError hide">请上传封面<p>
                     </div>
                     <div class="detail">
                       <div class="title clearfloat">
@@ -302,8 +302,8 @@
                         </div>
                         <input id="detail" type="file" name="file" class="hide" multiple>
                       </div>
-                      <div class="photoContainer">
-                      </div>
+                      <div class="photoContainer"></div>
+                      <p class="detailError hide">请上传详细图片<p>
                     </div>
                   </div>
                   <div class="operate">
@@ -346,46 +346,46 @@
                   <ul>
                     <li>
                       <label>热水供应</label>
-                      <input type="radio" class="Y" id="hotWaterY" name="hotWater" value="1">有，请描述时间段&nbsp;
+                      <input type="radio" class="Y required" id="hotWaterY" name="hotWater" value="1">有，请描述时间段&nbsp;
                       <input type="radio" class="N" id="hotWaterN" name="hotWater" value="0">无<br/>
                       <div>
                         <label for="hotWaterDescription">描述</label>
-                        <input type="text" id="hotWaterDescription" class="text" placeholder="例如：24小时/8:00~22:00,最长6个汉字">
+                        <input maxlength="8" type="text" id="hotWaterDescription" name="hotWaterDescription" class="text required" placeholder="例如：24小时/8:00~22:00,最长8个汉字">
                       </div>
                     </li>
                     <li>
                       <label>早餐</label>
-                      <input type="radio" class="Y" id="breakfastY" name="breakfast" value="1">有，请描述&nbsp;
+                      <input type="radio" class="Y required" id="breakfastY" name="breakfast" value="1">有，请描述&nbsp;
                       <input type="radio" class="N" id="breakfastN" name="breakfast" value="0">无<br />
                       <div>
                         <label>描述</label>
-                        <input type="text" id="breakfastDescription" class="text" placeholder="例如：中式早餐/面包+牛奶,最长6个汉字">
+                        <input maxlength="8" type="text" id="breakfastDescription" name="breakfastDescription" class="text required" placeholder="例如：中式早餐/面包+牛奶,最长8个汉字">
                       </div>
                     </li>
                     <li>
                       <label>浴室</label>
-                      <input type="radio" id="publicBathroom" name="bathroom" value="公共浴室">公共浴室&nbsp;
+                      <input type="radio" class="required" id="publicBathroom" name="bathroom" value="公共浴室">公共浴室&nbsp;
                       <input type="radio" id="independentBathroom" name="bathroom" value="独立浴室">独立浴室&nbsp;
                       <input type="radio" id="bathroomN" name="bathroom" value="0">无
                     </li>
                     <li>
                       <label>厕所</label>
-                      <input type="radio" id="publicToilet" name="toilet" value="公共厕所">公共厕所&nbsp;
+                      <input type="radio" class="required" id="publicToilet" name="toilet" value="公共厕所">公共厕所&nbsp;
                       <input type="radio" id="independentToilet" name="toilet" value="独立厕所">独立厕所&nbsp;
                       <input type="radio" id="toiletN" name="toilet" value="0">无
                     </li>
                     <li>
                       <label>营地管家</label>
-                      <input type="radio" id="butlerY" name="butler" value="1">有&nbsp;
+                      <input type="radio" class="required" id="butlerY" name="butler" value="1">有&nbsp;
                       <input type="radio" id="butlerN" name="butler" value="0">无
                     </li>
                     <li>
                       <label>网络</label>
-                      <input type="radio" class="Y" id="networkY" name="network" value="1">有&nbsp;
+                      <input type="radio" class="Y required" id="networkY" name="network" value="1">有&nbsp;
                       <input type="radio" class="N" id="networkN" name="network" value="0">无<br/>
                       <div>
                         <label>描述</label>
-                        <input type="text" id="networkDescription" class="text" name="" placeholder="例如：免费WIFI/收费有线宽带，最长6个汉字">
+                        <input maxlength="8" type="text" id="networkDescription" class="text required" name="networkDescription" placeholder="例如：免费WIFI/收费有线宽带，最长8个汉字">
                       </div>
                     </li>
                   </ul>
@@ -445,7 +445,7 @@
           <ul>
             <li>
               <label for="createSubclassName">名称</label>
-              <input type="text" class="text" id="createFacilityName">
+              <input maxlength="16" type="text" class="text required" id="createFacilityName" name="createFacilityName">
             </li>
           </ul>
         </form>
@@ -465,7 +465,7 @@
           <ul>
             <li>
               <label for="createSubclassName">名称</label>
-              <input type="text" class="text" id="editFacilityName">
+              <input maxlength="16" type="text" class="text required" id="editFacilityName" name="editFacilityName">
             </li>
           </ul>
         </form>
@@ -994,6 +994,7 @@
           done: function (e, result) {
             $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
             $(".cover .create").hide();
+            $(".coverError").addClass("hide");
           }
       });
       $("#detail").fileupload({
@@ -1003,6 +1004,7 @@
           if ($(".detailImg").length == 6) {
             $(".detail .create").hide();
           }
+          $(".detailError").addClass("hide");
         }
       })
     }
@@ -1124,6 +1126,9 @@
 
     //子类管理确认按钮
     $("#subclassManagementOk").on("click", function(){
+      if (!$("#subclassManagement form").valid()) {
+        return;
+      }
       var subTypeList = [];
       var that = this;
       $("#subclassManagement .mainClass").each(function(){
@@ -1153,6 +1158,9 @@
 
     //点击编辑房型基本信息确认按钮
     $("#editRoomBasicOk").on("click", function(){
+      if (!$("#editRoomBasic form").valid()) {
+        return;
+      }
       var that = this;
       var item = {
         name: $("#editRoomName").val(),
@@ -1167,6 +1175,9 @@
 
     //点击新增子类的确定按钮
     $("#createSubclassOk").on("click", function(){
+      if (!$("#createSubclass form").valid()) {
+        return;
+      }
       $("#createRoom tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
               + "</td><td>" + $("#createSubclassShortName").val() + "</td><td>" + $("#createSubclassInventory").val() + "</td></tr>");
       $("#subclassManagement tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
@@ -1234,6 +1245,9 @@
 
     //编辑子类确定按钮
     $("#editSubclassOk").on("click", function(){
+      if (!$("#editSubclass form").valid()) {
+        return;
+      }
       var that = this;
       $("#createRoom tbody tr.mainActive").html("<td>" + $("#editSubclassName").val()
       + "</td><td>"+ $("#editSubclassShortName").val()+"</td><td>"+ $("#editSubclassInventory").val()+"</td>");
@@ -1262,6 +1276,9 @@
 
     //编辑房间确定
     $("#editRoomOk").on("click", function(){
+      if (!$("#editRoom form").valid()) {
+        return;
+      }
       var that = this;
       var rooms = [];
       $(".room").each(function(){
@@ -1303,11 +1320,25 @@
     });
     //编辑展示信息确认
     $("#editRoomShowOk").on("click", function(){
+      if (!$("#editDisplayInfo form").valid()) {
+        return;
+      }
+      if ($(".cover .photoContainer").html() == "") {
+        $(".coverError").removeClass("hide");
+        return
+      }
+      if ($(".detail .photoContainer").html() == "") {
+        $(".detailError").removeClass("hide");
+        return
+      }
       var that = this;
       makeRoomShowInfo(that);
     });
     //新增设施确定
     $("#createFacilityOk").on("click", function(){
+      if (!$("#createFacility form").valid()) {
+        return;
+      }
       var that = this;
       $("#editDisplayInfo tbody").append("<tr class='mainClass'><td>" + $("#createFacilityName").val() + "</td></tr>");
       $("#editDisplayInfo .mainClass").on("click", function(){
@@ -1331,6 +1362,9 @@
 
     //编辑设施确认
     $("#editFacilityOk").on("click", function(){
+      if (!$("#editFacility form").valid()) {
+        return;
+      }
       var that = this;
       $("#editDisplayInfo .mainActive").find("td").html($("#editFacilityName").val());
       clearModal(that);
@@ -1367,7 +1401,6 @@
     });
 
     $(function() {
-      $("form").validate();
       //读取营地名称和用户名
       $(".campName").html(localStorage.getItem("campName"));
       $(".userName").find("a").html(localStorage.getItem("userName"));

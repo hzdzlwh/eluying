@@ -37,6 +37,10 @@ function clearModal(that){
     if ($(".photoContainer").html() != "") {
         $(".photoContainer").html("");
     }
+    $(that).parents(".modal").find("input[type=radio]").prop(false);
+    $("coverError").addClass("hide");
+    $("detailError").addClass("hide");
+
 }
 
 //错误验证
@@ -117,6 +121,7 @@ function mainContainer(){
 }
 
 $(document).ready(function(){
+    $("form").validate();
     mainContainer();
     //顶部导航栏
     $("body").prepend("<div class='header clearfloat'>"

@@ -39,31 +39,31 @@
             <ul>
               <li>
                 <label for="createFoodName">餐饮名称</label>
-                <input type="text" class="text" id="createFoodName" placeholder="用于展示给客户">
+                <input maxlength="16" type="text" class="text required" id="createFoodName" name="" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="createFoodShortName">简称</label>
-                <input type="text" class="text" id="createFoodShortName" placeholder="用于自己管理">
+                <input maxlength="8" type="text" class="text required" id="createFoodShortName" name="" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="createFoodUnit">单位</label>
-                <input type="text" class="text" id="createFoodUnit" placeholder="请填写单位">
+                <input maxlength="8" type="text" class="text required" id="createFoodUnit" name="" placeholder="请填写单位">
               </li>
               <li>
                 <label for="createFoodFitNum">适用人数</label>
-                <input type="text" class="text" id="createFoodFitNum" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="createFoodFitNum" name="" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="createFoodInventory">默认库存</label>
-                <input type="text" class="text" id="createFoodInventory" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="createFoodInventory" name="" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="createFoodPrice">单价</label>
-                <input type="text" class="text" id="createFoodPrice" placeholder="请填写纯数字">
+                <input maxlength="8" range="[0,99999999]" type="text" class="text required" id="createFoodPrice" name="" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="createFoodDescription">描述</label>
-                <textarea name="description" id="createFoodDescription" placeholder="请填写描述"></textarea>
+                <textarea maxlength="140" name="description" id="createFoodDescription" name="" placeholder="请填写描述"></textarea>
               </li>
             </ul>
           </form>
@@ -86,31 +86,31 @@
             <ul>
               <li>
                 <label for="editFoodName">餐饮名称</label>
-                <input id="editFoodName" type="text" class="text" placeholder="用于展示给客户">
+                <input maxlength="16" id="editFoodName" type="text" class="text required" name="editFoodName" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="editFoodShortName">简称</label>
-                <input id="editFoodShortName" type="text" class="text" placeholder="用于自己管理">
+                <input maxlength="8" id="editFoodShortName" type="text" class="text required" name="editFoodShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="editFoodUnit">单位</label>
-                <input id="editFoodUnit" type="text" class="text" placeholder="请填写单位">
+                <input maxlength="8" id="editFoodUnit" type="text" class="text required" name="editFoodUnit" placeholder="请填写单位">
               </li>
               <li>
                 <label for="editFoodFitNum">适用人数</label>
-                <input id="editFoodFitNum" type="text" class="text" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" id="editFoodFitNum" type="text" class="text required" name="editFoodFitNum" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editFoodInventory">默认库存</label>
-                <input id="editFoodInventory" type="text" class="text" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" id="editFoodInventory" type="text" class="text required" name="editFoodInventory" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editFoodPrice">单价</label>
-                <input id="editFoodPrice" type="text" class="text" placeholder="请填写纯数字">
+                <input maxlength="8" range="[0,99999999]" id="editFoodPrice" type="text" class="text required" name="editFoodPrice" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editFoodDescription">描述</label>
-                <textarea id="editFoodDescription" name="description" placeholder="请填写描述"></textarea>
+                <textarea maxlength="140" id="editFoodDescription" name="description" name="editFoodDescription" placeholder="请填写描述"></textarea>
               </li>
             </ul>
           </form>
@@ -141,8 +141,8 @@
                   </div>
                   <input id="cover" type="file" name="file" class="hide" multiple>
                 </div>
-                <div class="photoContainer">
-                </div>
+                <div class="photoContainer"></div>
+                <p class="coverError hide">请上传封面<p>
               </div>
               <div class="detail">
                 <div class="title clearfloat">
@@ -153,8 +153,8 @@
                   </div>
                   <input id="detail" type="file" name="file" class="hide" multiple>
                 </div>
-                <div class="photoContainer">
-                </div>
+                <div class="photoContainer"></div>
+                <p class="detailError hide">请上传详细图片<p>
               </div>
             </div>
             <div class="operate">
@@ -369,7 +369,7 @@
     //编辑基本信息
     function editFoodCategory(that){
       var item = {
-        id: $(".mainActive input").val(),
+        id: $(".mainActive .id").val(),
         name: $("#editFoodName").val(),
         shortName: $("#editFoodShortName").val(),
         unit: $("#editFoodUnit").val(),
@@ -432,7 +432,7 @@
 
     //删除
     function deleteFoodCategory(){
-      var id = $(".mainActive input").val();
+      var id = $(".mainActive .id").val();
       $.ajax({
         url: host + deleteOtherCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
         data: {id: id},
@@ -500,6 +500,7 @@
         done: function (e, result) {
           $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
           $(".cover .create").hide();
+          $(".coverError").addClass("hide");
         }
       });
       $("#detail").fileupload({
@@ -509,6 +510,7 @@
           if ($(".detailImg").length == 6) {
             $(".detail .create").hide();
           }
+          $(".detailError").addClass("hide");
         }
       })
     }
@@ -572,10 +574,16 @@
       modifyState(item);
     });
     $("#createFoodOk").on("click", function(){
+      if (!$("#createFood form").valid()) {
+        return;
+      }
       var that = this;
       addFoodCategory(that);
     });
     $("#editFoodOk").on("click", function(){
+      if (!$("#editFood form").valid()) {
+        return;
+      }
       var that = this;
       editFoodCategory(that);
     });
@@ -648,6 +656,14 @@
 
     //编辑展示信息确认
     $("#editFoodShowOk").on("click", function(){
+      if ($(".cover .photoContainer").html() == "") {
+        $(".coverError").removeClass("hide");
+        return
+      }
+      if ($(".detail .photoContainer").html() == "") {
+        $(".detailError").removeClass("hide");
+        return
+      }
       var that = this;
       makeFoodShowInfo(that);
     });

@@ -114,6 +114,10 @@
             cursor: pointer;
         }
     }
+    .coverError,.detailError {
+        margin-top: -30px;
+        color: red;
+    }
     .operate {
         margin-top: 75px;
         .second {

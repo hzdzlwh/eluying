@@ -39,31 +39,31 @@
           <ul>
             <li>
               <label for="createETName">娱乐名称</label>
-              <input type="text" class="text" id="createETName" placeholder="用于展示给客户">
+              <input maxlength="16" type="text" class="text required" id="createETName" name="createETName" placeholder="用于展示给客户">
             </li>
             <li>
               <label for="createETShortName">简称</label>
-              <input type="text" class="text" id="createETShortName" placeholder="用于自己管理">
+              <input maxlength="8" type="text" class="text required" id="createETShortName" name="createETShortName" placeholder="用于自己管理">
             </li>
             <li>
               <label for="createETUnit">单位</label>
-              <input type="text" class="text" id="createETUnit" placeholder="例如：次/辆">
+              <input maxlength="8" type="text" class="text required" id="createETUnit" name="createETUnit" placeholder="例如：次/辆">
             </li>
             <li>
               <label for="createETFitNum">适用人数</label>
-              <input type="text" class="text" id="createETFitNum" placeholder="请填写纯数字">
+              <input maxlength="8" type="text" class="text required" id="createETFitNum" name="createETFitNum" placeholder="请填写纯数字">
             </li>
             <li>
               <label for="createETInventory">默认库存</label>
-              <input type="text" class="text" id="createETInventory" placeholder="请填写纯数字">
+              <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="createETInventory" name="createETInventory" placeholder="请填写纯数字">
             </li>
             <li>
               <label for="createETPrice">单价</label>
-              <input type="text" class="text" id="createETPrice" placeholder="请填写纯数字">
+              <input maxlength="8" range="[0,99999999]" type="text" class="text required" id="createETPrice" name="createETPrice" placeholder="请填写纯数字">
             </li>
             <li>
               <label for="createETDescription">描述</label>
-              <textarea name="description" id="createETDescription" placeholder="请填写描述"></textarea>
+              <textarea maxlength="140" name="description" id="createETDescription" name="createETDescription" placeholder="请填写描述"></textarea>
             </li>
           </ul>
         </form>
@@ -81,36 +81,36 @@
       <div class="modal-content clearfloat">
         <div class="editET clearfloat">
           <form class="inputFiled">
-            <h1>新增娱乐</h1>
+            <h1>编辑娱乐</h1>
             <h2>基本信息</h2>
             <ul>
               <li>
                 <label for="editETName">娱乐名称</label>
-                <input type="text" class="text" id="editETName" placeholder="用于展示给客户">
+                <input maxlength="16" type="text" class="text required" id="editETName" name="editETName" placeholder="用于展示给客户">
               </li>
               <li>
                 <label for="editETShortName">简称</label>
-                <input type="text" class="text" id="editETShortName" placeholder="用于自己管理">
+                <input maxlength="8" type="text" class="text required" id="editETShortName" name="editETShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="editETUnit">单位</label>
-                <input type="text" class="text" id="editETUnit" placeholder="例如：次/辆">
+                <input maxlength="8" type="text" class="text required" id="editETUnit" name="editETUnit" placeholder="例如：次/辆">
               </li>
               <li>
                 <label for="editETFitNum">适用人数</label>
-                <input type="text" class="text" id="editETFitNum" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="editETFitNum" name="editETFitNum" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editETInventory">默认库存</label>
-                <input type="text" class="text" id="editETInventory" placeholder="请填写纯数字">
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="editETInventory" name="editETInventory" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editETPrice">单价</label>
-                <input type="text" class="text" id="editETPrice" placeholder="请填写纯数字">
+                <input maxlength="8" range="[0,99999999]" type="text" class="text required" id="editETPrice" name="editETPrice" placeholder="请填写纯数字">
               </li>
               <li>
                 <label for="editETDescription">描述</label>
-                <textarea name="description" id="editETDescription" placeholder="请填写描述"></textarea>
+                <textarea maxlength="140" name="description" id="editETDescription" name="editETDescription" placeholder="请填写描述"></textarea>
               </li>
             </ul>
           </form>
@@ -141,8 +141,8 @@
                   </div>
                   <input id="cover" type="file" name="file" class="hide" multiple>
                 </div>
-                <div class="photoContainer">
-                </div>
+                <div class="photoContainer"></div>
+                <p class="coverError hide">请上传封面<p>
               </div>
               <div class="detail">
                 <div class="title clearfloat">
@@ -153,8 +153,8 @@
                   </div>
                   <input id="detail" type="file" name="file" class="hide" multiple>
                 </div>
-                <div class="photoContainer">
-                </div>
+                <div class="photoContainer"></div>
+                <p class="detailError hide">请上传详细图片<p>
               </div>
             </div>
             <div class="operate">
@@ -361,7 +361,7 @@
     //编辑基本信息
     function editETCategory(that){
       var item = {
-        id: $(".mainActive input").val(),
+        id: $(".mainActive .id").val(),
         name: $("#editETName").val(),
         shortName: $("#editETShortName").val(),
         unit: $("#editETUnit").val(),
@@ -419,7 +419,7 @@
 
     //删除
     function deleteETCategory(){
-      var id = $(".mainActive input").val();
+      var id = $(".mainActive .id").val();
       $.ajax({
         url: host + deleteOtherCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
         data: {id: id},
@@ -482,6 +482,7 @@
         done: function (e, result) {
           $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
           $(".cover .create").hide();
+          $(".coverError").addClass("hide");
         }
       });
       $("#detail").fileupload({
@@ -491,6 +492,7 @@
           if ($(".detailImg").length == 6) {
             $(".detail .create").hide();
           }
+          $(".detailError").addClass("hide");
         }
       })
     }
@@ -553,10 +555,16 @@
       modifyState(item);
     });
     $("#createETOk").on("click", function(){
+      if (!$("#createET form").valid()) {
+        return;
+      }
       var that = this;
       addETCategory(that);
     });
     $("#editETOk").on("click", function(){
+      if (!$("#editET form").valid()) {
+        return;
+      }
       var that = this;
       editETCategory(that);
     });
@@ -629,6 +637,14 @@
 
     //编辑展示信息确认
     $("#editETShowOk").on("click", function(){
+      if ($(".cover .photoContainer").html() == "") {
+        $(".coverError").removeClass("hide");
+        return
+      }
+      if ($(".detail .photoContainer").html() == "") {
+        $(".detailError").removeClass("hide");
+        return
+      }
       var that = this;
       makeETShowInfo(that);
     });
