@@ -176,8 +176,7 @@ $(document).ready(function(){
     //退出登录
     $('#logout').click(function(){
         $.get(host + logoutUrl + ";jsessionid=" + $.cookie("jsessionid"));
-        $.cookie("campName", "", {path: "/"});
-        $.cookie("userName", "", {path: "/"});
+        store.clear();
         $.cookie("jsessionid", "", {path: "/"});
         location.href = "/eluyun/view/loginTest.html";
     });

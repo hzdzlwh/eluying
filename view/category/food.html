@@ -2,10 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="renderer" content="webkit">
   <title>易露云</title>
   <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!--[if lte IE 6]>
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.css">
+  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.min.css">
   <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
   <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
@@ -17,10 +19,14 @@
   <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
   <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
   <script src="/eluyun/static/js/jquery.fileupload.js"></script>
+  <script src="/eluyun/static/js/bootstrap.min.js"></script>
+  <script src="/eluyun/static/js/store.min.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
-  <script src="/eluyun/static/js/bootstrap.min.js"></script>
+  <!--[if lte IE 7]>
+  <script src="/eluyun/static/js/json2.js"></script>
+  <![endif]-->
   <!--[if lte IE 6]>
   <script type="text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
   <![endif]-->
@@ -562,8 +568,8 @@
     $(function(){
       $("form").validate();
       //读取营地名称和用户名
-      $(".campName").html(localStorage.getItem("campName"));
-      $(".userName").find("a").html(localStorage.getItem("userName"));
+      $(".campName").html(store.get("campName"));
+      $(".userName").find("a").html(store.get("userName"));
       loadFoodCategoryList();
     });
     $("#modifyStateButton").on("click", function(){
