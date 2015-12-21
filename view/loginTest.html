@@ -6,13 +6,6 @@
   <meta name="renderer" content="webkit">
   <title>易露云</title>
   <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!--[if lte IE 7]>
-  <script src="/eluyun/static/js/json2.js"></script>
-  <![endif]-->
-  <!--[if lte IE 6]>
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.min.css">
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
-  <![endif]-->
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <style>
     .loader {
@@ -143,9 +136,9 @@
             $(".mask").addClass("hide");
             return;
           }
-          store.set("campName", result.data.camps[0].name);
-          store.set("userName", result.data.userName);
-          $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
+          sessionStorage.setItem("campName", result.data.camps[0].name);
+          sessionStorage.setItem("userName", result.data.userName);
+          //$.cookie("jsessionid", result.data.jsessionid, {path: "/"});
           location.href="/eluyun/view/category/room.html";
         }
       })

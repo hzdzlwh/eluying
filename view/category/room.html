@@ -684,7 +684,7 @@
     //上架或者下架
     function modifyState(item){
       $.ajax({
-        url: host + modifyStateUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + modifyStateUrl,
         data: item,
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -710,7 +710,7 @@
     function loadSubRoom(id){
       var str = "";
       $.ajax({
-        url: host + loadSubRoomUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + loadSubRoomUrl,
         data: {id: id},
         success: function(result){
           $.each(result.data.list, function(index, element){
@@ -744,7 +744,7 @@
     //读取房型列表
     function loadRoomCategoryList() {
       $.ajax({
-        url: host + getRoomCategoryListUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + getRoomCategoryListUrl,
         success: function (result) {
           roomCategoryList.list = result.data.list;
           roomCategoryList.render();
@@ -1137,9 +1137,6 @@
 
     //子类管理确认按钮
     $("#subclassManagementOk").on("click", function(){
-      if (!$("#subclassManagement form").valid()) {
-        return;
-      }
       var subTypeList = [];
       var that = this;
       $("#subclassManagement .mainClass").each(function(){
@@ -1413,8 +1410,8 @@
 
     $(function() {
       //读取营地名称和用户名
-      $(".campName").html(store.get("campName"));
-      $(".userName").find("a").html(store.get("userName"));
+      $(".campName").html(sessionStorage.getItem("campName"));
+      $(".userName").find("a").html(sessionStorage.getItem("userName"));
       loadRoomCategoryList();
     })
   </script>
