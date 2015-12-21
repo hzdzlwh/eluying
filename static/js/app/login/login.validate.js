@@ -8,7 +8,7 @@ function loginNameValidate(str){
 
 function passwordValidate(str){
     var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/;
-    return reg.test(str) || '密码必须是6到15位,包含大小写字母和数字';
+    return reg.test(str) || '密码必须是6到15位,并且包含大小写字母和数字';
 }
 
 function passwordConfirmValidate(left, right){
