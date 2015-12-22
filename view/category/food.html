@@ -5,14 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="renderer" content="webkit">
   <title>易露云</title>
-  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!--[if lte IE 6]>
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.min.css">
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
-  <![endif]-->
+  <link rel="stylesheet" href="/eluyun/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
-  <script src="/eluyun/bower_components/jquery.min.js"></script>
-  <script src="/eluyun/static/js/jquery.cookie.js"></script>
+  <script src="/eluyun/static/js/jquery.min.js"></script>
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
@@ -20,15 +15,8 @@
   <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
   <script src="/eluyun/static/js/jquery.fileupload.js"></script>
   <script src="/eluyun/static/js/bootstrap.min.js"></script>
-  <script src="/eluyun/static/js/store.min.js"></script>
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
-  <![endif]-->
-  <!--[if lte IE 7]>
-  <script src="/eluyun/static/js/json2.js"></script>
-  <![endif]-->
-  <!--[if lte IE 6]>
-  <script type="text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
   <script src="/eluyun/static/js/app/category/food/food.js"></script>
@@ -145,7 +133,7 @@
                     <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                     <span>上传图片</span>
                   </div>
-                  <input id="cover" type="file" name="file" class="hide" multiple>
+                  <input id="cover" type="file" name="file" accept="image/*"/>
                 </div>
                 <div class="photoContainer"></div>
                 <p class="coverError hide">请上传封面<p>
@@ -157,7 +145,7 @@
                     <img src="/eluyun/static/image/icon_xinjian.png" alt="新增">
                     <span>上传图片</span>
                   </div>
-                  <input id="detail" type="file" name="file" class="hide" multiple>
+                  <input id="detail" type="file" name="file" accept="image/*" />
                 </div>
                 <div class="photoContainer"></div>
                 <p class="detailError hide">请上传详细图片<p>
@@ -184,7 +172,7 @@
                     <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="">
                     <p>替换图片</p>
                   </div>
-                  <input type="file" class="hide" name="file" id="replaceDetailImg"/>
+                  <input type="file" accept="image/*" name="file" id="replaceDetailImg" />
                 </div>
                 <div class="operateItem hide">
                   <div id="deleteDetail" class="clickDiv">
@@ -324,7 +312,7 @@
     //读取餐饮品类列表
     function loadFoodCategoryList(){
       $.ajax({
-        url: host + pullOtherCategoryListUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + pullOtherCategoryListUrl,
         data: {type: 1},
         success: function(result){
           foodCategoryList.list = result.data.list;
@@ -352,7 +340,8 @@
         type: 1
       };
       $.ajax({
-        url: host + addOrEditExtraCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + addOrEditExtraCategoryUrl
+        ,
         type: "POST",
         data: item,
         dataFilter: function(result){
@@ -386,7 +375,7 @@
         type: 1
       };
       $.ajax({
-        url: host + addOrEditExtraCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + addOrEditExtraCategoryUrl,
         type: "POST",
         data: item,
         dataFilter: function(result){
@@ -414,7 +403,7 @@
     //上架或者下架
     function modifyState(item){
       $.ajax({
-        url: host + modifyStateUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + modifyStateUrl,
         data: item,
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -440,7 +429,7 @@
     function deleteFoodCategory(){
       var id = $(".mainActive .id").val();
       $.ajax({
-        url: host + deleteOtherCategoryUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + deleteOtherCategoryUrl,
         data: {id: id},
         dataFilter: function(result){
           result = JSON.parse(result);
@@ -465,7 +454,7 @@
     //读取展示信息
     function pullFoodShowInfo(id){
       $.ajax({
-        url: host +pullShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host +pullShowInfoUrl,
         data: {id: id},
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -502,17 +491,21 @@
       }
       //上传图片
       $("#cover").fileupload({
-        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
-        done: function (e, result) {
-          $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.result.data.url + "' />");
+        url: host + uploadImageUrl,
+        done: function (e, data) {
+          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+          result = JSON.parse(result);
+          $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.data.url + "' />");
           $(".cover .create").hide();
           $(".coverError").addClass("hide");
         }
       });
       $("#detail").fileupload({
-        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
-        done: function (e, result) {
-          $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.result.data.url + "' />");
+        url: host + uploadImageUrl,
+        done: function (e, data) {
+          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+          result = JSON.parse(result);
+          $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.data.url + "' />");
           if ($(".detailImg").length == 6) {
             $(".detail .create").hide();
           }
@@ -550,7 +543,7 @@
     //发送展示信息
     function sendFoodShowInfo(item, that){
       $.ajax({
-        url: host + editShowInfoUrl + ";jsessionid=" + $.cookie("jsessionid"),
+        url: host + editShowInfoUrl,
         data: item,
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -568,8 +561,8 @@
     $(function(){
       $("form").validate();
       //读取营地名称和用户名
-      $(".campName").html(store.get("campName"));
-      $(".userName").find("a").html(store.get("userName"));
+      $(".campName").html(localStorage.getItem("campName"));
+      $(".userName").find("a").html(localStorage.getItem("userName"));
       loadFoodCategoryList();
     });
     $("#modifyStateButton").on("click", function(){
@@ -646,9 +639,11 @@
     $("#replaceDetail").on("click", function(){
       $("#replaceDetailImg").click();
       $("#replaceDetailImg").fileupload({
-        url: host + uploadImageUrl + ";jsessionid=" + $.cookie("jsessionid"),
-        done: function (e, result) {
-          $(".detail .photoSelected").attr("src" ,result.result.data.url);
+        url: host + uploadImageUrl,
+        done: function (e, data) {
+          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+          result = JSON.parse(result);
+          $(".detail .photoSelected").attr("src" ,result.data.url);
         }
       });
     });

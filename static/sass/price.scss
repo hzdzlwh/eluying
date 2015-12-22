@@ -1,0 +1,16 @@
+.priceGrid {
+    width: 900px;
+    border-top:4px solid #4A90E2;
+    table {
+        width: 900px;
+        th {
+            text-align: center;
+            height: 49px;
+            font-weight: bold;
+        }
+        td {
+           text-align: center;
+            height: 75px;
+        }
+    }
+}

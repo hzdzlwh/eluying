@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="renderer" content="webkit">
   <title>易露云</title>
-  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/eluyun/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
   <style>
     .loader {
@@ -85,7 +85,7 @@
       left: 0;
     }
   </style>
-  <script src="/eluyun/bower_components/jquery.min.js"></script>
+  <script src="/eluyun/static/js/jquery.min.js"></script>
   <script src="/eluyun/static/js/jquery.cookie.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
   <script src="/eluyun/static/js/store.min.js"></script>
@@ -136,8 +136,8 @@
             $(".mask").addClass("hide");
             return;
           }
-          sessionStorage.setItem("campName", result.data.camps[0].name);
-          sessionStorage.setItem("userName", result.data.userName);
+          localStorage.setItem("campName", result.data.camps[0].name);
+          localStorage.setItem("userName", result.data.userName);
           //$.cookie("jsessionid", result.data.jsessionid, {path: "/"});
           location.href="/eluyun/view/category/room.html";
         }

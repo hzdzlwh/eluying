@@ -121,7 +121,6 @@ function mainContainer(){
 }
 
 $(document).ready(function(){
-    $("form").validate();
     mainContainer();
     //顶部导航栏
     $("body").prepend("<div class='header clearfloat'>"
@@ -154,14 +153,20 @@ $(document).ready(function(){
         + "</ul>"
         + "</div>");
 
-    $(".modal").modal({
-        backdrop: "static",
-        show: false,
-        keyboard: true
-    });
+    function modalInit(){
+        $(".modal").modal({
+            backdrop: "static",
+            show: false,
+            keyboard: true
+        });
+    }
 
     //绑定模态框居中
-    $('.modal').on('show.bs.modal', centerModals);
+    $('.modal').on('show.bs.modal', function(){
+        centerModals();
+        modalInit();
+    });
+
     $(window).on('resize', function(){
         centerModals();
         mainContainer();
@@ -175,9 +180,8 @@ $(document).ready(function(){
 
     //退出登录
     $('#logout').click(function(){
-        $.get(host + logoutUrl + ";jsessionid=" + $.cookie("jsessionid"));
-        store.clear();
-        $.cookie("jsessionid", "", {path: "/"});
+        $.get(host + logoutUrl);
+        localStorage.clear();
         location.href = "/eluyun/view/loginTest.html";
     });
 });

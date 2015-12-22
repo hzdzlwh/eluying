@@ -114,9 +114,25 @@
             cursor: pointer;
         }
     }
+    .cover .photoContainer {
+        img {
+            max-width: 368px;
+        }
+    }
+    .detail .photoContainer {
+        img {
+            max-width: 122px;
+        }
+    }
     .coverError,.detailError {
         margin-top: -30px;
         color: red;
+    }
+    input[type=file] {
+        height: 1px;
+        width: 1px;
+        opacity: 0;
+        \9filter:alpha(opacity=0);
     }
     .operate {
         margin-top: 75px;
