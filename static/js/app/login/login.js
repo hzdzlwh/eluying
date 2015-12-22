@@ -252,7 +252,7 @@ $(document).ready(function(){
                         if(state == '注册'){
                             $("#loginRegister").modal('hide');
                             $("#loginRegSuccess").modal('show');
-                            //TODO 跳到另外一个页面
+                            window.location.href = '/view/category/room.html';
                         }else{
                             $("#loginRegister").modal('hide');
                             $("#loginApplySuccess").modal('show');
@@ -294,6 +294,7 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         $("#loginLogSuccess").modal('show');
+                        window.location.href = '/view/category/room.html';
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();
