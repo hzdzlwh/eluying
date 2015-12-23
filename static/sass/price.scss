@@ -1,16 +1,147 @@
 .priceGrid {
     width: 900px;
     border-top:4px solid #4A90E2;
+    float: left;
     table {
-        width: 900px;
+        border-collapse: collapse;
         th {
             text-align: center;
             height: 49px;
             font-weight: bold;
+            width: 100px;
+            background-color: #F7F7F7;
         }
         td {
-           text-align: center;
+            font-size: 12px;
+            text-align: center;
             height: 75px;
+            border: 1px #D8D8D8 solid;
         }
+        td:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+        tr.subPrice {
+            background-color: #4a90e2;
+            color: #FFF;
+            td {
+                border: 1px #3E79BF solid;
+                p {
+                    line-height: 25px;
+                }
+            }
+            td:nth-child(even) {
+                background-color: #488CDC;
+            }
+        }
+    }
+}
+.datePick {
+    float: right;
+    button {
+        width: 69px;
+        height: 31px;
+        border-radius: 5px;
+        border: 1px #4a90e2 solid;
+        background-color: #fff;
+        color: #4a90e2;
+        font-size: 12px;
+        margin: 0 13px;
+        cursor: pointer;
+    }
+    p {
+        margin-left: 100px;
+        margin-top: 8px;
+    }
+}
+
+.priceOperate {
+    margin-top: 0px;
+}
+
+.dateContainer {
+    position: relative;
+    display: inline-block;
+    width: 214px;
+    height: 43px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0 9px;
+    span {
+        color: #4a4a4a;
+        line-height: 43px;
+    }
+    img {
+        position: absolute;
+        top: 11px;
+        right: 11px;
+    }
+}
+
+.tab {
+    list-style: none;
+    li {
+        float: left;
+        width: 120px;
+        height: 27px;
+        border: 1px solid #4a90e2;
+        margin-left: -1px;
+        p {
+            line-height: 25px;
+            color: #4a90e2;
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+    li.active {
+        background-color: #4a90e2;
+        p {
+            color: #fff;
+        }
+    }
+    .leftTab {
+        border-radius:8px 0px 0px 8px;
+    }
+
+    .rightTab {
+        border-radius:0px 8px 8px 0px;
+    }
+}
+
+.editSeason {
+    h1 {
+        margin: 15px 0;
+    }
+    h2 {
+        margin: 15px 0;
+    }
+    .seasonGrid {
+        margin-top: 27px;
+        border-top: 4px #4a90e2 solid;
+        border-collapse: collapse;
+        float: left;
+        th {
+            background-color: #f7f7f7;
+            font-weight: bold;
+            height: 49px;
+            width: 96px;
+        }
+        td {
+            border: 1px #D8D8D8 solid;
+            height: 126px;
+            width: 96px;
+            p {
+                text-align: center;
+                line-height: 25px;
+            }
+        }
+        td:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+    }
+    .operate {
+        margin-top: 27px;
+    }
+    .footer {
+        margin-top: 38px;
     }
 }

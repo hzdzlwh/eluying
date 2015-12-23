@@ -11,6 +11,7 @@
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
+  <script src="/eluyun/static/js/jquery.cookie.js"></script>
   <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
   <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
   <script src="/eluyun/static/js/jquery.fileupload.js"></script>
@@ -37,7 +38,7 @@
               </li>
               <li>
                 <label for="createFoodShortName">简称</label>
-                <input maxlength="8" type="text" class="text required" id="createFoodShortName" name="" placeholder="用于自己管理">
+                <input maxlength="6" type="text" class="text required" id="createFoodShortName" name="" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="createFoodUnit">单位</label>
@@ -84,7 +85,7 @@
               </li>
               <li>
                 <label for="editFoodShortName">简称</label>
-                <input maxlength="8" id="editFoodShortName" type="text" class="text required" name="editFoodShortName" placeholder="用于自己管理">
+                <input maxlength="6" id="editFoodShortName" type="text" class="text required" name="editFoodShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="editFoodUnit">单位</label>
@@ -122,7 +123,7 @@
       <div class="modal-content clearfloat">
         <div class="editDisplayInfo clearfloat">
           <h1>编辑展示信息-烧烤</h1>
-          <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+          <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
           <div class="clearfloat">
             <div class="photo">
               <h2>图片管理</h2>
@@ -265,13 +266,13 @@
       var str = "";
       $.each(foodCategoryList.list, function(index, element){
         str += "<tr class='mainClass'>" +
-                "<td>" + element.name + "</td>" +
+                "<td class='gridMore'>" + element.name + "</td>" +
                 "<td>" + element.shortName + "</td>" +
                 "<td>" + element.unit + "</td>" +
                 "<td>" + element.fitNum + "</td>" +
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
-                "<td>" + element.description + "</td>" +
+                "<td class='gridMore'>" + element.description + "</td>" +
                 "<input type='hidden' class='state' value=" + element.state + " />" +
                 "<input type='hidden' class='id' value=" + element.id + " /></tr>";
       });
@@ -290,6 +291,12 @@
           $(".shangjia").addClass("hide");
         }
       })
+      $(".gridMore").on({"mouseenter":function(){
+        showMoreInfo(event, this);
+      },"mouseleave":function(){
+        hideMoreInfo(event, this)
+      }
+      });
     };
     //判断空属性
     function emptyFilter(data){
@@ -312,7 +319,7 @@
     //读取餐饮品类列表
     function loadFoodCategoryList(){
       $.ajax({
-        url: host + pullOtherCategoryListUrl,
+        url: getUrl(pullOtherCategoryListUrl),
         data: {type: 1},
         success: function(result){
           foodCategoryList.list = result.data.list;
@@ -340,8 +347,7 @@
         type: 1
       };
       $.ajax({
-        url: host + addOrEditExtraCategoryUrl
-        ,
+        url: getUrl(addOrEditExtraCategoryUrl),
         type: "POST",
         data: item,
         dataFilter: function(result){
@@ -356,6 +362,7 @@
             return;
           }
           item.id = result.data.id;
+          item.state = 0;
           foodCategoryList.list.push(item);
           foodCategoryList.render();
         }
@@ -375,7 +382,7 @@
         type: 1
       };
       $.ajax({
-        url: host + addOrEditExtraCategoryUrl,
+        url: getUrl(addOrEditExtraCategoryUrl),
         type: "POST",
         data: item,
         dataFilter: function(result){
@@ -403,7 +410,7 @@
     //上架或者下架
     function modifyState(item){
       $.ajax({
-        url: host + modifyStateUrl,
+        url: getUrl(modifyStateUrl),
         data: item,
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -429,7 +436,7 @@
     function deleteFoodCategory(){
       var id = $(".mainActive .id").val();
       $.ajax({
-        url: host + deleteOtherCategoryUrl,
+        url: getUrl(deleteOtherCategoryUrl),
         data: {id: id},
         dataFilter: function(result){
           result = JSON.parse(result);
@@ -454,7 +461,7 @@
     //读取展示信息
     function pullFoodShowInfo(id){
       $.ajax({
-        url: host +pullShowInfoUrl,
+        url: getUrl(pullShowInfoUrl),
         data: {id: id},
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -491,7 +498,7 @@
       }
       //上传图片
       $("#cover").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);
@@ -501,7 +508,7 @@
         }
       });
       $("#detail").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);
@@ -543,7 +550,7 @@
     //发送展示信息
     function sendFoodShowInfo(item, that){
       $.ajax({
-        url: host + editShowInfoUrl,
+        url: getUrl(editShowInfoUrl),
         data: item,
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -559,7 +566,6 @@
     }
 
     $(function(){
-      $("form").validate();
       //读取营地名称和用户名
       $(".campName").html(localStorage.getItem("campName"));
       $(".userName").find("a").html(localStorage.getItem("userName"));
@@ -639,7 +645,7 @@
     $("#replaceDetail").on("click", function(){
       $("#replaceDetailImg").click();
       $("#replaceDetailImg").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);

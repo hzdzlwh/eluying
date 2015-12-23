@@ -76,6 +76,35 @@ function somethingAlert(message){
     }, 1000);
 }
 
+function getUrl(path){
+    var url = host + path;
+    if (rewriteUrl == true) {
+        url += ";jsessionid=" + $.cookie("jsessionid");
+    }
+    return url;
+}
+
+//详细信息提示
+function showMoreInfo(event, that){
+    var x;
+    var y;
+    function getPos(e){
+        x = e.pageX;
+        y = e.pageY;
+    }
+    document.addEventListener('mousemove', getPos);
+    moreInfoT = setTimeout(function(){
+        $("body").append("<div class='moreInfo'></div>");
+        $(".moreInfo").html($(that).html()).css("top", y).css("left", x);
+        document.removeEventListener('mousemove', getPos);
+    }, 500);
+}
+
+function hideMoreInfo(){
+    clearTimeout(moreInfoT);
+    $(".moreInfo").remove();
+}
+
 //确认弹出框
 function confirmDialog(dialogConfig,confirmCallback){
     dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};

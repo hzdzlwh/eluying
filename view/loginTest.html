@@ -138,7 +138,7 @@
           }
           localStorage.setItem("campName", result.data.camps[0].name);
           localStorage.setItem("userName", result.data.userName);
-          //$.cookie("jsessionid", result.data.jsessionid, {path: "/"});
+          $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
           location.href="/eluyun/view/category/room.html";
         }
       })

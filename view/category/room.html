@@ -11,6 +11,7 @@
   <script src="/eluyun/static/js/jquery.validate.min.js"></script>
   <script src="/eluyun/static/js/validation.js"></script>
   <script src="/eluyun/static/js/ajaxurl.js"></script>
+  <script src="/eluyun/static/js/jquery.cookie.js"></script>
   <script src="/eluyun/static/js/jquery.ui.widget.js"></script>
   <script src="/eluyun/static/js/jquery.iframe-transport.js"></script>
   <script src="/eluyun/static/js/jquery.fileupload.js"></script>
@@ -37,7 +38,7 @@
                 <li><label for="createRoomName">房型名称</label>
                   <input maxlength="16" required id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
                 <li><label for="createRoomShortName">简称</label>
-                  <input maxlength="8" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
+                  <input maxlength="6" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
                   <input range="[0,99999999]" maxlength="8" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
@@ -107,7 +108,7 @@
                           <li><label for="editRoomName">房型名称</label>
                               <input maxlength="16" type="text" id="editRoomName" name="editRoomName" class="text required" placeholder="用于展示给客户" /></li>
                           <li><label for="editRoomShortName">简称</label>
-                              <input maxlength="8" type="text" id="editRoomShortName" name="editRoomShortName" class="text required" placeholder="用于自己管理" /></li>
+                              <input maxlength="6" type="text" id="editRoomShortName" name="editRoomShortName" class="text required" placeholder="用于自己管理" /></li>
                           <li><label for="editRoomPrice">价格</label>
                               <input maxlength="8" range="[0,99999999]" type="text" id="editRoomPrice" name="editRoomPrice" class="text required" placeholder="请填写纯数字" />
                               <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
@@ -189,7 +190,7 @@
               </li>
               <li>
                 <label for="createSubclassShortName">简称</label>
-                <input maxlength="8" type="text" class="text required" id="createSubclassShortName" name="createSubclassShortName" placeholder="用于自己管理">
+                <input maxlength="6" type="text" class="text required" id="createSubclassShortName" name="createSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="createSubclassInventory">房间数</label>
@@ -219,7 +220,7 @@
               </li>
               <li>
                 <label for="editSubclassShortName">简称</label>
-                <input maxlength="8" type="text" class="text required" id="editSubclassShortName" name="editSubclassShortName" placeholder="用于自己管理">
+                <input maxlength="6" type="text" class="text required" id="editSubclassShortName" name="editSubclassShortName" placeholder="用于自己管理">
               </li>
               <li>
                 <label for="editSubclassInventory">房间数</label>
@@ -241,7 +242,7 @@
       <div class="modal-content clearfloat">
         <div class="editDisplayInfo clearfloat">
             <h1>编辑展示信息-双人帐篷</h1>
-            <p class="tip">这些信息会出现在易露营的网站以及APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+            <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs clearfloat" role="tablist">
               <li role="presentation" class="active leftTab nav-tabs-li"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
@@ -585,7 +586,7 @@
       var str = "";
       $.each(roomCategoryList.list, function(index, element) {
         str += "<tr class='mainClass'>" +
-                "<td><span>" + element.name + "</span>"
+                "<td><span class='gridMore'>" + element.name + "</span>"
                 + "<img src='/eluyun/static/image/rotate.png'></td>" +
                 "<td>" + element.shortName + "</td>" +
                 "<td>" + element.unit + "</td>" +
@@ -596,7 +597,7 @@
                 "<input type='hidden' class='id' value=" + element.id + " /></tr>";
         $.each(element.subTypeList, function(index, subElement) {
           str += "<tr class='subclass hide'>" +
-                  "<td><div class='first'>" + subElement.name + "</div></td>" +
+                  "<td><div class='first gridMore'>" + subElement.name + "</div></td>" +
                   "<td><div>" + subElement.shortName + "</div></td>" +
                   "<td><div>" + element.unit + "</div></td>" +
                   "<td><div>" + element.fitNum + "</div></td>" +
@@ -636,12 +637,21 @@
       });
       //点击子类
       $(".subclass").on("click", function(){
-        $(".mainClass").removeClass("mainActive");
         $(".subclass").removeClass("subActive");
+        $(".mainClass").removeClass("mainActive");
+        $(this).prevAll(".mainClass").first().addClass("mainActive");
         $(this).addClass("subActive");
         $(".mainOperate .operateItem").addClass("hide");
         $(".mainOperate .second").addClass("hide");
-        $(".mainOperate .editSubRoomButton").removeClass("hide")
+        $(".mainOperate .editSubRoomButton").removeClass("hide");
+        $(".mainOperate .subclassManageButton").removeClass("hide");
+      });
+      //绑定悬浮信息
+      $(".gridMore").on({"mouseenter":function(){
+          showMoreInfo(event, this);
+        },"mouseleave":function(){
+          hideMoreInfo(event, this)
+        }
       });
     };
 
@@ -667,7 +677,7 @@
     //上架或者下架
     function modifyState(item){
       $.ajax({
-        url: host + modifyStateUrl,
+        url: getUrl(modifyStateUrl),
         data: item,
         dataFilter: function (result) {
           result = JSON.parse(result); //先转为json
@@ -693,13 +703,13 @@
     function loadSubRoom(id){
       var str = "";
       $.ajax({
-        url: host + loadSubRoomUrl,
+        url: getUrl(loadSubRoomUrl),
         data: {id: id},
         success: function(result){
           $.each(result.data.list, function(index, element){
             str += "<div class='room'><img src='/eluyun/static/image/ic_close.png' /><p>"
                     + element.serialNum + "</p>"
-                    + "<input type='text' class='hide editName' value=''>"
+                    + "<input type='text' class='hide editName' value='' maxlength='8'>"
                     + "<input type='hidden' class='id' value='" + element.id + "' /><input type='hidden' value='0' class='status'></div>"
           });
           $(".roomContainer").html(str);
@@ -727,7 +737,7 @@
     //读取房型列表
     function loadRoomCategoryList() {
       $.ajax({
-        url: host + getRoomCategoryListUrl,
+        url: getUrl(getRoomCategoryListUrl),
         success: function (result) {
           roomCategoryList.list = result.data.list;
           roomCategoryList.render();
@@ -745,7 +755,7 @@
     function addRoom(data, that){
       data.subTypeList = JSON.stringify(data.subTypeList);
       $.ajax({
-        url: host + addAccommodationUrl,
+        url: getUrl(addAccommodationUrl),
         type: "POST",
         data: data,
         success: function(result){
@@ -754,7 +764,9 @@
           } else {
             return;
           }
-          data.subTypeList = JSON.parse(data.subTypeList);
+          data.subTypeList = result.data.subTypeList;
+          data.state = 0;
+          data.id = result.data.id;
           roomCategoryList.list.push(data);
           roomCategoryList.render();
         },
@@ -769,7 +781,7 @@
     //编辑房型基本信息
     function editRoomBasic(that, item){
       $.ajax({
-        url: host + editRoomBasicUrl,
+        url: getUrl(editRoomBasicUrl),
         type: "POST",
         data: item,
         success: function(result){
@@ -800,7 +812,7 @@
     function deleteRoom(){
       var id = $(".mainActive .id").val();
       $.ajax({
-        url: host + deleteRoomUrl,
+        url: getUrl(deleteRoomUrl),
         data: {id: id},
         success: function(result){
           if(!errorHandler(result)){
@@ -825,7 +837,7 @@
     //子类管理
     function subclassManage(that, item){
       $.ajax({
-        url: host + subclassManageUrl,
+        url:  getUrl(subclassManageUrl),
         type: "POST",
         data: {
           id: item.id,
@@ -842,14 +854,9 @@
           } else {
             return;
           }
-          $.each(item.subTypeList, function(index, element){
-            if (element.status == 1) {
-              item.subTypeList.splice(index, 1);//删除多余子类
-            }
-          });
           $.each(roomCategoryList.list, function(index, element){
             if (element.id == item.id) {
-              roomCategoryList.list[index].subTypeList = item.subTypeList;
+              roomCategoryList.list[index].subTypeList = result.data.list;
               return false; //等于break
             }
           });
@@ -862,7 +869,7 @@
     //房间编辑
     function editSubRoom(that, item){
       $.ajax({
-        url: host + editSubRoomUrl,
+        url: getUrl(editSubRoomUrl),
         data: {rooms: JSON.stringify(item)},
         type: "POST",
         dataFilter: function(result) {
@@ -884,7 +891,7 @@
     //读取展示信息
     function pullRoomShowInfo(id){
       $.ajax({
-        url: host +pullShowInfoUrl,
+        url: getUrl(pullShowInfoUrl),
         data: {id: id},
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -899,10 +906,10 @@
 
     //显示展示信息
     function showRoomShowInfo(data){
-      $("#roomShowFitNum").val(data.fitNum);
-      $("#roomShowArea").val(data.area);
-      $("#roomShowBed").val(data.bedType);
-      $("#roomShowDescription").val(data.remark);
+      data.fitNum && $("#roomShowFitNum").val(data.fitNum);
+      data.area && $("#roomShowArea").val(data.area);
+      data.bedType && $("#roomShowBed").val(data.bedType);
+      data.remark && $("#roomShowDescription").val(data.remark);
       if (data.facilities.hotWater.status == 1) {
         $("#hotWaterY").prop("checked", true);
         $("#hotWaterDescription").val(data.facilities.hotWater.description);
@@ -984,7 +991,7 @@
       }
       //上传图片
       $("#cover").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);
@@ -994,7 +1001,7 @@
         }
       });
       $("#detail").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);
@@ -1075,7 +1082,7 @@
     //发送展示信息
     function sendRoomShowInfo(item, that){
       $.ajax({
-        url: host + editShowInfoUrl,
+        url: getUrl(editShowInfoUrl),
         data: item,
         dataFilter: function(result) {
           result = JSON.parse(result); //先转为json
@@ -1271,9 +1278,6 @@
 
     //编辑房间确定
     $("#editRoomOk").on("click", function(){
-      if (!$("#editRoom form").valid()) {
-        return;
-      }
       var that = this;
       var rooms = [];
       $(".room").each(function(){
@@ -1310,14 +1314,31 @@
     });
     //编辑展示信息确认
     $("#editRoomShowOk").on("click", function(){
-      if (!$("#editDisplayInfo form").valid()) {
-        return;
+      if ($(".rightTab").parent().hasClass("active")) {
+        if ($("#roomShowFitNum").val() == "") {
+          somethingAlert("请填写可容纳人数");
+          return;
+        }
+        if ($("#roomShowArea").val() == "") {
+          somethingAlert("请填写房间面积");
+          return;
+        }
+        if ($("#roomShowBed").val() == "") {
+          somethingAlert("请填写床型");
+          return;
+        }
       }
       if ($(".cover .photoContainer").html() == "") {
         $(".coverError").removeClass("hide");
+        if ($(".rightTab").parent().hasClass("active")) {
+          somethingAlert("请上传封面");
+        }
         return
       }
       if ($(".detail .photoContainer").html() == "") {
+        if ($(".rightTab").parent().hasClass("active")) {
+          somethingAlert("请上传详细图片");
+        }
         $(".detailError").removeClass("hide");
         return
       }
@@ -1377,7 +1398,7 @@
     //替换详细图片
     $("#replaceDetail").on("click", function(){
       $("#replaceDetailImg").fileupload({
-        url: host + uploadImageUrl,
+        url: getUrl(uploadImageUrl),
         done: function (e, data) {
           var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
           result = JSON.parse(result);

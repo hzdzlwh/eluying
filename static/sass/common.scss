@@ -2,6 +2,10 @@
     width: 1130px;
 }
 
+.modal-w1050 {
+    width: 1050px;
+}
+
 .modal-w626 {
     width: 626px;
 }
@@ -376,4 +380,13 @@
             margin-bottom: 20px;
         }
     }
+}
+
+.moreInfo {
+    z-index: 9999;
+    color: #FFF;
+    background-color: #4ACFE2;
+    max-width: 150px;
+    padding: 5px;
+    position: absolute;
 }
