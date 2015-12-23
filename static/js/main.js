@@ -209,7 +209,7 @@ $(document).ready(function(){
 
     //退出登录
     $('#logout').click(function(){
-        $.get(host + logoutUrl);
+        $.get(getUrl(logoutUrl));
         localStorage.clear();
         location.href = "/eluyun/view/loginTest.html";
     });

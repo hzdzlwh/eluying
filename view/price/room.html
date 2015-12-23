@@ -11,41 +11,11 @@
   <script src="/eluyun/static/js/main.js"></script>
 </head>
 <body>
-  <!--修改价格-->
-  <div class="modal fade" role="dialog" id="editPrice">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <div class="editPrice clearfloat">
-          <form class="inputFiled">
-            <h1>修改价格</h1>
-            <ul>
-              <li>
-                <label for="networkPrice">网络价</label>
-                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="networkPrice" name="networkPrice" />
-              </li>
-              <li>
-                <label for="agreementPrice">协议价</label>
-                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="agreementPrice" name="agreementPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金" />
-              </li>
-              <li>
-                <label for="retailPrice">零售价</label>
-                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="retailPrice" name="retailPrice" />
-              </li>
-            </ul>
-          </form>
-          <div class="footer">
-            <button class="btn-cancel" id="editPriceCancel">取消</button>
-            <button class="btn-ok" id="editPriceOk">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <!--修改淡旺季-->
   <div class="modal fade" role="dialog" id="editSeason">
     <div class="modal-dialog modal-w1050">
       <div class="modal-content clearfloat">
-        <div class="editSeason clearfloat">
+        <div class="editPrices clearfloat">
           <h1>淡旺季管理</h1>
           <h2>数据来源</h2>
           <ul class="tab clearfloat">
@@ -76,7 +46,7 @@
               </div>
             </div>
             <div class="clearfloat">
-              <table class="seasonGrid">
+              <table class="grid">
                 <thead>
                 <tr>
                   <th>价格类型</th>
@@ -160,7 +130,7 @@
               </div>
             </div>
             <div class="clearfloat">
-              <table class="seasonGrid">
+              <table class="grid">
                 <thead>
                 <tr>
                   <th>价格类型</th>
@@ -242,7 +212,7 @@
   <div class="modal fade" role="dialog" id="editMonth">
     <div class="modal-dialog modal-w1050">
       <div class="modal-content clearfloat">
-        <div class="editMonth clearfloat">
+        <div class="editPrices clearfloat">
           <h1>月份管理-双人帐篷</h1>
           <h2>数据来源</h2>
           <ul class="tab clearfloat">
@@ -260,18 +230,267 @@
             </li>
           </ul>
           <h1>11月</h1>
-          <div>
+          <div class="changeMonth">
             <button>&lt前一月</button>
             <button>后一月&gt</button>
           </div>
           <div class="clearfloat">
-            <table>
+            <table class="grid">
               <thead>
                 <tr>
-                  th
+                  <th>价格类型</th>
+                  <th>周一</th>
+                  <th>周二</th>
+                  <th>周三</th>
+                  <th>周四</th>
+                  <th>周五</th>
+                  <th>周六</th>
+                  <th>周日</th>
                 </tr>
               </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>网络价</p>
+                    <p>协议价</p>
+                    <p>零售价</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">2日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">3日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>网络价</p>
+                    <p>协议价</p>
+                    <p>零售价</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">11日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>网络价</p>
+                    <p>协议价</p>
+                    <p>零售价</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p>网络价</p>
+                    <p>协议价</p>
+                    <p>零售价</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                  <td>
+                    <span class="date">1日</span>
+                    <p>100</p>
+                    <p>20</p>
+                    <p>120</p>
+                  </td>
+                </tr>
+              </tbody>
             </table>
+            <div class="operate">
+              <div class="first">
+                <div class="operateItem">
+                  <div class="clickDiv" id="editMonthPriceButton" data-toggle="modal" data-target="#editPrice">
+                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+                    <p>修改价格</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <button class="btn-cancel" id="editMonthCancel">取消</button>
+            <button class="btn-ok" id="editMonthOk">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--修改价格-->
+  <div class="modal fade" role="dialog" id="editPrice">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editPrice clearfloat">
+          <form class="inputFiled">
+            <h1>修改价格</h1>
+            <ul>
+              <li>
+                <label for="networkPrice">网络价</label>
+                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="networkPrice" name="networkPrice" />
+              </li>
+              <li>
+                <label for="agreementPrice">协议价</label>
+                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="agreementPrice" name="agreementPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金" />
+              </li>
+              <li>
+                <label for="retailPrice">零售价</label>
+                <input maxlength="8" digits="true" range="[0,99999999]" type="text" class="text required" id="retailPrice" name="retailPrice" />
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel" id="editPriceCancel">取消</button>
+            <button class="btn-ok" id="editPriceOk">确认</button>
           </div>
         </div>
       </div>

@@ -36,6 +36,7 @@ function forgetVCOnClick(){
         $.ajax({
             type: "GET",
             url: baseUrl + '/user/sendVerifyCode',
+
             data: {
                 phone: phone,
                 origin: -1

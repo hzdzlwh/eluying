@@ -107,31 +107,59 @@
     }
 }
 
-.editSeason {
+.editPrices {
     h1 {
         margin: 15px 0;
     }
     h2 {
         margin: 15px 0;
     }
-    .seasonGrid {
+    .changeMonth {
+        position: absolute;
+        right: 240px;
+        top: 175px;
+        button {
+            width: 69px;
+            height: 31px;
+            border-radius: 5px;
+            border: 1px #4a90e2 solid;
+            background-color: #fff;
+            color: #4a90e2;
+            font-size: 12px;
+            margin: 0 13px;
+            cursor: pointer;
+        }
+    }
+    .grid {
         margin-top: 27px;
         border-top: 4px #4a90e2 solid;
         border-collapse: collapse;
         float: left;
         th {
+            text-align: center;
             background-color: #f7f7f7;
             font-weight: bold;
             height: 49px;
             width: 96px;
         }
         td {
+            position: relative;
             border: 1px #D8D8D8 solid;
             height: 126px;
             width: 96px;
             p {
                 text-align: center;
                 line-height: 25px;
+            }
+            p:nth-of-type(odd) {
+                color: #4a90e2;
+            }
+            .date {
+                position: absolute;
+                left: 37px;
+                top: 3px;
+                font-size: 12px;
+                color: #4F4F4F;
             }
         }
         td:nth-child(even) {
@@ -145,3 +173,4 @@
         margin-top: 38px;
     }
 }
+
