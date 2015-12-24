@@ -1,7 +1,7 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-var baseUrl = 'http://121.41.109.105:8081/mg';
+var baseUrl = "http://192.168.0.2:8082/mg";
 
 /*
 验证码按钮倒计时用。
@@ -295,7 +295,8 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         $("#loginLogSuccess").modal('show');
-                        window.location.href = '/view/category/room.html';
+                        window.location.href = 'view/category/room.html';
+                        $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();
