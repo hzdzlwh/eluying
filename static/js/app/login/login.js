@@ -39,7 +39,7 @@ function forgetVCOnClick(){
 
             data: {
                 phone: phone,
-                origin: -1
+                origin: 1
             },
             success: function(data){
                 console.log(data);
@@ -69,6 +69,11 @@ function registerVCOnClick(){
             },
             success: function(data){
                 console.log(data);
+                if(data.code == 9){
+                    $("#loginRegister .errorTips").html(data.msg);
+                    $("#loginRegister .errorTips").show();
+                    wait = 0;
+                }
             },
             error: function(data){
                 console.log(data);
