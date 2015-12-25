@@ -300,8 +300,10 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         $("#loginLogSuccess").modal('show');
+                        localStorage.setItem("campName", result.data.camps[0].name);
+                        localStorage.setItem("userName", result.data.userName);
+                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         window.location.href = 'view/category/room.html';
-                        $.cookie("jsessionid", result.data.jsessionid, {path: "/"});
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();

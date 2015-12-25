@@ -496,12 +496,17 @@
   <div class="mainContainer clearfloat">
     <div class="content clearfloat">
       <div class="title clearfloat">
-        <span class="campName">千岛湖星空帐篷营地</span>
+        <span class="campName"></span>
         <div class="datePick">
-          <button>&lt前一周</button>
+          <button onclick="lastWeak()">&lt前一周</button>
+          <script>
+            function lastWeak(){
+              Dates.creation([2015,11,14]);
+            }
+          </script>
           <div class="dateContainer">
-            <span>2015-11-02 今天</span>
-            <img src="/eluyun/static/image/icon_calender_press.png" alt="日历">
+            <span id="dateInput"></span>
+            <img class="clickDiv" onclick="laydate({elem: '#dateInput'});" src="/eluyun/static/image/icon_calender_press.png" alt="日历">
           </div>
           <button>后一周&gt</button>
           <p class="tip">今天以前（包括今天）的价格不能修改！</p>

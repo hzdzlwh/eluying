@@ -38,9 +38,16 @@ gulp.task('webpack', function(callback) {
 		resolve: {
 			extensions: ['.js', ""],
 			alias: {
+                cookie: path.join(__dirname,"./static/js/jquery.cookie.js"),
 				jquery: path.join(__dirname,"./static/js/jquery.min.js"),
 				header: path.join(__dirname,"./static/js/app/src/common/header.js"),
-				leftMenu: path.join(__dirname,"./static/js/app/src/common/leftMenu.js")
+				leftMenu: path.join(__dirname,"./static/js/app/src/common/leftMenu.js"),
+				util: path.join(__dirname,"./static/js/app/src/common/util.js"),
+                logout: path.join(__dirname,"./static/js/app/src/common/logout.js"),
+                AJAXService: path.join(__dirname,"./static/js/app/src/common/AJAXService.js"),
+                laydate: path.join(__dirname,"./static/js/lib/laydate/laydate.js"),
+                accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
+                virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js")
 			} 
 		},
 		devtool: "sourcemap"

@@ -146,7 +146,6 @@ function mainContainer(){
         width = 1135;
     }
     $(".mainContainer").css("width", width);
-
 }
 
 $(document).ready(function(){
