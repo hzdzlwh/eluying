@@ -28,7 +28,8 @@ gulp.task('webpack', function(callback) {
 			new webpack.optimize.CommonsChunkPlugin('common.js')
 		],
 		entry: {
-			"price/roomEntry": "./static/js/app/src/price/roomEntry.js"
+			"price/roomEntry": "./static/js/app/src/price/roomEntry.js",
+			"inventory/room": "./static/js/app/src/inventory/room.js"
 		},
 		output: {
 			path: path.join(__dirname, 'static/js/app/dist'),
@@ -47,8 +48,9 @@ gulp.task('webpack', function(callback) {
                 AJAXService: path.join(__dirname,"./static/js/app/src/common/AJAXService.js"),
                 laydate: path.join(__dirname,"./static/js/lib/laydate/laydate.js"),
                 accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
-                virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js")
-			} 
+                virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js"),
+                trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js")
+			}
 		},
 		devtool: "sourcemap"
 		}, function(err, stats) {

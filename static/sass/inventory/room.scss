@@ -1,0 +1,92 @@
+.inventoryGrid {
+  width: 900px;
+  border-top:4px solid #4A90E2;
+  float: left;
+  table {
+    border-collapse: collapse;
+    th {
+      text-align: center;
+      height: 49px;
+      font-weight: bold;
+      width: 100px;
+      background-color: #F7F7F7;
+    }
+    tr{
+      height: 75px;
+      td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px #D8D8D8 solid;
+        p{
+          line-height: 25px;
+        }
+        img{
+          transition: 300ms linear;
+        }
+      }
+    }
+    td:nth-child(even) {
+      background-color: #F9F9F9;
+    }
+    tr.subclass {
+      height: auto;
+      background-color: #4a90e2;
+      color: #FFF;
+      td {
+        border: 1px #3E79BF solid;
+      }
+      div{
+        line-height: 75px;
+      }
+      td:nth-child(even) {
+        background-color: #488CDC;
+      }
+    }
+    tr.subclass.hide{
+      display: none;
+    }
+  }
+}
+
+#editInven{
+  .title{
+    height: 44px;
+    margin-top: 10px;
+    margin-right: 49px;
+    font-size: 31px;
+    color: #4A90E2;
+  }
+  .edit{
+    margin-top: 60px;
+    width: 100%;
+    position: relative;
+    height: 43px;
+    .label{
+      width: auto;
+      height: 50px;
+      color: #666666;
+      font-size: 14px;
+      line-height: 43px;
+      position: absolute;
+      left: 70px;
+      top: 0;
+    }
+    input{
+      display: block;
+      position: absolute;
+      left: 122px;
+      top: 0;
+      border-radius: 5px;
+      border: #cccccc solid thin;
+      width: 348px;
+      height: 43px;
+    }
+  }
+  .tips{
+    width: 110px; height: 20px; line-height: 20px; text-align: left; margin-left: 122px; font-size: 14px; color: #666666;
+    margin-top: 9px;
+  }
+  .footer{
+    margin-top: 58px;
+  }
+}
