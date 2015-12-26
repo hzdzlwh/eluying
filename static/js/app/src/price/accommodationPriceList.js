@@ -1,17 +1,5 @@
 var AJAXService = require("AJAXService");
 var accommodationPriceList = {
-    getAccommodationBasicInfo: function(){
-        $.ajax({
-            url: AJAXService.getUrl("getAccommodationBasicInfo"),
-            data: {campId: localStorage.getItem("campId")},
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
-                this.roomsList = result.data.list;
-            }
-        });
-    },
     getAccommodationPriceList: function(){
         $.ajax({
             url: AJAXService.getUrl("getAccommodationPriceList"),
@@ -24,9 +12,12 @@ var accommodationPriceList = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-
+                accommodationPriceList.render(result);
             }
         })
+    },
+    render: function(result){
+
     }
 };
 module.exports = accommodationPriceList;
