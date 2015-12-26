@@ -3,21 +3,26 @@ webpackJsonp([0,1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(3);
-	$(function(){
-	    var header = __webpack_require__(4);
-	    header.showHeader();
-	    var leftMenu = __webpack_require__(9);
-	    leftMenu.showLeftMenu();
-	    var util = __webpack_require__(8);
-	    util.mainContainer();
-	    $(".campName").html(localStorage.getItem("campName"));
-	    var accommodationPriceList = __webpack_require__(10);
-	    accommodationPriceList.getAccommodationPriceList();
-	    laydate({
-	        elem: '#dateInput'
-	    });
-	    laydate.skin('danlan');
+	var header = __webpack_require__(4);
+	var leftMenu = __webpack_require__(9);
+	var accommodationPriceList = __webpack_require__(10);
+	var util = __webpack_require__(8);
+	
+	
+	header.showHeader();
+	leftMenu.showLeftMenu();
+	util.mainContainer();
+	$(".campName").html(localStorage.getItem("campName"));
+	accommodationPriceList.getAccommodationPriceList(new Date());
+	laydate({
+	    elem: '#dateInput'
 	});
+	laydate.skin('danlan');
+	events = {
+	    "resize window": util.mainContainer
+	};
+	util.bindDomAction(events);
+	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
@@ -952,7 +957,7 @@ webpackJsonp([0,1],[
 	        util.bindDomAction(this.events);
 	    },
 	    events: {
-	        "click #logout #logout": logout.logout
+	        "click #logout": logout.logout
 	    }
 	};
 	module.exports = header;
@@ -1170,6 +1175,9 @@ webpackJsonp([0,1],[
 	                        $(eventsInfoArray[1]).on(eventsInfoArray[0], eventsInfoArray[2], events[eventDef]);
 	                    }else if(eventsInfoArray.length == 2){
 	                        $(eventsInfoArray[1]).on(eventsInfoArray[0], events[eventDef]);
+	                        if (eventsInfoArray[1] == "window") {
+	                            $(window).on(eventsInfoArray[0], events[eventDef]);
+	                        }
 	                    }else{
 	                        console.warn("事件绑定格式错误");
 	                    }
@@ -1177,6 +1185,10 @@ webpackJsonp([0,1],[
 	                }
 	            }
 	        }
+	    },
+	
+	    dateFormat: function(date){
+	        return date.toLocaleDateString().replace(/\//g, "-");
 	    }
 	};
 	module.exports = util;
@@ -1208,14 +1220,15 @@ webpackJsonp([0,1],[
 
 	/* WEBPACK VAR INJECTION */(function($) {var AJAXService = __webpack_require__(6);
 	var vD = __webpack_require__(11);
+	var util = __webpack_require__(8);
 	var accommodationPriceList = {
-	    getAccommodationPriceList: function(){
+	    getAccommodationPriceList: function(startDate){
 	        $.ajax({
 	            url: AJAXService.getUrl("getAccommodationPriceList"),
 	            data: {
 	                campId: localStorage.getItem("campId"),
-	                startDate: "2015-12-23",
-	                endDate: "2015-12-29"
+	                startDate: util.dateFormat(startDate),
+	                endDate: util.dateFormat(new Date(startDate.setDate(startDate.getDate() + 6)))
 	            },
 	            dataFilter: function (result) {
 	                return AJAXService.sessionValidate(result);
@@ -1226,6 +1239,27 @@ webpackJsonp([0,1],[
 	        })
 	    },
 	    createEl: function(result){
+	        var week = ["周日","周一","周二","周三","周四","周五","周六"];
+	        var table = vD.El("table", {}, [
+	            vD.El("thead", {}, [
+	                vD.El("tr", {}, [
+	                    vD.El("th", {}, ["房型"]),
+	                    vD.El("th", {}, ["价格类型"])
+	                ])
+	            ])
+	        ]);
+	        var dateArray = [];
+	        for (var name in result.data) {
+	            $.each(result.data[name], function(index, element){
+	                dateArray.push(new Date(element.date));
+	            })
+	        }
+	        for (var i = 0;  i < 7; i++) {
+	            table.children[0].children[0].children.push(vD.El("th", {}, [
+	                vD.El("p", {}, [dateArray[i].toLocaleDateString().substring(5).replace("/", "-")]),
+	                vD.El("p", {}, [new Date().toDateString() ==  dateArray[i].toDateString() ? "今天" : week[dateArray[i].getDay()]])
+	            ]));
+	        }
 	        var tbody = vD.El('tbody', {}, []);
 	        for (var name in result.data) {
 	            var tr = vD.El("tr", {}, [
@@ -1241,11 +1275,12 @@ webpackJsonp([0,1],[
 	            });
 	            tbody.children.push(tr);
 	        }
-	        this.renderEl(tbody);
+	        table.children.push(tbody);
+	        this.renderEl(table);
 	    },
 	    renderEl: function(el){
 	        var dom = el.render();
-	        $("table").append(dom);
+	        $(".priceGrid").append(dom);
 	    }
 	};
 	module.exports = accommodationPriceList;

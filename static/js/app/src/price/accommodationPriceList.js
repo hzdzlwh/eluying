@@ -1,13 +1,14 @@
 var AJAXService = require("AJAXService");
 var vD = require("virtualDOM");
+var util = require("util");
 var accommodationPriceList = {
-    getAccommodationPriceList: function(){
+    getAccommodationPriceList: function(startDate){
         $.ajax({
             url: AJAXService.getUrl("getAccommodationPriceList"),
             data: {
                 campId: localStorage.getItem("campId"),
-                startDate: "2015-12-23",
-                endDate: "2015-12-29"
+                startDate: util.dateFormat(startDate),
+                endDate: util.dateFormat(new Date(startDate.setDate(startDate.getDate() + 6)))
             },
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -18,18 +19,25 @@ var accommodationPriceList = {
         })
     },
     createEl: function(result){
+        var week = ["周日","周一","周二","周三","周四","周五","周六"];
         var table = vD.El("table", {}, [
             vD.El("thead", {}, [
                 vD.El("tr", {}, [
-                    vD.El("td", {}, ["房型"]),
-                    vD.El("td", {}, ["价格类型"])
+                    vD.El("th", {}, ["房型"]),
+                    vD.El("th", {}, ["价格类型"])
                 ])
             ])
         ]);
+        var dateArray = [];
+        for (var name in result.data) {
+            $.each(result.data[name], function(index, element){
+                dateArray.push(new Date(element.date));
+            })
+        }
         for (var i = 0;  i < 7; i++) {
-            table.children[0].children[0].push(vD.El("td", {}, [
-                vD.El("p", {}, [startDate.substring(5)]),
-                vD.El("p", {}, [])
+            table.children[0].children[0].children.push(vD.El("th", {}, [
+                vD.El("p", {}, [dateArray[i].toLocaleDateString().substring(5).replace("/", "-")]),
+                vD.El("p", {}, [new Date().toDateString() ==  dateArray[i].toDateString() ? "今天" : week[dateArray[i].getDay()]])
             ]));
         }
         var tbody = vD.El('tbody', {}, []);
@@ -47,11 +55,12 @@ var accommodationPriceList = {
             });
             tbody.children.push(tr);
         }
-        this.renderEl(tbody);
+        table.children.push(tbody);
+        this.renderEl(table);
     },
     renderEl: function(el){
         var dom = el.render();
-        $("table").append(dom);
+        $(".priceGrid").append(dom);
     }
 };
 module.exports = accommodationPriceList;
