@@ -26,7 +26,7 @@ var header = {
         util.bindDomAction(this.events);
     },
     events: {
-        "click #logout #logout": logout.logout
+        "click #logout": logout.logout
     }
 };
 module.exports = header;
