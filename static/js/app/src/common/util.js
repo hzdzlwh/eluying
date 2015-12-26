@@ -13,7 +13,14 @@ var util = {
             if (events.hasOwnProperty(eventDef)) {
                 if(events[eventDef]) {
                     eventsInfoArray = eventDef.split(" ");
-                    $(eventsInfoArray[1]).on(eventsInfoArray[0], events[eventDef]);
+                    if(eventsInfoArray.length == 3){
+                        $(eventsInfoArray[1]).on(eventsInfoArray[0], eventsInfoArray[2], events[eventDef]);
+                    }else if(eventsInfoArray.length == 2){
+                        $(eventsInfoArray[1]).on(eventsInfoArray[0], events[eventDef]);
+                    }else{
+                        console.warn("事件绑定格式错误");
+                    }
+
                 }
             }
         }
