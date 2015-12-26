@@ -9,11 +9,9 @@ var accommodationPriceList = {
             },
             success: function(result){
                 this.roomsList = result.data.list;
-                accommodationPriceList.getAccommodationPriceList();
             }
         });
     },
-    ss: "nihao",
     getAccommodationPriceList: function(){
         $.ajax({
             url: AJAXService.getUrl("getAccommodationPriceList"),

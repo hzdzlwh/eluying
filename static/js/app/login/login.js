@@ -300,8 +300,8 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         $("#loginLogSuccess").modal('show');
-                        localStorage.setItem("campName", result.data.camps[0].name);
-                        localStorage.setItem("userName", result.data.userName);
+                        localStorage.setItem("campName", data.data.camps[0].name);
+                        localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         window.location.href = 'view/category/room.html';
                     }else{
