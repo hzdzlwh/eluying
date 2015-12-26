@@ -974,6 +974,7 @@
         $(".cover .create").hide();
       } else {
         $(".cover .create").show();
+        $(".cover .photoContainer").html("");
       }
       if (data.detailImgUrl != null) {
         var detailStr = "";
@@ -988,6 +989,7 @@
         }
       } else {
         $(".detail .create").show();
+        $(".detail .photoContainer").html("");
       }
       //上传图片
       $("#cover").fileupload({

@@ -8,7 +8,7 @@ $(function(){
     util.mainContainer();
     $(".campName").html(localStorage.getItem("campName"));
     var accommodationPriceList = require("accommodationPriceList");
-    accommodationPriceList.getAccommodationBasicInfo();
+    accommodationPriceList.getAccommodationPriceList();
     laydate({
         elem: '#dateInput'
     });

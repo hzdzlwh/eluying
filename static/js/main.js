@@ -34,9 +34,6 @@ function clearModal(that){
     if ($(that).parents(".modal").find("form").length != 0) {
         $(that).parents(".modal").find("form").validate().resetForm();
     }
-    if ($(".photoContainer").html() != "") {
-        $(".photoContainer").html("");
-    }
     $(that).parents(".modal").find("input[type=radio]").prop(false);
     $("coverError").addClass("hide");
     $("detailError").addClass("hide");
@@ -154,8 +151,8 @@ $(document).ready(function(){
     $("body").prepend("<div class='header clearfloat'>"
             + "<a class='logo' href='#'>易露云</a>"
             + "<ul>"
-                + "<li><a id='inventoryMenu' href='#'>库存管理</a></li>"
-                + "<li><a id='priceMenu' href='#'>价格维护</a></li>"
+                + "<li><a id='inventoryMenu' href='/eluyun/view/inventory/room.html'>库存管理</a></li>"
+                + "<li><a id='priceMenu' href='/eluyun/view/price/room.html'>价格维护</a></li>"
                 + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
             + "</ul>"
             + "<div class='right'>"
@@ -210,6 +207,6 @@ $(document).ready(function(){
     $('#logout').click(function(){
         $.get(getUrl(logoutUrl));
         localStorage.clear();
-        location.href = "/eluyun/view/loginTest.html";
+        location.href = "/eluyun/login.html";
     });
 });
