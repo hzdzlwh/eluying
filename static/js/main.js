@@ -34,9 +34,6 @@ function clearModal(that){
     if ($(that).parents(".modal").find("form").length != 0) {
         $(that).parents(".modal").find("form").validate().resetForm();
     }
-    if ($(".photoContainer").html() != "") {
-        $(".photoContainer").html("");
-    }
     $(that).parents(".modal").find("input[type=radio]").prop(false);
     $("coverError").addClass("hide");
     $("detailError").addClass("hide");
@@ -210,6 +207,6 @@ $(document).ready(function(){
     $('#logout').click(function(){
         $.get(getUrl(logoutUrl));
         localStorage.clear();
-        location.href = "/eluyun/view/loginTest.html";
+        location.href = "/eluyun/login.html";
     });
 });
