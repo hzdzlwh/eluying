@@ -4,3 +4,4 @@
 /.sass-cache/*
 /static/css/main.min.css
 /static/css/*.map
+/static/js/app/dist/*
