@@ -1,7 +1,7 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-var baseUrl = "http://192.168.0.2:8082/mg";
+var baseUrl = "http://192.168.0.120:8087";
 
 /*
 验证码按钮倒计时用。

@@ -20,7 +20,7 @@
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
-  <script src="/eluyun/static/js/app/category/room/room.js"></script>
+  <script src="/eluyun/static/js/app/src/category/room/room.js"></script>
   <script>
 
   </script>
@@ -884,6 +884,21 @@
             return;
           }
           $("#editRoom .roomContainer").html("");
+          var inventory = 0;
+          $.each(item, function(index, elemet){
+            if (elemet.status == 0) {
+              inventory ++;
+            }
+          });
+          $.each(roomCategoryList.list, function(index, element){
+            $.each(element.subTypeList, function(index, element){
+              if (element.id == $(".subActive").find(".id").val()) {
+                element.inventory = inventory;
+              }
+            });
+          });
+          roomCategoryList.countInventory($(".mainActive").find(".id").val());
+          roomCategoryList.render();
         }
       })
     }
@@ -1311,6 +1326,8 @@
     //编辑房间展示信息
     $("#editRoomDisplayInfoButton").on("click", function(){
       $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0) span").html());
+      $(".detail .photoContainer").html("");
+      $(".cover .photoContainer").html("");
       var id = $(".mainActive .id").val();
       pullRoomShowInfo(id);
     });
