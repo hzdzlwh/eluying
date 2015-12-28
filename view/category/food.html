@@ -20,7 +20,7 @@
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
   <script src="/eluyun/static/js/main.js"></script>
-  <script src="/eluyun/static/js/app/category/food/food.js"></script>
+  <script src="/eluyun/static/js/app/src/category/food/food.js"></script>
 </head>
 <body>
   <!-- 新增餐饮 -->
@@ -398,7 +398,9 @@
           }
           $.each(foodCategoryList.list, function(index, element){
             if (element.id == item.id) {
+              var state = foodCategoryList.list[index].state;
               foodCategoryList.list[index] = item;
+              foodCategoryList.list[index].state = state;
               return false; //等于break
             }
           });
@@ -480,6 +482,7 @@
         $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + data.coverUrl + "' />");
         $(".cover .create").hide();
       } else {
+        $(".cover .photoContainer").html("");
         $(".cover .create").show();
       }
       if (data.detailImgUrl != null) {
@@ -494,6 +497,7 @@
           $(".detail .create").show();
         }
       } else {
+        $(".detail .photoContainer").html("");
         $(".detail .create").show();
       }
       //上传图片
@@ -618,6 +622,8 @@
     //编辑展示信息
     $("#editFoodShowInfoButton").on("click", function(){
       $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0)").html());
+      $(".detail .photoContainer").html("");
+      $(".cover .photoContainer").html("");
       var id = $(".mainActive .id").val();
       pullFoodShowInfo(id);
     });

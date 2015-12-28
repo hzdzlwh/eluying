@@ -4,7 +4,6 @@
 var util = require("util");
 var leftMenu = require("leftMenu");
 var header = require("header");
-require("laydate");
 var trToggle = require("trToggle");
 
 $(document).ready(function(){
@@ -15,13 +14,7 @@ $(document).ready(function(){
     leftMenu.showLeftMenu();
     util.mainContainer();
 
-    /*
-    initialize datepicker
-     */
-    laydate({
-        elem: '#dateInput'
-    });
-    laydate.skin('danlan');
+
 
     trToggle();
 
