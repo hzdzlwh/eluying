@@ -21,10 +21,14 @@ gulp.task('styles',function(){
 gulp.task('webpack', function(callback) {
     webpack({
 		plugins: [
-
+			new webpack.ProvidePlugin({
+				"$": 'jquery',
+				"jQuery": 'jquery'
+			}),
 			new webpack.optimize.CommonsChunkPlugin('common.js')
 		],
 		entry: {
+			"login/login": "./static/js/app/src/login/login.js",
 			"price/roomEntry": "./static/js/app/src/price/roomEntry.js",
 			"inventory/room": "./static/js/app/src/inventory/room.js"
 		},
@@ -33,15 +37,14 @@ gulp.task('webpack', function(callback) {
 			filename: "[name].js",
 			publicPath: "./dist/"
 		},
-		module: {
-
-		},
 		resolve: {
 			extensions: ['.js', ""],
 			alias: {
 				cookie: path.join(__dirname,"./static/js/jquery.cookie.js"),
+				jquery: path.join(__dirname,"./static/js/jquery.min.js"),
 				jqueryui: path.join(__dirname,"./static/js/lib/jquery-ui.min.js"),
 				"datepicker-zh": path.join(__dirname,"./static/js/lib/datepicker-zh-CN.js"),
+				bootstrap: path.join(__dirname,"./static/js/bootstrap.min.js"),
 				header: path.join(__dirname,"./static/js/app/src/common/header.js"),
 				leftMenu: path.join(__dirname,"./static/js/app/src/common/leftMenu.js"),
 				util: path.join(__dirname,"./static/js/app/src/common/util.js"),
@@ -50,15 +53,16 @@ gulp.task('webpack', function(callback) {
                 accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
                 virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js"),
                 trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
+				validate: path.join(__dirname,"./static/js/app/src/login/login.validate.js")
+                trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
 				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
 				diff: path.join(__dirname,"./static/js/app/src/common/vD/diff.js"),
 				element: path.join(__dirname,"./static/js/app/src/common/vD/element.js"),
 				patch: path.join(__dirname,"./static/js/app/src/common/vD/patch.js"),
-				util2: path.join(__dirname,"./static/js/app/src/common/vD/util.js")
+				util2: path.join(__dirname,"./static/js/app/src/common/vD/util.js"),
+				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
+				validate: path.join(__dirname,"./static/js/app/src/login/login.validate.js")
 			}
-		},
-		externals: {
-			jquery: "jQuery"
 		},
 		devtool: "sourcemap"
 		}, function(err, stats) {
