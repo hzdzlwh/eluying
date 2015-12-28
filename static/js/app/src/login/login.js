@@ -3,6 +3,10 @@
  */
 var baseUrl = "http://192.168.0.2:8082/mg";
 
+var validate = require('validate');
+require("jquery");
+require("bootstrap");
+
 /*
 验证码按钮倒计时用。
  */
@@ -29,7 +33,7 @@ function time(o) {
 
 function forgetVCOnClick(){
     var phone = $("#loginForgetPwd .phone").val();
-    var result = phoneValidate(phone);
+    var result = validate.phoneValidate(phone);
     if(result == true){
         $("#loginForgetPwd .errorTips").hide();
         $(this).unbind("click");
@@ -57,7 +61,7 @@ function forgetVCOnClick(){
 
 function registerVCOnClick(){
     var phone = $("#loginRegister .phone").val();
-    var result = phoneValidate(phone);
+    var result = validate.phoneValidate(phone);
     if(result == true){
         $("#loginRegister .errorTips").hide();
         $(this).unbind("click");
@@ -143,15 +147,15 @@ $(document).ready(function(){
         var verifyCode = $("#loginForgetPwd .verifyCode").val();
         var pwd = $("#loginForgetPwd .pwd").val();
         var pwdConfirm = $("#loginForgetPwd .pwdConfirm").val();
-        var result = phoneValidate(phone);
+        var result = validate.phoneValidate(phone);
         if(result == true) {
-            result = verifyCodeValidate(verifyCode);
+            result = validate.verifyCodeValidate(verifyCode);
         }
         if(result == true) {
-            result = passwordValidate(pwd);
+            result = validate.passwordValidate(pwd);
         }
         if(result == true) {
-            result = passwordConfirmValidate(pwd, pwdConfirm);
+            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
         }
         if(result === true){
             $.ajax({
@@ -199,18 +203,18 @@ $(document).ready(function(){
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $("#loginRegister .pwdConfirm").val();
         var name, campName, campAddress, registrationCode;
-        var result = phoneValidate(phone);
+        var result = validate.phoneValidate(phone);
         if(result == true){
-            result = verifyCodeValidate(verifyCode);
+            result = validate.verifyCodeValidate(verifyCode);
         }
         if(result == true){
-            result = loginNameValidate(loginName);
+            result = validate.loginNameValidate(loginName);
         }
         if(result == true){
-            result = passwordValidate(pwd);
+            result = validate.passwordValidate(pwd);
         }
         if(result == true){
-            result = passwordConfirmValidate(pwd, pwdConfirm);
+            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
         }
         var state = $(this).html();
         if(state == '申请'){
@@ -219,13 +223,13 @@ $(document).ready(function(){
             campAddress = $("#loginRegister .address").val();
             registrationCode = null;
             if(result == true){
-                result = nameValidate(name);
+                result = validate.nameValidate(name);
             }
             if(result == true){
-                result = campNameValidate(campName);
+                result = validate.campNameValidate(campName);
             }
             if(result == true){
-                result = campAddressValidate(campAddress);
+                result = validate.campAddressValidate(campAddress);
             }
         }else if(state == '注册'){
             name = $("#loginRegister .name2").val();
@@ -233,10 +237,10 @@ $(document).ready(function(){
             campAddress = null;
             registrationCode = $("#loginRegister .registrationCode").val();
             if(result == true){
-                result = nameValidate(name);
+                result = validate.nameValidate(name);
             }
             if(result == true){
-                result = registrationCodeValidate(registrationCode);
+                result = validate.registrationCodeValidate(registrationCode);
             }
         }
         if(result == true){
@@ -285,9 +289,9 @@ $(document).ready(function(){
     $("#loginSection1 .log button").on("click", function(){
         var loginName = $("#loginSection1 .log .loginName").val();
         var password = $("#loginSection1 .log .password").val();
-        var result = loginNameValidate(loginName);
+        var result = validate.loginNameValidate(loginName);
         if(result == true) {
-            result = passwordValidate(password);
+            result = validate.passwordValidate(password);
         }
         if(result === true){
             $.ajax({
@@ -303,7 +307,7 @@ $(document).ready(function(){
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        window.location.href = 'view/category/room.html';
+                        window.location.href = '../../../../../view/category/room.html';
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();
@@ -328,7 +332,7 @@ $(document).ready(function(){
      */
     $("#loginSection1 .log .loginName").on("change", function(){
         var loginName = $(this).val();
-        var result = loginNameValidate(loginName);
+        var result = validate.loginNameValidate(loginName);
         if(result != true){
             $("#loginSection1 .log .errorTips").html(result);
             $("#loginSection1 .log .errorTips").show();
@@ -339,7 +343,7 @@ $(document).ready(function(){
     });
     $("#loginSection1 .log .password").on("change", function(){
         var password = $(this).val();
-        var result = passwordValidate(password);
+        var result = validate.passwordValidate(password);
         if(result != true){
             $("#loginSection1 .log .errorTips").html(result);
             $("#loginSection1 .log .errorTips").show();
@@ -354,7 +358,7 @@ $(document).ready(function(){
      */
     $("#loginForgetPwd .phone").on("change", function(){
         var phone = $(this).val();
-        var result = phoneValidate(phone);
+        var result = validate.phoneValidate(phone);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -364,7 +368,7 @@ $(document).ready(function(){
     });
     $("#loginForgetPwd .verifyCode").on("change", function(){
         var verifyCode = $(this).val();
-        var result = verifyCodeValidate(verifyCode);
+        var result = validate.verifyCodeValidate(verifyCode);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -374,7 +378,7 @@ $(document).ready(function(){
     });
     $("#loginForgetPwd .pwd").on("change", function(){
         var pwd = $(this).val();
-        var result = passwordValidate(pwd);
+        var result = validate.passwordValidate(pwd);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -385,12 +389,12 @@ $(document).ready(function(){
     $("#loginForgetPwd .pwdConfirm").on("change", function(){
         var pwd = $("#loginForgetPwd .pwd").val();
         var pwdConfirm = $(this).val();
-        var result = passwordValidate(pwd);
+        var result = validate.passwordValidate(pwd);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
         }else{
-            result = passwordConfirmValidate(pwd, pwdConfirm);
+            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
             if(result != true){
                 $("#loginForgetPwd .errorTips").html(result);
                 $("#loginForgetPwd .errorTips").show();
@@ -405,7 +409,7 @@ $(document).ready(function(){
      */
     $("#loginRegister .phone").on("change", function(){
         var phone = $(this).val();
-        var result = phoneValidate(phone);
+        var result = validate.phoneValidate(phone);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -415,7 +419,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .verifyCode").on("change", function(){
         var verifyCode = $(this).val();
-        var result = verifyCodeValidate(verifyCode);
+        var result = validate.verifyCodeValidate(verifyCode);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -425,7 +429,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .loginName").on("change", function(){
         var loginName = $(this).val();
-        var result = loginNameValidate(loginName);
+        var result = validate.loginNameValidate(loginName);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -452,7 +456,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .pwd").on("change", function(){
         var pwd = $(this).val();
-        var result = passwordValidate(pwd);
+        var result = validate.passwordValidate(pwd);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -463,7 +467,7 @@ $(document).ready(function(){
     $("#loginRegister .pwdConfirm").on("change", function(){
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $(this).val();
-        var result = passwordValidate(pwd);
+        var result = validate.passwordValidate(pwd);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -479,7 +483,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .name, #loginRegister .name2").on("change", function(){
         var name = $(this).val();
-        var result = nameValidate(name);
+        var result = validate.nameValidate(name);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -489,7 +493,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .campName").on("change", function(){
         var campName = $(this).val();
-        var result = campNameValidate(campName);
+        var result = validate.campNameValidate(campName);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -499,7 +503,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .address").on("change", function(){
         var address = $(this).val();
-        var result = campAddressValidate(address);
+        var result = validate.campAddressValidate(address);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -509,7 +513,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .registrationCode").on("change", function(){
         var registrationCode = $(this).val();
-        var result = registrationCodeValidate(registrationCode);
+        var result = validate.registrationCodeValidate(registrationCode);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();

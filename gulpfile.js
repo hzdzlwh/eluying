@@ -28,6 +28,7 @@ gulp.task('webpack', function(callback) {
 			new webpack.optimize.CommonsChunkPlugin('common.js')
 		],
 		entry: {
+			"login/login": "./static/js/app/src/login/login.js",
 			"price/roomEntry": "./static/js/app/src/price/roomEntry.js",
 			"inventory/room": "./static/js/app/src/inventory/room.js"
 		},
@@ -41,6 +42,7 @@ gulp.task('webpack', function(callback) {
 			alias: {
                 cookie: path.join(__dirname,"./static/js/jquery.cookie.js"),
 				jquery: path.join(__dirname,"./static/js/jquery.min.js"),
+				bootstrap: path.join(__dirname,"./static/js/bootstrap.min.js"),
 				header: path.join(__dirname,"./static/js/app/src/common/header.js"),
 				leftMenu: path.join(__dirname,"./static/js/app/src/common/leftMenu.js"),
 				util: path.join(__dirname,"./static/js/app/src/common/util.js"),
@@ -49,7 +51,8 @@ gulp.task('webpack', function(callback) {
                 laydate: path.join(__dirname,"./static/js/lib/laydate/laydate.js"),
                 accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
                 virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js"),
-                trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js")
+                trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
+				validate: path.join(__dirname,"./static/js/app/src/login/login.validate.js")
 			}
 		},
 		devtool: "sourcemap"
