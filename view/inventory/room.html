@@ -27,23 +27,79 @@
     <script src="/eluyun/static/js/app/dist/inventory/room.js"></script>
 </head>
 <body>
-    <!--修改价格-->
-    <div class="modal fade" role="dialog" id="editInven">
-        <div class="modal-dialog modal-w630">
+    <div class="modal fade" role="dialog" id="delPatch">
+        <div class="modal-dialog modal-w1130">
             <div class="modal-content clearfloat">
                 <div class="editPrice clearfloat">
                     <div class="title">
-                        修改库存－<span>双人帐篷</span>
+                        批量关房－<span>草地001</span>
                     </div>
-                    <div class="edit">
-                        <div class="label">总量</div>
-                        <input type="text" name="total"/>
+                    <div class="tips">按月份管理</div>
+                    <div class="monthPick">
+                        <div class="month">11月</div>
+                        <div class="pickers">
+                            <button>&lt前一周</button>
+                            <button>后一周&gt</button>
+                        </div>
                     </div>
-                    <div class="tips">已经预订数量 <span>20</span> </div>
-                    <div class="footer">
-                        <button class="btn-cancel" id="editInvenCancel">取消修改</button>
-                        <button class="btn-ok" id="editInvenOk">确认修改</button>
+                    <div class="patchGrid">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>周一</th>
+                                    <th>周二</th>
+                                    <th>周三</th>
+                                    <th>周四</th>
+                                    <th>周五</th>
+                                    <th>周六</th>
+                                    <th>周日</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="shut"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="sale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                    <td class="notsale"><p>1日</p><p>未售</p></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                    <div class="operate priceOperate">
+                        <div class="first">
+                            <div class="operateItem">
+                                <div class="clickDiv" id="modalDelButton">
+                                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="关闭房间">
+                                    <p>关闭房间</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn-cancel" id="editPatchCancel">取消修改</button>
+                    <button class="btn-ok" id="editPatchOk">确认修改</button>
                 </div>
             </div>
         </div>
@@ -119,84 +175,30 @@
                         <td><p>20</p><p>100</p></td>
                     </tr>
                     <tr class="subclass hide">
-                        <td><div>艺龙</div></td>
+                        <td><div>草地001</div></td>
                         <td>
-                            <div><p>剩余</p><p>总量</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="sale">已售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="shut">已关闭</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                    </tr>
-                    <tr class="subclass hide">
-                        <td><div>艺龙</div></td>
-                        <td>
-                            <div><p>剩余</p><p>总量</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                    </tr>
-                    <tr class="subclass hide">
-                        <td><div>艺龙</div></td>
-                        <td>
-                            <div><p>剩余</p><p>总量</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
-                        </td>
-                        <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                     </tr>
                     <tr class="mainClass">
@@ -214,30 +216,84 @@
                         <td><p>20</p><p>100</p></td>
                     </tr>
                     <tr class="subclass hide">
-                        <td><div>艺龙</div></td>
+                        <td><div>草地001</div></td>
                         <td>
-                            <div><p>剩余</p><p>总量</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="sale">已售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="shut">已关闭</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
                         </td>
                         <td>
-                            <div><p>20</p><p>120</p></div>
+                            <div class="notsale">未售</div>
+                        </td>
+                    </tr>
+                    <tr class="subclass hide">
+                        <td><div>草地001</div></td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="sale">已售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="shut">已关闭</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                    </tr>
+                    <tr class="subclass hide">
+                        <td><div>草地001</div></td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="sale">已售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="shut">已关闭</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
+                        </td>
+                        <td>
+                            <div class="notsale">未售</div>
                         </td>
                     </tr>
                     </tbody>
@@ -246,15 +302,15 @@
             <div class="operate priceOperate">
                 <div class="first">
                     <div class="operateItem">
-                        <div class="clickDiv" id="editInvenButton" data-toggle="modal" data-target="#editInven">
-                            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改库存">
-                            <p>修改库存</p>
+                        <div class="clickDiv" id="delButton">
+                            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="关闭房间">
+                            <p>关闭房间</p>
                         </div>
                     </div>
                     <div class="operateItem">
-                        <div class="clickDiv" id="editPatchButton" data-toggle="modal" data-target="#editPatch">
-                            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="批量管理">
-                            <p>批量管理</p>
+                        <div class="clickDiv" id="delPatchButton" data-toggle="modal" data-target="#delPatch">
+                            <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="批量关闭">
+                            <p>批量关闭</p>
                         </div>
                     </div>
                 </div>
