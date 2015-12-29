@@ -1,5 +1,6 @@
 .priceGrid {
-    width: 900px;
+    margin-top: 30px;
+    width: auto;
     border-top:4px solid #4A90E2;
     float: left;
     table {
@@ -27,9 +28,14 @@
             background-color: #F9F9F9;
         }
         tr.subPrice {
+            height: auto;
             background-color: #4a90e2;
             color: #FFF;
             td {
+                height: auto;
+                div {
+
+                }
                 border: 1px #3E79BF solid;
                 p {
                     line-height: 25px;
@@ -37,6 +43,15 @@
             }
             td:nth-child(even) {
                 background-color: #488CDC;
+            }
+            .subPriceTd {
+                cursor: pointer;
+                p {
+                    cursor: pointer;
+                }
+            }
+            .selected div {
+                border: 2px #fff solid;
             }
         }
     }
@@ -57,11 +72,12 @@
     p {
         margin-left: 100px;
         margin-top: 8px;
+        margin-bottom: 0;
     }
 }
 
 .priceOperate {
-    margin-top: 0px;
+    margin-top: 30px;
 }
 
 .dateContainer {

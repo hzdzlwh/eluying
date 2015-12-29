@@ -8,13 +8,13 @@ require("bootstrap");
 var modal = require("modal");
 
 
+
 //初始化界面
 header.showHeader();
 leftMenu.showLeftMenu();
 util.mainContainer();
 modal.modalInit();
 $(".campName").html(localStorage.getItem("campName"));
-
 
 //初始化日历
 $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
@@ -26,7 +26,6 @@ $(".dateContainer").datepicker({
 $("#datePicker").datepicker( "setDate", new Date());
 
 //拉今天的价格去
-accommodationPriceList.tableInit();
 accommodationPriceList.getAccommodationPriceList(new Date());
 
 

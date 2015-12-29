@@ -30,6 +30,7 @@ gulp.task('webpack', function(callback) {
 		entry: {
 			"login/login": "./static/js/app/src/login/login.js",
 			"price/roomEntry": "./static/js/app/src/price/roomEntry.js",
+			"price/foodETEntry": "./static/js/app/src/price/foodETEntry.js",
 			"inventory/room": "./static/js/app/src/inventory/room.js"
 		},
 		output: {
@@ -51,14 +52,10 @@ gulp.task('webpack', function(callback) {
                 logout: path.join(__dirname,"./static/js/app/src/common/logout.js"),
                 AJAXService: path.join(__dirname,"./static/js/app/src/common/AJAXService.js"),
                 accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
-                virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js"),
+				foodETPriceList: path.join(__dirname,"./static/js/app/src/price/foodETPriceList.js"),
                 trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
 				loginValidate: path.join(__dirname,"./static/js/app/src/login/login.validate.js"),
 				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
-				diff: path.join(__dirname,"./static/js/app/src/common/vD/diff.js"),
-				element: path.join(__dirname,"./static/js/app/src/common/vD/element.js"),
-				patch: path.join(__dirname,"./static/js/app/src/common/vD/patch.js"),
-				util2: path.join(__dirname,"./static/js/app/src/common/vD/util.js"),
 				validate: path.join(__dirname,"./static/js/jquery.validate.min.js"),
 				validation: path.join(__dirname,"./static/js/validation.js")
 			}

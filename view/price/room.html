@@ -547,13 +547,14 @@
             <h1>修改零售价</h1>
             <ul>
               <li>
-                <label for="retailPrice">网络价</label>
-                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice" name="netPrice" />
-              </li>
-              <li>
                 <label for="retailPrice">协议价</label>
                 <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="commissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
               </li>
+              <li>
+                <label for="retailPrice">网络价</label>
+                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice" name="netPrice" />
+              </li>
+
             </ul>
           </form>
           <div class="footer">
@@ -577,7 +578,7 @@
           <p class="tip">今天以前（包括今天）的价格不能修改！</p>
         </div>
       </div>
-      <div class="priceGrid">
+      <div class="priceGrid" style="width: 900px">
 
       </div>
       <div class="operate priceOperate">

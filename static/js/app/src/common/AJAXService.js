@@ -5,7 +5,7 @@ var AJAXService = {
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        host: "http://192.168.0.2:8082/mg",
+        host: "http://192.168.0.105:8087",
         //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
@@ -25,6 +25,9 @@ var AJAXService = {
         getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
         getAccommodationPriceList: "/price/getAccommodationPriceList",
         modifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialSalePrice",
+        ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
+        getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
+        getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
         logoutUrl: "/user/logout",
         rewriteUrl: true
     },
