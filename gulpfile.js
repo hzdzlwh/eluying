@@ -53,15 +53,14 @@ gulp.task('webpack', function(callback) {
                 accommodationPriceList: path.join(__dirname,"./static/js/app/src/price/accommodationPriceList.js"),
                 virtualDOM: path.join(__dirname,"./static/js/app/src/common/virtualDOM.js"),
                 trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
-				validate: path.join(__dirname,"./static/js/app/src/login/login.validate.js")
-                trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
+				loginValidate: path.join(__dirname,"./static/js/app/src/login/login.validate.js"),
 				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
 				diff: path.join(__dirname,"./static/js/app/src/common/vD/diff.js"),
 				element: path.join(__dirname,"./static/js/app/src/common/vD/element.js"),
 				patch: path.join(__dirname,"./static/js/app/src/common/vD/patch.js"),
 				util2: path.join(__dirname,"./static/js/app/src/common/vD/util.js"),
-				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
-				validate: path.join(__dirname,"./static/js/app/src/login/login.validate.js")
+				validate: path.join(__dirname,"./static/js/jquery.validate.min.js"),
+				validation: path.join(__dirname,"./static/js/validation.js")
 			}
 		},
 		devtool: "sourcemap"

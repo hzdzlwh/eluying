@@ -4,6 +4,7 @@ var accommodationPriceList = require("accommodationPriceList");
 var util = require("util");
 require("jqueryui");
 require("datepicker-zh");
+require("bootstrap");
 var modal = require("modal");
 
 
@@ -11,16 +12,18 @@ var modal = require("modal");
 header.showHeader();
 leftMenu.showLeftMenu();
 util.mainContainer();
+modal.modalInit();
 $(".campName").html(localStorage.getItem("campName"));
 
 
 //初始化日历
 $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
-$("#datePicker").datepicker({
+$(".dateContainer").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true
 }).datepicker( "setDate", new Date());
+$("#datePicker").datepicker( "setDate", new Date());
 
 //拉今天的价格去
 accommodationPriceList.tableInit();

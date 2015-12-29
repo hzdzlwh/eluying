@@ -26,6 +26,32 @@ var accommodationPriceList = {
         this.table = el("table", {}, []);
         this.tableDOM = this.table.render();
         $(".priceGrid").html(this.tableDOM);
+        events= {
+            "click .priceGrid .price": function(event){
+                $(".price").removeClass("selected");
+                $(event.target).toggleClass("selected");
+                $.each(accommodationPriceList.table.children[1].children, function(index, element){
+                    $.each(element.children, function(index, element){
+                        if (element.props.class) {
+                            element.props.class.replace(" selected", "");
+                        }
+                        if ($(event.target).attr("id") == element.props.id) {
+                            element.props.class += " selected";
+                        }
+                    });
+                });
+                $(".editSalePrice").removeClass("hide");
+                $(".second").removeClass("hide");
+            },
+            "click #editSalePriceButton": function(){
+                $("#retailPrice").val($(".selected").html());
+            },
+            "click #editSalePriceOk": function(){
+                var that = this;
+                accommodationPriceList.editSalePrice(that);
+            }
+        };
+        util.bindDomAction(events);
     },
 
     createEl: function(result){
@@ -33,7 +59,35 @@ var accommodationPriceList = {
             el("thead", {}, [
                 el("tr", {}, [
                     el("th", {}, ["房型"]),
-                    el("th", {}, ["价格类型"])
+                    el("th", {}, ["价格类型"]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ]),
+                    el("th",{},[
+                        el("p",{},[""]),
+                        el("p",{},[""])
+                    ])
                 ])
             ])
         ]);
@@ -51,10 +105,10 @@ var accommodationPriceList = {
 
         //把表头写好
         for (var i = 0;  i < 7; i++) {
-            newTable.children[0].children[0].children.push(el("th", {}, [
+            newTable.children[0].children[0].children[i + 2] = el("th", {}, [
                 el("p", {}, [dateArray[i].toLocaleDateString().substring(5).replace("/", "-")]),
                 el("p", {}, [new Date().toDateString() ==  dateArray[i].toDateString() ? "今天" : util.getWeek(dateArray[i])])
-            ]));
+            ]);
         }
 
         //开始写下面的表格
@@ -68,7 +122,7 @@ var accommodationPriceList = {
                         el("td", {} , ["零售价"])
                     ]);
                     $.each(result.data[name], function(index, element){
-                        tr.children.push(el("td", {class: "price", id: id++, roomId: element.id}, [
+                        tr.children.push(el("td", {class: "price", id: id++, roomid: element.id, date: element.date}, [
                             element.salePrice
                         ]));
                     });
@@ -80,35 +134,28 @@ var accommodationPriceList = {
 
         //更新
         var patches = diff(this.table, newTable);
-        console.log(this.table);
-        console.log(newTable);
         patch(this.tableDOM, patches);
         this.table = newTable;
     },
+    editSalePrice: function(that){
+        $.ajax({
+            url: AJAXService.getUrl("modifyAccommodationSpecialPrice"),
 
-
-    renderEl: function(el){
-        var dom = el.render();
-        $(".priceGrid").html(dom);
-        events= {
-            "click .priceGrid .price": function(event){
-                $(".price").removeClass("selected");
-                $(event.target).toggleClass("selected");
-                $.each(accommodationPriceList.table.children[1].children, function(index, element){
-                    $.each(element.children, function(index, element){
-                        if (element.props.class) {
-                            element.props.class.replace(" selected", "");
-                        }
-                        if ($(event.target).attr("id") == element.props.id) {
-                            element.props.class += " selected";
-                        }
-                    });
-                });
-                $(".first .operateItem").removeClass("hide");
-                $(".second").removeClass("hide");
+            data: {
+                newSalePrice: $("#retailPrice").val(),
+                categoryId: $(".selected").attr("roomid"),
+                dates: JSON.stringify([$(".selected").attr("date")])
+            },
+            dataFilter: function (result) {
+                return AJAXService.sessionValidate(result);
+            },
+            success: function(result){
+                if (util.errorHandler(result)) {
+                    clearModal(that);
+                    $(".selected").html($("#retailPrice").val());
+                }
             }
-        };
-        util.bindDomAction(events);
+        })
     }
 };
 module.exports = accommodationPriceList;

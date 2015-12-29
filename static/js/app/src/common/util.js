@@ -23,9 +23,19 @@ var util = {
                     }else{
                         console.warn("事件绑定格式错误");
                     }
-
                 }
             }
+        }
+    },
+
+    errorHandler: function(result){
+        var modal = require("modal");
+        if (result.code != 1) {
+            modal.somethingAlert(result.msg);
+            return false;
+        } else {
+            modal.somethingAlert("操作成功");
+            return true;
         }
     },
 

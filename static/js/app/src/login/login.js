@@ -3,7 +3,7 @@
  */
 var baseUrl = "http://192.168.0.120:8087";
 
-var validate = require('validate');
+var validate = require('loginValidate');
 require("jquery");
 require("bootstrap");
 

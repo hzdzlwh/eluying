@@ -1,3 +1,5 @@
+require("bootstrap");
+require("validate");
 function centerModals(){
     $('.modal').each(function(){
         var $clone = $(this).clone().css('display', 'block').appendTo('body');
@@ -9,8 +11,8 @@ function centerModals(){
 }
 
 function clearModal(that){
-    $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find(".operateItem").addClass("hide");
+    $(that).parents(".modal").modal("hide");
     $(that).parents(".modal").find("input").val(""); //将输入框清空
     $(that).parents(".modal").find("textarea").val("");
     $(that).parents(".modal").find("tbody").html(""); //将表单清空
@@ -30,5 +32,28 @@ function modalInit(){
     });
 }
 
+function somethingAlert(message){
+    $("body").prepend(
+        "<div class='modal fade' role='dialog' id='errorAlert'>" +
+        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-content clearfloat'>" +
+        "<div class='modal-header'>" +
+        "<p>" + "提示" + "</p>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<p>" + message + "</p>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>");
+    $("#errorAlert").modal("show");
+    centerModals();
+    setTimeout(function(){
+        $("#errorAlert").modal("hide");
+    }, 1000);
+}
+
 exports.centerModals =  centerModals;
 exports.clearModal = clearModal;
+exports.modalInit = modalInit;
+exports.somethingAlert = somethingAlert;
