@@ -40,7 +40,7 @@
                 <li><label for="createRoomShortName">简称</label>
                   <input maxlength="6" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
                 <li><label for="createRoomPrice">价格</label>
-                  <input range="[0,99999999]" maxlength="8" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
+                  <input range="[0,99999999]" maxlength="8" number="true" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
                   <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                 <li><label for="createRoomFitNum">可容纳人数</label>
                   <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
@@ -110,7 +110,7 @@
                           <li><label for="editRoomShortName">简称</label>
                               <input maxlength="6" type="text" id="editRoomShortName" name="editRoomShortName" class="text required" placeholder="用于自己管理" /></li>
                           <li><label for="editRoomPrice">价格</label>
-                              <input maxlength="8" range="[0,99999999]" type="text" id="editRoomPrice" name="editRoomPrice" class="text required" placeholder="请填写纯数字" />
+                              <input maxlength="8" range="[0,99999999]" type="text" number="true" id="editRoomPrice" name="editRoomPrice" class="text required" placeholder="请填写纯数字" />
                               <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
                           <li><label for="editRoomFitNum">可容纳人数</label>
                               <input maxlength="8" range="[0,99999999]" digits="true" type="text" id="editRoomFitNum" name="editRoomFitNum" class="text required" placeholder="请填写纯数字" /></li>
@@ -261,7 +261,7 @@
                     </li>
                     <li>
                       <label for="roomShowArea">房间面积</label>
-                      <input maxlength="8" range="[1,99999999]" type="text" class="text required" id="roomShowArea" name="roomShowArea" placeholder="单位：平方米">
+                      <input maxlength="8" range="[1,99999999]" number="true" type="text" class="text required" id="roomShowArea" name="roomShowArea" placeholder="单位：平方米">
                     </li>
                     <li>
                       <label for="roomShowBed">床型</label>
@@ -884,6 +884,21 @@
             return;
           }
           $("#editRoom .roomContainer").html("");
+          var inventory = 0;
+          $.each(item, function(index, elemet){
+            if (elemet.status == 0) {
+              inventory ++;
+            }
+          });
+          $.each(roomCategoryList.list, function(index, element){
+            $.each(element.subTypeList, function(index, element){
+              if (element.id == $(".subActive").find(".id").val()) {
+                element.inventory = inventory;
+              }
+            });
+          });
+          roomCategoryList.countInventory($(".mainActive").find(".id").val());
+          roomCategoryList.render();
         }
       })
     }
@@ -1311,6 +1326,8 @@
     //编辑房间展示信息
     $("#editRoomDisplayInfoButton").on("click", function(){
       $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0) span").html());
+      $(".detail .photoContainer").html("");
+      $(".cover .photoContainer").html("");
       var id = $(".mainActive .id").val();
       pullRoomShowInfo(id);
     });

@@ -1,5 +1,6 @@
 .priceGrid {
-    width: 900px;
+    margin-top: 30px;
+    width: auto;
     border-top:4px solid #4A90E2;
     float: left;
     table {
@@ -17,13 +18,24 @@
             height: 75px;
             border: 1px #D8D8D8 solid;
         }
+        td.price {
+            cursor: pointer;
+        }
+        td.price.selected {
+            border: 2px #4A90E2 solid;
+        }
         td:nth-child(even) {
             background-color: #F9F9F9;
         }
         tr.subPrice {
+            height: auto;
             background-color: #4a90e2;
             color: #FFF;
             td {
+                height: auto;
+                div {
+
+                }
                 border: 1px #3E79BF solid;
                 p {
                     line-height: 25px;
@@ -31,6 +43,15 @@
             }
             td:nth-child(even) {
                 background-color: #488CDC;
+            }
+            .subPriceTd {
+                cursor: pointer;
+                p {
+                    cursor: pointer;
+                }
+            }
+            .selected div {
+                border: 2px #fff solid;
             }
         }
     }
@@ -51,11 +72,12 @@
     p {
         margin-left: 100px;
         margin-top: 8px;
+        margin-bottom: 0;
     }
 }
 
 .priceOperate {
-    margin-top: 0px;
+    margin-top: 30px;
 }
 
 .dateContainer {
@@ -66,17 +88,17 @@
     border-radius: 5px;
     border: 1px solid #ccc;
     padding: 0 9px;
-    span {
-        color: #4a4a4a;
-        line-height: 43px;
-    }
-    img {
-        position: absolute;
-        top: 11px;
-        right: 11px;
-    }
 }
-
+.calender {
+    position: relative;
+    top: 11px;
+    right: 35px;
+    background: url(/eluyun/static/image/icon_calender_press.png) no-repeat;
+    height: 20px;
+    width: 19px;
+    cursor: pointer;
+    margin-right: -19px;
+}
 .tab {
     list-style: none;
     li {

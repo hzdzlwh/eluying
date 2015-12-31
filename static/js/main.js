@@ -146,6 +146,7 @@ function mainContainer(){
 }
 
 $(document).ready(function(){
+    modalInit();
     mainContainer();
     //顶部导航栏
     $("body").prepend("<div class='header clearfloat'>"
@@ -174,7 +175,6 @@ $(document).ready(function(){
         + "<li><a id='roomMenu' class='pie' href='/eluyun/view/category/room.html'>住宿</a></li>"
         + "<li><a id='foodMenu' href='/eluyun/view/category/food.html'>餐饮</a></li>"
         + "<li><a id='enterMenu' href='/eluyun/view/category/entertainment.html'>娱乐</a></li>"
-        + "<li><a id='shopMenu' href='/eluyun/view/category/shop.html'>商超</a></li>"
         + "</ul>"
         + "</div>");
 
@@ -189,7 +189,6 @@ $(document).ready(function(){
     //绑定模态框居中
     $('.modal').on('show.bs.modal', function(){
         centerModals();
-        modalInit();
     });
 
     $(window).on('resize', function(){

@@ -1,21 +1,25 @@
 /**
- * Created by huwanqi on 15/12/26.
+ * Created by huwanqi on 2015/12/28.
  */
 var util = require("util");
 var leftMenu = require("leftMenu");
 var header = require("header");
-var trToggle = require("trToggle");
+require("laydate");
 
 $(document).ready(function(){
     /*
-    initialize public modules
+     initialize public modules
      */
     header.showHeader();
     leftMenu.showLeftMenu();
     util.mainContainer();
 
-
-
-    trToggle();
+    /*
+     initialize datepicker
+     */
+    laydate({
+        elem: '#dateInput'
+    });
+    laydate.skin('danlan');
 
 });

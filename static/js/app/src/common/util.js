@@ -23,14 +23,72 @@ var util = {
                     }else{
                         console.warn("事件绑定格式错误");
                     }
-
                 }
             }
         }
     },
 
+    errorHandler: function(result){
+        var modal = require("modal");
+        if (result.code != 1) {
+            modal.somethingAlert(result.msg);
+            return false;
+        } else {
+            modal.somethingAlert("操作成功");
+            return true;
+        }
+    },
+
     dateFormat: function(date){
         return date.toLocaleDateString().replace(/\//g, "-");
+    },
+
+    lastWeek: function(){
+        var datepicker = $(this).siblings(".dateContainer");
+        var currentDate = datepicker.datepicker( "getDate" );
+        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
+        datepicker.trigger("dateChange");
+    },
+
+    nextWeek: function(){
+        var datepicker = $(this).siblings(".dateContainer");
+        var currentDate = datepicker.datepicker( "getDate" );
+        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() + 7)));
+        datepicker.trigger("dateChange");
+    },
+
+    getWeek: function(d){
+        var week = ["周日","周一","周二","周三","周四","周五","周六"];
+        return week[d.getDay()];
+    },
+
+    clone: function(obj){
+        var result,oClass = util.isClass(obj);
+        //确定result的类型
+        if(oClass==="Object"){
+            result = {};
+        }else if(oClass === "Array"){
+            result = [];
+        }else{
+            return obj;
+        }
+        for(var key in obj){
+            var copy = obj[key];
+            if(util.isClass(copy) == "Object"){
+                result[key]=arguments.callee(copy);//递归调用
+            }else if(util.isClass(copy)=="Array"){
+                result[key]=arguments.callee(copy);
+            }else{
+                result[key]=obj[key];
+            }
+        }
+        return result;
+    },
+
+    isClass: function(o){
+        if(o===null) return "Null";
+        if(o===undefined) return "Undefined";
+        return Object.prototype.toString.call(o).slice(8,-1);
     }
 };
 module.exports = util;
