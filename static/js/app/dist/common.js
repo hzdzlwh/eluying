@@ -134,6 +134,9 @@
 	                        $(eventsInfoArray[1]).on(eventsInfoArray[0], eventsInfoArray[2], events[eventDef]);
 	                    }else if(eventsInfoArray.length == 2){
 	                        $(eventsInfoArray[1]).on(eventsInfoArray[0], events[eventDef]);
+	                        if (eventsInfoArray[1] == "window") {
+	                            $(window).on(eventsInfoArray[0], events[eventDef]);
+	                        }
 	                    }else{
 	                        console.warn("事件绑定格式错误");
 	                    }
@@ -141,6 +144,10 @@
 	                }
 	            }
 	        }
+	    },
+	
+	    dateFormat: function(date){
+	        return date.toLocaleDateString().replace(/\//g, "-");
 	    }
 	};
 	module.exports = util;
@@ -198,7 +205,7 @@
 	        util.bindDomAction(this.events);
 	    },
 	    events: {
-	        "click #logout #logout": logout.logout
+	        "click #logout": logout.logout
 	    }
 	};
 	module.exports = header;
@@ -229,7 +236,8 @@
 	        //测试服 http://121.41.109.105:8081/mg
 	        //宪伟服务器 http://192.168.0.2:8082/mg
 	        //var host = "http://121.41.109.105:8081/mg";
-	        host: "http://192.168.0.2:8082/mg",
+	        //浩南服务器 http://192.168.0.118:8087
+	        host: "http://121.41.109.105:8081/mg",
 	        //var host = "/mg";
 	        loginUrl: "/user/login",
 	        getRoomCategoryListUrl: "/category/getRoomCategoryList",
@@ -261,7 +269,7 @@
 	    sessionValidate: function(data){
 	        data = JSON.parse(data);
 	        if (data.code == 14) {
-	            location.href = "/eluyun/view/loginTest.html";
+	            location.href = "/eluyun/login.html";
 	        }
 	        return JSON.stringify(data);
 	}

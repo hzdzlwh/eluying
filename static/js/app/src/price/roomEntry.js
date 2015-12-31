@@ -18,4 +18,5 @@ events = {
     "resize window": util.mainContainer
 };
 util.bindDomAction(events);
+alert("hello");
 
