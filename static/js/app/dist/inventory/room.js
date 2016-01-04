@@ -230,7 +230,7 @@ webpackJsonp([0],[
 	var util = __webpack_require__(3);
 	var header = {
 	    showHeader : function(){
-	        var headerStr = "<div class='header clearfloat'><a class='logo' href='#'>易露云</a><ul>"
+	        var headerStr = "<div class='header clearfloat'><a class='logo' href='#'>订单来了</a><ul>"
 	            + "<li><a id='inventoryMenu' href='/eluyun/view/inventory/room.html'>库存管理</a></li>"
 	            + "<li><a id='priceMenu' href='/eluyun/view/price/room.html'>价格维护</a></li>"
 	            + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
@@ -309,6 +309,12 @@ webpackJsonp([0],[
 	        ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
 	        getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
 	        getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
+	        modifyDefaultPrice: "/price/modifyDefaultPrice",
+	        getCampSeasons: "/price/getCampSeasons",
+	        getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
+	        modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
+	        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
+	        modifyCampSeason: "/price/modifyCampSeason",
 	        logoutUrl: "/user/logout",
 	        rewriteUrl: true
 	    },

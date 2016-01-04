@@ -130,6 +130,8 @@
 }
 
 .editPrices {
+    height: 769px;
+    position: relative;
     h1 {
         margin: 15px 0;
     }
@@ -173,7 +175,7 @@
                 text-align: center;
                 line-height: 25px;
             }
-            p:nth-of-type(odd) {
+            p:nth-of-type(even) {
                 color: #4a90e2;
             }
             .date {
@@ -187,12 +189,45 @@
         td:nth-child(even) {
             background-color: #F9F9F9;
         }
+        td.selected {
+            border: 2px #4a90e2 solid;
+        }
+        td.salePrice,td.netPrice {
+            cursor: pointer;
+            p {
+                cursor: pointer;
+            }
+        }
     }
     .operate {
         margin-top: 27px;
     }
-    .footer {
-        margin-top: 38px;
-    }
 }
 
+.busySeason {
+    position: absolute;
+    top: 120px;
+}
+
+.slackSeason {
+    position: absolute;
+    top: 412px;
+}
+
+.busyGrid {
+    position: relative;
+    top: 95px;
+}
+
+.slackGrid {
+    position: relative;
+    top: 183px;
+}
+
+.seasonOperate {
+    margin-top: -314px;
+}
+
+.seasonFooter {
+    margin-top: 371px;
+}

@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="/eluyun/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/eluyun/static/css/jquery-ui.min.css">
   <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
-
 </head>
 <body>
   <!--修改淡旺季-->
@@ -16,21 +15,10 @@
         <div class="editPrices clearfloat">
           <h1>淡旺季管理</h1>
           <h2>数据来源</h2>
-          <ul class="tab clearfloat">
-            <li class="leftTab active">
-              <p>零售</p>
-            </li>
-            <li>
-              <p>携程</p>
-            </li>
-            <li>
-              <p>艺龙</p>
-            </li>
-            <li class="rightTab">
-              <p>易露营</p>
-            </li>
-          </ul>
-          <div>
+          <ul class='nav nav-tabs clearfloat' role='tablist'></ul>
+          <div class="tab-content clearfloat">
+          </div>
+          <div class="busySeason">
             <h1>旺季</h1>
             <div>从
               <input type="text" class="dateContainer" id="fromBusyDate" />
@@ -39,78 +27,8 @@
               <input type="text" class="dateContainer" id="toBusyDate" />
               <label class="calender" for="toBusyDate" alt="日历"></label>
             </div>
-            <div class="clearfloat">
-              <table class="grid">
-                <thead>
-                <tr>
-                  <th>价格类型</th>
-                  <th>周一</th>
-                  <th>周二</th>
-                  <th>周三</th>
-                  <th>周四</th>
-                  <th>周五</th>
-                  <th>周六</th>
-                  <th>周日</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>
-                    <p>网络价</p>
-                    <p>协议价</p>
-                    <p>零售价</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div class="operate">
-                <div class="first">
-                  <div class="operateItem">
-                    <div class="clickDiv" id="editBusyPriceButton" data-toggle="modal" data-target="#editSeasonPrice">
-                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
-                      <p>修改价格</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-          <div>
+          <div class="slackSeason">
             <h1>淡季</h1>
             <div>从
               <input type="text" class="dateContainer" id="fromSlackDate" />
@@ -119,80 +37,29 @@
               <input type="text" class="dateContainer" id="toSlackDate" />
               <label class="calender" for="toSlackDate" alt="日历"></label>
             </div>
-            <div class="clearfloat">
-              <table class="grid">
-                <thead>
-                <tr>
-                  <th>价格类型</th>
-                  <th>周一</th>
-                  <th>周二</th>
-                  <th>周三</th>
-                  <th>周四</th>
-                  <th>周五</th>
-                  <th>周六</th>
-                  <th>周日</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>
-                    <p>网络价</p>
-                    <p>协议价</p>
-                    <p>零售价</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                  <td>
-                    <p>100</p>
-                    <p>20</p>
-                    <p>120</p>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div class="operate">
-                <div class="first">
-                  <div class="operateItem">
-                    <div class="clickDiv" id="editSlackPriceButton" data-toggle="modal" data-target="#editPrice">
-                      <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
-                      <p>修改价格</p>
-                    </div>
+          </div>
+          <div class="seasonOperate clearfloat">
+            <div class="operate">
+              <div class="first">
+                <div class="operateItem hide">
+                  <div class="clickDiv" id="editSeasonSalePriceButton" data-toggle="modal" data-target="#editSeasonSalePrice">
+                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+                    <p>修改价格</p>
                   </div>
                 </div>
+                <div class="operateItem hide">
+                  <div class="clickDiv" id="editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+                    <img src="/eluyun/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+                    <p>修改价格</p>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
-          <div class="footer">
-            <button class="btn-cancel" id="editSubclassCancel">取消</button>
-            <button class="btn-ok" id="editSubclassOk">确认</button>
+          <div class="seasonFooter footer">
+            <button class="btn-cancel" id="editSeasonCancel">取消</button>
+            <button class="btn-ok" id="editSeasonOk">确认</button>
           </div>
         </div>
       </div>
@@ -486,8 +353,8 @@
       </div>
     </div>
   </div>
-  <!--修改季度价格-->
-  <div class="modal fade" role="dialog" id="editSeasonPrice">
+  <!--修改季度网络价-->
+  <div class="modal fade" role="dialog" id="editSeasonNetPrice">
     <div class="modal-dialog modal-w626">
       <div class="modal-content clearfloat">
         <div class="editPrice clearfloat">
@@ -495,13 +362,32 @@
             <h1>修改零售价</h1>
             <ul>
               <li>
-                <label for="retailPrice">网络价</label>
-                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="seasonNetPrice" name="seasonNetPrice" />
+                <label for="seasonCommissionPrice">协议价</label>
+                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="seasonCommissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
               </li>
               <li>
-                <label for="retailPrice">协议价</label>
-                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="seasonCommissionPrice" name="seasonCommissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
+                <label for="seasonNetPrice">网络价</label>
+                <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="seasonNetPrice" name="netPrice" />
               </li>
+
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel" id="editSeasonNetPriceCancel">取消</button>
+            <button class="btn-ok" id="editSeasonNetPriceOk">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--修改季度零售价-->
+  <div class="modal fade" role="dialog" id="editSeasonSalePrice">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editPrice clearfloat">
+          <form class="inputFiled">
+            <h1>修改零售价</h1>
+            <ul>
               <li>
                 <label for="retailPrice">零售价</label>
                 <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="seasonRetailPrice" name="seasonRetailPrice" />
@@ -510,7 +396,7 @@
           </form>
           <div class="footer">
             <button class="btn-cancel" id="editSeasonPriceCancel">取消</button>
-            <button class="btn-ok" id="editSeasonPriceOk">确认</button>
+            <button class="btn-ok" id="editSeasonSalePriceOk">确认</button>
           </div>
         </div>
       </div>
@@ -547,11 +433,11 @@
             <h1>修改零售价</h1>
             <ul>
               <li>
-                <label for="retailPrice">协议价</label>
+                <label for="commissionPrice">协议价</label>
                 <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="commissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
               </li>
               <li>
-                <label for="retailPrice">网络价</label>
+                <label for="netPrice">网络价</label>
                 <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice" name="netPrice" />
               </li>
 

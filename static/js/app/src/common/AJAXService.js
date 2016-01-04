@@ -28,6 +28,12 @@ var AJAXService = {
         ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
         getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
         getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
+        modifyDefaultPrice: "/price/modifyDefaultPrice",
+        getCampSeasons: "/price/getCampSeasons",
+        getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
+        modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
+        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
+        modifyCampSeason: "/price/modifyCampSeason",
         logoutUrl: "/user/logout",
         rewriteUrl: true
     },

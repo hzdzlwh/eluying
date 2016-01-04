@@ -23,7 +23,7 @@ var accommodationPriceList = {
     tableInit: function(){
 
         events= {
-            "click .priceGrid .price": function(event){
+            "click .priceGrid .price": function(){
                 $(".price").removeClass("selected");
                 $(".subPriceTd").removeClass("selected");
                 $(this).toggleClass("selected");
@@ -31,7 +31,7 @@ var accommodationPriceList = {
                 $(".editNetPrice").addClass("hide");
                 $(".second").removeClass("hide");
             },
-            "click .priceGrid .subPriceTd": function(event){
+            "click .priceGrid .subPriceTd": function(){
                 $(".subPriceTd").removeClass("selected");
                 $(".price").removeClass("selected");
                 $(this).toggleClass("selected");
@@ -113,7 +113,7 @@ var accommodationPriceList = {
                 categoryId: $(".selected").attr("category-id"),
                 dates: JSON.stringify([$(".selected").attr("date")])
             },
-            dataFilter: function (result) {
+            dataFilter: function(result) {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
