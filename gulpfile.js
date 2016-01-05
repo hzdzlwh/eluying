@@ -31,7 +31,9 @@ gulp.task('webpack', function(callback) {
 			"login/login": "./static/js/app/src/login/login.js",
 			"price/roomEntry": "./static/js/app/src/price/roomEntry.js",
 			"price/foodETEntry": "./static/js/app/src/price/foodETEntry.js",
-			"inventory/room": "./static/js/app/src/inventory/room.js"
+			"inventory/room": "./static/js/app/src/inventory/room.js",
+			"inventory/food": "./static/js/app/src/inventory/food.js",
+			"inventory/entertainment": "./static/js/app/src/inventory/entertainment.js"
 		},
 		output: {
 			path: path.join(__dirname, 'static/js/app/dist'),
