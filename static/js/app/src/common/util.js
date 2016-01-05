@@ -43,7 +43,7 @@ var util = {
         return date.toLocaleDateString().replace(/\//g, "-");
     },
 
-    lastWeek: function(){
+    prevWeek: function(){
         var datepicker = $(this).siblings(".dateContainer");
         var currentDate = datepicker.datepicker( "getDate" );
         datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
@@ -62,33 +62,21 @@ var util = {
         return week[d.getDay()];
     },
 
-    clone: function(obj){
-        var result,oClass = util.isClass(obj);
-        //确定result的类型
-        if(oClass==="Object"){
-            result = {};
-        }else if(oClass === "Array"){
-            result = [];
-        }else{
-            return obj;
-        }
-        for(var key in obj){
-            var copy = obj[key];
-            if(util.isClass(copy) == "Object"){
-                result[key]=arguments.callee(copy);//递归调用
-            }else if(util.isClass(copy)=="Array"){
-                result[key]=arguments.callee(copy);
-            }else{
-                result[key]=obj[key];
-            }
-        }
-        return result;
+    getFirstDay: function(date){
+        return new Date(date.setDate(1));
     },
 
-    isClass: function(o){
-        if(o===null) return "Null";
-        if(o===undefined) return "Undefined";
-        return Object.prototype.toString.call(o).slice(8,-1);
+    getLastDay: function(firstDate){
+        var endDate = new Date(firstDate);
+        endDate.setMonth(endDate.getMonth()+1);
+        endDate.setDate(0);
+        return endDate;
+    },
+
+    //“yyyy-MM-dd” 转换成日期型
+    stringToDate: function(string){
+        var array = string.split("-");
+        return new Date(array[1] + " " +array[2]+","+array[0]);
     }
 };
 module.exports = util;

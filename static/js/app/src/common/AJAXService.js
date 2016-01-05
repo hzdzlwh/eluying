@@ -34,6 +34,7 @@ var AJAXService = {
         modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
         modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
         modifyCampSeason: "/price/modifyCampSeason",
+        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
         logoutUrl: "/user/logout",
         rewriteUrl: true
     },

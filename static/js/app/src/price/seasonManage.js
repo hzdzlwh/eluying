@@ -37,7 +37,6 @@ var seasonManage = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-                seasonManage.response = !seasonManage.response;
                 var channelArray = [];
                 for (var name in result.data) {
                     channelArray.push({
@@ -45,6 +44,7 @@ var seasonManage = {
                         id: result.data[name][0].channelId
                     });
                 }
+                $(".seasonCategory").html("淡旺季管理-" + result.data["0"][0].name);
                 seasonManage.tab(channelArray);
 
                 seasonManage.priceGrid(result.data, true);
@@ -64,7 +64,6 @@ var seasonManage = {
             success: function(result){
                 seasonManage.priceGrid(result.data, false);
 
-                seasonManage.eventBind();
 
             }
         });
@@ -112,7 +111,7 @@ var seasonManage = {
                 "</div>"
         });
         $("#editSeason .nav").html(tabStr);
-        $(".tab-content").html(tabpanelStr);
+        $("#editSeason .tab-content").html(tabpanelStr);
     },
 
     priceGrid: function(data, isBusy){
