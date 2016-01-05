@@ -14,8 +14,6 @@ $(document).ready(function(){
     leftMenu.showLeftMenu();
     util.mainContainer();
 
-
-
     trToggle();
 
 });
