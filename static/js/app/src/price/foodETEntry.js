@@ -15,7 +15,7 @@ $(".campName").html(localStorage.getItem("campName"));
 
 
 //拉今天的价格去
-foodETPriceList.getFoodETPriceList(window.location.pathname.split("/")[4].split(".")[0]);
+foodETPriceList.getFoodETPriceList(window.location.pathname.split("/")[3].split(".")[0]);
 
 
 events = {
