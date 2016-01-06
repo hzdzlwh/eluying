@@ -21,7 +21,7 @@ var header = {
         $("body").prepend(headerStr);
         $(".userName").find("a").html(localStorage.getItem("userName"));
         var pathArray = window.location.pathname.split("/");
-        var menu = pathArray[3];
+        var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");
         util.bindDomAction(this.events);
     },

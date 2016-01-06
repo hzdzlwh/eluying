@@ -5,6 +5,7 @@ webpackJsonp([2],[
 	/* WEBPACK VAR INJECTION */(function($) {/**
 	 * Created by huwanqi on 15/12/26.
 	 */
+	var AJAXService = __webpack_require__(10);
 	var util = __webpack_require__(3);
 	var leftMenu = __webpack_require__(7);
 	var header = __webpack_require__(8);
@@ -19,6 +20,16 @@ webpackJsonp([2],[
 	    util.mainContainer();
 	
 	    trToggle();
+	
+	    $.ajax({
+	        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+	        dataFilter: function (result) {
+	            return AJAXService.sessionValidate(result);
+	        },
+	        success: function(result){
+	            console.log(result);
+	        }
+	    })
 	
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -232,11 +243,11 @@ webpackJsonp([2],[
 	/* WEBPACK VAR INJECTION */(function($) {var leftMenu = {
 	    showLeftMenu: function() {
 	        var pathArray = window.location.pathname.split("/");
-	        var path = (pathArray[3]);
+	        var path = (pathArray[2]);
 	        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/view/" + path + "/room.html'>住宿</a></li>"
 	            + "<li><a id='foodMenu' href='/view/" + path + "/food.html'>餐饮</a></li>"
 	            + "<li><a id='enterMenu' href='/view/" + path + "/entertainment.html'>娱乐</a></li></ul></div>";
-	        var menu = pathArray[4].split(".")[0];
+	        var menu = pathArray[3].split(".")[0];
 	        $(".header").after(str);
 	        $("#" + menu + "Menu").addClass("active");
 	    }
@@ -271,7 +282,7 @@ webpackJsonp([2],[
 	        $("body").prepend(headerStr);
 	        $(".userName").find("a").html(localStorage.getItem("userName"));
 	        var pathArray = window.location.pathname.split("/");
-	        var menu = pathArray[3];
+	        var menu = pathArray[2];
 	        $("#" + menu + "Menu").addClass("active");
 	        util.bindDomAction(this.events);
 	    },
@@ -339,6 +350,11 @@ webpackJsonp([2],[
 	        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
 	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
 	        logoutUrl: "/user/logout",
+	        getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
+	        sendVerifyCodeUrl: '/user/sendVerifyCode',
+	        resetPasswordUrl: '/user/resetPassword',
+	        registerUrl: '/user/register',
+	        verifyUserNameUrl: '/user/verifyUserName',
 	        rewriteUrl: true
 	    },
 	    getUrl: function(path){

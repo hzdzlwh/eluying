@@ -278,11 +278,11 @@ webpackJsonp([5],[
 	/* WEBPACK VAR INJECTION */(function($) {var leftMenu = {
 	    showLeftMenu: function() {
 	        var pathArray = window.location.pathname.split("/");
-	        var path = (pathArray[3]);
+	        var path = (pathArray[2]);
 	        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/view/" + path + "/room.html'>住宿</a></li>"
 	            + "<li><a id='foodMenu' href='/view/" + path + "/food.html'>餐饮</a></li>"
 	            + "<li><a id='enterMenu' href='/view/" + path + "/entertainment.html'>娱乐</a></li></ul></div>";
-	        var menu = pathArray[4].split(".")[0];
+	        var menu = pathArray[3].split(".")[0];
 	        $(".header").after(str);
 	        $("#" + menu + "Menu").addClass("active");
 	    }
@@ -317,7 +317,7 @@ webpackJsonp([5],[
 	        $("body").prepend(headerStr);
 	        $(".userName").find("a").html(localStorage.getItem("userName"));
 	        var pathArray = window.location.pathname.split("/");
-	        var menu = pathArray[3];
+	        var menu = pathArray[2];
 	        $("#" + menu + "Menu").addClass("active");
 	        util.bindDomAction(this.events);
 	    },
@@ -385,6 +385,11 @@ webpackJsonp([5],[
 	        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
 	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
 	        logoutUrl: "/user/logout",
+	        getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
+	        sendVerifyCodeUrl: '/user/sendVerifyCode',
+	        resetPasswordUrl: '/user/resetPassword',
+	        registerUrl: '/user/register',
+	        verifyUserNameUrl: '/user/verifyUserName',
 	        rewriteUrl: true
 	    },
 	    getUrl: function(path){
