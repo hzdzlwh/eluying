@@ -4,6 +4,7 @@
 //var baseUrl = "http://192.168.0.120:8087";
 var AJAXService = require("AJAXService");
 var validate = require('loginValidate');
+var modal = require('modal');
 require("jquery");
 require("bootstrap");
 
@@ -96,25 +97,28 @@ $(document).ready(function(){
         GetLastUser();
     }
 
-    $(".modal").modal({
-        backdrop: "static",
-        show: false,
-        keyboard: true
-    });
-    function centerModals(){
-        $('.modal').each(function(){
-            var $clone = $(this).clone().css('display', 'block').appendTo('body');
-            var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
-            top = top > 0 ? top : 0;
-            $clone.remove();
-            $(this).find('.modal-content').css("margin-top", top);
-        });
-    }
-    $('.modal').on('show.bs.modal', centerModals);
-    $(window).on('resize', centerModals);
-    $(".btn-cancel").click(function(){
-        $(this).parents(".modal").modal("hide");
-    });
+    //$(".modal").modal({
+    //    backdrop: "static",
+    //    show: false,
+    //    keyboard: true
+    //});
+    //function centerModals(){
+    //    $('.modal').each(function(){
+    //        var $clone = $(this).clone().css('display', 'block').appendTo('body');
+    //        var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
+    //        top = top > 0 ? top : 0;
+    //        $clone.remove();
+    //        $(this).find('.modal-content').css("margin-top", top);
+    //    });
+    //}
+    //$('.modal').on('show.bs.modal', centerModals);
+    //$(window).on('resize', centerModals);
+    //$(".btn-cancel").click(function(){
+    //    $(this).parents(".modal").modal("hide");
+    //});
+
+    modal.modalInit();
+
     /*
     申请注册码和我有注册码切换
      */
