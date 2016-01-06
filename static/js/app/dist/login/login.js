@@ -9,12 +9,12 @@ webpackJsonp([3],{
 	
 	
 	var validate = __webpack_require__(13);
-	var AJAXservice = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"AJAXservice\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var AJAXService = __webpack_require__(10);
 	__webpack_require__(1);
 	__webpack_require__(5);
 	__webpack_require__(11);
 	
-	var baseUrl = AJAXservice.urls.host;
+	var baseUrl = AJAXService.urls.host;
 	/*
 	验证码按钮倒计时用。
 	 */

@@ -4,12 +4,12 @@
 
 
 var validate = require('loginValidate');
-var AJAXservice = require("AJAXservice");
+var AJAXService = require("AJAXService");
 require("jquery");
 require("bootstrap");
 require("cookie");
 
-var baseUrl = AJAXservice.urls.host;
+var baseUrl = AJAXService.urls.host;
 /*
 验证码按钮倒计时用。
  */
