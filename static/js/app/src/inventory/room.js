@@ -1,6 +1,7 @@
 /**
  * Created by huwanqi on 15/12/26.
  */
+var AJAXService = require("AJAXService");
 var util = require("util");
 var leftMenu = require("leftMenu");
 var header = require("header");
@@ -15,5 +16,15 @@ $(document).ready(function(){
     util.mainContainer();
 
     trToggle();
+
+    $.ajax({
+        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+        dataFilter: function (result) {
+            return AJAXService.sessionValidate(result);
+        },
+        success: function(result){
+            console.log(result);
+        }
+    })
 
 });
