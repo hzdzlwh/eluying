@@ -1,4 +1,4 @@
-webpackJsonp([0],[
+webpackJsonp([2],[
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -17,8 +17,6 @@ webpackJsonp([0],[
 	    header.showHeader();
 	    leftMenu.showLeftMenu();
 	    util.mainContainer();
-	
-	
 	
 	    trToggle();
 	
@@ -175,10 +173,48 @@ webpackJsonp([0],[
 	    }, 1000);
 	}
 	
+	//确认弹出框
+	function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
+	    dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};
+	    $("body").prepend(
+	        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
+	        "<div class='modal-dialog modal-w392'>" +
+	        "<div class='modal-content clearfloat'>" +
+	        "<div class='modal-header'>" +
+	        "<p>" + dialogConfig.title + "</p>" +
+	        "</div>" +
+	        "<div class='modal-body'>" +
+	        "<p>" +dialogConfig.message + "</p>" +
+	        "</div>" +
+	        "<div class='footer clearfloat'>" +
+	        "<button class='btn-cancel' id='confirmDialogCancel'>取消</button>" +
+	        "<button class='btn-ok' id='confirmDialogOk'>确认</button>" +
+	        "</div>" +
+	        "</div>" +
+	        "</div>" +
+	        "</div>");
+	    $("#confirmDialog").modal("show");
+	    centerModals();
+	    $('#confirmDialogOk').on("click", function(){
+	        confirmCallback&&confirmCallback();
+	        $("#confirmDialog").modal("hide");
+	        $(".modal-backdrop").remove();
+	        $("#confirmDialog").remove();
+	    });
+	    $('#confirmDialogCancel').on("click", function(){
+	        cancelCallback&&cancelCallback();
+	        $("#confirmDialog").modal("hide");
+	        $(".modal-backdrop").remove();
+	        $("#confirmDialog").remove();
+	    });
+	}
+	
+	
 	exports.centerModals =  centerModals;
 	exports.clearModal = clearModal;
 	exports.modalInit = modalInit;
 	exports.somethingAlert = somethingAlert;
+	exports.confirmDialog = confirmDialog;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -293,7 +329,6 @@ webpackJsonp([0],[
 	        editShowInfoUrl: "/category/modifyShowInfo",
 	        getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
 	        getAccommodationPriceList: "/price/getAccommodationPriceList",
-	        modifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialSalePrice",
 	        ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
 	        getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
 	        getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
@@ -304,6 +339,7 @@ webpackJsonp([0],[
 	        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
 	        modifyCampSeason: "/price/modifyCampSeason",
 	        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
+	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
 	        logoutUrl: "/user/logout",
 	        rewriteUrl: true
 	    },

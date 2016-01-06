@@ -94,7 +94,7 @@ var monthManage = {
                             }
                         }
                     }
-                    tbody += "<td class='salePrice' date='" + element.date + "'><span class='date'>" + element.date.substring(8) + "日</span><p>" + element.salePrice + "</p></td>";
+                    tbody += "<td class='salePrice' date='" + element.date + "' channel-id='" + element.channelId + "'><span class='date'>" + element.date.substring(8) + "日</span><p>" + element.salePrice + "</p></td>";
                     if (count != 0 && (count + 1) % 7 === 0) {
                         tbody += "</tr>";
                     }
@@ -123,7 +123,7 @@ var monthManage = {
                             }
                         }
                     }
-                    tbody += "<td class='netPrice' date='" + element.date + "'><span class='date'>" + element.date.substring(8) + "日</span>" +
+                    tbody += "<td class='netPrice' date='" + element.date + "' channel-id='" + element.channelId + "'><span class='date'>" + element.date.substring(8) + "日</span>" +
                         "<p>" + element.agreementPrice + "</p><p>" + element.netPrice + "</p></td>";
                     if (count != 0 && (count + 1) % 7 ===0) {
                         tbody += "</tr>";
@@ -132,6 +132,126 @@ var monthManage = {
                 });
             }
             $("#month" + name + " .grid").append(tbody);
+        }
+    },
+    batchModifyAccommodationSpecialPrice: function(data, that){
+        $.ajax({
+            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
+            type: "POST",
+            data: data,
+            dataFilter: function(result) {
+                return AJAXService.sessionValidate(result);
+            },
+            success: function(result){
+                if (util.errorHandler(result)) {
+                    modal.clearModal(that);
+                }
+            }
+        })
+    },
+    events: {
+        "click #editMonthButton": function(){
+            var startDate = util.getFirstDay(new Date());
+            monthManage.getAccommodationMonthPriceList(startDate);
+        },
+        "click #prevMonth": function(){
+
+            var current = util.stringToDate($("#editMonth .month").attr("start-date"));
+            var prevMonth = new Date(current.setMonth(current.getMonth() - 1));
+            monthManage.getAccommodationMonthPriceList(prevMonth);
+            if (prevMonth.getMonth() === new Date().getMonth()) {
+                $("#prevMonth").addClass("hide");
+            }
+            $("#nextMonth").removeClass("hide");
+            $("#editMonth .operateItem").addClass("hide");
+        },
+        "click #nextMonth": function(){
+            var current = util.stringToDate($("#editMonth .month").attr("start-date"));
+            var nextMonth = new Date(current.setMonth(current.getMonth() + 1));
+            monthManage.getAccommodationMonthPriceList(nextMonth);
+            if (nextMonth.getMonth() === 11 - new Date().getMonth()) {
+                $("#nextMonth").addClass("hide");
+            }
+            $("#prevMonth").removeClass("hide");
+            $("#editMonth .operateItem").addClass("hide");
+        },
+        "click #editMonth .salePrice": function(){
+            $(this).toggleClass("selected");
+            if ($("#editMonth .selected").length === 0) {
+                $("#editMonthSalePriceButton").parent().addClass("hide");
+            } else {
+                $("#editMonthSalePriceButton").parent().removeClass("hide");
+            }
+        },
+        "click #editMonth .netPrice": function(){
+            $(this).toggleClass("selected");
+            if ($("#editMonth .selected").length === 0) {
+                $("#editMonthNetPriceButton").parent().addClass("hide");
+            } else {
+                $("#editMonthNetPriceButton").parent().removeClass("hide");
+            }
+        },
+        "shown.bs.tab #editMonth a[data-toggle='tab']": function(){
+            $("#editMonth .selected").removeClass("selected");
+            $("#editMonth .operateItem").addClass("hide");
+        },
+        "click #editMonthSalePriceButton": function(){
+            if ($("#editMonth .selected").length === 1) {
+                $("#monthRetailPrice").val($("#editMonth .selected").find("p").html());
+            } else {
+                $("#monthRetailPrice").attr("placeholder", "批量修改");
+            }
+        },
+        "click #editMonthNetPriceButton": function(){
+            if ($("#editMonth .selected").length === 1) {
+                $("#monthCommissionPrice").val($("#editMonth .selected").find("p:eq(0)").html());
+                $("#monthNetPrice").val($("#editMonth .selected").find("p:eq(1)").html());
+            } else {
+                $("#monthCommissionPrice").attr("placeholder", "批量修改");
+                $("#monthNetPrice").attr("placeholder", "批量修改");
+            }
+        },
+        "click #editMonthSalePriceOk": function(){
+            $("#editMonth .selected").find("p").html($("#monthRetailPrice").val());
+            $("#editMonth .selected").addClass("changed");
+            var that = this;
+            modal.clearModal(that);
+        },
+        "click #editMonthNetPriceOk": function(){
+            $("#editMonth .selected").find("p:eq(0)").html($("#monthCommissionPrice").val());
+            $("#editMonth .selected").find("p:eq(1)").html($("#monthNetPrice").val());
+            $("#editMonth .selected").addClass("changed");
+            var that = this;
+            modal.clearModal(that);
+        },
+        "click #editMonthOk": function(){
+            var prices = [];
+            $(".changed").each(function(){
+                if ($(this).hasClass("salePrice")) {
+                    var price = {
+                        channelId: $(this).attr("channel-id"),
+                        date: $(this).attr("date"),
+                        newSalePrice: $(this).find("p").html(),
+                        newAgreementPrice: 0,
+                        newNetPrice: 0
+                    };
+                } else {
+                    var price = {
+                        channelId: $(this).attr("channel-id"),
+                        date: $(this).attr("date"),
+                        newSalePrice: 0,
+                        newAgreementPrice: $(this).find("p:eq(0)").html(),
+                        newNetPrice: $(this).find("p:eq(1)").html()
+                    };
+                }
+                prices.push(price);
+            });
+            var data = {
+                items: JSON.stringify(prices),
+                categoryId: $(".priceGrid .selected").attr("category-id")
+            };
+            var that = this;
+            monthManage.batchModifyAccommodationSpecialPrice(data, that);
         }
     }
 };

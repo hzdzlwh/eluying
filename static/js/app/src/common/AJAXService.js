@@ -24,7 +24,6 @@ var AJAXService = {
         editShowInfoUrl: "/category/modifyShowInfo",
         getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
         getAccommodationPriceList: "/price/getAccommodationPriceList",
-        modifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialSalePrice",
         ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
         getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
         getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
@@ -35,6 +34,7 @@ var AJAXService = {
         modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
         modifyCampSeason: "/price/modifyCampSeason",
         getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
+        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
         logoutUrl: "/user/logout",
         rewriteUrl: true
     },
