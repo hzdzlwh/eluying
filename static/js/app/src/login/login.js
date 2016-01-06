@@ -1,12 +1,13 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-var baseUrl = "http://120.26.83.168:8081/mg";
+var baseUrl = "http://121.41.109.105:8081/mg";
 
 var validate = require('loginValidate');
 require("jquery");
 require("bootstrap");
 require("cookie");
+
 
 /*
 验证码按钮倒计时用。
@@ -308,7 +309,7 @@ $(document).ready(function(){
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        window.location.href = '/eluyun/view/category/room.html';
+                        window.location.href = '/view/category/room.html';
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();

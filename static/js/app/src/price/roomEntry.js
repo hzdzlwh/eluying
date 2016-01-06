@@ -24,16 +24,25 @@ $(".dateContainer").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true
-}).datepicker( "setDate", new Date());
+});
 $("#datePicker").datepicker( "setDate", new Date());
-
 //拉今天的价格去
 accommodationPriceList.getAccommodationPriceList(new Date());
 
 
 events = {
-    "click .prevWeek": util.prevWeek,
-    "click .nextWeek": util.nextWeek,
+    "click .prevWeek": function(){
+        $(".editSalePrice").addClass("hide");
+        $(".editNetPrice").addClass("hide");
+        $(".second").addClass("hide");
+        util.prevWeek();
+    },
+    "click .nextWeek": function(){
+        $(".editSalePrice").addClass("hide");
+        $(".editNetPrice").addClass("hide");
+        $(".second").addClass("hide");
+        util.nextWeek();
+    },
     //按钮js改变日期
     "dateChange #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
     //用户选择改变日期
@@ -49,5 +58,7 @@ util.bindDomAction(events);
 util.bindDomAction(seasonManage.events);
 
 util.bindDomAction(monthManage.events);
+
+util.bindDomAction(accommodationPriceList.events);
 
 

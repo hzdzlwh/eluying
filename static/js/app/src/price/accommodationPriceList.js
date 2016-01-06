@@ -4,12 +4,14 @@ var trToggle = require("trToggle");
 var modal = require("modal");
 var accommodationPriceList = {
     getAccommodationPriceList: function(startDate){
+        var endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
         $.ajax({
             url: AJAXService.getUrl("getAccommodationPriceList"),
             data: {
                 campId: localStorage.getItem("campId"),
                 startDate: util.dateFormat(startDate),
-                endDate: util.dateFormat(new Date(startDate.setDate(startDate.getDate() + 6)))
+                endDate: util.dateFormat(endDate)
             },
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -20,43 +22,44 @@ var accommodationPriceList = {
         })
     },
 
+    events: {
+        "click .priceGrid .price": function(){
+            $(".price").removeClass("selected");
+            $(".subPriceTd").removeClass("selected");
+            $(this).toggleClass("selected");
+            $(".editSalePrice").removeClass("hide");
+            $(".editNetPrice").addClass("hide");
+            $(".second").removeClass("hide");
+        },
+        "click .priceGrid .subPriceTd": function(){
+            $(".subPriceTd").removeClass("selected");
+            $(".price").removeClass("selected");
+            $(this).toggleClass("selected");
+            $(".editNetPrice").removeClass("hide");
+            $(".editSalePrice").addClass("hide");
+            $(".second").removeClass("hide");
+        },
+        "click #editSalePriceButton": function(){
+            $("#retailPrice").val($(".selected").html());
+        },
+        "click #editNetPriceButton": function(){
+            $("#netPrice").val($(".selected").find("p:eq(1)").html());
+            $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
+        },
+        "click #editSalePriceOk": function(){
+            var that = this;
+            accommodationPriceList.editSalePrice(that);
+        },
+        "click #editNetPriceOk": function(){
+            var that = this;
+            accommodationPriceList.editNetAgreePrice(that);
+        }
+    },
+
     tableInit: function(){
 
-        events= {
-            "click .priceGrid .price": function(){
-                $(".price").removeClass("selected");
-                $(".subPriceTd").removeClass("selected");
-                $(this).toggleClass("selected");
-                $(".editSalePrice").removeClass("hide");
-                $(".editNetPrice").addClass("hide");
-                $(".second").removeClass("hide");
-            },
-            "click .priceGrid .subPriceTd": function(){
-                $(".subPriceTd").removeClass("selected");
-                $(".price").removeClass("selected");
-                $(this).toggleClass("selected");
-                $(".editNetPrice").removeClass("hide");
-                $(".editSalePrice").addClass("hide");
-                $(".second").removeClass("hide");
-            },
-            "click #editSalePriceButton": function(){
-                $("#retailPrice").val($(".selected").html());
-            },
-            "click #editNetPriceButton": function(){
-                $("#netPrice").val($(".selected").find("p:eq(1)").html());
-                $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
-            },
-            "click #editSalePriceOk": function(){
-                var that = this;
-                accommodationPriceList.editSalePrice(that);
-            },
-            "click #editNetPriceOk": function(){
-                var that = this;
-                accommodationPriceList.editNetAgreePrice(that);
-            }
-        };
         trToggle();
-        util.bindDomAction(events);
+
     },
 
     createEl: function(startDate, result){
@@ -64,7 +67,9 @@ var accommodationPriceList = {
         //得到七天日期对象
         var dateArray = [];
         for (var i = 0;  i < 7; i++) {
-            dateArray.push(new Date(startDate.setDate(startDate.getDate() + i)));
+            var date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
+            dateArray.push(date);
         }
 
         //把表头写好
@@ -83,7 +88,7 @@ var accommodationPriceList = {
         for (var name in result.data) {
             for (var subName in result.data[name]) {
                 if (subName == "0") {
-                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/eluyun/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
+                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
                     $.each(result.data[name][subName], function (index, element) {
                         tbody += "<td class='price' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
                     });
@@ -106,12 +111,18 @@ var accommodationPriceList = {
 
     //改零售价
     editSalePrice: function(that){
+        var items = [{
+            channelId: 0,
+            date: $(".selected").attr("date"),
+            newAgreementPrice: 0,
+            newNetPrice: 0,
+            newSalePrice: $("#retailPrice").val()
+        }];
         $.ajax({
-            url: AJAXService.getUrl("modifyAccommodationSpecialPrice"),
+            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
             data: {
-                newSalePrice: $("#retailPrice").val(),
-                categoryId: $(".selected").attr("category-id"),
-                dates: JSON.stringify([$(".selected").attr("date")])
+                items: JSON.stringify(items),
+                categoryId: $(".selected").attr("category-id")
             },
             dataFilter: function(result) {
                 return AJAXService.sessionValidate(result);
@@ -128,14 +139,18 @@ var accommodationPriceList = {
 
     //改网络价和协议价
     editNetAgreePrice: function(that){
+        var items = [{
+            channelId: $(".selected").attr("channel-id"),
+            date: $(".selected").attr("date"),
+            newAgreementPrice: $("#commissionPrice").val(),
+            newNetPrice: $("#netPrice").val(),
+            newSalePrice: 0
+        }];
         $.ajax({
-            url: AJAXService.getUrl("ModifyAccommodationSpecialChannelPrice"),
+            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
             data: {
-                newNetPrice: $("#netPrice").val(),
-                newAgreementPrice: $("#commissionPrice").val(),
-                categoryId: $(".selected").attr("category-id"),
-                dates: JSON.stringify([$(".selected").attr("date")]),
-                channelId: $(".selected").attr("channel-id")
+                items: JSON.stringify(items),
+                categoryId: $(".selected").attr("category-id")
             },
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);

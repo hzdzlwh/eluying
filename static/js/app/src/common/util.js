@@ -44,17 +44,15 @@ var util = {
     },
 
     prevWeek: function(){
-        var datepicker = $(this).siblings(".dateContainer");
-        var currentDate = datepicker.datepicker( "getDate" );
-        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
-        datepicker.trigger("dateChange");
+        var currentDate = $("#datePicker").datepicker( "getDate" );
+        $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
+        $("#datePicker").trigger("dateChange");
     },
 
     nextWeek: function(){
-        var datepicker = $(this).siblings(".dateContainer");
-        var currentDate = datepicker.datepicker( "getDate" );
-        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() + 7)));
-        datepicker.trigger("dateChange");
+        var currentDate = $("#datePicker").datepicker( "getDate" );
+        $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() + 7)));
+        $("#datePicker").trigger("dateChange");
     },
 
     getWeek: function(d){

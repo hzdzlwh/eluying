@@ -3,12 +3,12 @@ var util = require("util");
 var header = {
     showHeader : function(){
         var headerStr = "<div class='header clearfloat'><a class='logo' href='#'>订单来了</a><ul>"
-            + "<li><a id='inventoryMenu' href='/eluyun/view/inventory/room.html'>库存管理</a></li>"
-            + "<li><a id='priceMenu' href='/eluyun/view/price/room.html'>价格维护</a></li>"
-            + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
+            + "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>"
+            + "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>"
+            + "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>"
             + "</ul>"
             + "<div class='right'>"
-            + "<div class='userPhoto'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
+            + "<div class='userPhoto'><a href='#'><img src='/static/image/timg.jpg' alt='头像'></a></div>"
             + "<div class='userName'>"
             + "<a href='#'></a>"
             + "</div>"

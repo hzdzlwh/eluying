@@ -3,7 +3,7 @@ var logout = {
     logout: function(){
         $.get(AJAXService.getUrl("logoutUrl"));
         localStorage.clear();
-        location.href = "/eluyun/login.html";
+        location.href = "/login.html";
     }
 };
 module.exports = logout;

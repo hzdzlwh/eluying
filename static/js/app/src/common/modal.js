@@ -55,7 +55,7 @@ function somethingAlert(message){
 
 //确认弹出框
 function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
-    dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};
+    dialogConfig= dialogConfig||{title:"提醒", message:"您确定要这么做吗？"};
     $("body").prepend(
         "<div class='modal fade' role='dialog' id='confirmDialog'>" +
         "<div class='modal-dialog modal-w392'>" +

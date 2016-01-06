@@ -150,14 +150,14 @@ $(document).ready(function(){
     mainContainer();
     //顶部导航栏
     $("body").prepend("<div class='header clearfloat'>"
-            + "<a class='logo' href='#'>易露云</a>"
+            + "<a class='logo' href='#'>订单来了</a>"
             + "<ul>"
-                + "<li><a id='inventoryMenu' href='/eluyun/view/inventory/room.html'>库存管理</a></li>"
-                + "<li><a id='priceMenu' href='/eluyun/view/price/room.html'>价格维护</a></li>"
-                + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
+                + "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>"
+                + "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>"
+                + "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>"
             + "</ul>"
             + "<div class='right'>"
-                + "<div class='userPhoto pie'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
+                + "<div class='userPhoto pie'><a href='#'><img src='/static/image/timg.jpg' alt='头像'></a></div>"
                 + "<div class='userName'>"
                     + "<a href='#'></a>"
                 + "</div>"
@@ -172,9 +172,9 @@ $(document).ready(function(){
     //左侧菜单
     $(".header").after("<div class='leftMenu'>"
         + "<ul>"
-        + "<li><a id='roomMenu' class='pie' href='/eluyun/view/category/room.html'>住宿</a></li>"
-        + "<li><a id='foodMenu' href='/eluyun/view/category/food.html'>餐饮</a></li>"
-        + "<li><a id='enterMenu' href='/eluyun/view/category/entertainment.html'>娱乐</a></li>"
+        + "<li><a id='roomMenu' class='pie' href='/view/category/room.html'>住宿</a></li>"
+        + "<li><a id='foodMenu' href='/view/category/food.html'>餐饮</a></li>"
+        + "<li><a id='enterMenu' href='/view/category/entertainment.html'>娱乐</a></li>"
         + "</ul>"
         + "</div>");
 
@@ -206,6 +206,6 @@ $(document).ready(function(){
     $('#logout').click(function(){
         $.get(getUrl(logoutUrl));
         localStorage.clear();
-        location.href = "/eluyun/login.html";
+        location.href = "/login.html";
     });
 });

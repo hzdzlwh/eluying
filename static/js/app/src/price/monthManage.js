@@ -144,7 +144,9 @@ var monthManage = {
             },
             success: function(result){
                 if (util.errorHandler(result)) {
-                    modal.clearModal(that);
+                    if (that) {
+                        modal.clearModal(that);
+                    }
                 }
             }
         })
@@ -155,25 +157,44 @@ var monthManage = {
             monthManage.getAccommodationMonthPriceList(startDate);
         },
         "click #prevMonth": function(){
-
-            var current = util.stringToDate($("#editMonth .month").attr("start-date"));
-            var prevMonth = new Date(current.setMonth(current.getMonth() - 1));
-            monthManage.getAccommodationMonthPriceList(prevMonth);
-            if (prevMonth.getMonth() === new Date().getMonth()) {
-                $("#prevMonth").addClass("hide");
+            if ($(".changed").length > 0) {
+                var dialogConfig = {
+                    title: "提醒",
+                    message: "当前月份的修改尚未保存，是否保存？"
+                };
+                var confirmCallback = function(){
+                    var data = monthManage.preparePrices();
+                    monthManage.batchModifyAccommodationSpecialPrice(data);
+                    monthManage.showPrevMonth();
+                };
+                var cancelCallback = function(){
+                    monthManage.showPrevMonth();
+                };
+                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+            } else {
+                monthManage.showPrevMonth();
             }
-            $("#nextMonth").removeClass("hide");
-            $("#editMonth .operateItem").addClass("hide");
         },
         "click #nextMonth": function(){
-            var current = util.stringToDate($("#editMonth .month").attr("start-date"));
-            var nextMonth = new Date(current.setMonth(current.getMonth() + 1));
-            monthManage.getAccommodationMonthPriceList(nextMonth);
-            if (nextMonth.getMonth() === 11 - new Date().getMonth()) {
-                $("#nextMonth").addClass("hide");
+            if ($(".changed").length > 0) {
+                var dialogConfig = {
+                    title: "提醒",
+                    message: "当前月份的修改尚未保存，是否保存？"
+                };
+                var confirmCallback = function(){
+                    var data = monthManage.preparePrices();
+                    monthManage.batchModifyAccommodationSpecialPrice(data);
+                    monthManage.showNextMonth();
+                };
+                var cancelCallback = function(){
+                    monthManage.showNextMonth();
+                };
+                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+            } else {
+                monthManage.showNextMonth();
             }
-            $("#prevMonth").removeClass("hide");
-            $("#editMonth .operateItem").addClass("hide");
+
+
         },
         "click #editMonth .salePrice": function(){
             $(this).toggleClass("selected");
@@ -225,34 +246,63 @@ var monthManage = {
             modal.clearModal(that);
         },
         "click #editMonthOk": function(){
-            var prices = [];
-            $(".changed").each(function(){
-                if ($(this).hasClass("salePrice")) {
-                    var price = {
-                        channelId: $(this).attr("channel-id"),
-                        date: $(this).attr("date"),
-                        newSalePrice: $(this).find("p").html(),
-                        newAgreementPrice: 0,
-                        newNetPrice: 0
-                    };
-                } else {
-                    var price = {
-                        channelId: $(this).attr("channel-id"),
-                        date: $(this).attr("date"),
-                        newSalePrice: 0,
-                        newAgreementPrice: $(this).find("p:eq(0)").html(),
-                        newNetPrice: $(this).find("p:eq(1)").html()
-                    };
-                }
-                prices.push(price);
-            });
-            var data = {
-                items: JSON.stringify(prices),
-                categoryId: $(".priceGrid .selected").attr("category-id")
-            };
             var that = this;
-            monthManage.batchModifyAccommodationSpecialPrice(data, that);
+            if ($("#editMonth .changed").length >0 ) {
+                var data = monthManage.preparePrices();
+                monthManage.batchModifyAccommodationSpecialPrice(data, that);
+            } else {
+                modal.clearModal(that);
+            }
+
         }
+    },
+    preparePrices: function(){
+        var prices = [];
+        $(".changed").each(function(){
+            if ($(this).hasClass("salePrice")) {
+                var price = {
+                    channelId: $(this).attr("channel-id"),
+                    date: $(this).attr("date"),
+                    newSalePrice: $(this).find("p").html(),
+                    newAgreementPrice: 0,
+                    newNetPrice: 0
+                };
+            } else {
+                var price = {
+                    channelId: $(this).attr("channel-id"),
+                    date: $(this).attr("date"),
+                    newSalePrice: 0,
+                    newAgreementPrice: $(this).find("p:eq(0)").html(),
+                    newNetPrice: $(this).find("p:eq(1)").html()
+                };
+            }
+            prices.push(price);
+        });
+        var data = {
+            items: JSON.stringify(prices),
+            categoryId: $(".priceGrid .selected").attr("category-id")
+        };
+        return data;
+    },
+    showNextMonth: function(){
+        var current = util.stringToDate($("#editMonth .month").attr("start-date"));
+        var nextMonth = new Date(current.setMonth(current.getMonth() + 1));
+        monthManage.getAccommodationMonthPriceList(nextMonth);
+        if (nextMonth.getMonth() === 11 - new Date().getMonth()) {
+            $("#nextMonth").addClass("hide");
+        }
+        $("#prevMonth").removeClass("hide");
+        $("#editMonth .operateItem").addClass("hide");
+    },
+    showPrevMonth: function(){
+        var current = util.stringToDate($("#editMonth .month").attr("start-date"));
+        var prevMonth = new Date(current.setMonth(current.getMonth() - 1));
+        monthManage.getAccommodationMonthPriceList(prevMonth);
+        if (prevMonth.getMonth() === new Date().getMonth()) {
+            $("#prevMonth").addClass("hide");
+        }
+        $("#nextMonth").removeClass("hide");
+        $("#editMonth .operateItem").addClass("hide");
     }
 };
 module.exports = monthManage;

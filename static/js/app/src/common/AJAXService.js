@@ -6,7 +6,7 @@ var AJAXService = {
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        host: "http://120.26.83.168:8081/mg",
+        host: "http://121.41.109.105:8081/mg",
         //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
@@ -31,8 +31,7 @@ var AJAXService = {
         modifyDefaultPrice: "/price/modifyDefaultPrice",
         getCampSeasons: "/price/getCampSeasons",
         getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
-        modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
-        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
+        modifyAccommodationPeriodicalPrice: "/price/modifyAccommodationPeriodicalPrice",
         modifyCampSeason: "/price/modifyCampSeason",
         getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
         batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
@@ -49,7 +48,7 @@ var AJAXService = {
     sessionValidate: function(data){
         data = JSON.parse(data);
         if (data.code == 14) {
-            location.href = "/eluyun/login.html";
+            location.href = "/login.html";
         }
         return JSON.stringify(data);
 }

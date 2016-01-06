@@ -75,17 +75,15 @@ webpackJsonp([2],[
 	    },
 	
 	    prevWeek: function(){
-	        var datepicker = $(this).siblings(".dateContainer");
-	        var currentDate = datepicker.datepicker( "getDate" );
-	        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
-	        datepicker.trigger("dateChange");
+	        var currentDate = $("#datePicker").datepicker( "getDate" );
+	        $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
+	        $("#datePicker").trigger("dateChange");
 	    },
 	
 	    nextWeek: function(){
-	        var datepicker = $(this).siblings(".dateContainer");
-	        var currentDate = datepicker.datepicker( "getDate" );
-	        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() + 7)));
-	        datepicker.trigger("dateChange");
+	        var currentDate = $("#datePicker").datepicker( "getDate" );
+	        $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() + 7)));
+	        $("#datePicker").trigger("dateChange");
 	    },
 	
 	    getWeek: function(d){
@@ -175,7 +173,7 @@ webpackJsonp([2],[
 	
 	//确认弹出框
 	function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
-	    dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};
+	    dialogConfig= dialogConfig||{title:"提醒", message:"您确定要这么做吗？"};
 	    $("body").prepend(
 	        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
 	        "<div class='modal-dialog modal-w392'>" +
@@ -235,9 +233,9 @@ webpackJsonp([2],[
 	    showLeftMenu: function() {
 	        var pathArray = window.location.pathname.split("/");
 	        var path = (pathArray[3]);
-	        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/eluyun/view/" + path + "/room.html'>住宿</a></li>"
-	            + "<li><a id='foodMenu' href='/eluyun/view/" + path + "/food.html'>餐饮</a></li>"
-	            + "<li><a id='enterMenu' href='/eluyun/view/" + path + "/entertainment.html'>娱乐</a></li></ul></div>";
+	        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/view/" + path + "/room.html'>住宿</a></li>"
+	            + "<li><a id='foodMenu' href='/view/" + path + "/food.html'>餐饮</a></li>"
+	            + "<li><a id='enterMenu' href='/view/" + path + "/entertainment.html'>娱乐</a></li></ul></div>";
 	        var menu = pathArray[4].split(".")[0];
 	        $(".header").after(str);
 	        $("#" + menu + "Menu").addClass("active");
@@ -255,12 +253,12 @@ webpackJsonp([2],[
 	var header = {
 	    showHeader : function(){
 	        var headerStr = "<div class='header clearfloat'><a class='logo' href='#'>订单来了</a><ul>"
-	            + "<li><a id='inventoryMenu' href='/eluyun/view/inventory/room.html'>库存管理</a></li>"
-	            + "<li><a id='priceMenu' href='/eluyun/view/price/room.html'>价格维护</a></li>"
-	            + "<li><a id='categoryMenu' href='/eluyun/view/category/room.html'>品类管理</a></li>"
+	            + "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>"
+	            + "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>"
+	            + "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>"
 	            + "</ul>"
 	            + "<div class='right'>"
-	            + "<div class='userPhoto'><a href='#'><img src='/eluyun/static/image/timg.jpg' alt='头像'></a></div>"
+	            + "<div class='userPhoto'><a href='#'><img src='/static/image/timg.jpg' alt='头像'></a></div>"
 	            + "<div class='userName'>"
 	            + "<a href='#'></a>"
 	            + "</div>"
@@ -293,7 +291,7 @@ webpackJsonp([2],[
 	    logout: function(){
 	        $.get(AJAXService.getUrl("logoutUrl"));
 	        localStorage.clear();
-	        location.href = "/eluyun/login.html";
+	        location.href = "/login.html";
 	    }
 	};
 	module.exports = logout;
@@ -311,7 +309,7 @@ webpackJsonp([2],[
 	        //宪伟服务器 http://192.168.0.2:8082/mg
 	        //var host = "http://121.41.109.105:8081/mg";
 	        //浩南服务器 http://192.168.0.118:8087
-	        host: "http://120.26.83.168:8081/mg",
+	        host: "http://121.41.109.105:8081/mg",
 	        //var host = "/mg";
 	        loginUrl: "/user/login",
 	        getRoomCategoryListUrl: "/category/getRoomCategoryList",
@@ -336,8 +334,7 @@ webpackJsonp([2],[
 	        modifyDefaultPrice: "/price/modifyDefaultPrice",
 	        getCampSeasons: "/price/getCampSeasons",
 	        getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
-	        modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
-	        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
+	        modifyAccommodationPeriodicalPrice: "/price/modifyAccommodationPeriodicalPrice",
 	        modifyCampSeason: "/price/modifyCampSeason",
 	        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
 	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
@@ -354,7 +351,7 @@ webpackJsonp([2],[
 	    sessionValidate: function(data){
 	        data = JSON.parse(data);
 	        if (data.code == 14) {
-	            location.href = "/eluyun/login.html";
+	            location.href = "/login.html";
 	        }
 	        return JSON.stringify(data);
 	}

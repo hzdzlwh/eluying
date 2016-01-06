@@ -3,6 +3,11 @@ var util = require("util");
 var modal = require("modal");
 
 var seasonManage = {
+    fromBusyDate: "",
+    toBusyDate: "",
+    fromSlackDate: "",
+    toSlackDate: "",
+    //获取淡旺季的时间范围
     getSeasons: function(){
         $.ajax({
             url: AJAXService.getUrl("getCampSeasons"),
@@ -14,15 +19,21 @@ var seasonManage = {
                     if (element.type === 1) {
                         $("#fromBusyDate").datepicker( "setDate", element.startDate);
                         $("#toBusyDate").datepicker( "setDate", element.endDate);
+                        seasonManage.fromBusyDate = element.startDate;
+                        seasonManage.toBusyDate = element.endDate;
                     } else{
                         $("#fromSlackDate").datepicker( "setDate", element.startDate);
                         $("#toSlackDate").datepicker( "setDate", element.endDate);
+                        seasonManage.fromSlackDate = element.startDate;
+                        seasonManage.toSlackDate = element.endDate;
                     }
                 });
                 seasonManage.getAccommodationPeriodicalPrice();
             }
         });
     },
+
+    //获取价格
     getAccommodationPeriodicalPrice: function(){
         //拉旺季价格
         $.ajax({
@@ -68,6 +79,8 @@ var seasonManage = {
             }
         });
     },
+
+
     tab: function(channelArray){
         //拼接渠道tab
         var tabStr = "";
@@ -82,7 +95,7 @@ var seasonManage = {
             }
 
 
-
+            //表格表头
             tabpanelStr += "<div role='tabpanel' class='tab-pane " + (index === 0 ? "active" : "") + " clearfloat' id='season"+ element.id +"'>" +
                 "<table class='busyGrid grid'><thead><tr>" +
                 "<th>价格类型</th>" +
@@ -114,6 +127,8 @@ var seasonManage = {
         $("#editSeason .tab-content").html(tabpanelStr);
     },
 
+
+    //表格内容
     priceGrid: function(data, isBusy){
         for (var name in data) {
             var tbody = "";
@@ -126,9 +141,9 @@ var seasonManage = {
                     "</td>";
                 //0是周日 1~6是周一到周六
                 for (var i = 1; i < 7; i++) {
-                    tbody += "<td week='" + (i + 1) + "' class='salePrice'><p>" + data[name][i].salePrice + "</p></td>";
+                    tbody += "<td week='" + (i + 1) + "' class='salePrice' channel-id='" + data[name][i].channelId + "'><p>" + data[name][i].salePrice + "</p></td>";
                 }
-                tbody += "<td week='1' class='salePrice'><p>" + data[name][0].salePrice + "</p></td></tbody>";
+                tbody += "<td week='1' class='salePrice' channel-id='" + data[name][0].channelId + "'><p>" + data[name][0].salePrice + "</p></td></tbody>";
             } else {
                 tbody += "<tbody>" +
                     "<tr>" +
@@ -137,7 +152,7 @@ var seasonManage = {
                     "<p>网络价</p>" +
                     "</td>";
                 for (var i = 1; i < 7; i++) {
-                    tbody += "<td class='netPrice' channel-id='" + data[name][0].channelId + "' week='" + (i + 1) + "'><p>" + data[name][i].agreementPrice + "</p><p>" + data[name][i].netPrice + "</p></td>";
+                    tbody += "<td class='netPrice' channel-id='" + data[name][i].channelId + "' week='" + (i + 1) + "'><p>" + data[name][i].agreementPrice + "</p><p>" + data[name][i].netPrice + "</p></td>";
                 }
                 tbody += "<td class='netPrice' channel-id='" + data[name][0].channelId + "' week='1''><p>" + data[name][0].agreementPrice + "</p><p>" + data[name][0].netPrice + "</p></td></tbody>";
             }
@@ -151,81 +166,29 @@ var seasonManage = {
 
         }
     },
-    editSalePrice: function(that){
+
+    //修改价格和周期
+    modifyAccommodationPeriodicalPrice: function(data,that){
         $.ajax({
-            url: AJAXService.getUrl("modifyAccommodationPeriodicalSalePrice"),
-            data:{newSalePrice: $("#seasonRetailPrice").val(),
-                categoryId: $(".priceGrid .selected").attr("category-id"),
-                startDate: $("#editSeason .selected").parents("table").hasClass("busyGrid") ? $("#fromBusyDate").val() : $("#fromSlackDate").val(),
-                endDate: $("#editSeason .selected").parents("table").hasClass("busyGrid") ? $("#toBusyDate").val() : $("#toSlackDate").val(),
-                weekday: $("#editSeason .selected").attr("week")
-            },
+            url: AJAXService.getUrl("modifyAccommodationPeriodicalPrice"),
+            data: data,
             dataFilter: function(result) {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
-                    $("#editSeason .selected").find("p").html($("#seasonRetailPrice").val());
-                    modal.clearModal(that);
+                    modal.clearModal(that)
                 }
             }
         })
     },
-    editNetPrice: function(that){
-        $.ajax({
-            url: AJAXService.getUrl("modifyAccommodationPeriodicalChannelPrice"),
-            data:{
-                newNetPrice: $("#seasonNetPrice").val(),
-                newAgreementPrice: $("#seasonCommissionPrice").val(),
-                channelId: $("#editSeason .selected").attr("channel-id"),
-                categoryId: $(".priceGrid .selected").attr("category-id"),
-                startDate: $("#editSeason .selected").parents("table").hasClass("busyGrid") ? $("#fromBusyDate").val() : $("#fromSlackDate").val(),
-                endDate: $("#editSeason .selected").parents("table").hasClass("busyGrid") ? $("#toBusyDate").val() : $("#toSlackDate").val(),
-                weekday: $("#editSeason .selected").attr("week")
-            },
-            dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
-                if (util.errorHandler(result)) {
-                    $("#editSeason .selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());
-                    $("#editSeason .selected").find("p:eq(1)").html($("#seasonNetPrice").val());
-                    modal.clearModal(that);
-                }
-            }
-        })
-    },
-    modifyCampSeason: function(that){
-        $.ajax({
-            url: AJAXService.getUrl("modifyCampSeason"),
-            data:{
-                endDate: $("#toBusyDate").val(),
-                startDate: $("#fromBusyDate").val(),
-                type: 1
-            },
-            dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
-            },
-            async: false
-        });
-        $.ajax({
-            url: AJAXService.getUrl("modifyCampSeason"),
-            data:{
-                endDate: $("#toSlackDate").val(),
-                startDate: $("#fromSlackDate").val(),
-                type: 0
-            },
-            dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
-                if (util.errorHandler(result)) {
-                    modal.clearModal(that);
-                }
-            }
-        });
-    },
+
+
     events: {
+        "shown.bs.tab #editSeason a[data-toggle='tab']": function(){
+            $("#editSeason .selected").removeClass("selected");
+            $("#editSeason .operateItem").addClass("hide");
+        },
         "click #editSeasonButton": function(){
             seasonManage.getSeasons();
         },
@@ -251,17 +214,64 @@ var seasonManage = {
             $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(1)").html());
         },
         "click #editSeasonSalePriceOk": function(){
+            $("#editSeason .selected").addClass("changed");
             var that = this;
-            seasonManage.editSalePrice(that);
+            $(".selected").find("p").html($("#seasonRetailPrice").val());
+            modal.clearModal(that);
         },
         "click #editSeasonNetPriceOk": function(){
+            $("#editSeason .selected").addClass("changed");
             var that = this;
-            seasonManage.editNetPrice(that);
+            $(".selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());
+            $(".selected").find("p:eq(1)").html($("#seasonNetPrice").val());
+            modal.clearModal(that);
         },
         "click #editSeasonOk": function(){
             var that = this;
-            seasonManage.modifyCampSeason(that);
+            if ($("#editSeason .changed").length > 0
+                || seasonManage.fromBusyDate != $("#fromBusyDate").val()
+                || seasonManage.toBusyDate != $("#toBusyDate").val()
+                || seasonManage.fromSlackDate != $("#fromSlackDate").val()
+                || seasonManage.toSlackDate != $("#toSlackDate").val()) {
+                seasonManage.prepareData(that);
+            } else {
+                modal.clearModal(that);
+            }
+
         }
+    },
+    prepareData: function(that){
+        var prices = [];
+        $("#editSeason td.changed").each(function(){
+            var price = {
+                channelId: $(this).attr("channel-id"),
+                newAgreementPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(0)").html(),
+                newNetPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(1)").html(),
+                newSalePrice: $(this).hasClass("salePrice") ? $(this).find("p").html() : 0,
+                startDate: $(this).parents("table").hasClass("busyGrid") ? $("#fromBusyDate").val() : $("#fromSlackDate").val(),
+                endDate: $(this).parents("table").hasClass("busyGrid") ? $("#toBusyDate").val() : $("#toSlackDate").val(),
+                weekday: $(this).attr("week")
+            };
+            prices.push(price);
+        });
+        var seasons = [
+            {
+                startDate: $("#fromBusyDate").val(),
+                endDate: $("#toBusyDate").val(),
+                type: 1
+            },
+            {
+                startDate: $("#fromSlackDate").val(),
+                endDate: $("#toSlackDate").val(),
+                type: 0
+            }
+        ];
+        var data = {
+            items: JSON.stringify(prices),
+            categoryId: $(".priceGrid .selected").attr("category-id"),
+            seasons: JSON.stringify(seasons)
+        };
+        seasonManage.modifyAccommodationPeriodicalPrice(data, that);
     }
 
 };
