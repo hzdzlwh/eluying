@@ -6,11 +6,12 @@ webpackJsonp([3],{
 	/* WEBPACK VAR INJECTION */(function($) {/**
 	 * Created by huwanqi on 15/12/14.
 	 */
-	//var baseUrl = "http://192.168.0.120:8087";
-	var AJAXService = __webpack_require__(10);
+	var baseUrl = "http://120.26.83.168:8081/mg";
+	
 	var validate = __webpack_require__(13);
 	__webpack_require__(1);
 	__webpack_require__(5);
+	__webpack_require__(11);
 	
 	/*
 	验证码按钮倒计时用。
@@ -44,8 +45,8 @@ webpackJsonp([3],{
 	        $(this).unbind("click");
 	        $.ajax({
 	            type: "GET",
-	            //url: baseUrl + '/user/sendVerifyCode',
-	            url: AJAXService.getUrl('sendVerifyCodeUrl'),
+	            url: baseUrl + '/user/sendVerifyCode',
+	
 	            data: {
 	                phone: phone,
 	                origin: 1
@@ -72,8 +73,7 @@ webpackJsonp([3],{
 	        $(this).unbind("click");
 	        $.ajax({
 	            type: "GET",
-	            //url: baseUrl + '/user/sendVerifyCode',
-	            url: AJAXService.getUrl('sendVerifyCodeUrl'),
+	            url: baseUrl + '/user/sendVerifyCode',
 	            data: {
 	                phone: phone
 	            },
@@ -166,8 +166,7 @@ webpackJsonp([3],{
 	        if(result === true){
 	            $.ajax({
 	                type: 'GET',
-	                //url: baseUrl + '/user/resetPassword',
-	                url: AJAXService.getUrl("resetPasswordUrl"),
+	                url: baseUrl + '/user/resetPassword',
 	                data: {
 	                    password: pwd,
 	                    phone: phone,
@@ -253,8 +252,7 @@ webpackJsonp([3],{
 	        if(result == true){
 	            $.ajax({
 	                type: 'GET',
-	                //url: baseUrl + '/user/register',
-	                url: AJAXService.getUrl("registerUrl"),
+	                url: baseUrl + '/user/register',
 	                data: {
 	                    campAddress: campAddress,
 	                    campName: campName,
@@ -304,7 +302,7 @@ webpackJsonp([3],{
 	        if(result === true){
 	            $.ajax({
 	                type: "GET",
-	                url: AJAXService.getUrl("loginUrl"),
+	                url: baseUrl + '/user/login',
 	                data: {
 	                    loginName: loginName,
 	                    password: password
@@ -315,7 +313,7 @@ webpackJsonp([3],{
 	                        localStorage.setItem("campName", data.data.camps[0].name);
 	                        localStorage.setItem("userName", data.data.userName);
 	                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-	                        window.location.href = '../../../../../view/category/room.html';
+	                        window.location.href = '/eluyun/view/category/room.html';
 	                    }else{
 	                        $("#loginSection1 .log .errorTips").html(data.msg);
 	                        $("#loginSection1 .log .errorTips").show();
@@ -446,8 +444,7 @@ webpackJsonp([3],{
 	            //验证用户名是否存在
 	            $.ajax({
 	                type: 'GET',
-	                //url: baseUrl + '/user/verifyUserName',
-	                url: AJAXService.getUrl("verifyUserNameUrl"),
+	                url: baseUrl + '/user/verifyUserName',
 	                data: {
 	                    userName: loginName
 	                },

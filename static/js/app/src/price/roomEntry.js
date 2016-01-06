@@ -3,6 +3,7 @@ var leftMenu = require("leftMenu");
 var accommodationPriceList = require("accommodationPriceList");
 var util = require("util");
 var seasonManage = require("seasonManage");
+var monthManage = require("monthManage");
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
@@ -31,7 +32,7 @@ accommodationPriceList.getAccommodationPriceList(new Date());
 
 
 events = {
-    "click .lastWeek": util.lastWeek,
+    "click .prevWeek": util.prevWeek,
     "click .nextWeek": util.nextWeek,
     //按钮js改变日期
     "dateChange #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
@@ -40,40 +41,13 @@ events = {
     "resize window": util.mainContainer,
     "show.bs.modal .modal": modal.centerModals,
     "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
-    "click #editSeasonButton": seasonManage.getSeasons,
-    "click #editSeason .salePrice": function(){
-        $(".salePrice").removeClass("selected");
-        $(".netPrice").removeClass("selected");
-        $(this).addClass("selected");
-        $("#editSeasonNetPriceButton").parent().addClass("hide");
-        $("#editSeasonSalePriceButton").parent().removeClass("hide");
-    },
-    "click #editSeason .netPrice": function(){
-        $(".netPrice").removeClass("selected");
-        $(".salePrice").removeClass("selected");
-        $(this).addClass("selected");
-        $("#editSeasonSalePriceButton").parent().addClass("hide");
-        $("#editSeasonNetPriceButton").parent().removeClass("hide");
-    },
-    "click #editSeasonSalePriceButton": function(){
-        $("#seasonRetailPrice").val($(".salePrice.selected").find("p").html());
-    },
-    "click #editSeasonNetPriceButton": function(){
-        $("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());
-        $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(1)").html());
-    },
-    "click #editSeasonSalePriceOk": function(){
-        var that = this;
-        seasonManage.editSalePrice(that);
-    },
-    "click #editSeasonNetPriceOk": function(){
-        var that = this;
-        seasonManage.editNetPrice(that);
-    },
-    "click #editSeasonOk": function(){
-        var that = this;
-        seasonManage.modifyCampSeason(that);
-    }
+
+
 };
 util.bindDomAction(events);
+
+util.bindDomAction(seasonManage.events);
+
+util.bindDomAction(monthManage.events);
+
 

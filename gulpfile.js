@@ -60,7 +60,8 @@ gulp.task('webpack', function(callback) {
 				modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
 				validate: path.join(__dirname,"./static/js/jquery.validate.min.js"),
 				validation: path.join(__dirname,"./static/js/validation.js"),
-				seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js")
+				seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js"),
+				monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js")
 			}
 		},
 		devtool: "sourcemap"

@@ -53,7 +53,45 @@ function somethingAlert(message){
     }, 1000);
 }
 
+//确认弹出框
+function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
+    dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};
+    $("body").prepend(
+        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
+        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-content clearfloat'>" +
+        "<div class='modal-header'>" +
+        "<p>" + dialogConfig.title + "</p>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<p>" +dialogConfig.message + "</p>" +
+        "</div>" +
+        "<div class='footer clearfloat'>" +
+        "<button class='btn-cancel' id='confirmDialogCancel'>取消</button>" +
+        "<button class='btn-ok' id='confirmDialogOk'>确认</button>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>");
+    $("#confirmDialog").modal("show");
+    centerModals();
+    $('#confirmDialogOk').on("click", function(){
+        confirmCallback&&confirmCallback();
+        $("#confirmDialog").modal("hide");
+        $(".modal-backdrop").remove();
+        $("#confirmDialog").remove();
+    });
+    $('#confirmDialogCancel').on("click", function(){
+        cancelCallback&&cancelCallback();
+        $("#confirmDialog").modal("hide");
+        $(".modal-backdrop").remove();
+        $("#confirmDialog").remove();
+    });
+}
+
+
 exports.centerModals =  centerModals;
 exports.clearModal = clearModal;
 exports.modalInit = modalInit;
 exports.somethingAlert = somethingAlert;
+exports.confirmDialog = confirmDialog;

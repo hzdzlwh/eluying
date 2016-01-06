@@ -5,7 +5,6 @@ webpackJsonp([2],[
 	/* WEBPACK VAR INJECTION */(function($) {/**
 	 * Created by huwanqi on 15/12/26.
 	 */
-	var AJAXService = __webpack_require__(10);
 	var util = __webpack_require__(3);
 	var leftMenu = __webpack_require__(7);
 	var header = __webpack_require__(8);
@@ -20,16 +19,6 @@ webpackJsonp([2],[
 	    util.mainContainer();
 	
 	    trToggle();
-	
-	    $.ajax({
-	        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
-	        dataFilter: function (result) {
-	            return AJAXService.sessionValidate(result);
-	        },
-	        success: function(result){
-	            console.log(result);
-	        }
-	    })
 	
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -85,7 +74,7 @@ webpackJsonp([2],[
 	        return date.toLocaleDateString().replace(/\//g, "-");
 	    },
 	
-	    lastWeek: function(){
+	    prevWeek: function(){
 	        var datepicker = $(this).siblings(".dateContainer");
 	        var currentDate = datepicker.datepicker( "getDate" );
 	        datepicker.datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
@@ -104,33 +93,21 @@ webpackJsonp([2],[
 	        return week[d.getDay()];
 	    },
 	
-	    clone: function(obj){
-	        var result,oClass = util.isClass(obj);
-	        //确定result的类型
-	        if(oClass==="Object"){
-	            result = {};
-	        }else if(oClass === "Array"){
-	            result = [];
-	        }else{
-	            return obj;
-	        }
-	        for(var key in obj){
-	            var copy = obj[key];
-	            if(util.isClass(copy) == "Object"){
-	                result[key]=arguments.callee(copy);//递归调用
-	            }else if(util.isClass(copy)=="Array"){
-	                result[key]=arguments.callee(copy);
-	            }else{
-	                result[key]=obj[key];
-	            }
-	        }
-	        return result;
+	    getFirstDay: function(date){
+	        return new Date(date.setDate(1));
 	    },
 	
-	    isClass: function(o){
-	        if(o===null) return "Null";
-	        if(o===undefined) return "Undefined";
-	        return Object.prototype.toString.call(o).slice(8,-1);
+	    getLastDay: function(firstDate){
+	        var endDate = new Date(firstDate);
+	        endDate.setMonth(endDate.getMonth()+1);
+	        endDate.setDate(0);
+	        return endDate;
+	    },
+	
+	    //“yyyy-MM-dd” 转换成日期型
+	    stringToDate: function(string){
+	        var array = string.split("-");
+	        return new Date(array[1] + " " +array[2]+","+array[0]);
 	    }
 	};
 	module.exports = util;
@@ -196,10 +173,48 @@ webpackJsonp([2],[
 	    }, 1000);
 	}
 	
+	//确认弹出框
+	function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
+	    dialogConfig= dialogConfig||{title:"提示", message:"您确定要这么做吗？"};
+	    $("body").prepend(
+	        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
+	        "<div class='modal-dialog modal-w392'>" +
+	        "<div class='modal-content clearfloat'>" +
+	        "<div class='modal-header'>" +
+	        "<p>" + dialogConfig.title + "</p>" +
+	        "</div>" +
+	        "<div class='modal-body'>" +
+	        "<p>" +dialogConfig.message + "</p>" +
+	        "</div>" +
+	        "<div class='footer clearfloat'>" +
+	        "<button class='btn-cancel' id='confirmDialogCancel'>取消</button>" +
+	        "<button class='btn-ok' id='confirmDialogOk'>确认</button>" +
+	        "</div>" +
+	        "</div>" +
+	        "</div>" +
+	        "</div>");
+	    $("#confirmDialog").modal("show");
+	    centerModals();
+	    $('#confirmDialogOk').on("click", function(){
+	        confirmCallback&&confirmCallback();
+	        $("#confirmDialog").modal("hide");
+	        $(".modal-backdrop").remove();
+	        $("#confirmDialog").remove();
+	    });
+	    $('#confirmDialogCancel').on("click", function(){
+	        cancelCallback&&cancelCallback();
+	        $("#confirmDialog").modal("hide");
+	        $(".modal-backdrop").remove();
+	        $("#confirmDialog").remove();
+	    });
+	}
+	
+	
 	exports.centerModals =  centerModals;
 	exports.clearModal = clearModal;
 	exports.modalInit = modalInit;
 	exports.somethingAlert = somethingAlert;
+	exports.confirmDialog = confirmDialog;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -285,7 +300,69 @@ webpackJsonp([2],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 10 */,
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(11);
+	var AJAXService = {
+	    urls: {
+	        //正式服务器 http://120.26.83.168:8081/mg
+	        //测试服 http://121.41.109.105:8081/mg
+	        //宪伟服务器 http://192.168.0.2:8082/mg
+	        //var host = "http://121.41.109.105:8081/mg";
+	        //浩南服务器 http://192.168.0.118:8087
+	        host: "http://120.26.83.168:8081/mg",
+	        //var host = "/mg";
+	        loginUrl: "/user/login",
+	        getRoomCategoryListUrl: "/category/getRoomCategoryList",
+	        addAccommodationUrl: "/category/addAccommodation",
+	        pullOtherCategoryListUrl: "/category/pullOtherCategoryList",
+	        deleteOtherCategoryUrl: "/category/deleteOtherCategory",
+	        addOrEditExtraCategoryUrl: "/category/addOrEditOtherCategory",
+	        editRoomBasicUrl: "/category/modifyAccommodationBaseInfo",
+	        deleteRoomUrl: "/category/deleteAccommodationCategory",
+	        subclassManageUrl: "/category/modifySubCategory",
+	        loadSubRoomUrl: "/category/pullRoomList",
+	        editSubRoomUrl: "/category/modifyRooms",
+	        modifyStateUrl: "/category/modifyState",
+	        pullShowInfoUrl: "/category/pullShowInfo",
+	        uploadImageUrl: "/image/upload",
+	        editShowInfoUrl: "/category/modifyShowInfo",
+	        getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
+	        getAccommodationPriceList: "/price/getAccommodationPriceList",
+	        ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
+	        getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
+	        getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
+	        modifyDefaultPrice: "/price/modifyDefaultPrice",
+	        getCampSeasons: "/price/getCampSeasons",
+	        getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
+	        modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
+	        modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
+	        modifyCampSeason: "/price/modifyCampSeason",
+	        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
+	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
+	        logoutUrl: "/user/logout",
+	        rewriteUrl: true
+	    },
+	    getUrl: function(path){
+	        var url = this.urls.host + this.urls[path];
+	        if (this.urls.rewriteUrl == true) {
+	            url += ";jsessionid=" + $.cookie("jsessionid");
+	        }
+	        return url;
+	    },
+	    sessionValidate: function(data){
+	        data = JSON.parse(data);
+	        if (data.code == 14) {
+	            location.href = "/eluyun/login.html";
+	        }
+	        return JSON.stringify(data);
+	}
+	};
+	module.exports = AJAXService;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
 /* 11 */,
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {

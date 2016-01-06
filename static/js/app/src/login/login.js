@@ -1,12 +1,12 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-//var baseUrl = "http://192.168.0.120:8087";
-var AJAXService = require("AJAXService");
+var baseUrl = "http://120.26.83.168:8081/mg";
+
 var validate = require('loginValidate');
-var modal = require('modal');
 require("jquery");
 require("bootstrap");
+require("cookie");
 
 /*
 验证码按钮倒计时用。
@@ -40,8 +40,8 @@ function forgetVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            //url: baseUrl + '/user/sendVerifyCode',
-            url: AJAXService.getUrl('sendVerifyCodeUrl'),
+            url: baseUrl + '/user/sendVerifyCode',
+
             data: {
                 phone: phone,
                 origin: 1
@@ -68,8 +68,7 @@ function registerVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            //url: baseUrl + '/user/sendVerifyCode',
-            url: AJAXService.getUrl('sendVerifyCodeUrl'),
+            url: baseUrl + '/user/sendVerifyCode',
             data: {
                 phone: phone
             },
@@ -97,28 +96,25 @@ $(document).ready(function(){
         GetLastUser();
     }
 
-    //$(".modal").modal({
-    //    backdrop: "static",
-    //    show: false,
-    //    keyboard: true
-    //});
-    //function centerModals(){
-    //    $('.modal').each(function(){
-    //        var $clone = $(this).clone().css('display', 'block').appendTo('body');
-    //        var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
-    //        top = top > 0 ? top : 0;
-    //        $clone.remove();
-    //        $(this).find('.modal-content').css("margin-top", top);
-    //    });
-    //}
-    //$('.modal').on('show.bs.modal', centerModals);
-    //$(window).on('resize', centerModals);
-    //$(".btn-cancel").click(function(){
-    //    $(this).parents(".modal").modal("hide");
-    //});
-
-    modal.modalInit();
-
+    $(".modal").modal({
+        backdrop: "static",
+        show: false,
+        keyboard: true
+    });
+    function centerModals(){
+        $('.modal').each(function(){
+            var $clone = $(this).clone().css('display', 'block').appendTo('body');
+            var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
+            top = top > 0 ? top : 0;
+            $clone.remove();
+            $(this).find('.modal-content').css("margin-top", top);
+        });
+    }
+    $('.modal').on('show.bs.modal', centerModals);
+    $(window).on('resize', centerModals);
+    $(".btn-cancel").click(function(){
+        $(this).parents(".modal").modal("hide");
+    });
     /*
     申请注册码和我有注册码切换
      */
@@ -165,8 +161,7 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: 'GET',
-                //url: baseUrl + '/user/resetPassword',
-                url: AJAXService.getUrl("resetPasswordUrl"),
+                url: baseUrl + '/user/resetPassword',
                 data: {
                     password: pwd,
                     phone: phone,
@@ -252,8 +247,7 @@ $(document).ready(function(){
         if(result == true){
             $.ajax({
                 type: 'GET',
-                //url: baseUrl + '/user/register',
-                url: AJAXService.getUrl("registerUrl"),
+                url: baseUrl + '/user/register',
                 data: {
                     campAddress: campAddress,
                     campName: campName,
@@ -303,7 +297,7 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: "GET",
-                url: AJAXService.getUrl("loginUrl"),
+                url: baseUrl + '/user/login',
                 data: {
                     loginName: loginName,
                     password: password
@@ -314,7 +308,7 @@ $(document).ready(function(){
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        window.location.href = '../../../../../view/category/room.html';
+                        window.location.href = '/eluyun/view/category/room.html';
                     }else{
                         $("#loginSection1 .log .errorTips").html(data.msg);
                         $("#loginSection1 .log .errorTips").show();
@@ -445,8 +439,7 @@ $(document).ready(function(){
             //验证用户名是否存在
             $.ajax({
                 type: 'GET',
-                //url: baseUrl + '/user/verifyUserName',
-                url: AJAXService.getUrl("verifyUserNameUrl"),
+                url: baseUrl + '/user/verifyUserName',
                 data: {
                     userName: loginName
                 },

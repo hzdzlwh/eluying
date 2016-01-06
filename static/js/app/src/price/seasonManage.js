@@ -37,7 +37,6 @@ var seasonManage = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-                seasonManage.response = !seasonManage.response;
                 var channelArray = [];
                 for (var name in result.data) {
                     channelArray.push({
@@ -45,6 +44,7 @@ var seasonManage = {
                         id: result.data[name][0].channelId
                     });
                 }
+                $(".seasonCategory").html("淡旺季管理-" + result.data["0"][0].name);
                 seasonManage.tab(channelArray);
 
                 seasonManage.priceGrid(result.data, true);
@@ -64,7 +64,6 @@ var seasonManage = {
             success: function(result){
                 seasonManage.priceGrid(result.data, false);
 
-                seasonManage.eventBind();
 
             }
         });
@@ -112,7 +111,7 @@ var seasonManage = {
                 "</div>"
         });
         $("#editSeason .nav").html(tabStr);
-        $(".tab-content").html(tabpanelStr);
+        $("#editSeason .tab-content").html(tabpanelStr);
     },
 
     priceGrid: function(data, isBusy){
@@ -225,6 +224,44 @@ var seasonManage = {
                 }
             }
         });
+    },
+    events: {
+        "click #editSeasonButton": function(){
+            seasonManage.getSeasons();
+        },
+        "click #editSeason .salePrice": function(){
+            $(".salePrice").removeClass("selected");
+            $(".netPrice").removeClass("selected");
+            $(this).addClass("selected");
+            $("#editSeasonNetPriceButton").parent().addClass("hide");
+            $("#editSeasonSalePriceButton").parent().removeClass("hide");
+        },
+        "click #editSeason .netPrice": function(){
+            $(".netPrice").removeClass("selected");
+            $(".salePrice").removeClass("selected");
+            $(this).addClass("selected");
+            $("#editSeasonSalePriceButton").parent().addClass("hide");
+            $("#editSeasonNetPriceButton").parent().removeClass("hide");
+        },
+        "click #editSeasonSalePriceButton": function(){
+            $("#seasonRetailPrice").val($(".salePrice.selected").find("p").html());
+        },
+        "click #editSeasonNetPriceButton": function(){
+            $("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());
+            $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(1)").html());
+        },
+        "click #editSeasonSalePriceOk": function(){
+            var that = this;
+            seasonManage.editSalePrice(that);
+        },
+        "click #editSeasonNetPriceOk": function(){
+            var that = this;
+            seasonManage.editNetPrice(that);
+        },
+        "click #editSeasonOk": function(){
+            var that = this;
+            seasonManage.modifyCampSeason(that);
+        }
     }
 
 };

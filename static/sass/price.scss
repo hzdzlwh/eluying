@@ -130,7 +130,7 @@
 }
 
 .editPrices {
-    height: 769px;
+
     position: relative;
     h1 {
         margin: 15px 0;
@@ -140,8 +140,17 @@
     }
     .changeMonth {
         position: absolute;
-        right: 240px;
-        top: 175px;
+        right: 209px;
+        top: 124px;
+        width: 194px;
+        height: 31px;
+        #prevMonth {
+            position: absolute;
+        }
+        #nextMonth {
+            position: absolute;
+            left: 104px;
+        }
         button {
             width: 69px;
             height: 31px;
@@ -154,8 +163,10 @@
             cursor: pointer;
         }
     }
+    .tab-content {
+        float: left;
+    }
     .grid {
-        margin-top: 27px;
         border-top: 4px #4a90e2 solid;
         border-collapse: collapse;
         float: left;
@@ -169,7 +180,7 @@
         td {
             position: relative;
             border: 1px #D8D8D8 solid;
-            height: 126px;
+            height: 100px;
             width: 96px;
             p {
                 text-align: center;
@@ -197,10 +208,17 @@
             p {
                 cursor: pointer;
             }
+            span {
+                cursor: pointer;
+            }
         }
     }
     .operate {
-        margin-top: 27px;
+        margin-top: 0;
+    }
+    .footer {
+        float: right;
+        margin-top: 10px;
     }
 }
 
@@ -211,23 +229,31 @@
 
 .slackSeason {
     position: absolute;
-    top: 412px;
+    top: 380px;
 }
 
 .busyGrid {
     position: relative;
-    top: 95px;
+    top: 120px;
 }
 
 .slackGrid {
     position: relative;
-    top: 183px;
-}
-
-.seasonOperate {
-    margin-top: -314px;
+    top: 229px;
 }
 
 .seasonFooter {
-    margin-top: 371px;
+    margin-top: 240px !important;
+}
+
+.seasonOperate {
+    margin-top: -183px !important;
+}
+
+.editSeason {
+    height: 699px;
+}
+
+.editMonth {
+    height: 778px;
 }

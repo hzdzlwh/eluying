@@ -1,11 +1,12 @@
 require("cookie");
 var AJAXService = {
     urls: {
+        //正式服务器 http://120.26.83.168:8081/mg
         //测试服 http://121.41.109.105:8081/mg
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        host: "http://121.41.109.105:8081/mg",
+        host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
@@ -24,7 +25,6 @@ var AJAXService = {
         editShowInfoUrl: "/category/modifyShowInfo",
         getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
         getAccommodationPriceList: "/price/getAccommodationPriceList",
-        modifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialSalePrice",
         ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
         getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
         getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
@@ -34,6 +34,8 @@ var AJAXService = {
         modifyAccommodationPeriodicalSalePrice: "/price/modifyAccommodationPeriodicalSalePrice",
         modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
         modifyCampSeason: "/price/modifyCampSeason",
+        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
+        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
         logoutUrl: "/user/logout",
         getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
         sendVerifyCodeUrl: '/user/sendVerifyCode',
