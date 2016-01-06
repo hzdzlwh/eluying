@@ -1,4 +1,4 @@
-webpackJsonp([1],{
+webpackJsonp([3],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
@@ -6,8 +6,8 @@ webpackJsonp([1],{
 	/* WEBPACK VAR INJECTION */(function($) {/**
 	 * Created by huwanqi on 15/12/14.
 	 */
-	var baseUrl = "http://192.168.0.120:8087";
-	
+	//var baseUrl = "http://192.168.0.120:8087";
+	var AJAXService = __webpack_require__(10);
 	var validate = __webpack_require__(13);
 	__webpack_require__(1);
 	__webpack_require__(5);
@@ -44,8 +44,8 @@ webpackJsonp([1],{
 	        $(this).unbind("click");
 	        $.ajax({
 	            type: "GET",
-	            url: baseUrl + '/user/sendVerifyCode',
-	
+	            //url: baseUrl + '/user/sendVerifyCode',
+	            url: AJAXService.getUrl('sendVerifyCodeUrl'),
 	            data: {
 	                phone: phone,
 	                origin: 1
@@ -72,7 +72,8 @@ webpackJsonp([1],{
 	        $(this).unbind("click");
 	        $.ajax({
 	            type: "GET",
-	            url: baseUrl + '/user/sendVerifyCode',
+	            //url: baseUrl + '/user/sendVerifyCode',
+	            url: AJAXService.getUrl('sendVerifyCodeUrl'),
 	            data: {
 	                phone: phone
 	            },
@@ -165,7 +166,8 @@ webpackJsonp([1],{
 	        if(result === true){
 	            $.ajax({
 	                type: 'GET',
-	                url: baseUrl + '/user/resetPassword',
+	                //url: baseUrl + '/user/resetPassword',
+	                url: AJAXService.getUrl("resetPasswordUrl"),
 	                data: {
 	                    password: pwd,
 	                    phone: phone,
@@ -251,7 +253,8 @@ webpackJsonp([1],{
 	        if(result == true){
 	            $.ajax({
 	                type: 'GET',
-	                url: baseUrl + '/user/register',
+	                //url: baseUrl + '/user/register',
+	                url: AJAXService.getUrl("registerUrl"),
 	                data: {
 	                    campAddress: campAddress,
 	                    campName: campName,
@@ -301,7 +304,7 @@ webpackJsonp([1],{
 	        if(result === true){
 	            $.ajax({
 	                type: "GET",
-	                url: baseUrl + '/user/login',
+	                url: AJAXService.getUrl("loginUrl"),
 	                data: {
 	                    loginName: loginName,
 	                    password: password
@@ -443,7 +446,8 @@ webpackJsonp([1],{
 	            //验证用户名是否存在
 	            $.ajax({
 	                type: 'GET',
-	                url: baseUrl + '/user/verifyUserName',
+	                //url: baseUrl + '/user/verifyUserName',
+	                url: AJAXService.getUrl("verifyUserNameUrl"),
 	                data: {
 	                    userName: loginName
 	                },

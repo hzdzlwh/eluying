@@ -35,6 +35,11 @@ var AJAXService = {
         modifyAccommodationPeriodicalChannelPrice: "/price/modifyAccommodationPeriodicalChannelPrice",
         modifyCampSeason: "/price/modifyCampSeason",
         logoutUrl: "/user/logout",
+        getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
+        sendVerifyCodeUrl: '/user/sendVerifyCode',
+        resetPasswordUrl: '/user/resetPassword',
+        registerUrl: '/user/register',
+        verifyUserNameUrl: '/user/verifyUserName',
         rewriteUrl: true
     },
     getUrl: function(path){

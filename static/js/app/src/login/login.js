@@ -1,8 +1,8 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-var baseUrl = "http://192.168.0.120:8087";
-
+//var baseUrl = "http://192.168.0.120:8087";
+var AJAXService = require("AJAXService");
 var validate = require('loginValidate');
 require("jquery");
 require("bootstrap");
@@ -39,8 +39,8 @@ function forgetVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            url: baseUrl + '/user/sendVerifyCode',
-
+            //url: baseUrl + '/user/sendVerifyCode',
+            url: AJAXService.getUrl('sendVerifyCodeUrl'),
             data: {
                 phone: phone,
                 origin: 1
@@ -67,7 +67,8 @@ function registerVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            url: baseUrl + '/user/sendVerifyCode',
+            //url: baseUrl + '/user/sendVerifyCode',
+            url: AJAXService.getUrl('sendVerifyCodeUrl'),
             data: {
                 phone: phone
             },
@@ -160,7 +161,8 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: 'GET',
-                url: baseUrl + '/user/resetPassword',
+                //url: baseUrl + '/user/resetPassword',
+                url: AJAXService.getUrl("resetPasswordUrl"),
                 data: {
                     password: pwd,
                     phone: phone,
@@ -246,7 +248,8 @@ $(document).ready(function(){
         if(result == true){
             $.ajax({
                 type: 'GET',
-                url: baseUrl + '/user/register',
+                //url: baseUrl + '/user/register',
+                url: AJAXService.getUrl("registerUrl"),
                 data: {
                     campAddress: campAddress,
                     campName: campName,
@@ -296,7 +299,7 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: "GET",
-                url: baseUrl + '/user/login',
+                url: AJAXService.getUrl("loginUrl"),
                 data: {
                     loginName: loginName,
                     password: password
@@ -438,7 +441,8 @@ $(document).ready(function(){
             //验证用户名是否存在
             $.ajax({
                 type: 'GET',
-                url: baseUrl + '/user/verifyUserName',
+                //url: baseUrl + '/user/verifyUserName',
+                url: AJAXService.getUrl("verifyUserNameUrl"),
                 data: {
                     userName: loginName
                 },
