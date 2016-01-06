@@ -6,14 +6,15 @@ webpackJsonp([3],{
 	/* WEBPACK VAR INJECTION */(function($) {/**
 	 * Created by huwanqi on 15/12/14.
 	 */
-	var baseUrl = "http://121.41.109.105:8081/mg";
+	
 	
 	var validate = __webpack_require__(13);
+	var AJAXservice = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"AJAXservice\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	__webpack_require__(1);
 	__webpack_require__(5);
 	__webpack_require__(11);
 	
-	
+	var baseUrl = AJAXservice.urls.host;
 	/*
 	验证码按钮倒计时用。
 	 */

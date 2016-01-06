@@ -1,14 +1,15 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
-var baseUrl = "http://121.41.109.105:8081/mg";
+
 
 var validate = require('loginValidate');
+var AJAXservice = require("AJAXservice");
 require("jquery");
 require("bootstrap");
 require("cookie");
 
-
+var baseUrl = AJAXservice.urls.host;
 /*
 验证码按钮倒计时用。
  */
