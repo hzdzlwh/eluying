@@ -3,7 +3,8 @@
  */
 var modal = require('modal');
 var loginValidate = require('loginValidate');
-var baseUrl = "http://192.168.0.2:8082/mg";
+var AJAXService = require('AJAXService');
+var baseUrl = AJAXService.urls.host;
 
 var resposiveWindow = function(){
     $("html").css({
@@ -49,7 +50,6 @@ function forgetVCOnClick(){
         $.ajax({
             type: "GET",
             url: baseUrl + '/user/sendVerifyCode',
-
             data: {
                 phone: phone,
                 origin: 1
