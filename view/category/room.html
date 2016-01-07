@@ -405,15 +405,15 @@
                     </table>
                   </div>
                 </div>
-                <div class="operate">
+                <div class="operate facilityOperate">
                   <div class="first">
-                    <div class="operateItem">
+                    <div class="operateItem hide">
                       <div class="clickDiv" id="editFacilityButton" data-toggle="modal" data-target="#editFacility">
                         <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
                         <p>编辑信息</p>
                       </div>
                     </div>
-                    <div class="operateItem">
+                    <div class="operateItem hide">
                       <div class="clickDiv" id="deleteFacility">
                         <img src="/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
@@ -425,7 +425,7 @@
             </div>
         </div>
         <div class="footer clearfloat">
-          <button class="btn-cancel" id="editDisplayInfoCancel">取消</button>
+          <button class="cancel" id="editDisplayInfoCancel">取消</button>
           <button class="btn-ok" id="editRoomShowOk">确认</button>
         </div>
       </div>
@@ -1015,6 +1015,7 @@
           $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.data.url + "' />");
           $(".cover .create").hide();
           $(".coverError").addClass("hide");
+          changed = true;
         }
       });
       $("#detail").fileupload({
@@ -1027,6 +1028,7 @@
             $(".detail .create").hide();
           }
           $(".detailError").addClass("hide");
+          changed = true;
         }
       })
     }
@@ -1376,6 +1378,7 @@
         $(this).addClass("mainActive");
         $("#editDisplayInfo .operateItem").removeClass("hide");
       });
+      changed = true;
       clearModal(that);
     });
 
@@ -1383,6 +1386,7 @@
     $("#deleteFacility").on("click", function(){
       $("#editDisplayInfo .mainActive").remove();
       $("#editDisplayInfo .operateItem").addClass("hide");
+      changed = true;
     });
 
     //编辑设施
@@ -1397,6 +1401,7 @@
       }
       var that = this;
       $("#editDisplayInfo .mainActive").find("td").html($("#editFacilityName").val());
+      changed = true;
       clearModal(that);
     });
 
@@ -1405,6 +1410,7 @@
       $(".cover .photoSelected").remove();
       $("#editDisplayInfo .first .operateItem").addClass("hide");
       $(".cover .create").show();
+      changed = true;
     });
 
     //删除详细图片
@@ -1412,6 +1418,7 @@
       $(".detail .photoSelected").remove();
       $("#editDisplayInfo .second .operateItem").addClass("hide");
       $(".detail .create").show();
+      changed = true;
     });
 
     //替换详细图片
@@ -1425,6 +1432,36 @@
         }
       });
     });
+
+    var changed = false;
+
+    function setChanged(){
+      changed = true;
+    }
+
+    //防呆
+    $("#editDisplayInfo input").on("change", setChanged);
+
+    $("#editDisplayInfoCancel").on("click", function(){
+      var that = this;
+      if (changed) {
+        var dialogConfig = {
+          title: "提醒",
+          message: "当前的修改尚未保存，您确定要离开此页面吗？"
+        };
+        var confirmCallback = function(){
+          clearModal(that);
+          changed = false
+        };
+
+        confirmDialog(dialogConfig, confirmCallback);
+
+      } else {
+        clearModal(that);
+      }
+    });
+
+
 
     $(function() {
       //读取营地名称和用户名

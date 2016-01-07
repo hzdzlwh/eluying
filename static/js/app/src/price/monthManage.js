@@ -212,9 +212,33 @@ var monthManage = {
                 $("#editMonthNetPriceButton").parent().removeClass("hide");
             }
         },
-        "shown.bs.tab #editMonth a[data-toggle='tab']": function(){
-            $("#editMonth .selected").removeClass("selected");
-            $("#editMonth .operateItem").addClass("hide");
+        "click #editMonth a[data-toggle='tab']": function(){
+            var that = this;
+            if ($(".changed").length > 0) {
+
+                var dialogConfig = {
+                    title: "提醒",
+                    message: "当前渠道的修改尚未保存，是否保存？"
+                };
+                var confirmCallback = function(){
+                    var data = monthManage.preparePrices();
+                    monthManage.batchModifyAccommodationSpecialPrice(data);
+                    $(".changed").removeClass("changed");
+                    $(that).tab("show");
+                };
+                var cancelCallback = function(){
+                    $("#editMonth .selected").removeClass("selected");
+                    $("#editMonth .operateItem").addClass("hide");
+                    $(".changed").removeClass("changed");
+                    $(that).tab("show");
+                    //TODO 把修改过的值复原 T T
+                };
+                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                return false;
+            } else {
+                $("#editMonth .selected").removeClass("selected");
+                $("#editMonth .operateItem").addClass("hide");
+            }
         },
         "click #editMonthSalePriceButton": function(){
             if ($("#editMonth .selected").length === 1) {
@@ -254,6 +278,23 @@ var monthManage = {
                 modal.clearModal(that);
             }
 
+        },
+        "click #editMonthCancel": function(){
+            var that = this;
+            if ($(".changed").length > 0) {
+                var dialogConfig = {
+                    title: "提醒",
+                    message: "当前的修改尚未保存，您确定要离开此页面吗？"
+                };
+                var confirmCallback = function(){
+                    modal.clearModal(that);
+                };
+
+                modal.confirmDialog(dialogConfig, confirmCallback);
+
+            } else {
+                modal.clearModal(that);
+            }
         }
     },
     preparePrices: function(){

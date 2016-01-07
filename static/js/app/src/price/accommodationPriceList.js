@@ -24,19 +24,31 @@ var accommodationPriceList = {
 
     events: {
         "click .priceGrid .price": function(){
-            $(".price").removeClass("selected");
-            $(".subPriceTd").removeClass("selected");
-            $(this).toggleClass("selected");
+            $(".priceGrid td").removeClass("selected");
+            $(this).addClass("selected");
             $(".editSalePrice").removeClass("hide");
             $(".editNetPrice").addClass("hide");
             $(".second").removeClass("hide");
         },
         "click .priceGrid .subPriceTd": function(){
-            $(".subPriceTd").removeClass("selected");
-            $(".price").removeClass("selected");
-            $(this).toggleClass("selected");
+            $(".priceGrid td").removeClass("selected");
+            $(this).addClass("selected");
             $(".editNetPrice").removeClass("hide");
             $(".editSalePrice").addClass("hide");
+            $(".second").removeClass("hide");
+        },
+        "click .priceGrid .oldPrice": function(){
+            $(".priceGrid td").removeClass("selected");
+            $(this).addClass("selected");
+            $(".editSalePrice").addClass("hide");
+            $(".editNetPrice").addClass("hide");
+            $(".second").removeClass("hide");
+        },
+        "click .priceGrid .oldNetPrice": function(){
+            $(".priceGrid td").removeClass("selected");
+            $(this).addClass("selected");
+            $(".editSalePrice").addClass("hide");
+            $(".editNetPrice").addClass("hide");
             $(".second").removeClass("hide");
         },
         "click #editSalePriceButton": function(){
@@ -88,14 +100,19 @@ var accommodationPriceList = {
         for (var name in result.data) {
             for (var subName in result.data[name]) {
                 if (subName == "0") {
-                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
+                    tbody += "<tr class='mainClass'>" +
+                        "<td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
                     $.each(result.data[name][subName], function (index, element) {
-                        tbody += "<td class='price' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
+                        tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldPrice" : "price") +
+                            "' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
                     });
                 } else {
-                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>";
+                    tbody += "<tr class='subPrice hide'>" +
+                        "<td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>";
                     $.each(result.data[name][subName], function (index, element) {
-                        tbody += "<td class='subPriceTd' channel-id=" + element.channelId + " category-id=" + element.id + " date=" + element.date + "><div><p>" + element.agreementPrice + "</p><p>" + element.netPrice + "</p></div></td>";
+                        tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldNetPrice" : "subPriceTd") +
+                            "' channel-id=" + element.channelId + " category-id=" + element.id + " date=" + element.date + "><div><p>" +
+                            element.agreementPrice + "</p><p>" + element.netPrice + "</p></div></td>";
                     });
                 }
                 tbody += "</tr>"

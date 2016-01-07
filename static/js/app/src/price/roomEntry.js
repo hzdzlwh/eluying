@@ -46,7 +46,12 @@ events = {
     //按钮js改变日期
     "dateChange #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
     //用户选择改变日期
-    "change #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
+    "change #datePicker": function(){
+        accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"));
+        $(".second").addClass("hide");
+        $(".editSalePrice").addClass("hide");
+        $(".editNetPrice").addClass("hide");
+    },
     "resize window": util.mainContainer,
     "show.bs.modal .modal": modal.centerModals,
     "click .btn-cancel": function(){var that = this; modal.clearModal(that);},

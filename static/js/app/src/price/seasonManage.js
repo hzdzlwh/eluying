@@ -238,6 +238,23 @@ var seasonManage = {
                 modal.clearModal(that);
             }
 
+        },
+        "click #editSeasonCancel": function(){
+            var that = this;
+            if ($(".changed").length > 0) {
+                var dialogConfig = {
+                    title: "提醒",
+                    message: "当前的修改尚未保存，您确定要离开此页面吗？"
+                };
+                var confirmCallback = function(){
+                    modal.clearModal(that);
+                };
+
+                modal.confirmDialog(dialogConfig, confirmCallback);
+
+            } else {
+                modal.clearModal(that);
+            }
         }
     },
     prepareData: function(that){

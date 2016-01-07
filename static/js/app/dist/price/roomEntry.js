@@ -50,7 +50,12 @@ webpackJsonp([5],[
 	    //按钮js改变日期
 	    "dateChange #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
 	    //用户选择改变日期
-	    "change #datePicker": function(){accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"))},
+	    "change #datePicker": function(){
+	        accommodationPriceList.getAccommodationPriceList($(this).datepicker("getDate"));
+	        $(".second").addClass("hide");
+	        $(".editSalePrice").addClass("hide");
+	        $(".editNetPrice").addClass("hide");
+	    },
 	    "resize window": util.mainContainer,
 	    "show.bs.modal .modal": modal.centerModals,
 	    "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
@@ -405,19 +410,31 @@ webpackJsonp([5],[
 	
 	    events: {
 	        "click .priceGrid .price": function(){
-	            $(".price").removeClass("selected");
-	            $(".subPriceTd").removeClass("selected");
-	            $(this).toggleClass("selected");
+	            $(".priceGrid td").removeClass("selected");
+	            $(this).addClass("selected");
 	            $(".editSalePrice").removeClass("hide");
 	            $(".editNetPrice").addClass("hide");
 	            $(".second").removeClass("hide");
 	        },
 	        "click .priceGrid .subPriceTd": function(){
-	            $(".subPriceTd").removeClass("selected");
-	            $(".price").removeClass("selected");
-	            $(this).toggleClass("selected");
+	            $(".priceGrid td").removeClass("selected");
+	            $(this).addClass("selected");
 	            $(".editNetPrice").removeClass("hide");
 	            $(".editSalePrice").addClass("hide");
+	            $(".second").removeClass("hide");
+	        },
+	        "click .priceGrid .oldPrice": function(){
+	            $(".priceGrid td").removeClass("selected");
+	            $(this).addClass("selected");
+	            $(".editSalePrice").addClass("hide");
+	            $(".editNetPrice").addClass("hide");
+	            $(".second").removeClass("hide");
+	        },
+	        "click .priceGrid .oldNetPrice": function(){
+	            $(".priceGrid td").removeClass("selected");
+	            $(this).addClass("selected");
+	            $(".editSalePrice").addClass("hide");
+	            $(".editNetPrice").addClass("hide");
 	            $(".second").removeClass("hide");
 	        },
 	        "click #editSalePriceButton": function(){
@@ -469,14 +486,19 @@ webpackJsonp([5],[
 	        for (var name in result.data) {
 	            for (var subName in result.data[name]) {
 	                if (subName == "0") {
-	                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
+	                    tbody += "<tr class='mainClass'>" +
+	                        "<td>" + result.data[name][subName][0].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td>";
 	                    $.each(result.data[name][subName], function (index, element) {
-	                        tbody += "<td class='price' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
+	                        tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldPrice" : "price") +
+	                            "' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
 	                    });
 	                } else {
-	                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>";
+	                    tbody += "<tr class='subPrice hide'>" +
+	                        "<td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>";
 	                    $.each(result.data[name][subName], function (index, element) {
-	                        tbody += "<td class='subPriceTd' channel-id=" + element.channelId + " category-id=" + element.id + " date=" + element.date + "><div><p>" + element.agreementPrice + "</p><p>" + element.netPrice + "</p></div></td>";
+	                        tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldNetPrice" : "subPriceTd") +
+	                            "' channel-id=" + element.channelId + " category-id=" + element.id + " date=" + element.date + "><div><p>" +
+	                            element.agreementPrice + "</p><p>" + element.netPrice + "</p></div></td>";
 	                    });
 	                }
 	                tbody += "</tr>"
@@ -793,6 +815,23 @@ webpackJsonp([5],[
 	                modal.clearModal(that);
 	            }
 	
+	        },
+	        "click #editSeasonCancel": function(){
+	            var that = this;
+	            if ($(".changed").length > 0) {
+	                var dialogConfig = {
+	                    title: "提醒",
+	                    message: "当前的修改尚未保存，您确定要离开此页面吗？"
+	                };
+	                var confirmCallback = function(){
+	                    modal.clearModal(that);
+	                };
+	
+	                modal.confirmDialog(dialogConfig, confirmCallback);
+	
+	            } else {
+	                modal.clearModal(that);
+	            }
 	        }
 	    },
 	    prepareData: function(that){
@@ -1052,9 +1091,33 @@ webpackJsonp([5],[
 	                $("#editMonthNetPriceButton").parent().removeClass("hide");
 	            }
 	        },
-	        "shown.bs.tab #editMonth a[data-toggle='tab']": function(){
-	            $("#editMonth .selected").removeClass("selected");
-	            $("#editMonth .operateItem").addClass("hide");
+	        "click #editMonth a[data-toggle='tab']": function(){
+	            var that = this;
+	            if ($(".changed").length > 0) {
+	
+	                var dialogConfig = {
+	                    title: "提醒",
+	                    message: "当前渠道的修改尚未保存，是否保存？"
+	                };
+	                var confirmCallback = function(){
+	                    var data = monthManage.preparePrices();
+	                    monthManage.batchModifyAccommodationSpecialPrice(data);
+	                    $(".changed").removeClass("changed");
+	                    $(that).tab("show");
+	                };
+	                var cancelCallback = function(){
+	                    $("#editMonth .selected").removeClass("selected");
+	                    $("#editMonth .operateItem").addClass("hide");
+	                    $(".changed").removeClass("changed");
+	                    $(that).tab("show");
+	                    //TODO 把修改过的值复原 T T
+	                };
+	                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+	                return false;
+	            } else {
+	                $("#editMonth .selected").removeClass("selected");
+	                $("#editMonth .operateItem").addClass("hide");
+	            }
 	        },
 	        "click #editMonthSalePriceButton": function(){
 	            if ($("#editMonth .selected").length === 1) {
@@ -1094,6 +1157,23 @@ webpackJsonp([5],[
 	                modal.clearModal(that);
 	            }
 	
+	        },
+	        "click #editMonthCancel": function(){
+	            var that = this;
+	            if ($(".changed").length > 0) {
+	                var dialogConfig = {
+	                    title: "提醒",
+	                    message: "当前的修改尚未保存，您确定要离开此页面吗？"
+	                };
+	                var confirmCallback = function(){
+	                    modal.clearModal(that);
+	                };
+	
+	                modal.confirmDialog(dialogConfig, confirmCallback);
+	
+	            } else {
+	                modal.clearModal(that);
+	            }
 	        }
 	    },
 	    preparePrices: function(){

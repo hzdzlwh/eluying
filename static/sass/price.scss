@@ -21,7 +21,7 @@
         td.price {
             cursor: pointer;
         }
-        td.price.selected {
+        .mainClass .selected {
             border: 2px #4A90E2 solid;
         }
         td:nth-child(even) {
@@ -33,9 +33,6 @@
             color: #FFF;
             td {
                 height: auto;
-                div {
-
-                }
                 border: 1px #3E79BF solid;
                 p {
                     line-height: 25px;
@@ -46,11 +43,22 @@
             }
             .subPriceTd {
                 cursor: pointer;
+                div {
+                    margin: 2px;
+                    border: 2px transparent solid;
+                }
                 p {
                     cursor: pointer;
                 }
             }
+            .oldNetPrice {
+                div {
+                    margin: 2px;
+                    border: 2px transparent solid;
+                }
+            }
             .selected div {
+                margin: 2px;
                 border: 2px #fff solid;
             }
         }
