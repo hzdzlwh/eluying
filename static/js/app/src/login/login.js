@@ -106,11 +106,9 @@ $(document).ready(function(){
         GetLastUser();
     }
 
-    //$(".modal").modal({
-    //    backdrop: "static",
-    //    show: false,
-    //    keyboard: true
-    //});
+    $(".modal").modal({
+        show: false
+    });
     //function centerModals(){
     //    $('.modal').each(function(){
     //        var $clone = $(this).clone().css('display', 'block').appendTo('body');
@@ -125,7 +123,7 @@ $(document).ready(function(){
     //$(".btn-cancel").click(function(){
     //    $(this).parents(".modal").modal("hide");
     //});
-    modal.modalInit();
+    //modal.modalInit();
 
     $("#loginName").on("blur", GetPwdAndChk);
     $("#loginSave").on("click", SetPwdAndChk);
