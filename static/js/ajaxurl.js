@@ -1,8 +1,8 @@
 //测试服 http://121.41.109.105:8081/mg
 //本地服务器 http://192.168.0.2:8082/mg
 //var host = "http://121.41.109.105:8081/mg";
-//var host = "http://121.41.109.105:8081/mg";
-var host = "http://120.26.83.168:8081/mg";
+var host = "http://121.41.109.105:8081/mg";
+//var host = "http://120.26.83.168:8081/mg";
 //var host = "/mg";
 var loginUrl = "/user/login";
 var getRoomCategoryListUrl = "/category/getRoomCategoryList";
