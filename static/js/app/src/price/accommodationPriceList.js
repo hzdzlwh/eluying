@@ -88,7 +88,7 @@ var accommodationPriceList = {
         var thead = "<thead><tr><th>房型</th><th>价格类型</th>";
 
         for (i = 0;  i < 7; i++) {
-            thead += "<th><p>" + dateArray[i].toLocaleDateString().substring(5).replace("/", "-") + "</p><p>" +
+            thead += "<th><p>" + util.dateFormat(dateArray[i]).substring(5).replace("/", "-") + "</p><p>" +
                 (new Date().toDateString() ==  dateArray[i].toDateString() ? "今天" : util.getWeek(dateArray[i])) + "</p></th>"
         }
 

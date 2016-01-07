@@ -122,7 +122,12 @@ webpackJsonp([5],[
 	    },
 	
 	    dateFormat: function(date){
-	        return date.toLocaleDateString().replace(/\//g, "-");
+	        var y = date.getFullYear();
+	        var m = date.getMonth() + 1;
+	        m = m < 10 ? '0' + m : m;
+	        var d = date.getDate();
+	        d = d < 10 ? ('0' + d) : d;
+	        return y + '-' + m + '-' + d;
 	    },
 	
 	    prevWeek: function(){
@@ -474,7 +479,7 @@ webpackJsonp([5],[
 	        var thead = "<thead><tr><th>房型</th><th>价格类型</th>";
 	
 	        for (i = 0;  i < 7; i++) {
-	            thead += "<th><p>" + dateArray[i].toLocaleDateString().substring(5).replace("/", "-") + "</p><p>" +
+	            thead += "<th><p>" + util.dateFormat(dateArray[i]).substring(5).replace("/", "-") + "</p><p>" +
 	                (new Date().toDateString() ==  dateArray[i].toDateString() ? "今天" : util.getWeek(dateArray[i])) + "</p></th>"
 	        }
 	
