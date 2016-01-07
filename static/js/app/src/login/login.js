@@ -1,17 +1,23 @@
 /**
  * Created by huwanqi on 15/12/14.
  */
+var modal = require('modal');
+var loginValidate = require('loginValidate');
+var baseUrl = "http://192.168.0.2:8082/mg";
 
+var resposiveWindow = function(){
+    $("html").css({
+        "font-size": parseFloat($(window).width()) / 1920 * 20 + 'px'
+    });
+    $(window).on("resize", function(){
+        $("html").css({
+            "font-size": parseFloat($(window).width()) / 1920 * 20 + 'px'
+        });
+    })
+};
 
-var validate = require('loginValidate');
-var AJAXService = require("AJAXService");
-require("jquery");
-require("bootstrap");
-require("cookie");
-
-var baseUrl = AJAXService.urls.host;
 /*
-验证码按钮倒计时用。
+ 验证码按钮倒计时用。
  */
 var wait=60;
 function time(o) {
@@ -36,7 +42,7 @@ function time(o) {
 
 function forgetVCOnClick(){
     var phone = $("#loginForgetPwd .phone").val();
-    var result = validate.phoneValidate(phone);
+    var result = loginValidate.phoneValidate(phone);
     if(result == true){
         $("#loginForgetPwd .errorTips").hide();
         $(this).unbind("click");
@@ -64,7 +70,7 @@ function forgetVCOnClick(){
 
 function registerVCOnClick(){
     var phone = $("#loginRegister .phone").val();
-    var result = validate.phoneValidate(phone);
+    var result = loginValidate.phoneValidate(phone);
     if(result == true){
         $("#loginRegister .errorTips").hide();
         $(this).unbind("click");
@@ -94,31 +100,38 @@ function registerVCOnClick(){
 }
 
 $(document).ready(function(){
+    resposiveWindow();
+
     if (isPostBack == "False") {
         GetLastUser();
     }
 
-    $(".modal").modal({
-        backdrop: "static",
-        show: false,
-        keyboard: true
-    });
-    function centerModals(){
-        $('.modal').each(function(){
-            var $clone = $(this).clone().css('display', 'block').appendTo('body');
-            var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
-            top = top > 0 ? top : 0;
-            $clone.remove();
-            $(this).find('.modal-content').css("margin-top", top);
-        });
-    }
-    $('.modal').on('show.bs.modal', centerModals);
-    $(window).on('resize', centerModals);
-    $(".btn-cancel").click(function(){
-        $(this).parents(".modal").modal("hide");
-    });
+    //$(".modal").modal({
+    //    backdrop: "static",
+    //    show: false,
+    //    keyboard: true
+    //});
+    //function centerModals(){
+    //    $('.modal').each(function(){
+    //        var $clone = $(this).clone().css('display', 'block').appendTo('body');
+    //        var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
+    //        top = top > 0 ? top : 0;
+    //        $clone.remove();
+    //        $(this).find('.modal-content').css("margin-top", top);
+    //    });
+    //}
+    //$('.modal').on('show.bs.modal', centerModals);
+    //$(window).on('resize', centerModals);
+    //$(".btn-cancel").click(function(){
+    //    $(this).parents(".modal").modal("hide");
+    //});
+    modal.modalInit();
+
+    $("#loginName").on("blur", GetPwdAndChk);
+    $("#loginSave").on("click", SetPwdAndChk);
+
     /*
-    申请注册码和我有注册码切换
+     申请注册码和我有注册码切换
      */
     $("body").on("click", "#loginRegister .regCode .navs .item", function(){
         $("#loginRegister .regCode .navs .item").removeClass("active");
@@ -150,15 +163,15 @@ $(document).ready(function(){
         var verifyCode = $("#loginForgetPwd .verifyCode").val();
         var pwd = $("#loginForgetPwd .pwd").val();
         var pwdConfirm = $("#loginForgetPwd .pwdConfirm").val();
-        var result = validate.phoneValidate(phone);
+        var result = loginValidate.phoneValidate(phone);
         if(result == true) {
-            result = validate.verifyCodeValidate(verifyCode);
+            result = loginValidate.verifyCodeValidate(verifyCode);
         }
         if(result == true) {
-            result = validate.passwordValidate(pwd);
+            result = loginValidate.passwordValidate(pwd);
         }
         if(result == true) {
-            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
+            result = loginValidate.passwordConfirmValidate(pwd, pwdConfirm);
         }
         if(result === true){
             $.ajax({
@@ -197,7 +210,7 @@ $(document).ready(function(){
     $("#loginRegister .get_code").on("click", registerVCOnClick);
 
     /*
-    申请注册码或者注册
+     申请注册码或者注册
      */
     $("#loginRegister .confirm").on("click", function(){
         var phone = $("#loginRegister .phone").val();
@@ -206,18 +219,18 @@ $(document).ready(function(){
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $("#loginRegister .pwdConfirm").val();
         var name, campName, campAddress, registrationCode;
-        var result = validate.phoneValidate(phone);
+        var result = loginValidate.phoneValidate(phone);
         if(result == true){
-            result = validate.verifyCodeValidate(verifyCode);
+            result = loginValidate.verifyCodeValidate(verifyCode);
         }
         if(result == true){
-            result = validate.loginNameValidate(loginName);
+            result = loginValidate.loginNameValidate(loginName);
         }
         if(result == true){
-            result = validate.passwordValidate(pwd);
+            result = loginValidate.passwordValidate(pwd);
         }
         if(result == true){
-            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
+            result = loginValidate.passwordConfirmValidate(pwd, pwdConfirm);
         }
         var state = $(this).html();
         if(state == '申请'){
@@ -226,13 +239,13 @@ $(document).ready(function(){
             campAddress = $("#loginRegister .address").val();
             registrationCode = null;
             if(result == true){
-                result = validate.nameValidate(name);
+                result = loginValidate.nameValidate(name);
             }
             if(result == true){
-                result = validate.campNameValidate(campName);
+                result = loginValidate.campNameValidate(campName);
             }
             if(result == true){
-                result = validate.campAddressValidate(campAddress);
+                result = loginValidate.campAddressValidate(campAddress);
             }
         }else if(state == '注册'){
             name = $("#loginRegister .name2").val();
@@ -240,10 +253,10 @@ $(document).ready(function(){
             campAddress = null;
             registrationCode = $("#loginRegister .registrationCode").val();
             if(result == true){
-                result = validate.nameValidate(name);
+                result = loginValidate.nameValidate(name);
             }
             if(result == true){
-                result = validate.registrationCodeValidate(registrationCode);
+                result = loginValidate.registrationCodeValidate(registrationCode);
             }
         }
         if(result == true){
@@ -287,14 +300,14 @@ $(document).ready(function(){
     });
 
     /*
-    登录按钮响应
+     登录按钮响应
      */
-    $("#loginSection1 .log button").on("click", function(){
-        var loginName = $("#loginSection1 .log .loginName").val();
-        var password = $("#loginSection1 .log .password").val();
-        var result = validate.loginNameValidate(loginName);
+    $("#loginBox .log button").on("click", function(){
+        var loginName = $("#loginBox .log .loginName").val();
+        var password = $("#loginBox .log .password").val();
+        var result = loginValidate.loginNameValidate(loginName);
         if(result == true) {
-            result = validate.passwordValidate(password);
+            result = loginValidate.passwordValidate(password);
         }
         if(result === true){
             $.ajax({
@@ -310,49 +323,49 @@ $(document).ready(function(){
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        window.location.href = '/view/category/room.html';
+                        window.location.href = 'view/category/room.html';
                     }else{
-                        $("#loginSection1 .log .errorTips").html(data.msg);
-                        $("#loginSection1 .log .errorTips").show();
-                        $("#loginSection1 .log .text").css("margin-top", "30px");
+                        $("#loginBox .log .errorTips").html(data.msg);
+                        $("#loginBox .log .errorTips").show();
+                        $("#loginBox .log .text").css("margin-top", "30px");
                     }
                 },
                 error: function(data){
                     console.log(data);
                 }
             });
-            $("#loginSection1 .log .errorTips").hide();
-            $("#loginSection1 .log .text").css("margin-top", "44px");
+            $("#loginBox .log .errorTips").hide();
+            $("#loginBox .log .text").css("margin-top", "44px");
         }else{
-            $("#loginSection1 .log .errorTips").html(result);
-            $("#loginSection1 .log .errorTips").show();
-            $("#loginSection1 .log .text").css("margin-top", "30px");
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }
     });
 
     /*
-    登录表单验证
+     登录表单验证
      */
-    $("#loginSection1 .log .loginName").on("change", function(){
+    $("#loginBox .log .loginName").on("change", function(){
         var loginName = $(this).val();
-        var result = validate.loginNameValidate(loginName);
+        var result = loginValidate.loginNameValidate(loginName);
         if(result != true){
-            $("#loginSection1 .log .errorTips").html(result);
-            $("#loginSection1 .log .errorTips").show();
-            $("#loginSection1 .log .text").css("margin-top", "30px");
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }else {
-            $("#loginSection1 .log .errorTips").hide();
+            $("#loginBox .log .errorTips").hide();
         }
     });
-    $("#loginSection1 .log .password").on("change", function(){
+    $("#loginBox .log .password").on("change", function(){
         var password = $(this).val();
-        var result = validate.passwordValidate(password);
+        var result = loginValidate.passwordValidate(password);
         if(result != true){
-            $("#loginSection1 .log .errorTips").html(result);
-            $("#loginSection1 .log .errorTips").show();
-            $("#loginSection1 .log .text").css("margin-top", "30px");
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }else {
-            $("#loginSection1 .log .errorTips").hide();
+            $("#loginBox .log .errorTips").hide();
         }
     });
 
@@ -361,7 +374,7 @@ $(document).ready(function(){
      */
     $("#loginForgetPwd .phone").on("change", function(){
         var phone = $(this).val();
-        var result = validate.phoneValidate(phone);
+        var result = loginValidate.phoneValidate(phone);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -371,7 +384,7 @@ $(document).ready(function(){
     });
     $("#loginForgetPwd .verifyCode").on("change", function(){
         var verifyCode = $(this).val();
-        var result = validate.verifyCodeValidate(verifyCode);
+        var result = loginValidate.verifyCodeValidate(verifyCode);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -381,7 +394,7 @@ $(document).ready(function(){
     });
     $("#loginForgetPwd .pwd").on("change", function(){
         var pwd = $(this).val();
-        var result = validate.passwordValidate(pwd);
+        var result = loginValidate.passwordValidate(pwd);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
@@ -392,12 +405,12 @@ $(document).ready(function(){
     $("#loginForgetPwd .pwdConfirm").on("change", function(){
         var pwd = $("#loginForgetPwd .pwd").val();
         var pwdConfirm = $(this).val();
-        var result = validate.passwordValidate(pwd);
+        var result = loginValidate.passwordValidate(pwd);
         if(result != true){
             $("#loginForgetPwd .errorTips").html(result);
             $("#loginForgetPwd .errorTips").show();
         }else{
-            result = validate.passwordConfirmValidate(pwd, pwdConfirm);
+            result = loginValidate.passwordConfirmValidate(pwd, pwdConfirm);
             if(result != true){
                 $("#loginForgetPwd .errorTips").html(result);
                 $("#loginForgetPwd .errorTips").show();
@@ -412,7 +425,7 @@ $(document).ready(function(){
      */
     $("#loginRegister .phone").on("change", function(){
         var phone = $(this).val();
-        var result = validate.phoneValidate(phone);
+        var result = loginValidate.phoneValidate(phone);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -422,7 +435,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .verifyCode").on("change", function(){
         var verifyCode = $(this).val();
-        var result = validate.verifyCodeValidate(verifyCode);
+        var result = loginValidate.verifyCodeValidate(verifyCode);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -432,7 +445,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .loginName").on("change", function(){
         var loginName = $(this).val();
-        var result = validate.loginNameValidate(loginName);
+        var result = loginValidate.loginNameValidate(loginName);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -459,7 +472,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .pwd").on("change", function(){
         var pwd = $(this).val();
-        var result = validate.passwordValidate(pwd);
+        var result = loginValidate.passwordValidate(pwd);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -470,12 +483,12 @@ $(document).ready(function(){
     $("#loginRegister .pwdConfirm").on("change", function(){
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $(this).val();
-        var result = validate.passwordValidate(pwd);
+        var result = loginValidate.passwordValidate(pwd);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
         }else{
-            result = passwordConfirmValidate(pwd, pwdConfirm);
+            result = loginValidate.passwordConfirmValidate(pwd, pwdConfirm);
             if(result != true){
                 $("#loginRegister .errorTips").html(result);
                 $("#loginRegister .errorTips").show();
@@ -486,7 +499,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .name, #loginRegister .name2").on("change", function(){
         var name = $(this).val();
-        var result = validate.nameValidate(name);
+        var result = loginValidate.nameValidate(name);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -496,7 +509,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .campName").on("change", function(){
         var campName = $(this).val();
-        var result = validate.campNameValidate(campName);
+        var result = loginValidate.campNameValidate(campName);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -506,7 +519,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .address").on("change", function(){
         var address = $(this).val();
-        var result = validate.campAddressValidate(address);
+        var result = loginValidate.campAddressValidate(address);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -516,7 +529,7 @@ $(document).ready(function(){
     });
     $("#loginRegister .registrationCode").on("change", function(){
         var registrationCode = $(this).val();
-        var result = validate.registrationCodeValidate(registrationCode);
+        var result = loginValidate.registrationCodeValidate(registrationCode);
         if(result != true){
             $("#loginRegister .errorTips").html(result);
             $("#loginRegister .errorTips").show();
@@ -530,9 +543,9 @@ function GetLastUser() {
     var id = "49BAC005-7D5B-4231-8CEA-16939BEACD67";//GUID标识符
     var usr = GetCookie(id);
     if (usr != null) {
-        $("#loginSection1 .loginName").val(usr);
+        $("#loginBox .loginName").val(usr);
     } else {
-        $("#loginSection1 .loginName").val('');
+        $("#loginBox .loginName").val('');
     }
     GetPwdAndChk();
 }
@@ -540,13 +553,13 @@ function GetLastUser() {
 
 function SetPwdAndChk() {
     //取用户名
-    var usr = $("#loginSection1 .loginName").val();;
+    var usr = $("#loginBox .loginName").val();;
     //将最后一个用户信息写入到Cookie
     SetLastUser(usr);
     //如果记住密码选项被选中
     if (document.getElementById('loginSave').checked == true) {
         //取密码值
-        var pwd = $("#loginSection1 .password").val();
+        var pwd = $("#loginBox .password").val();
         var expdate = new Date();
         expdate.setTime(expdate.getTime() + 14 * (24 * 60 * 60 * 1000));
         //将用户名和密码写入到Cookie
@@ -570,14 +583,14 @@ function SetLastUser(usr) {
 //用户名失去焦点时调用该方法
 
 function GetPwdAndChk() {
-    var usr = $("#loginSection1 .loginName").val();
+    var usr = $("#loginBox .loginName").val();
     var pwd = GetCookie(usr);
     if (pwd != null) {
         document.getElementById('loginSave').checked = true;
-        $("#loginSection1 .password").val(pwd);
+        $("#loginBox .password").val(pwd);
     } else {
         document.getElementById('loginSave').checked = false;
-        $("#loginSection1 .password").val('');
+        $("#loginBox .password").val('');
     }
 }
 //取Cookie的值
@@ -616,7 +629,7 @@ function SetCookie(name, value, expires) {
 }
 
 function ResetCookie() {
-    var usr = $("#loginSection1 .loginName").val();;
+    var usr = $("#loginBox .loginName").val();;
     var expdate = new Date();
     SetCookie(usr, null, expdate);
 }
