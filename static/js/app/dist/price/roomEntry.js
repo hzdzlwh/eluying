@@ -58,7 +58,7 @@ webpackJsonp([8,9],[
 	    },
 	    "resize window": util.mainContainer,
 	    "show.bs.modal .modal": modal.centerModals,
-	    "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
+	    "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
 	
 	
 	};
@@ -422,6 +422,15 @@ webpackJsonp([8,9],[
 	    stringToDate: function(string){
 	        var array = string.split("-");
 	        return new Date(array[1] + " " +array[2]+","+array[0]);
+	    },
+	
+	    centroidDiv: function(dom, pdom){
+	        var cw = $(dom).width();
+	        var pw = $(pdom).width();
+	        $(dom).css({
+	            position: "relative",
+	            left: (pw-cw)/2
+	        });
 	    }
 	};
 	module.exports = util;

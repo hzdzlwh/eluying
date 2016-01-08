@@ -7,13 +7,7 @@
   <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/css/main.min.css">
-  <script src="/static/js/jquery.validate.min.js"></script>
-  <script src="/static/js/validation.js"></script>
-  <script src="/static/js/ajaxurl.js"></script>
-  <script src="/static/js/jquery.ui.widget.js"></script>
-  <script src="/static/js/jquery.iframe-transport.js"></script>
-  <script src="/static/js/jquery.fileupload.js"></script>
-  <script src="/static/js/bootstrap.min.js"></script>
+
   <!--[if lte IE 9]>
   <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
   <![endif]-->
@@ -583,197 +577,17 @@
       }
     }
 
-    //上架或者下架
-    function modifyState(item){
-      $.ajax({
-        url: getUrl(modifyStateUrl),
-        data: item,
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        },
-        success: function (result) {
-          if (!errorHandler(result)) {
-            return;
-          }
-          $.each(roomCategoryList.list, function(index, element){
-            if (element.id == item.id) {
-              roomCategoryList.list[index].state = item.state;
-              return false; //等于break
-            }
-          });
-          roomCategoryList.render();
-        }
-      })
-    }
 
-    //读取子房间列表
-    function loadSubRoom(id){
-      var str = "";
-      $.ajax({
-        url: getUrl(loadSubRoomUrl),
-        data: {id: id},
-        success: function(result){
-          $.each(result.data.list, function(index, element){
-            str += "<div class='room'><img src='/static/image/ic_close.png' /><p>"
-                    + element.serialNum + "</p>"
-                    + "<input type='text' class='hide editName' value='' maxlength='8'>"
-                    + "<input type='hidden' class='id' value='" + element.id + "' /><input type='hidden' value='0' class='status'></div>"
-          });
-          $(".roomContainer").html(str);
-          //点击子类房间名
-          $("#editRoom .room p").on("click", function(){
-            $(this).next(".editName").removeClass("hide").focus().val($(this).html());
-          });
-          $("#editRoom .editName").on("blur", function(){
-            $(this).addClass("hide");
-            $(this).parent(".room").find("p").html($(this).val());
-          });
-          $("#editRoom img").on("click", function(){
-            $(this).parent(".room").addClass("hide");
-            $(this).parent(".room").find(".status").val("1");
-          });
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        }
-      })
-    }
 
-    //读取房型列表
-    function loadRoomCategoryList() {
-      $.ajax({
-        url: getUrl(getRoomCategoryListUrl),
-        success: function (result) {
-          roomCategoryList.list = result.data.list;
-          roomCategoryList.render();
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          result.data.list = emptyFilter(result.data.list);
-          return JSON.stringify(result); //再转为字符串传回去
-        }
-      });
-    }
 
-    //新增房型
-    function addRoom(data, that){
-      data.subTypeList = JSON.stringify(data.subTypeList);
-      $.ajax({
-        url: getUrl(addAccommodationUrl),
-        type: "POST",
-        data: data,
-        success: function(result){
-          if (errorHandler(result)) {
-            clearModal(that);
-          } else {
-            return;
-          }
-          data.subTypeList = result.data.subTypeList;
-          data.state = 0;
-          data.id = result.data.id;
-          roomCategoryList.list.push(data);
-          roomCategoryList.render();
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        }
-      });
-    }
 
-    //编辑房型基本信息
-    function editRoomBasic(that, item){
-      $.ajax({
-        url: getUrl(editRoomBasicUrl),
-        type: "POST",
-        data: item,
-        success: function(result){
-          if (errorHandler(result)) {
-            clearModal(that);
-          } else {
-            return;
-          }
-          $.each(roomCategoryList.list, function(index, element){
-            if (element.id == item.id) {
-              for (var name in item) {
-                roomCategoryList.list[index][name] = item[name];
-              }
-              return false; //等于break
-            }
-          });
-          roomCategoryList.render();
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        }
-      });
-    }
 
-    //删除房型
-    function deleteRoom(){
-      var id = $(".mainActive .id").val();
-      $.ajax({
-        url: getUrl(deleteRoomUrl),
-        data: {id: id},
-        success: function(result){
-          if(!errorHandler(result)){
-            return;
-          }
-          $.each(roomCategoryList.list, function(index, element){
-            if (element.id == id) {
-              roomCategoryList.list.splice(index, 1);
-              return false; //等于break
-            }
-          });
-          roomCategoryList.render();
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        }
-      });
-    }
 
-    //子类管理
-    function subclassManage(that, item){
-      $.ajax({
-        url:  getUrl(subclassManageUrl),
-        type: "POST",
-        data: {
-          id: item.id,
-          subTypeList: JSON.stringify(item.subTypeList)
-        },
-        dataFilter: function (result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        },
-        success: function(result){
-          if (errorHandler(result)) {
-            clearModal(that);
-          } else {
-            return;
-          }
-          $.each(roomCategoryList.list, function(index, element){
-            if (element.id == item.id) {
-              roomCategoryList.list[index].subTypeList = result.data.list;
-              return false; //等于break
-            }
-          });
-          roomCategoryList.countInventory(item.id);
-          roomCategoryList.render();
-        }
-      })
-    }
+
+
+
+
+
 
     //房间编辑
     function editSubRoom(that, item){
@@ -1372,14 +1186,12 @@
 
 
 
-    $(function() {
-      //读取营地名称和用户名
-      $(".campName").html(localStorage.getItem("campName"));
-      $(".userName").find("a").html(localStorage.getItem("userName"));
-      loadRoomCategoryList();
-    })
+
   </script>
   <script src="/static/js/app/dist/common.js"></script>
   <script src="/static/js/app/dist/category/roomEntry.js"></script>
+  <script src="/static/js/jquery.ui.widget.js"></script>
+  <script src="/static/js/jquery.iframe-transport.js"></script>
+  <script src="/static/js/jquery.fileupload.js"></script>
 </body>
 </html>
