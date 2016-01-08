@@ -7,6 +7,7 @@
     <title>订单来了——库存管理</title>
     <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
     <!--<link rel="stylesheet" href="/static/bootstrap2/css/bootstrap.min.css">-->
     <!--[if lte IE 6]>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-ie6.css">
@@ -108,19 +109,12 @@
     <div class="mainContainer clearfloat" style="width: 1301px;">
         <div class="content clearfloat">
             <div class="title clearfloat">
-                <span class="campName">测试营地</span>
+                <span class="campName"></span>
                 <div class="datePick">
-                    <button onclick="lastWeak()">&lt前一周</button>
-                    <script>
-                        function lastWeak(){
-                            Dates.creation([2015,11,14]);
-                        }
-                    </script>
-                    <div class="dateContainer">
-                        <span id="dateInput"></span>
-                        <img class="clickDiv" onclick="laydate({elem: '#dateInput'});" src="/static/image/icon_calender_press.png" alt="日历">
-                    </div>
-                    <button>后一周&gt</button>
+                    <button class="prevWeek">&lt前一周</button>
+                    <input type="text" class="dateContainer" id="datePicker" />
+                    <label class="calender" for="datePicker"></label>
+                    <button class="nextWeek">后一周&gt</button>
                     <p class="tip">今天以前（包括今天）的价格不能修改！</p>
                 </div>
             </div>
@@ -300,7 +294,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="operate priceOperate">
+            <div class="operate inventoryOperate">
                 <div class="first">
                     <div class="operateItem">
                         <div class="clickDiv" id="delButton">

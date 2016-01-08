@@ -38,6 +38,8 @@ var AJAXService = {
         batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
         logoutUrl: "/user/logout",
         getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
+        getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
+        getRoomStatusUrl: '/inventory/getRoomStatus',
         sendVerifyCodeUrl: '/user/sendVerifyCode',
         resetPasswordUrl: '/user/resetPassword',
         registerUrl: '/user/register',

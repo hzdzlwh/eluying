@@ -16,6 +16,12 @@
       background-color: #488CDC;
     }
   }
+  .roomitem.selected{
+    border: solid thin white;
+  }
+  .statusitem.selected{
+    border: solid thin white;
+  }
 }
 
 #delPatch{

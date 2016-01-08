@@ -1,7 +1,10 @@
 .inventoryGrid {
   width: 900px;
+  max-height: 600px;
+  overflow-y: auto;
   border-top:4px solid #4A90E2;
   float: left;
+  margin-top: 20px;
   table {
     border-collapse: collapse;
     th {
@@ -188,4 +191,9 @@
   .footer{
     margin-top: 37px;
   }
+}
+
+.inventoryOperate{
+  margin-top: 20px;
+
 }

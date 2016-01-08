@@ -282,7 +282,7 @@ $(document).ready(function(){
                         if(state == '注册'){
                             $("#loginRegister").modal('hide');
                             $("#loginRegSuccess").modal('show');
-                            window.location.href = '/view/category/room.html';
+                            setTimeout("window.location.href = '/view/category/room.html';", 1000)
                         }else{
                             $("#loginRegister").modal('hide');
                             $("#loginApplySuccess").modal('show');
@@ -328,7 +328,7 @@ $(document).ready(function(){
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);
                         $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        window.location.href = 'view/category/room.html';
+                        setTimeout("window.location.href = 'view/category/room.html';", 1000);
                     }else{
                         $("#loginBox .log .errorTips").html(data.msg);
                         $("#loginBox .log .errorTips").show();

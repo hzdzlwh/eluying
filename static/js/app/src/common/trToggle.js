@@ -2,7 +2,7 @@
  * Created by huwanqi on 15/12/26.
  */
 function trToggle(pClass){
-    $(".mainClass").on("click", function(){
+    $("body").on("click", ".mainClass", function(){
         var that = $(this);
         if ($(this).nextUntil(".mainClass").hasClass("hide")) {
             $(this).find("img").addClass("rotate");
