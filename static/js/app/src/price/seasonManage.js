@@ -183,8 +183,53 @@ var seasonManage = {
         })
     },
 
+    setDaySelect: function(monthSelect, daySelect){
+        var month = monthSelect.val();
+        switch (month) {
+            case "01":
+            case "03":
+            case "05":
+            case "07":
+            case "08":
+            case "10":
+            case "12":
+                var day31 = '';
+                for (var i = 1; i < 32; i ++) {
+                    day31 += '<option value="' + (i < 10 ? '0' + i : i) + '">' + (i < 10 ? '0' + i : i) + '</option>'
+                }
+                daySelect.html(day31);
+                break;
+            case "04":
+            case "06":
+            case "09":
+            case "11":
+                var day30 = '';
+                for (var i = 1; i < 31; i ++) {
+                    day30 += '<option value="' + (i < 10 ? '0' + i : i) + '">' + (i < 10 ? '0' + i : i) + '</option>'
+                }
+                daySelect.html(day30);
+                break;
+            case "02":
+                var day29 = '';
+                for (var i = 1; i < 30; i ++) {
+                    day29 += '<option value="' + (i < 10 ? '0' + i : i) + '">' + (i < 10 ? '0' + i : i) + '</option>'
+                }
+                daySelect.html(day29);
+                break;
+            default:
+        }
+
+    },
 
     events: {
+
+        //点击月份选择
+        "change #editSeason .monthSelect": function(){
+            var monthSelect = $(this);
+            var daySelect = $(this).next("select");
+            seasonManage.setDaySelect(monthSelect, daySelect);
+        },
+
         "shown.bs.tab #editSeason a[data-toggle='tab']": function(){
             $("#editSeason .selected").removeClass("selected");
             $("#editSeason .operateItem").addClass("hide");

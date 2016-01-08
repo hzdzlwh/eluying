@@ -2,15 +2,14 @@ var logout = require("logout");
 var util = require("util");
 var header = {
     showHeader : function(){
-        var headerStr = "<div class='header clearfloat'><a class='logo' href='#'>订单来了</a><ul>"
+        var headerStr = "<div class='header clearfloat'><img src='/static/image/bannerLogo.png' width='100px' class='logo'><ul>"
             + "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>"
             + "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>"
             + "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>"
             + "</ul>"
             + "<div class='right'>"
-            + "<div class='userPhoto'><a href='#'><img src='/static/image/timg.jpg' alt='头像'></a></div>"
             + "<div class='userName'>"
-            + "<a href='#'></a>"
+            + "<span></span>"
             + "</div>"
             + "<div class='line'></div>"
             + "<div class='logout'>"
@@ -19,7 +18,7 @@ var header = {
             + "</div>"
             + "</div>";
         $("body").prepend(headerStr);
-        $(".userName").find("a").html(localStorage.getItem("userName"));
+        $(".userName").find("span").html(localStorage.getItem("userName"));
         var pathArray = window.location.pathname.split("/");
         var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");
