@@ -475,6 +475,7 @@ body{ padding: 0!important; overflow-x: hidden; }
   width: 1200px;
   margin: auto;
   height: 893px;
+  position: relative;
   .bg{
     width: 1920px;
     position: relative;
@@ -486,7 +487,7 @@ body{ padding: 0!important; overflow-x: hidden; }
     z-index: 2;
     position: absolute;
     left: 770px;
-    top: 365px;
+    top: 265px;
     border-radius: 5px;
     background: white;
     .errorTips{
