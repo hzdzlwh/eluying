@@ -2,6 +2,7 @@
  * Created by huwanqi on 15/12/14.
  */
 var modal = require('modal');
+var util = require('util');
 var loginValidate = require('loginValidate');
 var AJAXService = require('AJAXService');
 var baseUrl = AJAXService.urls.host;
@@ -100,7 +101,8 @@ function registerVCOnClick(){
 }
 
 $(document).ready(function(){
-    resposiveWindow();
+    util.centroidDiv("#loginBox .bg", '#loginBox');
+    util.centroidDiv(".loginPic img", '.loginPic');
 
     if (isPostBack == "False") {
         GetLastUser();

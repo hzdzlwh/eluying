@@ -80,6 +80,15 @@ var util = {
     stringToDate: function(string){
         var array = string.split("-");
         return new Date(array[1] + " " +array[2]+","+array[0]);
+    },
+
+    centroidDiv: function(dom, pdom){
+        var cw = $(dom).width();
+        var pw = $(pdom).width();
+        $(dom).css({
+            position: "relative",
+            left: (pw-cw)/2
+        });
     }
 };
 module.exports = util;
