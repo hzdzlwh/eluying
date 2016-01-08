@@ -16,9 +16,12 @@ $(document).ready(function(){
     util.mainContainer();
 
     trToggle();
-
     $.ajax({
         url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+        data:{
+            date: '2016-01-01',
+            type: 0
+        },
         dataFilter: function (result) {
             return AJAXService.sessionValidate(result);
         },
