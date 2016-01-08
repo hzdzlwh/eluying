@@ -45,7 +45,10 @@ gulp.task('webpack', function(){
                 "price/foodETEntry": "./static/js/app/src/price/foodETEntry.js",
                 "inventory/room": "./static/js/app/src/inventory/room.js",
                 "inventory/food": "./static/js/app/src/inventory/food.js",
-                "inventory/entertainment": "./static/js/app/src/inventory/entertainment.js"
+                "inventory/entertainment": "./static/js/app/src/inventory/entertainment.js",
+                "category/roomEntry": "./static/js/app/src/category/room/roomEntry.js",
+                "category/foodEntry": "./static/js/app/src/category/food/foodEntry.js",
+                "category/ETEntry": "./static/js/app/src/category/entertainment/ETEntry.js"
             },
             output: {
 
@@ -70,10 +73,12 @@ gulp.task('webpack', function(){
                     trToggle: path.join(__dirname,"./static/js/app/src/common/trToggle.js"),
                     loginValidate: path.join(__dirname,"./static/js/app/src/login/login.validate.js"),
                     modal: path.join(__dirname,"./static/js/app/src/common/modal.js"),
-                    validate: path.join(__dirname,"./static/js/jquery.validate.min.js"),
-                    validation: path.join(__dirname,"./static/js/validation.js"),
+                    validate: path.join(__dirname,"./static/js/lib/jquery.validate.min.js"),
+                    validation: path.join(__dirname,"./static/js/lib/validation.js"),
                     seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js"),
-                    monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js")
+                    monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js"),
+                    floatInfo: path.join(__dirname, "./static/js/app/src/common/floatInfo.js"),
+                    roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js")
                 }
             },
         devtool: "sourcemap"

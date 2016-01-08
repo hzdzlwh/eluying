@@ -11,13 +11,12 @@
     z-index: 999;
     @include minWidth();
     .logo {
+        margin-top: 14px;
         margin-left: 32px;
-        line-height: 52px;
-        font-size: 21px;
         float: left;
     }
     ul {
-        margin-left: 75px;
+        margin-left: 32px;
         float: left;
         li {
             float: left;
@@ -40,10 +39,6 @@
         color: #FFF;
         text-decoration: none;
     }
-    img {
-        width: 30px;
-        height: 30px;
-    }
     .userPhoto {
         border: 1px solid #FFF;
         border-radius: 100%;
@@ -52,10 +47,6 @@
         float: left;
         margin: 11px 0;
         overflow: hidden;
-        img {
-            width: 30px;
-            height: 30px;
-        }
     }
     .userName {
         width: 80px;
