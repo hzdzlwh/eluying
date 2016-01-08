@@ -103,6 +103,10 @@ function registerVCOnClick(){
 $(document).ready(function(){
     util.centroidDiv("#loginBox .bg", '#loginBox');
     util.centroidDiv(".loginPic img", '.loginPic');
+    $(window).on("resize", function(){
+        util.centroidDiv("#loginBox .bg", '#loginBox');
+        util.centroidDiv(".loginPic img", '.loginPic');
+    });
 
     if (isPostBack == "False") {
         GetLastUser();
@@ -128,7 +132,7 @@ $(document).ready(function(){
     //modal.modalInit();
 
     $("#loginName").on("blur", GetPwdAndChk);
-    $("#loginSave").on("click", SetPwdAndChk);
+    //$("#loginSave").on("click", SetPwdAndChk);
 
     /*
      申请注册码和我有注册码切换
@@ -319,6 +323,7 @@ $(document).ready(function(){
                 },
                 success: function(data){
                     if(data.code == 1){
+                        SetPwdAndChk(); //记住密码和账号
                         $("#loginLogSuccess").modal('show');
                         localStorage.setItem("campName", data.data.camps[0].name);
                         localStorage.setItem("userName", data.data.userName);

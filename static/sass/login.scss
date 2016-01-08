@@ -1,7 +1,7 @@
 html{
   font-size: 20px;
 }
-body{ padding: 0!important; }
+body{ padding: 0!important; overflow-x: hidden; }
 
 //#loginSection1 {
 //  height: 399px;
@@ -472,10 +472,9 @@ body{ padding: 0!important; }
 }
 
 #loginBox{
-  width: 100%;
-  min-width: 1200px;
+  width: 1200px;
+  margin: auto;
   height: 893px;
-  overflow-x: hidden;
   .bg{
     width: 1920px;
     position: relative;
