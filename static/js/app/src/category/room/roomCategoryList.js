@@ -112,7 +112,57 @@ var roomCategoryList = {
             floatInfo.hideMoreInfo(event, this)
         }
 
-    }
+    },
 
+    //上下架
+    modifyState: function(item){
+        $.ajax({
+            url: AJAXService.getUrl('modifyStateUrl'),
+            data: item,
+            dataFilter: function (result){
+                return AJAXService.sessionValidate(result);
+            },
+            success: function (result) {
+                if (!errorHandler(result)) {
+                    return;
+                }
+                $.each(roomCategoryList.list, function(index, element){
+                    if (element.id == item.id) {
+                        roomCategoryList.list[index].state = item.state;
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
+            }
+        })
+    },
+
+    //删除房型
+    deleteRoom: function(){
+        var id = $(".mainActive .id").val();
+        $.ajax({
+            url: getUrl(deleteRoomUrl),
+            data: {id: id},
+            success: function(result){
+                if(!errorHandler(result)){
+                    return;
+                }
+                $.each(roomCategoryList.list, function(index, element){
+                    if (element.id == id) {
+                        roomCategoryList.list.splice(index, 1);
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
+            },
+            dataFilter: function (result) {
+                result = JSON.parse(result); //先转为json
+                sessionValidate(result);
+                return JSON.stringify(result); //再转为字符串传回去
+            }
+        });
+    },
 
 };
+
+module.exports = roomCategoryList;

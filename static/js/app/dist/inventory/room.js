@@ -20,9 +20,12 @@ webpackJsonp([5,9],[
 	    util.mainContainer();
 	
 	    trToggle();
-	
 	    $.ajax({
 	        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+	        data:{
+	            date: '2016-01-01',
+	            type: 0
+	        },
 	        dataFilter: function (result) {
 	            return AJAXService.sessionValidate(result);
 	        },
@@ -382,6 +385,15 @@ webpackJsonp([5,9],[
 	    stringToDate: function(string){
 	        var array = string.split("-");
 	        return new Date(array[1] + " " +array[2]+","+array[0]);
+	    },
+	
+	    centroidDiv: function(dom, pdom){
+	        var cw = $(dom).width();
+	        var pw = $(pdom).width();
+	        $(dom).css({
+	            position: "relative",
+	            left: (pw-cw)/2
+	        });
 	    }
 	};
 	module.exports = util;
