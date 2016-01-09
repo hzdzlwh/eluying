@@ -8,7 +8,8 @@ require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
 var modal = require("modal");
-
+require("validate");
+require("validation");
 
 
 //初始化界面

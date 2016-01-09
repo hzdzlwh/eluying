@@ -1,6 +1,7 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
 var modal = require("modal");
+require("validate");
 
 var seasonManage = {
     fromBusyDate: "",
@@ -17,15 +18,19 @@ var seasonManage = {
             success: function(result){
                 $.each(result.data.list, function(index, element){
                     if (element.type === 1) {
-                        $("#fromBusyDate").datepicker( "setDate", element.startDate);
-                        $("#toBusyDate").datepicker( "setDate", element.endDate);
-                        seasonManage.fromBusyDate = element.startDate;
-                        seasonManage.toBusyDate = element.endDate;
+                        $("#busyStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
+                        $("#busyStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
+                        $("#busyEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
+                        $("#busyEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
+                        seasonManage.fromBusyDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
+                        seasonManage.toBusyDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
                     } else{
-                        $("#fromSlackDate").datepicker( "setDate", element.startDate);
-                        $("#toSlackDate").datepicker( "setDate", element.endDate);
-                        seasonManage.fromSlackDate = element.startDate;
-                        seasonManage.toSlackDate = element.endDate;
+                        $("#slackStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
+                        $("#slackStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
+                        $("#slackEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
+                        $("#slackEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
+                        seasonManage.fromSlackDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
+                        seasonManage.toSlackDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
                     }
                 });
                 seasonManage.getAccommodationPeriodicalPrice();
@@ -41,8 +46,8 @@ var seasonManage = {
             async: false,
             data: {
                 categoryId: $(".selected").attr("category-id"),
-                startDate: $("#fromBusyDate").val(),
-                endDate: $("#toBusyDate").val()
+                startDate: seasonManage.fromBusyDate,
+                endDate: seasonManage.toBusyDate
             },
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -66,8 +71,8 @@ var seasonManage = {
             url: AJAXService.getUrl("getAccommodationPeriodicalPrice"),
             data: {
                 categoryId: $(".selected").attr("category-id"),
-                startDate: $("#fromSlackDate").val(),
-                endDate: $("#toSlackDate").val()
+                startDate: seasonManage.fromSlackDate,
+                endDate: seasonManage.toSlackDate
             },
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -259,12 +264,18 @@ var seasonManage = {
             $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(1)").html());
         },
         "click #editSeasonSalePriceOk": function(){
+            if (!$("#editSeasonSalePrice form").valid()) {
+                return;
+            }
             $("#editSeason .selected").addClass("changed");
             var that = this;
             $(".selected").find("p").html($("#seasonRetailPrice").val());
             modal.clearModal(that);
         },
         "click #editSeasonNetPriceOk": function(){
+            if (!$("#editSeasonNetPrice form").valid()) {
+                return;
+            }
             $("#editSeason .selected").addClass("changed");
             var that = this;
             $(".selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());
@@ -300,6 +311,36 @@ var seasonManage = {
             } else {
                 modal.clearModal(that);
             }
+        },
+        "change #editSeason select": function(){
+            if ($(this).hasClass("monthSelect")) {
+                var dateStr = "2000-" + $(this).val() + "-" + $(this).next("select").val();
+                var date = util.stringToDate(dateStr);
+            } else {
+                var dateStr = "2000-" + $(this).prev("select").val() + "-" + $(this).val();
+                var date = util.stringToDate(dateStr);
+            }
+            if ($(this).attr("id") === "busyStartMonth" || $(this).attr("id") === "busyStartDay") {
+                date.setDate(date.getDate() - 1);
+                var dateArray = util.dateFormat(date).split("-");
+                $("#slackEndMonth [value=" + dateArray[1] +"]").prop("selected", true);
+                $("#slackEndDay [value=" + dateArray[2] +"]").prop("selected", true);
+            } else if ($(this).attr("id") === "busyEndMonth" || $(this).attr("id") === "busyEndDay") {
+                date.setDate(date.getDate() + 1);
+                var dateArray = util.dateFormat(date).split("-");
+                $("#slackStartMonth [value=" + dateArray[1] +"]").prop("selected", true);
+                $("#slackStartDay [value=" + dateArray[2] +"]").prop("selected", true);
+            } else if ($(this).attr("id") === "slackStartMonth" || $(this).attr("id") === "slackStartDay") {
+                date.setDate(date.getDate() - 1);
+                var dateArray = util.dateFormat(date).split("-");
+                $("#busyEndMonth [value=" + dateArray[1] +"]").prop("selected", true);
+                $("#busyEndDay [value=" + dateArray[2] +"]").prop("selected", true);
+            } else {
+                date.setDate(date.getDate() + 1);
+                var dateArray = util.dateFormat(date).split("-");
+                $("#busyStartMonth [value=" + dateArray[1] +"]").prop("selected", true);
+                $("#busyStartDay [value=" + dateArray[2] +"]").prop("selected", true);
+            }
         }
     },
     prepareData: function(that){
@@ -318,13 +359,13 @@ var seasonManage = {
         });
         var seasons = [
             {
-                startDate: $("#fromBusyDate").val(),
-                endDate: $("#toBusyDate").val(),
+                startDate: "2000-" + $("#busyStartMonth").val() + "-" + $("#busyStartDay").val(),
+                endDate: "2000-" + $("#busyEndMonth").val() + "-" + $("#busyEndDay").val(),
                 type: 1
             },
             {
-                startDate: $("#fromSlackDate").val(),
-                endDate: $("#toSlackDate").val(),
+                startDate: "2000-" + $("#slackStartMonth").val() + "-" + $("#slackStartDay").val(),
+                endDate: "2000-" + $("#slackEndMonth").val() + "-" + $("#slackEndDay").val(),
                 type: 0
             }
         ];

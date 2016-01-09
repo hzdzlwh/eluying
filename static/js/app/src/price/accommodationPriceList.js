@@ -2,6 +2,8 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 var trToggle = require("trToggle");
 var modal = require("modal");
+require("validate");
+
 var accommodationPriceList = {
     getAccommodationPriceList: function(startDate){
         var endDate = new Date(startDate);
@@ -59,10 +61,16 @@ var accommodationPriceList = {
             $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
         },
         "click #editSalePriceOk": function(){
+            if (!$("#editSalePrice form").valid()) {
+                return;
+            }
             var that = this;
             accommodationPriceList.editSalePrice(that);
         },
         "click #editNetPriceOk": function(){
+            if (!$("#editNetPrice form").valid()) {
+                return;
+            }
             var that = this;
             accommodationPriceList.editNetAgreePrice(that);
         }

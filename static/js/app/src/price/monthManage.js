@@ -1,6 +1,7 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
 var modal = require("modal");
+require("validate");
 
 var monthManage = {
     getAccommodationMonthPriceList: function(startDate){
@@ -257,12 +258,18 @@ var monthManage = {
             }
         },
         "click #editMonthSalePriceOk": function(){
+            if (!$("#editMonthSalePrice form").valid()) {
+                return;
+            }
             $("#editMonth .selected").find("p").html($("#monthRetailPrice").val());
             $("#editMonth .selected").addClass("changed");
             var that = this;
             modal.clearModal(that);
         },
         "click #editMonthNetPriceOk": function(){
+            if (!$("#editMonthNetPrice form").valid()) {
+                return;
+            }
             $("#editMonth .selected").find("p:eq(0)").html($("#monthCommissionPrice").val());
             $("#editMonth .selected").find("p:eq(1)").html($("#monthNetPrice").val());
             $("#editMonth .selected").addClass("changed");

@@ -4,7 +4,8 @@ var util = require("util");
 require("bootstrap");
 var modal = require("modal");
 var foodETPriceList = require("foodETPriceList");
-
+require("validate");
+require("validation");
 
 //初始化界面
 header.showHeader();
