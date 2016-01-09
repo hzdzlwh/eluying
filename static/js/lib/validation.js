@@ -1,4 +1,5 @@
-jQuery.extend(jQuery.validator.messages, {
+
+module.exports = jQuery.extend(jQuery.validator.messages, {
     required: "必选字段",
     remote: "请修正该字段",
     email: "请输入正确格式的电子邮件",
@@ -17,3 +18,4 @@ jQuery.extend(jQuery.validator.messages, {
     max: jQuery.validator.format("请输入一个最大为{0} 的值"),
     min: jQuery.validator.format("请输入一个最小为{0} 的值")
 });
+

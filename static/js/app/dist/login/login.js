@@ -7,7 +7,7 @@ webpackJsonp([6,9],[
 	 */
 	var modal = __webpack_require__(8);
 	var util = __webpack_require__(7);
-	var loginValidate = __webpack_require__(15);
+	var loginValidate = __webpack_require__(17);
 	var AJAXService = __webpack_require__(5);
 	var baseUrl = AJAXService.urls.host;
 	
@@ -286,7 +286,7 @@ webpackJsonp([6,9],[
 	                        if(state == '注册'){
 	                            $("#loginRegister").modal('hide');
 	                            $("#loginRegSuccess").modal('show');
-	                            window.location.href = '/view/category/room.html';
+	                            setTimeout("window.location.href = '/view/category/room.html';", 1000)
 	                        }else{
 	                            $("#loginRegister").modal('hide');
 	                            $("#loginApplySuccess").modal('show');
@@ -332,7 +332,7 @@ webpackJsonp([6,9],[
 	                        localStorage.setItem("campName", data.data.camps[0].name);
 	                        localStorage.setItem("userName", data.data.userName);
 	                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-	                        window.location.href = 'view/category/room.html';
+	                        setTimeout("window.location.href = 'view/category/room.html';", 1000);
 	                    }else{
 	                        $("#loginBox .log .errorTips").html(data.msg);
 	                        $("#loginBox .log .errorTips").show();
@@ -709,6 +709,9 @@ webpackJsonp([6,9],[
 	        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
 	        logoutUrl: "/user/logout",
 	        getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
+	        getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
+	        getRoomStatusUrl: '/inventory/getRoomStatus',
+	        modifyRoomStatusUrl: '/inventory/modifyRoomStatus',
 	        sendVerifyCodeUrl: '/user/sendVerifyCode',
 	        resetPasswordUrl: '/user/resetPassword',
 	        registerUrl: '/user/register',
@@ -944,6 +947,10 @@ webpackJsonp([6,9],[
 	        return new Date(array[1] + " " +array[2]+","+array[0]);
 	    },
 	
+	    diffDate: function(date, diff){
+	        return new Date(date.valueOf() + diff*24*60*60*1000);
+	    },
+	
 	    centroidDiv: function(dom, pdom){
 	        var cw = $(dom).width();
 	        var pw = $(pdom).width();
@@ -1087,7 +1094,9 @@ webpackJsonp([6,9],[
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ function(module, exports) {
 
 	/**

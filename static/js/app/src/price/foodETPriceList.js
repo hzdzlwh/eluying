@@ -2,6 +2,7 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 var trToggle = require("trToggle");
 var modal = require("modal");
+require("validate");
 var foodETPriceList = {
     getFoodETPriceList: function(path){
         $.ajax({
@@ -34,7 +35,7 @@ var foodETPriceList = {
         $("table").append(tbody);
         this.eventBind();
     },
-    editSalePrice: function(){
+    editSalePrice: function(that){
         $.ajax({
             url: AJAXService.getUrl("modifyDefaultPrice"),
             data: {
@@ -50,9 +51,9 @@ var foodETPriceList = {
             success: function(result){
                 if (util.errorHandler(result)) {
                     $(".selected").html($("#retailPrice").val());
-                    modal.clearModal(this);
+                    modal.clearModal(that);
                 }
-            }.bind(this)
+            }
         });
     },
     editNetAgreePrice: function(that){
@@ -102,8 +103,17 @@ var foodETPriceList = {
                 $("#netPrice").val($(".selected").find("p:eq(1)").html());
                 $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
             },
-            "click #editSalePriceOk": foodETPriceList.editSalePrice,
+            "click #editSalePriceOk": function(){
+                var that = this
+                if (!$("#editSalePrice form").valid()) {
+                    return;
+                }
+                foodETPriceList.editSalePrice(that)
+            },
             "click #editNetPriceOk": function(){
+                if (!$("#editNetPrice form").valid()) {
+                    return;
+                }
                 var that = this;
                 foodETPriceList.editNetAgreePrice(that);
             }
