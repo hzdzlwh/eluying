@@ -28,22 +28,34 @@ var IVENTORY = {
         }
     },
     update: function(){
-        //$(".inventoryGrid table tbody").html('');
-        var data = this.data;
-        var html = '';
-        data.forEach(function(i){
-            html += '<tr class="mainClass" cid="' + i.id + '" scid="' + i.subTypeId + '"> ' +
-                '<td> ' +
-                '<span>' + i.name + '</span> ' +
-                '<img src="/static/image/rotate.png" /> ' +
-                '</td> ' +
-                '<td><p>剩余</p><p>总量</p></td> ';
-            i.inventories.forEach(function(d){
-                html += '<td date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
-            });
-            html += '</tr>'
+        var that = this;
+        $.ajax({
+            url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+            data:{
+                date: that.start,
+                type: 0
+            },
+            dataFilter: function (result) {
+                return AJAXService.sessionValidate(result);
+            },
+            success: function(result){
+                var data = that.data = result.data.list;
+                var html = '';
+                data.forEach(function(i){
+                    html += '<tr class="mainClass" cid="' + i.id + '" scid="' + i.subTypeId + '"> ' +
+                        '<td> ' +
+                        '<span>' + i.name + '</span> ' +
+                        '<img src="/static/image/rotate.png" /> ' +
+                        '</td> ' +
+                        '<td><p>剩余</p><p>总量</p></td> ';
+                    i.inventories.forEach(function(d){
+                        html += '<td date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
+                    });
+                    html += '</tr>'
+                });
+                $(".inventoryGrid table tbody").html(html);
+            }
         });
-        $(".inventoryGrid table tbody").html(html);
     },
     changeStart: function(start){
         this.start = start;
@@ -154,7 +166,7 @@ var IVENTORY = {
 };
 
 var events = {
-    "click .prevWeek": function(){
+    "click .preWeek": function(){
         $(".editSalePrice").addClass("hide");
         $(".editNetPrice").addClass("hide");
         $(".second").addClass("hide");
@@ -328,6 +340,7 @@ var events = {
         }else{
             var open = 0;
             var dateList = [];
+            var flag = false;
             $(".roomDayItem.selected").each(function(){
                 var date = $(this).attr("date");
                 var status = $(this).attr("status");
@@ -335,7 +348,14 @@ var events = {
                 if(status == 0){
                     open = 1
                 } //有一个是关闭的，就是全打开操作；全都是打开的，就是全关闭操作
+                else if(status == 1){
+                    alert("房间已出售！不能关闭！");
+                    flag = true;
+                }
             });
+            if(flag){
+                return false;
+            }//如果选中的房间有已出售的，停止
             $.ajax({
                 url: AJAXService.getUrl("modifyRoomStatusUrl"),
                 data:{
@@ -349,6 +369,20 @@ var events = {
                 },
                 success: function(result){
                     IVENTORY.setPatchGrid();
+                    dateList.forEach(function(date){
+                        console.log(date);
+                        var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
+                        if(open == 1){
+                            dom.attr("status", '2');
+                            dom.removeClass("shut").addClass("notsale");
+                            dom.html('未售');
+                        }else{
+                            dom.attr("status", '0');
+                            dom.removeClass("notsale").addClass("shut");
+                            dom.html('已关闭');
+                        }
+                    });
+                    IVENTORY.updateLeft();
                 }
             });
         }
@@ -363,7 +397,8 @@ var events = {
         if(status == 2){
             open = 0;
         }else if(status == 1){
-
+            alert("已出售的房间不能关闭！");
+            return false;
         }else if(status == 0){
             open = 1;
         }
@@ -416,20 +451,7 @@ $(document).ready(function(){
     $("#datePicker").datepicker( "setDate", new Date());
 
     IVENTORY.updateTh();
-    $.ajax({
-        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
-        data:{
-            date: IVENTORY.start,
-            type: 0
-        },
-        dataFilter: function (result) {
-            return AJAXService.sessionValidate(result);
-        },
-        success: function(result){
-            IVENTORY.data = result.data.list;
-            IVENTORY.update();
-        }
-    });
+    IVENTORY.update();
 
     var localStorage = window.localStorage;
     $(".mainContainer .campName").html(localStorage.campName);

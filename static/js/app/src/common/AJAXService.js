@@ -41,6 +41,7 @@ var AJAXService = {
         getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
         getRoomStatusUrl: '/inventory/getRoomStatus',
         modifyRoomStatusUrl: '/inventory/modifyRoomStatus',
+        modifyExtraInventoryUrl: '/inventory/modifyExtraInventory',
         sendVerifyCodeUrl: '/user/sendVerifyCode',
         resetPasswordUrl: '/user/resetPassword',
         registerUrl: '/user/register',
