@@ -192,6 +192,7 @@ webpackJsonp([8,9],[
 	        getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
 	        getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
 	        getRoomStatusUrl: '/inventory/getRoomStatus',
+	        modifyRoomStatusUrl: '/inventory/modifyRoomStatus',
 	        sendVerifyCodeUrl: '/user/sendVerifyCode',
 	        resetPasswordUrl: '/user/resetPassword',
 	        registerUrl: '/user/register',
