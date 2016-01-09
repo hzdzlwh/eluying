@@ -40,8 +40,8 @@
                     <div class="monthPick">
                         <div class="month">11月</div>
                         <div class="pickers">
-                            <button>&lt前一周</button>
-                            <button>后一周&gt</button>
+                            <button class="preMonth">&lt前一月</button>
+                            <button class="nextMonth">后一月&gt</button>
                         </div>
                     </div>
                     <div class="patchGrid">
@@ -111,7 +111,7 @@
             <div class="title clearfloat">
                 <span class="campName"></span>
                 <div class="datePick">
-                    <button class="prevWeek">&lt前一周</button>
+                    <button class="preWeek">&lt前一周</button>
                     <input type="text" class="dateContainer" id="datePicker" />
                     <label class="calender" for="datePicker"></label>
                     <button class="nextWeek">后一周&gt</button>
@@ -303,7 +303,8 @@
                         </div>
                     </div>
                     <div class="operateItem">
-                        <div class="clickDiv" id="delPatchButton" data-toggle="modal" data-target="#delPatch">
+                        <!--<div class="clickDiv" id="delPatchButton" data-toggle="modal" data-target="#delPatch">-->
+                        <div class="clickDiv" id="delPatchButton">
                             <img src="/static/image/icon_bianjijibenxinxi.png" alt="批量关闭">
                             <p>批量关闭</p>
                         </div>
