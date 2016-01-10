@@ -127,13 +127,18 @@ var IVENTORY = {
                         html += '<td class="empty"><p>' + tempDate.getDate() + '日</p><p>' + '' + '</p></td>';
                         tempDate = util.diffDate(tempDate, 1);
                     }
+                    var today = new Date();
                     result.data.list.forEach(function(d){
                         tempDate = util.stringToDate(d.date);
                         var status = d.status;
+                        var classStr = "roomDayItem " + statusList[status].classStr;
+                        if(util.compareDates(today, tempDate)){
+                            classStr = "empty";
+                        }
                         if(tempDate.getDay() == 1){
                             html += '<tr>';
                         }
-                        html += '<td status="' + d.status + '" date="' + d.date + '" class="roomDayItem ' + statusList[status].classStr + '"><p>' + tempDate.getDate()
+                        html += '<td status="' + d.status + '" date="' + d.date + '" class="' + classStr + '"><p>' + tempDate.getDate()
                             + '日</p><p>' + statusList[status].text + '</p></td>';
                         if(tempDate.getDay() == 0){
                             html += '</tr>'

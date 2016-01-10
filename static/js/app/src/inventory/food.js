@@ -287,7 +287,7 @@ var events = {
         for(var total in hash){
             var dateList = hash[total];
             $.ajax({
-                url: AJAXService.getUrl("modifyExtraServiceInventoryBatchUrl"),
+                url: AJAXService.getUrl("modifyExtraInventoryBatchUrl"),
                 async: false,
                 data:{
                     categoryId: IVENTORY.selectedFood.id,
@@ -308,7 +308,7 @@ var events = {
     'click body #editPatchCancel': function(){
         $("#editPatch").modal("hide");
     },
-    'click body #preMonth': function(){
+    'click body #prevMonth': function(){
         if(IVENTORY.patchMonth == 0){
             IVENTORY.patchMonth = 11;
             IVENTORY.patchYear--;
