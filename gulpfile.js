@@ -58,11 +58,11 @@ gulp.task('webpack', function(){
             resolve: {
                 extensions: ['.js', ""],
                 alias: {
-                    cookie: path.join(__dirname,"./static/js/jquery.cookie.js"),
-                    jquery: path.join(__dirname,"./static/js/jquery.min.js"),
+                    cookie: path.join(__dirname,"./static/js/lib/jquery.cookie.js"),
+                    jquery: path.join(__dirname,"./static/js/lib/jquery.min.js"),
                     jqueryui: path.join(__dirname,"./static/js/lib/jquery-ui.min.js"),
                     "datepicker-zh": path.join(__dirname,"./static/js/lib/datepicker-zh-CN.js"),
-                    bootstrap: path.join(__dirname,"./static/js/bootstrap.min.js"),
+                    bootstrap: path.join(__dirname,"./static/js/lib/bootstrap.min.js"),
                     header: path.join(__dirname,"./static/js/app/src/common/header.js"),
                     leftMenu: path.join(__dirname,"./static/js/app/src/common/leftMenu.js"),
                     util: path.join(__dirname,"./static/js/app/src/common/util.js"),
@@ -78,7 +78,10 @@ gulp.task('webpack', function(){
                     seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js"),
                     monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js"),
                     floatInfo: path.join(__dirname, "./static/js/app/src/common/floatInfo.js"),
-                    roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js")
+                    roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js"),
+                    fileupload: path.join(__dirname,"./static/js/lib/jquery.fileupload.js"),
+                    "jquery.ui.widget": path.join(__dirname,"./static/js/lib/jquery.ui.widget.js"),
+                    iframe: path.join(__dirname,"./static/js/lib/jquery.iframe-transport.js")
                 }
             },
         devtool: "sourcemap"

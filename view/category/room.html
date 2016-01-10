@@ -1,1197 +1,598 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
-  <title>订单来了——品类管理</title>
-  <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/css/main.min.css">
-
-  <!--[if lte IE 9]>
-  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
-  <![endif]-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>订单来了——品类管理</title>
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.min.css">
 </head>
 <body>
-  <!-- 新增房型模态框 -->
-  <div class="modal fade" role="dialog" id="createRoom">
+<!-- 新增房型模态框 -->
+<div class="modal fade" role="dialog" id="createRoom">
     <div class="modal-dialog modal-w1130">
-      <div class="modal-content clearfloat">
-        <div class="createRoom clearfloat">
-          <form class="inputFiled rightBorder">
-              <h1>新增房型</h1>
-              <h2>基本信息</h2>
-              <ul>
-                <li><label for="createRoomName">房型名称</label>
-                  <input maxlength="16" required id="createRoomName" name="createRoomName" type="text" class="text required" placeholder="用于展示给客户" /></li>
-                <li><label for="createRoomShortName">简称</label>
-                  <input maxlength="6" type="text" name="createRoomShortName" class="text required" id="createRoomShortName" placeholder="用于自己管理" /></li>
-                <li><label for="createRoomPrice">价格</label>
-                  <input range="[0,99999999]" maxlength="8" number="true" type="text" name="createRoomPrice" class="text required" id="createRoomPrice" placeholder="请填写纯数字" />
-                  <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
-                <li><label for="createRoomFitNum">可容纳人数</label>
-                  <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomFitNum" class="text required" id="createRoomFitNum" placeholder="请填写纯数字" /></li>
-                <li><label for="createRoomUnit">单位</label>
-                  <input maxlength="8" type="text" name="createRoomUnit" class="text required" id="createRoomUnit" placeholder="请填写单位" /></li>
-                <li><label for="createRoomInventory">默认房间数</label>
-                  <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomInventory" class="text required" id="createRoomInventory" placeholder="请填写纯数字" />
-                  <p>可以在房态管理中，管理每天的房间库存</p></li>
-              </ul>
-          </form>
-          <div class="mid clearfloat">
-            <div class="title">
-              <h2>管理子类</h2>
-              <div class="create" data-toggle="modal" data-target="#createSubclass">
-                <img src="/static/image/icon_xinjian.png" alt="新增">
-                <span>新增子类</span>
-              </div>
-            </div>
-            <div class="border-top-4px grid">
-              <table>
-                <thead>
-                  <tr class="head">
-                    <th>名称</th>
-                    <th>简称</th>
-                    <th>房间数</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="operate">
-            <div class="first">
-              <div class="operateItem hide">
-                <div class="clickDiv" id="createRoomEdit" data-toggle="modal" data-target="#editSubclass">
-                  <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-                  <p>编辑信息</p>
-                </div>
-              </div>
-              <div class="operateItem hide">
-                <div id="createRoomDelete" class="clickDiv">
-                  <img src="/static/image/icon_shanchu.png" alt="">
-                  <p>删除</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer">
-          <button class="btn-cancel" id="createRoomCancel">取消</button>
-          <button class="btn-ok" id="createRoomOk">确认</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 编辑基本信息 -->
-  <div class="modal fade" role="dialog" id="editBasicInfo">
-      <div class="modal-dialog modal-w506">
-          <div class="modal-content clearfloat">
-              <div class="editBasicInfo clearfloat">
-                  <form class="inputFiled">
-                      <h1>编辑房型</h1>
-                      <h2>基本信息</h2>
-                      <ul>
-                          <li><label for="editRoomName">房型名称</label>
-                              <input maxlength="16" type="text" id="editRoomName" name="editRoomName" class="text required" placeholder="用于展示给客户" /></li>
-                          <li><label for="editRoomShortName">简称</label>
-                              <input maxlength="6" type="text" id="editRoomShortName" name="editRoomShortName" class="text required" placeholder="用于自己管理" /></li>
-                          <li><label for="editRoomPrice">价格</label>
-                              <input maxlength="8" range="[0,99999999]" type="text" number="true" id="editRoomPrice" name="editRoomPrice" class="text required" placeholder="请填写纯数字" />
-                              <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
-                          <li><label for="editRoomFitNum">可容纳人数</label>
-                              <input maxlength="8" range="[0,99999999]" digits="true" type="text" id="editRoomFitNum" name="editRoomFitNum" class="text required" placeholder="请填写纯数字" /></li>
-                          <li><label for="editRoomUnit">单位</label>
-                              <input maxlength="8" type="text" id="editRoomUnit" name="editRoomUnit" class="text required" placeholder="请填写单位" /></li>
-                      </ul>
-                  </form>
-              </div>
-              <div class="footer">
-                  <button class="btn-cancel">取消</button>
-                  <button class="btn-ok" id="editRoomBasicOk">确认</button>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- 子类管理模态框 -->
-  <div class="modal fade" role="dialog" id="subclassManagement">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <div class="subclassManagement clearfloat">
-          <div class="mid clearfloat">
-            <div class="title">
-              <h2>管理子类</h2>
-              <div class="create" data-toggle="modal" data-target="#createSubclass">
-                <img src="/static/image/icon_xinjian.png" alt="新增">
-                <span>新增子类</span>
-              </div>
-            </div>
-            <div class="border-top-4px grid">
-              <table>
-                <thead>
-                <tr class="head">
-                  <th>名称</th>
-                  <th>简称</th>
-                  <th>房间数</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="operate">
-            <div class="first">
-              <div class="operateItem hide">
-                <div class="clickDiv" data-toggle="modal" data-target="#editSubclass" id="subManageEditButton">
-                  <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-                  <p>编辑信息</p>
-                </div>
-              </div>
-              <div class="operateItem hide">
-                <div class="clickDiv" id="deleteSubclassButton">
-                  <img src="/static/image/icon_shanchu.png" alt="">
-                  <p>删除</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer">
-          <button class="btn-cancel" id="subclassManagementCancel">取消</button>
-          <button class="btn-ok" id="subclassManagementOk">确认</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 新增子类模态框 -->
-  <div class="modal fade" role="dialog" id="createSubclass">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <div class="createSubclass clearfloat">
-          <form class="inputFiled">
-            <h1>新增子类</h1>
-            <ul>
-              <li>
-                <label for="createSubclassName">名称</label>
-                <input maxlength="16" type="text" class="text required" id="createSubclassName" name="createSubclassName" placeholder="用于展示给客户">
-              </li>
-              <li>
-                <label for="createSubclassShortName">简称</label>
-                <input maxlength="6" type="text" class="text required" id="createSubclassShortName" name="createSubclassShortName" placeholder="用于自己管理">
-              </li>
-              <li>
-                <label for="createSubclassInventory">房间数</label>
-                <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required" id="createSubclassInventory" name="createSubclassInventory" placeholder="请填写纯数字">
-              </li>
-            </ul>
-          </form>
-          <div class="footer">
-            <button class="btn-cancel">取消</button>
-            <button class="btn-ok" id="createSubclassOk">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 编辑子类模态框 -->
-  <div class="modal fade" role="dialog" id="editSubclass">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <div class="createSubclass clearfloat">
-          <form class="inputFiled">
-            <h1>编辑子类</h1>
-            <ul>
-              <li>
-                <label for="editSubclassName">名称</label>
-                <input maxlength="16" type="text" class="text required" id="editSubclassName" name="editSubclassName" placeholder="用于展示给客户">
-              </li>
-              <li>
-                <label for="editSubclassShortName">简称</label>
-                <input maxlength="6" type="text" class="text required" id="editSubclassShortName" name="editSubclassShortName" placeholder="用于自己管理">
-              </li>
-              <li>
-                <label for="editSubclassInventory">房间数</label>
-                <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required" id="editSubclassInventory" name="editSubclassInventory" placeholder="请填写纯数字">
-              </li>
-            </ul>
-          </form>
-          <div class="footer">
-            <button class="btn-cancel" id="editSubclassCancel">取消</button>
-            <button class="btn-ok" id="editSubclassOk">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 编辑展示信息 -->
-  <div class="modal fade" role="dialog" id="editDisplayInfo">
-    <div class="modal-dialog modal-w1130">
-      <div class="modal-content clearfloat">
-        <div class="editDisplayInfo clearfloat">
-            <h1>编辑展示信息-双人帐篷</h1>
-            <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs clearfloat" role="tablist">
-              <li role="presentation" class="active leftTab nav-tabs-li"><a class="leftTab" href="#type" aria-controls="type" role="tab" data-toggle="tab">房型规格</a></li>
-              <li role="presentation" class="rightTab nav-tabs-li"><a class="rightTab" href="#facility" aria-controls="facility" role="tab" data-toggle="tab">房型设施</a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content clearfloat">
-              <!-- 房型规格 -->
-              <div role="tabpanel" class="tab-pane active clearfloat" id="type">
+        <div class="modal-content clearfloat">
+            <div class="createRoom clearfloat">
                 <form class="inputFiled rightBorder">
-                  <h2>基本规格</h2>
-                  <ul>
-                    <li>
-                      <label for="roomShowFitNum">可容纳人数</label>
-                      <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="roomShowFitNum" name="roomShowFitNum" placeholder="请填写纯数字">
-                    </li>
-                    <li>
-                      <label for="roomShowArea">房间面积</label>
-                      <input maxlength="8" range="[1,99999999]" number="true" type="text" class="text required" id="roomShowArea" name="roomShowArea" placeholder="单位：平方米">
-                    </li>
-                    <li>
-                      <label for="roomShowBed">床型</label>
-                      <input maxlength="8" type="text" class="text required" id="roomShowBed" name="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长8个汉字">
-                    </li>
-                    <li>
-                      <label for="roomShowDescription">描述或备注</label>
-                      <textarea maxlength="140" name="description" id="roomShowDescription" name="roomShowDescription" placeholder="最长140个汉字"></textarea>
-                    </li>
-                  </ul>
-                </form>
-                <div class="clearfloat">
-                  <div class="photo">
-                    <h2>图片管理</h2>
-                    <div class="cover">
-                      <div class="title clearfloat">
-                        <span>封面</span>
-                        <label for="cover" class="create">
-                          <img src="/static/image/icon_xinjian.png" alt="新增">
-                          <span>上传图片</span>
-                        </label>
-                          <input id="cover" type="file" name="file" accept="image/*"/>
-                      </div>
-                      <div class="photoContainer"></div>
-                      <p class="coverError hide">请上传封面<p>
-                    </div>
-                    <div class="detail">
-                      <div class="title clearfloat">
-                        <span>详细图片</span>
-                        <label for="detail" class="create">
-                          <img src="/static/image/icon_xinjian.png" alt="新增">
-                          <span>上传图片</span>
-                        </label>
-                        <input id="detail" type="file" name="file" accept="image/*"/>
-                      </div>
-                      <div class="photoContainer"></div>
-                      <p class="detailError hide">请上传详细图片<p>
-                    </div>
-                  </div>
-                  <div class="operate">
-                    <div class="first">
-                      <div class="operateItem hide">
-                        <label for="cover" id="replaceCover" class="clickDiv">
-                          <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-                          <p>替换图片</p>
-                        </label>
-                      </div>
-                      <div class="operateItem hide">
-                        <div id="deleteCover" class="clickDiv">
-                          <img src="/static/image/icon_shanchu.png" alt="">
-                          <p>删除</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="second">
-                      <div class="operateItem hide">
-                        <label for="replaceDetailImg" id="replaceDetail" class="clickDiv">
-                          <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-                          <p>替换图片</p>
-                        </label>
-                        <input type="file" name="file" id="replaceDetailImg" accept="image/*"/>
-                      </div>
-                      <div class="operateItem hide">
-                        <div id="deleteDetail" class="clickDiv">
-                          <img src="/static/image/icon_shanchu.png" alt="">
-                          <p>删除</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 房型设施 -->
-              <div role="tabpanel" class="tab-pane clearfloat" id="facility">
-                <form class="inputFiled rightBorder">
-                  <h2>基础设施</h2>
-                  <ul>
-                    <li>
-                      <label>热水供应</label>
-                      <input type="radio" class="Y required" id="hotWaterY" name="hotWater" value="1">有，请描述时间段&nbsp;
-                      <input type="radio" class="N" id="hotWaterN" name="hotWater" value="0">无<br/>
-                      <div>
-                        <label for="hotWaterDescription">描述</label>
-                        <input maxlength="8" type="text" id="hotWaterDescription" name="hotWaterDescription" class="text required" placeholder="例如：24小时/8:00~22:00,最长8个汉字">
-                      </div>
-                    </li>
-                    <li>
-                      <label>早餐</label>
-                      <input type="radio" class="Y required" id="breakfastY" name="breakfast" value="1">有，请描述&nbsp;
-                      <input type="radio" class="N" id="breakfastN" name="breakfast" value="0">无<br />
-                      <div>
-                        <label>描述</label>
-                        <input maxlength="8" type="text" id="breakfastDescription" name="breakfastDescription" class="text required" placeholder="例如：中式早餐/面包+牛奶,最长8个汉字">
-                      </div>
-                    </li>
-                    <li>
-                      <label>浴室</label>
-                      <input type="radio" class="required" id="publicBathroom" name="bathroom" value="公共浴室">公共浴室&nbsp;
-                      <input type="radio" id="independentBathroom" name="bathroom" value="独立浴室">独立浴室&nbsp;
-                      <input type="radio" id="bathroomN" name="bathroom" value="0">无
-                    </li>
-                    <li>
-                      <label>厕所</label>
-                      <input type="radio" class="required" id="publicToilet" name="toilet" value="公共厕所">公共厕所&nbsp;
-                      <input type="radio" id="independentToilet" name="toilet" value="独立厕所">独立厕所&nbsp;
-                      <input type="radio" id="toiletN" name="toilet" value="0">无
-                    </li>
-                    <li>
-                      <label>营地管家</label>
-                      <input type="radio" class="required" id="butlerY" name="butler" value="1">有&nbsp;
-                      <input type="radio" id="butlerN" name="butler" value="0">无
-                    </li>
-                    <li>
-                      <label>网络</label>
-                      <input type="radio" class="Y required" id="networkY" name="network" value="1">有&nbsp;
-                      <input type="radio" class="N" id="networkN" name="network" value="0">无<br/>
-                      <div>
-                        <label>描述</label>
-                        <input maxlength="8" type="text" id="networkDescription" class="text required" name="networkDescription" placeholder="例如：免费WIFI/收费有线宽带，最长8个汉字">
-                      </div>
-                    </li>
-                  </ul>
+                    <h1>新增房型</h1>
+                    <h2>基本信息</h2>
+                    <ul>
+                        <li><label for="createRoomName">房型名称</label>
+                            <input maxlength="16" required id="createRoomName" name="createRoomName" type="text"
+                                   class="text required" placeholder="用于展示给客户"/></li>
+                        <li><label for="createRoomShortName">简称</label>
+                            <input maxlength="6" type="text" name="createRoomShortName" class="text required"
+                                   id="createRoomShortName" placeholder="用于自己管理"/></li>
+                        <li><label for="createRoomPrice">价格</label>
+                            <input range="[0,99999999]" maxlength="8" number="true" type="text" name="createRoomPrice"
+                                   class="text required" id="createRoomPrice" placeholder="请填写纯数字"/>
+                            <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
+                        <li><label for="createRoomFitNum">可容纳人数</label>
+                            <input range="[1,99999999]" maxlength="8" digits="true" type="text" name="createRoomFitNum"
+                                   class="text required" id="createRoomFitNum" placeholder="请填写纯数字"/></li>
+                        <li><label for="createRoomUnit">单位</label>
+                            <input maxlength="8" type="text" name="createRoomUnit" class="text required"
+                                   id="createRoomUnit" placeholder="请填写单位"/></li>
+                        <li><label for="createRoomInventory">默认房间数</label>
+                            <input range="[1,99999999]" maxlength="8" digits="true" type="text"
+                                   name="createRoomInventory" class="text required" id="createRoomInventory"
+                                   placeholder="请填写纯数字"/>
+                            <p>可以在房态管理中，管理每天的房间库存</p></li>
+                    </ul>
                 </form>
                 <div class="mid clearfloat">
-                  <div class="title">
-                    <h2>其他设施</h2>
-                    <div class="create" data-toggle="modal" data-target="#createFacility">
-                      <img src="/static/image/icon_xinjian.png" alt="新增">
-                      <span>新增设施</span>
+                    <div class="title">
+                        <h2>管理子类</h2>
+                        <div class="create" data-toggle="modal" data-target="#createSubclass">
+                            <img src="/static/image/icon_xinjian.png" alt="新增">
+                            <span>新增子类</span>
+                        </div>
                     </div>
-                  </div>
-                  <div class="border-top-4px grid">
-                    <table>
-                      <thead>
-                        <tr class="head">
-                          <th>名称</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      </tbody>
-                    </table>
-                  </div>
+                    <div class="border-top-4px grid">
+                        <table>
+                            <thead>
+                            <tr class="head">
+                                <th>名称</th>
+                                <th>简称</th>
+                                <th>房间数</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="operate facilityOperate">
-                  <div class="first">
-                    <div class="operateItem hide">
-                      <div class="clickDiv" id="editFacilityButton" data-toggle="modal" data-target="#editFacility">
-                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-                        <p>编辑信息</p>
-                      </div>
+                <div class="operate">
+                    <div class="first">
+                        <div class="operateItem hide">
+                            <div class="clickDiv" id="createRoomEdit" data-toggle="modal" data-target="#editSubclass">
+                                <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                <p>编辑信息</p>
+                            </div>
+                        </div>
+                        <div class="operateItem hide">
+                            <div id="createRoomDelete" class="clickDiv">
+                                <img src="/static/image/icon_shanchu.png" alt="">
+                                <p>删除</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="operateItem hide">
-                      <div class="clickDiv" id="deleteFacility">
+                </div>
+            </div>
+            <div class="footer">
+                <button class="btn-cancel" id="createRoomCancel">取消</button>
+                <button class="btn-ok" id="createRoomOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑基本信息 -->
+<div class="modal fade" role="dialog" id="editBasicInfo">
+    <div class="modal-dialog modal-w506">
+        <div class="modal-content clearfloat">
+            <div class="editBasicInfo clearfloat">
+                <form class="inputFiled">
+                    <h1>编辑房型</h1>
+                    <h2>基本信息</h2>
+                    <ul>
+                        <li><label for="editRoomName">房型名称</label>
+                            <input maxlength="16" type="text" id="editRoomName" name="editRoomName"
+                                   class="text required" placeholder="用于展示给客户"/></li>
+                        <li><label for="editRoomShortName">简称</label>
+                            <input maxlength="6" type="text" id="editRoomShortName" name="editRoomShortName"
+                                   class="text required" placeholder="用于自己管理"/></li>
+                        <li><label for="editRoomPrice">价格</label>
+                            <input maxlength="8" range="[0,99999999]" type="text" number="true" id="editRoomPrice"
+                                   name="editRoomPrice" class="text required" placeholder="请填写纯数字"/>
+                            <p>可以在房价管理中，管理每天的房价，网络价和零售价默认一致</p></li>
+                        <li><label for="editRoomFitNum">可容纳人数</label>
+                            <input maxlength="8" range="[0,99999999]" digits="true" type="text" id="editRoomFitNum"
+                                   name="editRoomFitNum" class="text required" placeholder="请填写纯数字"/></li>
+                        <li><label for="editRoomUnit">单位</label>
+                            <input maxlength="8" type="text" id="editRoomUnit" name="editRoomUnit" class="text required"
+                                   placeholder="请填写单位"/></li>
+                    </ul>
+                </form>
+            </div>
+            <div class="footer">
+                <button class="btn-cancel">取消</button>
+                <button class="btn-ok" id="editRoomBasicOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 子类管理模态框 -->
+<div class="modal fade" role="dialog" id="subclassManagement">
+    <div class="modal-dialog modal-w626">
+        <div class="modal-content clearfloat">
+            <div class="subclassManagement clearfloat">
+                <div class="mid clearfloat">
+                    <div class="title">
+                        <h2>管理子类</h2>
+                        <div class="create" data-toggle="modal" data-target="#createSubclass">
+                            <img src="/static/image/icon_xinjian.png" alt="新增">
+                            <span>新增子类</span>
+                        </div>
+                    </div>
+                    <div class="border-top-4px grid">
+                        <table>
+                            <thead>
+                            <tr class="head">
+                                <th>名称</th>
+                                <th>简称</th>
+                                <th>房间数</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="operate">
+                    <div class="first">
+                        <div class="operateItem hide">
+                            <div class="clickDiv" data-toggle="modal" data-target="#editSubclass"
+                                 id="subManageEditButton">
+                                <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                <p>编辑信息</p>
+                            </div>
+                        </div>
+                        <div class="operateItem hide">
+                            <div class="clickDiv" id="deleteSubclassButton">
+                                <img src="/static/image/icon_shanchu.png" alt="">
+                                <p>删除</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <button class="btn-cancel" id="subclassManagementCancel">取消</button>
+                <button class="btn-ok" id="subclassManagementOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增子类模态框 -->
+<div class="modal fade" role="dialog" id="createSubclass">
+    <div class="modal-dialog modal-w626">
+        <div class="modal-content clearfloat">
+            <div class="createSubclass clearfloat">
+                <form class="inputFiled">
+                    <h1>新增子类</h1>
+                    <ul>
+                        <li>
+                            <label for="createSubclassName">名称</label>
+                            <input maxlength="16" type="text" class="text required" id="createSubclassName"
+                                   name="createSubclassName" placeholder="用于展示给客户">
+                        </li>
+                        <li>
+                            <label for="createSubclassShortName">简称</label>
+                            <input maxlength="6" type="text" class="text required" id="createSubclassShortName"
+                                   name="createSubclassShortName" placeholder="用于自己管理">
+                        </li>
+                        <li>
+                            <label for="createSubclassInventory">房间数</label>
+                            <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required"
+                                   id="createSubclassInventory" name="createSubclassInventory" placeholder="请填写纯数字">
+                        </li>
+                    </ul>
+                </form>
+                <div class="footer">
+                    <button class="btn-cancel">取消</button>
+                    <button class="btn-ok" id="createSubclassOk">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑子类模态框 -->
+<div class="modal fade" role="dialog" id="editSubclass">
+    <div class="modal-dialog modal-w626">
+        <div class="modal-content clearfloat">
+            <div class="createSubclass clearfloat">
+                <form class="inputFiled">
+                    <h1>编辑子类</h1>
+                    <ul>
+                        <li>
+                            <label for="editSubclassName">名称</label>
+                            <input maxlength="16" type="text" class="text required" id="editSubclassName"
+                                   name="editSubclassName" placeholder="用于展示给客户">
+                        </li>
+                        <li>
+                            <label for="editSubclassShortName">简称</label>
+                            <input maxlength="6" type="text" class="text required" id="editSubclassShortName"
+                                   name="editSubclassShortName" placeholder="用于自己管理">
+                        </li>
+                        <li>
+                            <label for="editSubclassInventory">房间数</label>
+                            <input maxlength="8" digits="true" range="[1,99999999]" type="text" class="text required"
+                                   id="editSubclassInventory" name="editSubclassInventory" placeholder="请填写纯数字">
+                        </li>
+                    </ul>
+                </form>
+                <div class="footer">
+                    <button class="btn-cancel" id="editSubclassCancel">取消</button>
+                    <button class="btn-ok" id="editSubclassOk">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑展示信息 -->
+<div class="modal fade" role="dialog" id="editDisplayInfo">
+    <div class="modal-dialog modal-w1130">
+        <div class="modal-content clearfloat">
+            <div class="editDisplayInfo clearfloat">
+                <h1>编辑展示信息</h1>
+                <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs clearfloat" role="tablist">
+                    <li role="presentation" class="active leftTab nav-tabs-li"><a class="leftTab" href="#type"
+                                                                                  aria-controls="type" role="tab"
+                                                                                  data-toggle="tab">房型规格</a></li>
+                    <li role="presentation" class="rightTab nav-tabs-li"><a class="rightTab" href="#facility"
+                                                                            aria-controls="facility" role="tab"
+                                                                            data-toggle="tab">房型设施</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content clearfloat">
+                    <!-- 房型规格 -->
+                    <div role="tabpanel" class="tab-pane active clearfloat" id="type">
+                        <form class="inputFiled rightBorder">
+                            <h2>基本规格</h2>
+                            <ul>
+                                <li>
+                                    <label for="roomShowFitNum">可容纳人数</label>
+                                    <input maxlength="8" range="[1,99999999]" digits="true" type="text"
+                                           class="text required" id="roomShowFitNum" name="roomShowFitNum"
+                                           placeholder="请填写纯数字">
+                                </li>
+                                <li>
+                                    <label for="roomShowArea">房间面积</label>
+                                    <input maxlength="8" range="[1,99999999]" number="true" type="text"
+                                           class="text required" id="roomShowArea" name="roomShowArea"
+                                           placeholder="单位：平方米">
+                                </li>
+                                <li>
+                                    <label for="roomShowBed">床型</label>
+                                    <input maxlength="8" type="text" class="text required" id="roomShowBed"
+                                           name="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长8个汉字">
+                                </li>
+                                <li>
+                                    <label for="roomShowDescription">描述或备注</label>
+                                    <textarea maxlength="140" name="description" id="roomShowDescription"
+                                              name="roomShowDescription" placeholder="最长140个汉字"></textarea>
+                                </li>
+                            </ul>
+                        </form>
+                        <div class="clearfloat">
+                            <div class="photo">
+                                <h2>图片管理</h2>
+                                <div class="cover">
+                                    <div class="title clearfloat">
+                                        <span>封面</span>
+                                        <label for="cover" class="create">
+                                            <img src="/static/image/icon_xinjian.png" alt="新增">
+                                            <span>上传图片</span>
+                                        </label>
+                                        <input id="cover" type="file" name="file" accept="image/*"/>
+                                    </div>
+                                    <div class="photoContainer"></div>
+                                    <p class="coverError hide">请上传封面
+                                    <p>
+                                </div>
+                                <div class="detail">
+                                    <div class="title clearfloat">
+                                        <span>详细图片</span>
+                                        <label for="detail" class="create">
+                                            <img src="/static/image/icon_xinjian.png" alt="新增">
+                                            <span>上传图片</span>
+                                        </label>
+                                        <input id="detail" type="file" name="file" accept="image/*"/>
+                                    </div>
+                                    <div class="photoContainer"></div>
+                                    <p class="detailError hide">请上传详细图片
+                                    <p>
+                                </div>
+                            </div>
+                            <div class="operate">
+                                <div class="first">
+                                    <div class="operateItem hide">
+                                        <label for="cover" id="replaceCover" class="clickDiv">
+                                            <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                            <p>替换图片</p>
+                                        </label>
+                                    </div>
+                                    <div class="operateItem hide">
+                                        <div id="deleteCover" class="clickDiv">
+                                            <img src="/static/image/icon_shanchu.png" alt="">
+                                            <p>删除</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="second">
+                                    <div class="operateItem hide">
+                                        <label for="replaceDetailImg" id="replaceDetail" class="clickDiv">
+                                            <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                            <p>替换图片</p>
+                                        </label>
+                                        <input type="file" name="file" id="replaceDetailImg" accept="image/*"/>
+                                    </div>
+                                    <div class="operateItem hide">
+                                        <div id="deleteDetail" class="clickDiv">
+                                            <img src="/static/image/icon_shanchu.png" alt="">
+                                            <p>删除</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 房型设施 -->
+                    <div role="tabpanel" class="tab-pane clearfloat" id="facility">
+                        <form class="inputFiled rightBorder">
+                            <h2>基础设施</h2>
+                            <ul>
+                                <li>
+                                    <label>热水供应</label>
+                                    <input type="radio" class="Y required" id="hotWaterY" name="hotWater" value="1">有，请描述时间段&nbsp;
+                                    <input type="radio" class="N" id="hotWaterN" name="hotWater" value="0">无<br/>
+                                    <div>
+                                        <label for="hotWaterDescription">描述</label>
+                                        <input maxlength="8" type="text" id="hotWaterDescription"
+                                               name="hotWaterDescription" class="text required"
+                                               placeholder="例如：24小时/8:00~22:00,最长8个汉字">
+                                    </div>
+                                </li>
+                                <li>
+                                    <label>早餐</label>
+                                    <input type="radio" class="Y required" id="breakfastY" name="breakfast" value="1">有，请描述&nbsp;
+                                    <input type="radio" class="N" id="breakfastN" name="breakfast" value="0">无<br/>
+                                    <div>
+                                        <label>描述</label>
+                                        <input maxlength="8" type="text" id="breakfastDescription"
+                                               name="breakfastDescription" class="text required"
+                                               placeholder="例如：中式早餐/面包+牛奶,最长8个汉字">
+                                    </div>
+                                </li>
+                                <li>
+                                    <label>浴室</label>
+                                    <input type="radio" class="required" id="publicBathroom" name="bathroom"
+                                           value="公共浴室">公共浴室&nbsp;
+                                    <input type="radio" id="independentBathroom" name="bathroom" value="独立浴室">独立浴室&nbsp;
+                                    <input type="radio" id="bathroomN" name="bathroom" value="0">无
+                                </li>
+                                <li>
+                                    <label>厕所</label>
+                                    <input type="radio" class="required" id="publicToilet" name="toilet" value="公共厕所">公共厕所&nbsp;
+                                    <input type="radio" id="independentToilet" name="toilet" value="独立厕所">独立厕所&nbsp;
+                                    <input type="radio" id="toiletN" name="toilet" value="0">无
+                                </li>
+                                <li>
+                                    <label>营地管家</label>
+                                    <input type="radio" class="required" id="butlerY" name="butler" value="1">有&nbsp;
+                                    <input type="radio" id="butlerN" name="butler" value="0">无
+                                </li>
+                                <li>
+                                    <label>网络</label>
+                                    <input type="radio" class="Y required" id="networkY" name="network" value="1">有&nbsp;
+                                    <input type="radio" class="N" id="networkN" name="network" value="0">无<br/>
+                                    <div>
+                                        <label>描述</label>
+                                        <input maxlength="8" type="text" id="networkDescription" class="text required"
+                                               name="networkDescription" placeholder="例如：免费WIFI/收费有线宽带，最长8个汉字">
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <div class="mid clearfloat">
+                            <div class="title">
+                                <h2>其他设施</h2>
+                                <div class="create" data-toggle="modal" data-target="#createFacility">
+                                    <img src="/static/image/icon_xinjian.png" alt="新增">
+                                    <span>新增设施</span>
+                                </div>
+                            </div>
+                            <div class="border-top-4px grid">
+                                <table>
+                                    <thead>
+                                    <tr class="head">
+                                        <th>名称</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="operate facilityOperate">
+                            <div class="first">
+                                <div class="operateItem hide">
+                                    <div class="clickDiv" id="editFacilityButton" data-toggle="modal"
+                                         data-target="#editFacility">
+                                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                        <p>编辑信息</p>
+                                    </div>
+                                </div>
+                                <div class="operateItem hide">
+                                    <div class="clickDiv" id="deleteFacility">
+                                        <img src="/static/image/icon_shanchu.png" alt="">
+                                        <p>删除</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer clearfloat">
+                <button class="cancel" id="editDisplayInfoCancel">取消</button>
+                <button class="btn-ok" id="editRoomShowOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增设施 -->
+<div class="modal fade" role="dialog" id="createFacility">
+    <div class="modal-dialog modal-w626">
+        <div class="modal-content clearfloat">
+            <form class="inputFiled">
+                <h1>新增设施</h1>
+                <ul>
+                    <li>
+                        <label for="createSubclassName">名称</label>
+                        <input maxlength="16" type="text" class="text required" id="createFacilityName"
+                               name="createFacilityName">
+                    </li>
+                </ul>
+            </form>
+            <div class="footer">
+                <button class="btn-cancel">取消</button>
+                <button class="btn-ok" id="createFacilityOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑设施 -->
+<div class="modal fade" role="dialog" id="editFacility">
+    <div class="modal-dialog modal-w626">
+        <div class="modal-content clearfloat">
+            <form class="inputFiled">
+                <h1>编辑设施</h1>
+                <ul>
+                    <li>
+                        <label for="createSubclassName">名称</label>
+                        <input maxlength="16" type="text" class="text required" id="editFacilityName"
+                               name="editFacilityName">
+                    </li>
+                </ul>
+            </form>
+            <div class="footer">
+                <button class="btn-cancel">取消</button>
+                <button class="btn-ok" id="editFacilityOk">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑房间 -->
+<div class="modal fade" role="dialog" id="editRoom">
+    <div class="modal-dialog modal-w485">
+        <div class="modal-content clearfloat">
+            <div class="editRoom clearfloat">
+                <div class="roomContainer clearfloat">
+                </div>
+                <p class="tip">点击房间名可修改房间名哦</p>
+                <div class="footer">
+                    <button class="btn-cancel">取消</button>
+                    <button class="btn-ok" id="editRoomOk">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 页面主体 -->
+<div class="mainContainer clearfloat">
+    <div class="content clearfloat">
+        <div class="title clearfloat">
+            <span class="campName"></span>
+            <div class="create" data-toggle="modal" data-target="#createRoom" id="createRoomButton">
+                <img src="/static/image/icon_xinjian.png" alt="新增">
+                <span>新增房型</span>
+            </div>
+        </div>
+        <div class="categoryGrid grid">
+            <table>
+                <thead>
+                <tr class="head">
+                    <th>房型</th>
+                    <th>简称</th>
+                    <th>单位</th>
+                    <th>可用人数</th>
+                    <th>默认库存</th>
+                    <th>默认价格</th>
+                </tr>
+                </thead>
+                <tbody id="roomCategoryList">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="operate mainOperate">
+            <div class="first clearfloat" id="roomCategoryFirst">
+                <div class="operateItem hide subclassManageButton">
+                    <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement"
+                         id="subclassManageButton">
+                        <img src="/static/image/icon_zileiguanli.png" alt="">
+                        <p>子类管理</p>
+                    </div>
+                </div>
+                <div class="operateItem hide editBasicInfoButton">
+                    <div class="clickDiv" id="editBasicInfoButton" data-toggle="modal" data-target="#editBasicInfo">
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑基本信息</p>
+                    </div>
+                </div>
+                <div class="operateItem hide deleteRoomButton">
+                    <div class="clickDiv" id="deleteRoomButton">
                         <img src="/static/image/icon_shanchu.png" alt="">
                         <p>删除</p>
-                      </div>
                     </div>
-                  </div>
                 </div>
-              </div>
+                <div class="operateItem hide editSubRoomButton">
+                    <div class="clickDiv" data-toggle="modal" data-target="#editRoom" id="editSubRoomButton">
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑房间</p>
+                    </div>
+                </div>
+            </div>
+            <div class="second clearfloat hide">
+                <div class="operateItem hide">
+                    <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo"
+                         id="editRoomDisplayInfoButton">
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑展示信息</p></div>
+                </div>
+                <div class="operateItem hide shangjia">
+                    <div class="clickDiv modifyStateButton">
+                        <img src="/static/image/icon_shangjia.png" alt="">
+                        <p>上架</p>
+                    </div>
+                    <p class="putaway">目前未上架</p>
+                </div>
+                <div class="operateItem hide xiajia">
+                    <div class="clickDiv modifyStateButton">
+                        <img src="/static/image/icon_xiajia.png" alt="">
+                        <p>下架</p>
+                    </div>
+                    <p class="putaway">已上架</p>
+                </div>
             </div>
         </div>
-        <div class="footer clearfloat">
-          <button class="cancel" id="editDisplayInfoCancel">取消</button>
-          <button class="btn-ok" id="editRoomShowOk">确认</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!-- 新增设施 -->
-  <div class="modal fade" role="dialog" id="createFacility">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <form class="inputFiled">
-          <h1>新增设施</h1>
-          <ul>
-            <li>
-              <label for="createSubclassName">名称</label>
-              <input maxlength="16" type="text" class="text required" id="createFacilityName" name="createFacilityName">
-            </li>
-          </ul>
-        </form>
-        <div class="footer">
-          <button class="btn-cancel">取消</button>
-          <button class="btn-ok" id="createFacilityOk">确认</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 编辑设施 -->
-  <div class="modal fade" role="dialog" id="editFacility">
-    <div class="modal-dialog modal-w626">
-      <div class="modal-content clearfloat">
-        <form class="inputFiled">
-          <h1>编辑设施</h1>
-          <ul>
-            <li>
-              <label for="createSubclassName">名称</label>
-              <input maxlength="16" type="text" class="text required" id="editFacilityName" name="editFacilityName">
-            </li>
-          </ul>
-        </form>
-        <div class="footer">
-          <button class="btn-cancel">取消</button>
-          <button class="btn-ok" id="editFacilityOk">确认</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 编辑房间 -->
-  <div class="modal fade" role="dialog" id="editRoom">
-    <div class="modal-dialog modal-w485">
-      <div class="modal-content clearfloat">
-        <div class="editRoom clearfloat">
-          <div class="roomContainer clearfloat">
-          </div>
-          <p class="tip">点击房间名可修改房间名哦</p>
-          <div class="footer">
-            <button class="btn-cancel">取消</button>
-            <button class="btn-ok" id="editRoomOk">确认</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 页面主体 -->
-  <div class="mainContainer clearfloat">
-    <div class="content clearfloat">
-      <div class="title clearfloat">
-        <span class="campName"></span>
-        <div class="create" data-toggle="modal" data-target="#createRoom" id="createRoomButton">
-          <img src="/static/image/icon_xinjian.png" alt="新增">
-          <span>新增房型</span>
-        </div>
-      </div>
-      <div class="categoryGrid grid">
-        <table>
-          <thead>
-          <tr class="head">
-            <th>房型</th>
-            <th>简称</th>
-            <th>单位</th>
-            <th>可用人数</th>
-            <th>默认库存</th>
-            <th>默认价格</th>
-          </tr>
-          </thead>
-          <tbody id="roomCategoryList">
+</div>
 
-          </tbody>
-        </table>
-      </div>
-      <div class="operate mainOperate">
-        <div class="first clearfloat" id="roomCategoryFirst">
-          <div class="operateItem hide subclassManageButton">
-            <div class="clickDiv" data-toggle="modal" data-target="#subclassManagement" id="subclassManageButton">
-              <img src="/static/image/icon_zileiguanli.png" alt="">
-              <p>子类管理</p>
-            </div>
-          </div>
-          <div class="operateItem hide editBasicInfoButton">
-            <div class="clickDiv" id="editBasicInfoButton" data-toggle="modal" data-target="#editBasicInfo">
-              <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-              <p>编辑基本信息</p>
-            </div>
-          </div>
-          <div class="operateItem hide deleteRoomButton">
-            <div class="clickDiv" id="deleteRoomButton">
-              <img src="/static/image/icon_shanchu.png" alt="">
-              <p>删除</p>
-            </div>
-          </div>
-          <div class="operateItem hide editSubRoomButton">
-            <div class="clickDiv" data-toggle="modal" data-target="#editRoom" id="editSubRoomButton">
-              <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-              <p>编辑房间</p>
-            </div>
-          </div>
-        </div>
-        <div class="second clearfloat hide">
-          <div class="operateItem hide">
-            <div class="clickDiv" data-toggle="modal" data-target="#editDisplayInfo" id="editRoomDisplayInfoButton">
-              <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-              <p>编辑展示信息</p></div>
-          </div>
-          <div class="operateItem hide shangjia">
-            <div class="clickDiv modifyStateButton">
-              <img src="/static/image/icon_shangjia.png" alt="">
-              <p>上架</p>
-            </div>
-            <p class="putaway">目前未上架</p>
-          </div>
-          <div class="operateItem hide xiajia">
-            <div class="clickDiv modifyStateButton">
-              <img src="/static/image/icon_xiajia.png" alt="">
-              <p>下架</p>
-            </div>
-            <p class="putaway">已上架</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
+<script src="/static/js/app/dist/common.js"></script>
+<script src="/static/js/app/dist/category/roomEntry.js"></script>
 
-
-
-
-
-    //判断空属性
-    function emptyFilter(data){
-      $.each(data, function(index, element){
-        for (var name in element) {
-          if (element[name] == null || element[name] == undefined) {
-            element[name] = "";
-          }
-        }
-      });
-      return data;
-    }
-
-    //session失效验证
-    function sessionValidate(data){
-      if (data.code == 14) {
-        location.href = "/view/loginTest.html";
-      }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //房间编辑
-    function editSubRoom(that, item){
-      $.ajax({
-        url: getUrl(editSubRoomUrl),
-        data: {rooms: JSON.stringify(item)},
-        type: "POST",
-        dataFilter: function(result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        },
-        success: function(result){
-          if (errorHandler(result)) {
-            clearModal(that);
-          } else {
-            return;
-          }
-          $("#editRoom .roomContainer").html("");
-          var inventory = 0;
-          $.each(item, function(index, elemet){
-            if (elemet.status == 0) {
-              inventory ++;
-            }
-          });
-          $.each(roomCategoryList.list, function(index, element){
-            $.each(element.subTypeList, function(index, element){
-              if (element.id == $(".subActive").find(".id").val()) {
-                element.inventory = inventory;
-              }
-            });
-          });
-          roomCategoryList.countInventory($(".mainActive").find(".id").val());
-          roomCategoryList.render();
-        }
-      })
-    }
-
-    //读取展示信息
-    function pullRoomShowInfo(id){
-      $.ajax({
-        url: getUrl(pullShowInfoUrl),
-        data: {id: id},
-        dataFilter: function(result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        },
-        success: function(result){
-          showRoomShowInfo(result.data);
-        }
-      })
-    }
-
-    //显示展示信息
-    function showRoomShowInfo(data){
-      data.fitNum && $("#roomShowFitNum").val(data.fitNum);
-      data.area && $("#roomShowArea").val(data.area);
-      data.bedType && $("#roomShowBed").val(data.bedType);
-      data.remark && $("#roomShowDescription").val(data.remark);
-      if (data.facilities.hotWater.status == 1) {
-        $("#hotWaterY").prop("checked", true);
-        $("#hotWaterDescription").val(data.facilities.hotWater.description);
-        $("#hotWaterN").nextAll("div").removeClass("hide");
-      } else {
-        $("#hotWaterN").prop("checked", true);
-        $("#hotWaterN").nextAll("div").addClass("hide");
-      }
-      if (data.facilities.breakfast.status == 1) {
-        $("#breakfastY").prop("checked", true);
-        $("#breakfastDescription").val(data.facilities.breakfast.description);
-        $("#breakfastN").nextAll("div").removeClass("hide");
-      } else {
-        $("#breakfastN").prop("checked", true);
-        $("#breakfastN").nextAll("div").addClass("hide");
-      }
-      if (data.facilities.bathroom.status == 1) {
-        if (data.facilities.bathroom.description == "公共浴室") {
-          $("#publicBathroom").prop("checked", true);
-        } else {
-          $("#independentBathroom").prop("checked", true);
-        }
-      } else {
-        $("#bathroomN").prop("checked", true);
-      }
-      if (data.facilities.toilet.status == 1) {
-        if (data.facilities.toilet.description == "公共厕所") {
-          $("#publicToilet").prop("checked", true);
-        } else {
-          $("#independentToilet").prop("checked", true);
-        }
-      } else {
-        $("#toiletN").prop("checked", true);
-      }
-      if (data.facilities.manager.status == 1) {
-        $("#butlerY").prop("checked", true);
-      } else {
-        $("#butlerN").prop("checked", true);
-      }
-      if (data.facilities.network.status == 1) {
-        $("#networkY").prop("checked", true);
-        $("#networkN").nextAll("div").removeClass("hide");
-        $("#networkDescription").val(data.facilities.hotWater.description);
-      } else {
-        $("#networkN").prop("checked", true);
-        $("#networkN").nextAll("div").addClass("hide");
-      }
-      if (data.extraFacilities != null) {
-        var str = "";
-        $.each(data.extraFacilities, function(index, element){
-          str += "<tr class='mainClass'><td>" + element.name + "</td></tr>"
-        });
-        $("#editDisplayInfo tbody").html(str);
-        $("#editDisplayInfo .mainClass").on("click", function(){
-          $("#editDisplayInfo .mainClass").removeClass("mainActive");
-          $(this).addClass("mainActive");
-          $("#editDisplayInfo .operateItem").removeClass("hide");
-        });
-      }
-      if (data.coverUrl != null) {
-        $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + data.coverUrl + "' />");
-        $(".cover .create").hide();
-      } else {
-        $(".cover .create").show();
-        $(".cover .photoContainer").html("");
-      }
-      if (data.detailImgUrl != null) {
-        var detailStr = "";
-        $.each(data.detailImgUrl, function(index, element){
-          detailStr += "<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + element + "' />"
-        });
-        $(".detail .photoContainer").html(detailStr);
-        if ($(".detailImg").length == 6) {
-          $(".detail .create").hide();
-        } else {
-          $(".detail .create").show();
-        }
-      } else {
-        $(".detail .create").show();
-        $(".detail .photoContainer").html("");
-      }
-      //上传图片
-      $("#cover").fileupload({
-        url: getUrl(uploadImageUrl),
-        done: function (e, data) {
-          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
-          result = JSON.parse(result);
-          $(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.data.url + "' />");
-          $(".cover .create").hide();
-          $(".coverError").addClass("hide");
-          changed = true;
-        }
-      });
-      $("#detail").fileupload({
-        url: getUrl(uploadImageUrl),
-        done: function (e, data) {
-          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
-          result = JSON.parse(result);
-          $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.data.url + "' />");
-          if ($(".detailImg").length == 6) {
-            $(".detail .create").hide();
-          }
-          $(".detailError").addClass("hide");
-          changed = true;
-        }
-      })
-    }
-
-    //准备展示信息数据
-    function makeRoomShowInfo(that){
-      var detailImgUrl = [];
-      $(".detailImg").each(function(){
-        detailImgUrl.push($(this).attr("src"));
-      });
-      var extraFacilities = [];
-      $("#editDisplayInfo .mainClass").each(function() {
-        extraFacilities.push({
-          name: $(this).find("td").html(),
-          description: ""
-        })
-      });
-      var facilities = {
-        hotWater: {
-          status: $("#hotWaterY").prop("checked") ? 1 : 0,
-          description: $("#hotWaterY").prop("checked") ? $("#hotWaterDescription").val() : ""
-        },
-        breakfast: {
-          status: $("#breakfastY").prop("checked") ? 1 : 0,
-          description: $("#breakfastY").prop("checked") ? $("#breakfastDescription").val() : ""
-        },
-        bathroom: {
-          status: $("#bathroomN").prop("checked") ? 0 : 1,
-          description: $("#publicBathroom").prop("checked") ? "公共浴室" : ($("#independentBathroom").prop("checked") ? "独立浴室" : "")
-        },
-        toilet: {
-          status: $("#toiletN").prop("checked") ? 0 : 1,
-          description: $("#publicToilet").prop("checked") ? "公共厕所" : ($("#independentToilet").prop("checked") ? "独立厕所" : "")
-        },
-        manager: {
-          status: $("#butlerY").prop("checked") ? 1 : 0,
-          description: ""
-        },
-        network: {
-          status: $("#networkY").prop("checked") ? 1 : 0,
-          description: ""
-        }
-      };
-      var item = {
-        area: $("#roomShowArea").val(),
-        bedType: $("#roomShowBed").val(),
-        coverUrl: $(".coverImg").attr("src"),
-        detailImgUrl: JSON.stringify(detailImgUrl),
-        extraFacilities: JSON.stringify(extraFacilities),
-        fitNum: $("#roomShowFitNum").val(),
-        remark: $("#roomShowDescription").val(),
-        id: $("#roomCategoryList").find(".mainActive").find(".id").val(),
-        facilities: JSON.stringify(facilities)
-      };
-      sendRoomShowInfo(item, that);
-    }
-
-    //选择图片
-    function selectPhoto(obj){
-      if ($(obj).hasClass("coverImg")) {
-        $(obj).addClass("photoSelected");
-        $("#editDisplayInfo .first .operateItem").removeClass("hide");
-      } else {
-        $(".detailImg").removeClass("photoSelected");
-        $(obj).addClass("photoSelected");
-        $("#editDisplayInfo .second .operateItem").removeClass("hide");
-      }
-    }
-
-    //发送展示信息
-    function sendRoomShowInfo(item, that){
-      $.ajax({
-        url: getUrl(editShowInfoUrl),
-        data: item,
-        dataFilter: function(result) {
-          result = JSON.parse(result); //先转为json
-          sessionValidate(result);
-          return JSON.stringify(result); //再转为字符串传回去
-        },
-        success: function(result){
-          if (errorHandler(result)) {
-            clearModal(that);
-          }
-        }
-      })
-    }
-
-    //点击子类管理按钮
-    $("#subclassManageButton").on("click", function(){
-      var str = "";
-      $(".mainActive").nextUntil(".mainClass").each(function(){
-        str += "<tr class='mainClass'><td>" + $(this).find("td:eq(0) div").html()
-                + "</td><td>"+ $(this).find("td:eq(1) div").html() +"</td><td>"+ $(this).find("td:eq(4) div").html() +"</td>"
-                + "<input type='hidden' class='id' value='" + $(this).find(".id").val()
-                + "'><input type='hidden' class='status' value='0'></tr>"
-      });
-      $("#subclassManagement").find("tbody").html(str);
-      $(".subclassManagement .mainClass").on("click", function() {
-        $("#subclassManagement .mainClass").removeClass("mainActive");
-        $(this).addClass("mainActive");
-        $(".subclassManagement .operateItem").removeClass("hide");
-      });
-    });
-
-    //子类管理编辑信息
-    $("#subManageEditButton").on("click", function(){
-      $("#editSubclassName").val($("#subclassManagement tr.mainActive").find("td:eq(0)").html());
-      $("#editSubclassShortName").val($("#subclassManagement tr.mainActive").find("td:eq(1)").html());
-      $("#editSubclassInventory").val($("#subclassManagement tr.mainActive").find("td:eq(2)").html());
-    });
-
-    //子类删除按钮
-    $("#deleteSubclassButton").on("click", function(){
-      $("#subclassManagement tr.mainActive .status").val("1");
-      $("#subclassManagement tr.mainActive").hide();
-      $("#subclassManagement tr.mainActive").removeClass("mainActive");
-      $("#subclassManagement .operateItem").addClass("hide");
-    });
-
-    //子类管理确认按钮
-    $("#subclassManagementOk").on("click", function(){
-      var subTypeList = [];
-      var that = this;
-      $("#subclassManagement .mainClass").each(function(){
-        subTypeList.push({
-          id: $(this).find(".id").val(),
-          inventory: $(this).find("td:eq(2)").html(),
-          name: $(this).find("td:eq(0)").html(),
-          shortName: $(this).find("td:eq(1)").html(),
-          status: $(this).find(".status").val()
-        })
-      });
-      var item = {
-        id: $("#roomCategoryList .mainActive .id").val(),
-        subTypeList: subTypeList
-      };
-      subclassManage(that, item);
-    });
-
-    //点击编辑房型基本信息
-    $("#editBasicInfoButton").on("click", function(){
-      $("#editRoomName").val($(".mainActive td:eq(0) span").html());
-      $("#editRoomShortName").val($(".mainActive td:eq(1)").html());
-      $("#editRoomPrice").val($(".mainActive td:eq(5)").html());
-      $("#editRoomFitNum").val($(".mainActive td:eq(3)").html());
-      $("#editRoomUnit").val($(".mainActive td:eq(2)").html());
-    });
-
-    //点击编辑房型基本信息确认按钮
-    $("#editRoomBasicOk").on("click", function(){
-      if (!$("#editBasicInfo form").valid()) {
-        return;
-      }
-      var that = this;
-      var item = {
-        name: $("#editRoomName").val(),
-        shortName: $("#editRoomShortName").val(),
-        price: $("#editRoomPrice").val(),
-        fitNum: $("#editRoomFitNum").val(),
-        unit: $("#editRoomUnit").val(),
-        id: $(".mainActive .id").val()
-      };
-      editRoomBasic(that, item);
-    });
-
-    //点击新增子类的确定按钮
-    $("#createSubclassOk").on("click", function(){
-      if (!$("#createSubclass form").valid()) {
-        return;
-      }
-      $("#createRoom tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
-              + "</td><td>" + $("#createSubclassShortName").val() + "</td><td>" + $("#createSubclassInventory").val() + "</td></tr>");
-      $("#subclassManagement tbody").append("<tr class='mainClass'><td>" + $("#createSubclassName").val()
-              + "</td><td>" + $("#createSubclassShortName").val() + "</td><td>" + $("#createSubclassInventory").val()
-              + "</td><input class='id' type='hidden'><input class='status' type='hidden' value='0'></tr>");
-      $(".subclassManagement .mainClass").on("click", function() {
-        $("#subclassManagement .mainClass").removeClass("mainActive");
-        $(this).addClass("mainActive");
-        $(".subclassManagement .operateItem").removeClass("hide");
-      });
-      $("#createRoom tr").on("click", function(){
-        $("#createRoom .mainClass").removeClass("mainActive");
-        $(this).addClass("mainActive");
-        $("#createRoomEdit").parent().removeClass("hide");
-        $("#createRoomDelete").parent().removeClass("hide");
-      });
-      $("#createSubclass").modal("hide");
-      $("#createSubclass").find("input").val("");
-    });
-
-    //新增房型确认按钮
-    $("#createRoomOk").on("click", function(){
-      if (!$("#createRoom form").valid()) {
-        return;
-      }
-      var that = this;
-      var subList = [];
-      $("#createRoom tbody tr").each(function(){
-        subList.push({
-          name: $(this).find("td:eq(0)").html(),
-          shortName: $(this).find("td:eq(1)").html(),
-          inventory: $(this).find("td:eq(2)").html()
-        });
-      });
-      if (subList.length == 0) {
-        subList.push({
-          name: $("#createRoomName").val(),
-          shortName: $("#createRoomShortName").val(),
-          inventory: $("#createRoomInventory").val()
-        });
-      }
-      var data = {
-        name: $("#createRoomName").val(),
-        shortName: $("#createRoomShortName").val(),
-        price: $("#createRoomPrice").val(),
-        fitNum: $("#createRoomFitNum").val(),
-        unit: $("#createRoomUnit").val(),
-        inventory: $("#createRoomInventory").val(),
-        subTypeList: subList
-      };
-      addRoom(data, that);
-    });
-
-    //新增房型的时候编辑子类按钮
-    $("#createRoomEdit").on("click", function(){
-      $("#editSubclassName").val($("#createRoom tbody tr.mainActive").find("td:eq(0)").html());
-      $("#editSubclassShortName").val($("#createRoom tbody tr.mainActive").find("td:eq(1)").html());
-      $("#editSubclassInventory").val($("#createRoom tbody tr.mainActive").find("td:eq(2)").html());
-    });
-
-    //新增房型的时候删除子类按钮
-    $("#createRoomDelete").on("click", function(){
-      $("#createRoom tbody tr.mainActive").remove();
-    });
-
-    //编辑子类确定按钮
-    $("#editSubclassOk").on("click", function(){
-      if (!$("#editSubclass form").valid()) {
-        return;
-      }
-      var that = this;
-      $("#createRoom tbody tr.mainActive").html("<td>" + $("#editSubclassName").val()
-      + "</td><td>"+ $("#editSubclassShortName").val()+"</td><td>"+ $("#editSubclassInventory").val()+"</td>");
-      $("#subclassManagement .mainActive td:eq(0)").html($("#editSubclassName").val());
-      $("#subclassManagement .mainActive td:eq(1)").html($("#editSubclassShortName").val());
-      $("#subclassManagement .mainActive td:eq(2)").html($("#editSubclassInventory").val());
-      clearModal(that);
-    });
-
-    //点击删除按钮
-    $("#deleteRoomButton").on("click", function(){
-      var confirmCallback = deleteRoom;
-      var dialogConfig = {title:"提示", message:"您确定要删除吗？"};
-      confirmDialog(dialogConfig,confirmCallback);
-    });
-
-    $("#createRoomButton").on("click", function(){
-      $("#createRoom tbody").html("");
-    });
-
-    //点击编辑房间
-    $("#editSubRoomButton").on("click", function(){
-      var id = $(".subActive .id").val();
-      loadSubRoom(id);
-    });
-
-    //编辑房间确定
-    $("#editRoomOk").on("click", function(){
-      var that = this;
-      var rooms = [];
-      $(".room").each(function(){
-        rooms.push({
-          id: $(this).find(".id").val(),
-          serialNum: $(this).find("p").html(),
-          status: $(this).find(".status").val()
-        });
-      });
-      editSubRoom(that, rooms);
-    });
-
-    //上架或下架
-    $(".modifyStateButton").on("click", function(){
-      var item = {
-        id: $(".mainActive .id").val(),
-        state: 1 - $(".mainActive .state").val()
-      };
-      modifyState(item);
-    });
-
-    $(".Y").on("click", function(){
-      $(this).nextAll("div").removeClass("hide");
-    });
-    $(".N").on("click", function(){
-      $(this).nextAll("div").addClass("hide");
-    });
-
-    //编辑房间展示信息
-    $("#editRoomDisplayInfoButton").on("click", function(){
-      $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0) span").html());
-      $(".detail .photoContainer").html("");
-      $(".cover .photoContainer").html("");
-      var id = $(".mainActive .id").val();
-      pullRoomShowInfo(id);
-    });
-    //编辑展示信息确认
-    $("#editRoomShowOk").on("click", function(){
-      if ($(".rightTab").parent().hasClass("active")) {
-        if ($("#roomShowFitNum").val() == "") {
-          somethingAlert("请填写可容纳人数");
-          return;
-        }
-        if ($("#roomShowArea").val() == "") {
-          somethingAlert("请填写房间面积");
-          return;
-        }
-        if ($("#roomShowBed").val() == "") {
-          somethingAlert("请填写床型");
-          return;
-        }
-      }
-      if ($(".cover .photoContainer").html() == "") {
-        $(".coverError").removeClass("hide");
-        if ($(".rightTab").parent().hasClass("active")) {
-          somethingAlert("请上传封面");
-        }
-        return
-      }
-      if ($(".detail .photoContainer").html() == "") {
-        if ($(".rightTab").parent().hasClass("active")) {
-          somethingAlert("请上传详细图片");
-        }
-        $(".detailError").removeClass("hide");
-        return
-      }
-      var that = this;
-      makeRoomShowInfo(that);
-    });
-    //新增设施确定
-    $("#createFacilityOk").on("click", function(){
-      if (!$("#createFacility form").valid()) {
-        return;
-      }
-      var that = this;
-      $("#editDisplayInfo tbody").append("<tr class='mainClass'><td>" + $("#createFacilityName").val() + "</td></tr>");
-      $("#editDisplayInfo .mainClass").on("click", function(){
-        $("#editDisplayInfo .mainClass").removeClass("mainActive");
-        $(this).addClass("mainActive");
-        $("#editDisplayInfo .operateItem").removeClass("hide");
-      });
-      changed = true;
-      clearModal(that);
-    });
-
-    //删除设施
-    $("#deleteFacility").on("click", function(){
-      $("#editDisplayInfo .mainActive").remove();
-      $("#editDisplayInfo .operateItem").addClass("hide");
-      changed = true;
-    });
-
-    //编辑设施
-    $("#editFacilityButton").on("click", function(){
-      $("#editFacilityName").val($("#editDisplayInfo .mainActive").find("td").html());
-    });
-
-    //编辑设施确认
-    $("#editFacilityOk").on("click", function(){
-      if (!$("#editFacility form").valid()) {
-        return;
-      }
-      var that = this;
-      $("#editDisplayInfo .mainActive").find("td").html($("#editFacilityName").val());
-      changed = true;
-      clearModal(that);
-    });
-
-    //删除封面
-    $("#deleteCover").on("click", function(){
-      $(".cover .photoSelected").remove();
-      $("#editDisplayInfo .first .operateItem").addClass("hide");
-      $(".cover .create").show();
-      changed = true;
-    });
-
-    //删除详细图片
-    $("#deleteDetail").on("click", function(){
-      $(".detail .photoSelected").remove();
-      $("#editDisplayInfo .second .operateItem").addClass("hide");
-      $(".detail .create").show();
-      changed = true;
-    });
-
-    //替换详细图片
-    $("#replaceDetail").on("click", function(){
-      $("#replaceDetailImg").fileupload({
-        url: getUrl(uploadImageUrl),
-        done: function (e, data) {
-          var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
-          result = JSON.parse(result);
-          $(".detail .photoSelected").attr("src" ,result.data.url);
-        }
-      });
-    });
-
-    var changed = false;
-
-    function setChanged(){
-      changed = true;
-    }
-
-    //防呆
-    $("#editDisplayInfo input").on("change", setChanged);
-
-    $("#editDisplayInfoCancel").on("click", function(){
-      var that = this;
-      if (changed) {
-        var dialogConfig = {
-          title: "提醒",
-          message: "当前的修改尚未保存，您确定要离开此页面吗？"
-        };
-        var confirmCallback = function(){
-          clearModal(that);
-          changed = false
-        };
-
-        confirmDialog(dialogConfig, confirmCallback);
-
-      } else {
-        clearModal(that);
-      }
-    });
-
-
-
-
-  </script>
-  <script src="/static/js/app/dist/common.js"></script>
-  <script src="/static/js/app/dist/category/roomEntry.js"></script>
-  <script src="/static/js/jquery.ui.widget.js"></script>
-  <script src="/static/js/jquery.iframe-transport.js"></script>
-  <script src="/static/js/jquery.fileupload.js"></script>
 </body>
 </html>

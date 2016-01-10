@@ -1,13 +1,12 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
-var trToggle = require("trToggle");
 var modal = require("modal");
 var floatInfo = require("floatInfo");
 
 var roomCategoryList = {
 
     //重新计算库存
-    countInventory: function(id){
+    countInventory: function (id) {
         $.each(roomCategoryList.list, function (index, element) {
             if (element.id == id) {
                 var inventory = 0;
@@ -22,13 +21,13 @@ var roomCategoryList = {
 
 
     //读取房型列表
-    loadRoomCategoryList: function(){
+    loadRoomCategoryList: function () {
         $.ajax({
             url: AJAXService.getUrl('getRoomCategoryListUrl'),
-            dataFilter: function (result){
+            dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             },
-            success: function (result){
+            success: function (result) {
                 roomCategoryList.list = result.data.list;
                 roomCategoryList.render();
             }
@@ -36,7 +35,7 @@ var roomCategoryList = {
     },
 
     //绘制
-    render: function(){
+    render: function () {
         var str = "";
         $.each(roomCategoryList.list, function (index, element) {
             str += "<tr class='mainClass'>" +
@@ -64,10 +63,56 @@ var roomCategoryList = {
         $(".mainOperate .operateItem").addClass("hide");
         $(".mainOperate .second").addClass("hide");
     },
+//上下架
+    modifyState: function (item) {
+        $.ajax({
+            url: AJAXService.getUrl('modifyStateUrl'),
+            data: item,
+            dataFilter: function (result) {
+                return AJAXService.sessionValidate(result);
+            },
+            success: function (result) {
+                if (!util.errorHandler(result)) {
+                    return;
+                }
+                $.each(roomCategoryList.list, function (index, element) {
+                    if (element.id == item.id) {
+                        roomCategoryList.list[index].state = item.state;
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
+            }
+        })
+    },
+
+    //删除房型
+    deleteRoom: function () {
+        var id = $(".mainActive .id").val();
+        $.ajax({
+            url: AJAXService.getUrl("deleteRoomUrl"),
+            data: {id: id},
+            success: function (result) {
+                if (!util.errorHandler(result)) {
+                    return;
+                }
+                $.each(roomCategoryList.list, function (index, element) {
+                    if (element.id == id) {
+                        roomCategoryList.list.splice(index, 1);
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
+            },
+            dataFilter: function (result) {
+                return AJAXService.sessionValidate(result);
+            }
+        });
+    },
 
     events: {
         //点击主类
-        "click .categoryGrid .mainClass": function(){
+        "click .categoryGrid .mainClass": function () {
             $(".mainClass").removeClass("mainActive");
             $(".subclass").removeClass("subActive");
             $(this).addClass("mainActive");
@@ -76,10 +121,10 @@ var roomCategoryList = {
                 $(this).find("img").addClass("rotate");
                 $(this).nextUntil(".mainClass").removeClass("hide");
                 $(this).nextUntil(".mainClass").find("div").slideDown(300);
-            } else{
+            } else {
                 $(this).find("img").removeClass("rotate");
                 $(this).nextUntil(".mainClass").find("div").slideUp(300);
-                setTimeout(function(){
+                setTimeout(function () {
                     that.nextUntil(".mainClass").addClass("hide");
                 }, 300);
             }
@@ -94,7 +139,7 @@ var roomCategoryList = {
         },
 
         //点击子类
-        "click .category .subclass": function(){
+        "click .categoryGrid .subclass": function () {
             $(".subclass").removeClass("subActive");
             $(".mainClass").removeClass("mainActive");
             $(this).prevAll(".mainClass").first().addClass("mainActive");
@@ -105,64 +150,30 @@ var roomCategoryList = {
             $(".mainOperate .subclassManageButton").removeClass("hide");
         },
         //绑定悬浮信息
-        "mouseenter .categoryGrid .gridMore": function(){
+        "mouseenter .categoryGrid .gridMore": function () {
             floatInfo.showMoreInfo(event, this);
         },
-        "mouseleave .categoryGrid .gridMore":function(){
+        "mouseleave .categoryGrid .gridMore": function () {
             floatInfo.hideMoreInfo(event, this)
+        },
+
+
+        //点击删除按钮
+        "click #deleteRoomButton": function () {
+            var confirmCallback = roomCategoryList.deleteRoom;
+            var dialogConfig = {title: "提示", message: "您确定要删除吗？"};
+            modal.confirmDialog(dialogConfig, confirmCallback);
+        },
+
+        //上架或下架
+        "click .modifyStateButton": function () {
+            var item = {
+                id: $(".mainActive .id").val(),
+                state: 1 - $(".mainActive .state").val()
+            };
+            roomCategoryList.modifyState(item);
         }
-
-    },
-
-    //上下架
-    modifyState: function(item){
-        $.ajax({
-            url: AJAXService.getUrl('modifyStateUrl'),
-            data: item,
-            dataFilter: function (result){
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
-                if (!errorHandler(result)) {
-                    return;
-                }
-                $.each(roomCategoryList.list, function(index, element){
-                    if (element.id == item.id) {
-                        roomCategoryList.list[index].state = item.state;
-                        return false; //等于break
-                    }
-                });
-                roomCategoryList.render();
-            }
-        })
-    },
-
-    //删除房型
-    deleteRoom: function(){
-        var id = $(".mainActive .id").val();
-        $.ajax({
-            url: getUrl(deleteRoomUrl),
-            data: {id: id},
-            success: function(result){
-                if(!errorHandler(result)){
-                    return;
-                }
-                $.each(roomCategoryList.list, function(index, element){
-                    if (element.id == id) {
-                        roomCategoryList.list.splice(index, 1);
-                        return false; //等于break
-                    }
-                });
-                roomCategoryList.render();
-            },
-            dataFilter: function (result) {
-                result = JSON.parse(result); //先转为json
-                sessionValidate(result);
-                return JSON.stringify(result); //再转为字符串传回去
-            }
-        });
-    },
-
+    }
 };
 
 module.exports = roomCategoryList;
