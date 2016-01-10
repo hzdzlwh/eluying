@@ -86,6 +86,10 @@ var util = {
         return new Date(date.valueOf() + diff*24*60*60*1000);
     },
 
+    compareDates: function(date1, date2){
+        return date1 > date2;
+    },
+
     centroidDiv: function(dom, pdom){
         var cw = $(dom).width();
         var pw = $(pdom).width();

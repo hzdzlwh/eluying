@@ -10,9 +10,9 @@ webpackJsonp([5],{
 	var util = __webpack_require__(7);
 	var leftMenu = __webpack_require__(11);
 	var header = __webpack_require__(3);
-	var trToggle = __webpack_require__(30);
+	var trToggle = __webpack_require__(32);
+	__webpack_require__(30);
 	__webpack_require__(31);
-	__webpack_require__(32);
 	__webpack_require__(9);
 	
 	var IVENTORY = {
@@ -33,22 +33,34 @@ webpackJsonp([5],{
 	        }
 	    },
 	    update: function(){
-	        //$(".inventoryGrid table tbody").html('');
-	        var data = this.data;
-	        var html = '';
-	        data.forEach(function(i){
-	            html += '<tr class="mainClass" cid="' + i.id + '" scid="' + i.subTypeId + '"> ' +
-	                '<td> ' +
-	                '<span>' + i.name + '</span> ' +
-	                '<img src="/static/image/rotate.png" /> ' +
-	                '</td> ' +
-	                '<td><p>剩余</p><p>总量</p></td> ';
-	            i.inventories.forEach(function(d){
-	                html += '<td date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
-	            });
-	            html += '</tr>'
+	        var that = this;
+	        $.ajax({
+	            url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+	            data:{
+	                date: that.start,
+	                type: 0
+	            },
+	            dataFilter: function (result) {
+	                return AJAXService.sessionValidate(result);
+	            },
+	            success: function(result){
+	                var data = that.data = result.data.list;
+	                var html = '';
+	                data.forEach(function(i){
+	                    html += '<tr class="mainClass" cid="' + i.id + '" scid="' + i.subTypeId + '"> ' +
+	                        '<td> ' +
+	                        '<span>' + i.name + '</span> ' +
+	                        '<img src="/static/image/rotate.png" /> ' +
+	                        '</td> ' +
+	                        '<td><p>剩余</p><p>总量</p></td> ';
+	                    i.inventories.forEach(function(d){
+	                        html += '<td date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
+	                    });
+	                    html += '</tr>'
+	                });
+	                $(".inventoryGrid table tbody").html(html);
+	            }
 	        });
-	        $(".inventoryGrid table tbody").html(html);
 	    },
 	    changeStart: function(start){
 	        this.start = start;
@@ -120,13 +132,18 @@ webpackJsonp([5],{
 	                        html += '<td class="empty"><p>' + tempDate.getDate() + '日</p><p>' + '' + '</p></td>';
 	                        tempDate = util.diffDate(tempDate, 1);
 	                    }
+	                    var today = new Date();
 	                    result.data.list.forEach(function(d){
 	                        tempDate = util.stringToDate(d.date);
 	                        var status = d.status;
+	                        var classStr = "roomDayItem " + statusList[status].classStr;
+	                        if(util.compareDates(today, tempDate)){
+	                            classStr = "empty";
+	                        }
 	                        if(tempDate.getDay() == 1){
 	                            html += '<tr>';
 	                        }
-	                        html += '<td status="' + d.status + '" date="' + d.date + '" class="roomDayItem ' + statusList[status].classStr + '"><p>' + tempDate.getDate()
+	                        html += '<td status="' + d.status + '" date="' + d.date + '" class="' + classStr + '"><p>' + tempDate.getDate()
 	                            + '日</p><p>' + statusList[status].text + '</p></td>';
 	                        if(tempDate.getDay() == 0){
 	                            html += '</tr>'
@@ -159,7 +176,7 @@ webpackJsonp([5],{
 	};
 	
 	var events = {
-	    "click .prevWeek": function(){
+	    "click .preWeek": function(){
 	        $(".editSalePrice").addClass("hide");
 	        $(".editNetPrice").addClass("hide");
 	        $(".second").addClass("hide");
@@ -333,6 +350,7 @@ webpackJsonp([5],{
 	        }else{
 	            var open = 0;
 	            var dateList = [];
+	            var flag = false;
 	            $(".roomDayItem.selected").each(function(){
 	                var date = $(this).attr("date");
 	                var status = $(this).attr("status");
@@ -340,7 +358,14 @@ webpackJsonp([5],{
 	                if(status == 0){
 	                    open = 1
 	                } //有一个是关闭的，就是全打开操作；全都是打开的，就是全关闭操作
+	                else if(status == 1){
+	                    alert("房间已出售！不能关闭！");
+	                    flag = true;
+	                }
 	            });
+	            if(flag){
+	                return false;
+	            }//如果选中的房间有已出售的，停止
 	            $.ajax({
 	                url: AJAXService.getUrl("modifyRoomStatusUrl"),
 	                data:{
@@ -354,6 +379,20 @@ webpackJsonp([5],{
 	                },
 	                success: function(result){
 	                    IVENTORY.setPatchGrid();
+	                    dateList.forEach(function(date){
+	                        console.log(date);
+	                        var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
+	                        if(open == 1){
+	                            dom.attr("status", '2');
+	                            dom.removeClass("shut").addClass("notsale");
+	                            dom.html('未售');
+	                        }else{
+	                            dom.attr("status", '0');
+	                            dom.removeClass("notsale").addClass("shut");
+	                            dom.html('已关闭');
+	                        }
+	                    });
+	                    IVENTORY.updateLeft();
 	                }
 	            });
 	        }
@@ -368,7 +407,8 @@ webpackJsonp([5],{
 	        if(status == 2){
 	            open = 0;
 	        }else if(status == 1){
-	
+	            alert("已出售的房间不能关闭！");
+	            return false;
 	        }else if(status == 0){
 	            open = 1;
 	        }
@@ -421,20 +461,7 @@ webpackJsonp([5],{
 	    $("#datePicker").datepicker( "setDate", new Date());
 	
 	    IVENTORY.updateTh();
-	    $.ajax({
-	        url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
-	        data:{
-	            date: IVENTORY.start,
-	            type: 0
-	        },
-	        dataFilter: function (result) {
-	            return AJAXService.sessionValidate(result);
-	        },
-	        success: function(result){
-	            IVENTORY.data = result.data.list;
-	            IVENTORY.update();
-	        }
-	    });
+	    IVENTORY.update();
 	
 	    var localStorage = window.localStorage;
 	    $(".mainContainer .campName").html(localStorage.campName);
@@ -523,35 +550,6 @@ webpackJsonp([5],{
 /***/ 30:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {/**
-	 * Created by huwanqi on 15/12/26.
-	 */
-	function trToggle(pClass){
-	    $("body").on("click", ".mainClass", function(){
-	        var that = $(this);
-	        if ($(this).nextUntil(".mainClass").hasClass("hide")) {
-	            $(this).find("img").addClass("rotate");
-	            $(this).nextUntil(".mainClass").find("div").hide();
-	            $(this).nextUntil(".mainClass").removeClass("hide");
-	            $(this).nextUntil(".mainClass").find("div").slideDown(300);
-	        } else{
-	            $(this).find("img").removeClass("rotate");
-	            $(this).nextUntil(".mainClass").find("div").slideUp(300);
-	            setTimeout(function(){
-	                that.nextUntil(".mainClass").addClass("hide");
-	            }, 300);
-	        }
-	    });
-	}
-	
-	module.exports = trToggle;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ },
-
-/***/ 31:
-/***/ function(module, exports, __webpack_require__) {
-
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! jQuery UI - v1.11.4 - 2015-12-27
 	* http://jqueryui.com
 	* Includes: core.js, datepicker.js
@@ -562,7 +560,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 32:
+/***/ 31:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {/* Chinese initialisation for the jQuery UI date picker plugin. */
@@ -596,6 +594,35 @@ webpackJsonp([5],{
 	    return datepicker.regional[ "zh-CN" ];
 	
 	} ) );
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+
+/***/ 32:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {/**
+	 * Created by huwanqi on 15/12/26.
+	 */
+	function trToggle(pClass){
+	    $("body").on("click", ".mainClass", function(){
+	        var that = $(this);
+	        if ($(this).nextUntil(".mainClass").hasClass("hide")) {
+	            $(this).find("img").addClass("rotate");
+	            $(this).nextUntil(".mainClass").find("div").hide();
+	            $(this).nextUntil(".mainClass").removeClass("hide");
+	            $(this).nextUntil(".mainClass").find("div").slideDown(300);
+	        } else{
+	            $(this).find("img").removeClass("rotate");
+	            $(this).nextUntil(".mainClass").find("div").slideUp(300);
+	            setTimeout(function(){
+	                that.nextUntil(".mainClass").addClass("hide");
+	            }, 300);
+	        }
+	    });
+	}
+	
+	module.exports = trToggle;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }

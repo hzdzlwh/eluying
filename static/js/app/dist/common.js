@@ -160,6 +160,9 @@
 	        getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
 	        getRoomStatusUrl: '/inventory/getRoomStatus',
 	        modifyRoomStatusUrl: '/inventory/modifyRoomStatus',
+	        modifyExtraInventoryUrl: '/inventory/modifyExtraInventory',
+	        getCategoryInventoriesUrl: '/inventory/getCategoryInventories',
+	        modifyExtraServiceInventoryBatchUrl: '/inventory/modifyExtraServiceInventoryBatch',
 	        sendVerifyCodeUrl: '/user/sendVerifyCode',
 	        resetPasswordUrl: '/user/resetPassword',
 	        registerUrl: '/user/register',
@@ -397,6 +400,10 @@
 	
 	    diffDate: function(date, diff){
 	        return new Date(date.valueOf() + diff*24*60*60*1000);
+	    },
+	
+	    compareDates: function(date1, date2){
+	        return date1 > date2;
 	    },
 	
 	    centroidDiv: function(dom, pdom){
