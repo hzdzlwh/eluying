@@ -50,6 +50,93 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" role="dialog" id="editPatch">
+    <div class="modal-dialog modal-w1130">
+        <div class="modal-content clearfloat">
+            <div class="editPrice clearfloat">
+                <div class="title">
+                    批量管理－<span>双人帐篷</span>
+                </div>
+                <div class="label1">默认总量</div>
+                <input class="numofall" type="text">
+                <div class="tips">按月份管理</div>
+                <div class="monthPick">
+                    <div class="month">11月</div>
+                    <div class="pickers">
+                        <button id="prevMonth">&lt前一月</button>
+                        <button id="nextMonth">后一月&gt</button>
+                    </div>
+                </div>
+                <div class="patchGrid">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="fixed">数字类型</th>
+                            <th>周一</th>
+                            <th>周二</th>
+                            <th>周三</th>
+                            <th>周四</th>
+                            <th>周五</th>
+                            <th>周六</th>
+                            <th>周日</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="fixed"><p>&nbsp;</p><p>未售</p><p>未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="operate priceOperate">
+                    <div class="first">
+                        <div class="operateItem">
+                            <div class="clickDiv" id="modalEditButton">
+                                <img src="/static/image/icon_bianjijibenxinxi.png" alt="关闭房间">
+                                <p>修改库存</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <button class="btn-cancel" id="editPatchCancel">取消修改</button>
+                <button class="btn-ok" id="editPatchOk">确认修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改价格-->
+<div class="modal fade" role="dialog" id="editInvenForPatch">
+    <div class="modal-dialog modal-w630">
+        <div class="modal-content clearfloat">
+            <div class="editPrice clearfloat">
+                <div class="title">
+                    修改库存－<span>双人帐篷</span>
+                </div>
+                <div class="edit">
+                    <div class="label">总量</div>
+                    <input type="text" name="total"/>
+                </div>
+                <div class="tips">已经预订数量 <span>20</span> </div>
+                <div class="footer">
+                    <button class="btn-cancel" id="editInvenForPatchCancel">取消修改</button>
+                    <button class="btn-ok" id="editInvenForPatchOk">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="mainContainer clearfloat" style="width: 1301px;">
     <div class="content clearfloat">
         <div class="title clearfloat">
@@ -59,7 +146,7 @@
                 <input type="text" class="dateContainer" id="datePicker" />
                 <label class="calender" for="datePicker"></label>
                 <button class="nextWeek">后一周&gt</button>
-                <p class="tip">今天以前（包括今天）的价格不能修改！</p>
+                <p class="tip">今天以前（包括今天）的库存不能修改！</p>
             </div>
         </div>
         <div class="inventoryGrid">

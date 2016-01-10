@@ -50,6 +50,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" role="dialog" id="editPatch">
     <div class="modal-dialog modal-w1130">
         <div class="modal-content clearfloat">
@@ -63,8 +64,8 @@
                 <div class="monthPick">
                     <div class="month">11月</div>
                     <div class="pickers">
-                        <button>&lt前一周</button>
-                        <button>后一周&gt</button>
+                        <button id="prevMonth">&lt前一月</button>
+                        <button id="nextMonth">后一月&gt</button>
                     </div>
                 </div>
                 <div class="patchGrid">
@@ -113,6 +114,29 @@
         </div>
     </div>
 </div>
+
+<!--修改价格-->
+<div class="modal fade" role="dialog" id="editInvenForPatch">
+    <div class="modal-dialog modal-w630">
+        <div class="modal-content clearfloat">
+            <div class="editPrice clearfloat">
+                <div class="title">
+                    修改库存－<span>双人帐篷</span>
+                </div>
+                <div class="edit">
+                    <div class="label">总量</div>
+                    <input type="text" name="total"/>
+                </div>
+                <div class="tips">已经预订数量 <span>20</span> </div>
+                <div class="footer">
+                    <button class="btn-cancel" id="editInvenForPatchCancel">取消修改</button>
+                    <button class="btn-ok" id="editInvenForPatchOk">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="mainContainer clearfloat" style="width: 1301px;">
     <div class="content clearfloat">
         <div class="title clearfloat">
@@ -122,7 +146,7 @@
                 <input type="text" class="dateContainer" id="datePicker" />
                 <label class="calender" for="datePicker"></label>
                 <button class="nextWeek">后一周&gt</button>
-                <p class="tip">今天以前（包括今天）的价格不能修改！</p>
+                <p class="tip">今天以前（包括今天）的库存不能修改！</p>
             </div>
         </div>
         <div class="inventoryGrid">

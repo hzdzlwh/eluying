@@ -13,6 +13,8 @@ var IVENTORY = {
     data: null,
     start: util.dateFormat(new Date()),
     selectedEntertain: null,
+    patchYear: (new Date()).getFullYear(),
+    patchMonth: (new Date()).getMonth(),
     updateTh: function(){
         var dayStrs = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         var dateStr = this.start;
@@ -61,6 +63,79 @@ var IVENTORY = {
         this.start = start;
         this.updateTh();
         this.update();
+    },
+    setPatchGrid: function(){
+        $("#editPatch .monthPick .month").html( (parseInt(this.patchMonth)+1) + "月");
+        var today = new Date();
+        var startDate, start;
+        var endDate, end;
+        today.setFullYear(this.patchYear);
+        today.setMonth(this.patchMonth);
+        startDate = util.getFirstDay(today);
+        endDate = util.getLastDay(today);
+        start = util.dateFormat(startDate);
+        end = util.dateFormat(endDate);
+        $.ajax({
+            url: AJAXService.getUrl("getCategoryInventoriesUrl"),
+            data:{
+                startDate: start,
+                endDate	: end,
+                categoryId: this.selectedEntertain.id
+            },
+            dataFilter: function (result) {
+                return AJAXService.sessionValidate(result);
+            },
+            success: function(result){
+                if(result.code == 1){
+                    result.data.list.sort(function(a, b){
+                        return util.stringToDate(a.date) - util.stringToDate(b.date);
+                    });
+                    var html = '';
+                    //处理每个月第一天之前的
+                    var firstDate = util.stringToDate(result.data.list[0].date);
+                    var diff1 = firstDate.getDay() == 0 ? -6 : -(firstDate.getDay() - 1);
+                    var firstDay = util.diffDate(firstDate, diff1);
+                    var tempDate = firstDay;
+                    if(tempDate < firstDate){
+                        html += '<tr><td class="fixed"><p>&nbsp;</p><p>剩余</p><p>总量</p></td>'
+                    }
+                    while(tempDate < firstDate){
+                        html += '<td class="empty"><p>' + tempDate.getDate() + '日</p></td>';
+                        tempDate = util.diffDate(tempDate, 1);
+                    }
+                    var today = new Date();
+                    result.data.list.forEach(function(d){
+                        tempDate = util.stringToDate(d.date);
+                        var status = d.status;
+                        var classStr = "entertainPatchItem";
+                        if(util.compareDates(today, tempDate)){
+                            classStr = 'empty';
+                        }
+                        if(tempDate.getDay() == 1){
+                            html += '<tr><td class="fixed"><p>&nbsp;</p><p>剩余</p><p>总量</p></td>';
+                        }
+                        html += '<td class="' + classStr + '" total="' + d.total + '" remain="' + d.remain + '" date="' + d.date
+                            + '"><p class="date">'
+                            + tempDate.getDate() + '日</p><p class="left">' + d.remain
+                            + '</p><p class="all">' + d.total + '</p></td>';
+                        if(tempDate.getDay() == 0){
+                            html += '</tr>'
+                        }
+                    });
+                    //处理每个月最后一天之后的
+                    var lastDate = util.stringToDate(result.data.list[result.data.list.length-1].date);
+                    lastDate = util.diffDate(lastDate, 1);
+                    if(lastDate.getDay() != 0){
+                        html += '</tr>';
+                    }
+                    console.log(html);
+                    $("#editPatch .patchGrid tbody").html(html);
+                }else{
+                    alert(result.msg);
+                }
+                console.log(result.data.list);
+            }
+        });
     }
 };
 
@@ -170,6 +245,111 @@ var events = {
     },
     'click body #editInvenCancel': function(){
         $("#editInven").modal("hide");
+    },
+    'click body #editInvenForPatchOk': function(){
+        var newTotal = $("#editInvenForPatch .edit input").val();
+        //TODO 判断下有没有比已经预定的多
+        $(".entertainPatchItem.selected").each(function(){
+            var total = parseInt($(this).attr("total"));
+            var remain = parseInt($(this).attr("remain"));
+            $(this).attr("total", newTotal);
+            $(this).attr("remain", newTotal-total+remain);
+            $(this).find(".all").html(newTotal);
+            $(this).find(".left").html(newTotal-total+remain);
+        });
+        $(".entertainPatchItem").removeClass("selected");
+        $("#editInvenForPatch").modal("hide");
+    },
+    'click body #editInvenForPatchCancel': function(){
+        $("#editInvenForPatch").modal("hide");
+    },
+    'click body #editPatchButton': function(){
+        if($(".entertainitem.selected").length != 0){
+            IVENTORY.setPatchGrid();
+            $("#editPatch .title span").html(IVENTORY.selectedEntertain.name);
+            $("#editPatch").modal("show");
+        }else{
+            alert("请选择一项餐饮！");
+        }
+    },
+    'click body #editPatchOk': function(){
+        var hash = {};
+        $(".entertainPatchItem").each(function(){
+            var date = $(this).attr("date");
+            var total = $(this).attr("total");
+            if(hash[total] == undefined){
+                hash[total] = [];
+                hash[total].push(date);
+            }else if(hash[total] && hash[total].indexOf(date) == -1){
+                hash[total].push(date);
+            }
+        });
+        for(var total in hash){
+            var dateList = hash[total];
+            $.ajax({
+                url: AJAXService.getUrl("modifyExtraServiceInventoryBatchUrl"),
+                async: false,
+                data:{
+                    categoryId: IVENTORY.selectedEntertain.id,
+                    dateList: JSON.stringify(dateList),
+                    inventory: total
+                },
+                dataFilter: function (result) {
+                    return AJAXService.sessionValidate(result);
+                },
+                success: function(result){
+                    console.log(result);
+                }
+            });
+            IVENTORY.update();
+            $("#editPatch").modal("hide");
+        }
+    },
+    'click body #editPatchCancel': function(){
+        $("#editPatch").modal("hide");
+    },
+    'click body #preMonth': function(){
+        if(IVENTORY.patchMonth == 0){
+            IVENTORY.patchMonth = 11;
+            IVENTORY.patchYear--;
+        }else{
+            IVENTORY.patchMonth--;
+        }
+        IVENTORY.setPatchGrid();
+    },
+    'click body #nextMonth': function(){
+        if(IVENTORY.patchMonth == 11){
+            IVENTORY.patchMonth = 0;
+            IVENTORY.patchYear++;
+        }else{
+            IVENTORY.patchMonth++;
+        }
+        IVENTORY.setPatchGrid();
+    },
+    'click body .entertainPatchItem': function(){
+        if($(this).hasClass("selected")){
+            $(this).removeClass("selected");
+        }else{
+            $(this).addClass("selected");
+        }
+    },
+    'change body input.numofall': function(){
+        var newTotal = $(this).val();
+        $(".entertainPatchItem").each(function(){
+            var total = parseInt($(this).attr("total"));
+            var remain = parseInt($(this).attr("remain"));
+            $(this).attr("total", newTotal);
+            $(this).attr("remain", newTotal-total+remain);
+            $(this).find(".all").html(newTotal);
+            $(this).find(".left").html(newTotal-total+remain);
+        });
+    },
+    'click body #modalEditButton': function(){
+        if($(".entertainPatchItem.selected").length != 0){
+            $("#editInvenForPatch").modal("show");
+        }else{
+            alert("请先选择至少一天！");
+        }
     }
 };
 
