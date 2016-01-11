@@ -64,9 +64,12 @@ gulp.task('zip', function () {
 });
 
 gulp.task('rev', function () {
-    return gulp.src(['rev/**/*.json', 'build/**/*.html'])
+    gulp.src(['rev/**/*.json', 'build/**/*.html'])
         .pipe( revCollector())
         .pipe( gulp.dest('build') );
+    gulp.src(['rev/**/*.json', 'build/static/js/app/dist/**/*.js'])
+        .pipe( revCollector())
+        .pipe( gulp.dest('build/static/js/app/dist') );
 });
 
 
