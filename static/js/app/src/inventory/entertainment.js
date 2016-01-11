@@ -20,16 +20,18 @@ var IVENTORY = {
         var dayStrs = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         var dateStr = this.start;
         var date = util.stringToDate(dateStr);
+        var dateStrWithoutYear = util.dateFormatWithoutYear(date);
         var today = new Date();
         for(var i = 0; i < 7; i++){
             var str = dayStrs[date.getDay()];
             if(util.isSameDay(today, date)){
                 str = '今天';
             }
-            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(1)").html(dateStr);
+            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(1)").html(dateStrWithoutYear);
             $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(2)").html(str);
             date = util.diffDate(date, 1);
             dateStr = util.dateFormat(date);
+            dateStrWithoutYear = util.dateFormatWithoutYear(date);
         }
     },
     update: function(){

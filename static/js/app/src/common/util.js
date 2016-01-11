@@ -95,6 +95,14 @@ var util = {
             && date1.getDate() == date2.getDate();
     },
 
+    dateFormatWithoutYear: function(date){
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return m + '-' + d;
+    },
+
     centroidDiv: function(dom, pdom){
         var cw = $(dom).width();
         var pw = $(pdom).width();
