@@ -47,8 +47,8 @@ gulp.task('build', ['styles', 'webpack2', 'clean'],function(){
 
 });
 
-gulp.task('zip', ['build'], function(){
-    gulp.src('build/**/*')
+gulp.task('zip', function(){
+    gulp.src('./build/**')
         .pipe(zip('eluyun.war'))
         .pipe(gulp.dest('./'));
 });
@@ -122,8 +122,7 @@ gulp.task('webpack2', function(){
             gutil.log("[webpack]", stats.toString({
             }));
         }, webpack))
-        .pipe(gulp.dest('static/js/app/dist/'))
-        .pipe(notify({title:'好棒啊！',message:'<%= file.relative %>编译完成，站起来活动活动'}));
+        .pipe(gulp.dest('static/js/app/dist/'));
 });
 
 gulp.task('webpack', function(){
