@@ -70,6 +70,9 @@ gulp.task('rev', function () {
     gulp.src(['rev/**/*.json', 'build/static/js/app/dist/**/*.js'])
         .pipe( revCollector())
         .pipe( gulp.dest('build/static/js/app/dist') );
+    gulp.src(['rev/**/*.json', 'build/static/css/**/*.css'])
+        .pipe( revCollector())
+        .pipe( gulp.dest('build/static/css') );
 });
 
 
