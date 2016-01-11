@@ -13,32 +13,35 @@ var showInfo = require("./showInfo");
 require("bootstrap");
 require("validation");
 
-//初始化界面
-header.showHeader();
-leftMenu.showLeftMenu();
-util.mainContainer();
-modal.modalInit();
-$(".campName").html(localStorage.getItem("campName"));
+
+$(function(){
+    //初始化界面
+    header.showHeader();
+    leftMenu.showLeftMenu();
+    util.mainContainer();
+    modal.modalInit();
+    $(".campName").html(localStorage.getItem("campName"));
 
 
-ETCategoryList.loadETCategoryList();
+    ETCategoryList.loadETCategoryList();
 
 
-events = {
+    events = {
 
-    "resize window": util.mainContainer,
-    "show.bs.modal .modal": modal.centerModals,
-    "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
+        "resize window": util.mainContainer,
+        "show.bs.modal .modal": modal.centerModals,
+        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
 
 
-};
+    };
 
-util.bindDomAction(events);
+    util.bindDomAction(events);
 
-util.bindDomAction(ETCategoryList.events);
+    util.bindDomAction(ETCategoryList.events);
 
-util.bindDomAction(addET.events);
+    util.bindDomAction(addET.events);
 
-util.bindDomAction(editETBasic.events);
+    util.bindDomAction(editETBasic.events);
 
-util.bindDomAction(showInfo.events);
+    util.bindDomAction(showInfo.events);
+});

@@ -7,23 +7,24 @@ var foodETPriceList = require("foodETPriceList");
 require("validate");
 require("validation");
 
-//初始化界面
-header.showHeader();
-leftMenu.showLeftMenu();
-util.mainContainer();
-modal.modalInit();
-$(".campName").html(localStorage.getItem("campName"));
+
+$(function(){
+    //初始化界面
+    header.showHeader();
+    leftMenu.showLeftMenu();
+    util.mainContainer();
+    modal.modalInit();
+    $(".campName").html(localStorage.getItem("campName"));
 
 
 //拉今天的价格去
-foodETPriceList.getFoodETPriceList(window.location.pathname.split("/")[3].split(".")[0]);
+    foodETPriceList.getFoodETPriceList(window.location.pathname.split("/")[3].split(".")[0]);
 
 
-events = {
-    "resize window": util.mainContainer,
-    "show.bs.modal .modal": modal.centerModals,
-    "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
-};
-util.bindDomAction(events);
-
-
+    events = {
+        "resize window": util.mainContainer,
+        "show.bs.modal .modal": modal.centerModals,
+        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
+    };
+    util.bindDomAction(events);
+});
