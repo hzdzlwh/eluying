@@ -2,27 +2,28 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>订单来了</title>
-  <link rel="stylesheet" href="/eluyun/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!--[if lte IE 6]>
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/bootstrap-ie6.css">
-  <link rel="stylesheet" type="text/css" href="/eluyun/static/css/ie.css">
-  <![endif]-->
-  <link rel="stylesheet" href="/eluyun/static/css/main.min.css">
+  <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-
-  <div class="mainContainer">
-
-  </div>
-  <!--[if lte IE 9]>
-  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv-printshiv.js"></script>
-  <![endif]-->
-  <script src="/eluyun/bower_components/jquery.min.js"></script>
-  <script src="/eluyun/static/js/bootstrap.min.js"></script>
-  <!--[if lte IE 6]>
-  <script type="/eluyun/text/javascript" src="/eluyun/static/js/bootstrap-ie.js"></script>
-  <![endif]-->
-  <script src="/eluyun/static/js/main.js"></script>
+<script>
+  var ua = window.navigator.userAgent;
+  if (ua.indexOf('MicroMessenger') > -1 ) {
+    document.write('<img src="/static/image/weixin.jpg" width="100%">');
+    document.body.addEventListener('touchmove',function(){
+      event.preventDefault();
+    })
+  } else if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+    window.location="https://itunes.apple.com/xxx";
+  } else if (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1) {
+    window.location="http://xxx/xxx.apk";
+  }
+</script>
 </body>
 </html>
