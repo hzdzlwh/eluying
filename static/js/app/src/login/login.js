@@ -124,17 +124,17 @@ $(document).ready(function(){
         });
     }else{
         $("#loginBox").css({
-            "overflow-x": ""
+            "overflow-x": "visible"
         });
     }
-    $("body").on("resize", function(){
+    $(window).on("resize", function(){
         if($(window).width() < 1200){
             $("#loginBox").css({
                 "overflow-x": "hidden"
             });
         }else{
             $("#loginBox").css({
-                "overflow-x": ""
+                "overflow-x": "visible"
             });
         }
     });
