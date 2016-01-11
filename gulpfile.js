@@ -35,21 +35,12 @@ gulp.task('build', function(){
         .pipe(gulp.dest('build/WEB-INF'));
     gulp.src('static/image/**/*')
         .pipe(gulp.dest('build/static/image'));
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i
-        }
-        return i
-    }
 
-    var d=new Date();
-    var year=d.getFullYear();
-    var month=checkTime(d.getMonth() + 1);
-    var day=checkTime(d.getDate());
-    var hour=checkTime(d.getHours());
-    var minute=checkTime(d.getMinutes());
+});
+
+gulp.task('zip', ['build'], function(){
     gulp.src('build/**/*')
-        .pipe(zip('dingdanlaile' + '-' + year+month+day + hour + minute + '.war'))
+        .pipe(zip('eluyun.war'))
         .pipe(gulp.dest('./'));
 });
 
