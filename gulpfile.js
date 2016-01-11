@@ -8,7 +8,9 @@ var gulp = require('gulp'),
     path = require("path"),
     gutil = require("gulp-util"),
     browserSync = require('browser-sync').create(),
-    reload = browserSync.reload;
+    reload = browserSync.reload,
+    zip = require('gulp-zip'),
+    uglify = require('gulp-uglify');
 
 gulp.task('browser-sync', function() {
 	browserSync.init({
@@ -19,6 +21,37 @@ gulp.task('browser-sync', function() {
 	});
 });
 
+gulp.task('build', function(){
+    gulp.src('static/css/**/*.css')
+        .pipe(gulp.dest('build/static/css'));
+    gulp.src('static/js/app/dist/**/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('build/static/app/dist'));
+    gulp.src('view/**/*.html')
+        .pipe(gulp.dest('build/view'));
+    gulp.src('login.html')
+        .pipe(gulp.dest('build'));
+    gulp.src('WEB-INF/web.xml')
+        .pipe(gulp.dest('build/WEB-INF'));
+    gulp.src('static/image/**/*')
+        .pipe(gulp.dest('build/static/image'));
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i
+        }
+        return i
+    }
+
+    var d=new Date();
+    var year=d.getFullYear();
+    var month=checkTime(d.getMonth() + 1);
+    var day=checkTime(d.getDate());
+    var hour=checkTime(d.getHours());
+    var minute=checkTime(d.getMinutes());
+    gulp.src('build/**/*')
+        .pipe(zip('dingdanlaile' + '-' + year+month+day + hour + minute + '.war'))
+        .pipe(gulp.dest('./'));
+});
 
 gulp.task('styles',function(){
 	return sass('static/sass/main.scss', {style: 'compressed'})
@@ -109,3 +142,4 @@ gulp.task('default',['watch'],function(){
 	gulp.start('webpack');
 	gulp.start('watch');
 });
+
