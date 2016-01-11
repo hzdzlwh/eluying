@@ -117,6 +117,7 @@ $(document).ready(function(){
     $(".modal").modal({
         show: false
     });
+
     //function centerModals(){
     //    $('.modal').each(function(){
     //        var $clone = $(this).clone().css('display', 'block').appendTo('body');
