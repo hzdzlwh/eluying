@@ -20,10 +20,15 @@ var IVENTORY = {
         var dayStrs = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         var dateStr = this.start;
         var date = util.stringToDate(dateStr);
+        var today = new Date();
         for(var i = 0; i < 7; i++){
+            var str = dayStrs[date.getDay()];
+            if(util.isSameDay(today, date)){
+                str = '今天';
+            }
             $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(1)").html(dateStr);
-            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(2)").html( i == 0 ? '今天' : dayStrs[date.getDay()]);
-            date = new Date(date.valueOf() + 1*24*60*60*1000);
+            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(2)").html(str);
+            date = util.diffDate(date, 1);
             dateStr = util.dateFormat(date);
         }
     },
@@ -262,18 +267,14 @@ var events = {
                 }
             });
         }else{
-            var that = $(this);
             if ($(this).nextUntil(".mainClass").hasClass("hide")) {
                 $(this).find("img").addClass("rotate");
-                $(this).nextUntil(".mainClass").find("div").hide();
                 $(this).nextUntil(".mainClass").removeClass("hide");
                 //$(this).nextUntil(".mainClass").find("div").slideDown(300);
             } else{
                 $(this).find("img").removeClass("rotate");
                 //$(this).nextUntil(".mainClass").find("div").slideUp(300);
-                setTimeout(function(){
-                    that.nextUntil(".mainClass").addClass("hide");
-                }, 300);
+                $(that).nextUntil(".mainClass").addClass("hide");
             }
         }
     },
