@@ -8,6 +8,7 @@ var header = require("header");
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
+var modal = require("modal");
 
 var IVENTORY = {
     data: null,
@@ -19,10 +20,15 @@ var IVENTORY = {
         var dayStrs = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         var dateStr = this.start;
         var date = util.stringToDate(dateStr);
+        var today = new Date();
         for(var i = 0; i < 7; i++){
+            var str = dayStrs[date.getDay()];
+            if(util.isSameDay(today, date)){
+                str = '今天';
+            }
             $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(1)").html(dateStr);
-            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(2)").html( i == 0 ? '今天' : dayStrs[date.getDay()]);
-            date = new Date(date.valueOf() + 1*24*60*60*1000);
+            $(".inventoryGrid table thead th:nth-child(" + (i+3) + ") p:nth-child(2)").html(str);
+            date = util.diffDate(date, 1);
             dateStr = util.dateFormat(date);
         }
     },
@@ -350,7 +356,9 @@ var events = {
         }else{
             alert("请先选择至少一天！");
         }
-    }
+    },
+    "resize window": util.mainContainer,
+    "show.bs.modal .modal": modal.centerModals
 };
 
 $(document).ready(function(){

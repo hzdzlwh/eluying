@@ -1,15 +1,18 @@
 .inventoryGrid {
-  width: 900px;
-  max-height: 600px;
+  width: 901px;
+  //max-height: 600px;
   overflow-y: auto;
   border-top:4px solid #4A90E2;
   float: left;
   margin-top: 20px;
   table {
     border-collapse: collapse;
+    thead tr{
+      height: 49px!important;
+    }
     th {
       text-align: center;
-      height: 49px;
+      height: 49px!important;
       font-weight: bold;
       width: 100px;
       background-color: #F7F7F7;

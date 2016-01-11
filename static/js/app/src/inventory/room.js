@@ -9,6 +9,7 @@ var trToggle = require("trToggle");
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
+var modal = require("modal");
 
 var IVENTORY = {
     data: null,
@@ -434,7 +435,9 @@ var events = {
                 IVENTORY.updateLeft();
             }
         });
-    }
+    },
+    "resize window": util.mainContainer,
+    "show.bs.modal .modal": modal.centerModals
 };
 
 $(document).ready(function(){
