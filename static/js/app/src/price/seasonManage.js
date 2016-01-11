@@ -351,8 +351,8 @@ var seasonManage = {
                 newAgreementPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(0)").html(),
                 newNetPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(1)").html(),
                 newSalePrice: $(this).hasClass("salePrice") ? $(this).find("p").html() : 0,
-                startDate: $(this).parents("table").hasClass("busyGrid") ? $("#fromBusyDate").val() : $("#fromSlackDate").val(),
-                endDate: $(this).parents("table").hasClass("busyGrid") ? $("#toBusyDate").val() : $("#toSlackDate").val(),
+                startDate: $(this).parents("table").hasClass("busyGrid") ? '2000-' + $("#busyStartMonth").val() + $("#busyStartDay").val() : '2000-' + $("#slackStartMonth").val() + $("#slackStartDay").val(),
+                endDate: $(this).parents("table").hasClass("busyGrid") ? '2000-' + $("#busyEndMonth").val() + $("#busyEndDay").val() : '2000-' + $("#slackEndMonth").val() + $("#slackEndDay").val(),
                 weekday: $(this).attr("week")
             };
             prices.push(price);
