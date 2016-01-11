@@ -1,11 +1,12 @@
 .inventoryGrid {
-  width: 902px;
+  width: 904px;
   //max-height: 600px;
   overflow-y: auto;
   border-top:4px solid #4A90E2;
   float: left;
   margin-top: 20px;
   table {
+    width: 902px;
     border-collapse: collapse;
     thead tr{
       height: 49px!important;
