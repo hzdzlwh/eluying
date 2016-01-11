@@ -11,7 +11,9 @@ webpackJsonp([6],{
 	var loginValidate = __webpack_require__(33);
 	var AJAXService = __webpack_require__(5);
 	var baseUrl = AJAXService.urls.host;
-	
+	__webpack_require__(9);
+	__webpack_require__(6);
+
 	var resposiveWindow = function(){
 	    $("html").css({
 	        "font-size": parseFloat($(window).width()) / 1920 * 20 + 'px'
@@ -22,7 +24,7 @@ webpackJsonp([6],{
 	        });
 	    })
 	};
-	
+
 	/*
 	 验证码按钮倒计时用。
 	 */
@@ -46,7 +48,7 @@ webpackJsonp([6],{
 	        }, 1000);
 	    }
 	}
-	
+
 	function forgetVCOnClick(){
 	    var phone = $("#loginForgetPwd .phone").val();
 	    var result = loginValidate.phoneValidate(phone);
@@ -73,7 +75,7 @@ webpackJsonp([6],{
 	        $("#loginForgetPwd .errorTips").show();
 	    }
 	}
-	
+
 	function registerVCOnClick(){
 	    var phone = $("#loginRegister .phone").val();
 	    var result = loginValidate.phoneValidate(phone);
@@ -104,7 +106,7 @@ webpackJsonp([6],{
 	        $("#loginRegister .errorTips").show();
 	    }
 	}
-	
+
 	$(document).ready(function(){
 	    util.centroidDiv("#loginBox .bg", '#loginBox');
 	    util.centroidDiv(".loginPic img", '.loginPic');
@@ -112,11 +114,11 @@ webpackJsonp([6],{
 	        util.centroidDiv("#loginBox .bg", '#loginBox');
 	        util.centroidDiv(".loginPic img", '.loginPic');
 	    });
-	
+
 	    if (isPostBack == "False") {
 	        GetLastUser();
 	    }
-	
+
 	    $(".modal").modal({
 	        show: false
 	    });
@@ -135,10 +137,10 @@ webpackJsonp([6],{
 	    //    $(this).parents(".modal").modal("hide");
 	    //});
 	    //modal.modalInit();
-	
+
 	    $("#loginName").on("blur", GetPwdAndChk);
 	    //$("#loginSave").on("click", SetPwdAndChk);
-	
+
 	    /*
 	     申请注册码和我有注册码切换
 	     */
@@ -158,12 +160,12 @@ webpackJsonp([6],{
 	            $("#loginRegister .confirm").html('申请');
 	        }
 	    });
-	
+
 	    /*
 	     忘记密码点击发送验证码
 	     */
 	    $("#loginForgetPwd .get_code").on("click", forgetVCOnClick);
-	
+
 	    /*
 	     忘记密码点击确认
 	     */
@@ -212,12 +214,12 @@ webpackJsonp([6],{
 	            $("#loginForgetPwd .errorTips").show();
 	        }
 	    });
-	
+
 	    /*
 	     注册点击发送验证码
 	     */
 	    $("#loginRegister .get_code").on("click", registerVCOnClick);
-	
+
 	    /*
 	     申请注册码或者注册
 	     */
@@ -307,7 +309,7 @@ webpackJsonp([6],{
 	            $("#loginRegister .errorTips").show();
 	        }
 	    });
-	
+
 	    /*
 	     登录按钮响应
 	     */
@@ -352,7 +354,7 @@ webpackJsonp([6],{
 	            $("#loginBox .log .text").css("margin-top", "30px");
 	        }
 	    });
-	
+
 	    /*
 	     登录表单验证
 	     */
@@ -378,7 +380,7 @@ webpackJsonp([6],{
 	            $("#loginBox .log .errorTips").hide();
 	        }
 	    });
-	
+
 	    /*
 	     忘记密码表单验证
 	     */
@@ -429,7 +431,7 @@ webpackJsonp([6],{
 	            }
 	        }
 	    });
-	
+
 	    /*
 	     注册表单验证
 	     */
@@ -548,7 +550,7 @@ webpackJsonp([6],{
 	        }
 	    });
 	});
-	
+
 	function GetLastUser() {
 	    var id = "49BAC005-7D5B-4231-8CEA-16939BEACD67";//GUID标识符
 	    var usr = GetCookie(id);
@@ -560,7 +562,7 @@ webpackJsonp([6],{
 	    GetPwdAndChk();
 	}
 	//点击登录时触发客户端事件
-	
+
 	function SetPwdAndChk() {
 	    //取用户名
 	    var usr = $("#loginBox .loginName").val();;
@@ -579,7 +581,7 @@ webpackJsonp([6],{
 	        ResetCookie();
 	    }
 	}
-	
+
 	/*
 	 记住密码功能用
 	 */
@@ -591,7 +593,7 @@ webpackJsonp([6],{
 	    SetCookie(id, usr, expdate);
 	}
 	//用户名失去焦点时调用该方法
-	
+
 	function GetPwdAndChk() {
 	    var usr = $("#loginBox .loginName").val();
 	    var pwd = GetCookie(usr);
@@ -604,7 +606,7 @@ webpackJsonp([6],{
 	    }
 	}
 	//取Cookie的值
-	
+
 	function GetCookie(name) {
 	    var arg = name + "=";
 	    var alen = arg.length;
@@ -619,14 +621,14 @@ webpackJsonp([6],{
 	    return null;
 	}
 	var isPostBack = "False";
-	
+
 	function getCookieVal(offset) {
 	    var endstr = document.cookie.indexOf(";", offset);
 	    if (endstr == -1) endstr = document.cookie.length;
 	    return unescape(document.cookie.substring(offset, endstr));
 	}
 	//写入到Cookie
-	
+
 	function SetCookie(name, value, expires) {
 	    var argv = SetCookie.arguments;
 	    //本例中length = 3
@@ -637,7 +639,7 @@ webpackJsonp([6],{
 	    var secure = (argc > 5) ? argv[5] : false;
 	    document.cookie = name + "=" + escape(value) + ((expires == null) ? "" : ("; expires=" + expires.toGMTString())) + ((path == null) ? "" : ("; path=" + path)) + ((domain == null) ? "" : ("; domain=" + domain)) + ((secure == true) ? "; secure" : "");
 	}
-	
+
 	function ResetCookie() {
 	    var usr = $("#loginBox .loginName").val();;
 	    var expdate = new Date();
@@ -654,55 +656,54 @@ webpackJsonp([6],{
 	 * Created by huwanqi on 15/12/19.
 	 */
 	var validate = {};
-	
+
 	validate.loginNameValidate = function(str){
 	    var reg = /^[a-zA-Z0-9]{6,15}$/;
 	    return reg.test(str) || '账户名必须是6到15位的字母或者数字';
 	};
-	
+
 	validate.passwordValidate = function(str){
 	    //var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/;
 	    var reg = /^[a-zA-Z0-9]{6,15}$/;
 	    return reg.test(str) || '密码必须是6到15位的数字或字母';
 	};
-	
+
 	validate.passwordConfirmValidate = function(left, right){
 	    return left === right || '两次输入的密码不一样';
 	};
-	
+
 	validate.phoneValidate = function(str){
 	    var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
 	    return reg.test(str) || '请填写大陆的11位手机号码';
 	};
-	
+
 	validate.verifyCodeValidate = function(str){
 	    var reg = /^\d{4}$/;
 	    return reg.test(str) || '请填写您收到的4位验证码';
 	};
-	
+
 	validate.nameValidate = function(str){
 	    var reg = /^[\u4e00-\u9fa5]{2,}$/;
 	    return reg.test(str) || '请填写您的姓名';
 	};
-	
+
 	validate.campNameValidate = function(str){
 	    var reg = /^[\u4e00-\u9fa5]{0,}$/;
 	    return reg.test(str) || '请填写您的营地名称';
 	};
-	
+
 	validate.campAddressValidate = function(str){
 	    var reg = /^[\u4e00-\u9fa5]{0,}$/;
 	    return reg.test(str) || '请填写您的营地地址';
 	};
-	
+
 	validate.registrationCodeValidate = function(str){
 	    var reg = /^[a-zA-Z0-9]{0,}$/;
 	    return reg.test(str) || '请填写您的营地注册码';
 	};
-	
+
 	module.exports = validate;
 
 /***/ }
 
 });
-//# sourceMappingURL=login.js.map

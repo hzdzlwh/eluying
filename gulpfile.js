@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync').create(),
     reload = browserSync.reload,
     zip = require('gulp-zip'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    clean = require('gulp-clean');
 
 gulp.task('browser-sync', function() {
 	browserSync.init({
@@ -21,7 +22,12 @@ gulp.task('browser-sync', function() {
 	});
 });
 
-gulp.task('build', ['styles', 'webpack2'],function(){
+gulp.task('clean', function(){
+   gulp.src(['./build', './.sass-cache'])
+       .pipe(clean({force: true}));
+});
+
+gulp.task('build', ['styles', 'webpack2', 'clean'],function(){
     gulp.src('static/css/**/*.css')
         .pipe(gulp.dest('build/static/css'));
     gulp.src('static/js/app/dist/**/*.js')

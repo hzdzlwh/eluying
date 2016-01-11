@@ -7,3 +7,4 @@
 /static/js/app/dist/*
 /*.war
 /build/*
+/projectFilesBackup/*
