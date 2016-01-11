@@ -1,0 +1,12 @@
+{
+  "category/ETEntry.js": "category/ETEntry-2766b33488.js",
+  "category/foodEntry.js": "category/foodEntry-f355713591.js",
+  "category/roomEntry.js": "category/roomEntry-26ee19761b.js",
+  "common.js": "common-0fd98f1cbc.js",
+  "inventory/entertainment.js": "inventory/entertainment-5d24d6845c.js",
+  "inventory/food.js": "inventory/food-bf63bd7770.js",
+  "inventory/room.js": "inventory/room-4fc5225ff0.js",
+  "login/login.js": "login/login-2908d24d9a.js",
+  "price/foodETEntry.js": "price/foodETEntry-f593624435.js",
+  "price/roomEntry.js": "price/roomEntry-3b92accc5c.js"
+}
