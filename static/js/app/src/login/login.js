@@ -139,6 +139,13 @@ $(document).ready(function(){
         }
     });
 
+    $("body").on("keyup", function(ev){
+        console.log(ev);
+        if(ev.which == 13){
+            $("#loginBox .log button").click();
+        }//如果是回车
+    });
+
     $("#loginName").on("blur", GetPwdAndChk);
     //$("#loginSave").on("click", SetPwdAndChk);
 
