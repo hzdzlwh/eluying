@@ -26,7 +26,10 @@ gulp.task('build', ['styles', 'webpack2'],function(){
         .pipe(gulp.dest('build/static/css'));
     gulp.src('static/js/app/dist/**/*.js')
         .pipe(uglify())
-        .pipe(gulp.dest('build/static/app/dist'));
+        .pipe(gulp.dest('build/static/js/app/dist'));
+    gulp.src(['static/js/lib/html5shiv.min.js', 'static/js/lib/respond.min.js', 'static/js/lib/bootstrap-ie.js'])
+        .pipe(uglify())
+        .pipe(gulp.dest('build/static/js/lib'));
     gulp.src('view/**/*.html')
         .pipe(gulp.dest('build/view'));
     gulp.src('login.html')
@@ -114,7 +117,6 @@ gulp.task('webpack2', function(){
             }));
         }, webpack))
         .pipe(gulp.dest('static/js/app/dist/'))
-        .pipe(reload({stream: true}))
         .pipe(notify({title:'好棒啊！',message:'<%= file.relative %>编译完成，站起来活动活动'}));
 });
 

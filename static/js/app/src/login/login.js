@@ -6,6 +6,8 @@ var util = require('util');
 var loginValidate = require('loginValidate');
 var AJAXService = require('AJAXService');
 var baseUrl = AJAXService.urls.host;
+require('bootstrap');
+require('cookie');
 
 var resposiveWindow = function(){
     $("html").css({
