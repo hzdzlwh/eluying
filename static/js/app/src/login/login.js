@@ -119,7 +119,7 @@ $(document).ready(function(){
     });
 
     //手机网站适配
-    if($(window).width() < 1200){
+    if($(window).width() <= 1200){
         //修改viewport
         var scale = $(window).width() / 1200;
         $("meta[name=viewport]").attr("content", 'width=device-width, initial-scale=' + scale + ', ' +
@@ -131,18 +131,19 @@ $(document).ready(function(){
         $("#loginBox").css({
             "overflow-x": "visible"
         });
-        $(window).on("resize", function(){
-            if($(window).width() < 1200){
-                $("#loginBox").css({
-                    "overflow-x": "hidden"
-                });
-            }else{
-                $("#loginBox").css({
-                    "overflow-x": "visible"
-                });
-            }
-        });
     }
+    $(window).on("resize", function(){
+        //alert($(window).width());
+        if($(window).width() <= 1200){
+            $("#loginBox").css({
+                "overflow-x": "hidden"
+            });
+        }else{
+            $("#loginBox").css({
+                "overflow-x": "visible"
+            });
+        }
+    });
 
 
     $("body").on("keyup", function(ev){
