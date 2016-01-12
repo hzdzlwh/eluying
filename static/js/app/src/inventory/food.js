@@ -116,7 +116,7 @@ var IVENTORY = {
                         tempDate = util.stringToDate(d.date);
                         var status = d.status;
                         var classStr = "foodPatchItem";
-                        if(util.compareDates(today, tempDate)){
+                        if(!util.isSameDay(today, tempDate) && util.compareDates(today, tempDate)){
                             classStr = 'empty';
                         }
                         if(tempDate.getDay() == 1){
@@ -318,7 +318,7 @@ var events = {
                     return AJAXService.sessionValidate(result);
                 },
                 success: function(result){
-                    console.log(result);
+                    if(util.errorHandler(result)){}
                 }
             });
             IVENTORY.update();

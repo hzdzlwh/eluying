@@ -140,7 +140,7 @@ var IVENTORY = {
                         tempDate = util.stringToDate(d.date);
                         var status = d.status;
                         var classStr = "roomDayItem " + statusList[status].classStr;
-                        if(util.compareDates(today, tempDate)){
+                        if(!util.isSameDay(today, tempDate) && util.compareDates(today, tempDate)){
                             classStr = "empty";
                         }
                         if(tempDate.getDay() == 1){
@@ -387,21 +387,23 @@ var events = {
                     return AJAXService.sessionValidate(result);
                 },
                 success: function(result){
-                    IVENTORY.setPatchGrid();
-                    dateList.forEach(function(date){
-                        console.log(date);
-                        var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
-                        if(open == 1){
-                            dom.attr("status", '2');
-                            dom.removeClass("shut").addClass("notsale");
-                            dom.html('未售');
-                        }else{
-                            dom.attr("status", '0');
-                            dom.removeClass("notsale").addClass("shut");
-                            dom.html('已关闭');
-                        }
-                    });
-                    IVENTORY.updateLeft();
+                    if(util.errorHandler(result)){
+                        IVENTORY.setPatchGrid();
+                        dateList.forEach(function(date){
+                            console.log(date);
+                            var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
+                            if(open == 1){
+                                dom.attr("status", '2');
+                                dom.removeClass("shut").addClass("notsale");
+                                dom.html('未售');
+                            }else{
+                                dom.attr("status", '0');
+                                dom.removeClass("notsale").addClass("shut");
+                                dom.html('已关闭');
+                            }
+                        });
+                        IVENTORY.updateLeft();
+                    }
                 }
             });
         }
@@ -433,18 +435,20 @@ var events = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-                if(status == 2){
-                    itemDom.attr("status", '0');
-                    itemDom.removeClass("notsale").addClass("shut");
-                    itemDom.html('已关闭');
-                }else if(status == 1){
+                if(util.errorHandler(result)){
+                    if(status == 2){
+                        itemDom.attr("status", '0');
+                        itemDom.removeClass("notsale").addClass("shut");
+                        itemDom.html('已关闭');
+                    }else if(status == 1){
 
-                }else if(status == 0){
-                    itemDom.attr("status", '2');
-                    itemDom.removeClass("shut").addClass("notsale");
-                    itemDom.html('未售');
+                    }else if(status == 0){
+                        itemDom.attr("status", '2');
+                        itemDom.removeClass("shut").addClass("notsale");
+                        itemDom.html('未售');
+                    }
+                    IVENTORY.updateLeft();
                 }
-                IVENTORY.updateLeft();
             }
         });
     },
