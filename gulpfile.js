@@ -46,7 +46,7 @@ gulp.task('build', ['styles', 'webpack2', 'clean'], function () {
         .pipe(gulp.dest('build/static/js/lib'));
     gulp.src('view/**/*.html')
         .pipe(gulp.dest('build/view'));
-    gulp.src('login.html')
+    gulp.src('./*.html')
         .pipe(gulp.dest('build'));
     gulp.src('WEB-INF/web.xml')
         .pipe(gulp.dest('build/WEB-INF'));
