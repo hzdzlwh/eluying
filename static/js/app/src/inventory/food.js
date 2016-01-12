@@ -139,7 +139,7 @@ var IVENTORY = {
                     console.log(html);
                     $("#editPatch .patchGrid tbody").html(html);
                 }else{
-                    alert(result.msg);
+                    util.somethingAlert(result.msg);
                 }
                 console.log(result.data.list);
             }
@@ -185,7 +185,8 @@ var events = {
     },
     "click body .fooditem": function(){
         var foodid = $(this).parents(".mainClass").attr("data");
-        console.log(foodid);
+        $(".operate .operateItem:first-child").hide();
+        $(".operate .operateItem:last-child").show();
         if(!$(this).hasClass("selected")){
             $(".foodDayItem, .fooditem").removeClass("selected");
             $(this).addClass("selected");
@@ -202,6 +203,8 @@ var events = {
     "click body .foodDayItem": function(){
         var foodid = $(this).parents(".mainClass").attr("data");
         var date = $(this).attr("date");
+        $(".operate .operateItem:first-child").show();
+        $(".operate .operateItem:last-child").hide();
         if(!$(this).hasClass("selected")){
             $(".foodDayItem, .fooditem").removeClass("selected");
             $(this).addClass("selected");
@@ -216,14 +219,22 @@ var events = {
         }
     },
     'click body #editInvenButton': function(){
-        if(IVENTORY.selectedFood.date){
+        if(IVENTORY.selectedFood && IVENTORY.selectedFood.date){
             $("#editInven").modal("show");
+            var selectedItem = $(".foodDayItem[date=" + IVENTORY.selectedFood.date + "]");
+            var remain = selectedItem.find("p:first-child").html();
+            var total = selectedItem.find("p:last-child").html();
+            $("#editInven .tips span").html(total - remain);
         }else{
-            alert("请先选择某天的餐饮！");
+            modal.somethingAlert("请先选择某天的餐饮！");
         }
     },
     'click body #editInvenOk': function(){
         var inventory = $("#editInven .edit input").val();
+        if(!/^\d+$/.test(inventory) || parseInt(inventory) < parseInt($("#editInven .tips span").html())){
+            modal.somethingAlert("总库存不能少于已经预定的量！");
+            return false;
+        }
         var categoryId = IVENTORY.selectedFood.id;
         var date = IVENTORY.selectedFood.date;
         $.ajax({
@@ -237,17 +248,18 @@ var events = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-                console.log(result);
-                var totalDom = $(".mainClass[data=" + IVENTORY.selectedFood.id + "]")
-                    .find(".foodDayItem[date=" + date + "]").find("p:last-child");
-                var remainDom = $(".mainClass[data=" + IVENTORY.selectedFood.id + "]")
-                    .find(".foodDayItem[date=" + date + "]").find("p:first-child");
-                var total = parseInt(totalDom.html());
-                var remain = parseInt(remainDom.html());
-                var newRemain = inventory - total + remain;
-                totalDom.html(inventory);
-                remainDom.html(newRemain);
-                $("#editInven").modal("hide");
+                if(util.errorHandler(result)){
+                    var totalDom = $(".mainClass[data=" + IVENTORY.selectedFood.id + "]")
+                        .find(".foodDayItem[date=" + date + "]").find("p:last-child");
+                    var remainDom = $(".mainClass[data=" + IVENTORY.selectedFood.id + "]")
+                        .find(".foodDayItem[date=" + date + "]").find("p:first-child");
+                    var total = parseInt(totalDom.html());
+                    var remain = parseInt(remainDom.html());
+                    var newRemain = inventory - total + remain;
+                    totalDom.html(inventory);
+                    remainDom.html(newRemain);
+                    $("#editInven").modal("hide");
+                }
             }
         });
     },
@@ -277,7 +289,7 @@ var events = {
             $("#editPatch .title span").html(IVENTORY.selectedFood.name);
             $("#editPatch").modal("show");
         }else{
-            alert("请选择一项餐饮！");
+            util.somethingAlert("请选择一项餐饮！");
         }
     },
     'click body #editPatchOk': function(){
@@ -356,7 +368,7 @@ var events = {
         if($(".foodPatchItem.selected").length != 0){
             $("#editInvenForPatch").modal("show");
         }else{
-            alert("请先选择至少一天！");
+            util.somethingAlert("请先选择至少一天！");
         }
     },
     "resize window": util.mainContainer,
@@ -384,6 +396,8 @@ $(document).ready(function(){
 
     IVENTORY.updateTh();
     IVENTORY.update();
+
+    $(".operate .operateItem").hide();
 
     var localStorage = window.localStorage;
     $(".mainContainer .campName").html(localStorage.campName);

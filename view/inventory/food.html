@@ -13,19 +13,18 @@
     <script src="/static/js/app/dist/inventory/food.js"></script>
 </head>
 <body>
-<!--修改价格-->
 <div class="modal fade" role="dialog" id="editInven">
     <div class="modal-dialog modal-w630">
         <div class="modal-content clearfloat">
             <div class="editPrice clearfloat">
                 <div class="title">
-                    修改库存－<span>双人帐篷</span>
+                    修改库存－<span></span>
                 </div>
                 <div class="edit">
                     <div class="label">总量</div>
                     <input type="text" name="total"/>
                 </div>
-                <div class="tips">已经预订数量 <span>20</span> </div>
+                <div class="tips">已经预订数量 <span></span> </div>
                 <div class="footer">
                     <button class="btn-cancel" id="editInvenCancel">取消修改</button>
                     <button class="btn-ok" id="editInvenOk">确认修改</button>
@@ -40,7 +39,7 @@
         <div class="modal-content clearfloat">
             <div class="editPrice clearfloat">
                 <div class="title">
-                    批量管理－<span>双人帐篷</span>
+                    批量管理－<span></span>
                 </div>
                 <div class="label1">默认总量</div>
                 <input class="numofall" type="text">
@@ -67,16 +66,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td class="fixed"><p>&nbsp;</p><p>未售</p><p>未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                            <td><p class="date">1日</p><p class="left">未售</p><p class="all">未售</p></td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -84,7 +74,7 @@
                     <div class="first">
                         <div class="operateItem">
                             <div class="clickDiv" id="modalEditButton">
-                                <img src="/static/image/icon_bianjijibenxinxi.png" alt="关闭房间">
+                                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改库存">
                                 <p>修改库存</p>
                             </div>
                         </div>
@@ -99,7 +89,6 @@
     </div>
 </div>
 
-<!--修改价格-->
 <div class="modal fade" role="dialog" id="editInvenForPatch">
     <div class="modal-dialog modal-w630">
         <div class="modal-content clearfloat">
@@ -111,7 +100,7 @@
                     <div class="label">总量</div>
                     <input type="text" name="total"/>
                 </div>
-                <div class="tips">已经预订数量 <span>20</span> </div>
+                <!--<div class="tips">已经预订数量 <span>20</span> </div>-->
                 <div class="footer">
                     <button class="btn-cancel" id="editInvenForPatchCancel">取消修改</button>
                     <button class="btn-ok" id="editInvenForPatchOk">确认修改</button>
@@ -130,14 +119,14 @@
                 <input type="text" class="dateContainer" id="datePicker" />
                 <label class="calender" for="datePicker"></label>
                 <button class="nextWeek">后一周&gt</button>
-                <p class="tip">今天以前（包括今天）的库存不能修改！</p>
+                <p class="tip">今天以前的库存不能修改！</p>
             </div>
         </div>
         <div class="inventoryGrid">
             <table>
                 <thead>
                 <tr>
-                    <th>房型</th>
+                    <th>项目</th>
                     <th>数字类型</th>
                     <th>
                         <p>11-02</p>
@@ -170,142 +159,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="mainClass">
-                    <td>
-                        <span>双人帐篷</span>
-                        <img src="/static/image/rotate.png" />
-                    </td>
-                    <td><p>剩余</p><p>总量</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                </tr>
-                <tr class="subclass hide">
-                    <td><div>艺龙</div></td>
-                    <td>
-                        <div><p>剩余</p><p>总量</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                </tr>
-                <tr class="subclass hide">
-                    <td><div>艺龙</div></td>
-                    <td>
-                        <div><p>剩余</p><p>总量</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                </tr>
-                <tr class="subclass hide">
-                    <td><div>艺龙</div></td>
-                    <td>
-                        <div><p>剩余</p><p>总量</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                </tr>
-                <tr class="mainClass">
-                    <td>
-                        <span>双人帐篷</span>
-                        <img src="/static/image/rotate.png" />
-                    </td>
-                    <td><p>剩余</p><p>总量</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                    <td><p>20</p><p>100</p></td>
-                </tr>
-                <tr class="subclass hide">
-                    <td><div>艺龙</div></td>
-                    <td>
-                        <div><p>剩余</p><p>总量</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                    <td>
-                        <div><p>20</p><p>120</p></div>
-                    </td>
-                </tr>
+
                 </tbody>
             </table>
         </div>

@@ -283,6 +283,8 @@ var events = {
     },
     'click body .roomitem': function(){
         var roomid = $(this).attr("data");
+        $(".operate .operateItem:first-child").hide();
+        $(".operate .operateItem:last-child").show();
         if(!$(this).hasClass("selected")){
             $(".roomitem, .statusitem").removeClass("selected");
             $(this).addClass("selected");
@@ -297,6 +299,14 @@ var events = {
     },
     'click body .statusitem': function(){
         IVENTORY.selectedRoom = null;
+        var status = $(this).attr("status");
+        if(status == 0){
+            $(".operate .operateItem:first-child p").html("打开房间");
+        }else{
+            $(".operate .operateItem:first-child p").html("关闭房间");
+        }
+        $(".operate .operateItem:first-child").show();
+        $(".operate .operateItem:last-child").hide();
         $(".roomitem, .statusitem").removeClass("selected");
         $(this).addClass("selected");
     },
@@ -463,6 +473,8 @@ $(document).ready(function(){
 
     IVENTORY.updateTh();
     IVENTORY.update();
+
+    $(".operate .operateItem").hide();
 
     var localStorage = window.localStorage;
     $(".mainContainer .campName").html(localStorage.campName);
