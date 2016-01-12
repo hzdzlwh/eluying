@@ -118,7 +118,12 @@ $(document).ready(function(){
         show: false
     });
 
-    if($(window).width() < 1200){
+    //手机网站适配
+    if($(window).width() <= 1200){
+        //修改viewport
+        var scale = $(window).width() / 1200;
+        $("meta[name=viewport]").attr("content", 'width=device-width, initial-scale=' + scale + ', ' +
+            'minimum-scale=' + scale + ', maximum-scale=' + scale + '');
         $("#loginBox").css({
             "overflow-x": "hidden"
         });
@@ -128,7 +133,8 @@ $(document).ready(function(){
         });
     }
     $(window).on("resize", function(){
-        if($(window).width() < 1200){
+        //alert($(window).width());
+        if($(window).width() <= 1200){
             $("#loginBox").css({
                 "overflow-x": "hidden"
             });
@@ -138,6 +144,7 @@ $(document).ready(function(){
             });
         }
     });
+
 
     $("body").on("keyup", function(ev){
         console.log(ev);
