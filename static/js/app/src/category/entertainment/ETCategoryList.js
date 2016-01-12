@@ -31,7 +31,7 @@ var ETCategoryList = {
     loadETCategoryList: function () {
         $.ajax({
             url: AJAXService.getUrl("pullOtherCategoryListUrl"),
-            data: {type: 0},
+            data: {type: 2},
             success: function (result) {
                 ETCategoryList.list = result.data.list;
                 ETCategoryList.render();

@@ -16,7 +16,7 @@ var addET = {
             inventory: $("#createETInventory").val(),
             price: $("#createETPrice").val(),
             description: $("#createETDescription").val(),
-            type: 0
+            type: 2
         };
         $.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
