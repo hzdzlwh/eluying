@@ -18,7 +18,7 @@ var editETBasic = {
             inventory: $("#editETInventory").val(),
             price: $("#editETPrice").val(),
             description: $("#editETDescription").val(),
-            type: 1
+            type: 0
         };
         $.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
