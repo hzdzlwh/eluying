@@ -20,9 +20,9 @@
       event.preventDefault();
     })
   } else if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-    window.location="https://itunes.apple.com/xxx";
+    document.write('<p>iOS版本暂未提供下载，敬请期待！</p>');
   } else if (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1) {
-    window.location="http://xxx/xxx.apk";
+    window.location="http://dingdanlaileapp.oss-cn-hangzhou.aliyuncs.com/eluyun_1.0.00104release_gf_sign.apk";
   }
 </script>
 </body>
