@@ -122,8 +122,7 @@ $(document).ready(function(){
     if($(window).width() <= 1200){
         //修改viewport
         var scale = $(window).width() / 1200;
-        $("meta[name=viewport]").attr("content", 'width=device-width, initial-scale=' + scale + ', ' +
-            'minimum-scale=' + scale + ', maximum-scale=' + scale + '');
+        $("meta[name=viewport]").attr("content", 'width=device-width, initial-scale=' + scale);
         $("#loginBox").css({
             "overflow-x": "hidden"
         });
