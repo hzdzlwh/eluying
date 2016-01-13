@@ -26,19 +26,24 @@
 </head>
 <body>
 <script>
+  document.body.addEventListener('touchmove',function(){
+    event.preventDefault();
+  });
   var ua = window.navigator.userAgent;
   if (ua.indexOf('MicroMessenger') > -1 ) {
     document.write('<img src="/static/image/weixin.jpg" width="100%">');
-    document.body.addEventListener('touchmove',function(){
-      event.preventDefault();
-    })
   } else {
-    document.write('<img src="/static/image/weixin.jpg" width="100%">'
-    if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-      document.write('<p>iOS版本暂未提供下载，敬请期待！</p>');
-    } else if (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1) {
-      window.location="http://dingdanlaileapp.oss-cn-hangzhou.aliyuncs.com/eluyun_1.0.00104release_gf_sign.apk";
-    }
+    document.write('<img src="/static/image/appStart.png" width="100%">');
+    document.getElementsByTagName('img')[0].addEventListener('load', function(){
+      if (!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+        alert('iOS版本暂未提供下载，敬请期待！');
+      } else if (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1) {
+        window.location="http://dingdanlaileapp.oss-cn-hangzhou.aliyuncs.com/dingdanlaile_latest.apk";
+      }
+    });
+
+
+
   }
 
 </script>
