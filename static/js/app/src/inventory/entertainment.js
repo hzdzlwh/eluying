@@ -221,7 +221,7 @@ var events = {
     'click body #editInvenButton': function(){
         if(IVENTORY.selectedEntertain && IVENTORY.selectedEntertain.date){
             $("#editInven").modal("show");
-            var selectedItem = $(".entertainDayItem[date=" + IVENTORY.selectedEntertain.date + "]");
+            var selectedItem = $(".entertainDayItem.selected");
             var remain = selectedItem.find("p:first-child").html();
             var total = selectedItem.find("p:last-child").html();
             $("#editInven .tips span").html(total - remain);
