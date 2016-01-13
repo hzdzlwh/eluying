@@ -79,7 +79,10 @@ var util = {
     //“yyyy-MM-dd” 转换成日期型
     stringToDate: function(string){
         var array = string.split("-");
-        return new Date(array[1] + " " +array[2]+","+array[0]);
+        var date = new Date();
+        date.setUTCFullYear(array[0], array[1] - 1, array[2]);
+        date.setUTCHours(0, 0, 0, 0);
+        return date;
     },
 
     diffDate: function(date, diff){
