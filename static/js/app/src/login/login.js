@@ -58,10 +58,10 @@ function forgetVCOnClick(){
                 origin: 1
             },
             success: function(data){
-                console.log(data);
+
             },
             error: function(data){
-                console.log(data);
+
             }
         });
         time(this);
@@ -84,7 +84,7 @@ function registerVCOnClick(){
                 phone: phone
             },
             success: function(data){
-                console.log(data);
+
                 if(data.code == 9){
                     $("#loginRegister .errorTips").html(data.msg);
                     $("#loginRegister .errorTips").show();
@@ -92,7 +92,7 @@ function registerVCOnClick(){
                 }
             },
             error: function(data){
-                console.log(data);
+
             }
         });
         time(this);
@@ -146,7 +146,7 @@ $(document).ready(function(){
 
 
     $("body").on("keyup", function(ev){
-        console.log(ev);
+
         if(ev.which == 13){
             $("#loginBox .log button").click();
         }//如果是回车
@@ -208,7 +208,7 @@ $(document).ready(function(){
                     verifyCode: verifyCode
                 },
                 success: function(data){
-                    console.log(data);
+
                     if(data.code == 1){
                         $("#loginForgetPwd .errorTips").hide();
                         $("#loginForgetPwd").modal('hide');
@@ -220,7 +220,7 @@ $(document).ready(function(){
                     }
                 },
                 error: function(data){
-                    console.log(data);
+
                 }
             });
         }else{
@@ -314,7 +314,7 @@ $(document).ready(function(){
                     }
                 },
                 error: function(data){
-                    console.log(data);
+
                 }
             });
             $("#loginRegister .errorTips").hide();
@@ -357,7 +357,7 @@ $(document).ready(function(){
                     }
                 },
                 error: function(data){
-                    console.log(data);
+
                 }
             });
             $("#loginBox .log .errorTips").hide();
