@@ -352,6 +352,15 @@ var events = {
         }else{
             $(this).addClass("selected");
         }
+        if($(".roomDayItem.selected").length == 0){
+            $("#modalDelButton").hide();
+        }else if($(".roomDayItem.selected[status=2]").length == 0){
+            $("#modalDelButton").show();
+            $("#modalDelButton").find("p").html("打开房间");
+        }else{
+            $("#modalDelButton").show();
+            $("#modalDelButton").find("p").html("关闭房间");
+        }
     },
     'click body #modalDelButton': function(){
         if($(".roomDayItem.selected").length == 0){
@@ -453,8 +462,14 @@ var events = {
         });
     },
     "resize window": util.mainContainer,
-    "show.bs.modal .modal": modal.centerModals
+    "show.bs.modal .modal": modal.centerModals,
+    "scroll window": function(){
+
+    }
 };
+
+var operateTop;
+var operateLeft;
 
 $(document).ready(function(){
     /*
@@ -463,8 +478,6 @@ $(document).ready(function(){
     header.showHeader();
     leftMenu.showLeftMenu();
     util.mainContainer();
-
-    //trToggle();
 
     //初始化日历
     $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
