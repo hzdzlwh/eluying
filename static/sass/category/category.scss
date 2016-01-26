@@ -21,6 +21,7 @@
     border-top:4px solid #4A90E2;
     margin-top: 40px;
     float: left;
+    position: relative;
     table {
         table-layout: fixed;
         width: 900px;
@@ -143,6 +144,6 @@
     }
 }
 
-.subclassManagement {
+.manageShopCategory,.subclassManagement {
     margin-bottom: 20px;
 }

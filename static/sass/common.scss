@@ -420,3 +420,17 @@
     margin-left: 930px;
     margin-top: 40px;
 }
+
+.selectList {
+    position: absolute;
+    top: 0;
+    padding-top: 10px;
+    background-color: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+    li {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
+}

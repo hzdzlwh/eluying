@@ -42,7 +42,7 @@ var editRoomBasic = {
             $("#editRoomUnit").val($(".mainActive td:eq(2)").html());
         },
 
-//点击编辑房型基本信息确认按钮
+        //点击编辑房型基本信息确认按钮
         "click #editRoomBasicOk": function () {
             if (!$("#editBasicInfo form").valid()) {
                 return;
