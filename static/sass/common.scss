@@ -424,13 +424,18 @@
 .selectList {
     position: absolute;
     top: 0;
-    padding-top: 10px;
+    left: 263px;
+    padding: 10px;
     background-color: #4a90e2;
     color: #fff;
     cursor: pointer;
+    width: 124px;
     li {
         margin-top: 5px;
         margin-bottom: 5px;
         margin-left: 5px;
+    }
+    #selectSwitch {
+        margin-left: 0;
     }
 }

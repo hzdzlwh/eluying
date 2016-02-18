@@ -104,7 +104,7 @@ var shopList = {
     renderCategory: function() {
         var str = '';
         $.each(shopList.categoryList, function(index, element) {
-            str += '<li data-id="' + element.goodstypeId + '"><img class="check" src="/static/image/check.png">' + element.goodstypeName + '</li>';
+            str += '<li class="categoryItem" data-id="' + element.goodstypeId + '"><img class="check" src="/static/image/check.png">' + element.goodstypeName + '</li>';
 
         });
         //因为可能修改了品类，所以先重写，再追加
@@ -127,7 +127,7 @@ var shopList = {
             $(this).addClass("mainActive");
             $(".mainOperate .operateItem").removeClass("hide");
         },
-        'click .selectList li': function() {
+        'click .selectList .categoryItem': function() {
             if ($(this).find('img').css('visibility') === 'visible') {
                 $(this).find('img').css('visibility', 'hidden');
             } else {
