@@ -286,7 +286,7 @@ $(document).ready(function(){
         }
         if(result == true){
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: baseUrl + '/user/register',
                 data: {
                     campAddress: campAddress,
@@ -301,6 +301,9 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         if(state == '注册'){
+                            localStorage.setItem("campName", data.data.camps[0].name);
+                            localStorage.setItem("userName", data.data.userName);
+                            $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                             $("#loginRegister").modal('hide');
                             $("#loginRegSuccess").modal('show');
                             setTimeout("window.location.href = '/view/category/room.html';", 1000)
@@ -336,7 +339,7 @@ $(document).ready(function(){
         }
         if(result === true){
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: baseUrl + '/user/login',
                 data: {
                     loginName: loginName,

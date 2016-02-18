@@ -7,18 +7,18 @@ var AJAXService = {
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
         //host: "http://121.41.109.105:8081/mg",
-        //host: "/mg",
-        host: "http://120.26.83.168/mg",
+        host: "/mg",
+        //host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
         addAccommodationUrl: "/category/addAccommodation",
         pullOtherCategoryListUrl: "/category/pullOtherCategoryList",
         deleteOtherCategoryUrl: "/category/deleteOtherCategory",
+        subclassManageUrl: "/category/modifySubCategory",
         addOrEditExtraCategoryUrl: "/category/addOrEditOtherCategory",
         editRoomBasicUrl: "/category/modifyAccommodationBaseInfo",
         deleteRoomUrl: "/category/deleteAccommodationCategory",
-        subclassManageUrl: "/category/modifySubCategory",
         loadSubRoomUrl: "/category/pullRoomList",
         editSubRoomUrl: "/category/modifyRooms",
         modifyStateUrl: "/category/modifyState",
@@ -49,6 +49,12 @@ var AJAXService = {
         resetPasswordUrl: '/user/resetPassword',
         registerUrl: '/user/register',
         verifyUserNameUrl: '/user/verifyUserName',
+        getShopList: '/category/getMarketGoodsList',
+        getShopCategory: '/category/getGoodTypeInfo',
+        editCategory: '/category/goodTypeOperation',
+        deleteGood: '/category/deleteOneGood',
+        addGood: '/category/addNewGood',
+        editGood: '/category/editOneGood',
         rewriteUrl: true
     },
     getUrl: function(path){
