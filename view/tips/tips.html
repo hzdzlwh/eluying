@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>温馨提示</title>
+</head>
+<style>
+    *{
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+        font-family:"微软雅黑";
+    }
+    .container{
+        width: 844px;
+        margin: auto;
+        height: 473px;
+        position: relative;
+    }
+    .title1{
+        position: absolute;
+        top: 76px;
+        left: 0;
+        font-size: 17px;
+        color: #9B9B9B;
+    }
+    .title2{
+        position: absolute;
+        top: 126px;
+        left: 0;
+        font-size: 24px;
+        color: #000000;
+        font-weight: 900;
+    }
+    .wrapper{
+        position: absolute;
+        top: 186px;
+        left: 0;
+        width: 100%;
+        height: 220px;
+    }
+    .wrapper .use360, .wrapper .usechrome{
+        float: left;
+        width: 344px;
+        height: 220px;
+        position: relative;
+    }
+    .hr1{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 4px;
+        background: #4A90E2;
+    }
+    .hr2{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: #4A90E2;
+    }
+    .title6{
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 30px;
+        font-size: 22px;
+        text-align: center;
+        color: #4A90E2;
+    }
+    .wrapper .use360 img, .wrapper .usechrome img{
+        display: block;
+        position: absolute;
+        left: 57px;
+        top: 100px;
+    }
+    .wrapper .usechrome img{
+        left: 40px;
+    }
+    .btn{
+        width: 99px;
+        height: 34px;
+        font-size: 16px;
+        color: #ffffff;
+        line-height: 34px;
+        text-align: center;
+        cursor: pointer;
+        background: #4A90E2;
+        position: absolute;
+        left: 167px;
+        top: 128px;
+        border-radius: 4px;
+    }
+    .btn:hover{
+        background: #9BC9FF;
+    }
+    .wrapper .label1{
+        float: left;
+        width: 156px;
+        height: 220px;
+        line-height: 220px;
+        text-align: center;
+        font-size: 19px;
+        color: #ababab;
+    }
+    .qa{
+        width: 100%;
+        height: 687px;
+        background: #4A90E2;
+    }
+    .qa .main{
+        width: 844px;
+        margin: auto;
+        height: 100%;
+        position: relative;
+    }
+    .qa .main .title3{
+        font-size: 24px;
+        color: #b9d9ff;
+        padding-top: 30px;
+    }
+    .qa .main .title4{
+        font-size: 18px;
+        color: #ffffff;
+        padding-top: 30px;
+    }
+    .qa .main .title5{
+        font-size: 14px;
+        color: #C4DFFF;
+        padding-top: 15px;
+        text-indent: 22px;
+    }
+    .qa .main img{
+        margin-top: 15px;
+        margin-left: 22px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="title1">
+            感谢您使用订单来了！
+        </div>
+        <div class="title2">
+            享受更好的服务，请使用
+        </div>
+        <div class="wrapper">
+            <div class="use360">
+                <div class="hr1"></div>
+                <div class="title6">360浏览器的「极速模式」</div>
+                <img src="/static/image/tips-360.png" alt="360"/>
+                <div class="btn">下载</div>
+                <div class="hr2"></div>
+            </div>
+            <div class="label1">或</div>
+            <div class="usechrome">
+                <div class="hr1"></div>
+                <div class="title6">谷歌浏览器</div>
+                <img src="/static/image/tips-chrome.png" alt="360"/>
+                <div class="btn">下载</div>
+                <div class="hr2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="qa">
+        <div class="main">
+            <div class="title3">常见问答</div>
+            <div class="title4">1. 为什么一定要使用这两款浏览器？</div>
+            <div class="title5">他们分别是目前国内和国外最专业的浏览器。可以提升系统性能，让您用起来更爽。</div>
+            <div class="title4">2. 怎么打开360浏览器的「极速模式」？</div>
+            <div class="title5">
+                点击地址栏旁边的「闪电」或者「e」按钮。打开方式如下图：
+                <br/>
+                <img src="/static/image/tips-1.png" alt="tips"/>
+            </div>
+            <div class="title4">3. 我能使用 IE 浏览器吗？</div>
+            <div class="title5">为了体验更好、更快的服务，请不要使用 IE 浏览器。 <br/> <img src="/static/image/tips-noie.png" alt="no ie"/></div>
+        </div>
+    </div>
+</body>
+</html>

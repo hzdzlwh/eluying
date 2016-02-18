@@ -116,6 +116,35 @@ var util = {
             position: "relative",
             left: (pw-cw)/2
         });
+    },
+
+    checkExplorer: function(){
+        var flag = true;
+        if(navigator.userAgent.indexOf("MSIE")>0)
+        {
+            if(navigator.userAgent.indexOf("MSIE 6.0")>0)
+            {
+                flag = true;
+            }
+            if(navigator.userAgent.indexOf("MSIE 7.0")>0)
+            {
+                flag = true;
+            }
+            if(navigator.userAgent.indexOf("MSIE 8.0")>0)
+            {
+                flag = true;
+            }
+            if(navigator.userAgent.indexOf("MSIE 9.0")>0)
+            {
+                flag = false;
+            }
+        }else
+        {
+            flag = false;
+        }
+        if(flag){
+            window.location.href = "/view/tips/tips.html";
+        }
     }
 };
 module.exports = util;

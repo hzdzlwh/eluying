@@ -103,6 +103,8 @@ function registerVCOnClick(){
 }
 
 $(document).ready(function(){
+    util.checkExplorer();
+
     util.centroidDiv("#loginBox .bg", '#loginBox');
     util.centroidDiv(".loginPic img", '.loginPic');
     $(window).on("resize", function(){
