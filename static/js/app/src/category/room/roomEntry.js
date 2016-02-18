@@ -13,6 +13,8 @@ require("validation");
 
 
 $(function(){
+    //检测IE
+    util.checkExplorer();
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
