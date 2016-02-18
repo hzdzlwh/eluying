@@ -7,8 +7,8 @@ var AJAXService = {
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
         //host: "http://121.41.109.105:8081/mg",
-		host: "/mg",
-        //host: "http://120.26.83.168:8081/mg",
+        //host: "/mg",
+        host: "http://120.26.83.168/mg",
         //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
