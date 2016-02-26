@@ -19,7 +19,7 @@ validate.passwordConfirmValidate = function(left, right){
 };
 
 validate.phoneValidate = function(str){
-    var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+    var reg = /^1[3|4|5|7|8]\d{9}$/;
     return reg.test(str) || '请填写大陆的11位手机号码';
 };
 
