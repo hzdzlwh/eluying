@@ -47,6 +47,7 @@ var IVENTORY = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
+                console.log(result);
                 var data = that.data = result.data.list;
                 var html = '';
                 data.forEach(function(i){
@@ -354,12 +355,12 @@ var events = {
         }
         if($(".roomDayItem.selected").length == 0){
             $("#modalDelButton").hide();
-        }else if($(".roomDayItem.selected[status=2]").length == 0){
-            $("#modalDelButton").show();
-            $("#modalDelButton").find("p").html("打开房间");
-        }else{
+        }else if($(".roomDayItem.selected[status=0]").length == 0){
             $("#modalDelButton").show();
             $("#modalDelButton").find("p").html("关闭房间");
+        }else{
+            $("#modalDelButton").show();
+            $("#modalDelButton").find("p").html("打开房间");
         }
     },
     'click body #modalDelButton': function(){
