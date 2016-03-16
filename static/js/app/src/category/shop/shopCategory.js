@@ -27,6 +27,7 @@ var shopCategory = {
 
     editCategory: function(that, item) {
         $.ajax({
+            type: "POST",
             url: AJAXService.getUrl('editCategory'),
             data: {subList: JSON.stringify(item)},
             dataFilter: function (result) {
