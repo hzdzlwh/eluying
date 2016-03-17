@@ -6,8 +6,8 @@ var AJAXService = {
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        //host: "http://121.41.109.105:8081/mg",
-        host: "/mg",
+        host: "http://121.41.109.105:8081/mg",
+        //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
         loginUrl: "/user/login",
@@ -58,8 +58,8 @@ var AJAXService = {
         rewriteUrl: true
     },
     getUrl: function(path){
-        var url = this.urls.host + this.urls[path];
-        if (this.urls.rewriteUrl == true) {
+        var url = this.urls.host + (this.urls[path] || path);
+        if (this.urls.rewriteUrl == true && $.cookie("jsessionid")) {
             url += ";jsessionid=" + $.cookie("jsessionid");
         }
         return url;
