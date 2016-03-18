@@ -2,22 +2,25 @@ var logout = require("logout");
 var util = require("util");
 var header = {
     showHeader : function(){
-        var headerStr = "<div class='header clearfloat'><img src='/static/image/bannerLogo.png' width='100px' class='logo'><ul>"
-            + "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>"
-            + "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>"
-            + "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>"
-            + "</ul>"
-            + "<div class='right'>"
-            + "<div class='userName'>"
-            + "<span></span>"
-            + "</div>"
-            + "<div class='line'></div>"
-            + "<div class='logout'>"
-            + "<a href='javascript:void(0)' id='logout'>退出账户</a>"
-            + "</div>"
-            + "</div>"
-            + "</div>";
+        var headerStr = "<div class='header clearfloat'><p class='camp-name'>" + localStorage.getItem('campName') + "</p>" +
+            "<img src='../../static/image/upload.png' class='upload'>" +
+            "<ul>" +
+            "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>" +
+            "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>" +
+            "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>" +
+            "</ul>" +
+            "<div class='right'>" +
+            "<div class='userName'>" +
+            "<span></span>" +
+            "</div>" +
+            "<div class='line'></div>" +
+            "<div class='logout'>" +
+            "<a href='javascript:void(0)' id='logout'>退出账户</a>" +
+            "</div>" +
+            "</div>" +
+            "</div>"; +
         $("body").prepend(headerStr);
+        //根据path激活active
         $(".userName").find("span").html(localStorage.getItem("userName"));
         var pathArray = window.location.pathname.split("/");
         var menu = pathArray[2];

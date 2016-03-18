@@ -307,9 +307,13 @@ $(document).ready(function(){
                             $('#createOrJoinNetwork').modal('show');
                         } else {
                             $("#loginLogSuccess").modal('show');
-                            localStorage.setItem("campName", data.data.camps[0].name);
-                            localStorage.setItem("userName", data.data.userName);
-                            $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
+                            $.each(data.data.camps, function(index, el) {
+                                if (el.campId === data.data.user.lastCampId) {
+                                    localStorage.setItem("campName", el.campName);
+                                }
+                            });
+                            localStorage.setItem("userName", data.data.user.realName);
+                            $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
                             setTimeout("window.location.href = 'view/category/room.html';", 1000);
                         }
                     }else{

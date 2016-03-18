@@ -9,10 +9,17 @@
     position: fixed;
     width: 100%;
     z-index: 999;
+    .camp-name {
+        float: left;
+        margin-left: 26px;
+        font-size: 14px;
+        line-height: 52px;
+        color: #94ccff;
+    }
     @include minWidth();
-    .logo {
-        margin-top: 14px;
-        margin-left: 32px;
+    .upload {
+        margin-top: 20px;
+        margin-left: 26px;
         float: left;
     }
     ul {
