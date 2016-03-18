@@ -58,8 +58,15 @@
     .userName {
         line-height: 52px;
         float: left;
-        margin-left: 17px;
-        margin-right: 17px;
+        width: 110px;
+        text-align: center;
+        cursor: pointer;
+        span {
+            cursor: pointer;
+        }
+    }
+    .userName:hover {
+        background-color: #4a90e2;
     }
     .line {
         width: 1px;
@@ -69,14 +76,20 @@
         background: url("../image/Line.png");
     }
     .logout {
-        width: 72px;
+        width: 110px;
         line-height: 52px;
-        float: left;
-        margin-left: 17px;
+        position: absolute;
+        top: 52px;
+        right: 26px;
+        background-color: #4a90e2;
+        text-align: center;
+    }
+    .userName-active {
+        background-color: #4a90e2;
     }
     .right {
         float: right;
-        margin-right: 32px;
+        margin-right: 26px;
     }
 }
 

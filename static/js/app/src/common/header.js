@@ -13,8 +13,7 @@ var header = {
             "<div class='userName'>" +
             "<span></span>" +
             "</div>" +
-            "<div class='line'></div>" +
-            "<div class='logout'>" +
+            "<div class='logout' style='display: none'>" +
             "<a href='javascript:void(0)' id='logout'>退出账户</a>" +
             "</div>" +
             "</div>" +
@@ -28,7 +27,20 @@ var header = {
         util.bindDomAction(this.events);
     },
     events: {
-        "click #logout": logout.logout
+        "click #logout": function(e) {
+            e.stopPropagation();
+            logout.logout();
+        },
+        "click .userName": function(e) {
+            e.stopPropagation();
+            $(this).addClass('userName-active');
+            $('.logout').show();
+        },
+        "click body": function() {
+            $('.userName').removeClass('userName-active');
+            $('.logout').hide();
+        }
     }
 };
+
 module.exports = header;
