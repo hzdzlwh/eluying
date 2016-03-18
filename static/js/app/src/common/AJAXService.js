@@ -66,7 +66,7 @@ var AJAXService = {
     },
     sessionValidate: function(data){
         data = JSON.parse(data);
-        if (data.code == 14) {
+        if (data.code == 11002) {
             location.href = "/login.html";
         }
         return JSON.stringify(data);
