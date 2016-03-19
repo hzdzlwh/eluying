@@ -6,8 +6,10 @@ var util = require('util');
 var loginValidate = require('loginValidate');
 var AJAXService = require('AJAXService');
 var baseUrl = AJAXService.urls.host;
+var networkAction = require("networkAction");
 require('bootstrap');
 require('cookie');
+
 
 var resposiveWindow = function(){
     $("html").css({
@@ -43,6 +45,7 @@ function time(o) {
         }, 1000);
     }
 }
+
 
 function forgetVCOnClick(){
     var phone = $("#loginForgetPwd .phone").val();
@@ -134,7 +137,6 @@ $(document).ready(function(){
         });
     }
     $(window).on("resize", function(){
-        //alert($(window).width());
         if($(window).width() <= 1200){
             $("#loginBox").css({
                 "overflow-x": "hidden"
@@ -156,8 +158,6 @@ $(document).ready(function(){
 
     $("#loginName").on("blur", GetPwdAndChk);
     //$("#loginSave").on("click", SetPwdAndChk);
-
-
 
     /*
      忘记密码点击发送验证码
@@ -310,12 +310,14 @@ $(document).ready(function(){
                             $.each(data.data.camps, function(index, el) {
                                 if (el.campId === data.data.user.lastCampId) {
                                     localStorage.setItem("campName", el.campName);
+                                    localStorage.setItem("campNum", el.campId);
                                 }
                             });
-                            localStorage.setItem("userName", data.data.user.realName);
-                            $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
                             setTimeout("window.location.href = 'view/category/room.html';", 1000);
                         }
+                        localStorage.setItem("userName", data.data.user.realName);
+                        $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
+
                     }else{
                         $("#loginBox .log .errorTips").html(data.msg);
                         $("#loginBox .log .errorTips").show();
@@ -334,6 +336,20 @@ $(document).ready(function(){
             $("#loginBox .log .text").css("margin-top", "30px");
         }
     });
+
+    /*创建网络按钮*/
+    $("#createNewNetwork").on('click', function () {
+        var modalDialog = networkAction.init("create",{});
+        $("#createOrJoinNetwork").modal("hide");
+        modalDialog.modal("show");
+    })
+
+    /*加入网络按钮*/
+    $("#joinNetwork").on('click', function () {
+        var modalDialog = networkAction.init("joinStep1",{});
+        $("#createOrJoinNetwork").modal("hide");
+        modalDialog.modal("show");
+    })
 
     /*
      登录表单验证

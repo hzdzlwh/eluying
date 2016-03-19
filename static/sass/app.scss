@@ -91,6 +91,58 @@
         float: right;
         margin-right: 26px;
     }
+    #headerSwitchCamp{
+        display: none;
+    }
+    .headerSwitch{
+        float: left;
+        cursor: pointer;
+        position: relative;
+        .avatorContainer{
+            float: left;
+            width: 270px;
+        }
+        &:hover{
+            background: #4a90e2;
+            .camp-name{
+                color: white;
+            }
+        }
+        dl{
+            position: absolute;
+            top: 52px;
+            padding: 0 20px 10px;
+            background: #4a90e2;
+            width: 100%;
+            font-size: 12px;
+            font-weight: normal;
+            dt{
+                margin: 15px 0;
+                color: #95c1ef;
+            }
+            dd{
+                padding: 10px 0;
+                text-indent: 2em;
+                &.on{
+                    background: url("../image/tick.png") no-repeat;
+                    background-position: 0 7px;
+                }
+                &:hover{
+                    background-color: #3473be;
+                }
+            }
+        }
+        #headerJoinNewNetwork, #headerCreateNetwork{
+            text-indent: 0em;
+        }
+        hr{
+            background: #75b4f4;
+            margin:0px;
+        }
+        .upload{
+            float: right;
+        }
+    }
 }
 
 .mainContainer {

@@ -138,7 +138,8 @@ gulp.task('webpack2', function () {
                     roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js"),
                     fileupload: path.join(__dirname, "./static/js/lib/jquery.fileupload.js"),
                     "jquery.ui.widget": path.join(__dirname, "./static/js/lib/jquery.ui.widget.js"),
-                    iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js")
+                    iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js"),
+                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js")
                 }
             }
         }, null, function (err, stats) {
@@ -201,7 +202,8 @@ gulp.task('webpack', function () {
                     roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js"),
                     fileupload: path.join(__dirname, "./static/js/lib/jquery.fileupload.js"),
                     "jquery.ui.widget": path.join(__dirname, "./static/js/lib/jquery.ui.widget.js"),
-                    iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js")
+                    iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js"),
+                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js")
                 }
             },
             devtool: "sourcemap"

@@ -1,9 +1,24 @@
 var logout = require("logout");
 var util = require("util");
+var AJAXService = require("AJAXService");
+var networkAction = require("networkAction");
+var modal = require('modal');
 var header = {
     showHeader : function(){
-        var headerStr = "<div class='header clearfloat'><p class='camp-name'>" + localStorage.getItem('campName') + "</p>" +
+        var that = this;
+        var headerStr = "<div class='header clearfloat'>" +
+            "<div class='headerSwitch'>" +
+            "<div class='avatorContainer'>" +
+            "<p class='camp-name'>" + localStorage.getItem('campName') + "</p>" +
             "<img src='../../static/image/upload.png' class='upload'>" +
+            "</div>" +
+            "<dl id='headerSwitchCamp'>" +
+            "<dd id='headerJoinNewNetwork'>＋ 加入新网络" +
+            "</dd>" +
+            "<dd id='headerCreateNetwork'>＋ 创建新网络" +
+            "</dd>" +
+            "</dl>" +
+            "</div>" +
             "<ul>" +
             "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>" +
             "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>" +
@@ -25,6 +40,61 @@ var header = {
         var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");
         util.bindDomAction(this.events);
+        $.ajax({
+            url: AJAXService.getUrl("/user/getPersonalInfoInNetwork"),
+            success: function (data) {
+                var campNum = localStorage.getItem("campNum");
+                if(data.code == 1){
+                    var result = data.data.camps;
+                    var key = "";
+                    var flag = false;
+                    var object = {
+                        created: "",
+                        joined: ""
+                    }
+                    for(var i = 0; i < result.length; i++){
+                        var item = result[i];
+                        if(item.userType == 1){
+                            key = "created";
+                        }else{
+                            key = "joined";
+                        }
+                        if(item.campId == campNum){
+                            flag = true;
+                        }else{
+                            flag = false;
+                        }
+                        object[key] += that.getItemHtml(item, flag);
+                    }
+                    if(object.created){
+                        object.created = "<dt>我创建的</dt>"+ object.created +"<hr>";
+                    }
+                    if(object.joined){
+                        object.joined += "<dt>我加入的</dt>"+object.joined+"<hr>";
+                    }
+                }
+                $("#headerSwitchCamp").prepend(object.created+object.joined);
+                $("#headerSwitchCamp .networkButton").click(function(){
+                    var campId = $(this).attr("data-campId");
+                    var campName = $(this).attr("data-campName");
+                    $.ajax({
+                        url: AJAXService.getUrl("/network/changeNetwork"),
+                        data: {
+                            campId: campId
+                        },
+                        success: function (data) {
+                            if(data.code == 1){
+                                localStorage.setItem("campNum", campId);
+                                localStorage.setItem("campName", campName);
+                                window.location.reload();
+                            }else{
+                                alert(data.msg);
+                            }
+                        }
+                    })
+                })
+            }
+        })
     },
     events: {
         "click #logout": function(e) {
@@ -39,7 +109,25 @@ var header = {
         "click body": function() {
             $('.userName').removeClass('userName-active');
             $('.logout').hide();
+        },
+        "click #headerJoinNewNetwork": function () {
+            networkAction.init("joinStep1",{}).modal("show");
+        },
+        "click #headerCreateNetwork": function () {
+            networkAction.init("create",{}).modal("show");
+        },
+        "click .avatorContainer": function(){
+            $("#headerSwitchCamp").slideToggle();
         }
+    },
+    getItemHtml: function(item, flag){
+        var className = "networkButton";
+        if(flag){
+            className += " on";
+        }else{
+            className += "";
+        }
+        return "<dd class='"+className+"' data-campId='"+item.campId+"' data-campName='"+item.campName+"'>"+item.campName+"</dd>"
     }
 };
 
