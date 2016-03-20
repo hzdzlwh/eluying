@@ -49,6 +49,18 @@ var network = {
 					post.networkName = resultDom.find(".networkName").val();
 					post.department = resultDom.find(".department").val();
 					post.position = resultDom.find(".position").val();
+					if(post.networkName.length > 20){
+						alert("网络名称不能大于20个字符");
+						return false;
+					}
+					if(post.department.length > 10){
+						alert("部门名称不能大于10个字符");
+						return false;
+					}
+					if(post.position.length > 10){
+						alert("支付名称不能大于10个字符");
+						return false;
+					}
 					confirmHandler(post.networkName, post.department, post.position);
 				});
 				break;
