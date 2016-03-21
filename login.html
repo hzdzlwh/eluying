@@ -64,6 +64,12 @@
         #loginSection1 .log{ top: 56px; }
     </style>
     <![endif]-->
+    <script>
+        var ua = window.navigator.userAgent;
+        if(!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1)) {
+            location.href = 'http://www.dingdandao.com/wap';
+        }
+    </script>
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/login/login.js"></script>
 
