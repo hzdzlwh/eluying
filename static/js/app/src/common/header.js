@@ -43,7 +43,7 @@ var header = {
         $.ajax({
             url: AJAXService.getUrl("/user/getPersonalInfoInNetwork"),
             success: function (data) {
-                var campNum = localStorage.getItem("campNum");
+                var campId = localStorage.getItem("campId");
                 if(data.code == 1){
                     var result = data.data.camps;
                     var key = "";
@@ -59,7 +59,7 @@ var header = {
                         }else{
                             key = "joined";
                         }
-                        if(item.campId == campNum){
+                        if(item.campId == campId){
                             flag = true;
                         }else{
                             flag = false;
@@ -70,7 +70,7 @@ var header = {
                         object.created = "<dt>我创建的</dt>"+ object.created +"<hr>";
                     }
                     if(object.joined){
-                        object.joined += "<dt>我加入的</dt>"+object.joined+"<hr>";
+                        object.joined = "<dt>我加入的</dt>"+object.joined+"<hr>";
                     }
                 }
                 $("#headerSwitchCamp").prepend(object.created+object.joined);
@@ -84,7 +84,7 @@ var header = {
                         },
                         success: function (data) {
                             if(data.code == 1){
-                                localStorage.setItem("campNum", campId);
+                                localStorage.setItem("campId", campId);
                                 localStorage.setItem("campName", campName);
                                 window.location.reload();
                             }else{

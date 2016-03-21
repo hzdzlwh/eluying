@@ -80,6 +80,7 @@ var network = {
 								that.init(that.status.JOIN_NETWORK,result).modal("show");
 							}else{
 								alert(data.msg);
+								resultDom.modal("hide");
 							}
 						}
 					})
@@ -111,7 +112,21 @@ var network = {
 				break;
 			case this.status.CREATE_SUCCESS:
 				$(".createNetworkButton").click(function () {
-					window.location.href = "/view/category/room.html";
+					var campId = resultDom.find("input[name='campId']").val();
+					var campName = resultDom.find("input[name='campName']").val();
+					$.ajax({
+						url: AJAXService.getUrl("/network/changeNetwork"),
+						data: {
+							campId: campId
+						},
+						success: function (data) {
+							if(data.code == 1){
+								window.location.href = "/view/category/room.html";
+								localStorage.setItem("campId", campId);
+								localStorage.setItem("campName", campName);
+							}
+						}
+					})
 				})
 				break;
 		}

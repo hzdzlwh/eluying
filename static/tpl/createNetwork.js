@@ -84,6 +84,8 @@ html.staticTpl['createSuccess'] = ''+
 	'<div class="modal-dialog">\
 		<div class="modal-content">\
 			<div class="title">创建成功</div>\
+			<input type="hidden" name="campId" value="{campId}"/>\
+			<input type="hidden" name="campName" value="{campName}"/>\
 			<section>\
 				您已经成功创建网络{campName}（网络号：{networkNum}）。\
 			</section>\

@@ -310,7 +310,7 @@ $(document).ready(function(){
                             $.each(data.data.camps, function(index, el) {
                                 if (el.campId === data.data.user.lastCampId) {
                                     localStorage.setItem("campName", el.campName);
-                                    localStorage.setItem("campNum", el.campId);
+                                    localStorage.setItem("campId", el.campId);
                                 }
                             });
                             setTimeout("window.location.href = 'view/category/room.html';", 1000);
