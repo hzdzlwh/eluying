@@ -65,6 +65,7 @@
     </style>
     <![endif]-->
     <script>
+        var ua = window.navigator.userAgent;
         if(!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || (ua.indexOf('Android') > -1 || ua.indexOf('Linux') > -1)) {
             location.href = 'http://www.dingdandao.com/wap';
         }
