@@ -61,7 +61,10 @@ function forgetVCOnClick(){
                 origin: 1
             },
             success: function(data){
-
+                if (data.code !== 1) {
+                    $("#loginForgetPwd .errorTips").html(data.msg);
+                    $("#loginForgetPwd .errorTips").show();
+                }
             },
             error: function(data){
 
@@ -224,7 +227,7 @@ $(document).ready(function(){
     $("#loginRegister .confirm").on("click", function(){
         var phone = $("#loginRegister .phone").val();
         var verifyCode = $("#loginRegister .verifyCode").val();
-        var realName = $("#loginRegister .realName").val();
+        var realName = $("#loginRegister .realName").val().trim();
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $("#loginRegister .pwdConfirm").val();
         var name, campName, campAddress, registrationCode;

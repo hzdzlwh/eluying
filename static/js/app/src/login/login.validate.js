@@ -4,8 +4,8 @@
 var validate = {};
 
 validate.realNameValidate = function(str){
-    var reg = /^[a-zA-Z\u4e00-\u9fa5]{2,16}$/;
-    return reg.test(str) || '姓名必须是2到16个中英文字符';
+    var reg = /^[a-zA-Z\u4e00-\u9fa5\s]{2,16}$/;
+    return reg.test(str) || '姓名错误，请输入2-16个字符，不支持特殊符号';
 };
 
 validate.passwordValidate = function(str){
