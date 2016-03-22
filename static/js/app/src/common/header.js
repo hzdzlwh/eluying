@@ -87,6 +87,9 @@ var header = {
                                 localStorage.setItem("campId", campId);
                                 localStorage.setItem("campName", campName);
                                 window.location.reload();
+                            }else if(data.code == 11002){
+                                alert(data.msg);
+                                logout.logout();
                             }else{
                                 alert(data.msg);
                             }
@@ -108,6 +111,7 @@ var header = {
         },
         "click body": function() {
             $('.userName').removeClass('userName-active');
+            $("#headerSwitchCamp").slideUp();
             $('.logout').hide();
         },
         "click #headerJoinNewNetwork": function () {
@@ -116,7 +120,8 @@ var header = {
         "click #headerCreateNetwork": function () {
             networkAction.init("create",{}).modal("show");
         },
-        "click .avatorContainer": function(){
+        "click .avatorContainer": function(e){
+            e.stopPropagation();
             $("#headerSwitchCamp").slideToggle();
         }
     },

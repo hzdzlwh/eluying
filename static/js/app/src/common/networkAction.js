@@ -63,6 +63,24 @@ var network = {
 					}
 					confirmHandler(post.networkName, post.department, post.position);
 				});
+				resultDom.find("input.networkName").on("input", function () {
+					var value = $(this).val();
+					if(value.length > 20){
+						$(this).val(value.substr(0,20))
+					}
+				})
+				resultDom.find("input.department").on("input", function () {
+					var value = $(this).val();
+					if(value.length > 10){
+						$(this).val(value.substr(0,10))
+					}
+				})
+				resultDom.find("input.position").on("input", function () {
+					var value = $(this).val();
+					if(value.length > 10){
+						$(this).val(value.substr(0,10))
+					}
+				})
 				break;
 			case this.status.JOIN_NETWORK1:
 				var that = this;
@@ -109,6 +127,18 @@ var network = {
 						}
 					})
 				});
+				resultDom.find("input.department").on("input", function () {
+					var value = $(this).val();
+					if(value.length > 10){
+						$(this).val(value.substr(0,10))
+					}
+				})
+				resultDom.find("input.position").on("input", function () {
+					var value = $(this).val();
+					if(value.length > 10){
+						$(this).val(value.substr(0,10))
+					}
+				})
 				break;
 			case this.status.CREATE_SUCCESS:
 				$(".createNetworkButton").click(function () {
