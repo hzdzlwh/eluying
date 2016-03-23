@@ -6,8 +6,10 @@ var util = require('util');
 var loginValidate = require('loginValidate');
 var AJAXService = require('AJAXService');
 var baseUrl = AJAXService.urls.host;
+var networkAction = require("networkAction");
 require('bootstrap');
 require('cookie');
+
 
 var resposiveWindow = function(){
     $("html").css({
@@ -44,6 +46,7 @@ function time(o) {
     }
 }
 
+
 function forgetVCOnClick(){
     var phone = $("#loginForgetPwd .phone").val();
     var result = loginValidate.phoneValidate(phone);
@@ -58,7 +61,10 @@ function forgetVCOnClick(){
                 origin: 1
             },
             success: function(data){
-
+                if (data.code !== 1) {
+                    $("#loginForgetPwd .errorTips").html(data.msg);
+                    $("#loginForgetPwd .errorTips").show();
+                }
             },
             error: function(data){
 
@@ -79,7 +85,7 @@ function registerVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            url: baseUrl + '/user/sendVerifyCode',
+            url: AJAXService.getUrl('/user/sendVerifyCode'),
             data: {
                 phone: phone
             },
@@ -134,7 +140,6 @@ $(document).ready(function(){
         });
     }
     $(window).on("resize", function(){
-        //alert($(window).width());
         if($(window).width() <= 1200){
             $("#loginBox").css({
                 "overflow-x": "hidden"
@@ -156,26 +161,6 @@ $(document).ready(function(){
 
     $("#loginName").on("blur", GetPwdAndChk);
     //$("#loginSave").on("click", SetPwdAndChk);
-
-    /*
-     申请注册码和我有注册码切换
-     */
-    $("body").on("click", "#loginRegister .regCode .navs .item", function(){
-        $("#loginRegister .regCode .navs .item").removeClass("active");
-        $(this).addClass("active");
-        var data = $(this).attr("data");
-        if(data == 'use'){
-            $("#loginRegister .apply").hide();
-            $("#loginRegister .use").show();
-            $("#loginRegister .regCode").height(183);
-            $("#loginRegister .confirm").html('注册');
-        }else{
-            $("#loginRegister .apply").show();
-            $("#loginRegister .use").hide();
-            $("#loginRegister .regCode").height(243);
-            $("#loginRegister .confirm").html('申请');
-        }
-    });
 
     /*
      忘记密码点击发送验证码
@@ -237,12 +222,12 @@ $(document).ready(function(){
     $("#loginRegister .get_code").on("click", registerVCOnClick);
 
     /*
-     申请注册码或者注册
+     注册
      */
     $("#loginRegister .confirm").on("click", function(){
         var phone = $("#loginRegister .phone").val();
         var verifyCode = $("#loginRegister .verifyCode").val();
-        var loginName = $("#loginRegister .loginName").val();
+        var realName = $("#loginRegister .realName").val().trim();
         var pwd = $("#loginRegister .pwd").val();
         var pwdConfirm = $("#loginRegister .pwdConfirm").val();
         var name, campName, campAddress, registrationCode;
@@ -251,7 +236,7 @@ $(document).ready(function(){
             result = loginValidate.verifyCodeValidate(verifyCode);
         }
         if(result == true){
-            result = loginValidate.loginNameValidate(loginName);
+            result = loginValidate.realNameValidate(realName);
         }
         if(result == true){
             result = loginValidate.passwordValidate(pwd);
@@ -260,66 +245,36 @@ $(document).ready(function(){
             result = loginValidate.passwordConfirmValidate(pwd, pwdConfirm);
         }
         var state = $(this).html();
-        if(state == '申请'){
-            name = $("#loginRegister .name").val();
-            campName = $("#loginRegister .campName").val();
-            campAddress = $("#loginRegister .address").val();
-            registrationCode = null;
-            if(result == true){
-                result = loginValidate.nameValidate(name);
-            }
-            if(result == true){
-                result = loginValidate.campNameValidate(campName);
-            }
-            if(result == true){
-                result = loginValidate.campAddressValidate(campAddress);
-            }
-        }else if(state == '注册'){
-            name = $("#loginRegister .name2").val();
-            campName = null;
-            campAddress = null;
-            registrationCode = $("#loginRegister .registrationCode").val();
-            if(result == true){
-                result = loginValidate.nameValidate(name);
-            }
-            if(result == true){
-                result = loginValidate.registrationCodeValidate(registrationCode);
-            }
-        }
+
+
+
         if(result == true){
+            $(this).prop('disabled', true)
+                .html('注册中。。。');
             $.ajax({
                 type: 'POST',
-                url: baseUrl + '/user/register',
+                url: AJAXService.getUrl('/user/register'),
                 data: {
-                    campAddress: campAddress,
-                    campName: campName,
-                    name: name,
+                    realName: realName,
                     password: pwd,
                     phone: phone,
-                    registrationCode: registrationCode,
-                    userName: loginName,
-                    verifyCode: verifyCode
+                    verifyCode: verifyCode,
+                    terminal: 1
                 },
                 success: function(data){
                     if(data.code == 1){
-                        if(state == '注册'){
-                            localStorage.setItem("campName", data.data.camps[0].name);
-                            localStorage.setItem("userName", data.data.userName);
-                            $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                            $("#loginRegister").modal('hide');
-                            $("#loginRegSuccess").modal('show');
-                            setTimeout("window.location.href = '/view/category/room.html';", 1000)
-                        }else{
-                            $("#loginRegister").modal('hide');
-                            $("#loginApplySuccess").modal('show');
-                        }
+                        localStorage.setItem("userName", data.data.realName);
+                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
+                        $("#loginRegister").modal('hide');
+                        $("#createOrJoinNetwork").modal('show');
                     }else{
                         $("#loginRegister .errorTips").html(data.msg);
                         $("#loginRegister .errorTips").show();
                     }
                 },
-                error: function(data){
-
+                complete: function(data){
+                    $('#loginRegister .confirm').prop('disabled', false)
+                        .html('注册');
                 }
             });
             $("#loginRegister .errorTips").hide();
@@ -335,7 +290,7 @@ $(document).ready(function(){
     $("#loginBox .log button").on("click", function(){
         var loginName = $("#loginBox .log .loginName").val();
         var password = $("#loginBox .log .password").val();
-        var result = loginValidate.loginNameValidate(loginName);
+        var result = loginValidate.phoneValidate(loginName);
         if(result == true) {
             result = loginValidate.passwordValidate(password);
         }
@@ -344,17 +299,28 @@ $(document).ready(function(){
                 type: "POST",
                 url: baseUrl + '/user/login',
                 data: {
-                    loginName: loginName,
-                    password: password
+                    terminal: 1,
+                    password: password,
+                    phone: loginName
                 },
                 success: function(data){
                     if(data.code == 1){
                         SetPwdAndChk(); //记住密码和账号
-                        $("#loginLogSuccess").modal('show');
-                        localStorage.setItem("campName", data.data.camps[0].name);
-                        localStorage.setItem("userName", data.data.userName);
-                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
-                        setTimeout("window.location.href = 'view/category/room.html';", 1000);
+                        if (data.data.camps.length === 0) {
+                            $('#createOrJoinNetwork').modal('show');
+                        } else {
+                            $("#loginLogSuccess").modal('show');
+                            $.each(data.data.camps, function(index, el) {
+                                if (el.campId === data.data.user.lastCampId) {
+                                    localStorage.setItem("campName", el.campName);
+                                    localStorage.setItem("campId", el.campId);
+                                }
+                            });
+                            setTimeout("window.location.href = 'view/category/room.html';", 1000);
+                        }
+                        localStorage.setItem("userName", data.data.user.realName);
+                        $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
+
                     }else{
                         $("#loginBox .log .errorTips").html(data.msg);
                         $("#loginBox .log .errorTips").show();
@@ -374,12 +340,26 @@ $(document).ready(function(){
         }
     });
 
+    /*创建网络按钮*/
+    $("#createNewNetwork").on('click', function () {
+        var modalDialog = networkAction.init("create",{});
+        $("#createOrJoinNetwork").modal("hide");
+        modalDialog.modal("show");
+    })
+
+    /*加入网络按钮*/
+    $("#joinNetwork").on('click', function () {
+        var modalDialog = networkAction.init("joinStep1",{});
+        $("#createOrJoinNetwork").modal("hide");
+        modalDialog.modal("show");
+    })
+
     /*
      登录表单验证
      */
     $("#loginBox .log .loginName").on("change", function(){
         var loginName = $(this).val();
-        var result = loginValidate.loginNameValidate(loginName);
+        var result = loginValidate.phoneValidate(loginName);
         if(result != true){
             $("#loginBox .log .errorTips").html(result);
             $("#loginBox .log .errorTips").show();
