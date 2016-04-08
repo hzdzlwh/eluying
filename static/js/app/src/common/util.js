@@ -1,8 +1,8 @@
 var util = {
     mainContainer: function(){
-        var width = document.body.clientWidth - 65;
-        if (width < 1135) {
-            width = 1135;
+        var width = document.body.clientWidth - 220;
+        if (width < 980) {
+            width = 980;
         }
         $(".mainContainer").css("width", width);
     },

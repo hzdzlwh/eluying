@@ -5,21 +5,22 @@
 .header {
     background-color: #303030;
     color: #FFF;
-    height: 52px;
+    height: 80px;
     position: fixed;
     width: 100%;
     z-index: 999;
     .camp-name {
         float: left;
-        margin-left: 26px;
-        font-size: 14px;
-        line-height: 52px;
-        color: #94ccff;
+        margin-left: 20px;
+        font-size: 20px;
+        line-height: 80px;
+        font-family:PingFangSC-Regular;
+        color:#FFF;
     }
     @include minWidth();
     .upload {
-        margin-top: 20px;
-        margin-left: 26px;
+        margin-top: 34px;
+        margin-left: 25px;
         float: left;
     }
     ul {
@@ -28,7 +29,7 @@
         li {
             float: left;
             width: 110px;
-            line-height: 52px;
+            line-height: 80px;
             font-size: 14px;
             text-align: center;
             cursor: pointer;
@@ -56,7 +57,7 @@
         overflow: hidden;
     }
     .userName {
-        line-height: 52px;
+        line-height: 80px;
         float: left;
         width: 110px;
         text-align: center;
@@ -77,9 +78,9 @@
     }
     .logout {
         width: 110px;
-        line-height: 52px;
+        line-height: 80px;
         position: absolute;
-        top: 52px;
+        top: 80px;
         right: 26px;
         background-color: #4a90e2;
         text-align: center;
@@ -100,19 +101,19 @@
         position: relative;
         .avatorContainer{
             float: left;
-            width: 270px;
+            width: 239px;
         }
         &:hover{
-            background: #4a90e2;
+            background: #2a2a2a;
             .camp-name{
                 color: white;
             }
         }
         dl{
             position: absolute;
-            top: 52px;
+            top: 80px;
             padding: 0 20px 10px;
-            background: #4a90e2;
+            background: #2a2a2a;
             width: 100%;
             font-size: 12px;
             font-weight: normal;
@@ -139,23 +140,20 @@
             background: #75b4f4;
             margin:0px;
         }
-        .upload{
-            float: right;
-        }
     }
 }
 
 .mainContainer {
     position: absolute;
-    top: 52px;
+    top: 80px;
     left: 65px;
     zoom:1;
     width: 100%;
     .content {
         margin: 40px auto 0 auto;
-        width: 1105px;
+        width: 950px;
             .title {
-                width: 900px;
+                width: 745px;
                 height: 41px;
                 .campName {
                     color: #4A90E2;
@@ -174,19 +172,20 @@
 }
 
 .leftMenu {
-    width: 65px;
+    width: 100px;
     background-color: #4A90E2;
     height: 100%;
     position: fixed;
-    top: 52px;
+    top: 80px;
+    left: 120px;
     z-index: 10;
     ul {
         margin-left: 7px;
         margin-top: 46px;
         li {
-            line-height: 52px;
+            line-height: 80px;
             height: 49px;
-            width: 59px;
+            width: 94px;
             margin-bottom: 20px;
             border-radius: 6px 0 0 6px;
             a {
@@ -208,6 +207,3 @@
         }
     }
 }
-
-
-
