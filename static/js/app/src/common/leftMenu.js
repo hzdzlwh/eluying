@@ -1,18 +1,39 @@
+var leftMenuHtml = require('./leftMenu.html');
+var dot = require('dot');
 var leftMenu = {
     showLeftMenu: function() {
         var pathArray = window.location.pathname.split("/");
         var path = (pathArray[2]);
-        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/view/" + path + "/room.html'>住宿</a></li>"
-            + "<li><a id='foodMenu' href='/view/" + path + "/food.html'>餐饮</a></li>"
-            + "<li><a id='entertainmentMenu' href='/view/" + path + "/entertainment.html'>娱乐</a></li>";
-        var header = pathArray[2];
-        if (header === 'category') {
-            str += '<li><a id="shopMenu" href="/view/' + path + '/shop.html">商超</a></li>';
-        }
-        str += '</ul></div>';
         var menu = pathArray[3].split(".")[0];
-        $(".header").after(str);
-        $("#" + menu + "Menu").addClass("active");
+        var templ = dot.template(leftMenuHtml);
+        var data = {
+            room:'住宿',
+            food:'餐饮',
+            entertainment:'娱乐',
+            roomPath:'/view/'+path+'/room.html',
+            foodPath:'/view/'+path+'/food.html',
+            entertainmentPath:'/view/'+path+'/entertainment.html',
+            service: '业务设置',
+            website: '直销网站设置',
+            charge: '收款设置',
+            servicePath: '#',
+            websitePath: '#',
+            chargePath: '#',
+            web:'网站运营',
+            information:'基本信息',
+            manage:'商品管理',
+            webPath: '#',
+            informationPath: '#',
+            managePath: '#',
+            weixin: '企业微信支付',
+            zhifubao: '企业支付宝',
+            other: '其他',
+            weixinPath: '#',
+            zhifubaoPath: '#',
+            otherPath: '#'
+        };
+        $(".header").after(templ(data));
+        $("#"+ menu +"Menu").addClass("active");
     }
 };
 module.exports = leftMenu;

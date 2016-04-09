@@ -3,37 +3,19 @@ var util = require("util");
 var AJAXService = require("AJAXService");
 var networkAction = require("networkAction");
 var modal = require('modal');
+var headerHtml = require('./header.html');
+var dot = require('dot');
 var header = {
     showHeader : function(){
         var that = this;
-        var headerStr = "<div class='header clearfloat'>" +
-            "<div class='headerSwitch'>" +
-            "<div class='avatorContainer'>" +
-            "<p class='camp-name'>" + localStorage.getItem('campName') + "</p>" +
-            "<img src='../../static/image/upload.png' class='upload'>" +
-            "</div>" +
-            "<dl id='headerSwitchCamp'>" +
-            "<dd id='headerJoinNewNetwork'>＋ 加入新网络" +
-            "</dd>" +
-            "<dd id='headerCreateNetwork'>＋ 创建新网络" +
-            "</dd>" +
-            "</dl>" +
-            "</div>" +
-            "<ul>" +
-            "<li><a id='categoryMenu' href='/view/category/room.html'>品类管理</a></li>" +
-            "<li><a id='inventoryMenu' href='/view/inventory/room.html'>库存管理</a></li>" +
-            "<li><a id='priceMenu' href='/view/price/room.html'>价格维护</a></li>" +
-            "</ul>" +
-            "<div class='right'>" +
-            "<div class='userName'>" +
-            "<span></span>" +
-            "</div>" +
-            "<div class='logout' style='display: none'>" +
-            "<a href='javascript:void(0)' id='logout'>退出账户</a>" +
-            "</div>" +
-            "</div>" +
-            "</div>"; +
-        $("body").prepend(headerStr);
+        var data = {
+            campName:localStorage.getItem('campName'),
+            joinNet: "加入新网络",
+            creatNet: "创建新网络",
+            logOut: "退出账户" 
+        };
+        var temp = dot.template(headerHtml);
+        $("body").prepend(temp(data));
         //根据path激活active
         $(".userName").find("span").html(localStorage.getItem("userName"));
         var pathArray = window.location.pathname.split("/");
