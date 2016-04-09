@@ -105,7 +105,9 @@ gulp.task('webpack2', function () {
                 "category/roomEntry": "./static/js/app/src/category/room/roomEntry.js",
                 "category/foodEntry": "./static/js/app/src/category/food/foodEntry.js",
                 "category/ETEntry": "./static/js/app/src/category/entertainment/ETEntry.js",
-                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js"
+                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js",
+                "salesite/info": "./static/js/app/src/salesite/info.js",
+                "salesite/operation": "./static/js/app/src/salesite/operation.js"
             },
             output: {
 
@@ -169,7 +171,9 @@ gulp.task('webpack', function () {
                 "category/roomEntry": "./static/js/app/src/category/room/roomEntry.js",
                 "category/foodEntry": "./static/js/app/src/category/food/foodEntry.js",
                 "category/ETEntry": "./static/js/app/src/category/entertainment/ETEntry.js",
-                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js"
+                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js",
+                "salesite/info": "./static/js/app/src/salesite/info.js",
+                "salesite/operation": "./static/js/app/src/salesite/operation.js"
             },
             output: {
                 filename: "[name].js",
