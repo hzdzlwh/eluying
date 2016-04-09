@@ -172,9 +172,15 @@ gulp.task('webpack', function () {
                 "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js"
             },
             output: {
-
                 filename: "[name].js",
                 publicPath: "./dist/"
+            },
+            module: {
+              loaders: [
+
+                  {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, "./view")] }
+
+              ]
             },
             resolve: {
                 extensions: ['.js', ""],
