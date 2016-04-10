@@ -3,7 +3,7 @@ var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var foodCategoryList = require("./foodCategoryList");
-var addFood = require("./addFood");
+var addFood = require("./addfood");
 var editFoodBasic = require("./editFoodBasic");
 var showInfo = require("./showInfo");
 
