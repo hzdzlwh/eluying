@@ -119,8 +119,26 @@
         background: white;
         float: left;
         margin-right: 15px;
+        .cross{
+          width: 100%;
+          position: relative;
+          height: 1px;
+          .item1, .item2{
+            width: 111.8%;
+            height: 1px;
+            background: green;
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+          .item1{
+            transform:rotate(20deg);
+          }
+          .item2{
+            transform:rotate(-20deg);
+          }
+        }
       }
-
     }
   }
 }

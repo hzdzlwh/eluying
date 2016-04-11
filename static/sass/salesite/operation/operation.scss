@@ -81,7 +81,35 @@
         width: 180px;
         height: 130px;
         margin: auto 12px;
-        background: green;
+        //background: green;
+        .itemBox{
+          width: 180px;
+          height: 130px;
+          background:#ffffff;
+          border:1px solid #dadada;
+          border-radius:2px;
+          padding-top: 21px;
+          position: relative;
+        }
+        .itemBox.active{
+          border:1px solid #4a90e2;
+        }
+        img{
+
+        }
+        .stext{
+          font-size:12px;
+          color:#8b9fb4;
+          text-align:center;
+          width: 100%;
+          margin-top: 12px;
+        }
+        .yesTips{
+          position: absolute;
+          right: -10px;
+          top: -10px;
+          z-index: 1;
+        }
       }
       .item:first-child{
         margin-left: 0;

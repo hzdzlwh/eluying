@@ -7,6 +7,7 @@ var AJAXService = {
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
         host: "http://121.41.109.105:8081/mg",
+        host2: "http://121.41.109.105:8081/ws",
         //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
@@ -55,7 +56,9 @@ var AJAXService = {
         deleteGood: '/category/deleteOneGood',
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
-        rewriteUrl: true
+        rewriteUrl: true,
+        checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
+        getOperationInfoUrl: ' /directNet/getOperationInfo'
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
@@ -64,11 +67,18 @@ var AJAXService = {
         }
         return url;
     },
+    getUrl2: function(path){
+        var url = this.urls.host2 + (this.urls[path] || path);
+        //if (this.urls.rewriteUrl == true && $.cookie("jsessionid")) {
+        //    url += ";jsessionid=" + $.cookie("jsessionid");
+        //}
+        return url;
+    },
     sessionValidate: function(data){
         data = JSON.parse(data);
-        if (data.code == 11002) {
-            location.href = "/login.html";
-        }
+        //if (data.code == 11002) {
+        //    location.href = "/login.html";
+        //}
         return JSON.stringify(data);
 }
 };

@@ -319,7 +319,8 @@ $(document).ready(function(){
                             setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                         }
                         localStorage.setItem("userName", data.data.user.realName);
-                        $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
+                        localStorage.setItem("uid", data.data.user.uid);
+                        //$.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
 
                     }else{
                         $("#loginBox .log .errorTips").html(data.msg);
