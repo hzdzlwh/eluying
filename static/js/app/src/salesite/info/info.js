@@ -13,7 +13,7 @@ $(function(){
     util.checkExplorer();
     //初始化界面
     header.showHeader();
-    // leftMenu.showLeftMenu();
+    leftMenu.showLeftMenu();
     util.mainContainer();
     modal.modalInit();
 
