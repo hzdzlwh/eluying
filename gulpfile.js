@@ -213,7 +213,9 @@ gulp.task('webpack', function () {
                     fileupload: path.join(__dirname, "./static/js/lib/jquery.fileupload.js"),
                     "jquery.ui.widget": path.join(__dirname, "./static/js/lib/jquery.ui.widget.js"),
                     iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js"),
-                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js")
+                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js"),
+                    dsy: path.join(__dirname, "./static/js/app/src/common/dsy.js"),
+                    angular: path.join(__dirname, "./node_modules/angular/angular.min.js"),
                 }
             },
             devtool: "sourcemap"
