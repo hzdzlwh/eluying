@@ -3,37 +3,37 @@ var dot = require('dot');
 var leftMenu = {
     showLeftMenu: function() {
         var pathArray = window.location.pathname.split("/");
-        var path = (pathArray[2]);
-        var menu = pathArray[3].split(".")[0];
+        var menuParent = pathArray[2];
+        var menu = pathArray[4].split(".")[0];
         var templ = dot.template(leftMenuHtml);
         var data = {
             room:'住宿',
             food:'餐饮',
             entertainment:'娱乐',
-            roomPath:'/view/'+path+'/room.html',
-            foodPath:'/view/'+path+'/food.html',
-            entertainmentPath:'/view/'+path+'/entertainment.html',
-            service: '业务设置',
-            website: '直销网站设置',
-            charge: '收款设置',
-            servicePath: '#',
-            websitePath: '#',
-            chargePath: '#',
-            web:'网站运营',
-            information:'基本信息',
-            manage:'商品管理',
-            webPath: '#',
-            informationPath: '#',
-            managePath: '#',
+            roomPath:'/view/business/category/room.html',
+            foodPath:'/view/business/category/food.html',
+            entertainmentPath:'/view/business/category/entertainment.html',
+            business: '业务设置',
+            salesite: '直销网站设置',
+            setting: '收款设置',
+            businessPath: '/view/business/category/room.html',
+            salesitePath: '/view/salesite/operation/operation.html',
+            settingPath: '/view/setting/weixin/weixin.html',
+            operation:'网站运营',
+            info:'基本信息',
+            operationPath: '/view/salesite/operation/operation.html',
+            infoPath: '/view/salesite/info/info.html',
             weixin: '企业微信支付',
             zhifubao: '企业支付宝',
             other: '其他',
-            weixinPath: '#',
-            zhifubaoPath: '#',
-            otherPath: '#'
+            weixinPath: '/view/setting/weixin/weixin.html',
+            zhifubaoPath: '/view/setting/zhifubao/zhifubao.html',
+            otherPath: '/view/setting/other/other.html'
         };
-        $(".header").after(templ(data));
-        $("#"+ menu +"Menu").addClass("active");
+        $('.header').after(templ(data));
+        $('#'+ menu +'Menu').addClass('active');
+        $('#'+ menuParent +'ParentMenu').addClass('active');
+        $('#'+  menuParent +'Menu').css('display','block').siblings().css('display','none');
     }
 };
 module.exports = leftMenu;
