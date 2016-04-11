@@ -1,3 +1,4 @@
+var AJAXService = require("AJAXService");
 var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");
@@ -67,6 +68,16 @@ $(function(){
         $scope.districtItems = dsy.Items[0 + '_' + $scope.selectedProvince + '_' + $scope.selectedCity];
         $scope.addressMore = '123';
         $scope.cover = null;
+        $.ajax({
+            url: AJAXService.getUrl2("getBasicInfoUrl"),
+            data:{
+                campId: 56,
+                uid: 85
+            },
+            success: function(result){
+                console.log(result);
+            }
+        });
     });
 
 });

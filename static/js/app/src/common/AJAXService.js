@@ -57,8 +57,9 @@ var AJAXService = {
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
         rewriteUrl: true,
+        getBasicInfoUrl: '/directNet/getBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
-        getOperationInfoUrl: ' /directNet/getOperationInfo'
+        getOperationInfoUrl: '/directNet/getOperationInfo'
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
