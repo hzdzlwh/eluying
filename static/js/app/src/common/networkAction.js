@@ -151,7 +151,7 @@ var network = {
 						},
 						success: function (data) {
 							if(data.code == 1){
-								window.location.href = "/view/category/room.html";
+								window.location.href = "/view/business/category/room.html";
 								localStorage.setItem("campId", campId);
 								localStorage.setItem("campName", campName);
 							}

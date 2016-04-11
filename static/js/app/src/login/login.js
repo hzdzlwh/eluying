@@ -316,7 +316,7 @@ $(document).ready(function(){
                                     localStorage.setItem("campId", el.campId);
                                 }
                             });
-                            setTimeout("window.location.href = 'view/category/room.html';", 1000);
+                            setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                         }
                         localStorage.setItem("userName", data.data.user.realName);
                         $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
