@@ -22,7 +22,7 @@
             <div class="formrow clearfloat">
                 <div class="slabel">名称:</div>
                 <div class="scontent">
-                    <p>千岛湖星空帐篷酒店</p>
+                    <p>{{campName}}</p>
                 </div>
             </div>
             <div class="formrow clearfloat">
@@ -92,9 +92,10 @@
                 <div class="slabel">营地封面图:</div>
                 <div class="scontent">
                     <div class="thumbpic">
-                        <div class="cross" ng-if="cover==null">
+                        <div class="cross" ng-if="cover===null">
 
                         </div>
+                        <img src="{{cover}}" ng-if="cover!==null"/>
                     </div>
                     <div class="sbtn">上传封面</div>
                 </div>

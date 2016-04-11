@@ -57,6 +57,7 @@ var AJAXService = {
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
         rewriteUrl: true,
+        getCampTypeUrl: '/directNet/getCampType',
         getBasicInfoUrl: '/directNet/getBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
         getOperationInfoUrl: '/directNet/getOperationInfo'
