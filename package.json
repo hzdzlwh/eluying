@@ -4,6 +4,7 @@
   "description": "dingdanlaile",
   "main": "gulpfile.js",
   "dependencies": {
+    "angular": "^1.5.3",
     "dot": "^1.0.3"
   },
   "devDependencies": {
