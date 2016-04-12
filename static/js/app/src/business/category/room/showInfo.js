@@ -32,18 +32,18 @@ var showInfo = {
         if (data.facilities.hotWater.status == 1) {
             $("#hotWaterY").prop("checked", true);
             $("#hotWaterDescription").val(data.facilities.hotWater.description);
-            $("#hotWaterN").nextAll("div").removeClass("hide");
+            $("#hotWaterSpan").prevAll("div").removeClass("hide");
         } else {
             $("#hotWaterN").prop("checked", true);
-            $("#hotWaterN").nextAll("div").addClass("hide");
+            $("#hotWaterSpan").prevAll("div").addClass("hide");
         }
         if (data.facilities.breakfast.status == 1) {
             $("#breakfastY").prop("checked", true);
             $("#breakfastDescription").val(data.facilities.breakfast.description);
-            $("#breakfastN").nextAll("div").removeClass("hide");
+            $("#breakfastSpan").prevAll("div").removeClass("hide");
         } else {
             $("#breakfastN").prop("checked", true);
-            $("#breakfastN").nextAll("div").addClass("hide");
+            $("#breakfastSpan").prevAll("div").addClass("hide");
         }
         if (data.facilities.bathroom.status == 1) {
             if (data.facilities.bathroom.description == "公共浴室") {
@@ -70,11 +70,11 @@ var showInfo = {
         }
         if (data.facilities.network.status == 1) {
             $("#networkY").prop("checked", true);
-            $("#networkN").nextAll("div").removeClass("hide");
+            $("#networkSpan").prevAll("div").removeClass("hide");
             $("#networkDescription").val(data.facilities.hotWater.description);
         } else {
             $("#networkN").prop("checked", true);
-            $("#networkN").nextAll("div").addClass("hide");
+            $("#networkSpan").prevAll("div").addClass("hide");
         }
         if (data.extraFacilities != null) {
             var str = "";
@@ -85,7 +85,7 @@ var showInfo = {
             $("#editDisplayInfo .mainClass").on("click", function () {
                 $("#editDisplayInfo .mainClass").removeClass("mainActive");
                 $(this).addClass("mainActive");
-                $("#editDisplayInfo .operateItem").removeClass("hide");
+                $("#editDisplayInfo .firstTwo .operateItem").removeClass("hide");
             });
         }
         if (data.coverUrl != null) {
@@ -194,7 +194,7 @@ var showInfo = {
     selectPhoto: function (obj) {
         if ($(obj).hasClass("coverImg")) {
             $(obj).addClass("photoSelected");
-            $("#editDisplayInfo .first .operateItem").removeClass("hide");
+            $("#editDisplayInfo .firstOne .operateItem").removeClass("hide");
         } else {
             $(".detailImg").removeClass("photoSelected");
             $(obj).addClass("photoSelected");
@@ -232,7 +232,7 @@ var showInfo = {
             $(this).nextAll("div").removeClass("hide");
         },
         "click .N": function () {
-            $(this).nextAll("div").addClass("hide");
+            $(this).prevAll("div").addClass("hide");
         },
 
 //编辑房间展示信息
@@ -287,7 +287,7 @@ var showInfo = {
             $("#editDisplayInfo .mainClass").on("click", function () {
                 $("#editDisplayInfo .mainClass").removeClass("mainActive");
                 $(this).addClass("mainActive");
-                $("#editDisplayInfo .operateItem").removeClass("hide");
+                $("#editDisplayInfo .firstTwo .operateItem").removeClass("hide");
             });
             showInfo.changed = true;
             modal.clearModal(that);

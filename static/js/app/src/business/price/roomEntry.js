@@ -1,5 +1,6 @@
 var header = require("header");
 var leftMenu = require("leftMenu");
+var topMenu = require("../../common/topMenu");
 var accommodationPriceList = require("accommodationPriceList");
 var util = require("util");
 var seasonManage = require("seasonManage");
@@ -16,6 +17,7 @@ $(function(){
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
+    topMenu.showTopMenu();
     util.mainContainer();
     modal.modalInit();
     $(".campName").html(localStorage.getItem("campName"));

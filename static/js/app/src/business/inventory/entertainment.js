@@ -4,6 +4,7 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
 var leftMenu = require("leftMenu");
+var topMenu = require("../../common/topMenu");
 var header = require("header");
 require("jqueryui");
 require("datepicker-zh");
@@ -381,6 +382,7 @@ $(document).ready(function(){
      */
     header.showHeader();
     leftMenu.showLeftMenu();
+    topMenu.showTopMenu();
     util.mainContainer();
 
     //trToggle();

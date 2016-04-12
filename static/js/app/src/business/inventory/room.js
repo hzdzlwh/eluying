@@ -5,6 +5,7 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 var leftMenu = require("leftMenu");
 var header = require("header");
+var topMenu = require("../../common/topMenu");
 var trToggle = require("trToggle");
 require("jqueryui");
 require("datepicker-zh");
@@ -478,6 +479,7 @@ $(document).ready(function(){
      */
     header.showHeader();
     leftMenu.showLeftMenu();
+    topMenu.showTopMenu();
     util.mainContainer();
 
     //初始化日历

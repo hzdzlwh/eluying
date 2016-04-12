@@ -1,5 +1,6 @@
 var header = require("header");
 var leftMenu = require("leftMenu");
+var topMenu = require("../../common/topMenu");
 var util = require("util");
 require("bootstrap");
 var modal = require("modal");
@@ -12,6 +13,7 @@ $(function(){
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
+    topMenu.showTopMenu();
     util.mainContainer();
     modal.modalInit();
     $(".campName").html(localStorage.getItem("campName"));
