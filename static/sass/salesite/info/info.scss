@@ -33,11 +33,18 @@
     font-size:14px;
     color:#ffffff;
     text-align:center;
+    cursor: pointer;
   }
   .sbtn.save{
     position: absolute;
     right: 11.25%;
     bottom: 36px;
+  }
+  .sbtn:hover{
+    background: #3a71b0;
+  }
+  .sbtn:focus{
+    background: #3a71b0;
   }
   .formrow{
     width: 100%;
@@ -112,6 +119,8 @@
         background:#ffffff;
         border:1px solid #cccccc;
         border-radius:2px;
+        padding-left: 8px;
+        padding-right: 8px;
       }
       .thumbpic{
         width: 200px;
@@ -119,8 +128,30 @@
         background: white;
         float: left;
         margin-right: 15px;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+        .cross{
+          width: 100%;
+          position: relative;
+          height: 1px;
+          .item1, .item2{
+            width: 111.8%;
+            height: 1px;
+            background: green;
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+          .item1{
+            transform:rotate(20deg);
+          }
+          .item2{
+            transform:rotate(-20deg);
+          }
+        }
       }
-
     }
   }
 }

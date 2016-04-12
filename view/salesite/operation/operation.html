@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="operationApp">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -11,7 +11,7 @@
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/salesite/operation.js"></script>
 </head>
-<body>
+<body ng-controller="operationCtrl">
 <div class="modal fade" role="dialog" id="copySuccess">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -34,8 +34,8 @@
                 <span class="total">140</span>
             </div>
             <div class="btns">
-                <div class="publish">发布公告</div>
-                <div class="cancel">取消</div>
+                <div class="mmbtn publish">发布公告</div>
+                <div class="mmbtn cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -54,31 +54,42 @@
                 <div class="stitle">上线准备工作</div>
                 <div class="hr2"></div>
                 <div class="wrapper">
-                    <div class="item"></div>
-                    <div class="item"></div>
-                    <div class="item"></div>
+                    <div class="item" ng-repeat="s in status">
+                        <div class="itemBox" ng-class="{'active': status[s].status}">
+                            <img class="yesTips" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="status[s].status"/>
+                            <img src="{{s.yesUrl}}" alt="" ng-if="status[s].status"/>
+                            <img src="{{s.noUrl}}" alt="" ng-if="!status[s].status"/>
+                            <div class="stext" ng-if="status[s].status">{{s.yesText}}</div>
+                            <div class="stext" ng-if="!status[s].status">{{s.noText}}</div>
+                        </div>
+                    </div>
+                    <!--<div class="item"></div>-->
+                    <!--<div class="item"></div>-->
+                    <!--<div class="item"></div>-->
                 </div>
-                <div class="sbtn disabled">网站上线</div>
+                <div class="sbtn" ng-class="{'disabled': !status['alipay'].status || !status['campBasicInfo'].status}">网站上线</div>
             </div>
         </div>
         <div class="salesite-operation-success">
             <div class="successbox">
                 <div class="hr"></div>
                 <div class="formrow">
-                    <div class="stext">公告:晚上有篝火晚会</div>
-                    <div class="stime">2016-02-02 14:30</div>
+                    <div class="stext">公告:{{notice || "无"}}</div>
+                    <div class="stime">{{noticeTime || ''}}</div>
                     <div class="sbtn" data-toggle="modal" data-target="#announcement">发布新公告</div>
                 </div>
                 <div class="hr2"></div>
                 <div class="formrow">
-                    <div class="stext">网站:www.dingdandao.com/12345678</div>
+                    <div class="stext">网站:{{campUrl}}</div>
                     <div class="sbtn" data-toggle="modal" data-target="#copySuccess">复制网址</div>
                 </div>
                 <div class="hr2"></div>
                 <div class="formrow erweima">
                     <div class="stext">
                         <span>二维码:</span>
-                        <div class="erweimapic"></div>
+                        <div class="erweimapic">
+                            <img src="{{campQrCode}}" alt="营地二维码"/>
+                        </div>
                     </div>
                     <div class="sbtn">下载</div>
                 </div>
