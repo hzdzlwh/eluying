@@ -198,6 +198,7 @@
     position: absolute;
     top: 29px;
     right: 80px;
+    cursor: pointer;
   }
   .formrow.erweima{
     height: 191px;
@@ -205,12 +206,14 @@
       display: inline-block;
       width: 128px;
       height: 128px;
-      background: green;
       margin-left: 5px;
     }
     .sbtn{
       top: 44px;
     }
+  }
+  .sbtn:hover, .sbtn:focus{
+    background: #3a71b0;
   }
 }
 
@@ -310,6 +313,9 @@
     height: 40px;
     margin: auto;
     margin-top: 33px;
+    .mmbtn{
+      cursor: pointer;
+    }
     .publish{
       background:#4a90e2;
       border-radius:2px;
@@ -320,6 +326,9 @@
       color: #ffffff;
       text-align: center;
       line-height: 40px;
+    }
+    .publish:hover, .publish:focus{
+      background: #3a71b0;
     }
     .cancel{
       border:1px solid #4a90e2;
@@ -332,6 +341,9 @@
       text-align: center;
       line-height: 40px;
       margin-right: 49px;
+    }
+    .cancel:hover, .cancel:focus{
+      background: #dddddd;
     }
   }
 }

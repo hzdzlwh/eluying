@@ -81,7 +81,7 @@ gulp.task('styles', function () {
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('static/css'))
-        .pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
+        //.pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
         .pipe(reload({stream: true}));
 });
 
@@ -227,7 +227,7 @@ gulp.task('webpack', function () {
         }, webpack))
         .pipe(gulp.dest('static/js/app/dist/'))
         .pipe(reload({stream: true}))
-        .pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
+        //.pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
 });
 
 

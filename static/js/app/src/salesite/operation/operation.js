@@ -37,12 +37,15 @@ $(function(){
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click .cancel,.publish": function(){
+            $("#announcement").modal("hide");
+        }
     };
 
     util.bindDomAction(events);
 
     var app = angular.module('operationApp', []);
-    app.controller('operationCtrl', function($scope) {
+    app.controller('operationCtrl', function($scope, $http) {
         $scope.status = {
             alipay: {
                 status: false,
@@ -66,27 +69,54 @@ $(function(){
             //    noText: '点我去开通企业微信支付'
             //},
         };
-        $.ajax({
-            url: AJAXService.getUrl2("checkDirectNetOnlineUrl"),
-            data:{
+        $scope.campUrl = null;
+        $scope.directNetStatus = null;
+        $scope.notice = null;
+        $scope.noticeTime = null;
+        $scope.campQrCode = null;
+        $http.get(AJAXService.getUrl2("checkDirectNetOnlineUrl"), {
+            params: {
                 campId: 56,
                 uid: 85
-            },
-            success: function(result){
-                $scope.status.alipay.status = result.data.alipay;
-                $scope.status.campBasicInfo.status = result.data.campBasicInfo;
             }
+        }).success(function(result){
+            console.log(result);
+            $scope.status.alipay.status = result.data.alipay;
+            $scope.status.campBasicInfo.status = result.data.campBasicInfo;
         });
-        $.ajax({
-            url: AJAXService.getUrl2("getOperationInfoUrl"),
-            data:{
+        $http.get(AJAXService.getUrl2("getOperationInfoUrl"), {
+            params: {
                 campId: 56,
                 uid: 85
-            },
-            success: function(result){
-                console.log(result);
             }
+        }).success(function(result){
+            $scope.campQrCode = result.data.campQrCode;
+            $scope.campUrl = result.data.campUrl;
+            $scope.directNetStatus = result.data.directNetStatus;
+            $scope.notice = result.data.notice;
+            $scope.noticeTime = result.data.noticeTime;
         });
+        //$.ajax({
+        //    url: AJAXService.getUrl2("checkDirectNetOnlineUrl"),
+        //    data:{
+        //        campId: 56,
+        //        uid: 85
+        //    },
+        //    success: function(result){
+        //        $scope.status.alipay.status = result.data.alipay;
+        //        $scope.status.campBasicInfo.status = result.data.campBasicInfo;
+        //    }
+        //});
+        //$.ajax({
+        //    url: AJAXService.getUrl2("getOperationInfoUrl"),
+        //    data:{
+        //        campId: 56,
+        //        uid: 85
+        //    },
+        //    success: function(result){
+        //        console.log(result);
+        //    }
+        //});
     });
 
 });

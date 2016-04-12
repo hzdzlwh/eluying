@@ -59,6 +59,7 @@ var AJAXService = {
         rewriteUrl: true,
         getCampTypeUrl: '/directNet/getCampType',
         getBasicInfoUrl: '/directNet/getBasicInfo',
+        editBasicInfoUrl: '/directNet/editBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
         getOperationInfoUrl: '/directNet/getOperationInfo'
     },

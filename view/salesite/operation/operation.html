@@ -34,8 +34,8 @@
                 <span class="total">140</span>
             </div>
             <div class="btns">
-                <div class="publish">发布公告</div>
-                <div class="cancel">取消</div>
+                <div class="mmbtn publish">发布公告</div>
+                <div class="mmbtn cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -74,20 +74,22 @@
             <div class="successbox">
                 <div class="hr"></div>
                 <div class="formrow">
-                    <div class="stext">公告:晚上有篝火晚会</div>
-                    <div class="stime">2016-02-02 14:30</div>
+                    <div class="stext">公告:{{notice || "无"}}</div>
+                    <div class="stime">{{noticeTime || ''}}</div>
                     <div class="sbtn" data-toggle="modal" data-target="#announcement">发布新公告</div>
                 </div>
                 <div class="hr2"></div>
                 <div class="formrow">
-                    <div class="stext">网站:www.dingdandao.com/12345678</div>
+                    <div class="stext">网站:{{campUrl}}</div>
                     <div class="sbtn" data-toggle="modal" data-target="#copySuccess">复制网址</div>
                 </div>
                 <div class="hr2"></div>
                 <div class="formrow erweima">
                     <div class="stext">
                         <span>二维码:</span>
-                        <div class="erweimapic"></div>
+                        <div class="erweimapic">
+                            <img src="{{campQrCode}}" alt="营地二维码"/>
+                        </div>
                     </div>
                     <div class="sbtn">下载</div>
                 </div>

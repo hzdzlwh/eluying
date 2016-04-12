@@ -33,11 +33,18 @@
     font-size:14px;
     color:#ffffff;
     text-align:center;
+    cursor: pointer;
   }
   .sbtn.save{
     position: absolute;
     right: 11.25%;
     bottom: 36px;
+  }
+  .sbtn:hover{
+    background: #3a71b0;
+  }
+  .sbtn:focus{
+    background: #3a71b0;
   }
   .formrow{
     width: 100%;

@@ -30,8 +30,10 @@ $(function(){
             ev.stopPropagation();
             $(".selectBox .toselect-container").hide();
             $(this).siblings(".toselect-container").show();
+        },
+        "click .sbtn.upload": function(){
+            $("input#coverUpload").click();
         }
-
     };
 
     util.bindDomAction(events);
@@ -73,11 +75,34 @@ $(function(){
             var address = $scope.addressMore;
             var campName = $scope.campName;
             var city = $scope.cityItems[$scope.selectedCity];
-            var country = $scope.districtItems[$scope.selectedDistrict];
+            try{
+                var country = $scope.districtItems[$scope.selectedDistrict];
+            }catch(e){
+                var country = '';
+            }
+
             var imgUrl = $scope.cover;
             var province = $scope.provinceItems[$scope.selectedProvince];
             var recePhone = $scope.phone;
             var type = $scope.selectedType;
+            $http.get(AJAXService.getUrl2("editBasicInfoUrl"), {
+                params: {
+                    campId: 56,
+                    uid: 85,
+                    address: address,
+                    campType: type,
+                    city: city,
+                    county: country,
+                    imgUrl: imgUrl,
+                    province: province,
+                    recePhone: recePhone
+                }
+            }).success(function(result){
+                console.log(result);
+            });
+        };
+        $scope.uploadCover = function(){
+            console.log(this);
         };
         $http.get(AJAXService.getUrl2("getBasicInfoUrl"), {
             params: {
@@ -85,7 +110,6 @@ $(function(){
                 uid: 85
             }
         }).success(function(result){
-            console.log(result);
             var infos = result.data;
             var address = infos.address;
             var campName = infos.campName;
