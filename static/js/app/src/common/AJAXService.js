@@ -72,10 +72,31 @@ var AJAXService = {
     },
     getUrl2: function(path){
         var url = this.urls.host2 + (this.urls[path] || path);
-        //if (this.urls.rewriteUrl == true && $.cookie("jsessionid")) {
-        //    url += ";jsessionid=" + $.cookie("jsessionid");
-        //}
         return url;
+    },
+    ajaxWithToken: function(method, path, data, callback, errorCallback){
+        data.campId = localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        data.token = localStorage.getItem("token");
+        $.ajax({
+            type: method,
+            url: AJAXService.getUrl2(path),
+            data: data,
+            success: callback,
+            error: errorCallback,
+        });
+    },
+    ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
+        data.campId = localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        data.token = localStorage.getItem("token");
+        if(method === 'GET' || method === 'get'){
+            $http.get(AJAXService.getUrl2(path), {
+                params: data
+            }).success(callback);
+        }else if(method === 'POST' || method === 'post'){
+            //TODO
+        }
     },
     sessionValidate: function(data){
         data = JSON.parse(data);

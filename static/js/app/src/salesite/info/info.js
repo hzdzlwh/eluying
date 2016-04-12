@@ -3,6 +3,7 @@ var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
+require("fileupload");
 require("angular");
 var dsy = require("dsy");
 
@@ -17,6 +18,19 @@ $(function(){
     leftMenu.showLeftMenu();
     util.mainContainer();
     modal.modalInit();
+
+    $("#coverUpload").fileupload({
+        url: AJAXService.getUrl("uploadImageUrl"),
+        done: function (e, data) {
+            var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+            result = JSON.parse(result);
+            console.log(result);
+            //$(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.data.url + "' />");
+            //$(".cover .create").hide();
+            //$(".coverError").addClass("hide");
+            //showInfo.changed = true;
+        }
+    });
 
     events = {
 
@@ -85,31 +99,37 @@ $(function(){
             var province = $scope.provinceItems[$scope.selectedProvince];
             var recePhone = $scope.phone;
             var type = $scope.selectedType;
-            $http.get(AJAXService.getUrl2("editBasicInfoUrl"), {
-                params: {
-                    campId: 56,
-                    uid: 85,
-                    address: address,
-                    campType: type,
-                    city: city,
-                    county: country,
-                    imgUrl: imgUrl,
-                    province: province,
-                    recePhone: recePhone
-                }
-            }).success(function(result){
+            //$http.get(AJAXService.getUrl2("editBasicInfoUrl"), {
+            //    params: {
+            //        campId: 56,
+            //        uid: 85,
+            //        address: address,
+            //        campType: type,
+            //        city: city,
+            //        county: country,
+            //        imgUrl: imgUrl,
+            //        province: province,
+            //        recePhone: recePhone
+            //    }
+            //}).success(function(result){
+            //    console.log(result);
+            //});
+            AJAXService.ajaxWithTokenAngular($http, 'GET', 'editBasicInfoUrl', {
+                address: address,
+                campType: type,
+                city: city,
+                county: country,
+                imgUrl: imgUrl,
+                province: province,
+                recePhone: recePhone
+            }, function(result){
                 console.log(result);
             });
         };
         $scope.uploadCover = function(){
             console.log(this);
         };
-        $http.get(AJAXService.getUrl2("getBasicInfoUrl"), {
-            params: {
-                campId: 56,
-                uid: 85
-            }
-        }).success(function(result){
+        AJAXService.ajaxWithTokenAngular($http, 'GET', 'getBasicInfoUrl', {}, function(result){
             var infos = result.data;
             var address = infos.address;
             var campName = infos.campName;
