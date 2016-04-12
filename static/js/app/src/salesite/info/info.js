@@ -20,7 +20,7 @@ $(function(){
     modal.modalInit();
 
     $("#coverUpload").fileupload({
-        url: AJAXService.getUrl("uploadImageUrl"),
+        url: AJAXService.getUrl2("uploadImageUrl"),
         done: function (e, data) {
             var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
             result = JSON.parse(result);
@@ -99,22 +99,7 @@ $(function(){
             var province = $scope.provinceItems[$scope.selectedProvince];
             var recePhone = $scope.phone;
             var type = $scope.selectedType;
-            //$http.get(AJAXService.getUrl2("editBasicInfoUrl"), {
-            //    params: {
-            //        campId: 56,
-            //        uid: 85,
-            //        address: address,
-            //        campType: type,
-            //        city: city,
-            //        county: country,
-            //        imgUrl: imgUrl,
-            //        province: province,
-            //        recePhone: recePhone
-            //    }
-            //}).success(function(result){
-            //    console.log(result);
-            //});
-            AJAXService.ajaxWithTokenAngular($http, 'GET', 'editBasicInfoUrl', {
+            AJAXService.ajaxWithToken('GET', 'editBasicInfoUrl', {
                 address: address,
                 campType: type,
                 city: city,
@@ -123,13 +108,14 @@ $(function(){
                 province: province,
                 recePhone: recePhone
             }, function(result){
-                console.log(result);
+                modal.somethingAlert(result.msg);
+                $scope.$apply();
             });
         };
         $scope.uploadCover = function(){
             console.log(this);
         };
-        AJAXService.ajaxWithTokenAngular($http, 'GET', 'getBasicInfoUrl', {}, function(result){
+        AJAXService.ajaxWithToken('GET', 'getBasicInfoUrl', {}, function(result){
             var infos = result.data;
             var address = infos.address;
             var campName = infos.campName;
@@ -149,6 +135,7 @@ $(function(){
             $scope.addressMore = address;
             $scope.cover = imgUrl;
             $scope.campName = campName;
+            $scope.$apply();
         });
     });
 
