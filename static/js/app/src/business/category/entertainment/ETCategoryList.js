@@ -10,6 +10,7 @@ var ETCategoryList = {
     render: function () {
         var str = "";
         $.each(ETCategoryList.list, function (index, element) {
+            var state = element.state ? '已上架' : '未上架';
             str += "<tr class='mainClass'>" +
                 "<td class='gridMore'>" + element.name + "</td>" +
                 "<td>" + element.shortName + "</td>" +
@@ -18,6 +19,7 @@ var ETCategoryList = {
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
                 "<td class='gridMore'>" + element.description + "</td>" +
+                "<td>" + state + "</td>" +
                 "<input type='hidden' class='state' value=" + element.state + " />" +
                 "<input type='hidden' class='id' value=" + element.id + " /></tr>";
         });
@@ -44,7 +46,7 @@ var ETCategoryList = {
 
     //上架或者下架
     modifyState: function (item) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("modifyStateUrl"),
             data: item,
             dataFilter: function (result) {
@@ -62,7 +64,19 @@ var ETCategoryList = {
                 });
                 ETCategoryList.render();
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('get','/category/modifyStatePC',item,function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(ETCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    ETCategoryList.list[index].state = item.state;
+                    return false; //等于break
+                }
+            });
+            ETCategoryList.render();
+        });
     },
 
     //删除
@@ -123,7 +137,8 @@ var ETCategoryList = {
         "click .modifyStateButton": function () {
             var item = {
                 id: $(".mainActive .id").val(),
-                state: 1 - $(".mainActive .state").val()
+                state: 1 - $(".mainActive .state").val(),
+                channelId: 5
             };
             ETCategoryList.modifyState(item);
         }

@@ -149,7 +149,19 @@ var seasonManage = {
                     tbody += "<td week='" + (i + 1) + "' class='salePrice' channel-id='" + data[name][i].channelId + "'><p>" + data[name][i].salePrice + "</p></td>";
                 }
                 tbody += "<td week='1' class='salePrice' channel-id='" + data[name][0].channelId + "'><p>" + data[name][0].salePrice + "</p></td></tbody>";
-            } else {
+            } else if(name === "5"){
+                tbody += "<tbody>" +
+                    "<tr>" +
+                    "<td>" +
+                    "<p>直销价</p>" +
+                    "</td>";
+                for (var i = 1; i < 7; i++) {
+                    tbody += "<td class='netPrice' channel-id='" + data[name][i].channelId + "' week='" + (i + 1) + "'>" + "<p>" + data[name][i].netPrice + "</p></td>";
+                }
+                tbody += "<td class='netPrice' channel-id='" + data[name][0].channelId + "' week='1''>" + "<p>" + data[name][0].netPrice + "</p></td></tbody>";
+
+            }
+             else {
                 tbody += "<tbody>" +
                     "<tr>" +
                     "<td>" +
@@ -260,8 +272,8 @@ var seasonManage = {
             $("#seasonRetailPrice").val($(".salePrice.selected").find("p").html());
         },
         "click #editSeasonNetPriceButton": function(){
-            $("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());
-            $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(1)").html());
+            /*$("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());*/
+            $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(0)").html());
         },
         "click #editSeasonSalePriceOk": function(){
             if (!$("#editSeasonSalePrice form").valid()) {
@@ -278,8 +290,8 @@ var seasonManage = {
             }
             $("#editSeason .selected").addClass("changed");
             var that = this;
-            $(".selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());
-            $(".selected").find("p:eq(1)").html($("#seasonNetPrice").val());
+            /*$(".selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());*/
+            $(".selected").find("p:eq(0)").html($("#seasonNetPrice").val());
             modal.clearModal(that);
         },
         "click #editSeasonOk": function(){

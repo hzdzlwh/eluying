@@ -114,7 +114,14 @@ var accommodationPriceList = {
                         tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldPrice" : "price") +
                             "' category-id=" + element.id + " date=" + element.date + ">" + element.salePrice + "</td>";
                     });
-                } else {
+                } else if(subName == "5"){
+                    tbody += "<tr class='subPrice hide'>" +
+                        "<td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>直销价</p></div></td>";
+                    $.each(result.data[name][subName], function (index, element) {
+                        tbody += "<td class='" + (Date.parse(util.stringToDate(element.date)) < new Date().setHours(23, 59, 59, 999) ? "oldNetPrice" : "subPriceTd") +
+                            "' channel-id=" + element.channelId + " category-id=" + element.id + " date=" + element.date + "><div>" + "<p>" + element.netPrice + "</p></div></td>";
+                    });
+                } else{
                     tbody += "<tr class='subPrice hide'>" +
                         "<td><div>" + result.data[name][subName][0].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>";
                     $.each(result.data[name][subName], function (index, element) {
