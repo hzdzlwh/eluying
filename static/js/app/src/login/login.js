@@ -263,7 +263,7 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         localStorage.setItem("userName", data.data.realName);
-                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
+                        //$.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         $("#loginRegister").modal('hide');
                         $("#createOrJoinNetwork").modal('show');
                     }else{
@@ -294,42 +294,35 @@ $(document).ready(function(){
             result = loginValidate.passwordValidate(password);
         }
         if(result === true){
-            $.ajax({
-                type: "POST",
-                url: baseUrl + '/user/login',
-                data: {
-                    terminal: 1,
-                    password: password,
-                    phone: loginName
-                },
-                success: function(data){
-                    if(data.code == 1){
-                        SetPwdAndChk(); //记住密码和账号
-                        if (data.data.camps.length === 0) {
-                            $('#createOrJoinNetwork').modal('show');
-                        } else {
-                            $("#loginLogSuccess").modal('show');
-                            $.each(data.data.camps, function(index, el) {
-                                if (el.campId === data.data.user.lastCampId) {
-                                    localStorage.setItem("campName", el.campName);
-                                    localStorage.setItem("campId", el.campId);
-                                }
-                            });
-                            setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
-                        }
-                        localStorage.setItem("userName", data.data.user.realName);
-                        localStorage.setItem("uid", data.data.user.uid);
-                        localStorage.setItem("token", data.data.user.token);
-                        $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
-
-                    }else{
-                        $("#loginBox .log .errorTips").html(data.msg);
-                        $("#loginBox .log .errorTips").show();
-                        $("#loginBox .log .text").css("margin-top", "30px");
+            AJAXService.ajaxWithToken("POST", "loginUrl", {
+                terminal: 1,
+                password: password,
+                phone: loginName
+            }, function(data){
+                if(data.code == 1){
+                    SetPwdAndChk(); //记住密码和账号
+                    if (data.data.camps.length === 0) {
+                        $('#createOrJoinNetwork').modal('show');
+                    } else {
+                        $("#loginLogSuccess").modal('show');
+                        $.each(data.data.camps, function(index, el) {
+                            if (el.campId === data.data.user.lastCampId) {
+                                localStorage.setItem("campName", el.campName);
+                                localStorage.setItem("campId", el.campId);
+                            }
+                        });
+                        setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                     }
-                },
-                error: function(data){
-
+                    localStorage.setItem("userName", data.data.user.realName);
+                    localStorage.setItem("userType", data.data.user.userType);
+                    localStorage.setItem("uid", data.data.user.uid);
+                    localStorage.setItem("token", data.data.user.token);
+                    setTimeout(util.checkAuth, 900);
+                    //util.checkAuth();
+                }else{
+                    $("#loginBox .log .errorTips").html(data.msg);
+                    $("#loginBox .log .errorTips").show();
+                    $("#loginBox .log .text").css("margin-top", "30px");
                 }
             });
             $("#loginBox .log .errorTips").hide();

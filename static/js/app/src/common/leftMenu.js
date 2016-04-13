@@ -18,13 +18,15 @@ var leftMenu = {
             setting: '收款设置',
             businessPath: '/view/business/category/room.html',
             salesitePath: '/view/salesite/operation/operation.html',
-            settingPath: '/view/setting/tipsMethod/tipsMethod.html',
+            settingPath: '/view/setting/method/method.html',
             operation:'网站运营',
             info:'基本信息',
             operationPath: '/view/salesite/operation/operation.html',
             infoPath: '/view/salesite/info/info.html',
-            tipsMethod: '支付方式',
-            tipsMethodPath: '/view/setting/tipsMethod/tipsMethod.html'
+            method: '支付方式',
+            methodPath: '/view/setting/method/method.html',
+            // tipsMethod: '支付方式',
+            //tipsMethodPath: '/view/setting/tipsMethod/tipsMethod.html'
         };
         $('.header').after(templ(data));
         $('#'+ menu +'Menu').addClass('active');

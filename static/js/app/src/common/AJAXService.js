@@ -58,6 +58,8 @@ var AJAXService = {
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
         rewriteUrl: true,
+        openCloseDirectNetUrl: '/directNet/openCloseDirectNet',
+        modifyNoticeUrl: '/directNet/modifyNotice',
         getCampTypeUrl: '/directNet/getCampType',
         getBasicInfoUrl: '/directNet/getBasicInfo',
         editBasicInfoUrl: '/directNet/editBasicInfo',
@@ -78,8 +80,10 @@ var AJAXService = {
     ajaxWithToken: function(method, path, data, callback, errorCallback){
         data.timestamp = (new Date()).valueOf();
         // data.version = (new Date()).valueOf();
-        data.campId = localStorage.getItem("campId");
-        data.uid = localStorage.getItem("uid");
+        //data.campId = localStorage.getItem("campId");
+        //data.uid = localStorage.getItem("uid");
+        data.campId = 56;
+        data.uid = 85;
         data.kick = true;
         // data.token = localStorage.getItem("token");
         var array = [];
