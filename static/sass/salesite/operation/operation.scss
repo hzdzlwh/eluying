@@ -135,15 +135,31 @@
     .sbtn{
       width: 100px;
       height: 40px;
+      color: white;
       line-height: 40px;
       margin: auto;
       border-radius:2px;
       font-size:14px;
       text-align:center;
+      background:#4a90e2;
+      cursor: pointer;
+    }
+    .sbtn:hover{
+      background: #3a71b0;
+    }
+    .sbtn:focus{
+      background: #3a71b0;
     }
     .sbtn.disabled{
       background:#dfdfdf;
       color:#9e9e9e;
+      cursor: not-allowed;
+    }
+    .sbtn.disabled:hover{
+      background: #dfdfdf;
+    }
+    .sbtn.disabled:focus{
+      background: #dfdfdf;
     }
     overflow-x: hidden;
     background:#f6f6f6;

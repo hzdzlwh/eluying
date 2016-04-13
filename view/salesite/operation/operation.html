@@ -69,7 +69,7 @@
                     <!--<div class="item"></div>-->
                     <!--<div class="item"></div>-->
                 </div>
-                <div class="sbtn" ng-class="{'disabled': !status['alipay'].status || !status['campBasicInfo'].status}">网站上线</div>
+                <div class="sbtn" ng-class="{'disabled': !status['alipay'].status || !status['campBasicInfo'].status}" ng-click="changeSiteState()">网站上线</div>
             </div>
         </div>
         <div class="salesite-operation-success" ng-if="directNetStatus == 1">
