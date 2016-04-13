@@ -74,28 +74,43 @@ $(function(){
         $scope.notice = null;
         $scope.noticeTime = null;
         $scope.campQrCode = null;
-        $http.get(AJAXService.getUrl2("checkDirectNetOnlineUrl"), {
-            params: {
-                campId: 56,
-                uid: 85
-            }
-        }).success(function(result){
+        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
             console.log(result);
             $scope.status.alipay.status = result.data.alipay;
             $scope.status.campBasicInfo.status = result.data.campBasicInfo;
+            $scope.$apply();
         });
-        $http.get(AJAXService.getUrl2("getOperationInfoUrl"), {
-            params: {
-                campId: 56,
-                uid: 85
-            }
-        }).success(function(result){
+        AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
+            console.log(result);
             $scope.campQrCode = result.data.campQrCode;
             $scope.campUrl = result.data.campUrl;
             $scope.directNetStatus = result.data.directNetStatus;
             $scope.notice = result.data.notice;
             $scope.noticeTime = result.data.noticeTime;
+            $scope.$apply();
         });
+        // $http.get(AJAXService.getUrl2("checkDirectNetOnlineUrl"), {
+        //     params: {
+        //         campId: 56,
+        //         uid: 85
+        //     }
+        // }).success(function(result){
+        //     console.log(result);
+        //     $scope.status.alipay.status = result.data.alipay;
+        //     $scope.status.campBasicInfo.status = result.data.campBasicInfo;
+        // });
+        // $http.get(AJAXService.getUrl2("getOperationInfoUrl"), {
+        //     params: {
+        //         campId: 56,
+        //         uid: 85
+        //     }
+        // }).success(function(result){
+        //     $scope.campQrCode = result.data.campQrCode;
+        //     $scope.campUrl = result.data.campUrl;
+        //     $scope.directNetStatus = result.data.directNetStatus;
+        //     $scope.notice = result.data.notice;
+        //     $scope.noticeTime = result.data.noticeTime;
+        // });
         //$.ajax({
         //    url: AJAXService.getUrl2("checkDirectNetOnlineUrl"),
         //    data:{

@@ -115,6 +115,13 @@ gulp.task('webpack2', function () {
                 filename: "[name].js",
                 publicPath: "./dist/"
             },
+            module: {
+                loaders: [
+
+                    {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, "./view")] }
+
+                ]
+            },
             resolve: {
                 extensions: ['.js', ""],
                 alias: {

@@ -1,4 +1,5 @@
 require("cookie");
+var md5 = require("md5");
 var AJAXService = {
     urls: {
         //正式服务器 http://120.26.83.168:8081/mg
@@ -75,9 +76,23 @@ var AJAXService = {
         return url;
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback){
+        data.timestamp = (new Date()).valueOf();
+        // data.version = (new Date()).valueOf();
         data.campId = localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");
-        data.token = localStorage.getItem("token");
+        data.kick = true;
+        // data.token = localStorage.getItem("token");
+        var array = [];
+        for(var key in data){
+            array.push(data[key]);
+        }
+        array.push(localStorage.getItem("token"));
+        array.sort();
+        var str = array.join("");
+        // console.log(str);
+        var strMD5 = md5(str);
+        // console.log(strMD5);
+        data.sign = strMD5;
         $.ajax({
             type: method,
             url: AJAXService.getUrl2(path),
