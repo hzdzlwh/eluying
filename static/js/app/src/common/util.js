@@ -151,6 +151,13 @@ var util = {
         if(flag){
             window.location.href = "/view/tips/tips.html";
         }
+    },
+
+    checkAuth: function(){
+        var userType = window.localStorage.getItem("userType");
+        if(userType != 1){
+            window.location.href = '/view/tips/noauth.html'
+        }
     }
 };
 module.exports = util;

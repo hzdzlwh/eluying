@@ -107,7 +107,8 @@ gulp.task('webpack2', function () {
                 "category/ETEntry": "./static/js/app/src/business/category/entertainment/ETEntry.js",
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
-                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js"
+                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
 
@@ -182,7 +183,8 @@ gulp.task('webpack', function () {
                 "category/ETEntry": "./static/js/app/src/business/category/entertainment/ETEntry.js",
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
-                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js"
+                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
                 filename: "[name].js",
