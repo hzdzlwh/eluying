@@ -28,13 +28,17 @@ var util = {
         }
     },
 
-    errorHandler: function(result){
+    errorHandler: function(result, msg){
         var modal = require("modal");
         if (result.code != 1) {
             modal.somethingAlert(result.msg);
             return false;
         } else {
-            modal.somethingAlert("操作成功");
+            if (msg) {
+                modal.somethingAlert(msg)
+            } else {
+                modal.somethingAlert("操作成功");
+            }
             return true;
         }
     },

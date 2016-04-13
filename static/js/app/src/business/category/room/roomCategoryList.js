@@ -38,6 +38,7 @@ var roomCategoryList = {
     render: function () {
         var str = "";
         $.each(roomCategoryList.list, function (index, element) {
+            var state = element.state ? '已上架' : '未上架';
             str += "<tr class='mainClass'>" +
                 "<td><span class='gridMore'>" + element.name + "</span>"
                 + "<img src='/static/image/rotate.png'></td>" +
@@ -46,6 +47,7 @@ var roomCategoryList = {
                 "<td>" + element.fitNum + "</td>" +
                 "<td>" + element.inventory + "</td>" +
                 "<td>" + element.price + "</td>" +
+                "<td>" + state + "</td>" +
                 "<input type='hidden' class='state' value=" + element.state + " />" +
                 "<input type='hidden' class='id' value=" + element.id + " /></tr>";
             $.each(element.subTypeList, function (index, subElement) {
@@ -56,6 +58,7 @@ var roomCategoryList = {
                     "<td><div>" + element.fitNum + "</div></td>" +
                     "<td><div>" + subElement.inventory + "</div></td>" +
                     "<td><div class='last'>" + element.price + "</div></td>" +
+                    "<td><div>" + "</div></td>" +
                     "<input type='hidden' class='id' value=" + subElement.id + " /></tr>";
             })
         });
