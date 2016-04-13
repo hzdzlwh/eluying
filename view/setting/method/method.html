@@ -12,10 +12,81 @@
     <script src="/static/js/app/dist/setting/method.js"></script>
 </head>
 <body>
+<div class="modal fade" role="dialog" id="deleteMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                删除之后将不能用这种收款方式继续收银，
+                您确定要删除吗？
+            </div>
+            <div class="btns clearfloat">
+                <div class="sbtn sbtn-ok">删除</div>
+                <div class="sbtn sbtn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="newMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">新增收款方式</div>
+            <div class="hr2"></div>
+            <div class="maintext">
+                <div class="slabel">收款方式名称</div>
+                <div class="scontent"><input type="text"/></div>
+            </div>
+            <div class="btns clearfloat">
+                <div class="sbtn sbtn-ok">发布</div>
+                <div class="sbtn sbtn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="alipayMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">新增收款方式</div>
+            <div class="hr2"></div>
+            <div class="srow clearfloat">
+                <div class="scol scol1"><span style="color: red;">*</span>合作者身份（PID）</div>
+                <div class="scol scol2"><input type="text"/></div>
+            </div>
+            <div class="srow clearfloat">
+                <div class="scol scol1">支付宝账号</div>
+                <div class="scol scol2"><input type="text"/></div>
+            </div>
+            <div class="srow big clearfloat">
+                <div class="scol scol1">
+                    支付宝账号
+                    <div class="tips">
+                        合作伙伴秘钥管理=＞RSA加密：<br/>
+                        查看支付宝公钥
+                    </div>
+                </div>
+                <div class="scol scol2"><textarea></textarea></div>
+            </div>
+            <div class="srow medium clearfloat">
+                <div class="scol scol1">
+                    商户RSA私钥
+                    <div class="tips">
+                        (非PKCS8)编码
+                    </div>
+                </div>
+                <div class="scol scol2"><textarea></textarea></div>
+            </div>
+            <div class="hr3"></div>
+            <div class="sbtn sbtn-ok">提交审核</div>
+            <div class="sbtn sbtn-cancel">取消</div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="mainContainer clearfloat">
     <div class="content clearfloat">
         <div class="method-container">
-            <div class="method-add">
+            <div class="method-add" data-toggle="modal" data-target="#deleteMethod">
                 <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/189D870C-E8B1-493A-B819-FBE72BB3E887@1x.png" alt="add"/>
                 新增收款方式
             </div>
