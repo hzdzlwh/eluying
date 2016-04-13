@@ -50,9 +50,9 @@ $(function(){
             alipay: {
                 status: false,
                 yesUrl: pics['alipay-yes'],
-                yesText: '开通企业支付宝',
+                yesText: '绑定企业支付宝',
                 noUrl: pics['alipay-no'],
-                noText: '点我去开通企业支付宝'
+                noText: '点我去绑定企业支付宝'
             },
             campBasicInfo: {
                 status: false,
@@ -64,9 +64,9 @@ $(function(){
             //wechatPay: {
             //    status: false,
             //    yesUrl: pics['wechat-yes'],
-            //    yesText: '开通企业微信支付',
+            //    yesText: '绑定企业微信支付',
             //    noUrl: pics['wechat-no'],
-            //    noText: '点我去开通企业微信支付'
+            //    noText: '点我去绑定企业微信支付'
             //},
         };
         $scope.campUrl = null;
