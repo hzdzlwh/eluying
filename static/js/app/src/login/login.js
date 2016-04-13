@@ -324,22 +324,7 @@ $(document).ready(function(){
                     $("#loginBox .log .errorTips").show();
                     $("#loginBox .log .text").css("margin-top", "30px");
                 }
-            })
-            //$.ajax({
-            //    type: "POST",
-            //    url: baseUrl + '/user/login',
-            //    data: {
-            //        terminal: 1,
-            //        password: password,
-            //        phone: loginName
-            //    },
-            //    success: function(data){
-            //
-            //    },
-            //    error: function(data){
-            //
-            //    }
-            //});
+            });
             $("#loginBox .log .errorTips").hide();
             $("#loginBox .log .text").css("margin-top", "44px");
         }else{
