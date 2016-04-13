@@ -108,6 +108,7 @@ gulp.task('webpack2', function () {
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "setting/method": "./static/js/app/src/setting/method/method.js",
                 "tipsMethod/tipsMethod": "./static/js/app/src/setting/tipsMethod/tipsMethod.js",
                 "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
@@ -185,6 +186,7 @@ gulp.task('webpack', function () {
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "setting/method": "./static/js/app/src/setting/method/method.js",
                 "tipsMethod/tipsMethod": "./static/js/app/src/setting/tipsMethod/tipsMethod.js",
                 "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
