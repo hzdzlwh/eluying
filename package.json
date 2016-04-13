@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "dependencies": {
     "angular": "^1.5.3",
-    "dot": "^1.0.3"
+    "dot": "^1.0.3",
+    "md5": "^2.1.0"
   },
   "devDependencies": {
     "browser-sync": "^2.10.0",
