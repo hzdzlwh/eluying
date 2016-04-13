@@ -26,6 +26,9 @@
   .scontent.ready{
     color: #f5a623;
   }
+  .scontent.on{
+    color:#4a90e2;
+  }
   .sbtn{
     float: right;
     background:#4a90e2;
@@ -36,12 +39,19 @@
     text-align: center;
     font-size: 14px;
     color: white;
+    cursor: pointer;
   }
   .sbtn.openbtn{
-    margin-right: 20%;
+    margin-right: 250px;
   }
   .sbtn.closebtn{
-    margin-right: 24px;
+    margin-right: 250px;
+  }
+  .sbtn:hover{
+    background: #3a71b0;
+  }
+  .sbtn:focus{
+    background: #3a71b0;
   }
 }
 
@@ -94,8 +104,9 @@
         .itemBox.active{
           border:1px solid #4a90e2;
         }
-        img{
-
+        img.logo{
+          width: 64px;
+          height: 64px;
         }
         .stext{
           font-size:12px;
@@ -103,6 +114,9 @@
           text-align:center;
           width: 100%;
           margin-top: 12px;
+        }
+        a{
+          color:#8b9fb4;
         }
         .yesTips{
           position: absolute;
@@ -184,6 +198,14 @@
       margin-left: 125px;
       padding-top: 10px;
       color: #a8a8a8;
+    }
+  }
+  .formrow.notice{
+    height: auto;
+    padding-bottom: 32px;
+    .stext{
+      height: auto;
+      word-break: break-all;
     }
   }
   .sbtn{
