@@ -263,7 +263,7 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         localStorage.setItem("userName", data.data.realName);
-                        //$.cookie("jsessionid", data.data.jsessionid, {path: "/"});
+                        $.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         $("#loginRegister").modal('hide');
                         $("#createOrJoinNetwork").modal('show');
                     }else{
@@ -320,7 +320,7 @@ $(document).ready(function(){
                         localStorage.setItem("userName", data.data.user.realName);
                         localStorage.setItem("uid", data.data.user.uid);
                         localStorage.setItem("token", data.data.user.token);
-                        //$.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
+                        $.cookie("jsessionid", data.data.user.jsessionid, {path: "/"});
 
                     }else{
                         $("#loginBox .log .errorTips").html(data.msg);
