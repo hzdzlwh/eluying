@@ -324,6 +324,94 @@
   }
 }
 
+#submitSuccess{
+  .modal-dialog {
+    width: 318px;
+  }
+  .modal-content {
+    width: 318px;
+    height: 162px;
+    background: #f6f6f6;
+    border-radius: 2px;
+    padding: 0;
+    .hr {
+      width: 100%;
+      height: 4px;
+      background-color: #4A90E2;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .stext{
+      font-size:18px;
+      color:#4a90e2;
+      text-align:center;
+      width: 100%;
+      margin: auto;
+      margin-top: 46px;
+      line-height: 25px;
+    }
+    .stext_small{
+      font-size:14px;
+      color:#414141;
+      text-align:center;
+      width: 100%;
+      margin-top: 18px;
+    }
+  }
+}
+
+#submitFail{
+  .modal-dialog {
+    width: 318px;
+  }
+  .modal-content {
+    width: 318px;
+    height: 162px;
+    background: #f6f6f6;
+    border-radius: 2px;
+    padding: 0;
+    .hr {
+      width: 100%;
+      height: 4px;
+      background-color: #4A90E2;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .stext{
+      font-size:18px;
+      color:#d0021b;
+      text-align:center;
+      width: 100%;
+      margin-top: 26px;
+    }
+    .stext_small{
+      font-size:14px;
+      color:#414141;
+      text-align:center;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .sbtn{
+      background:#4a90e2;
+      border-radius:2px;
+      width:100px;
+      height:40px;
+      margin: auto;
+      margin-top: 20px;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+    }
+    .sbtn:hover, .sbtn:focus{
+      background: #3a71b0;
+    }
+  }
+}
+
 #deleteMethod{
   .modal-dialog {
     width: 400px;

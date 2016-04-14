@@ -26,7 +26,10 @@ $(function(){
 
     var app = angular.module('methodApp', []);
     app.controller('methodCtrl', function($scope) {
-
+        AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+            console.log(result);
+            $scope.$apply();
+        });
     });
 
 });
