@@ -109,7 +109,6 @@ gulp.task('webpack2', function () {
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tipsMethod/tipsMethod": "./static/js/app/src/setting/tipsMethod/tipsMethod.js",
                 "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
@@ -187,7 +186,6 @@ gulp.task('webpack', function () {
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tipsMethod/tipsMethod": "./static/js/app/src/setting/tipsMethod/tipsMethod.js",
                 "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
