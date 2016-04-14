@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="methodApp">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -11,7 +11,7 @@
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/setting/method.js"></script>
 </head>
-<body>
+<body ng-controller="methodCtrl">
 <div class="modal fade" role="dialog" id="deleteMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -23,6 +23,35 @@
             <div class="btns clearfloat">
                 <div class="sbtn sbtn-ok">删除</div>
                 <div class="sbtn sbtn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="submitSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                提交成功，请耐心等待审核
+            </div>
+            <div class="stext_small">
+                正在跳转到审核中页面
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="submitFail">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                提交失败
+            </div>
+            <div class="stext_small">
+                失败原因XXXXXXXXXX
+            </div>
+            <div class="sbtn">
+                确定提交审核
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -86,7 +115,7 @@
 <div class="mainContainer clearfloat">
     <div class="content clearfloat">
         <div class="method-container">
-            <div class="method-add" data-toggle="modal" data-target="#deleteMethod">
+            <div class="method-add">
                 <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/189D870C-E8B1-493A-B819-FBE72BB3E887@1x.png" alt="add"/>
                 新增收款方式
             </div>
