@@ -18,17 +18,15 @@ var leftMenu = {
             setting: '收款设置',
             businessPath: '/view/business/category/room.html',
             salesitePath: '/view/salesite/operation/operation.html',
-            settingPath: '/view/setting/weixin/weixin.html',
+            settingPath: '/view/setting/method/method.html',
             operation:'网站运营',
             info:'基本信息',
             operationPath: '/view/salesite/operation/operation.html',
             infoPath: '/view/salesite/info/info.html',
-            weixin: '企业微信支付',
-            zhifubao: '企业支付宝',
-            other: '其他',
-            weixinPath: '/view/setting/weixin/weixin.html',
-            zhifubaoPath: '/view/setting/zhifubao/zhifubao.html',
-            otherPath: '/view/setting/other/other.html'
+            method: '支付方式',
+            methodPath: '/view/setting/method/method.html',
+            // tipsMethod: '支付方式',
+            //tipsMethodPath: '/view/setting/tipsMethod/tipsMethod.html'
         };
         $('.header').after(templ(data));
         $('#'+ menu +'Menu').addClass('active');

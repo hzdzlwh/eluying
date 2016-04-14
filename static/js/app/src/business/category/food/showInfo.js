@@ -9,7 +9,7 @@ require("fileupload");
 var showInfo = {
     //读取展示信息
     pullFoodShowInfo: function (id) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("pullShowInfoUrl"),
             data: {id: id},
             dataFilter: function (result) {
@@ -18,7 +18,10 @@ var showInfo = {
             success: function (result) {
                 showInfo.showFoodShowInfo(result.data);
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('get','/category/pullShowInfoPC',{id: id},function (result) {
+            showInfo.showFoodShowInfo(result.data);
+        });
     },
 
 //显示展示信息
@@ -98,7 +101,7 @@ var showInfo = {
 
 //发送展示信息
     sendFoodShowInfo: function (item, that) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("editShowInfoUrl"),
             data: item,
             dataFilter: function (result) {
@@ -109,7 +112,12 @@ var showInfo = {
                     modal.clearModal(that);
                 }
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('post','/category/modifyShowInfoPC',item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            }
+        });
     },
 
     events: {

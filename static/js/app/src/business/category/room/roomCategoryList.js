@@ -57,8 +57,8 @@ var roomCategoryList = {
                     "<td><div>" + element.unit + "</div></td>" +
                     "<td><div>" + element.fitNum + "</div></td>" +
                     "<td><div>" + subElement.inventory + "</div></td>" +
-                    "<td><div class='last'>" + element.price + "</div></td>" +
-                    "<td><div>" + "</div></td>" +
+                    "<td><div>" + element.price + "</div></td>" +
+                    "<td><div class='last'>" + state + "</div></td>" +
                     "<input type='hidden' class='id' value=" + subElement.id + " /></tr>";
             })
         });
@@ -68,7 +68,7 @@ var roomCategoryList = {
     },
 //上下架
     modifyState: function (item) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('modifyStateUrl'),
             data: item,
             dataFilter: function (result) {
@@ -86,7 +86,19 @@ var roomCategoryList = {
                 });
                 roomCategoryList.render();
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('get','/category/modifyStatePC',item,function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(roomCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    roomCategoryList.list[index].state = item.state;
+                    return false; //等于break
+                }
+            });
+            roomCategoryList.render();
+        });
     },
 
     //删除房型
@@ -172,7 +184,8 @@ var roomCategoryList = {
         "click .modifyStateButton": function () {
             var item = {
                 id: $(".mainActive .id").val(),
-                state: 1 - $(".mainActive .state").val()
+                state: 1 - $(".mainActive .state").val(),
+                channelId: 5,
             };
             roomCategoryList.modifyState(item);
         }

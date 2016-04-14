@@ -58,11 +58,14 @@ var AJAXService = {
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
         rewriteUrl: true,
+        openCloseDirectNetUrl: '/directNet/openCloseDirectNet',
+        modifyNoticeUrl: '/directNet/modifyNotice',
         getCampTypeUrl: '/directNet/getCampType',
         getBasicInfoUrl: '/directNet/getBasicInfo',
         editBasicInfoUrl: '/directNet/editBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
-        getOperationInfoUrl: '/directNet/getOperationInfo'
+        getOperationInfoUrl: '/directNet/getOperationInfo',
+        getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
@@ -76,23 +79,27 @@ var AJAXService = {
         return url;
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback){
-        data.timestamp = (new Date()).valueOf();
-        // data.version = (new Date()).valueOf();
-        data.campId = localStorage.getItem("campId");
-        data.uid = localStorage.getItem("uid");
-        data.kick = true;
-        // data.token = localStorage.getItem("token");
-        var array = [];
-        for(var key in data){
-            array.push(data[key]);
+        if(path !== 'loginUrl'){
+            data.timestamp = (new Date()).valueOf();
+            // data.version = (new Date()).valueOf();
+            data.campId = localStorage.getItem("campId");
+            data.uid = localStorage.getItem("uid");
+            //data.campId = 56;
+            //data.uid = 85;
+            data.kick = true;
+            // data.token = localStorage.getItem("token");
+            var array = [];
+            for(var key in data){
+                array.push(data[key]);
+            }
+            array.push(localStorage.getItem("token"));
+            array.sort();
+            var str = array.join("");
+            // console.log(str);
+            var strMD5 = md5(str);
+            // console.log(strMD5);
+            data.sign = strMD5;
         }
-        array.push(localStorage.getItem("token"));
-        array.sort();
-        var str = array.join("");
-        // console.log(str);
-        var strMD5 = md5(str);
-        // console.log(strMD5);
-        data.sign = strMD5;
         $.ajax({
             type: method,
             url: AJAXService.getUrl2(path),

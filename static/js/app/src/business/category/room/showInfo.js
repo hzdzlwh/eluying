@@ -11,7 +11,7 @@ var showInfo = {
     },
     //读取展示信息
     pullRoomShowInfo: function (id) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("pullShowInfoUrl"),
             data: {id: id},
             dataFilter: function (result) {
@@ -20,7 +20,10 @@ var showInfo = {
             success: function (result) {
                 showInfo.showRoomShowInfo(result.data);
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('get','/category/pullShowInfoPC',{id: id},function (result) {
+            showInfo.showRoomShowInfo(result.data);
+        });
     },
 
     //显示展示信息
@@ -204,7 +207,7 @@ var showInfo = {
 
     //发送展示信息
     sendRoomShowInfo: function (item, that) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("editShowInfoUrl"),
             data: item,
             dataFilter: function (result) {
@@ -215,7 +218,12 @@ var showInfo = {
                     modal.clearModal(that);
                 }
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken('post','/category/modifyShowInfoPC',item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            }
+        });
     },
 
     events: {

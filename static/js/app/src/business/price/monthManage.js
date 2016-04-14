@@ -103,8 +103,7 @@ var monthManage = {
                 });
 
 
-            } else {
-                //渠道表格
+            } else if(name === "7"){
                 var count = 0;
                 $.each(data[name], function(index, element){
                     if (count % 7 === 0){
@@ -126,6 +125,35 @@ var monthManage = {
                     }
                     tbody += "<td class='netPrice' date='" + element.date + "' channel-id='" + element.channelId + "'><span class='date'>" + element.date.substring(8) + "日</span>" +
                         "<p>" + element.agreementPrice + "</p><p>" + element.netPrice + "</p></td>";
+                    if (count != 0 && (count + 1) % 7 ===0) {
+                        tbody += "</tr>";
+                    }
+                    count ++;
+                });
+            }
+            else {
+                //渠道表格
+                var count = 0;
+                $.each(data[name], function(index, element){
+                    if (count % 7 === 0){
+                        tbody += "<tr><td><p>直销价</p></td>"
+                    }
+                    //定位首个价格在表格中的位置
+                    if (index === 0) {
+                        if (util.stringToDate(element.date).getDay() === 0 ){
+                            for (var i = 0; i < 6; i ++) {
+                                tbody += "<td></td>";
+                                count ++;
+                            }
+                        } else {
+                            for (var i = 0; i < util.stringToDate(element.date).getDay() - 1; i ++) {
+                                tbody += "<td></td>";
+                                count ++;
+                            }
+                        }
+                    }
+                    tbody += "<td class='netPrice' date='" + element.date + "' channel-id='" + element.channelId + "'><span class='date'>" + element.date.substring(8) + "日</span>" +
+                        "<p>" + element.netPrice + "</p></td>";
                     if (count != 0 && (count + 1) % 7 ===0) {
                         tbody += "</tr>";
                     }
@@ -250,8 +278,8 @@ var monthManage = {
         },
         "click #editMonthNetPriceButton": function(){
             if ($("#editMonth .selected").length === 1) {
-                $("#monthCommissionPrice").val($("#editMonth .selected").find("p:eq(0)").html());
-                $("#monthNetPrice").val($("#editMonth .selected").find("p:eq(1)").html());
+                /*$("#monthCommissionPrice").val($("#editMonth .selected").find("p:eq(0)").html());*/
+                $("#monthNetPrice").val($("#editMonth .selected").find("p:eq(0)").html());
             } else {
                 $("#monthCommissionPrice").attr("placeholder", "批量修改");
                 $("#monthNetPrice").attr("placeholder", "批量修改");
@@ -270,8 +298,8 @@ var monthManage = {
             if (!$("#editMonthNetPrice form").valid()) {
                 return;
             }
-            $("#editMonth .selected").find("p:eq(0)").html($("#monthCommissionPrice").val());
-            $("#editMonth .selected").find("p:eq(1)").html($("#monthNetPrice").val());
+            /*$("#editMonth .selected").find("p:eq(0)").html($("#monthCommissionPrice").val());*/
+            $("#editMonth .selected").find("p:eq(0)").html($("#monthNetPrice").val());
             $("#editMonth .selected").addClass("changed");
             var that = this;
             modal.clearModal(that);
