@@ -7,7 +7,7 @@ var addRoom = {
     //新增房型
     addRoom: function (data, that) {
         data.subTypeList = JSON.stringify(data.subTypeList);
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("addAccommodationUrl"),
             type: "POST",
             data: data,
@@ -26,6 +26,18 @@ var addRoom = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","addAccommodationUrl",data,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            data.subTypeList = result.data.subTypeList;
+            data.state = 0;
+            data.id = result.data.id;
+            roomCategoryList.list.push(data);
+            roomCategoryList.render();
         });
     },
     events: {

@@ -22,7 +22,7 @@ var roomCategoryList = {
 
     //读取房型列表
     loadRoomCategoryList: function () {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getRoomCategoryListUrl'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -31,6 +31,10 @@ var roomCategoryList = {
                 roomCategoryList.list = result.data.list;
                 roomCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("GET",'getRoomCategoryListUrl',{},function (result) {
+            roomCategoryList.list = result.data.list;
+            roomCategoryList.render();
         });
     },
 
@@ -104,7 +108,7 @@ var roomCategoryList = {
     //删除房型
     deleteRoom: function () {
         var id = $(".mainActive .id").val();
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("deleteRoomUrl"),
             data: {id: id},
             success: function (result) {
@@ -122,6 +126,18 @@ var roomCategoryList = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","deleteRoomUrl",{id: id},function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(roomCategoryList.list, function (index, element) {
+                if (element.id == id) {
+                    roomCategoryList.list.splice(index, 1);
+                    return false; //等于break
+                }
+            });
+            roomCategoryList.render();
         });
     },
 

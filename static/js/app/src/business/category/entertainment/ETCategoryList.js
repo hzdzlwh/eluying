@@ -31,7 +31,7 @@ var ETCategoryList = {
 
     //读取餐饮品类列表
     loadETCategoryList: function () {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("pullOtherCategoryListUrl"),
             data: {type: 2},
             success: function (result) {
@@ -41,6 +41,10 @@ var ETCategoryList = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             }
+        })*/
+        AJAXService.ajaxWithToken("get","pullOtherCategoryListUrl",{type: 2},function (result) {
+            ETCategoryList.list = result.data.list;
+            ETCategoryList.render();
         });
     },
 
@@ -82,7 +86,7 @@ var ETCategoryList = {
     //删除
     deleteETCategory: function () {
         var id = $(".mainActive .id").val();
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("deleteOtherCategoryUrl"),
             data: {id: id},
             dataFilter: function (result) {
@@ -100,6 +104,18 @@ var ETCategoryList = {
                 });
                 ETCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","deleteOtherCategoryUrl",{id: id},function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(ETCategoryList.list, function (index, element) {
+                if (element.id == id) {
+                    ETCategoryList.list.splice(index, 1);
+                    return false; //等于break
+                }
+            });
+            ETCategoryList.render();
         });
     },
     events: {

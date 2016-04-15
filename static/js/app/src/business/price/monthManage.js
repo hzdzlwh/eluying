@@ -9,7 +9,7 @@ var monthManage = {
         var endDate = util.dateFormat(util.getLastDay(startDate));
         startDate = util.dateFormat(startDate);
         $("#editMonth .month").attr("start-date", startDate);
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("getAccommodationMonthPriceList"),
             data: {
                 startDate: startDate,
@@ -32,6 +32,23 @@ var monthManage = {
                 monthManage.priceGrid(result.data);
 
             }
+        })*/
+        AJAXService.ajaxWithToken("GET","getAccommodationMonthPriceList",{
+            startDate: startDate,
+            endDate: endDate,
+            categoryId: $(".priceGrid .selected").attr("category-id")
+        },function(result){
+            var channelArray = [];
+            for (var name in result.data) {
+                channelArray.push({
+                    name: result.data[name][0].channelName,
+                    id: result.data[name][0].channelId
+                });
+            }
+            $(".monthCategory").html("月份管理-" + result.data["0"][0].name);
+            monthManage.tab(channelArray);
+            monthManage.priceGrid(result.data);
+
         })
     },
 
@@ -164,7 +181,7 @@ var monthManage = {
         }
     },
     batchModifyAccommodationSpecialPrice: function(data, that){
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
             type: "POST",
             data: data,
@@ -176,6 +193,13 @@ var monthManage = {
                     if (that) {
                         modal.clearModal(that);
                     }
+                }
+            }
+        })*/
+        AJAXService.ajaxWithToken("POST","batchModifyAccommodationSpecialPrice",data,function(result){
+            if (util.errorHandler(result)) {
+                if (that) {
+                    modal.clearModal(that);
                 }
             }
         })

@@ -18,7 +18,7 @@ var addET = {
             description: $("#createETDescription").val(),
             type: 2
         };
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
             type: "POST",
             data: item,
@@ -36,7 +36,18 @@ var addET = {
                 ETCategoryList.list.push(item);
                 ETCategoryList.render();
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken("POST","addOrEditExtraCategoryUrl",item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            item.id = result.data.id;
+            item.state = 0;
+            ETCategoryList.list.push(item);
+            ETCategoryList.render();
+        });
     },
     events: {
         "click #createETOk": function () {

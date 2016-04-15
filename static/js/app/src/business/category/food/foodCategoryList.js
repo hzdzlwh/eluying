@@ -31,7 +31,7 @@ var foodCategoryList = {
 
     //读取餐饮品类列表
     loadFoodCategoryList: function () {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("pullOtherCategoryListUrl"),
             data: {type: 1},
             success: function (result) {
@@ -41,6 +41,10 @@ var foodCategoryList = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             }
+        })*/
+        AJAXService.ajaxWithToken("get","pullOtherCategoryListUrl",{type: 1},function (result) {
+            foodCategoryList.list = result.data.list;
+            foodCategoryList.render();
         });
     },
 
@@ -82,7 +86,7 @@ var foodCategoryList = {
     //删除
     deleteFoodCategory: function () {
         var id = $(".mainActive .id").val();
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("deleteOtherCategoryUrl"),
             data: {id: id},
             dataFilter: function (result) {
@@ -100,6 +104,18 @@ var foodCategoryList = {
                 });
                 foodCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","deleteOtherCategoryUrl",{id: id},function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(foodCategoryList.list, function (index, element) {
+                if (element.id == id) {
+                    foodCategoryList.list.splice(index, 1);
+                    return false; //等于break
+                }
+            });
+            foodCategoryList.render();
         });
     },
     events: {

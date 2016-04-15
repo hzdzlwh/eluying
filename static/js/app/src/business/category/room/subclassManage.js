@@ -6,7 +6,7 @@ var roomCategoryList = require("roomCategoryList");
 var subclassManage = {
     //子类管理
     subclassManage: function (that, item) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("subclassManageUrl"),
             type: "POST",
             data: {
@@ -31,6 +31,24 @@ var subclassManage = {
                 roomCategoryList.countInventory(item.id);
                 roomCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","subclassManageUrl",{
+            id: item.id,
+            subTypeList: JSON.stringify(item.subTypeList)
+        },function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            $.each(roomCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    roomCategoryList.list[index].subTypeList = result.data.list;
+                    return false; //等于break
+                }
+            });
+            roomCategoryList.countInventory(item.id);
+            roomCategoryList.render();
         })
     },
     events: {

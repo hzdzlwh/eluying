@@ -37,7 +37,7 @@ var IVENTORY = {
     },
     update: function(){
         var that = this;
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
             data:{
                 date: this.start,
@@ -66,6 +66,29 @@ var IVENTORY = {
                 });
                 $(".inventoryGrid table tbody").html(html);
             }
+        })*/
+        AJAXService.ajaxWithToken("GET","getCategoriesAndInventoriesUrl",{
+            date: this.start,
+            type: 2
+        },function(result){
+            var data = that.data = result.data.list;
+            var html = '';
+            data.forEach(function(i){
+                html += '<tr class="mainClass" data="' + i.id + '"> ' +
+                    '<td class="entertainitem"> ' +
+                    '<span>' + i.name + '</span> ' +
+                    '</td> ' +
+                    '<td><p>剩余</p><p>总量</p></td> ';
+                i.inventories.sort(function(a, b){
+                    return util.stringToDate(a.date) - util.stringToDate(b.date);
+                });
+                i.inventories.forEach(function(d){
+                    html += '<td class="entertainDayItem" date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
+                });
+                html += '</tr>';
+                console.log(i);
+            });
+            $(".inventoryGrid table tbody").html(html);
         });
     },
     changeStart: function(start) {
@@ -84,7 +107,7 @@ var IVENTORY = {
         endDate = util.getLastDay(today);
         start = util.dateFormat(startDate);
         end = util.dateFormat(endDate);
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("getCategoryInventoriesUrl"),
             data:{
                 startDate: start,
@@ -144,6 +167,60 @@ var IVENTORY = {
                 }
                 console.log(result.data.list);
             }
+        })*/
+        AJAXService.ajaxWithToken("GET","getCategoryInventoriesUrl",{
+            startDate: start,
+                endDate	: end,
+                categoryId: this.selectedEntertain.id
+        },function(result){
+            if(result.code == 1){
+                result.data.list.sort(function(a, b){
+                    return util.stringToDate(a.date) - util.stringToDate(b.date);
+                });
+                var html = '';
+                //处理每个月第一天之前的
+                var firstDate = util.stringToDate(result.data.list[0].date);
+                var diff1 = firstDate.getDay() == 0 ? -6 : -(firstDate.getDay() - 1);
+                var firstDay = util.diffDate(firstDate, diff1);
+                var tempDate = firstDay;
+                if(tempDate < firstDate){
+                    html += '<tr><td class="fixed"><p>&nbsp;</p><p>剩余</p><p>总量</p></td>'
+                }
+                while(tempDate < firstDate){
+                    html += '<td class="empty"><p>' + tempDate.getDate() + '日</p></td>';
+                    tempDate = util.diffDate(tempDate, 1);
+                }
+                var today = new Date();
+                result.data.list.forEach(function(d){
+                    tempDate = util.stringToDate(d.date);
+                    var status = d.status;
+                    var classStr = "entertainPatchItem";
+                    if(!util.isSameDay(today, tempDate) && util.compareDates(today, tempDate)){
+                        classStr = 'empty';
+                    }
+                    if(tempDate.getDay() == 1){
+                        html += '<tr><td class="fixed"><p>&nbsp;</p><p>剩余</p><p>总量</p></td>';
+                    }
+                    html += '<td class="' + classStr + '" total="' + d.total + '" remain="' + d.remain + '" date="' + d.date
+                        + '"><p class="date">'
+                        + tempDate.getDate() + '日</p><p class="left">' + d.remain
+                        + '</p><p class="all">' + d.total + '</p></td>';
+                    if(tempDate.getDay() == 0){
+                        html += '</tr>'
+                    }
+                });
+                //处理每个月最后一天之后的
+                var lastDate = util.stringToDate(result.data.list[result.data.list.length-1].date);
+                lastDate = util.diffDate(lastDate, 1);
+                if(lastDate.getDay() != 0){
+                    html += '</tr>';
+                }
+                console.log(html);
+                $("#editPatch .patchGrid tbody").html(html);
+            }else{
+                util.somethingAlert(result.msg);
+            }
+            console.log(result.data.list);
         });
     }
 };
@@ -238,7 +315,7 @@ var events = {
         }
         var categoryId = IVENTORY.selectedEntertain.id;
         var date = IVENTORY.selectedEntertain.date;
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("modifyExtraInventoryUrl"),
             data:{
                 categoryId: categoryId,
@@ -261,6 +338,24 @@ var events = {
                     remainDom.html(newRemain);
                     $("#editInven").modal("hide");
                 }
+            }
+        })*/
+        AJAXService.ajaxWithToken("GET","modifyExtraInventoryUrl",{
+            categoryId: categoryId,
+            date: date,
+            inventory: inventory
+        },function(result){
+            if(util.errorHandler(result)){
+                var totalDom = $(".mainClass[data=" + IVENTORY.selectedEntertain.id + "]")
+                    .find(".entertainDayItem[date=" + date + "]").find("p:last-child");
+                var remainDom = $(".mainClass[data=" + IVENTORY.selectedEntertain.id + "]")
+                    .find(".entertainDayItem[date=" + date + "]").find("p:first-child");
+                var total = parseInt(totalDom.html());
+                var remain = parseInt(remainDom.html());
+                var newRemain = inventory - total + remain;
+                totalDom.html(inventory);
+                remainDom.html(newRemain);
+                $("#editInven").modal("hide");
             }
         });
     },
@@ -307,7 +402,7 @@ var events = {
         });
         for(var total in hash){
             var dateList = hash[total];
-            $.ajax({
+            /*$.ajax({
                 url: AJAXService.getUrl("modifyExtraInventoryBatchUrl"),
                 async: false,
                 data:{
@@ -321,7 +416,14 @@ var events = {
                 success: function(result){
                     if(util.errorHandler(result)){}
                 }
-            });
+            })*/
+            AJAXService.ajaxWithToken("GET","modifyExtraInventoryBatchUrl",{
+                categoryId: IVENTORY.selectedEntertain.id,
+                dateList: JSON.stringify(dateList),
+                inventory: total
+            },function(result){
+                if(util.errorHandler(result)){}
+            },undefined,false);
             IVENTORY.update();
             $("#editPatch").modal("hide");
         }

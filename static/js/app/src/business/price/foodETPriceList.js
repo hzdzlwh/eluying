@@ -5,7 +5,7 @@ var modal = require("modal");
 require("validate");
 var foodETPriceList = {
     getFoodETPriceList: function(path){
-        $.ajax({
+        /*$.ajax({
             url: path == "food" ? AJAXService.getUrl("getFoodCategoryPriceList") : AJAXService.getUrl("getPlayCategoryPriceList"),
             data: {
                 campId: localStorage.getItem("campId")
@@ -16,6 +16,10 @@ var foodETPriceList = {
             success: function(result){
                 foodETPriceList.render(result)
             }
+        })*/
+        var url = (path == "food") ? "getFoodCategoryPriceList" : "getPlayCategoryPriceList";
+        AJAXService.ajaxWithToken("GET",url,{},function(result){
+            foodETPriceList.render(result)
         })
     },
     render: function(result){
@@ -36,7 +40,7 @@ var foodETPriceList = {
         this.eventBind();
     },
     editSalePrice: function(that){
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("modifyDefaultPrice"),
             data: {
                 newSalePrice: $("#retailPrice").val(),
@@ -54,10 +58,22 @@ var foodETPriceList = {
                     modal.clearModal(that);
                 }
             }
+        })*/
+        AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
+            newSalePrice: $("#retailPrice").val(),
+            newNetPrice: 0,
+            newAgreementPrice: 0,
+            categoryId: $(".selected").attr("category-id"),
+            channelId: 0
+        },function(result){
+            if (util.errorHandler(result)) {
+                $(".selected").html($("#retailPrice").val());
+                modal.clearModal(that);
+            }
         });
     },
     editNetAgreePrice: function(that){
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("modifyDefaultPrice"),
             data: {
                 newSalePrice: 0,
@@ -75,6 +91,19 @@ var foodETPriceList = {
                     $(".selected").find("p:eq(1)").html($("#netPrice").val());
                     modal.clearModal(that);
                 }
+            }
+        })*/
+        AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
+            newSalePrice: 0,
+            newNetPrice: $("#netPrice").val(),
+            newAgreementPrice: $("#commissionPrice").val(),
+            categoryId: $(".selected").attr("category-id"),
+            channelId: $(".selected").attr("channel-id")
+        },function(result){
+            if (util.errorHandler(result)) {
+                $(".selected").find("p:eq(0)").html($("#commissionPrice").val());
+                $(".selected").find("p:eq(1)").html($("#netPrice").val());
+                modal.clearModal(that);
             }
         })
     },

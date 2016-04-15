@@ -20,7 +20,7 @@ var editFoodBasic = {
             description: $("#editFoodDescription").val(),
             type: 1
         };
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
             type: "POST",
             data: item,
@@ -43,6 +43,22 @@ var editFoodBasic = {
                 });
                 foodCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","addOrEditExtraCategoryUrl",item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            $.each(foodCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    var state = foodCategoryList.list[index].state;
+                    foodCategoryList.list[index] = item;
+                    foodCategoryList.list[index].state = state;
+                    return false; //等于break
+                }
+            });
+            foodCategoryList.render();
         });
     },
     events: {
