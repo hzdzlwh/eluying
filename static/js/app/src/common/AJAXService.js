@@ -66,6 +66,8 @@ var AJAXService = {
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
         getOperationInfoUrl: '/directNet/getOperationInfo',
         getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
+        bindAlipayAccountUrl: '/collectionMethod/bindAlipayAccount',
+        newDeleteCollectionMethodUrl: '/collectionMethod/newDeleteCollectionMethod',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

@@ -62,7 +62,7 @@
                             <img class="logo" src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
                             <div class="stext" ng-if="s.status">{{s.yesText}}</div>
-                            <div class="stext" ng-if="!s.status"><a href="http://www.baidu.com">{{s.noText}}</a></div>
+                            <div class="stext" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
                         </div>
                     </div>
                     <!--<div class="item"></div>-->

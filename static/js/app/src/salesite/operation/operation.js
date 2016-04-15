@@ -49,6 +49,7 @@ $(function(){
         $scope.status = {
             alipay: {
                 status: false,
+                href: '/view/setting/method/method.html',
                 yesUrl: pics['alipay-yes'],
                 yesText: '绑定企业支付宝',
                 noUrl: pics['alipay-no'],
@@ -56,6 +57,7 @@ $(function(){
             },
             campBasicInfo: {
                 status: false,
+                href: '/view/salesite/info/info.html',
                 yesUrl: pics['info-yes'],
                 yesText: '网站基本信息填写完整',
                 noUrl: pics['info-no'],
