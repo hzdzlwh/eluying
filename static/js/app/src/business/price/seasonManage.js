@@ -10,10 +10,10 @@ var seasonManage = {
     toSlackDate: "",
     //获取淡旺季的时间范围
     getSeasons: function(){
-        $.ajax({
-            url: AJAXService.getUrl("getCampSeasons"),
+        /*$.ajax({
+            url: AJAXService.getUrl2("getCampSeasons"),
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return AJAXServicesessionValidate(result);
             },
             success: function(result){
                 $.each(result.data.list, function(index, element){
@@ -35,13 +35,33 @@ var seasonManage = {
                 });
                 seasonManage.getAccommodationPeriodicalPrice();
             }
+        })*/
+        AJAXService.ajaxWithToken("GET","getCampSeasons",{},function(result){
+            $.each(result.data.list, function(index, element){
+                if (element.type === 1) {
+                    $("#busyStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
+                    $("#busyStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
+                    $("#busyEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
+                    $("#busyEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
+                    seasonManage.fromBusyDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
+                    seasonManage.toBusyDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
+                } else{
+                    $("#slackStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
+                    $("#slackStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
+                    $("#slackEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
+                    $("#slackEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
+                    seasonManage.fromSlackDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
+                    seasonManage.toSlackDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
+                }
+            });
+            seasonManage.getAccommodationPeriodicalPrice();
         });
     },
 
     //获取价格
     getAccommodationPeriodicalPrice: function(){
         //拉旺季价格
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("getAccommodationPeriodicalPrice"),
             async: false,
             data: {
@@ -65,9 +85,26 @@ var seasonManage = {
 
                 seasonManage.priceGrid(result.data, true);
             }
-        });
+        })*/
+        AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
+            categoryId: $(".selected").attr("category-id"),
+            startDate: seasonManage.fromBusyDate,
+            endDate: seasonManage.toBusyDate
+        },function(result){
+            var channelArray = [];
+            for (var name in result.data) {
+                channelArray.push({
+                    name: result.data[name][0].channelName,
+                    id: result.data[name][0].channelId
+                });
+            }
+            $(".seasonCategory").html("淡旺季管理-" + result.data["0"][0].name);
+            seasonManage.tab(channelArray);
+
+            seasonManage.priceGrid(result.data, true);
+        },undefined,false);
         //拉淡季价格
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("getAccommodationPeriodicalPrice"),
             data: {
                 categoryId: $(".selected").attr("category-id"),
@@ -82,7 +119,14 @@ var seasonManage = {
 
 
             }
-        });
+        });*/
+        AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
+            categoryId: $(".selected").attr("category-id"),
+            startDate: seasonManage.fromSlackDate,
+            endDate: seasonManage.toSlackDate
+        },function(result) {
+            seasonManage.priceGrid(result.data, false);
+        },undefined,false)
     },
 
 
@@ -186,7 +230,7 @@ var seasonManage = {
 
     //修改价格和周期
     modifyAccommodationPeriodicalPrice: function(data,that){
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("modifyAccommodationPeriodicalPrice"),
             data: data,
             dataFilter: function(result) {
@@ -196,6 +240,11 @@ var seasonManage = {
                 if (util.errorHandler(result)) {
                     modal.clearModal(that)
                 }
+            }
+        })*/
+        AJAXService.ajaxWithToken("POST","modifyAccommodationPeriodicalPrice",data,function(result){
+            if (util.errorHandler(result)) {
+                modal.clearModal(that)
             }
         })
     },
@@ -361,7 +410,7 @@ var seasonManage = {
             var price = {
                 channelId: $(this).attr("channel-id"),
                 newAgreementPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(0)").html(),
-                newNetPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(1)").html(),
+                newNetPrice: $(this).hasClass("salePrice") ? 0 : $(this).find("p:eq(0)").html(),
                 newSalePrice: $(this).hasClass("salePrice") ? $(this).find("p").html() : 0,
                 startDate: $(this).parents("table").hasClass("busyGrid") ? '2000-' + $("#busyStartMonth").val() + '-' + $("#busyStartDay").val() : '2000-' + $("#slackStartMonth").val() + '-' + $("#slackStartDay").val(),
                 endDate: $(this).parents("table").hasClass("busyGrid") ? '2000-' + $("#busyEndMonth").val() + '-' + $("#busyEndDay").val() : '2000-' + $("#slackEndMonth").val() + '-' + $("#slackEndDay").val(),

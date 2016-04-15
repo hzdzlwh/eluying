@@ -20,7 +20,7 @@ var editETBasic = {
             description: $("#editETDescription").val(),
             type: 2
         };
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
             type: "POST",
             data: item,
@@ -43,6 +43,22 @@ var editETBasic = {
                 });
                 ETCategoryList.render();
             }
+        })*/
+        AJAXService.ajaxWithToken("POST","addOrEditExtraCategoryUrl",item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            $.each(ETCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    var state = ETCategoryList.list[index].state;
+                    ETCategoryList.list[index] = item;
+                    ETCategoryList.list[index].state = state;
+                    return false; //等于break
+                }
+            });
+            ETCategoryList.render();
         });
     },
     events: {

@@ -18,7 +18,7 @@ var addFood = {
             description: $("#createFoodDescription").val(),
             type: 1
         };
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
             type: "POST",
             data: item,
@@ -36,7 +36,18 @@ var addFood = {
                 foodCategoryList.list.push(item);
                 foodCategoryList.render();
             }
-        })
+        })*/
+        AJAXService.ajaxWithToken("POST","addOrEditExtraCategoryUrl",item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            item.id = result.data.id;
+            item.state = 0;
+            foodCategoryList.list.push(item);
+            foodCategoryList.render();
+        });
     },
     events: {
         "click #createFoodOk": function () {

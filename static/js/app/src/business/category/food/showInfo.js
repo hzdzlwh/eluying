@@ -50,7 +50,7 @@ var showInfo = {
         }
         //上传图片
         $("#cover").fileupload({
-            url: AJAXService.getUrl("uploadImageUrl"),
+            url: AJAXService.getUrl2("uploadImageUrl"),
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -60,7 +60,7 @@ var showInfo = {
             }
         });
         $("#detail").fileupload({
-            url: AJAXService.getUrl("uploadImageUrl"),
+            url: AJAXService.getUrl2("uploadImageUrl"),
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -161,7 +161,7 @@ var showInfo = {
         "click #replaceDetail": function () {
             $("#replaceDetailImg").click();
             $("#replaceDetailImg").fileupload({
-                url: AJAXService.getUrl("uploadImageUrl"),
+                url: AJAXService.getUrl2("uploadImageUrl"),
                 done: function (e, data) {
                     var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                     result = JSON.parse(result);

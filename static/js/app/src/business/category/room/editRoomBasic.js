@@ -7,7 +7,7 @@ var editRoomBasic = {
 
     //编辑房型基本信息
     editRoomBasic: function (that, item) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("editRoomBasicUrl"),
             type: "POST",
             data: item,
@@ -30,6 +30,22 @@ var editRoomBasic = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             },
+        })*/
+        AJAXService.ajaxWithToken("POST","editRoomBasicUrl",item,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            $.each(roomCategoryList.list, function (index, element) {
+                if (element.id == item.id) {
+                    for (var name in item) {
+                        roomCategoryList.list[index][name] = item[name];
+                    }
+                    return false; //等于break
+                }
+            });
+            roomCategoryList.render();
         });
     },
     events: {

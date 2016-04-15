@@ -78,11 +78,13 @@ var AJAXService = {
         var url = this.urls.host2 + (this.urls[path] || path);
         return url;
     },
-    ajaxWithToken: function(method, path, data, callback, errorCallback){
+    ajaxWithToken: function(method, path, data, callback, errorCallback,asy){
         if(path !== 'loginUrl'){
             data.timestamp = (new Date()).valueOf();
             // data.version = (new Date()).valueOf();
-            data.campId = localStorage.getItem("campId");
+            if(path !== '/homepage/changeCamp'){
+                data.campId = localStorage.getItem("campId");
+            }
             data.uid = localStorage.getItem("uid");
             //data.campId = 56;
             //data.uid = 85;
@@ -103,6 +105,7 @@ var AJAXService = {
         $.ajax({
             type: method,
             url: AJAXService.getUrl2(path),
+            async: asy,
             data: data,
             success: callback,
             error: errorCallback,
