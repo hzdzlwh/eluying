@@ -118,7 +118,7 @@ $(function(){
                 }, 1000);
             }else{
                 modal.somethingAlert("您的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。");
-                //$("#campUrl").select();
+                $("#campUrl").select();
             }
         };
         AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){

@@ -9,6 +9,7 @@ var AJAXService = {
         //浩南服务器 http://192.168.0.118:8087
         host: "http://121.41.109.105:8081/mg",
         host2: "http://121.41.109.105:8081/ws",
+        // host2: "http://192.168.0.124:8081/ws", //勉之测试服
         //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
@@ -90,7 +91,8 @@ var AJAXService = {
             data.uid = localStorage.getItem("uid");
             //data.campId = 56;
             //data.uid = 85;
-            data.kick = true;
+            // data.kick = true;
+            data.terminal = 1;
             // data.token = localStorage.getItem("token");
             var array = [];
             for(var key in data){

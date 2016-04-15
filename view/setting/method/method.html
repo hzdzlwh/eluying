@@ -176,8 +176,8 @@
                 <div class="row other" ng-repeat="pay in payChannelCustomList">
                     <div class="col col1">{{pay.name}}</div>
                     <div class="col col2"><span class="sopen">已开通</span></div>
-                    <div class="col col3"><div method="{{pay.id}}" class="btn-delete" data-toggle="modal"
-                                               data-target="#deleteMethod" ng-click="setMethodToDelete(pay.id)">删除</div></div>
+                    <div class="col col3"><div method="{{pay.channelId}}" class="btn-delete" data-toggle="modal"
+                                               data-target="#deleteMethod" ng-click="setMethodToDelete(pay.channelId)">删除</div></div>
                 </div>
             </div>
         </div>
