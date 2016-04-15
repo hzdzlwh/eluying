@@ -57,6 +57,11 @@
       float: left;
       text-align: right;
       padding-right: 15px;
+      .require{
+        position: relative;
+        top: -1px;
+        right: 3px;
+      }
     }
     .scontent{
       width: 75%;

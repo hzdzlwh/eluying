@@ -3,6 +3,7 @@
   height: auto;
   position: relative;
   padding-top: 51px;
+  margin-bottom: 100px;
   //margin-top: 51px;
   .method-add{
     background:#ffffff;
@@ -50,6 +51,14 @@
         height: 100%;
         float: left;
         text-align: left;
+        .hr4{
+          width: 90%;
+          height: 2px;
+          margin: auto;
+          background: #526479;
+          position: relative;
+          top: 39px;
+        }
         .btn-binding, .btn-delete{
           background:#4a90e2;
           border-radius:2px;
@@ -67,6 +76,12 @@
         }
         span.sopen{
           color: #4a90e2;
+        }
+        span.serror{
+          color:#f5a623;
+        }
+        span.swarning{
+          color:#ffb32c;
         }
         .btn-binding:hover, .btn-binding:active, .btn-delete:hover, .btn-delete:active{
           background: #3a71b0;
@@ -169,6 +184,7 @@
           height:38px;
           position: relative;
           top: 12px;
+          padding-left: 10px;
         }
         textarea{
           display: block;
@@ -179,6 +195,7 @@
           height:71px;
           position: relative;
           top: 12px;
+          padding: 10px;
         }
       }
     }
@@ -283,6 +300,7 @@
           border-radius:2px;
           width:300px;
           height:40px;
+          padding: 0 10px;
         }
       }
     }
@@ -432,6 +450,73 @@
     }
     .stext{
       font-size:18px;
+      color:#4a90e2;
+      text-align:center;
+      width: 342px;
+      margin: auto;
+      margin-top: 46px;
+      height: 50px;
+      line-height: 25px;
+    }
+    .btns{
+      margin-top: 24px;
+      width: 100%;
+      height: 40px;
+      text-align: center;
+      .sbtn-ok{
+        background:#4a90e2;
+        border-radius:2px;
+        width:100px;
+        height:40px;
+        line-height: 40px;
+        color: white;
+        text-align: center;
+        display: inline-block;
+        margin: 0 25px;
+        cursor: pointer;
+      }
+      .sbtn-cancel{
+        border:1px solid #4a90e2;
+        border-radius:2px;
+        width:100px;
+        height:40px;
+        line-height: 40px;
+        color: #4A90E2;
+        text-align: center;
+        display: inline-block;
+        margin: 0 25px;
+        cursor: pointer;
+      }
+      .sbtn-ok:hover, .sbtn-ok:focus{
+        background: #3a71b0;
+      }
+      .sbtn-cancel:hover, .sbtn-cancel:focus{
+        background: #dddddd;
+      }
+    }
+  }
+}
+
+#comfirmSubmit{
+  .modal-dialog {
+    width: 400px;
+  }
+  .modal-content {
+    width: 400px;
+    height: 214px;
+    background: #f6f6f6;
+    border-radius: 2px;
+    padding: 0;
+    .hr {
+      width: 100%;
+      height: 4px;
+      background-color: #4A90E2;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .stext{
+      font-size:14px;
       color:#4a90e2;
       text-align:center;
       width: 342px;

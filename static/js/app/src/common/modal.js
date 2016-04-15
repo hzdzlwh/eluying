@@ -50,7 +50,7 @@ function somethingAlert(message){
     centerModals();
     setTimeout(function(){
         $("#errorAlert").modal("hide");
-    }, 1000);
+    }, 2500);
 }
 
 //确认弹出框

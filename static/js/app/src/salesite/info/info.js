@@ -145,6 +145,9 @@ $(function(){
 
 var findIndex = function(array, str){
     var result = 0;
+    if(!array){
+        return result;
+    }
     array.forEach(function(d, i){
         if(d === str){
             result = i;

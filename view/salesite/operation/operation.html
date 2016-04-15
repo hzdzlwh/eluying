@@ -47,10 +47,10 @@
             <div class="scontent fail" ng-if="directNetStatus === 0 && (!status.alipay.status || !status.campBasicInfo.status)">未完成准备工作,未上线</div>
             <div class="scontent on" ng-if="directNetStatus === 1">已上线</div>
             <div class="scontent ready" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)">已完成准备工作，未上线</div>
-            <!--<div class="sbtn openbtn" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)" ng-click="changeSiteState()">网站上线</div>-->
+            <div class="sbtn openbtn" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)" ng-click="changeSiteState()">网站上线</div>
             <div class="sbtn closebtn" ng-if="directNetStatus === 1" ng-click="changeSiteState()">关闭网站</div>
         </div>
-        <div class="salesite-operation-fail" ng-if="directNetStatus == 0">
+        <div class="salesite-operation-fail" ng-if="!(status.alipay.status && status.campBasicInfo.status)">
             <div class="failbox">
                 <div class="hr"></div>
                 <div class="stitle">上线准备工作</div>
@@ -62,7 +62,7 @@
                             <img class="logo" src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
                             <div class="stext" ng-if="s.status">{{s.yesText}}</div>
-                            <div class="stext" ng-if="!s.status"><a href="http://www.baidu.com">{{s.noText}}</a></div>
+                            <div class="stext" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
                         </div>
                     </div>
                     <!--<div class="item"></div>-->
@@ -72,7 +72,7 @@
                 <div class="sbtn" ng-class="{'disabled': !status['alipay'].status || !status['campBasicInfo'].status}" ng-click="changeSiteState()">网站上线</div>
             </div>
         </div>
-        <div class="salesite-operation-success" ng-if="directNetStatus == 1">
+        <div class="salesite-operation-success" ng-if="(status.alipay.status && status.campBasicInfo.status)">
             <div class="successbox">
                 <div class="hr"></div>
                 <div class="formrow notice">
