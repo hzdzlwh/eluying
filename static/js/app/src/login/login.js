@@ -263,6 +263,9 @@ $(document).ready(function(){
                 success: function(data){
                     if(data.code == 1){
                         localStorage.setItem("userName", data.data.realName);
+                        localStorage.setItem("uid", data.data.user.uid);
+                        localStorage.setItem("avatar", data.data.user.avatar);
+                        localStorage.setItem("token", data.data.user.token);
                         //$.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         $("#loginRegister").modal('hide');
                         $("#createOrJoinNetwork").modal('show');
@@ -313,6 +316,7 @@ $(document).ready(function(){
                         });
                         setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                     }
+                    localStorage.setItem("avatar", data.data.user.avatar);
                     localStorage.setItem("userName", data.data.user.realName);
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);

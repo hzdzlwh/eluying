@@ -58,16 +58,35 @@
     }
     .userName {
         line-height: 80px;
+        width: 140px;
         float: left;
-        width: 110px;
         text-align: center;
         cursor: pointer;
+        padding: 0 20px;
         span {
             cursor: pointer;
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #ffffff;
+            float: right;
+        }
+        .uesrPicture{
+          height: 38px;
+          width: 38px;
+          float: left;
+          display: inline-block;
+          border-radius: 100%;
+          border: solid 1px;
+          overflow: hidden;
+          margin: 20px 0;
+          img{
+            transform: scale(0.19);
+            margin: -82px 0 0 -82px;
+          }
         }
     }
     .userName:hover {
-        background-color: #4a90e2;
+        background-color: #2a2a2a;
     }
     .line {
         width: 1px;
@@ -77,23 +96,25 @@
         background: url("../image/Line.png");
     }
     .logout {
-        width: 110px;
+        width: 140px;
         line-height: 80px;
         position: absolute;
         top: 80px;
-        right: 26px;
-        background-color: #4a90e2;
+        right: 0;
+        background-color: #2a2a2a;
         text-align: center;
     }
     .userName-active {
-        background-color: #4a90e2;
+        background-color: #2a2a2a;
     }
     .right {
         float: right;
-        margin-right: 26px;
     }
     #headerSwitchCamp{
         display: none;
+    }
+    .switchCampActive{
+      background: #2a2a2a;
     }
     .headerSwitch{
         float: left;
