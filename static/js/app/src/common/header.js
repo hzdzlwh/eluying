@@ -158,7 +158,7 @@ var header = {
         "click .userName": function(e) {
             e.stopPropagation();
             $(this).addClass('userName-active');
-            $('.logout').show();
+            $('.logout').toggle();
         },
         "click body": function() {
             $('.userName').removeClass('userName-active');
