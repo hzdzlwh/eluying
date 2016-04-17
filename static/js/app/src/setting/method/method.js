@@ -9,9 +9,8 @@ require("bootstrap");
 require("validation");
 
 $(function(){
-    //���IE
+    //检测IE
     util.checkExplorer();
-    //��ʼ������
     header.showHeader();
     leftMenu.showLeftMenu();
     util.mainContainer();
@@ -53,14 +52,14 @@ $(function(){
 
     var that = this;
     var app = angular.module('methodApp', []);
-    app.controller('methodCtrl', function($scope) {
-        $scope.accountName = '';
-        $scope.pid = '';
-        $scope.privateKey = '';
-        $scope.publicKey = '';
-        $scope.methodToDelete = null;
+    app.controller('methodCtrl', ['$scope', function(scope) {
+        scope.accountName = '';
+        scope.pid = '';
+        scope.privateKey = '';
+        scope.publicKey = '';
+        scope.methodToDelete = null;
         $scope.errorTips = '';
-        $scope.addMethod = function(){
+        scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){
                 // modal.somethingAlert("支付方式名称不能为空");
@@ -142,7 +141,7 @@ $(function(){
             $scope.payChannelCustomList = result.data.payChannelCustomList;
             $scope.$apply();
         });
-    });
+    }]);
 
 });
 

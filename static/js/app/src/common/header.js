@@ -12,12 +12,14 @@ var header = {
             campName:localStorage.getItem('campName'),
             joinNet: "加入新网络",
             creatNet: "创建新网络",
-            logOut: "退出账户" 
+            logOut: "退出账户", 
+            avatar: localStorage.getItem('avatar')
         };
         var temp = dot.template(headerHtml);
         $("body").prepend(temp(data));
         //根据path激活active
         $(".userName").find("span").html(localStorage.getItem("userName"));
+        console.log(localStorage);
         var pathArray = window.location.pathname.split("/");
         var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");
@@ -156,11 +158,15 @@ var header = {
         "click .userName": function(e) {
             e.stopPropagation();
             $(this).addClass('userName-active');
-            $('.logout').show();
+            $('.logout').toggle();
         },
         "click body": function() {
             $('.userName').removeClass('userName-active');
-            $("#headerSwitchCamp").slideUp();
+            if ($('#headerSwitchCamp').css('display') === 'block') {
+                $('#headerSwitchCamp').slideUp('normal', function() {
+                    $(".headerSwitch").removeClass("switchCampActive");
+                });
+            }
             $('.logout').hide();
         },
         "click #headerJoinNewNetwork": function () {
@@ -169,9 +175,17 @@ var header = {
         "click #headerCreateNetwork": function () {
             networkAction.init("create",{}).modal("show");
         },
+        // 网络信息显示事件
         "click .avatorContainer": function(e){
             e.stopPropagation();
-            $("#headerSwitchCamp").slideToggle();
+            if ($('#headerSwitchCamp').css('display') === 'none') {
+                $('#headerSwitchCamp').slideDown();
+                $(".headerSwitch").addClass("switchCampActive");
+            } else if ($('#headerSwitchCamp').css('display') === 'block') {
+                $('#headerSwitchCamp').slideUp('normal', function() {
+                    $(".headerSwitch").removeClass("switchCampActive");
+                })
+            }
         }
     },
     getItemHtml: function(item, flag){

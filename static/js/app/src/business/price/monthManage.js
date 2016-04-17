@@ -373,7 +373,7 @@ var monthManage = {
                     date: $(this).attr("date"),
                     newSalePrice: 0,
                     newAgreementPrice: $(this).find("p:eq(0)").html(),
-                    newNetPrice: $(this).find("p:eq(1)").html()
+                    newNetPrice: $(this).find("p:eq(0)").html()
                 };
             }
             prices.push(price);
