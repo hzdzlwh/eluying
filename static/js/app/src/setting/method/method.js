@@ -17,29 +17,35 @@ $(function(){
     util.mainContainer();
     modal.modalInit();
 
+    var checkAlipayForm = function(){
+        var pidDom = document.getElementById("alipayMethod-pid");
+        var accountName = document.getElementById("alipayMethod-accountName");
+        var publicKey = document.getElementById("alipayMethod-publicKey");
+        var privateKey = document.getElementById("alipayMethod-privateKey");
+        if(!pidDom.checkValidity()){
+            modal.somethingAlert("pid不能为空!");
+            return false;
+        } else if(!accountName.checkValidity()){
+            modal.somethingAlert("支付宝帐号不能为空!");
+            return false;
+        }else if(!publicKey.checkValidity()){
+            modal.somethingAlert("支付宝公钥不能为空!");
+            return false;
+        }else if(!publicKey.checkValidity()){
+            modal.somethingAlert("支付宝私钥不能为空!");
+            return false;
+        }
+        return true;
+    };
+
     events = {
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
-        "click #alipayMethod-ok": function(){
-            var pidDom = document.getElementById("alipayMethod-pid");
-            var accountName = document.getElementById("alipayMethod-accountName");
-            var publicKey = document.getElementById("alipayMethod-publicKey");
-            var privateKey = document.getElementById("alipayMethod-privateKey");
-            if(!pidDom.checkValidity()){
-                modal.somethingAlert("pid不能为空!");
-                return false;
-            } else if(!accountName.checkValidity()){
-                modal.somethingAlert("支付宝帐号不能为空!");
-                return false;
-            }else if(!publicKey.checkValidity()){
-                modal.somethingAlert("支付宝公钥不能为空!");
-                return false;
-            }else if(!publicKey.checkValidity()){
-                modal.somethingAlert("支付宝私钥不能为空!");
-                return false;
+        "click body #alipayMethod-ok": function(){
+            if(checkAlipayForm()){
+                $("#comfirmSubmit").modal("show");
             }
-            $("#comfirmSubmit").modal("show");
         }
     };
 
@@ -53,17 +59,34 @@ $(function(){
         $scope.privateKey = '';
         $scope.publicKey = '';
         $scope.methodToDelete = null;
+        $scope.errorTips = '';
         $scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){
-                modal.somethingAlert("支付方式名称不能为空");
+                // modal.somethingAlert("支付方式名称不能为空");
+                $scope.errorTips = ("支付方式名称不能为空");
                 return false;
             }
+            var flag = true;
+            var payChannelCustomList = $scope.payChannelCustomList;
+            console.log(payChannelCustomList);
+            payChannelCustomList.forEach(function(d){
+                if(d.name === newMethod.value){
+                    flag = false;
+                }
+            });
+            if(!flag){
+                // modal.somethingAlert("支付方式重复");
+                $scope.errorTips = ("支付方式重复");
+                return false;
+            }
+            $scope.errorTips = '';
             AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                 channelName: newMethod.value
             }, function(result){
                 modal.somethingAlert(result.msg);
                 $("#newMethod").modal("hide");
+                newMethod.value = '';
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                     $scope.cash = result.data.map.cash;
                     $scope.alipay = result.data.map.alipay;
@@ -91,31 +114,32 @@ $(function(){
             });
         };
         $scope.submitAlipay = function(){
-            AJAXService.ajaxWithToken('GET', 'bindAlipayAccountUrl', {
-                accountName: $scope.accountName,
-                pid: $scope.pid,
-                publicKey: $scope.publicKey,
-                privateKey: $scope.privateKey,
-            }, function(result){
-                if(result.code !== 1){
-                    util.somethingAlert(result.msg);
-                }else{
-                    $("#comfirmSubmit").modal("hide");
-                    $("#alipayMethod").modal("hide");
-                    AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                        $scope.cash = result.data.map.cash;
-                        $scope.alipay = result.data.map.alipay;
-                        $scope.payChannelCustomList = result.data.payChannelCustomList;
-                        $scope.$apply();
-                    });
-                }
-            });
+            if(checkAlipayForm()){
+                AJAXService.ajaxWithToken('GET', 'bindAlipayAccountUrl', {
+                    accountName: $scope.accountName,
+                    pid: $scope.pid,
+                    publicKey: $scope.publicKey,
+                    privateKey: $scope.privateKey,
+                }, function(result){
+                    if(result.code !== 1){
+                        util.somethingAlert(result.msg);
+                    }else{
+                        $("#comfirmSubmit").modal("hide");
+                        $("#alipayMethod").modal("hide");
+                        AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                            $scope.cash = result.data.map.cash;
+                            $scope.alipay = result.data.map.alipay;
+                            $scope.payChannelCustomList = result.data.payChannelCustomList;
+                            $scope.$apply();
+                        });
+                    }
+                });
+            }
         };
         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
             $scope.cash = result.data.map.cash;
             $scope.alipay = result.data.map.alipay;
             $scope.payChannelCustomList = result.data.payChannelCustomList;
-            console.log($scope);
             $scope.$apply();
         });
     });

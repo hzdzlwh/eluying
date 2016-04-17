@@ -102,7 +102,7 @@
                         <img src="{{cover}}" ng-if="cover!==null"/>
                     </div>
                     <input type="file" name="file" id="coverUpload" style="display: none" onchange="angular.element(this).scope().uploadCover.call(this)"/>
-                    <div class="sbtn upload">上传封面</div>
+                    <div class="sbtn upload">{{cover ? '更换封面' : '上传封面'}}上传封面</div>
                 </div>
             </div>
             <div class="sbtn save" ng-click="submit()">保存</div>
