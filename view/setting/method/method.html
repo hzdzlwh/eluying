@@ -66,9 +66,12 @@
             <div class="maintext">
                 <div class="slabel">收款方式名称</div>
                 <div class="scontent"><input type="text" id="newMethod-input" required="required"/></div>
+                <div class="errorTips">
+                    {{errorTips}}
+                </div>
             </div>
             <div class="btns clearfloat">
-                <div class="sbtn sbtn-ok" ng-click="addMethod()">发布</div>
+                <div class="sbtn sbtn-ok" ng-click="addMethod()">确定</div>
                 <div class="btn-cancel sbtn sbtn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
@@ -81,16 +84,16 @@
             <div class="stitle">绑定企业支付宝</div>
             <div class="hr2"></div>
             <div class="srow clearfloat">
-                <div class="scol scol1"><span style="color: red;">*</span>合作者身份（PID）</div>
+                <div class="scol scol1"><span style="font-size: 20px; color: red;">*</span>合作者身份（PID）</div>
                 <div class="scol scol2"><input id="alipayMethod-pid" type="text" ng-model="pid" required="required"/></div>
             </div>
             <div class="srow clearfloat">
-                <div class="scol scol1">支付宝账号</div>
+                <div class="scol scol1"><span style="font-size: 20px; color: red;">*</span>支付宝账号</div>
                 <div class="scol scol2"><input id="alipayMethod-accountName" type="text" ng-model="accountName"/></div>
             </div>
             <div class="srow big clearfloat">
                 <div class="scol scol1">
-                    支付宝公钥
+                    <span style="font-size: 20px; color: red;">*</span>支付宝公钥
                     <div class="tips">
                         合作伙伴秘钥管理=＞RSA加密：<br/>
                         查看支付宝公钥
@@ -100,7 +103,7 @@
             </div>
             <div class="srow medium clearfloat">
                 <div class="scol scol1">
-                    商户RSA私钥
+                    <span style="font-size: 20px; color: red;">*</span>商户RSA私钥
                     <div class="tips">
                         (非PKCS8)编码
                     </div>
@@ -108,7 +111,8 @@
                 <div class="scol scol2"><textarea id="alipayMethod-privateKey" ng-model="privateKey"></textarea></div>
             </div>
             <div class="hr3"></div>
-            <div class="sbtn sbtn-ok" id="alipayMethod-ok">提交审核</div>
+            <div class="sbtn sbtn-ok" ng-if="alipay === 1" id="alipayMethod-ok">提交审核</div>
+            <div class="sbtn sbtn-ok" ng-if="alipay === 3 || alipay === 2" id="alipayMethod-submit" ng-click="submitAlipay()">提交审核</div>
             <div class="btn-cancel sbtn sbtn-cancel">取消</div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->

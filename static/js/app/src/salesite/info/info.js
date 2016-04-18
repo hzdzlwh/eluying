@@ -55,52 +55,52 @@ $(function(){
     util.bindDomAction(events);
 
     var app = angular.module('infoApp', []);
-    app.controller('infoCtrl', function($scope, $http) {
-        $scope.types = ["营地", "景区", "农庄", "游乐园"];
-        $scope.selectedType = 0;
-        $scope.selectType = function(type){
-            $scope.selectedType = type;
+    app.controller('infoCtrl',['$scope', function(scope) {
+        scope.types = ["营地", "景区", "农庄", "游乐园"];
+        scope.selectedType = 0;
+        scope.selectType = function(type){
+            scope.selectedType = type;
         };
-        $scope.phone = '18768114210';
-        $scope.items = dsy.Items;
-        $scope.selectedProvince = 0;
-        $scope.selectProvince = function(index){
-            $scope.selectedProvince = index;
-            $scope.selectedCity = 0;
-            $scope.selectedDistrict = 0;
-            $scope.cityItems = dsy.Items[0 + '_' + $scope.selectedProvince];
-            $scope.districtItems = dsy.Items[0 + '_' + $scope.selectedProvince + '_' + $scope.selectedCity];
+        scope.phone = '18768114210';
+        scope.items = dsy.Items;
+        scope.selectedProvince = 0;
+        scope.selectProvince = function(index){
+            scope.selectedProvince = index;
+            scope.selectedCity = 0;
+            scope.selectedDistrict = 0;
+            scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
+            scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
         };
-        $scope.selectedCity = 0;
-        $scope.selectCity = function(index){
-            $scope.selectedCity = index;
-            $scope.selectedDistrict = 0;
-            $scope.districtItems = dsy.Items[0 + '_' + $scope.selectedProvince + '_' + $scope.selectedCity];
+        scope.selectedCity = 0;
+        scope.selectCity = function(index){
+            scope.selectedCity = index;
+            scope.selectedDistrict = 0;
+            scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
         };
-        $scope.selectedDistrict = 0;
-        $scope.selectDistrict = function(index){
-            $scope.selectedDistrict = index;
+        scope.selectedDistrict = 0;
+        scope.selectDistrict = function(index){
+            scope.selectedDistrict = index;
         };
-        $scope.provinceItems = dsy.Items[$scope.selectedProvince]
-        $scope.cityItems = dsy.Items[0 + '_' + $scope.selectedProvince];
-        $scope.districtItems = dsy.Items[0 + '_' + $scope.selectedProvince + '_' + $scope.selectedCity];
-        $scope.addressMore = '123';
-        $scope.cover = null;
-        $scope.campName = '111';
-        $scope.submit = function(){
-            var address = $scope.addressMore;
-            var campName = $scope.campName;
-            var city = $scope.cityItems[$scope.selectedCity];
+        scope.provinceItems = dsy.Items[scope.selectedProvince]
+        scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
+        scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
+        scope.addressMore = '123';
+        scope.cover = null;
+        scope.campName = '111';
+        scope.submit = function(){
+            var address = scope.addressMore;
+            var campName = scope.campName;
+            var city = scope.cityItems[scope.selectedCity];
             try{
-                var country = $scope.districtItems[$scope.selectedDistrict];
+                var country = scope.districtItems[scope.selectedDistrict];
             }catch(e){
                 var country = '';
             }
 
-            var imgUrl = $scope.cover;
-            var province = $scope.provinceItems[$scope.selectedProvince];
-            var recePhone = $scope.phone;
-            var type = $scope.selectedType;
+            var imgUrl = scope.cover;
+            var province = scope.provinceItems[scope.selectedProvince];
+            var recePhone = scope.phone;
+            var type = scope.selectedType;
             AJAXService.ajaxWithToken('GET', 'editBasicInfoUrl', {
                 address: address,
                 campType: type,
@@ -111,10 +111,10 @@ $(function(){
                 recePhone: recePhone
             }, function(result){
                 modal.somethingAlert(result.msg);
-                $scope.$apply();
+                scope.$apply();
             });
         };
-        $scope.uploadCover = function(){
+        scope.uploadCover = function(){
             console.log(this);
         };
         AJAXService.ajaxWithToken('GET', 'getBasicInfoUrl', {}, function(result){
@@ -127,19 +127,19 @@ $(function(){
             var province = infos.province;
             var recePhone = infos.recePhone;
             var type = infos.type;
-            $scope.selectedProvince = findIndex(dsy.Items['0'], province);
-            $scope.selectedCity = findIndex(dsy.Items['0_' + $scope.selectedProvince], city);
-            $scope.selectedDistrict = findIndex(dsy.Items['0_' + $scope.selectedProvince + '_' + $scope.selectedCity], country);
-            $scope.cityItems = dsy.Items[0 + '_' + $scope.selectedProvince];
-            $scope.districtItems = dsy.Items[0 + '_' + $scope.selectedProvince + '_' + $scope.selectedCity];
-            $scope.phone = recePhone;
-            $scope.selectedType = type;
-            $scope.addressMore = address;
-            $scope.cover = imgUrl;
-            $scope.campName = campName;
-            $scope.$apply();
+            scope.selectedProvince = findIndex(dsy.Items['0'], province);
+            scope.selectedCity = findIndex(dsy.Items['0_' + scope.selectedProvince], city);
+            scope.selectedDistrict = findIndex(dsy.Items['0_' + scope.selectedProvince + '_' + scope.selectedCity], country);
+            scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
+            scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
+            scope.phone = recePhone;
+            scope.selectedType = type;
+            scope.addressMore = address;
+            scope.cover = imgUrl;
+            scope.campName = campName;
+            scope.$apply();
         });
-    });
+    }]);
 
 });
 

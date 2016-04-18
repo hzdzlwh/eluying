@@ -45,8 +45,8 @@ $(function(){
     util.bindDomAction(events);
 
     var app = angular.module('operationApp', []);
-    app.controller('operationCtrl', function($scope, $http) {
-        $scope.status = {
+    app.controller('operationCtrl', ['$scope', function(scope) {
+        scope.status = {
             alipay: {
                 status: false,
                 href: '/view/setting/method/method.html',
@@ -71,50 +71,50 @@ $(function(){
             //    noText: '点我去绑定企业微信支付'
             //},
         };
-        $scope.campUrl = null;
-        $scope.directNetStatus = null;
-        $scope.notice = null;
-        $scope.noticeLength = $scope.notice ? $scope.notice.length : 0;
-        $scope.noticeTime = null;
-        $scope.campQrCode = null;
-        $scope.textOnChange = function(){
-            $scope.noticeLength = $scope.notice ? $scope.notice.length : 0;
+        scope.campUrl = null;
+        scope.directNetStatus = null;
+        scope.notice = null;
+        scope.noticeLength = scope.notice ? scope.notice.length : 0;
+        scope.noticeTime = null;
+        scope.campQrCode = null;
+        scope.textOnChange = function(){
+            scope.noticeLength = scope.notice ? scope.notice.length : 0;
         };
-        $scope.changeSiteState = function(){
-            var data = $scope.directNetStatus ? 0 : 1;
+        scope.changeSiteState = function(){
+            var data = scope.directNetStatus ? 0 : 1;
             AJAXService.ajaxWithToken('GET', 'openCloseDirectNetUrl', {
                 directNetStatus: data
             }, function(result){
                 console.log(result);
                 AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-                    $scope.status.alipay.status = result.data.alipay;
-                    $scope.status.campBasicInfo.status = result.data.campBasicInfo;
-                    $scope.$apply();
+                    scope.status.alipay.status = result.data.alipay;
+                    scope.status.campBasicInfo.status = result.data.campBasicInfo;
+                    scope.$apply();
                 });
                 AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
-                    $scope.campQrCode = result.data.campQrCode;
-                    $scope.campUrl = result.data.campUrl;
-                    $scope.directNetStatus = result.data.directNetStatus;
-                    $scope.notice = result.data.notice;
-                    $scope.noticeLength = $scope.notice ? $scope.notice.length : 0;
-                    $scope.noticeTime = result.data.noticeTime;
-                    $scope.$apply();
+                    scope.campQrCode = result.data.campQrCode;
+                    scope.campUrl = result.data.campUrl;
+                    scope.directNetStatus = result.data.directNetStatus;
+                    scope.notice = result.data.notice;
+                    scope.noticeLength = scope.notice ? scope.notice.length : 0;
+                    scope.noticeTime = result.data.noticeTime;
+                    scope.$apply();
                 });
             });
         };
-        $scope.publishNotice = function(){
+        scope.publishNotice = function(){
             AJAXService.ajaxWithToken('GET', 'modifyNoticeUrl', {
-                notice: $scope.notice
+                notice: scope.notice
             }, function(result){
                 modal.somethingAlert(result.msg);
             });
         };
-        $scope.copySite = function(){
+        scope.copySite = function(){
             if(window.clipboardData && window.clipboardData.setData){
-                window.clipboardData.setData('Text', $scope.campUrl);
+                window.clipboardData.setData('Text', scope.campUrl);
                 $("#copySuccess").modal("show");
                 setTimeout(function(){
-                    window.location.href = $scope.campUrl;
+                    window.location.href = scope.campUrl;
                 }, 1000);
             }else{
                 modal.somethingAlert("您的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。");
@@ -122,19 +122,19 @@ $(function(){
             }
         };
         AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-            $scope.status.alipay.status = result.data.alipay;
-            $scope.status.campBasicInfo.status = result.data.campBasicInfo;
-            $scope.$apply();
+            scope.status.alipay.status = result.data.alipay;
+            scope.status.campBasicInfo.status = result.data.campBasicInfo;
+            scope.$apply();
         });
         AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
-            $scope.campQrCode = result.data.campQrCode;
-            $scope.campUrl = result.data.campUrl;
-            $scope.directNetStatus = result.data.directNetStatus;
-            $scope.notice = result.data.notice;
-            $scope.noticeLength = $scope.notice ? $scope.notice.length : 0;
-            $scope.noticeTime = result.data.noticeTime;
-            $scope.$apply();
+            scope.campQrCode = result.data.campQrCode;
+            scope.campUrl = result.data.campUrl;
+            scope.directNetStatus = result.data.directNetStatus;
+            scope.notice = result.data.notice;
+            scope.noticeLength = scope.notice ? scope.notice.length : 0;
+            scope.noticeTime = result.data.noticeTime;
+            scope.$apply();
         });
-    });
+    }]);
 
 });
