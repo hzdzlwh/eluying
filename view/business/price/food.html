@@ -27,8 +27,8 @@
           </ul>
         </form>
         <div class="footer">
-          <button class="btn-cancel" id="editPriceCancel">取消</button>
-          <button class="btn-ok" id="editSalePriceOk">确认</button>
+          <button class="btn-ok" id="editSalePriceOk">确认修改</button>
+          <button class="btn-cancel" id="editPriceCancel">取消修改</button>
         </div>
       </div>
     </div>
@@ -40,22 +40,22 @@
     <div class="modal-content clearfloat">
       <div class="editPrice clearfloat">
         <form class="inputFiled">
-          <h1>修改零售价</h1>
+          <h1>修改直销价</h1>
           <ul>
-            <li>
+            <!--<li>
               <label for="retailPrice">协议价</label>
               <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="commissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
-            </li>
+            </li>-->
             <li>
-              <label for="retailPrice">网络价</label>
+              <label for="retailPrice">直销价</label>
               <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice" name="netPrice" />
             </li>
 
           </ul>
         </form>
         <div class="footer">
-          <button class="btn-cancel" id="editNetPriceCancel">取消</button>
-          <button class="btn-ok" id="editNetPriceOk">确认</button>
+          <button class="btn-ok" id="editNetPriceOk">确认修改</button>
+          <button class="btn-cancel" id="editNetPriceCancel">取消修改</button>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@
         <div class="operateItem hide editNetPrice">
           <div class="clickDiv" id="editNetPriceButton" data-toggle="modal" data-target="#editNetPrice">
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
-            <p>修改网络价与协议价</p>
+            <p>修改直销价</p>
           </div>
         </div>
       </div>

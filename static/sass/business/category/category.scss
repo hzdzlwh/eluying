@@ -118,11 +118,13 @@
     .cover .photoContainer {
         img {
             max-width: 368px;
+            width: 100%;
         }
     }
     .detail .photoContainer {
         img {
             max-width: 122px;
+            height: 50%;
         }
     }
     .coverError,.detailError {

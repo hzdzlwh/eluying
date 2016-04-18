@@ -11,6 +11,7 @@ require("bootstrap");
 var modal = require("modal");
 require("validate");
 require("validation");
+var trToggle = require("trToggle");
 
 
 $(function(){
@@ -33,7 +34,7 @@ $(function(){
 //拉今天的价格去
     accommodationPriceList.getAccommodationPriceList(new Date());
 
-
+    trToggle();
     events = {
         "click .prevWeek": function(){
             $(".editSalePrice").addClass("hide");

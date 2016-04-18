@@ -1,6 +1,7 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
 var modal = require("modal");
+var accommodationPriceList = require("accommodationPriceList");
 require("validate");
 
 var monthManage = {
@@ -198,6 +199,9 @@ var monthManage = {
         })*/
         AJAXService.ajaxWithToken("POST","batchModifyAccommodationSpecialPrice",data,function(result){
             if (util.errorHandler(result)) {
+                accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
+                $('.priceOperate .second').addClass('hide');
+                $('.priceOperate .first .operateItem ').addClass('hide');
                 if (that) {
                     modal.clearModal(that);
                 }

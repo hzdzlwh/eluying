@@ -131,7 +131,7 @@ var showInfo = {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
                 $(".detail .photoContainer").append("<img onclick='selectPhoto(this)' class='detailImg' height='102px' src='" + result.data.url + "' />");
-                if ($(".detailImg").length == 6) {
+                if ($(".detailImg").length >= 6) {
                     $(".detail .create").hide();
                 }
                 $(".detailError").addClass("hide");
