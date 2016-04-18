@@ -91,12 +91,12 @@
         text-align: center;
       }
       .col1{
-        width: 84px;
+        width: 114px;
         margin-left: 58px;
       }
       .col2{
         width: 42px;
-        margin-left: 137px;
+        margin-left: 107px;
       }
       .col3{
         width: 100px;
@@ -106,6 +106,15 @@
     .row.head{
       height: 60px;
       line-height: 60px;
+      .col1{
+        text-align: left;
+      }
+    }
+    .row.other{
+      .col1{
+        line-height: 20px;
+        padding-top: 30px;
+      }
     }
   }
 }

@@ -58,16 +58,21 @@ $(function(){
         scope.privateKey = '';
         scope.publicKey = '';
         scope.methodToDelete = null;
-        $scope.errorTips = '';
+        scope.errorTips = '';
         scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){
                 // modal.somethingAlert("支付方式名称不能为空");
-                $scope.errorTips = ("支付方式名称不能为空");
+                scope.errorTips = ("支付方式名称不能为空");
+                return false;
+            }
+            if(newMethod.value.length > 16){
+                // modal.somethingAlert("支付方式名称不能为空");
+                scope.errorTips = ("支付方式名称长度不能超过16");
                 return false;
             }
             var flag = true;
-            var payChannelCustomList = $scope.payChannelCustomList;
+            var payChannelCustomList = scope.payChannelCustomList;
             console.log(payChannelCustomList);
             payChannelCustomList.forEach(function(d){
                 if(d.name === newMethod.value){
@@ -76,10 +81,10 @@ $(function(){
             });
             if(!flag){
                 // modal.somethingAlert("支付方式重复");
-                $scope.errorTips = ("支付方式重复");
+                scope.errorTips = ("支付方式重复");
                 return false;
             }
-            $scope.errorTips = '';
+            scope.errorTips = '';
             AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                 channelName: newMethod.value
             }, function(result){
@@ -87,38 +92,38 @@ $(function(){
                 $("#newMethod").modal("hide");
                 newMethod.value = '';
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    $scope.cash = result.data.map.cash;
-                    $scope.alipay = result.data.map.alipay;
-                    $scope.payChannelCustomList = result.data.payChannelCustomList;
-                    $scope.$apply();
+                    scope.cash = result.data.map.cash;
+                    scope.alipay = result.data.map.alipay;
+                    scope.payChannelCustomList = result.data.payChannelCustomList;
+                    scope.$apply();
                 });
             });
         };
-        $scope.setMethodToDelete = function(id){
-            $scope.methodToDelete = id;
+        scope.setMethodToDelete = function(id){
+            scope.methodToDelete = id;
         };
-        $scope.deleteMethod = function(){
+        scope.deleteMethod = function(){
             $("#deleteMethod").modal("hide");
             AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
-                channelId: $scope.methodToDelete
+                channelId: scope.methodToDelete
             }, function(result){
-                $scope.methodToDelete = null;
+                scope.methodToDelete = null;
                 modal.somethingAlert(result.msg);
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    $scope.cash = result.data.map.cash;
-                    $scope.alipay = result.data.map.alipay;
-                    $scope.payChannelCustomList = result.data.payChannelCustomList;
-                    $scope.$apply();
+                    scope.cash = result.data.map.cash;
+                    scope.alipay = result.data.map.alipay;
+                    scope.payChannelCustomList = result.data.payChannelCustomList;
+                    scope.$apply();
                 });
             });
         };
-        $scope.submitAlipay = function(){
+        scope.submitAlipay = function(){
             if(checkAlipayForm()){
                 AJAXService.ajaxWithToken('GET', 'bindAlipayAccountUrl', {
-                    accountName: $scope.accountName,
-                    pid: $scope.pid,
-                    publicKey: $scope.publicKey,
-                    privateKey: $scope.privateKey,
+                    accountName: scope.accountName,
+                    pid: scope.pid,
+                    publicKey: scope.publicKey,
+                    privateKey: scope.privateKey,
                 }, function(result){
                     if(result.code !== 1){
                         util.somethingAlert(result.msg);
@@ -126,20 +131,20 @@ $(function(){
                         $("#comfirmSubmit").modal("hide");
                         $("#alipayMethod").modal("hide");
                         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                            $scope.cash = result.data.map.cash;
-                            $scope.alipay = result.data.map.alipay;
-                            $scope.payChannelCustomList = result.data.payChannelCustomList;
-                            $scope.$apply();
+                            scope.cash = result.data.map.cash;
+                            scope.alipay = result.data.map.alipay;
+                            scope.payChannelCustomList = result.data.payChannelCustomList;
+                            scope.$apply();
                         });
                     }
                 });
             }
         };
         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-            $scope.cash = result.data.map.cash;
-            $scope.alipay = result.data.map.alipay;
-            $scope.payChannelCustomList = result.data.payChannelCustomList;
-            $scope.$apply();
+            scope.cash = result.data.map.cash;
+            scope.alipay = result.data.map.alipay;
+            scope.payChannelCustomList = result.data.payChannelCustomList;
+            scope.$apply();
         });
     }]);
 
