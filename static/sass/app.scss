@@ -149,6 +149,9 @@
             dd{
                 padding: 10px 0;
                 text-indent: 2em;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
                 &.on{
                     background: url("../image/tick.png") no-repeat;
                     background-position: 0 7px;

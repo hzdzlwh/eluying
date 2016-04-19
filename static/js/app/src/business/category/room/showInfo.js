@@ -6,6 +6,10 @@ var showInfo = {
 
     changed: false,
 
+    isLoading: true,
+    coverIsLoading: true,
+    detailIsLoading: true,
+
     setChanged: function () {
         this.changed = true;
     },
@@ -21,7 +25,10 @@ var showInfo = {
                 showInfo.showRoomShowInfo(result.data);
             }
         })*/
-        AJAXService.ajaxWithToken('get','/category/pullShowInfoPC',{id: id},function (result) {
+        AJAXService.ajaxWithToken('get', '/category/pullShowInfoPC', {id: id}, function (result) {
+            showInfo.isLoading = false;
+            showInfo.coverIsLoading = false;
+            showInfo.detailIsLoading = false;
             showInfo.showRoomShowInfo(result.data);
         });
     },
@@ -74,7 +81,7 @@ var showInfo = {
         if (data.facilities.network.status == 1) {
             $("#networkY").prop("checked", true);
             $("#networkSpan").prevAll("div").removeClass("hide");
-            $("#networkDescription").val(data.facilities.hotWater.description);
+            $("#networkDescription").val(data.facilities.network.description);
         } else {
             $("#networkN").prop("checked", true);
             $("#networkSpan").prevAll("div").addClass("hide");
@@ -104,7 +111,7 @@ var showInfo = {
                 detailStr += "<img class='detailImg' height='102px' src='" + element + "' />"
             });
             $(".detail .photoContainer").html(detailStr);
-            if ($(".detailImg").length == 6) {
+            if ($(".detailImg").length >= 6) {
                 $(".detail .create").hide();
             } else {
                 $(".detail .create").show();
@@ -116,6 +123,9 @@ var showInfo = {
         //上传图片
         $("#cover").fileupload({
             url: AJAXService.getUrl2("uploadImageUrl"),
+            send: function(){
+                showInfo.coverIsLoading = true;
+            },
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -123,10 +133,14 @@ var showInfo = {
                 $(".cover .create").hide();
                 $(".coverError").addClass("hide");
                 showInfo.changed = true;
+                showInfo.coverIsLoading = false;
             }
         });
         $("#detail").fileupload({
             url: AJAXService.getUrl2("uploadImageUrl"),
+            send: function(){
+                showInfo.detailIsLoading = true;
+            },
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -136,6 +150,7 @@ var showInfo = {
                 }
                 $(".detailError").addClass("hide");
                 showInfo.changed = true;
+                showInfo.detailIsLoading = false;
             }
         })
     },
@@ -176,7 +191,7 @@ var showInfo = {
             },
             network: {
                 status: $("#networkY").prop("checked") ? 1 : 0,
-                description: ""
+                description: $("#networkY").prop("checked") ? $("#networkDescription").val() : ""
             }
         };
         var item = {
@@ -338,6 +353,22 @@ var showInfo = {
             $("#editDisplayInfo .second .operateItem").addClass("hide");
             $(".detail .create").show();
             showInfo.changed = true;
+        },
+
+        "click .create": function(e){
+            if(showInfo.isLoading){
+                e.preventDefault();
+            }
+        },
+        "click .cover .create": function(e){
+            if(showInfo.coverIsLoading){
+                e.preventDefault();
+            }
+        },
+        "click .detail .create": function(e){
+            if(showInfo.detailIsLoading){
+                e.preventDefault();
+            }
         },
 
 //替换详细图片
