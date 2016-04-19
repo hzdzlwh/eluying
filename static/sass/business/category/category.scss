@@ -47,6 +47,10 @@
                 span{
                     float: left;
                     cursor: pointer;
+                    max-width: 78px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
                 img{
                     margin: 26px 0 26px 0;

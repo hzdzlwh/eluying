@@ -35,11 +35,11 @@ $(function(){
 
     events = {
         "resize window": util.mainContainer,
-        "show.bs.modal .modal": modal.centerModals,
+        "show .bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click .cancel,.publish": function(){
             $("#announcement").modal("hide");
-        }
+        },
     };
 
     util.bindDomAction(events);
@@ -77,6 +77,9 @@ $(function(){
         scope.noticeLength = scope.notice ? scope.notice.length : 0;
         scope.noticeTime = null;
         scope.campQrCode = null;
+        scope.onWebsite = function(s){
+            window.location = s.href;
+        };
         scope.textOnChange = function(){
             scope.noticeLength = scope.notice ? scope.notice.length : 0;
         };

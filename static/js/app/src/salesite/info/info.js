@@ -56,7 +56,7 @@ $(function(){
 
     var app = angular.module('infoApp', []);
     app.controller('infoCtrl',['$scope', function(scope) {
-        scope.types = ["营地", "景区", "农庄", "游乐园"];
+        scope.types = ["营地", "景区", "农庄", "游乐园","度假村","客栈","青旅"];
         scope.selectedType = 0;
         scope.selectType = function(type){
             scope.selectedType = type;
