@@ -13,18 +13,29 @@
 </head>
 <body ng-controller="methodCtrl">
 
+<div class="modal fade" role="dialog" id="wechatMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                绑定企业微信支付
+            </div>
+            <div class="stext">
+                点击提交审核后，订单来了工作人员会在1~2个工作日内
+                联系您，请保持电话畅通。
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel">取消</div>
+                <div class="sbtn sbtn-ok" ng-click="submitWechat()">提交审核</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="modal fade" role="dialog" id="deleteMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stext">
-                删除之后将不能用这种收款方式继续收银，
-                您确定要删除吗？
-            </div>
-            <div class="btns clearfloat">
-                <div class="sbtn sbtn-ok" ng-click="deleteMethod()">删除</div>
-                <div class="btn-cancel sbtn sbtn-cancel">取消</div>
-            </div>
+
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
@@ -162,7 +173,8 @@
                 <!--<div class="row wechat">-->
                     <!--<div class="col col1">企业微信支付</div>-->
                     <!--<div class="col col2"><span class="sclose">未开通</span></div>-->
-                    <!--<div class="col col3"><div class="btn-binding">绑定账号</div></div>-->
+                    <!--<div class="col col3"><div class="btn-binding" data-toggle="modal"-->
+                                               <!--data-target="#wechatMethod">绑定账号</div></div>-->
                 <!--</div>-->
                 <div class="row cash">
                     <div class="col col1">现金</div>
