@@ -63,7 +63,7 @@ var accommodationPriceList = {
             $("#retailPrice").val($(".selected").html());
         },
         "click #editNetPriceButton": function(){
-            $("#netPrice").val($(".selected").find("p:eq(1)").html());
+            $("#netPrice").val($(".selected").find("p:eq(0)").html());
             $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
         },
         "click #editSalePriceOk": function(){
@@ -80,12 +80,6 @@ var accommodationPriceList = {
             var that = this;
             accommodationPriceList.editNetAgreePrice(that);
         }
-    },
-
-    tableInit: function(){
-
-        trToggle();
-
     },
 
     createEl: function(startDate, result){
@@ -144,7 +138,6 @@ var accommodationPriceList = {
         var table = "<table>"+ thead + tbody +"</table>";
 
         $(".priceGrid").html(table);
-        this.tableInit();
     },
 
     //改零售价
@@ -190,7 +183,7 @@ var accommodationPriceList = {
         var items = [{
             channelId: $(".selected").attr("channel-id"),
             date: $(".selected").attr("date"),
-            newAgreementPrice: $("#commissionPrice").val(),
+            newAgreementPrice: 0,
             newNetPrice: $("#netPrice").val(),
             newSalePrice: 0
         }];
@@ -217,7 +210,7 @@ var accommodationPriceList = {
         },function(result){
             if (util.errorHandler(result)) {
                 $(".selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $(".selected").find("p:eq(1)").html($("#netPrice").val());
+                $(".selected").find("p:eq(0)").html($("#netPrice").val());
                 modal.clearModal(that);
             }
         });

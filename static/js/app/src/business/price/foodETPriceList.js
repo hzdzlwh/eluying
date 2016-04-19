@@ -29,9 +29,9 @@ var foodETPriceList = {
                 if (subName == 0) {
                     tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + result.data[name][subName].salePrice + "</td></tr>"
                 } else {
-                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>协议价</p><p>网络价</p></div></td>" +
-                        "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>" +
-                        result.data[name][subName].agreementPrice + "</p><p>" + result.data[name][subName].netPrice + "</p></div></td></tr>"
+                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                        "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
+                        + result.data[name][subName].netPrice + "</p></div></td></tr>"
                 }
             }
         }
@@ -96,13 +96,13 @@ var foodETPriceList = {
         AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
             newSalePrice: 0,
             newNetPrice: $("#netPrice").val(),
-            newAgreementPrice: $("#commissionPrice").val(),
+            newAgreementPrice: 0,
             categoryId: $(".selected").attr("category-id"),
             channelId: $(".selected").attr("channel-id")
         },function(result){
             if (util.errorHandler(result)) {
                 $(".selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $(".selected").find("p:eq(1)").html($("#netPrice").val());
+                $(".selected").find("p:eq(0)").html($("#netPrice").val());
                 modal.clearModal(that);
             }
         })
@@ -129,7 +129,7 @@ var foodETPriceList = {
                 $("#retailPrice").val($(".selected").html());
             },
             "click #editNetPriceButton": function(){
-                $("#netPrice").val($(".selected").find("p:eq(1)").html());
+                $("#netPrice").val($(".selected").find("p:eq(0)").html());
                 $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
             },
             "click #editSalePriceOk": function(){
