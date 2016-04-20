@@ -74,6 +74,7 @@ $(function(){
         scope.campUrl = null;
         scope.directNetStatus = null;
         scope.notice = null;
+        scope.notice2 = null;
         scope.noticeLength = scope.notice ? scope.notice.length : 0;
         scope.noticeTime = null;
         scope.campQrCode = null;
@@ -96,6 +97,7 @@ $(function(){
                     scope.campUrl = result.data.campUrl;
                     scope.directNetStatus = result.data.directNetStatus;
                     scope.notice = result.data.notice;
+                    scope.notice2 = result.data.notice;
                     scope.noticeLength = scope.notice ? scope.notice.length : 0;
                     scope.noticeTime = result.data.noticeTime;
                     scope.$apply();
@@ -104,9 +106,10 @@ $(function(){
         };
         scope.publishNotice = function(){
             AJAXService.ajaxWithToken('GET', 'modifyNoticeUrl', {
-                notice: scope.notice
+                notice: scope.notice2
             }, function(result){
                 modal.somethingAlert(result.msg);
+                scope.notice = scope.notice2;
             });
         };
         scope.copySite = function(){
