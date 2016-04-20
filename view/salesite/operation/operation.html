@@ -29,9 +29,12 @@
             <textarea name="announce" id="announce"
                       placeholder="系统只会保留最新一条公告" ng-model="notice2" ng-keyup="textOnChange()"></textarea>
             <div class="counter">
-                <span class="current">{{noticeLength}}</span>
+                <span ng-class="{true: 'current full', false: 'current'}[noticeLength > 140]">{{noticeLength}}</span>
                 <span>/</span>
                 <span class="total">140</span>
+            </div>
+            <div class="errorTips" ng-if="noticeLength > 140">
+                公告不能超过140字！
             </div>
             <div class="btns">
                 <div class="mmbtn publish" ng-click="publishNotice()">发布公告</div>

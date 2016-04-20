@@ -37,7 +37,7 @@ $(function(){
         "resize window": util.mainContainer,
         "show .bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
-        "click .cancel,.publish": function(){
+        "click .cancel": function(){
             $("#announcement").modal("hide");
         },
     };
@@ -75,14 +75,14 @@ $(function(){
         scope.directNetStatus = null;
         scope.notice = null;
         scope.notice2 = null;
-        scope.noticeLength = scope.notice ? scope.notice.length : 0;
+        scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
         scope.noticeTime = null;
         scope.campQrCode = null;
         scope.onWebsite = function(s){
             window.location = s.href;
         };
         scope.textOnChange = function(){
-            scope.noticeLength = scope.notice ? scope.notice.length : 0;
+            scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
         };
         scope.changeSiteState = function(){
             var data = scope.directNetStatus ? 0 : 1;
@@ -101,19 +101,33 @@ $(function(){
                     scope.directNetStatus = result.data.directNetStatus;
                     scope.notice = result.data.notice;
                     scope.notice2 = result.data.notice;
-                    scope.noticeLength = scope.notice ? scope.notice.length : 0;
+                    scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
                     scope.noticeTime = result.data.noticeTime;
                     scope.$apply();
                 });
             });
         };
         scope.publishNotice = function(){
-            AJAXService.ajaxWithToken('GET', 'modifyNoticeUrl', {
-                notice: scope.notice2
-            }, function(result){
-                modal.somethingAlert(result.msg);
-                scope.notice = scope.notice2;
-            });
+            if(scope.noticeLength <= 140){
+                AJAXService.ajaxWithToken('GET', 'modifyNoticeUrl', {
+                    notice: scope.notice2
+                }, function(result){
+                    modal.somethingAlert(result.msg);
+                    if(result.code === 1){
+                        AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
+                            scope.campQrCode = result.data.campQrCode;
+                            scope.campUrl = result.data.campUrl;
+                            scope.directNetStatus = result.data.directNetStatus;
+                            scope.notice = result.data.notice;
+                            scope.notice2 = result.data.notice;
+                            scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
+                            scope.noticeTime = result.data.noticeTime;
+                            scope.$apply();
+                        });
+                        $("#announcement").modal("hide");
+                    }
+                });
+            }
         };
         scope.copySite = function(){
             if(window.clipboardData && window.clipboardData.setData){
@@ -137,7 +151,7 @@ $(function(){
             scope.campUrl = result.data.campUrl;
             scope.directNetStatus = result.data.directNetStatus;
             scope.notice = result.data.notice;
-            scope.noticeLength = scope.notice ? scope.notice.length : 0;
+            scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
             scope.noticeTime = result.data.noticeTime;
             scope.$apply();
         });
