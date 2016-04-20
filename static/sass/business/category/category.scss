@@ -68,10 +68,14 @@
             color: #FFF;
             td {
                 border-bottom: 1px solid #3E79BF;
+                overflow: hidden;
                 div {
                     padding-left: 17px;
                     height: 59px;
                     line-height: 59px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
             }
             z-index: 10;

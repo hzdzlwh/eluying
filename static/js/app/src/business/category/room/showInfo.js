@@ -268,6 +268,9 @@ var showInfo = {
         },
 //编辑展示信息确认
         "click #editRoomShowOk": function () {
+            if (!$("#type form").valid()) {
+                return;
+            }
             if ($(".rightTab").parent().hasClass("active")) {
                 if ($("#roomShowFitNum").val() == "") {
                     modal.somethingAlert("请填写可容纳人数");
