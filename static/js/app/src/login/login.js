@@ -110,7 +110,6 @@ function registerVCOnClick(){
 $(document).ready(function(){
     util.checkExplorer();
     util.centroidDiv("#loginBox .bg", '#loginBox');
-    // console.log($("#"))
     util.centroidDiv(".loginPic img", '.loginPic');
     $(window).on("resize", function(){
         util.centroidDiv("#loginBox .bg", '#loginBox');

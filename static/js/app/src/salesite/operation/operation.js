@@ -89,7 +89,6 @@ $(function(){
             AJAXService.ajaxWithToken('GET', 'openCloseDirectNetUrl', {
                 directNetStatus: data
             }, function(result){
-                console.log(result);
                 AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
                     scope.status.alipay.status = result.data.alipay;
                     scope.status.campBasicInfo.status = result.data.campBasicInfo;

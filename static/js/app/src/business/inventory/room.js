@@ -48,7 +48,6 @@ var IVENTORY = {
                 return AJAXService.sessionValidate(result);
             },
             success: function(result){
-                console.log(result);
                 var data = that.data = result.data.list;
                 var html = '';
                 data.forEach(function(i){
@@ -70,7 +69,6 @@ var IVENTORY = {
             date: that.start,
             type: 0
         },function(result){
-            console.log(result);
             var data = that.data = result.data.list;
             var html = '';
             data.forEach(function(i){
@@ -336,7 +334,6 @@ var events = {
                         if(result.data.list.length == 0){
                             alert('这个房型还没有房间！');
                         }else{
-                            console.log(result);
                             var html = '';
                             result.data.list.forEach(function(d){
                                 html += '<tr class="subclass hide" roomid="' + d.id + '"> ' +
@@ -379,7 +376,6 @@ var events = {
                     if(result.data.list.length == 0){
                         alert('这个房型还没有房间！');
                     }else{
-                        console.log(result);
                         var html = '';
                         result.data.list.forEach(function(d){
                             html += '<tr class="subclass hide" roomid="' + d.id + '"> ' +
@@ -542,7 +538,6 @@ var events = {
                     if(util.errorHandler(result)){
                         IVENTORY.setPatchGrid();
                         dateList.forEach(function(date){
-                            console.log(date);
                             var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
                             if(open == 1){
                                 dom.attr("status", '2');
@@ -567,7 +562,6 @@ var events = {
                 if(util.errorHandler(result)){
                     IVENTORY.setPatchGrid();
                     dateList.forEach(function(date){
-                        console.log(date);
                         var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
                         if(open == 1){
                             dom.attr("status", '2');

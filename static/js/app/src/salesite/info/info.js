@@ -24,7 +24,6 @@ $(function(){
         done: function (e, data) {
             var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
             result = JSON.parse(result);
-            console.log(result);
             angular.element(this).scope().cover = result.data.url;
             angular.element(this).scope().$apply();
             //$(".cover .photoContainer").html("<img onclick='selectPhoto(this)' class='coverImg' height='205px' src='" + result.data.url + "' />");
@@ -115,7 +114,6 @@ $(function(){
             });
         };
         scope.uploadCover = function(){
-            console.log(this);
         };
         AJAXService.ajaxWithToken('GET', 'getBasicInfoUrl', {}, function(result){
             var infos = result.data;

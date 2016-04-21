@@ -19,7 +19,6 @@ var header = {
         $("body").prepend(temp(data));
         //根据path激活active
         $(".userName").find("span").html(localStorage.getItem("userName"));
-        console.log(localStorage);
         var pathArray = window.location.pathname.split("/");
         var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");

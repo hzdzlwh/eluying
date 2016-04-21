@@ -101,9 +101,7 @@ var AJAXService = {
             array.push(localStorage.getItem("token"));
             array.sort();
             var str = array.join("");
-            // console.log(str);
             var strMD5 = md5(str);
-            // console.log(strMD5);
             data.sign = strMD5;
         }
         $.ajax({

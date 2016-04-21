@@ -73,7 +73,6 @@ $(function(){
             }
             var flag = true;
             var payChannelCustomList = scope.payChannelCustomList;
-            console.log(payChannelCustomList);
             payChannelCustomList.forEach(function(d){
                 if(d.name === newMethod.value){
                     flag = false;

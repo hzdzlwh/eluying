@@ -318,7 +318,7 @@ var monthManage = {
                 return;
             }
             $("#editMonth .selected").find("p").html($("#monthRetailPrice").val());
-            $("#editMonth .selected").addClass("changed");
+            $("#editMonth .selected").addClass("changed").removeClass("selected");
             var that = this;
             modal.clearModal(that);
         },
@@ -328,7 +328,7 @@ var monthManage = {
             }
             /*$("#editMonth .selected").find("p:eq(0)").html($("#monthCommissionPrice").val());*/
             $("#editMonth .selected").find("p:eq(0)").html($("#monthNetPrice").val());
-            $("#editMonth .selected").addClass("changed");
+            $("#editMonth .selected").addClass("changed").removeClass("selected");
             var that = this;
             modal.clearModal(that);
         },

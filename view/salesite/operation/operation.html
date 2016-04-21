@@ -46,8 +46,8 @@
 <div class="mainContainer clearfloat">
     <div class="content clearfloat">
         <div class="salesite-operation-status">
-            <div class="slabel">网站状态:</div>
-            <div class="scontent fail" ng-if="directNetStatus === 0 && (!status.alipay.status || !status.campBasicInfo.status)">未完成准备工作,未上线</div>
+            <div class="slabel">网站状态：</div>
+            <div class="scontent fail" ng-if="directNetStatus === 0 && (!status.alipay.status || !status.campBasicInfo.status)">未完成准备工作，未上线</div>
             <div class="scontent on" ng-if="directNetStatus === 1">已上线</div>
             <div class="scontent ready" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)">已完成准备工作，未上线</div>
             <div class="sbtn openbtn" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)" ng-click="changeSiteState()">网站上线</div>

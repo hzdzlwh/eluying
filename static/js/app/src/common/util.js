@@ -115,9 +115,7 @@ var util = {
 
     centroidDiv: function(dom, pdom){
         var cw = $(dom).width();
-        console.log(dom, cw);
         var pw = $(pdom).width();
-        console.log(pdom, pw);
         $(dom).css({
             position: "relative",
             left: (pw-cw)/2

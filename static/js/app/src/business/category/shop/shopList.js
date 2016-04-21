@@ -51,7 +51,6 @@ var shopList = {
                     showCategories.push($(el).parent().attr('data-id'));
                 }
             });
-            console.log(showCategories);
 
             $.each(this.list, function(index, el) {
                 $.each(showCategories, function(index ,id) {

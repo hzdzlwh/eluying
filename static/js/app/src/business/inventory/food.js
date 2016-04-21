@@ -62,7 +62,6 @@ var IVENTORY = {
                         html += '<td class="foodDayItem" date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
                     });
                     html += '</tr>';
-                    console.log(i);
                 });
                 $(".inventoryGrid table tbody").html(html);
             }
@@ -86,7 +85,6 @@ var IVENTORY = {
                     html += '<td class="foodDayItem" date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
                 });
                 html += '</tr>';
-                console.log(i);
             });
             $(".inventoryGrid table tbody").html(html);
         });
@@ -160,12 +158,10 @@ var IVENTORY = {
                     if(lastDate.getDay() != 0){
                         html += '</tr>';
                     }
-                    console.log(html);
                     $("#editPatch .patchGrid tbody").html(html);
                 }else{
                     util.somethingAlert(result.msg);
                 }
-                console.log(result.data.list);
             }
         })*/
         AJAXService.ajaxWithToken("GET","getCategoryInventoriesUrl",{
@@ -215,12 +211,10 @@ var IVENTORY = {
                 if(lastDate.getDay() != 0){
                     html += '</tr>';
                 }
-                console.log(html);
                 $("#editPatch .patchGrid tbody").html(html);
             }else{
                 util.somethingAlert(result.msg);
             }
-            console.log(result.data.list);
         });
     }
 };
