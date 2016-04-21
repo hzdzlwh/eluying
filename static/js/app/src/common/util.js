@@ -154,9 +154,24 @@ var util = {
     },
 
     checkAuth: function(){
-        var userType = window.localStorage.getItem("userType");
-        if(userType != 1){
-            window.location.href = '/view/tips/noauth.html'
+        //var userType = window.localStorage.getItem("userType");
+        //if(userType != 1){
+        //    window.location.href = '/view/tips/noauth.html'
+        var campId = localStorage.getItem("campId");
+        var camps = localStorage.getItem("camps");
+        camps = JSON.parse(camps);
+        var flag = false;
+        for(var i = 0; i < camps.length; i++){
+            var camp = camps[i];
+            if(campId == camp.campId && camp.userType == 1){
+                flag = true;
+            }
+        }
+        if(!flag){
+            window.location.href = '/view/tips/noauth.html';
+        }else{
+            window.location.href = '/view/business/category/room.html';
+            //window.location.reload();
         }
     }
 };
