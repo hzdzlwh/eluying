@@ -122,14 +122,14 @@ $(function(){
             var address = infos.address;
             var campName = infos.campName;
             var city = infos.city;
-            var country = infos.country;
+            var county = infos.county;
             var imgUrl = infos.imgUrl;
             var province = infos.province;
             var recePhone = infos.recePhone;
             var type = infos.type;
             scope.selectedProvince = findIndex(dsy.Items['0'], province);
             scope.selectedCity = findIndex(dsy.Items['0_' + scope.selectedProvince], city);
-            scope.selectedDistrict = findIndex(dsy.Items['0_' + scope.selectedProvince + '_' + scope.selectedCity], country);
+            scope.selectedDistrict = findIndex(dsy.Items['0_' + scope.selectedProvince + '_' + scope.selectedCity], county);
             scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
             scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
             scope.phone = recePhone;
