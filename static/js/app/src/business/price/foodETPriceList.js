@@ -94,9 +94,9 @@ var foodETPriceList = {
             }
         })*/
         AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
-            newSalePrice: 0,
+            newSalePrice: $("#netPrice").val(),
             newNetPrice: $("#netPrice").val(),
-            newAgreementPrice: 0,
+            newAgreementPrice: $("#netPrice").val(),
             categoryId: $(".selected").attr("category-id"),
             channelId: $(".selected").attr("channel-id")
         },function(result){

@@ -183,9 +183,9 @@ var accommodationPriceList = {
         var items = [{
             channelId: $(".selected").attr("channel-id"),
             date: $(".selected").attr("date"),
-            newAgreementPrice: 0,
+            newAgreementPrice: $("#netPrice").val(),
             newNetPrice: $("#netPrice").val(),
-            newSalePrice: 0
+            newSalePrice: $("#netPrice").val()
         }];
         /*$.ajax({
             url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),

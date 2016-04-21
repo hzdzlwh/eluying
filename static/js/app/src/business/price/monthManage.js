@@ -375,7 +375,7 @@ var monthManage = {
                 var price = {
                     channelId: $(this).attr("channel-id"),
                     date: $(this).attr("date"),
-                    newSalePrice: 0,
+                    newSalePrice: $(this).find("p:eq(0)").html(),
                     newAgreementPrice: $(this).find("p:eq(0)").html(),
                     newNetPrice: $(this).find("p:eq(0)").html()
                 };
