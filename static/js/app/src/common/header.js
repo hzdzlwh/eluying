@@ -138,7 +138,8 @@ var header = {
                     if(data.code == 1){
                         localStorage.setItem("campId", campId);
                         localStorage.setItem("campName", campName);
-                        window.location.reload();
+                        util.checkAuth();
+                        //window.location.reload();
                     }else if(data.code == 11002){
                         alert(data.msg);
                         logout.logout();
