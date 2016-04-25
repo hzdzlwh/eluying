@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="methodApp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——直销网站设置</title>
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/static/css/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/setting/method.js"></script>
+</head>
+<body ng-controller="methodCtrl">
+
+<div class="modal fade" role="dialog" id="wechatMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                绑定企业微信支付
+            </div>
+            <div class="stext">
+                点击提交审核后，订单来了工作人员会在1~2个工作日内
+                联系您，请保持电话畅通。
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel">取消</div>
+                <div class="sbtn sbtn-ok" ng-click="submitWechat()">提交审核</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="deleteMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                删除之后将不能用这种收款方式继续收银，
+                您确定要删除吗？
+            </div>
+            <div class="btns clearfloat">
+                <div class="sbtn sbtn-ok" ng-click="deleteMethod()">删除</div>
+                <div class="btn-cancel sbtn sbtn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="submitSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                提交成功，请耐心等待审核
+            </div>
+            <div class="stext_small">
+                正在跳转到审核中页面
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="submitFail">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                提交失败
+            </div>
+            <div class="stext_small">
+                失败原因XXXXXXXXXX
+            </div>
+            <div class="sbtn">
+                确定提交审核
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="newMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">新增收款方式</div>
+            <div class="hr2"></div>
+            <div class="maintext">
+                <div class="slabel">收款方式名称</div>
+                <div class="scontent"><input type="text" id="newMethod-input" required="required"/></div>
+                <div class="errorTips">
+                    {{errorTips}}
+                </div>
+            </div>
+            <div class="btns clearfloat">
+                <div class="sbtn sbtn-ok" ng-click="addMethod()">确定</div>
+                <div class="btn-cancel sbtn sbtn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="alipayMethod">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">绑定企业支付宝</div>
+            <div class="hr2"></div>
+            <div class="srow clearfloat">
+                <div class="scol scol1"><span style="font-size: 20px; color: red;">*</span>合作者身份（PID）</div>
+                <div class="scol scol2"><input id="alipayMethod-pid" type="text" ng-model="pid" required="required"/></div>
+            </div>
+            <div class="srow clearfloat">
+                <div class="scol scol1"><span style="font-size: 20px; color: red;">*</span>支付宝账号</div>
+                <div class="scol scol2"><input id="alipayMethod-accountName" type="text" ng-model="accountName"/></div>
+            </div>
+            <div class="srow big clearfloat">
+                <div class="scol scol1">
+                    <span style="font-size: 20px; color: red;">*</span>支付宝公钥
+                    <div class="tips">
+                        合作伙伴秘钥管理=＞RSA加密：<br/>
+                        查看支付宝公钥
+                    </div>
+                </div>
+                <div class="scol scol2"><textarea id="alipayMethod-publicKey" ng-model="publicKey"></textarea></div>
+            </div>
+            <div class="srow medium clearfloat">
+                <div class="scol scol1">
+                    <span style="font-size: 20px; color: red;">*</span>商户RSA私钥
+                    <div class="tips">
+                        (非PKCS8)编码
+                    </div>
+                </div>
+                <div class="scol scol2"><textarea id="alipayMethod-privateKey" ng-model="privateKey"></textarea></div>
+            </div>
+            <div class="hr3"></div>
+            <div class="sbtn sbtn-ok" ng-if="alipay === 1" id="alipayMethod-ok">提交审核</div>
+            <div class="sbtn sbtn-ok" ng-if="alipay === 3 || alipay === 2" id="alipayMethod-submit" ng-click="submitAlipay()">提交审核</div>
+            <div class="btn-cancel sbtn sbtn-cancel">取消</div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="comfirmSubmit">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">
+                提交审核新的支付宝将会自动解绑原来的企业支付宝，
+                并且下架直销网站，确定要提交审核吗？
+            </div>
+            <div class="btns clearfloat">
+                <div class="sbtn sbtn-ok" ng-click="submitAlipay()">确定提交审核</div>
+                <div class="btn-cancel sbtn sbtn-cancel">不提交</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="mainContainer clearfloat">
+    <div class="content clearfloat">
+        <div class="method-container">
+            <div class="method-add" data-toggle="modal"
+                 data-target="#newMethod">
+                <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/189D870C-E8B1-493A-B819-FBE72BB3E887@1x.png" alt="add"/>
+                新增收款方式
+            </div>
+            <div class="method-list">
+                <div class="hr"></div>
+                <div class="row head">
+                    <div class="col col1 col-center">收款方式</div>
+                    <div class="col col2 col-center">状态</div>
+                    <div class="col col3 col-center">操作</div>
+                </div>
+                <div class="hr2"></div>
+                <div class="row alipay">
+                    <div class="col col1">企业支付宝</div>
+                    <div class="col col2" ng-if="alipay == 3"><span class="sclose">未开通</span></div>
+                    <div class="col col2" ng-if="alipay == 1"><span class="sopen">已开通</span></div>
+                    <div class="col col2" ng-if="alipay == 2"><span class="serror">审核失败</span></div>
+                    <div class="col col2" ng-if="alipay == 0"><span class="swarning">审核中</span></div>
+                    <div class="col col3">
+                        <div class="hr4" ng-if="alipay == 0"></div>
+                        <div ng-if="alipay != 0" class="btn-binding" data-toggle="modal"
+                             data-target="#alipayMethod">{{(alipay == 1 || alipay == 2) ? '更换帐号' : '绑定账号'}}</div></div>
+                </div>
+                <!--<div class="row wechat">-->
+                    <!--<div class="col col1">企业微信支付</div>-->
+                    <!--<div class="col col2"><span class="sclose">未开通</span></div>-->
+                    <!--<div class="col col3"><div class="btn-binding" data-toggle="modal"-->
+                                               <!--data-target="#wechatMethod">绑定账号</div></div>-->
+                <!--</div>-->
+                <div class="row cash">
+                    <div class="col col1">现金</div>
+                    <div class="col col2" ng-if="cash == 0"><span class="sclose">未开通</span></div>
+                    <div class="col col2" ng-if="cash == 1"><span class="sopen">已开通</span></div>
+                    <div class="col col3"><div class="hr4"></div></div>
+                </div>
+                <div class="hr2"></div>
+                <!--<div class="row other">-->
+                    <!--<div class="col col1">中行信用卡</div>-->
+                    <!--<div class="col col2"><span class="sopen">已开通</span></div>-->
+                    <!--<div class="col col3"><div class="btn-delete" data-toggle="modal"-->
+                                               <!--data-target="#deleteMethod">删除</div></div>-->
+                <!--</div>-->
+                <div class="row other" ng-repeat="pay in payChannelCustomList">
+                    <div class="col col1">{{pay.name}}</div>
+                    <div class="col col2"><span class="sopen">已开通</span></div>
+                    <div class="col col3"><div method="{{pay.channelId}}" class="btn-delete" data-toggle="modal"
+                                               data-target="#deleteMethod" ng-click="setMethodToDelete(pay.channelId)">删除</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

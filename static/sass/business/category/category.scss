@@ -1,0 +1,165 @@
+.content{
+    .title{
+        .create{
+            cursor: pointer;
+            float: right;
+            color: #4A90E2;
+            height: 36px;
+            line-height: 36px;
+            img {
+                margin-right: 15px;
+            }
+            span {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.categoryGrid {
+    width: 745px;
+    border-top:4px solid #4A90E2;
+    margin-top: 40px;
+    float: left;
+    position: relative;
+    table {
+        table-layout: fixed;
+        width: 100%;
+        .head {
+            background-color: #F7F7F7;
+            height: 49px;
+            th {
+                font-weight: bold;
+                padding-left: 17px;
+                border-bottom: 1px solid #D9D9D9;
+            }
+        }
+        .mainClass {
+            height: 59px;
+            cursor: pointer;
+            td {
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                padding-left: 17px;
+                border-bottom: 1px solid #D9D9D9;
+                line-height: 58px;
+                span{
+                    float: left;
+                    cursor: pointer;
+                    max-width: 78px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                img{
+                    margin: 26px 0 26px 0;
+                    float: right;
+                    transition: 300ms linear;
+                }
+                .rotate {
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+        .subclass {
+            background-color: #4A90E2;
+            cursor: pointer;
+            color: #FFF;
+            td {
+                border-bottom: 1px solid #3E79BF;
+                overflow: hidden;
+                div {
+                    padding-left: 17px;
+                    height: 59px;
+                    line-height: 59px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+            z-index: 10;
+        }
+    }
+}
+.editDisplayInfo {
+    .photo {
+        float: left;
+    }
+    .title {
+        width: 368px;
+        span {
+            height: 36px;
+            line-height: 36px;
+            float: left;
+            color: #4A90E2;
+        }
+        .create{
+            cursor: pointer;
+            float: right;
+            color: #4A90E2;
+            height: 36px;
+            line-height: 36px;
+            img {
+                margin-right: 15px;
+            }
+            span {
+                cursor: pointer;
+                float: none;
+            }
+        }
+    }
+    .photoContainer {
+        margin-top: 17px;
+        margin-bottom: 27px;
+        width: 368px;
+        background-color: #FBFBFB;
+        border: 1px #CFCFCF solid;
+        .photoSelected {
+            border: 2px solid #4a90e2;
+        }
+        img {
+            cursor: pointer;
+        }
+    }
+    .photoCon1{
+        height: 276px;
+    }
+    .photoCon2{
+        height: 185px;
+    }
+    .cover .photoContainer {
+        img {
+            width: 368px;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .detail .photoContainer {
+        img {
+            width: 122px;
+            height: 92px;
+        }
+    }
+    .coverError,.detailError {
+        margin-top: -30px;
+        color: red;
+    }
+    input[type=file] {
+        height: 1px;
+        width: 1px;
+        opacity: 0;
+        \9filter:alpha(opacity=0);
+    }
+    .operate {
+        margin-top: 75px;
+        .second {
+            border-top: solid 4px #4A90E2;
+            margin-top: 167px;
+        }
+    }
+}
+
+.manageShopCategory,.subclassManagement {
+    margin-bottom: 20px;
+}

@@ -1,8 +1,8 @@
 var util = {
     mainContainer: function(){
-        var width = document.body.clientWidth - 65;
-        if (width < 1135) {
-            width = 1135;
+        var width = document.body.clientWidth - 220;
+        if (width < 980) {
+            width = 980;
         }
         $(".mainContainer").css("width", width);
     },
@@ -28,13 +28,17 @@ var util = {
         }
     },
 
-    errorHandler: function(result){
+    errorHandler: function(result, msg){
         var modal = require("modal");
         if (result.code != 1) {
             modal.somethingAlert(result.msg);
             return false;
         } else {
-            modal.somethingAlert("操作成功");
+            if (msg) {
+                modal.somethingAlert(msg)
+            } else {
+                modal.somethingAlert("操作成功");
+            }
             return true;
         }
     },
@@ -145,6 +149,63 @@ var util = {
         if(flag){
             window.location.href = "/view/tips/tips.html";
         }
-    }
+    },
+
+    checkAuth: function(){
+        var campId = localStorage.getItem("campId");
+        var camps = localStorage.getItem("camps");
+        camps = JSON.parse(camps);
+        var flag = false;
+        for(var i = 0; i < camps.length; i++){
+            var camp = camps[i];
+            if(campId == camp.campId && camp.userType == 1){
+                flag = true;
+            }
+        }
+        var href = window.location.href;
+        if(!flag){
+            if(href.indexOf("/view/tips/noauth.html") > 0){
+
+            }else{
+                window.location.href = '/view/tips/noauth.html';
+            }
+        }else{
+            if(href.indexOf("/view/tips/noauth.html") > 0){
+                window.location.href = '/view/business/category/room.html';
+            }else{
+
+            }
+        }
+    },
+
+    //checkAuth: function(){
+    //    //var userType = window.localStorage.getItem("userType");
+    //    //if(userType != 1){
+    //    //    window.location.href = '/view/tips/noauth.html'
+    //    var campId = localStorage.getItem("campId");
+    //    var camps = localStorage.getItem("camps");
+    //    camps = JSON.parse(camps);
+    //    var flag = false;
+    //    for(var i = 0; i < camps.length; i++){
+    //        var camp = camps[i];
+    //        if(campId == camp.campId && camp.userType == 1){
+    //            flag = true;
+    //        }
+    //    }
+    //    if(!flag){
+    //        if(href.indexOf("/view/tips/noauth.html") > 0){
+    //
+    //        }else{
+    //            window.location.href = '/view/tips/noauth.html';
+    //        }
+    //    }else{
+    //        var href = window.location.href;
+    //        if(href.indexOf("/view/tips/noauth.html") > 0){
+    //            window.location.href = '/view/business/category/room.html';
+    //        }else{
+    //            window.location.reload();
+    //        }
+    //    }
+    //}
 };
 module.exports = util;

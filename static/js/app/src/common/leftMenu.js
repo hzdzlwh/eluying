@@ -1,18 +1,37 @@
+var leftMenuHtml = require('./leftMenu.html');
+var dot = require('dot');
 var leftMenu = {
     showLeftMenu: function() {
         var pathArray = window.location.pathname.split("/");
-        var path = (pathArray[2]);
-        var str = "<div class='leftMenu'><ul><li><a id='roomMenu' href='/view/" + path + "/room.html'>住宿</a></li>"
-            + "<li><a id='foodMenu' href='/view/" + path + "/food.html'>餐饮</a></li>"
-            + "<li><a id='entertainmentMenu' href='/view/" + path + "/entertainment.html'>娱乐</a></li>";
-        var header = pathArray[2];
-        if (header === 'category') {
-            str += '<li><a id="shopMenu" href="/view/' + path + '/shop.html">商超</a></li>';
-        }
-        str += '</ul></div>';
-        var menu = pathArray[3].split(".")[0];
-        $(".header").after(str);
-        $("#" + menu + "Menu").addClass("active");
+        var menuParent = pathArray[2];
+        var menu = pathArray[4].split(".")[0];
+        var templ = dot.template(leftMenuHtml);
+        var data = {
+            room:'住宿',
+            food:'餐饮',
+            entertainment:'娱乐',
+            roomPath:'/view/business/category/room.html',
+            foodPath:'/view/business/category/food.html',
+            entertainmentPath:'/view/business/category/entertainment.html',
+            business: '业务设置',
+            salesite: '直销网站设置',
+            setting: '收款设置',
+            businessPath: '/view/business/category/room.html',
+            salesitePath: '/view/salesite/operation/operation.html',
+            settingPath: '/view/setting/method/method.html',
+            operation:'网站运营',
+            info:'基本信息',
+            operationPath: '/view/salesite/operation/operation.html',
+            infoPath: '/view/salesite/info/info.html',
+            method: '支付方式',
+            methodPath: '/view/setting/method/method.html',
+            // tipsMethod: '支付方式',
+            //tipsMethodPath: '/view/setting/tipsMethod/tipsMethod.html'
+        };
+        $('.header').after(templ(data));
+        $('#'+ menu +'Menu').addClass('active');
+        $('#'+ menuParent +'ParentMenu').addClass('active');
+        $('#'+  menuParent +'Menu').css('display','block').siblings().css('display','none');
     }
 };
 module.exports = leftMenu;

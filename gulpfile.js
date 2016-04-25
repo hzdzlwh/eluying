@@ -81,7 +81,7 @@ gulp.task('styles', function () {
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('static/css'))
-        .pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
+        //.pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
         .pipe(reload({stream: true}));
 });
 
@@ -97,20 +97,31 @@ gulp.task('webpack2', function () {
             ],
             entry: {
                 "login/login": "./static/js/app/src/login/login.js",
-                "price/roomEntry": "./static/js/app/src/price/roomEntry.js",
-                "price/foodETEntry": "./static/js/app/src/price/foodETEntry.js",
-                "inventory/room": "./static/js/app/src/inventory/room.js",
-                "inventory/food": "./static/js/app/src/inventory/food.js",
-                "inventory/entertainment": "./static/js/app/src/inventory/entertainment.js",
-                "category/roomEntry": "./static/js/app/src/category/room/roomEntry.js",
-                "category/foodEntry": "./static/js/app/src/category/food/foodEntry.js",
-                "category/ETEntry": "./static/js/app/src/category/entertainment/ETEntry.js",
-                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js"
+                "price/roomEntry": "./static/js/app/src/business/price/roomEntry.js",
+                "price/foodETEntry": "./static/js/app/src/business/price/foodETEntry.js",
+                "inventory/room": "./static/js/app/src/business/inventory/room.js",
+                "inventory/food": "./static/js/app/src/business/inventory/food.js",
+                "inventory/entertainment": "./static/js/app/src/business/inventory/entertainment.js",
+                "category/roomEntry": "./static/js/app/src/business/category/room/roomEntry.js",
+                "category/foodEntry": "./static/js/app/src/business/category/food/foodEntry.js",
+                "category/ETEntry": "./static/js/app/src/business/category/entertainment/ETEntry.js",
+                "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
+                "salesite/info": "./static/js/app/src/salesite/info/info.js",
+                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "setting/method": "./static/js/app/src/setting/method/method.js",
+                "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
 
                 filename: "[name].js",
                 publicPath: "./dist/"
+            },
+            module: {
+                loaders: [
+
+                    {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, "./view")] }
+
+                ]
             },
             resolve: {
                 extensions: ['.js', ""],
@@ -125,21 +136,23 @@ gulp.task('webpack2', function () {
                     util: path.join(__dirname, "./static/js/app/src/common/util.js"),
                     logout: path.join(__dirname, "./static/js/app/src/common/logout.js"),
                     AJAXService: path.join(__dirname, "./static/js/app/src/common/AJAXService.js"),
-                    accommodationPriceList: path.join(__dirname, "./static/js/app/src/price/accommodationPriceList.js"),
-                    foodETPriceList: path.join(__dirname, "./static/js/app/src/price/foodETPriceList.js"),
+                    accommodationPriceList: path.join(__dirname, "./static/js/app/src/business/price/accommodationPriceList.js"),
+                    foodETPriceList: path.join(__dirname, "./static/js/app/src/business/price/foodETPriceList.js"),
                     trToggle: path.join(__dirname, "./static/js/app/src/common/trToggle.js"),
                     loginValidate: path.join(__dirname, "./static/js/app/src/login/login.validate.js"),
                     modal: path.join(__dirname, "./static/js/app/src/common/modal.js"),
                     validate: path.join(__dirname, "./static/js/lib/jquery.validate.min.js"),
                     validation: path.join(__dirname, "./static/js/lib/validation.js"),
-                    seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js"),
-                    monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js"),
+                    seasonManage: path.join(__dirname, "./static/js/app/src/business/price/seasonManage.js"),
+                    monthManage: path.join(__dirname, "./static/js/app/src/business/price/monthManage.js"),
                     floatInfo: path.join(__dirname, "./static/js/app/src/common/floatInfo.js"),
-                    roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js"),
+                    roomCategoryList: path.join(__dirname, "./static/js/app/src/business/category/room/roomCategoryList.js"),
                     fileupload: path.join(__dirname, "./static/js/lib/jquery.fileupload.js"),
                     "jquery.ui.widget": path.join(__dirname, "./static/js/lib/jquery.ui.widget.js"),
                     iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js"),
-                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js")
+                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js"),
+                    dsy: path.join(__dirname, "./static/js/app/src/common/dsy.js"),
+                    angular: path.join(__dirname, "./node_modules/angular/angular.min.js"),
                 }
             }
         }, null, function (err, stats) {
@@ -161,20 +174,30 @@ gulp.task('webpack', function () {
             ],
             entry: {
                 "login/login": "./static/js/app/src/login/login.js",
-                "price/roomEntry": "./static/js/app/src/price/roomEntry.js",
-                "price/foodETEntry": "./static/js/app/src/price/foodETEntry.js",
-                "inventory/room": "./static/js/app/src/inventory/room.js",
-                "inventory/food": "./static/js/app/src/inventory/food.js",
-                "inventory/entertainment": "./static/js/app/src/inventory/entertainment.js",
-                "category/roomEntry": "./static/js/app/src/category/room/roomEntry.js",
-                "category/foodEntry": "./static/js/app/src/category/food/foodEntry.js",
-                "category/ETEntry": "./static/js/app/src/category/entertainment/ETEntry.js",
-                "category/shopEntry": "./static/js/app/src/category/shop/shopEntry.js"
+                "price/roomEntry": "./static/js/app/src/business/price/roomEntry.js",
+                "price/foodETEntry": "./static/js/app/src/business/price/foodETEntry.js",
+                "inventory/room": "./static/js/app/src/business/inventory/room.js",
+                "inventory/food": "./static/js/app/src/business/inventory/food.js",
+                "inventory/entertainment": "./static/js/app/src/business/inventory/entertainment.js",
+                "category/roomEntry": "./static/js/app/src/business/category/room/roomEntry.js",
+                "category/foodEntry": "./static/js/app/src/business/category/food/foodEntry.js",
+                "category/ETEntry": "./static/js/app/src/business/category/entertainment/ETEntry.js",
+                "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
+                "salesite/info": "./static/js/app/src/salesite/info/info.js",
+                "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "setting/method": "./static/js/app/src/setting/method/method.js",
+                "tips/noauth": "./static/js/app/src/tips/noauth.js"
             },
             output: {
-
                 filename: "[name].js",
                 publicPath: "./dist/"
+            },
+            module: {
+              loaders: [
+
+                  {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, "./view")] }
+
+              ]
             },
             resolve: {
                 extensions: ['.js', ""],
@@ -189,21 +212,23 @@ gulp.task('webpack', function () {
                     util: path.join(__dirname, "./static/js/app/src/common/util.js"),
                     logout: path.join(__dirname, "./static/js/app/src/common/logout.js"),
                     AJAXService: path.join(__dirname, "./static/js/app/src/common/AJAXService.js"),
-                    accommodationPriceList: path.join(__dirname, "./static/js/app/src/price/accommodationPriceList.js"),
-                    foodETPriceList: path.join(__dirname, "./static/js/app/src/price/foodETPriceList.js"),
+                    accommodationPriceList: path.join(__dirname, "./static/js/app/src/business/price/accommodationPriceList.js"),
+                    foodETPriceList: path.join(__dirname, "./static/js/app/src/business/price/foodETPriceList.js"),
                     trToggle: path.join(__dirname, "./static/js/app/src/common/trToggle.js"),
                     loginValidate: path.join(__dirname, "./static/js/app/src/login/login.validate.js"),
                     modal: path.join(__dirname, "./static/js/app/src/common/modal.js"),
                     validate: path.join(__dirname, "./static/js/lib/jquery.validate.min.js"),
                     validation: path.join(__dirname, "./static/js/lib/validation.js"),
-                    seasonManage: path.join(__dirname, "./static/js/app/src/price/seasonManage.js"),
-                    monthManage: path.join(__dirname, "./static/js/app/src/price/monthManage.js"),
+                    seasonManage: path.join(__dirname, "./static/js/app/src/business/price/seasonManage.js"),
+                    monthManage: path.join(__dirname, "./static/js/app/src/business/price/monthManage.js"),
                     floatInfo: path.join(__dirname, "./static/js/app/src/common/floatInfo.js"),
-                    roomCategoryList: path.join(__dirname, "./static/js/app/src/category/room/roomCategoryList.js"),
+                    roomCategoryList: path.join(__dirname, "./static/js/app/src/business/category/room/roomCategoryList.js"),
                     fileupload: path.join(__dirname, "./static/js/lib/jquery.fileupload.js"),
                     "jquery.ui.widget": path.join(__dirname, "./static/js/lib/jquery.ui.widget.js"),
                     iframe: path.join(__dirname, "./static/js/lib/jquery.iframe-transport.js"),
-                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js")
+                    networkAction: path.join(__dirname, "./static/js/app/src/common/networkAction.js"),
+                    dsy: path.join(__dirname, "./static/js/app/src/common/dsy.js"),
+                    angular: path.join(__dirname, "./node_modules/angular/angular.min.js"),
                 }
             },
             devtool: "sourcemap"
@@ -213,7 +238,7 @@ gulp.task('webpack', function () {
         }, webpack))
         .pipe(gulp.dest('static/js/app/dist/'))
         .pipe(reload({stream: true}))
-        .pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
+        //.pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
 });
 
 

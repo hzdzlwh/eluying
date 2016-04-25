@@ -1,4 +1,5 @@
 require("cookie");
+var md5 = require("md5");
 var AJAXService = {
     urls: {
         //正式服务器 http://120.26.83.168:8081/mg
@@ -7,6 +8,8 @@ var AJAXService = {
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
         host: "http://121.41.109.105:8081/mg",
+        host2: "http://121.41.109.105:8081/ws",
+        // host2: "http://192.168.0.124:8081/ws", //勉之测试服
         //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",
         //var host = "/mg";
@@ -55,7 +58,17 @@ var AJAXService = {
         deleteGood: '/category/deleteOneGood',
         addGood: '/category/addNewGood',
         editGood: '/category/editOneGood',
-        rewriteUrl: true
+        rewriteUrl: true,
+        openCloseDirectNetUrl: '/directNet/openCloseDirectNet',
+        modifyNoticeUrl: '/directNet/modifyNotice',
+        getCampTypeUrl: '/directNet/getCampType',
+        getBasicInfoUrl: '/directNet/getBasicInfo',
+        editBasicInfoUrl: '/directNet/editBasicInfo',
+        checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
+        getOperationInfoUrl: '/directNet/getOperationInfo',
+        getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
+        bindAlipayAccountUrl: '/collectionMethod/bindAlipayAccount',
+        newDeleteCollectionMethodUrl: '/collectionMethod/newDeleteCollectionMethod',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
@@ -64,11 +77,59 @@ var AJAXService = {
         }
         return url;
     },
+    getUrl2: function(path){
+        var url = this.urls.host2 + (this.urls[path] || path);
+        return url;
+    },
+    ajaxWithToken: function(method, path, data, callback, errorCallback,asy){
+        if(path !== 'loginUrl'){
+            data.timestamp = (new Date()).valueOf();
+            // data.version = (new Date()).valueOf();
+            if(path !== '/homepage/changeCamp'){
+                data.campId = localStorage.getItem("campId");
+            }
+            data.uid = localStorage.getItem("uid");
+            //data.campId = 56;
+            //data.uid = 85;
+            // data.kick = true;
+            data.terminal = 1;
+            // data.token = localStorage.getItem("token");
+            var array = [];
+            for(var key in data){
+                array.push(data[key]);
+            }
+            array.push(localStorage.getItem("token"));
+            array.sort();
+            var str = array.join("");
+            var strMD5 = md5(str);
+            data.sign = strMD5;
+        }
+        $.ajax({
+            type: method,
+            url: AJAXService.getUrl2(path),
+            async: asy,
+            data: data,
+            success: callback,
+            error: errorCallback,
+        });
+    },
+    ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
+        data.campId = localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        data.token = localStorage.getItem("token");
+        if(method === 'GET' || method === 'get'){
+            $http.get(AJAXService.getUrl2(path), {
+                params: data
+            }).success(callback);
+        }else if(method === 'POST' || method === 'post'){
+            //TODO
+        }
+    },
     sessionValidate: function(data){
         data = JSON.parse(data);
-        if (data.code == 11002) {
-            location.href = "/login.html";
-        }
+        //if (data.code == 11002) {
+        //    location.href = "/login.html";
+        //}
         return JSON.stringify(data);
 }
 };

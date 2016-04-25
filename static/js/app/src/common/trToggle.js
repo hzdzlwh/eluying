@@ -9,6 +9,7 @@ function trToggle(pClass){
             $(this).nextUntil(".mainClass").find("div").hide();
             $(this).nextUntil(".mainClass").removeClass("hide");
             $(this).nextUntil(".mainClass").find("div").slideDown(300);
+            
         } else{
             $(this).find("img").removeClass("rotate");
             $(this).nextUntil(".mainClass").find("div").slideUp(300);

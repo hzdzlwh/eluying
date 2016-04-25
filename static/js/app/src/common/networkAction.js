@@ -25,8 +25,8 @@ var network = {
 		switch(status){
 			case this.status.CREATE_NETWORK:
 				var confirmHandler = function (networkName, department, position) {
-					$.ajax({
-						url: AJAXService.getUrl("/network/createNetwork"),
+					/*$.ajax({
+						url: AJAXService.getUrl2("/network/createNetwork"),
 						data: {
 							department: department,
 							networkName: networkName,
@@ -41,6 +41,20 @@ var network = {
 							}else{
 								//创建失败
 							}
+						}
+					})*/
+					AJAXService.ajaxWithToken("POST","/network/createNetwork",{
+						department: department,
+						networkName: networkName,
+						position: position
+					},function (data) {
+						if(data.code == 1){
+							var  result= data.data;
+							//创建成功
+							resultDom.modal("hide");
+							that.init(that.status.CREATE_SUCCESS, result.camp).modal("show");
+						}else{
+							//创建失败
 						}
 					})
 				}
@@ -86,7 +100,7 @@ var network = {
 				var that = this;
 				resultDom.find(".createNetworkButton").click(function () {
 					var networkNum = resultDom.find(".networkId").val();
-					$.ajax({
+					/*$.ajax({
 						url: AJAXService.getUrl("/network/getNetworkInfo"),
 						data: {
 							networkNum: networkNum
@@ -101,8 +115,19 @@ var network = {
 								resultDom.modal("hide");
 							}
 						}
+					})*/
+					AJAXService.ajaxWithToken("GET","/network/getNetworkInfo",{
+						networkNum: networkNum
+					},function (data) {
+						if(data.code == 1){
+							var result = data.data.camp;
+							resultDom.modal("hide");
+							that.init(that.status.JOIN_NETWORK,result).modal("show");
+						}else{
+							alert(data.msg);
+							resultDom.modal("hide");
+						}
 					})
-
 				});
 				break;
 			case this.status.JOIN_NETWORK:
@@ -111,8 +136,8 @@ var network = {
 				var department = resultDom.find(".department").val();
 				var position = resultDom.find(".position").val();
 				resultDom.find(".createNetworkButton").click(function () {
-					$.ajax({
-						url: AJAXService.getUrl("/network/applyJoinNetwork"),
+					/*$.ajax({
+						url: AJAXService.getUrl2("/network/applyJoinNetwork"),
 						data: {
 							networkNum: networkNum,
 							department: department,
@@ -124,6 +149,17 @@ var network = {
 							}else{
 								alert(data.msg);
 							}
+						}
+					})*/
+					AJAXService.ajaxWithToken("GET","/network/applyJoinNetwork",{
+						networkNum: networkNum,
+						department: department,
+						position: position
+					},function(data){
+						if(data.code == 1){
+							alert("申请已发送至该网络，请耐心等待审核");
+						}else{
+							alert(data.msg);
 						}
 					})
 				});
@@ -144,17 +180,24 @@ var network = {
 				$(".createNetworkButton").click(function () {
 					var campId = resultDom.find("input[name='campId']").val();
 					var campName = resultDom.find("input[name='campName']").val();
-					$.ajax({
+					/*$.ajax({
 						url: AJAXService.getUrl("/network/changeNetwork"),
 						data: {
 							campId: campId
 						},
 						success: function (data) {
 							if(data.code == 1){
-								window.location.href = "/view/category/room.html";
+								window.location.href = "/view/business/category/room.html";
 								localStorage.setItem("campId", campId);
 								localStorage.setItem("campName", campName);
 							}
+						}
+					})*/
+					AJAXService.ajaxWithToken("POST","/homepage/changeCamp",{campId: campId},function (data) {
+						if(data.code == 1){
+							window.location.href = "/view/business/category/room.html";
+							localStorage.setItem("campId", campId);
+							localStorage.setItem("campName", campName);
 						}
 					})
 				})

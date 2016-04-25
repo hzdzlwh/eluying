@@ -3,9 +3,14 @@
   "version": "0.0.1",
   "description": "dingdanlaile",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "angular": "^1.5.3",
+    "dot": "^1.0.3",
+    "md5": "^2.1.0"
+  },
   "devDependencies": {
     "browser-sync": "^2.10.0",
+    "fs": "0.0.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-clean": "^0.3.1",
@@ -17,6 +22,7 @@
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.0.2",
+    "raw-loader": "^0.5.1",
     "react": "^0.14.3",
     "webpack": "^1.12.9",
     "webpack-stream": "^3.1.0"

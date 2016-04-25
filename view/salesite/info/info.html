@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="infoApp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——直销网站设置</title>
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/static/css/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/salesite/info.js"></script>
+</head>
+<body>
+<div class="mainContainer clearfloat" ng-controller="infoCtrl">
+    <div class="content clearfloat">
+        <div class="salesite-info-tips">
+            基本信息将用于直销官网展示给客户相关资料，请确保基本信息的真实和完整！
+        </div>
+        <div class="salesite-info-infobox">
+            <div class="hr"></div>
+            <div class="formrow clearfloat">
+                <div class="slabel">名称:</div>
+                <div class="scontent">
+                    <p>{{campName}}</p>
+                </div>
+            </div>
+            <div class="formrow clearfloat">
+                <div class="slabel"><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/505F4B8F-2DFD-4120-AF28-CF5F2B6E434C@1x.png"
+                                         alt="" class="require">类型选择:</div>
+                <div class="scontent">
+                    <div class="selectBox">
+                        <div class="item selected">
+                            {{ types[selectedType] }}
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="toselect-container">
+                            <div class="item toselect" ng-click="selectType($index)" index="$index" ng-repeat="t in types">
+                                {{ t }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formrow clearfloat">
+                <div class="slabel"><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/505F4B8F-2DFD-4120-AF28-CF5F2B6E434C@1x.png"
+                                         alt="" class="require">前台电话:</div>
+                <div class="scontent">
+                    <input type="text" name="phone" ng-model="phone">
+                </div>
+            </div>
+            <div class="formrow clearfloat">
+                <div class="slabel"><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/505F4B8F-2DFD-4120-AF28-CF5F2B6E434C@1x.png"
+                                         alt="" class="require">地址:</div>
+                <div class="scontent">
+                    <div class="selectBox small">
+                        <div class="item selected">
+                            {{ provinceItems[selectedProvince] }}
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="toselect-container">
+                            <div class="item toselect" ng-click="selectProvince($index)" ng-repeat="n in provinceItems">{{n}}</div>
+                            <!--<div class="item toselect">营地1</div>-->
+                            <!--<div class="item toselect">营地2</div>-->
+                            <!--<div class="item toselect">营地3</div>-->
+                        </div>
+                    </div>
+                    <div class="selectBox small">
+                        <div class="item selected">
+                            {{ cityItems[selectedCity] }}
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="toselect-container">
+                            <div class="item toselect" ng-click="selectCity($index)" ng-repeat="n in cityItems">{{n}}</div>
+                        </div>
+                    </div>
+                    <div class="selectBox small">
+                        <div class="item selected">
+                            {{ districtItems[selectedDistrict] }}
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="toselect-container">
+                            <div class="item toselect" ng-click="selectDistrict($index)" ng-repeat="n in districtItems">{{n}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="formrow clearfloat">
+                <div class="slabel"></div>
+                <div class="scontent">
+                    <input type="text" name="addressmore" ng-model="addressMore">
+                </div>
+            </div>
+            <div class="formrow clearfloat">
+                <div class="slabel"><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/505F4B8F-2DFD-4120-AF28-CF5F2B6E434C@1x.png"
+                                         alt="" class="require">营地封面图:</div>
+                <div class="scontent">
+                    <div class="thumbpic">
+                        <div class="cross" ng-if="cover===null">
+
+                        </div>
+                        <img src="{{cover}}" ng-if="cover!==null"/>
+                    </div>
+                    <input type="file" name="file" id="coverUpload" style="display: none" onchange="angular.element(this).scope().uploadCover.call(this)"/>
+                    <div class="sbtn upload">{{cover ? '更换封面' : '上传封面'}}</div>
+                </div>
+            </div>
+            <div class="sbtn save" ng-click="submit()">保存</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

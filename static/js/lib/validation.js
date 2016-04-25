@@ -1,4 +1,12 @@
+jQuery.validator.addMethod( "floatNumber",function(value,element){
 
+    var len = value.split(".")[1] ? value.split(".")[1].length : 0;
+
+    if(value !='' && len > 2){return false;}
+
+    return true;
+
+} ,  "请输入小数位少于三位的数值");
 module.exports = jQuery.extend(jQuery.validator.messages, {
     required: "必选字段",
     remote: "请修正该字段",
