@@ -313,7 +313,7 @@ $(document).ready(function(){
                                 localStorage.setItem("campId", el.campId);
                             }
                         });
-                        //setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
+                        setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                     }
                     localStorage.setItem("camps", JSON.stringify(data.data.camps));
                     localStorage.setItem("avatar", data.data.user.avatar);
@@ -321,7 +321,7 @@ $(document).ready(function(){
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);
                     localStorage.setItem("token", data.data.user.token);
-                    setTimeout(util.checkAuth, 900);
+                    //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();
                 }else{
                     $("#loginBox .log .errorTips").html(data.msg);

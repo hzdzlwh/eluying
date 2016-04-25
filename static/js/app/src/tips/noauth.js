@@ -9,4 +9,6 @@ $(function(){
     //初始化界面
     header.showHeader();
 
+    util.checkAuth();
+
 });

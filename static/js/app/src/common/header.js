@@ -23,64 +23,6 @@ var header = {
         var menu = pathArray[2];
         $("#" + menu + "Menu").addClass("active");
         util.bindDomAction(this.events);
-        /*$.ajax({
-            url: AJAXService.getUrl("/user/getPersonalInfoInNetwork"),
-            success: function (data) {
-                var campId = localStorage.getItem("campId");
-                if(data.code == 1){
-                    var result = data.data.camps;
-                    var key = "";
-                    var flag = false;
-                    var object = {
-                        created: "",
-                        joined: ""
-                    }
-                    for(var i = 0; i < result.length; i++){
-                        var item = result[i];
-                        if(item.userType == 1){
-                            key = "created";
-                        }else{
-                            key = "joined";
-                        }
-                        if(item.campId == campId){
-                            flag = true;
-                        }else{
-                            flag = false;
-                        }
-                        object[key] += that.getItemHtml(item, flag);
-                    }
-                    if(object.created){
-                        object.created = "<dt>我创建的</dt>"+ object.created +"<hr>";
-                    }
-                    if(object.joined){
-                        object.joined = "<dt>我加入的</dt>"+object.joined+"<hr>";
-                    }
-                }
-                $("#headerSwitchCamp").prepend(object.created+object.joined);
-                $("#headerSwitchCamp .networkButton").click(function(){
-                    var campId = $(this).attr("data-campId");
-                    var campName = $(this).attr("data-campName");
-                    $.ajax({
-                        url: AJAXService.getUrl("/network/changeNetwork"),
-                        data: {
-                            campId: campId
-                        },
-                        success: function (data) {
-                            if(data.code == 1){
-                                localStorage.setItem("campId", campId);
-                                localStorage.setItem("campName", campName);
-                                window.location.reload();
-                            }else if(data.code == 11002){
-                                alert(data.msg);
-                                logout.logout();
-                            }else{
-                                alert(data.msg);
-                            }
-                        }
-                    })
-                })
-            }
-        })*/
         AJAXService.ajaxWithToken("get","/user/getPersonalInfoInNetwork",{},function (data) {
             var campId = localStorage.getItem("campId");
             if(data.code == 1){
@@ -116,30 +58,11 @@ var header = {
             $("#headerSwitchCamp .networkButton").click(function(){
                 var campId = $(this).attr("data-campId");
                 var campName = $(this).attr("data-campName");
-                /*$.ajax({
-                    url: AJAXService.getUrl("/network/changeNetwork"),
-                    data: {
-                        campId: campId
-                    },
-                    success: function (data) {
-                        if(data.code == 1){
-                            localStorage.setItem("campId", campId);
-                            localStorage.setItem("campName", campName);
-                            window.location.reload();
-                        }else if(data.code == 11002){
-                            alert(data.msg);
-                            logout.logout();
-                        }else{
-                            alert(data.msg);
-                        }
-                    }
-                })*/
                 AJAXService.ajaxWithToken("GET","/homepage/changeCamp",{campId: campId},function (data) {
                     if(data.code == 1){
                         localStorage.setItem("campId", campId);
                         localStorage.setItem("campName", campName);
-                        util.checkAuth();
-                        //window.location.reload();
+                        window.location.reload();
                     }else if(data.code == 11002){
                         alert(data.msg);
                         logout.logout();
@@ -147,7 +70,8 @@ var header = {
                         alert(data.msg);
                     }
                 })
-            })
+            });
+            util.checkAuth();
         });
     },
     events: {
