@@ -261,7 +261,7 @@ $(document).ready(function(){
                 },
                 success: function(data){
                     if(data.code == 1){
-                        localStorage.setItem("userName", data.data.realName);
+                        localStorage.setItem("userName", data.data.user.realName);
                         localStorage.setItem("uid", data.data.user.uid);
                         localStorage.setItem("avatar", data.data.user.avatar);
                         localStorage.setItem("token", data.data.user.token);
