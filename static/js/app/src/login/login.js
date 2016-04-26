@@ -292,9 +292,9 @@ $(document).ready(function(){
         var loginName = $("#loginBox .log .loginName").val();
         var password = $("#loginBox .log .password").val();
         var result = loginValidate.phoneValidate(loginName);
-        if(result == true) {
+        /*if(result == true) {
             result = loginValidate.passwordValidate(password);
-        }
+        }*/
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
