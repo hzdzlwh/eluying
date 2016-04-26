@@ -93,6 +93,7 @@ var AJAXService = {
             //data.uid = 85;
             // data.kick = true;
             data.terminal = 1;
+            data.version = 4;
             // data.token = localStorage.getItem("token");
             var array = [];
             for(var key in data){
