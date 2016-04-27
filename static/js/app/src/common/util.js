@@ -156,9 +156,10 @@ var util = {
         var camps = localStorage.getItem("camps");
         camps = JSON.parse(camps);
         var flag = false;
+        //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
         for(var i = 0; i < camps.length; i++){
             var camp = camps[i];
-            if(campId == camp.campId && camp.userType == 1){
+            if(campId == camp.campId && camp.userType != 2){
                 flag = true;
             }
         }
