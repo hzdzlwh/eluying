@@ -74,6 +74,11 @@
             color: #ffffff;
             float: left;
             margin-left: 20px;
+            max-width: 42px;
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .uesrPicture{
           height: 38px;
