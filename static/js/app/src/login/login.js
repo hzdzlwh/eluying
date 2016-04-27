@@ -261,7 +261,7 @@ $(document).ready(function(){
                 },
                 success: function(data){
                     if(data.code == 1){
-                        localStorage.setItem("userName", data.data.realName);
+                        localStorage.setItem("userName", data.data.user.realName);
                         localStorage.setItem("uid", data.data.user.uid);
                         localStorage.setItem("avatar", data.data.user.avatar);
                         localStorage.setItem("token", data.data.user.token);
@@ -292,12 +292,13 @@ $(document).ready(function(){
         var loginName = $("#loginBox .log .loginName").val();
         var password = $("#loginBox .log .password").val();
         var result = loginValidate.phoneValidate(loginName);
-        if(result == true) {
+        /*if(result == true) {
             result = loginValidate.passwordValidate(password);
-        }
+        }*/
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
+                version: 4,
                 password: password,
                 phone: loginName
             }, function(data){
