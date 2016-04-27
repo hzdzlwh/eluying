@@ -110,6 +110,13 @@ var AJAXService = {
             url: AJAXService.getUrl2(path),
             async: asy,
             data: data,
+            dataFilter: function(data){
+                if(data.code == 5){
+                    window.localStorage.clear();
+                    window.location.href = "/login.html";
+                }
+                return data;
+            },
             success: callback,
             error: errorCallback,
         });
