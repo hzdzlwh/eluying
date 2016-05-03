@@ -177,36 +177,6 @@ var util = {
 
             }
         }
-    },
-
-    //checkAuth: function(){
-    //    //var userType = window.localStorage.getItem("userType");
-    //    //if(userType != 1){
-    //    //    window.location.href = '/view/tips/noauth.html'
-    //    var campId = localStorage.getItem("campId");
-    //    var camps = localStorage.getItem("camps");
-    //    camps = JSON.parse(camps);
-    //    var flag = false;
-    //    for(var i = 0; i < camps.length; i++){
-    //        var camp = camps[i];
-    //        if(campId == camp.campId && camp.userType == 1){
-    //            flag = true;
-    //        }
-    //    }
-    //    if(!flag){
-    //        if(href.indexOf("/view/tips/noauth.html") > 0){
-    //
-    //        }else{
-    //            window.location.href = '/view/tips/noauth.html';
-    //        }
-    //    }else{
-    //        var href = window.location.href;
-    //        if(href.indexOf("/view/tips/noauth.html") > 0){
-    //            window.location.href = '/view/business/category/room.html';
-    //        }else{
-    //            window.location.reload();
-    //        }
-    //    }
-    //}
+    }
 };
 module.exports = util;
