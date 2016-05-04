@@ -109,7 +109,9 @@ gulp.task('webpack2', function () {
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tips/noauth": "./static/js/app/src/tips/noauth.js"
+                "tips/noauth": "./static/js/app/src/tips/noauth.js",
+                "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
+                "tips/expired": "./static/js/app/src/tips/expired.js"
             },
             output: {
 
@@ -186,7 +188,10 @@ gulp.task('webpack', function () {
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tips/noauth": "./static/js/app/src/tips/noauth.js"
+                "tips/noauth": "./static/js/app/src/tips/noauth.js",
+                "tips/expired": "./static/js/app/src/tips/expired.js",
+                "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
             },
             output: {
                 filename: "[name].js",
