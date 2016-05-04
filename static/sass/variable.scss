@@ -1,0 +1,65 @@
+//颜色
+$color1: #178CE6;
+$color1Hover: #45a0e6;
+$color1Click: #1684d9;
+
+$color2: #10c8e0;
+$color2Hover: #3dcde0;
+$color2Click: #0fbdd4;
+
+$color3: #36d987;
+$color3Hover: #62d99d;
+$color3Click: #33cc80;
+
+$color4: #ffbf40;
+$color4Hover: #ffd073;
+$color4Click: #f2b63d;
+
+$color5: #ff9326;
+$color5Hover: #ffac59;
+$color5Click: #f28b24;
+
+$color6: #f24949;
+$color6Hover: #f27979;
+$color6Click: #e64545;
+
+//标题
+@mixin mainTitle1(){
+  color: #00a0e8;
+  font-size: 16px;
+}
+@mixin mainTitle2(){
+  color: #666666;
+  font-size: 16px;
+}
+@mixin subTitle1(){
+  color: #00a0e8;
+  font-size: 14px;
+}
+@mixin subTitle2(){
+  color: #666666;
+  font-size: 14px;
+}
+@mixin contentNormal(){
+  color: #666666;
+  font-size: 12px;
+}
+@mixin contentInvalid(){
+  color: #cccccc;
+  font-size: 12px;
+}
+@mixin contentAsist(){
+  color: #999999;
+  font-size: 12px;
+}
+@mixin contentWarning(){
+  color: #f24949;
+  font-size: 12px;
+}
+@mixin contentLink(){
+  color: #00a0e8;
+  font-size: 12px;
+}
+
+//2像素的倒角
+$BorderRadius: 2px;

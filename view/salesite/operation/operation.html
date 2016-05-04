@@ -57,15 +57,14 @@
             <div class="failbox">
                 <div class="hr"></div>
                 <div class="stitle">上线准备工作</div>
-                <div class="hr2"></div>
                 <div class="wrapper">
                     <div class="item" ng-repeat="s in status">
                         <div class="itemBox" ng-class="{'active': s.status}" ng-click="onWebsite(s)">
                             <img class="yesTips" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
-                            <div class="stext" ng-if="s.status">{{s.yesText}}</div>
-                            <div class="stext" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
+                            <div class="stext active" ng-if="s.status">{{s.yesText}}</div>
+                            <div class="stext notactive" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
                         </div>
                     </div>
                     <!--<div class="item"></div>-->
