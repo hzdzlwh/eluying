@@ -250,6 +250,7 @@ gulp.task('webpack', function () {
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
     gulp.watch('static/js/app/src/**/*.js', ['webpack']);
+    gulp.watch('static/js/app/src/common/*.html', ['webpack']);
     gulp.watch("**/*.html").on('change', reload);
 });
 
