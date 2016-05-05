@@ -320,12 +320,12 @@
 }
 
 .leftMenu {
-    width: 100px;
+    width: 88px;
     background-color: #f7f7f7;
     height: 100%;
     position: fixed;
     top: 68px;
-    left: 120px;
+    left: 116px;
     z-index: 10;
     box-shadow: 2px 0px 2px 0px #dadada;
     ul {
@@ -354,7 +354,7 @@
     }
 }
 .leftParentMenu{
-    width: 120px;
+    width: 116px;
     background-color: $color1;
     height: 100%;
     position: fixed;
