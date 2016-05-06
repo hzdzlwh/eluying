@@ -1,0 +1,191 @@
+@import "../../variable";
+$headerHeight: 48px;
+$subHeaderHeight: 32px;
+$gridHeight: 48px;
+$borderColor: #e6e6e6;
+$bgColor: #f8f9fc;
+.accommodation-mainContainer{
+  position: absolute;
+  top: 68px;
+  bottom: 0;
+  left: 0;
+  zoom:1;
+  width: 100%;
+  .content {
+    width: 100%;
+    height: 100%;
+    @include subTitle2();
+    .date-selector{
+      position: fixed;
+      top: 68px;
+      left: 0;
+      width: 140px;;
+      height: $headerHeight;
+      line-height: $headerHeight;
+      text-align: center;
+      border-bottom: solid thin $borderColor;
+      border-right: solid thin $borderColor;
+      z-index: 2;
+      background: $bgColor;
+      img{
+        margin-left: 8px;
+      }
+    }
+    .category-filter{
+      width: 140px;;
+      position: fixed;
+      top: 68px + $headerHeight;
+      left: 0;
+      height: $subHeaderHeight;
+      line-height: $subHeaderHeight;
+      text-align: center;
+      border-right: solid thin $borderColor;
+      border-bottom: solid thin $borderColor;
+      z-index: 2;
+      background: $bgColor;
+      img{
+        margin-left: 8px;
+      }
+    }
+    .leftHeader{
+      border-right: solid thin $borderColor;
+      position: fixed;
+      top: 68px + $headerHeight + $subHeaderHeight;
+      left: 0;
+      background: $bgColor;
+      width:140px;
+      height: auto;
+      .category-item{
+        width: 100%;
+        height: auto;
+        position: relative;
+        //border-bottom: solid thin $borderColor;
+        .category-name{
+          width: 74px;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          position: absolute;
+          border-right: solid thin $borderColor;
+          border-bottom: solid thin $borderColor;
+          .stext{
+            width: 42px;
+            height: 40px;
+            margin-left: -21px;
+            margin-top: -20px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+          }
+        }
+        .category-list{
+          display: inline-block;
+          vertical-align: top;
+          width: 66px;
+          margin-left: 74px;
+          height: auto;
+          .room-item{
+            width: 100%;
+            line-height: $gridHeight;
+            text-align: center;
+            border-bottom: solid thin $borderColor;
+            height: $gridHeight;
+          }
+          .room-item:last-child{
+            width: 100%;
+            //border-bottom: none;
+            height: $gridHeight;
+          }
+        }
+      }
+    }
+    .sheader{
+      position: fixed;
+      top: 68px;
+      left: 140px;
+      width: 3000px;
+      height: auto;
+      z-index: 1;
+      .sheader-item{
+        width: 100px;
+        height: auto;
+        float: left;
+        .date-item{
+          width: 100%;
+          height: $gridHeight;
+          text-align: center;
+          background: $bgColor;
+          border-bottom: solid thin $borderColor;
+          border-right: solid thin $borderColor;
+          .date{
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+          }
+          .desc{
+            width: 100%;
+            height: 23px;
+            line-height: 23px;
+          }
+        }
+        .left{
+          width: 100%;
+          height: $subHeaderHeight;
+          background: $bgColor;
+          text-align: center;
+          line-height: $subHeaderHeight;
+          border-bottom: solid thin $borderColor;
+          border-right: solid thin $borderColor;
+        }
+      }
+    }
+    .calendor-container{
+      position: absolute;
+      left: 140px;
+      right: 0;
+      top: $headerHeight + $subHeaderHeight;
+      bottom: 0;
+      height: auto;
+      overflow-x: auto;
+      overflow-y: auto;
+      .entryList{
+        width: 3000px;
+        height: auto;
+        .srow{
+          width: 100%;
+          height: $gridHeight;
+          .entryItem{
+            width: 100px;
+            height: $gridHeight;
+            background: white;
+            float: left;
+            border-right: solid thin $borderColor;
+            border-bottom: solid thin $borderColor;
+          }
+        }
+      }
+      //.day-item{
+      //  width: 100px;
+      //  float: left;
+      //  border-right: solid thin $borderColor;
+      //  position: relative;
+      //  .entryList{
+      //    position: absolute;
+      //    top: 80px;
+      //    left: 0;
+      //    bottom: 0;
+      //    width: 100%;
+      //    .entryItem{
+      //      width: 100%;
+      //      height: $gridHeight;
+      //      background: white;
+      //      border-bottom: solid thin $borderColor;
+      //    }
+      //  }
+      //}
+      //.day-item:last-child{
+      //  border-right: none;
+      //}
+    }
+  }
+}

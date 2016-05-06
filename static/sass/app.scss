@@ -68,12 +68,19 @@
       text-align:left;
       float: left;
       cursor: pointer;
+      a{
+        color: #999999;
+      }
     }
     .accomodationEntry:hover{
-      color: #ffffff;
+      a{
+        color: #ffffff;
+      }
     }
     .accomodationEntry.selected{
-      color:#ffffff;
+      a{
+        color:#ffffff;
+      }
       background: url("http://7xsrk6.com2.z0.glb.qiniucdn.com/9E45600D-40AE-4107-AACF-C1FF3BCEEA54@1x.png") no-repeat;
       background-position: 28px 62px;
     }
