@@ -336,6 +336,12 @@ $highlightColor: #e6f1ff;
           border-bottom: solid thin $borderColor;
           border-right: solid thin $borderColor;
         }
+        .date-item.weekend{
+          color: $color6;
+        }
+        .date-item.today{
+          color: $color1;
+        }
       }
     }
     .calendor-container{
@@ -347,6 +353,7 @@ $highlightColor: #e6f1ff;
       height: auto;
       overflow-x: auto;
       overflow-y: auto;
+      padding-bottom: 102px;
       .entryList{
         width: 3000px;
         height: auto;
@@ -533,6 +540,79 @@ $highlightColor: #e6f1ff;
       //.day-item:last-child{
       //  border-right: none;
       //}
+    }
+    .shopcart{
+      position: fixed;
+      height: 102px;
+      width: 100%;
+      bottom: -102px;
+      background:#fafafa;
+      box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+      .already{
+        opacity:0.5;
+        font-size:12px;
+        color:#7d7d7d;
+        text-align:left;
+        height: 17px;
+        margin-left: 16px;
+        margin-top: 8px;
+        line-height: 17px;
+      }
+      .roomList{
+        width: 77%;
+        height: 60px;
+        margin-left: 16px;
+        margin-top: 8px;
+        overflow: hidden;
+        .item{
+          height: 20px;
+          line-height: 20px;
+          float: left;
+          margin-left: 16px;
+        }
+      }
+      .sbtn{
+        border-radius:$BorderRadius;
+        width:100px;
+        height:28px;
+        position: absolute;
+        bottom: 9px;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        line-height: 28px;
+        cursor: pointer;
+      }
+      .sbtn.addition{
+        background: $color6;
+        right: 132px;
+      }
+      .sbtn.addition:hover{
+        background: $color6Hover;
+      }
+      .sbtn.addition:active{
+        background: $color6Click;
+      }
+      .sbtn.book{
+        background: $color1;
+        right: 132px;
+      }
+      .sbtn.book:hover{
+        background: $color1Hover;
+      }
+      .sbtn.book:active{
+        background: $color1Click;
+      }
+      .sbtn.buy{
+        background: $color5;
+        right: 16px;
+      }
+      .sbtn.buy:hover{
+        background: $color5Hover;
+      }
+      .sbtn.buy:active{
+        background: $color5Click;
+      }
     }
   }
 }

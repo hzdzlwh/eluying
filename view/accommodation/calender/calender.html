@@ -130,8 +130,10 @@
         </div>
         <div class="sheader">
             <div class="sheader-item" ng-repeat="d in datesArray">
-                <div class="date-item" date="{{d.dateStr}}">
-                    <div class="date">{{d.dateStr}}</div>
+                <div class="date-item"
+                     ng-class="{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
+                     date="{{d.dateStr}}">
+                    <div class="date">{{d.dateStr == today ? '今天' : d.dateStr}}</div>
                     <div class="desc">{{d.weekday}}</div>
                 </div>
                 <div class="left">剩{{d.left}}</div>
@@ -162,6 +164,64 @@
                     <img class="status" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/6F62DF58-FC40-4DF1-86F7-F7235C7B2123@1x.png" alt="">
                 </div>
             </div>
+        </div>
+        <div class="shopcart">
+            <div class="already">已选择<span>100</span>个房间</div>
+            <div class="roomList">
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+                <div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div><div class="item">房间1</div>
+                <div class="item">房间1222222</div>
+                <div class="item">房间12</div>
+            </div>
+            <div class="sbtn addition">补录</div>
+            <div class="sbtn book">预订</div>
+            <div class="sbtn buy">直接入住</div>
         </div>
     </div>
 </div>

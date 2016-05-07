@@ -113,10 +113,11 @@ $(function(){
 
     var app = angular.module('calenderApp', []);
     app.controller('calenderCtrl', ['$scope', function(scope) {
-        scope.startDate = new Date("2016-05-05");
+        scope.today = util.dateFormatWithoutYear(new Date());
+        scope.startDate = util.diffDate(new Date(), -2);
         scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
         scope.datesArray = [];
-        var tempDate = new Date("2016-05-05");
+        var tempDate = util.diffDate(new Date(), -2);
         for(var i = 0; i < 30; i++){
             scope.datesArray.push({
                 date: tempDate,
