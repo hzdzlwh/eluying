@@ -4,6 +4,17 @@ $subHeaderHeight: 32px;
 $gridHeight: 48px;
 $borderColor: #e6e6e6;
 $bgColor: #f8f9fc;
+$highlightColor: #e6f1ff;
+@mixin sbtn(){
+  border:1px solid $color1;
+  border-radius:$BorderRadius;
+  width:48px;
+  height:22px;
+  line-height: 22px;
+  color: $color1;
+  text-align: center;
+  font-size: 14px;
+}
 .accommodation-mainContainer{
   position: absolute;
   top: 68px;
@@ -16,19 +27,124 @@ $bgColor: #f8f9fc;
     height: 100%;
     @include subTitle2();
     .date-selector{
-      position: fixed;
-      top: 68px;
-      left: 0;
-      width: 140px;;
-      height: $headerHeight;
-      line-height: $headerHeight;
-      text-align: center;
-      border-bottom: solid thin $borderColor;
-      border-right: solid thin $borderColor;
-      z-index: 2;
-      background: $bgColor;
-      img{
-        margin-left: 8px;
+      .date-selector-switch{
+        position: fixed;
+        top: 68px;
+        left: 0;
+        width: 140px;;
+        height: $headerHeight;
+        line-height: $headerHeight;
+        text-align: center;
+        border-bottom: solid thin $borderColor;
+        border-right: solid thin $borderColor;
+        z-index: 2;
+        background: $bgColor;
+        cursor: pointer;
+        img{
+          margin-left: 8px;
+        }
+      }
+      .date-table{
+        display: none;
+        background:#fafafa;
+        box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius:$BorderRadius;
+        width:240px;
+        height:310px;
+        position: absolute;
+        top: $headerHeight;
+        left: 0;
+        z-index: 3;
+        .tips{
+          width: 100%;
+          opacity:0.5;
+          font-size:12px;
+          color:#7d7d7d;
+          text-align:center;
+          margin-top: 8px;
+        }
+        .month-selector{
+          text-align: center;
+          height: 20px;
+          line-height: 20px;
+          margin-top: 8px;
+          font-size:14px;
+          color:$color1;
+          img{
+            position: relative;
+            top: -2px;
+          }
+          .previous{
+            vertical-align: middle;
+            margin-right: 16px;
+          }
+          .next{
+            vertical-align: middle;
+            margin-left: 16px;
+            -webkit-transform: rotate(-180deg);
+            -moz-transform: rotate(-180deg);
+            -o-transform: rotate(-180deg);
+          }
+        }
+        .week-header{
+          width: 100%;
+          padding: 0 14px;
+          height: 20px;
+          margin-top: 14px;
+          margin-bottom: 7px;
+          .item{
+            float: left;
+            width: 14px;
+            height: 20px;
+            margin: 0 8px;
+            font-size:14px;
+            color:#666666;
+            text-align:center;
+          }
+        }
+        .date-row{
+          width: 100%;
+          padding: 0 14px;
+          height: 36px;
+          .item{
+            float: left;
+            width: 14px;
+            height: 36px;
+            line-height: 36px;
+            margin: 0 8px;
+            font-size:14px;
+            color:#666666;
+            text-align:center;
+            position: relative;
+            .dot{
+              background:#ff9326;
+              width:6px;
+              height:6px;
+              border-radius:100%;
+              position: absolute;
+              left: 50%;
+              margin-left: -3px;
+              bottom: 0;
+              display: none;
+            }
+          }
+          .item.invalid{
+            color:#cccccc;
+          }
+          .item.today{
+            color: $color1;
+          }
+          .item.selected{
+            .dot{
+              display: block;
+            }
+          }
+        }
+      }
+    }
+    .date-selector.open{
+      .date-table{
+        display: block;
       }
     }
     .category-filter{
@@ -43,8 +159,85 @@ $bgColor: #f8f9fc;
       border-bottom: solid thin $borderColor;
       z-index: 2;
       background: $bgColor;
+      .category-filter-switch{
+        cursor: pointer;
+      }
       img{
         margin-left: 8px;
+      }
+      .category-filter-menu{
+        display: none;
+        position: absolute;
+        top: $subHeaderHeight;
+        left: 0;
+        background:#fafafa;
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+        border-radius:2px;
+        width:139px;
+        @include contentNormal();
+        font-size: 14px;
+        line-height: $subHeaderHeight;
+        text-align: left;
+        .options{
+          .item{
+            width: 100%;
+            height: 24px;
+            line-height: 24px;
+            cursor: pointer;
+            position: relative;
+            padding-left: 24px;
+            .notCheck{
+              width: 12px;
+              height: 12px;
+              border-radius: 100%;
+              border: solid thin #666666;
+              position: absolute;
+              left: 8px;
+              top: 6px;
+            }
+            .yesCheck{
+              width: 12px;
+              height: 12px;
+              border-radius: 100%;
+              position: absolute;
+              display: none;
+              left: 8px;
+              top: 6px;
+              background-image: url("http://7xsrk6.com2.z0.glb.qiniucdn.com/73FA4C7F-F668-4B66-84CD-F3402290A694@1x.png");
+            }
+          }
+          .item.selected{
+            .notCheck{
+              display: none;
+            }
+            .yesCheck{
+              display: block;
+            }
+          }
+          .item:hover{
+            background: #ededed;
+          }
+        }
+        hr{
+          width: 98%;
+          margin: auto;
+        }
+        .sbtn{
+          @include sbtn();
+          margin-top: 4px;
+          margin-bottom: 4px;
+          margin-left: 82px;
+        }
+      }
+    }
+    .category-filter.open{
+      img{
+        -webkit-transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+      }
+      .category-filter-menu{
+        display: block;
       }
     }
     .leftHeader{
@@ -91,6 +284,9 @@ $bgColor: #f8f9fc;
             border-bottom: solid thin $borderColor;
             height: $gridHeight;
           }
+          .room-item.selected{
+            background: $highlightColor;
+          }
           .room-item:last-child{
             width: 100%;
             //border-bottom: none;
@@ -128,6 +324,9 @@ $bgColor: #f8f9fc;
             line-height: 23px;
           }
         }
+        .date-item.selected{
+          background: $highlightColor;
+        }
         .left{
           width: 100%;
           height: $subHeaderHeight;
@@ -151,6 +350,44 @@ $bgColor: #f8f9fc;
       .entryList{
         width: 3000px;
         height: auto;
+        .glyph{
+          position: absolute;
+          height: $gridHeight - 4px;
+          color: white;
+          .username{
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            padding-left: 14px;
+            margin-top: 2px;
+          }
+          .where{
+            width: 100%;
+            height: 17px;
+            margin-top: 4px;
+            line-height: 17px;
+            padding-left: 14px;
+            font-size: 12px;
+          }
+          .status{
+            position: absolute;
+            bottom: 4px;
+            left: 63px;
+            margin-left: 20px;
+          }
+        }
+        .glyph.book{
+          background: #82beff;
+          border-left: solid 6px $color1;
+        }
+        .glyph.finish{
+          background: #bfbfbf;
+          border-left: solid 6px #8c8c8c;
+        }
+        .glyph.ing{
+          background: #ffba75;
+          border-left: solid 6px #f27c05;
+        }
         .srow{
           width: 100%;
           height: $gridHeight;
@@ -161,6 +398,116 @@ $bgColor: #f8f9fc;
             float: left;
             border-right: solid thin $borderColor;
             border-bottom: solid thin $borderColor;
+            position: relative;
+            .inner{
+              width: 96px;
+              height: $gridHeight - 4px;
+              margin: auto;
+              margin-top: 2px;
+              font-size: 12px;
+              position: relative;
+              line-height: $gridHeight - 4px;
+              text-align: center;
+              .closeTips{
+                background:#bfbfbf;
+                width:95px;
+                height:43px;
+                color: white;
+                line-height: 43px;
+                text-align: left;
+                padding-left: 14px;
+                font-size: 14px;
+                display: none;
+                position: relative;
+                z-index: 2;
+              }
+              .entryOp{
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                background:#fafafa;
+                box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+                width:88px;
+                height:32px;
+                text-align: center;
+                line-height: 32px;
+                font-size: 14px;
+                cursor: pointer;
+                z-index: 1;
+                display: none;
+              }
+              .entryOp:hover{
+                background: #f1f1f1;
+              }
+              img{
+                display: none;
+              }
+              .date{
+                width: 45px;
+                height: 17px;
+                position: absolute;
+                left: 3px;
+                top: 5px;
+                line-height: 17px;
+                visibility: hidden;
+                text-align: left;
+              }
+              .price{
+                width: 49px;
+                height: 17px;
+                position: absolute;
+                right: 3px;
+                top: 5px;
+                line-height: 17px;
+                visibility: hidden;
+                text-align: right;
+              }
+              .name{
+                width: 92px;
+                height: 17px;
+                position: absolute;
+                left: 1px;
+                bottom: 5px;
+                line-height: 17px;
+                text-overflow: ellipsis;
+                visibility: hidden;
+                text-align: center;
+              }
+            }
+          }
+          .entryItem.selected{
+            .inner{
+              background: $highlightColor;
+              border: solid thin $color1;
+              img{
+                display: inline;
+              }
+            }
+          }
+          .entryItem{
+            .inner:hover{
+              border: solid thin $color1;
+              img{
+                display: none;
+              }
+              .date, .price, .name{
+                visibility: visible;
+              }
+            }
+          }
+          .entryItem.closed{
+            .closeTips{
+              display: block;
+            }
+            .inner:hover{
+              border: none;
+              img{
+                display: none;
+              }
+              .date, .price, .name{
+                visibility: hidden;
+              }
+            }
           }
         }
       }

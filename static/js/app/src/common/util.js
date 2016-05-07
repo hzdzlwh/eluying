@@ -52,6 +52,11 @@ var util = {
         return y + '-' + m + '-' + d;
     },
 
+    tomorrow: function(date){
+        var d = date.getDate();
+        return new Date(date.setDate(d + 1));
+    },
+
     prevWeek: function(){
         var currentDate = $("#datePicker").datepicker( "getDate" );
         $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
@@ -91,6 +96,10 @@ var util = {
 
     diffDate: function(date, diff){
         return new Date(date.valueOf() + diff*24*60*60*1000);
+    },
+
+    DateDiff: function(date1, date2){
+        return Math.ceil((date2.valueOf() - date1.valueOf())/24/60/60/1000);
     },
 
     compareDates: function(date1, date2){
