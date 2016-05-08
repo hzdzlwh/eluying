@@ -5,15 +5,81 @@ $gridHeight: 48px;
 $borderColor: #e6e6e6;
 $bgColor: #f8f9fc;
 $highlightColor: #e6f1ff;
+@mixin modalHeader(){
+  background:$color1;
+  width:100%;
+  height:4px;
+}
 @mixin sbtn(){
   border:1px solid $color1;
   border-radius:$BorderRadius;
   width:48px;
   height:22px;
-  line-height: 22px;
+  line-height: 20px;
   color: $color1;
   text-align: center;
   font-size: 14px;
+  cursor: pointer;
+}
+
+.msgModal{
+  .modal-dialog {
+    width: 272px;
+  }
+  .modal-content {
+    background:#fafafa;
+    border-radius:$BorderRadius;
+    width:272px;
+    height:146px;
+    padding: 0;
+    overflow-x: hidden;
+    .hr{
+      @include modalHeader();
+    }
+    .stitle{
+      font-size:14px;
+      color:$color1;
+      text-align:center;
+      width: 100%;
+      height: 20px;
+      line-height: 20px;
+      margin-top: 10px;
+    }
+    .stext{
+      font-size:14px;
+      color:#666666;
+      text-align:left;
+      width: 224px;
+      line-height: 20px;
+      margin: auto;
+      margin-top: 8px;
+      margin-bottom: 32px;
+    }
+    .btns{
+      width: 100%;
+      text-align: right;
+      font-size: 14px;
+      .sbtn{
+        @include sbtn();
+        width: 48px;
+        display: inline-block;
+      }
+      .confirm{
+        background: $color1;
+        color: white;
+        margin-right: 24px;
+      }
+      .confirm:hover{
+        background: $color1Hover;
+      }
+      .confirm:active{
+        background: $color1Click;
+      }
+      .cancel{
+        margin-right: 10px;
+      }
+    }
+  }
 }
 .accommodation-mainContainer{
   position: absolute;
@@ -361,6 +427,9 @@ $highlightColor: #e6f1ff;
           position: absolute;
           height: $gridHeight - 4px;
           color: white;
+          .infos{
+            position: absolute;
+          }
           .username{
             width: 100%;
             height: 20px;
@@ -545,7 +614,7 @@ $highlightColor: #e6f1ff;
       position: fixed;
       height: 102px;
       width: 100%;
-      bottom: -102px;
+      bottom: -0px;
       background:#fafafa;
       box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
       .already{

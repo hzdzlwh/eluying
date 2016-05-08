@@ -13,7 +13,58 @@
     <script src="/static/js/app/dist/accommodation/calender.js"></script>
 </head>
 <body ng-controller="calenderCtrl">
-<!--页面主体 -->
+<div class="msgModal modal fade" role="dialog" id="directModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">直接入住</div>
+            <div class="stext">选择直接入住，系统将自动清除今天以前的房态格子。</div>
+            <div class="btns">
+                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm">清除</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="msgModal modal fade" role="dialog" id="additionalModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">补录</div>
+            <div class="stext">选择补录，系统将自动清除今天及以后的房态格子。</div>
+            <div class="btns">
+                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm">清除</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="msgModal modal fade" role="dialog" id="bookModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">预定</div>
+            <div class="stext">选择预定，系统将自动清除今天以前的房态格子。</div>
+            <div class="btns">
+                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm">清除</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="msgModal modal fade" role="dialog" id="shortModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">库存不足</div>
+            <div class="stext">部分房间库存不足，系统将自动清除不可选的房间。</div>
+            <div class="btns">
+                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm">清除</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="accommodation-mainContainer">
     <div class="content">
         <div class="date-selector">
@@ -162,6 +213,9 @@
                     <div class="username">小树</div>
                     <div class="where">携程</div>
                     <img class="status" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/6F62DF58-FC40-4DF1-86F7-F7235C7B2123@1x.png" alt="">
+                    <div class="infos">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -220,8 +274,8 @@
                 <div class="item">房间12</div>
             </div>
             <div class="sbtn addition">补录</div>
-            <div class="sbtn book">预订</div>
-            <div class="sbtn buy">直接入住</div>
+            <div class="sbtn book" data-toggle="modal" data-target="#bookModal">预订</div>
+            <div class="sbtn buy" data-toggle="modal" data-target="#directModal">直接入住</div>
         </div>
     </div>
 </div>
