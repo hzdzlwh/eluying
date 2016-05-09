@@ -189,6 +189,57 @@ $(function(){
             };
             scope.glyphs.push(glyph);
         }
+
+        //维护日历
+        var selectedMonth = null;
+        var calenderDays = [];
+        var firstDay = new Date();
+        firstDay.setDate(1);
+        if(selectedMonth && firstDay_Month !== selectedMonth){
+            firstDay.setMonth(selectedMonth);
+        }
+        var firstDay_Month = firstDay.getMonth();
+        var firstDay_weekday = firstDay.getDay();
+        if(firstDay_weekday === 0){
+            for(var i = 6; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        }
+        else{
+            for(var i = firstDay_weekday-1; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        }
+        calenderDays.push(firstDay);
+        var temp = util.diffDate(firstDay, 1);
+        while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
+            calenderDays.push(temp);
+            temp = util.diffDate(temp, 1);
+        }
+        var iter = [];
+        var days = [];
+        for(var i = 0; i < calenderDays.length; i++){
+            var sclass = '';
+            var today = new Date();
+            if(calenderDays[i] < today){
+                sclass = 'invalid';
+            }else if(calenderDays[i] == today){
+                sclass = 'today';
+            }
+            if(util.isSameDay(calenderDays[i], scope.startDate)){
+                sclass += ' selected';
+            }
+            iter.push({
+                date: calenderDays[i],
+                sclass: sclass
+            });
+            if(i % 7 === 6){
+                days.push(iter);
+                iter = [];
+            }
+        }
+        console.log(days);
+        scope.calenderDays = days;
     }]);
 
 });
