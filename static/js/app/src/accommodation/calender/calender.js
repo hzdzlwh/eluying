@@ -106,6 +106,22 @@ $(function(){
             }else{
                 $(".date-selector").removeClass("open");
             }
+        },
+        "mouseover body .glyph": function(ev){
+            var clientY = ev.clientY;
+            var infos = $(this).find(".infos");
+            var height = infos.height();
+            if(height + 180 > clientY){
+                infos.removeClass("up");
+                infos.addClass("down");
+            }else{
+                infos.removeClass("down");
+                infos.addClass("up");
+            }
+            infos.show();
+        },
+        "mouseleave body .glyph": function(ev){
+            $(this).find(".infos").hide();
         }
     };
 
@@ -157,8 +173,8 @@ $(function(){
         var gridWidth = 100;
         var gridHeight = 48;
         for(var i = 0; i < 1; i++){
-            var date_min = new Date("2016-05-05");
-            var date_max = new Date("2016-05-08");
+            var date_min = new Date("2016-05-09");
+            var date_max = new Date("2016-05-13");
             var diff = util.DateDiff(date_min, date_max);
             var startDiff = util.DateDiff(scope.startDate, date_min);
             var room = 0;

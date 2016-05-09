@@ -8,6 +8,9 @@ require("angular");
 require("bootstrap");
 require("validation");
 
+var checkedUrl = 'http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png';
+var uncheckedUrl = 'http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png';
+
 $(function(){
     //检测IE
     util.checkExplorer();
@@ -45,6 +48,19 @@ $(function(){
             if(checkAlipayForm()){
                 $("#comfirmSubmit").modal("show");
             }
+        },
+        "click body .scheckbox": function(){
+            var id = $(this).parents("tr").attr("class");
+            if(id === 'alichat'){
+
+            }else if(id === 'wallet'){
+
+            }else if(id === 'nothing'){
+
+            }
+            $(".scheckbox").attr("src", uncheckedUrl);
+            $(this).attr("src", checkedUrl);
+
         }
     };
 

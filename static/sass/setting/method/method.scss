@@ -92,6 +92,17 @@
               text-align: left;
             }
           }
+          .alichat{
+            .schange{
+              cursor: pointer;
+            }
+            .schange:hover{
+              color: $color1Hover;
+            }
+            .schange:active{
+              color: $color1Click;
+            }
+          }
         }
       }
     }
@@ -114,6 +125,7 @@
       position: absolute;
       top: 0;
       right: 0;
+      cursor: pointer;
     }
     .sbox{
       margin-top: 20px;
@@ -155,6 +167,9 @@
               width: 92px;
               padding-left: 17px;
               text-align: left;
+            }
+            td.delete{
+              cursor: pointer;
             }
           }
         }

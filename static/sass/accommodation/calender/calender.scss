@@ -427,8 +427,162 @@ $highlightColor: #e6f1ff;
           position: absolute;
           height: $gridHeight - 4px;
           color: white;
+          .infos.down{
+            left: 0;
+            top: $gridHeight + 10px;
+            .arrow-up{
+              display: block;
+            }
+            .arrow-down{
+              display: none;
+            }
+          }
+          .infos.up{
+            left: 0;
+            bottom: $gridHeight + 10px;
+            .arrow-up{
+              display: none;
+            }
+            .arrow-down{
+              display: block;
+            }
+          }
           .infos{
+            display:none;
             position: absolute;
+            background-color:#fafafa;
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+            width:280px;
+            height:auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-size: 14px;
+            .arrow-up, .arrow-down{
+              position: absolute;
+              left: 20px;
+              width: 0px;
+              height: 0px;
+              border-left: 10px solid transparent;
+              border-right: 10px solid transparent;
+              border-bottom: 10px solid #fafafa;
+              /*以下属性可以是IE5兼容*/
+              font-size: 0px;
+              line-height: 0px;
+            }
+            .arrow-up{
+              top: -10px;
+            }
+            .arrow-down{
+              bottom: -10px;
+              border-bottom: none;
+              border-top: 10px solid #fafafa;
+            }
+            .susername{
+              color:#666666;
+              text-align:left;
+              height: 20px;
+              line-height: 20px;
+              float: left;
+              margin-left: 8px;
+            }
+            .sstatus{
+              color:#666666;
+              text-align:right;
+              height: 20px;
+              line-height: 20px;
+              float: right;
+              position: relative;
+              margin-right: 8px;
+              .dot{
+                width:6px;
+                height:6px;
+                border-radius:100%;
+                position: absolute;
+                left: -10px;
+                top: 7px;
+              }
+              .dot.book{
+                background: $color1;
+              }
+              .dot.ing{
+                background: $color5;
+              }
+            }
+            .booktime{
+              clear: both;
+              color: #b3b3b3;
+              margin-top: 24px;
+              padding-left: 8px;
+              padding-right: 8px;
+              height: 20px;
+              .start span, .end span{
+                color: #666666;
+                margin-right: 4px;
+              }
+              .start{
+                margin-right: 16px;
+              }
+              .end{
+                margin-right: 24px;
+              }
+              .start, .end, .stotal{
+                float: left;
+              }
+              .from{
+                float: right;
+              }
+            }
+            .bhr{
+              background:#ededed;
+              width:264px;
+              height:1px;
+              margin: auto;
+              margin-top: 4px;
+              margin-bottom: 4px;
+            }
+            .bprice{
+              height: 20px;
+              .stotal{
+                float: left;
+              }
+              .stotal, .sleft, .sgive{
+                height: 20px;
+                line-height: 20px;
+                color: #b3b3b3;
+                font-size:14px;
+                text-align:left;
+                padding: 0 8px;
+                .slabel{
+                  width: 70px;
+                }
+                .num{
+                  width: 44px;
+                  color: #666666;
+                }
+              }
+              .sleft .num{
+                color: $color1;
+              }
+              .sgive .num{
+                color: $color6;
+              }
+              .sleft, .sgive{
+                float: right;
+              }
+              .sgive{
+                display: none;
+              }
+            }
+            .remarks{
+              clear: both;
+              margin-top: 4px;
+              padding: 0 8px;
+              width: 100%;
+              color: #666666;
+              span{
+                color: #b3b3b3;
+              }
+            }
           }
           .username{
             width: 100%;
@@ -611,6 +765,7 @@ $highlightColor: #e6f1ff;
       //}
     }
     .shopcart{
+      min-width: 1200px;
       position: fixed;
       height: 102px;
       width: 100%;

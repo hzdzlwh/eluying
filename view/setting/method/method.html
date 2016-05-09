@@ -220,20 +220,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
-                                         alt="unchecked">企业支付宝+企业微信支付</td>
+                            <tr class="alichat">
+                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
+                                         alt="unchecked">
+                                    <!--企业支付宝+企业微信支付</td>-->
+                                    企业支付宝</td>
                                 <td><div class="dot"></div>已开通</td>
-                                <td>更换账号</td>
+                                <td class="schange" data-toggle="modal"
+                                    data-target="#alipayMethod">更换账号</td>
                             </tr>
-                            <tr>
-                                <td><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png"
+                            <tr class="wallet">
+                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png"
                                          alt="checked">订单钱包</td>
                                 <td><div class="dot invalid"></div>未开通</td>
                                 <td><div class="hr3"></div></td>
                             </tr>
-                            <tr>
-                                <td><img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
+                            <tr class="nothing">
+                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
                                          alt="unchecked">不使用线上收款（直销网站不能上线）</td>
                             </tr>
                         </tbody>
@@ -242,7 +245,7 @@
             </div>
             <div class="othermethod">
                 <div class="stitle">其他自定义收款方式</div>
-                <div class="sbtn">新增收款方式</div>
+                <div class="sbtn" data-toggle="modal" data-target="#newMethod">新增收款方式</div>
                 <div class="sbox">
                     <div class="hr"></div>
                     <table>
@@ -259,20 +262,11 @@
                                 <td><div class="dot"></div>已开通</td>
                                 <td><div class="hr3"></div></td>
                             </tr>
-                            <tr>
-                                <td>中国银行卡</td>
-                                <td><div class="dot invalid"></div>已开通</td>
-                                <td>删除</td>
-                            </tr>
-                            <tr>
-                                <td>中心银卡</td>
-                                <td><div class="dot invalid"></div>已开通</td>
-                                <td>删除</td>
-                            </tr>
-                            <tr>
-                                <td>农业银行</td>
-                                <td><div class="dot invalid"></div>已开通</td>
-                                <td>删除</td>
+                            <tr ng-repeat="pay in payChannelCustomList">
+                                <td>{{pay.name}}</td>
+                                <td><div class="dot"></div>已开通</td>
+                                <td class="delete" method="{{pay.channelId}}" class="btn-delete" data-toggle="modal"
+                                    data-target="#deleteMethod" ng-click="setMethodToDelete(pay.channelId)">删除</td>
                             </tr>
                         </tbody>
                     </table>
