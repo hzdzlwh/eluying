@@ -63,6 +63,13 @@ $(function(){
         scope.methodToDelete = null;
         scope.errorTips = '';
         scope.onlinePay = {};
+        scope.chooseMethod = function(method){
+            AJAXService.ajaxWithToken('GET', 'selectPayWapUrl', {
+                type: method
+            }, function(result){
+                console.log(result);
+            });
+        };
         scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){

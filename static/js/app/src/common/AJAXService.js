@@ -66,6 +66,7 @@ var AJAXService = {
         editBasicInfoUrl: '/directNet/editBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
         getOperationInfoUrl: '/directNet/getOperationInfo',
+        selectPayWapUrl: '/directNet/selectPayWap',
         getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
         bindAlipayAccountUrl: '/collectionMethod/bindAlipayAccount',
         newDeleteCollectionMethodUrl: '/collectionMethod/newDeleteCollectionMethod',
