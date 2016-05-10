@@ -48,19 +48,6 @@ $(function(){
             if(checkAlipayForm()){
                 $("#comfirmSubmit").modal("show");
             }
-        },
-        "click body .scheckbox": function(){
-            var id = $(this).parents("tr").attr("class");
-            if(id === 'alichat'){
-
-            }else if(id === 'wallet'){
-
-            }else if(id === 'nothing'){
-
-            }
-            $(".scheckbox").attr("src", uncheckedUrl);
-            $(this).attr("src", checkedUrl);
-
         }
     };
 
@@ -75,6 +62,7 @@ $(function(){
         scope.publicKey = '';
         scope.methodToDelete = null;
         scope.errorTips = '';
+        scope.onlinePay = {};
         scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){
@@ -107,8 +95,7 @@ $(function(){
                 $("#newMethod").modal("hide");
                 newMethod.value = '';
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    scope.cash = result.data.map.cash;
-                    scope.alipay = result.data.map.alipay;
+                    scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();
                 });
@@ -125,8 +112,7 @@ $(function(){
                 scope.methodToDelete = null;
                 modal.somethingAlert(result.msg);
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    scope.cash = result.data.map.cash;
-                    scope.alipay = result.data.map.alipay;
+                    scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();
                 });
@@ -146,8 +132,7 @@ $(function(){
                         $("#comfirmSubmit").modal("hide");
                         $("#alipayMethod").modal("hide");
                         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                            scope.cash = result.data.map.cash;
-                            scope.alipay = result.data.map.alipay;
+                            scope.onlinePay = result.data.map;
                             scope.payChannelCustomList = result.data.payChannelCustomList;
                             scope.$apply();
                         });
@@ -156,8 +141,8 @@ $(function(){
             }
         };
         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-            scope.cash = result.data.map.cash;
-            scope.alipay = result.data.map.alipay;
+            console.log(result.data.map);
+            scope.onlinePay = result.data.map;
             scope.payChannelCustomList = result.data.payChannelCustomList;
             scope.$apply();
         });

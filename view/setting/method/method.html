@@ -221,23 +221,25 @@
                         </thead>
                         <tbody>
                             <tr class="alichat">
-                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
-                                         alt="unchecked">
+                                <td><img ng-if="onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
+                                    <img ng-if="onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                     <!--企业支付宝+企业微信支付</td>-->
                                     企业支付宝</td>
-                                <td><div class="dot"></div>已开通</td>
+                                <td><div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{onlinePay.alipayCash === 0 ? '未开通' : '已开通'}}</td>
                                 <td class="schange" data-toggle="modal"
                                     data-target="#alipayMethod">更换账号</td>
                             </tr>
                             <tr class="wallet">
-                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png"
-                                         alt="checked">订单钱包</td>
-                                <td><div class="dot invalid"></div>未开通</td>
+                                <td>
+                                    <img ng-if="onlinePay.walletPaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
+                                    <img ng-if="onlinePay.walletPaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">订单钱包</td>
+                                <td><div class="dot" ng-class="{'invalid': onlinePay.walletPayCash === 0 }"></div>{{onlinePay.walletPayCash === 0 ? '未开通' : '已开通'}}</td>
                                 <td><div class="hr3"></div></td>
                             </tr>
                             <tr class="nothing">
-                                <td><img class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png"
-                                         alt="unchecked">不使用线上收款（直销网站不能上线）</td>
+                                <td><img ng-if="onlinePay.walletPaySelected == 1 || onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
+                                    <img ng-if="onlinePay.walletPaySelected == 0 && onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
+                                    不使用线上收款（直销网站不能上线）</td>
                             </tr>
                         </tbody>
                     </table>
