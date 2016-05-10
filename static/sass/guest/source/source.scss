@@ -1,0 +1,100 @@
+@import "../../variable";
+@mixin modalHeader(){
+  background:$color1;
+  width:100%;
+  height:4px;
+}
+
+.guest-container{
+  margin-top: -20px;
+  .stitle{
+    width: 418px;
+    height: 22px;
+    margin-bottom: 21px;
+    line-height: 22px;
+    .stext{
+      float: left;
+      font-size:16px;
+      color:#666666;
+      text-align:left;
+    }
+    .snew{
+      font-size:14px;
+      color:$color1;
+      text-align:right;
+      cursor: pointer;
+      img{
+        position: relative;
+        top: -1px;
+      }
+    }
+    .snew:hover{
+      color: $color1Hover;
+    }
+    .snew:active{
+      color: $color1Click;
+    }
+  }
+  .sbox{
+    clear: both;
+    background:#fafafa;
+    box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+    border-radius:$BorderRadius;
+    overflow: hidden;
+    width:418px;
+    height: auto;
+    padding-bottom: 6px;
+    .clearfloat{
+      clear: both;
+    }
+    .hr{
+      @include modalHeader();
+    }
+    .sheader{
+      margin-top: 10px;
+      margin-bottom: 11px;
+    }
+    .srow{
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .srow.fit{
+      margin-top: 8px;
+      margin-bottom: 11px;
+    }
+    .sheader, .srow{
+      clear: both;
+      height: 20px;
+      width: 100%;
+      line-height: 20px;
+    }
+    .hr1{
+      width: 100%;
+      height: 1px;
+      border-bottom: 1px solid #ededed;
+    }
+    .hr2{
+      width: 28px;
+      height: 1px;
+      border-bottom: 1px solid #b3b3b3;
+      position: relative;
+      top: 10px;
+    }
+    .col1{
+      float: left;
+      margin-left: 24px;
+    }
+    .col2{
+      float: right;
+      margin-right: 24px;
+      color: $color1;
+      cursor: pointer;
+    }
+    .col2:hover{
+      color: $color1Hover;
+    }
+    .col2:active{
+      color: $color1Click;
+    }
+  }
+}

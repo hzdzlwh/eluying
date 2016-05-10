@@ -221,15 +221,18 @@ $(function(){
         for(var i = 0; i < calenderDays.length; i++){
             var sclass = '';
             var today = new Date();
-            if(calenderDays[i] < today){
-                sclass = 'invalid';
-            }else if(calenderDays[i] == today){
+            var text = null;
+            if(util.isSameDay(calenderDays[i], today)){
                 sclass = 'today';
+                text = '今';
+            }else if(calenderDays[i] < today){
+                sclass = 'invalid';
             }
             if(util.isSameDay(calenderDays[i], scope.startDate)){
                 sclass += ' selected';
             }
             iter.push({
+                text: text,
                 date: calenderDays[i],
                 sclass: sclass
             });

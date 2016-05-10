@@ -76,7 +76,7 @@
       position: relative;
       input{
         display: block;
-        width: 226px;
+        width: 256px;
         //visibility: hidden;
         height: 24px;
         background:#ffffff;
@@ -94,7 +94,7 @@
         background:#fafafa;
         box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
         border-radius:2px;
-        width:226px;
+        width:256px;
         height:auto;
         position: absolute;
         right: -5px;
@@ -106,6 +106,7 @@
           .sbtn{
             @include sbtn();
             margin-left: 24px;
+            cursor: pointer;
           }
           .next{
             img{
@@ -131,28 +132,35 @@
           background: #ededed;
           margin: auto;
         }
+        .item:hover{
+          background: #ededed;
+        }
         .item{
           width: 100%;
           height: 69px;
           padding-top: 3px;
           padding-bottom: 3px;
           position: relative;
+          cursor: pointer;
           .srow{
             height: 20px;
             width: 100%;
             position: relative;
-            .result, .desc{
+            .slabel, .desc{
               height: 100%;
               line-height: 20px;
             }
-            .result{
+            .slabel{
+              width: 56px;
+              text-align: left;
               padding-left: 8px;
-              color: #666666;
+              color: #b3b3b3;
             }
             .desc{
-              color: #b3b3b3;
+              width: 135px;
+              color: #666666;
               position: absolute;
-              left: 46px;
+              left: 64px;
               top: 0;
             }
           }
@@ -160,21 +168,40 @@
             position: absolute;
             top: 4px;
             right: 8px;
-            font-size:14px;
-            color:#666666;
-            text-align:right;
-            width: 50px;
-            height: 20px;
-            line-height: 20px;
-            .dot{
-              display: inline-block;
-              background:$color1;
-              width:6px;
-              height:6px;
-              border-radius:100%;
-              position: relative;
-              top: -2px;
-              left: -4px;
+            font-size:12px;
+            color: white;
+            text-align:center;
+            width: 44px;
+            height: 22px;
+            line-height: 22px;
+            .triangle{
+              position: absolute;
+              top: 0;
+              left: -11px;
+            }
+          }
+          .status.book{
+            background: #82beff;
+            .triangle{
+              border-top: solid transparent 11px;
+              border-bottom: solid transparent 11px;
+              border-right: solid #82beff 11px;
+            }
+          }
+          .status.ing{
+            background: #ffba75;
+            .triangle{
+              border-top: solid transparent 11px;
+              border-bottom: solid transparent 11px;
+              border-right: solid #ffba75 11px;
+            }
+          }
+          .status.finish{
+            background: #bfbfbf;
+            .triangle{
+              border-top: solid transparent 11px;
+              border-bottom: solid transparent 11px;
+              border-right: solid #bfbfbf 11px;
             }
           }
         }
@@ -465,16 +492,17 @@
             width: 100%;
             margin-bottom: 4px;
             a {
-                font-family: PingFangSC-Regular;
-                font-size: 14px;
-                color: #999999;
-                text-decoration: none;
-                display: inline-block;
-                width: 100%;
-                text-align: center;
+              font-family: PingFangSC-Regular;
+              font-size: 14px;
+              color: #999999;
+              text-decoration: none;
+              display: inline-block;
+              width: 100%;
+              text-align: center;
             }
             a.active{
               color: $color1;
+              border-right: #178CE6 solid medium;
             }
             a:hover{
               color: $color1;
