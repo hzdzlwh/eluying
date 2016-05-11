@@ -90,64 +90,10 @@
                 </div>
                 <div class="date-row" ng-repeat="row in calenderDays">
                     <div class="item {{day.sclass}}" ng-repeat="day in row">
-                        {{day.date.getDate()}}
-                        <div class="dot"></div>
+                        {{day.text || day.date.getDate()}}
+                        <!--<div class="dot"></div>-->
                     </div>
                 </div>
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1</div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1</div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1</div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1<div class="dot"></div></div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1</div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
-                <!--<div class="date-row">-->
-                    <!--<div class="item invalid">27</div>-->
-                    <!--<div class="item invalid">28</div>-->
-                    <!--<div class="item invalid">29 <div class="dot"></div></div>-->
-                    <!--<div class="item invalid">30</div>-->
-                    <!--<div class="item today">31</div>-->
-                    <!--<div class="item selected">1</div>-->
-                    <!--<div class="item">2</div>-->
-                <!--</div>-->
             </div>
         </div>
         <div class="category-filter">
