@@ -72,7 +72,7 @@
                     <div class="col2"><div class="hr2"></div></div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="hr1"></div>
+                <div class="hr1" ng-if="guestList.length > 0"></div>
 
                 <div class="srow" ng-repeat="guest in guestList">
                     <div class="col1">{{guest.name}}</div>

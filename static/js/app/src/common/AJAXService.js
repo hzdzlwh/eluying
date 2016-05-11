@@ -73,6 +73,8 @@ var AJAXService = {
         getChannelsUrl: '/user/getChannels',
         removeChannelUrl: '/user/removeChannel',
         addChannelUrl: '/user/addChannel',
+        getRoomsAndStausUrl: '/room/getRoomsAndStaus',
+        getRoomCategoriesUrl: '/room/getRoomCategories',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

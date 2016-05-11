@@ -1,6 +1,7 @@
 /**
  * Created by huwanqi on 16/5/1.
  */
+var AJAXService = require("AJAXService");
 var header = require("header");
 var leftMenu = require("leftMenu");
 var topMenu = require("../../common/topMenu");
@@ -143,31 +144,7 @@ $(function(){
             });
             tempDate = util.tomorrow(tempDate);
         }
-        scope.category = [];
-        scope.rooms = [];
-        var tempId = 0;
-        for(var i = 0; i < 5; i++){
-            var rooms = [];
-            for(var j = 0; j < 3; j++){
-                var days = [];
-                for(var k = 0; k < 30; k++){
-                    days.push({
-                        date: scope.datesArray[k].dateStr
-                    });
-                }
-                var room = {
-                    id: tempId++,
-                    num: '0101',
-                    list: days
-                };
-                rooms.push(room);
-                scope.rooms.push(room);
-            }
-            scope.category.push({
-                name: '超屌海景房',
-                rooms: rooms
-            });
-        }
+
         //type:1退房, 2入住, 3预订
         scope.glyphs = [];
         var gridWidth = 100;
@@ -241,8 +218,67 @@ $(function(){
                 iter = [];
             }
         }
-        console.log(days);
         scope.calenderDays = days;
+        AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){
+            var pRooms = result.data.list;
+            AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
+                date: util.dateFormat(scope.startDate),
+                days: 30,
+                sub: true
+            }, function(result2){
+                var holiday = result2.data.holidays;
+                var cRooms = result2.data.rs;
+                var cRoomStore = {};
+                var roomStore = [];
+                var pRoomList = {};
+                var cRoomList = {};
+                for(var i = 0; i < cRooms.length; i++){
+                    var cRoom = cRooms[i];
+                    if(!cRoomList[cRoom.ti]){
+                        cRoomList[cRoom.ti] = {};
+                    }
+                    cRoomList[cRoom.ti][cRoom.i] = {
+                        id: cRoom.i,
+                        sn: cRoom.sn,
+                        st: cRoom.st
+                    };
+                }
+                for(var i = 0; i < pRooms.length; i++){
+                    var pRoom = pRooms[i];
+                    if(!pRoomList[pRoom.pId]){
+                        pRoomList[pRoom.pId] = {
+                            id: pRoom.pId,
+                            name: pRoom.pName
+                        };
+                    }
+                    if(!cRoomStore[pRoom.cId]){
+                        cRoomStore[pRoom.cId] = {
+                            id: pRoom.cId,
+                            name: pRoom.cName,
+                            pId: pRoom.pId,
+                            rooms: cRoomList[pRoom.cId]
+                        };
+                    }
+                }
+                for(var c in cRoomStore){
+                    for(var r in cRoomStore[c].rooms){
+                        for(var k = 0; k < cRoom.st.length; k++){
+                            cRoomStore[c].rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
+                        }
+                        var temp = {
+                            id: r,
+                            sn: cRoomStore[c].rooms[r].sn,
+                            st: cRoomStore[c].rooms[r].st
+                        };
+                        roomStore.push(temp);
+                    }
+                }
+                scope.pRoomList = pRoomList;
+                scope.cRoomStore = cRoomStore;
+                scope.roomStore = roomStore;
+                scope.$apply();
+            });
+        });
     }]);
 
 });

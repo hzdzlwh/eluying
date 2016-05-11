@@ -279,7 +279,11 @@
       float: right;
       margin-right: 24px;
       color: $color1;
-      cursor: pointer;
+    }
+    .srow{
+      .col2{
+        cursor: pointer;
+      }
     }
     .col2:hover{
       color: $color1Hover;

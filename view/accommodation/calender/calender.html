@@ -104,15 +104,15 @@
             </div>
             <div class="category-filter-menu">
                 <div class="options">
-                    <div class="item category-filter-all">
+                    <div class="item category-filter-all selected">
                         <div class="notCheck"></div>
                         <div class="yesCheck"></div>
                         全选
                     </div>
-                    <div class="item category-filter-single">
+                    <div class="item category-filter-single selected" ng-repeat="pRoom in pRoomList">
                         <div class="notCheck"></div>
                         <div class="yesCheck"></div>
-                        露营地
+                        {{pRoom.name}}
                     </div>
                 </div>
                 <hr>
@@ -120,12 +120,22 @@
             </div>
         </div>
         <div class="leftHeader">
-            <div class="category-item" ng-repeat="c in category">
+            <!--<div class="category-item" ng-repeat="c in category">-->
+                <!--<div class="category-name">-->
+                    <!--<span class="stext">{{c.name}}</span>-->
+                <!--</div>-->
+                <!--<div class="category-list">-->
+                    <!--<div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.num}}</div>-->
+                    <!--&lt;!&ndash;<div class="room-item" room="0">0101</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="room-item" room="1">0101</div>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="category-item" ng-repeat="c in cRoomStore">
                 <div class="category-name">
                     <span class="stext">{{c.name}}</span>
                 </div>
                 <div class="category-list">
-                    <div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.num}}</div>
+                    <div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.sn}}</div>
                     <!--<div class="room-item" room="0">0101</div>-->
                     <!--<div class="room-item" room="1">0101</div>-->
                 </div>
@@ -144,8 +154,8 @@
         </div>
         <div class="calendor-container">
             <div class="entryList">
-                <div class="srow" room="{{r.id}}" ng-repeat="r in rooms">
-                    <div class="entryItem" date="{{day.date}}" ng-repeat="day in r.list">
+                <div class="srow" room="{{r.id}}" ng-repeat="r in roomStore">
+                    <div class="entryItem" date="{{day.date}}" ng-repeat="day in r.st">
                         <div class="inner">
                             <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">
                             <div class="date">04-26</div>
