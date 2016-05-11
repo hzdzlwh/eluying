@@ -169,9 +169,6 @@
               padding-left: 17px;
               text-align: left;
             }
-            td.delete{
-              cursor: pointer;
-            }
           }
         }
         tbody{
@@ -205,6 +202,9 @@
               width: 92px;
               padding-left: 17px;
               text-align: left;
+            }
+            td.delete{
+              cursor: pointer;
             }
           }
         }

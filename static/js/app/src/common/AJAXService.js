@@ -70,6 +70,9 @@ var AJAXService = {
         getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
         bindAlipayAccountUrl: '/collectionMethod/bindAlipayAccount',
         newDeleteCollectionMethodUrl: '/collectionMethod/newDeleteCollectionMethod',
+        getChannelsUrl: '/user/getChannels',
+        removeChannelUrl: '/user/removeChannel',
+        addChannelUrl: '/user/addChannel',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

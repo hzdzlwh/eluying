@@ -19,14 +19,14 @@
             <div class="stitle">新增客源</div>
             <div class="maintext">
                 <div class="slabel">客源名称</div>
-                <div class="scontent"><input type="text" id="newGuest-input" required="required"/></div>
+                <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest"/></div>
                 <div class="errorTips">
 
                 </div>
             </div>
             <div class="btns clearfloat">
                 <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
-                <div class="sbtn sbtn-ok confirm">确定</div>
+                <div class="sbtn sbtn-ok confirm" ng-click="addGuest()">确定</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -43,8 +43,8 @@
                 删除之后将不能选择此种客源，您确定要删除吗？
             </div>
             <div class="btns clearfloat">
-                <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
-                <div class="sbtn sbtn-ok confirm">确定</div>
+                <div class="btn-cancel sbtn sbtn-cancel cancel" ng-click="resetGuest()">取消</div>
+                <div class="sbtn sbtn-ok confirm" ng-click="deleteGuest()">确定</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -73,16 +73,17 @@
                     <div class="clearfloat"></div>
                 </div>
                 <div class="hr1"></div>
-                <div class="srow">
-                    <div class="col1">旅行社</div>
-                    <div class="col2 delete">删除</div>
+
+                <div class="srow" ng-repeat="guest in guestList">
+                    <div class="col1">{{guest.name}}</div>
+                    <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest" ng-click="toDeleteGuest(guest.id)">删除</div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="srow">
-                    <div class="col1">俱乐部</div>
-                    <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest">删除</div>
-                    <div class="clearfloat"></div>
-                </div>
+                <!--<div class="srow">-->
+                    <!--<div class="col1">俱乐部</div>-->
+                    <!--<div class="col2 delete" data-toggle="modal" data-target="#deleteGuest">删除</div>-->
+                    <!--<div class="clearfloat"></div>-->
+                <!--</div>-->
             </div>
         </div>
     </div>

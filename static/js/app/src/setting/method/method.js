@@ -64,10 +64,21 @@ $(function(){
         scope.errorTips = '';
         scope.onlinePay = {};
         scope.chooseMethod = function(method){
+            if(method == 2 && scope.onlinePay.alipayCash === 0){
+                return false;
+            }
+            if(method == 1 && scope.onlinePay.walletPayCash === 0){
+                return false;
+            }
             AJAXService.ajaxWithToken('GET', 'selectPayWapUrl', {
                 type: method
             }, function(result){
-                console.log(result);
+                AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                    console.log(result.data.map);
+                    scope.onlinePay = result.data.map;
+                    scope.payChannelCustomList = result.data.payChannelCustomList;
+                    scope.$apply();
+                });
             });
         };
         scope.addMethod = function(){
