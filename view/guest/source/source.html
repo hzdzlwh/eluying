@@ -12,14 +12,49 @@
     <script src="/static/js/app/dist/guest/source.js"></script>
 </head>
 <body ng-controller="guestCtrl">
+<div class="modal fade" role="dialog" id="newGuest">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">新增客源</div>
+            <div class="maintext">
+                <div class="slabel">客源名称</div>
+                <div class="scontent"><input type="text" id="newGuest-input" required="required"/></div>
+                <div class="errorTips">
 
+                </div>
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
+                <div class="sbtn sbtn-ok confirm">确定</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
+<div class="modal fade" role="dialog" id="deleteGuest">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                提示
+            </div>
+            <div class="stext">
+                删除之后将不能选择此种客源，您确定要删除吗？
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
+                <div class="sbtn sbtn-ok confirm">确定</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="mainContainer clearfloat">
     <div class="content clearfloat">
         <div class="guest-container">
             <div class="stitle">
                 <div class="stext">自定义客源</div>
-                <div class="snew">
+                <div class="snew" data-toggle="modal" data-target="#newGuest">
                     <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="">
                     新增客源
                 </div>
@@ -45,7 +80,7 @@
                 </div>
                 <div class="srow">
                     <div class="col1">俱乐部</div>
-                    <div class="col2 delete">删除</div>
+                    <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest">删除</div>
                     <div class="clearfloat"></div>
                 </div>
             </div>

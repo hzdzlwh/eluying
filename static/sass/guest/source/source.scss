@@ -4,6 +4,197 @@
   width:100%;
   height:4px;
 }
+@mixin sbtn1(){
+  background:$color1;
+  border: $color1 solid thin;
+  color: white;
+  border-radius:2px;
+  width:50px;
+  height:24px;
+  line-height: 22px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+@mixin sbtn2(){
+  background:#ffffff;
+  border: $color1 solid thin;
+  color: $color1;
+  border-radius:2px;
+  width:50px;
+  height:24px;
+  line-height: 22px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#newGuest{
+  .modal-dialog {
+    width: 352px;
+  }
+  .modal-content {
+    width: 352px;
+    height: 127px;
+    background:#f6f6f6;
+    padding: 0;
+    border-radius:$BorderRadius;
+    overflow: hidden;
+    .hr{
+      @include modalHeader();
+    }
+    .stitle{
+      font-size:14px;
+      color:$color1;
+      text-align:center;
+      width: 100%;
+      height: 20px;
+      line-height: 20px;
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+    .maintext{
+      width: 100%;
+      height: 24px;
+      position: relative;
+      .slabel{
+        width: 56px;
+        height: 24px;
+        line-height: 24px;
+        float: left;
+        margin-left: 24px;
+        font-size:14px;
+        color:#666666;
+      }
+      .scontent{
+        margin-left: 8px;
+        height: 24px;
+        width: 240px;
+        float: left;
+        input{
+          display: block;
+          background:#ffffff;
+          border:1px solid #cccccc;
+          border-radius:$BorderRadius;
+          width:240px;
+          height:24px;
+          padding: 0 10px;
+        }
+      }
+      .errorTips{
+        position: absolute;
+        left: 88px;
+        bottom: -24px;
+        width: 100%;
+        height: 24px;
+        color: red;
+        line-height: 24px;
+      }
+    }
+    .btns{
+      margin-top: 20px;
+      width: 100%;
+      height: 24px;
+      padding-left: 88px;
+      .sbtn{
+        display: inline-block;
+      }
+      .sbtn-ok{
+        @include sbtn1();
+      }
+      .sbtn-cancel{
+        @include sbtn2();
+        margin-right: 10px;
+      }
+      .sbtn-ok:hover{
+        background: $color1Hover;
+        border: $color1Hover solid thin;
+      }
+      .sbtn-ok:active{
+        background: $color1Click;
+        border: $color1Click solid thin;
+      }
+      .sbtn-cancel:hover{
+        color: $color1Hover;
+        border: $color1Hover solid thin;
+      }
+      .sbtn-cancel:active{
+        color: $color1Click;
+        border: $color1Click solid thin;
+      }
+    }
+  }
+}
+
+#deleteGuest{
+  .modal-dialog {
+    width: 272px;
+  }
+  .modal-content {
+    background:#fafafa;
+    border-radius:$BorderRadius;
+    width:272px;
+    height:146px;
+    padding: 0;
+    overflow-x: hidden;
+    .hr{
+      @include modalHeader();
+    }
+    .stitle{
+      font-size:14px;
+      color:$color1;
+      text-align:center;
+      width: 100%;
+      height: 20px;
+      line-height: 20px;
+      margin-top: 10px;
+    }
+    .stext{
+      font-size:14px;
+      color:#666666;
+      text-align:left;
+      width: 224px;
+      line-height: 20px;
+      margin: auto;
+      margin-top: 8px;
+      margin-bottom: 32px;
+    }
+    .btns{
+      width: 100%;
+      text-align: right;
+      font-size: 14px;
+      .sbtn{
+        display: inline-block;
+      }
+      .confirm{
+        @include sbtn1();
+        margin-right: 24px;
+      }
+      .confirm:hover{
+        background: $color1Hover;
+        border: $color1Hover solid thin;
+      }
+      .confirm:active{
+        background: $color1Click;
+        border: $color1Click solid thin;
+      }
+      .cancel{
+        @include sbtn2();
+        margin-right: 10px;
+      }
+      .cancel:hover{
+        color: $color1Hover;
+        border: $color1Hover solid thin;
+      }
+      .cancel:active{
+        color: $color1Click;
+        border: $color1Click solid thin;
+      }
+    }
+  }
+}
+
+
 
 .guest-container{
   margin-top: -20px;
