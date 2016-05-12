@@ -134,151 +134,175 @@ $(function(){
         scope.startDate = util.diffDate(new Date(), -2);
         scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
         scope.datesArray = [];
-        var tempDate = util.diffDate(new Date(), -2);
-        for(var i = 0; i < 30; i++){
-            scope.datesArray.push({
-                date: tempDate,
-                dateStr: util.dateFormatWithoutYear(tempDate),
-                weekday: util.getWeek(tempDate),
-                left: 111
-            });
-            tempDate = util.tomorrow(tempDate);
-        }
+        scope.calenderDays = [];
 
-        //type:1退房, 2入住, 3预订
-        scope.glyphs = [];
-        var gridWidth = 100;
-        var gridHeight = 48;
-        for(var i = 0; i < 1; i++){
-            var date_min = new Date("2016-05-09");
-            var date_max = new Date("2016-05-13");
-            var diff = util.DateDiff(date_min, date_max);
-            var startDiff = util.DateDiff(scope.startDate, date_min);
-            var room = 0;
-            var top = gridHeight * room + 1;
-            var left = 100 * startDiff + 2;
-            var width = 100 * diff - 6;
-            var glyph = {
-                type: Math.ceil(Math.random()),
-                top: top,
-                left: left,
-                width: width
-            };
-            scope.glyphs.push(glyph);
-        }
+        ////type:1退房, 2入住, 3预订
+        //scope.glyphs = [];
+        //var gridWidth = 100;
+        //var gridHeight = 48;
+        //for(var i = 0; i < 1; i++){
+        //    var date_min = new Date("2016-05-14");
+        //    var date_max = new Date("2016-05-16");
+        //    var diff = util.DateDiff(date_min, date_max);
+        //    var startDiff = util.DateDiff(scope.startDate, date_min);
+        //    var room = 0;
+        //    var top = gridHeight * room + 1;
+        //    var left = 100 * startDiff + 2;
+        //    var width = 100 * diff - 6;
+        //    var glyph = {
+        //        type: Math.ceil(Math.random()),
+        //        top: top,
+        //        left: left,
+        //        width: width
+        //    };
+        //    scope.glyphs.push(glyph);
+        //}
 
-        //维护日历
-        var selectedMonth = null;
-        var calenderDays = [];
-        var firstDay = new Date();
-        firstDay.setDate(1);
-        if(selectedMonth && firstDay_Month !== selectedMonth){
-            firstDay.setMonth(selectedMonth);
-        }
-        var firstDay_Month = firstDay.getMonth();
-        var firstDay_weekday = firstDay.getDay();
-        if(firstDay_weekday === 0){
-            for(var i = 6; i > 0; i--){
-                calenderDays.push(util.diffDate(firstDay, -i));
+        scope.selectDate = function(date){
+            scope.startDate = date;
+            scope.updateData();
+        };
+        scope.lastMonth = function(){
+            var month = scope.startDate.getMonth();
+            scope.startDate.setMonth(month - 1);
+            scope.startDate.setDate(1);
+            scope.updateData();
+        };
+        scope.nextMonth = function(){
+            var month = scope.startDate.getMonth();
+            scope.startDate.setMonth(month + 1);
+            scope.startDate.setDate(1);
+            scope.updateData();
+        };
+        scope.updateData = function(){
+            scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
+            scope.datesArray = [];
+            var tempDate = new Date(scope.startDate);
+            for(var i = 0; i < 30; i++){
+                scope.datesArray.push({
+                    date: tempDate,
+                    dateStr: util.dateFormatWithoutYear(tempDate),
+                    weekday: util.getWeek(tempDate),
+                    left: 111
+                });
+                tempDate = util.tomorrow(tempDate);
             }
-        }
-        else{
-            for(var i = firstDay_weekday-1; i > 0; i--){
-                calenderDays.push(util.diffDate(firstDay, -i));
+            //维护日历
+            var selectedMonth = null;
+            var calenderDays = [];
+            var firstDay = new Date(scope.startDate);
+            firstDay.setDate(1);
+            var firstDay_Month = firstDay.getMonth();
+            var firstDay_weekday = firstDay.getDay();
+            if(selectedMonth && firstDay_Month !== selectedMonth){
+                firstDay.setMonth(selectedMonth);
             }
-        }
-        calenderDays.push(firstDay);
-        var temp = util.diffDate(firstDay, 1);
-        while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
-            calenderDays.push(temp);
-            temp = util.diffDate(temp, 1);
-        }
-        var iter = [];
-        var days = [];
-        for(var i = 0; i < calenderDays.length; i++){
-            var sclass = '';
-            var today = new Date();
-            var text = null;
-            if(util.isSameDay(calenderDays[i], today)){
-                sclass = 'today';
-                text = '今';
-            }else if(calenderDays[i] < today){
-                sclass = 'invalid';
-            }
-            if(util.isSameDay(calenderDays[i], scope.startDate)){
-                sclass += ' selected';
-            }
-            iter.push({
-                text: text,
-                date: calenderDays[i],
-                sclass: sclass
-            });
-            if(i % 7 === 6){
-                days.push(iter);
-                iter = [];
-            }
-        }
-        scope.calenderDays = days;
-        AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){
-            var pRooms = result.data.list;
-            AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
-                date: util.dateFormat(scope.startDate),
-                days: 30,
-                sub: true
-            }, function(result2){
-                var holiday = result2.data.holidays;
-                var cRooms = result2.data.rs;
-                var cRoomStore = {};
-                var roomStore = [];
-                var pRoomList = {};
-                var cRoomList = {};
-                for(var i = 0; i < cRooms.length; i++){
-                    var cRoom = cRooms[i];
-                    if(!cRoomList[cRoom.ti]){
-                        cRoomList[cRoom.ti] = {};
-                    }
-                    cRoomList[cRoom.ti][cRoom.i] = {
-                        id: cRoom.i,
-                        sn: cRoom.sn,
-                        st: cRoom.st
-                    };
+            if(firstDay_weekday === 0){
+                for(var i = 6; i > 0; i--){
+                    calenderDays.push(util.diffDate(firstDay, -i));
                 }
-                for(var i = 0; i < pRooms.length; i++){
-                    var pRoom = pRooms[i];
-                    if(!pRoomList[pRoom.pId]){
-                        pRoomList[pRoom.pId] = {
-                            id: pRoom.pId,
-                            name: pRoom.pName
-                        };
-                    }
-                    if(!cRoomStore[pRoom.cId]){
-                        cRoomStore[pRoom.cId] = {
-                            id: pRoom.cId,
-                            name: pRoom.cName,
-                            pId: pRoom.pId,
-                            rooms: cRoomList[pRoom.cId]
-                        };
-                    }
+            }
+            else{
+                for(var i = firstDay_weekday-1; i > 0; i--){
+                    calenderDays.push(util.diffDate(firstDay, -i));
                 }
-                for(var c in cRoomStore){
-                    for(var r in cRoomStore[c].rooms){
-                        for(var k = 0; k < cRoom.st.length; k++){
-                            cRoomStore[c].rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
+            }
+            calenderDays.push(firstDay);
+            var temp = util.diffDate(firstDay, 1);
+            while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
+                calenderDays.push(temp);
+                temp = util.diffDate(temp, 1);
+            }
+            var iter = [];
+            var days = [];
+            for(var i = 0; i < calenderDays.length; i++){
+                var sclass = '';
+                var today = new Date();
+                var text = null;
+                if(util.isSameDay(calenderDays[i], today)){
+                    sclass = 'today';
+                    text = '今';
+                }else if(calenderDays[i] < today){
+                    sclass = 'invalid';
+                }
+                if(util.isSameDay(calenderDays[i], scope.startDate)){
+                    sclass += ' selected';
+                }
+                iter.push({
+                    text: text,
+                    date: calenderDays[i],
+                    sclass: sclass
+                });
+                if(i % 7 === 6){
+                    days.push(iter);
+                    iter = [];
+                }
+            }
+            scope.calenderDays = days;
+            //拉取房态
+            AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){
+                var pRooms = result.data.list;
+                AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
+                    date: util.dateFormat(scope.startDate),
+                    days: 30,
+                    sub: true
+                }, function(result2){
+                    var holiday = result2.data.holidays;
+                    var cRooms = result2.data.rs;
+                    var cRoomStore = {};
+                    var roomStore = [];
+                    var pRoomList = {};
+                    var cRoomList = {};
+                    for(var i = 0; i < cRooms.length; i++){
+                        var cRoom = cRooms[i];
+                        if(!cRoomList[cRoom.ti]){
+                            cRoomList[cRoom.ti] = {};
                         }
-                        var temp = {
-                            id: r,
-                            sn: cRoomStore[c].rooms[r].sn,
-                            st: cRoomStore[c].rooms[r].st
+                        cRoomList[cRoom.ti][cRoom.i] = {
+                            id: cRoom.i,
+                            sn: cRoom.sn,
+                            st: cRoom.st
                         };
-                        roomStore.push(temp);
                     }
-                }
-                scope.pRoomList = pRoomList;
-                scope.cRoomStore = cRoomStore;
-                scope.roomStore = roomStore;
-                scope.$apply();
+                    for(var i = 0; i < pRooms.length; i++){
+                        var pRoom = pRooms[i];
+                        if(!pRoomList[pRoom.pId]){
+                            pRoomList[pRoom.pId] = {
+                                id: pRoom.pId,
+                                name: pRoom.pName
+                            };
+                        }
+                        if(!cRoomStore[pRoom.cId]){
+                            cRoomStore[pRoom.cId] = {
+                                id: pRoom.cId,
+                                name: pRoom.cName,
+                                pId: pRoom.pId,
+                                rooms: cRoomList[pRoom.cId]
+                            };
+                        }
+                    }
+                    for(var c in cRoomStore){
+                        for(var r in cRoomStore[c].rooms){
+                            for(var k = 0; k < cRoom.st.length; k++){
+                                cRoomStore[c].rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
+                            }
+                            var temp = {
+                                id: r,
+                                sn: cRoomStore[c].rooms[r].sn,
+                                st: cRoomStore[c].rooms[r].st
+                            };
+                            roomStore.push(temp);
+                        }
+                    }
+                    scope.pRoomList = pRoomList;
+                    scope.cRoomStore = cRoomStore;
+                    scope.roomStore = roomStore;
+                    scope.$apply();
+                });
             });
-        });
+        };
+
+        scope.updateData();
     }]);
 
 });
