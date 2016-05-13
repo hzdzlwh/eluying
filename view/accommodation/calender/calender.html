@@ -270,7 +270,9 @@
             </div>
             <div class="hr2"></div>
             <div class="consume-info">
-                <div class="sub-title">消费信息</div>
+                <div class="sub-title consume-switch">消费信息
+                    <img src="http://static.dingdandao.com/B78F7FA7-51E3-43F8-A590-4A658F0FA3A6@1x.png" alt="down">
+                </div>
                 <div class="hr2"></div>
                 <div class="infos">
                     <div class="item">
@@ -279,7 +281,47 @@
                         <div class="desc">
                             <img src="http://static.dingdandao.com/3978B081-296B-49BF-8758-79280A84D53D@1x.png" alt="">
                             <div class="desc-box">
-
+                                <div class="subt">订单总结：</div>
+                                <div class="sitem">
+                                    <div class="sl">订单总价</div>
+                                    <div class="sval">¥10000</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl">优惠：</div>
+                                    <div class="sval">- ¥100</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl">客户应付：</div>
+                                    <div class="sval">¥10000</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="hr3"></div>
+                                <div class="subt">订单收支明细</div>
+                                <div class="sitem">
+                                    <div class="sl">客户已付（现金）：</div>
+                                    <div class="sval1">¥10000</div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl">客户已付（支付宝）：</div>
+                                    <div class="sval1">¥10000</div>
+                                </div>
+                                <div class="hr3"></div>
+                                <div class="subt">押金收支明细</div>
+                                <div class="sitem">
+                                    <div class="sl">押金（现金）：</div>
+                                    <div class="sval1">¥10000</div>
+                                </div>
+                                <div class="hr3"></div>
+                                <div class="sitem">
+                                    <div class="sl1">商家需退：</div>
+                                    <div class="sval2">¥100000</div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl1">需退押金：</div>
+                                    <div class="sval2">¥100</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -343,6 +385,140 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<div class="modal fade" role="dialog" id="orderEditModel">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="sheader">
+                <div class="stitle">
+                    <span>编辑订单</span>
+                    <div class="status book"><div class="triangle"></div>已预订</div>
+                </div>
+            </div>
+            <div class="hr2"></div>
+            <div class="guest-info">
+                <div class="sub-title">客户信息</div>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td><input type="text" class="long"></td>
+                        <td>手机号</td>
+                        <td><input type="text" class="short"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select class="short">
+                                <option value="0">身份证</option>
+                                <option value="1">学生证</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="long"></td>
+                        <td>渠道</td>
+                        <td>
+                            <select class="long">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <div class="hr2"></div>
+            </div>
+            <div class="subtype room">
+                <div class="sub-title">房间信息</div>
+                <table>
+                    <tr>
+                        <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <td>
+                            <span class="light">入住</span>
+                            &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
+                            <span class="light">共7晚</span>
+                        </td>
+                        <td>¥10000</td>
+                    </tr>
+                    <tr>
+                        <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <td>
+                            <span class="light">入住</span>
+                            &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
+                            <span class="light">共7晚</span>
+                        </td>
+                        <td>¥10000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="subtype food">
+                <div class="sub-title">
+                    餐饮信息
+                    <div class="sadd">
+                        <img src="http://static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="add">
+                        添加餐饮项目
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>烧烤</td>
+                        <td><span class="light">时间</span>&nbsp;0425</td>
+                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
+                        <td>¥10000</td>
+                    </tr>
+                    <tr>
+                        <td>烧烤</td>
+                        <td><span class="light">时间</span>&nbsp;0425</td>
+                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
+                        <td>¥10000</td>
+                    </tr>
+                    <tr>
+                        <td>烧烤</td>
+                        <td><span class="light">时间</span>&nbsp;0425</td>
+                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
+                        <td>¥10000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="subtype fun">
+                <div class="sub-title">
+                    娱乐信息
+                    <div class="sadd">
+                        <img src="http://static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="add">
+                        添加娱乐项目
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>皮划艇</td>
+                        <td><span class="light">时间</span>&nbsp;0425</td>
+                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
+                        <td>¥10000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="discount">
+                <div class="slabel">优惠</div>
+                <input type="text">
+            </div>
+            <div class="remark">
+                <div class="slabel">备注</div>
+                <textarea></textarea>
+            </div>
+            <div class="accounts">
+                <div class="sgive">
+                    <div class="slabel">客户需补</div>
+                    <div class="snum">¥9999</div>
+                </div>
+                <div class="deposit">
+                    <div class="slabel">已收押金</div>
+                    <div class="snum">¥99</div>
+                </div>
+                <div class="sbtn confirm">保存</div>
+                <div class="sbtn cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="modal fade" role="dialog" id="payWithAlipayModal">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -357,6 +533,47 @@
                 <div class="item">收银员：001</div>
             </div>
             <div class="sbtn">确认收款</div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="keepOrNotModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                要保留未使用项目吗
+            </div>
+            <div class="stext">
+                有项目未使用~如果客人不再使用项目，请先去编辑订单将项目删除。
+            </div>
+            <div class="btns">
+                <div class="sbtn cancel">不保留,去删除</div>
+                <div class="sbtn confirm">保留</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="arrearsModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                款项未结清
+            </div>
+            <div class="scontent">
+                <div class="srow sgive">
+                    <div class="slabel">客户需补订单：</div>
+                    <div class="snum">￥5000</div>
+                </div>
+                <div class="srow srefund">
+                    <div class="slabel">需退押金：</div>
+                    <div class="snum">￥100</div>
+                </div>
+            </div>
+            <div class="btns">
+                <div class="sbtn confirm">没关系,继续</div>
+                <div class="sbtn cancel">返回编辑收银</div>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
@@ -486,8 +703,8 @@
                 <div class="item">房间1</div>
             </div>
             <div class="sbtn addition">补录</div>
-            <div class="sbtn book" data-toggle="modal" data-target="#bookModal">预订</div>
-            <div class="sbtn buy" data-toggle="modal" data-target="#orderCancelModal">直接入住</div>
+            <div class="sbtn book">预订</div>
+            <div class="sbtn buy" data-toggle="modal" data-target="#arrearsModal">直接入住</div>
         </div>
     </div>
 </div>

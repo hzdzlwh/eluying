@@ -123,6 +123,15 @@ $(function(){
         },
         "mouseleave body .glyph": function(ev){
             $(this).find(".infos").hide();
+        },
+        "click body .consume-switch": function (ev) {
+            if($(this).hasClass("open")){
+                $(this).removeClass("open");
+                $(this).siblings(".infos").hide();
+            }else{
+                $(this).addClass("open");
+                $(this).siblings(".infos").show();
+            }
         }
     };
 
