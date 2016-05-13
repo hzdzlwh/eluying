@@ -68,4 +68,52 @@ $headerBg: #393b4a;
   font-size: 12px;
 }
 
+@mixin btn1_normal(){
+  border:1px solid $color1;
+  border-radius: 2px;
+  font-size:14px;
+  height: 24px;
+  color:$color1;
+  text-align:center;
+  line-height: 22px;
+  cursor: pointer;
+}
+@mixin btn1_hover(){
+  background:#e6f1ff;
+  border:1px solid $color1Hover;
+  color: $color1Hover
+}
+@mixin btn1_click(){
+  background:#e6f1ff;
+  border:1px solid $color1Click;
+  color: $color1Click;
+}
+@mixin btn2_normal(){
+  background:$color1;
+  border-radius:2px;
+  height: 24px;
+  font-size:14px;
+  color:white;
+  text-align:center;
+  line-height: 24px;
+  cursor: pointer;
+}
+@mixin btn2_hover(){
+  background:$color1Hover;
+  border: none;
+  color: white;
+}
+@mixin btn2_click(){
+  background:$color1Click;
+  border: none;
+  color: white;
+}
+
+@mixin btn_small{
+  width:50px;
+}
+@mixin btn_big{
+  width:100px;
+}
+
 $BorderRadius: 2px;

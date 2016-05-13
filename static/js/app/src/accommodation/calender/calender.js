@@ -136,11 +136,11 @@ $(function(){
         scope.datesArray = [];
         scope.calenderDays = [];
 
-        ////type:1退房, 2入住, 3预订
-        //scope.glyphs = [];
-        //var gridWidth = 100;
-        //var gridHeight = 48;
-        //for(var i = 0; i < 1; i++){
+        // //type:1退房, 2入住, 3预订
+        // scope.glyphs = [];
+        // var gridWidth = 100;
+        // var gridHeight = 48;
+        // for(var i = 0; i < 1; i++){
         //    var date_min = new Date("2016-05-14");
         //    var date_max = new Date("2016-05-16");
         //    var diff = util.DateDiff(date_min, date_max);
@@ -156,7 +156,7 @@ $(function(){
         //        width: width
         //    };
         //    scope.glyphs.push(glyph);
-        //}
+        // }
 
         scope.selectDate = function(date){
             scope.startDate = date;
