@@ -127,10 +127,14 @@ $(function(){
         "click body .consume-switch": function (ev) {
             if($(this).hasClass("open")){
                 $(this).removeClass("open");
-                $(this).siblings(".infos").hide();
+                $(this).parents(".consume-info").animate({
+                    height: '24'
+                });
             }else{
                 $(this).addClass("open");
-                $(this).siblings(".infos").show();
+                $(this).parents(".consume-info").css({
+                    height: 'auto'
+                });
             }
         }
     };
