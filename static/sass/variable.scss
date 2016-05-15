@@ -116,4 +116,22 @@ $headerBg: #393b4a;
   width:100px;
 }
 
+@mixin select1{
+  border:1px solid #cccccc;
+  border-radius:2px;
+  padding-left: 8px;
+  padding-right: 24px;
+  text-overflow: ellipsis;
+  line-height: 20px;
+  width:114px;
+  height:22px;
+  font-size:14px;
+  color:#666666;
+  text-align:left;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  background: white url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
+}
+
 $BorderRadius: 2px;

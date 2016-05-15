@@ -5,6 +5,8 @@ $gridHeight: 48px;
 $borderColor: #e6e6e6;
 $bgColor: #f8f9fc;
 $highlightColor: #e6f1ff;
+$trash_grey: url("http://static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
+$trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
 @mixin modalHeader(){
   background:$color1;
   width:100%;
@@ -12,36 +14,36 @@ $highlightColor: #e6f1ff;
 }
 .msgModal{
   .modal-dialog {
-    width: 272px;
+    width: 300px;
   }
   .modal-content {
     background:#fafafa;
     border-radius:$BorderRadius;
-    width:272px;
-    height:146px;
+    width:300px;
+    height:140px;
     padding: 0;
     overflow-x: hidden;
     .hr{
       @include modalHeader();
     }
-    .stitle{
-      font-size:14px;
-      color:$color1;
-      text-align:center;
-      width: 100%;
-      height: 20px;
-      line-height: 20px;
-      margin-top: 10px;
-    }
+    //.stitle{
+    //  font-size:14px;
+    //  color:$color1;
+    //  text-align:center;
+    //  width: 100%;
+    //  height: 20px;
+    //  line-height: 20px;
+    //  margin-top: 10px;
+    //}
     .stext{
-      font-size:14px;
-      color:#666666;
       text-align:left;
       width: 224px;
       line-height: 20px;
       margin: auto;
-      margin-top: 8px;
-      margin-bottom: 32px;
+      margin-top: 27px;
+      margin-bottom: 23px;
+      font-size:16px;
+      color:#666666;
     }
     .btns{
       width: 100%;
@@ -124,8 +126,9 @@ $highlightColor: #e6f1ff;
       line-height: 17px;
       height: 17px;
       position: absolute;
-      left: 0px;
+      left: 0;
       top: 108px;
+      opacity: 0.5;
     }
     .btns{
       position: absolute;
@@ -145,6 +148,20 @@ $highlightColor: #e6f1ff;
       .sbtn:active{
         @include btn1_click();
       }
+    }
+  }
+}
+#newFailModal{
+  .modal-content{
+    height: 140px;
+    img{
+      left: 85px;
+    }
+    .stitle{
+      left: 145px;
+    }
+    .reason{
+      left: 145px;
     }
   }
 }
@@ -201,7 +218,7 @@ $highlightColor: #e6f1ff;
       .status{
         position: absolute;
         top: 12px;
-        left: 96px;
+        left: 106px;
         font-size:12px;
         color: white;
         text-align:center;
@@ -348,7 +365,7 @@ $highlightColor: #e6f1ff;
           width: 203px;
         }
         td:nth-child(4){
-          width: 48px;
+          width: 54px;
           text-align: right;
         }
       }
@@ -367,7 +384,7 @@ $highlightColor: #e6f1ff;
           line-height: 20px;
           min-height: 20px;
           margin-bottom: 10px;
-          min-width: 117px;
+          min-width: 120px;
           .slabel{
             opacity:0.5;
             font-size:12px;
@@ -396,20 +413,17 @@ $highlightColor: #e6f1ff;
             color:#00af10;
           }
         }
-        .item.orderid{
+        .item.orderid, .item.staff{
           width: 50%;
           .svalue{
             color: #7d7d7d;
             font-size: 12px;
+            opacity: 0.5;
           }
         }
         .item.staff{
           width: 49%;
           text-align: right;
-          .svalue{
-            color: #7d7d7d;
-            font-size: 12px;
-          }
         }
       }
       .btns{
@@ -460,7 +474,7 @@ $highlightColor: #e6f1ff;
       .status{
         position: absolute;
         top: 12px;
-        left: 96px;
+        left: 106px;
         font-size:12px;
         color: white;
         text-align:center;
@@ -572,6 +586,11 @@ $highlightColor: #e6f1ff;
           margin-bottom: 8px;
           position: relative;
           clear: both;
+          .select1{
+            @include select1();
+            width: 120px;
+            float: right;
+          }
           .sbold{
             font-size:16px;
             color:#666666;
@@ -609,14 +628,6 @@ $highlightColor: #e6f1ff;
             width:98px;
             height:22px;
             float: left;
-          }
-          select{
-            background:#ffffff;
-            border:1px solid #cccccc;
-            border-radius:$BorderRadius;
-            width:118px;
-            height:22px;
-            float: right;
           }
           .desc{
             position: absolute;
@@ -742,7 +753,7 @@ $highlightColor: #e6f1ff;
     }
   }
 }
-#orderEditModel{
+#orderEditModel, #newOrderModal{
   .modal-dialog {
     width: 530px;
   }
@@ -771,7 +782,7 @@ $highlightColor: #e6f1ff;
       .status{
         position: absolute;
         top: 12px;
-        left: 96px;
+        left: 106px;
         font-size:12px;
         color: white;
         text-align:center;
@@ -826,17 +837,41 @@ $highlightColor: #e6f1ff;
       line-height: 20px;
     }
     .guest-info{
-      margin-top: 8px;
+      margin: 8px 0 8px;
       table {
-        margin: 8px 16px 8px;
+        margin: 8px 16px 12px;
         td {
           height: 43px;
           text-align: left;
           color: #666666;
-          padding: 0 0 0 4px;
+          padding: 0 0 0 0;
+          position: relative;
+          .tips{
+            position: absolute;
+            left: 2px;
+            top: 34px;
+            height: 17px;
+            line-height: 17px;
+            font-size:12px;
+            text-align:left;
+            opacity:0.5;
+            color:#7d7d7d;
+          }
+          .tips.warning{
+            color:#f24949;
+            opacity: 1;
+          }
+          input{
+            padding: 0 8px;
+          }
         }
         td:first-child{
           width: 78px;
+          .select1{
+            @include select1();
+            width: 74px;
+            background-position: 60px;
+          }
         }
         td:nth-child(2){
           width: 220px;
@@ -846,6 +881,11 @@ $highlightColor: #e6f1ff;
         }
         td:nth-child(4){
           width: 150px;
+          .select1{
+            @include select1();
+            width: 150px;
+            background-position: 136px;
+          }
         }
         input.short{
           display: block;
@@ -870,11 +910,102 @@ $highlightColor: #e6f1ff;
       }
     }
     .subtype{
-      margin: 8px 0;
+      margin: 8px 0 12px;
       color: #666666;
       //.sub-title{
       //  color: #666666;
       //}
+      .select1{
+        @include select1();
+      }
+      tr{
+        height: 41px;
+      }
+      td{
+        position: relative;
+        .tips{
+          position: absolute;
+          left: 59px;
+          top: 32px;
+          height: 17px;
+          line-height: 17px;
+          font-size:12px;
+          text-align:left;
+          opacity:0.5;
+          color:#7d7d7d;
+        }
+        .tips.warning{
+          color:#f24949;
+          opacity: 1;
+        }
+        .tips.left{
+          left: 35px
+        }
+        .tips.right{
+          left: 108px;
+        }
+      }
+      td:nth-child(3), td:nth-child(4){
+        .sdelete{
+          position: absolute;
+          width: 14px;
+          height: 14px;
+          background: $trash_grey;
+          display: inline-block;
+          right: -36px;
+          top: 13px;
+          cursor: pointer;
+        }
+        .sdelete:hover{
+          background: $trash_blue;
+          background-size: 14px 14px;
+        }
+      }
+      .snumber{
+        display: inline-block;
+        background:#ffffff;
+        border:1px solid #cccccc;
+        border-radius:2px;
+        width:87px;
+        height:24px;
+        position: relative;
+        .minus, .plus{
+          width: 15px;
+          height: 22px;
+          line-height: 22px;
+          position: absolute;
+          top: 0;
+          text-align: center;
+        }
+        .minus{
+          left: 0;
+          border-right: 1px solid #cccccc;
+        }
+        .plus{
+          right: 0;
+          border-left: 1px solid #cccccc;
+        }
+        input{
+          width: 55px;
+          height: 22px;
+          position: relative;
+          left: 15px;
+          text-align: center;
+          display: inline-block;
+          border: none;
+        }
+        input:focus{
+          outline: none;
+        }
+      }
+      input.datePicker{
+        display: inline-block;
+        background:#ffffff;
+        border:1px solid #cccccc;
+        border-radius:$BorderRadius;
+        width:57px;
+        height:22px;
+      }
       table{
         margin: 8px 16px 0;
         td{
@@ -888,7 +1019,7 @@ $highlightColor: #e6f1ff;
     }
     .subtype.room{
       td:first-child{
-        width: 190px;
+        width: 165px;
         .sstatus{
           display: inline-block;
           border-radius:$BorderRadius;
@@ -898,7 +1029,7 @@ $highlightColor: #e6f1ff;
           font-size: 10px;
           text-align: center;
           line-height: 16px;
-          margin-left: 10px;
+          margin-left: 5px;
         }
         .sstatus.book{
           background:#82beff;
@@ -911,8 +1042,14 @@ $highlightColor: #e6f1ff;
         }
       }
       td:nth-child(2){
-        width: 230px;
-
+        width: 219px;
+        .sstart, .send{
+          width: 50.5px;
+          height: 22px;
+          line-height: 22px;
+          text-align: center;
+          display: inline-block;
+        }
       }
       td:nth-child(3){
         width: 75px;
@@ -932,6 +1069,12 @@ $highlightColor: #e6f1ff;
       td:first-child{
         width: 84px;
         text-overflow: ellipsis;
+        .sname{
+          width: 84px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
       }
       td:nth-child(2){
         width: 93px;
@@ -950,6 +1093,7 @@ $highlightColor: #e6f1ff;
     .discount{
       margin: 8px 0;
       position: relative;
+      color: #666666;
       .slabel{
         width: 28px;
         height: 20px;
@@ -969,9 +1113,28 @@ $highlightColor: #e6f1ff;
         text-align: right;
         padding-right: 8px;
       }
+      span.tips{
+        display: block;
+        position: absolute;
+        left: 60px;
+        height: 20px;
+        line-height: 20px;
+        top: 0;
+        font-size: 14px;
+      }
+    }
+    .counter{
+      margin: 0 16px 8px;
+      opacity:0.5;
+      font-size:12px;
+      color:#7d7d7d;
+      text-align:right;
+    }
+    .counter.warning{
+      color: $color6;
     }
     .remark{
-      margin: 8px 0;
+      margin: 8px 0 0;
       position: relative;
       .slabel{
         width: 28px;
@@ -1031,29 +1194,54 @@ $highlightColor: #e6f1ff;
       .sbtn{
         margin-top: 10px;
       }
-      .sbtn.confirm{
+      .sbtn.cancel{
         @include btn1_normal();
         @include btn_big();
         float: right;
         margin-right: 16px;
        }
-      .sbtn.confirm:hover{
+      .sbtn.cancel:hover{
         @include btn1_hover();
       }
-      .sbtn.confirm:active{
+      .sbtn.cancel:active{
         @include btn1_click();
       }
-      .sbtn.cancel{
+      .sbtn.confirm{
         @include btn2_normal();
         @include btn_big();
         float: right;
         margin-right: 20px;
       }
-      .sbtn.cancel:hover{
+      .sbtn.confirm:hover{
         @include btn2_hover();
       }
-      .sbtn.cancel:active{
+      .sbtn.confirm:active{
         @include btn2_click();
+      }
+    }
+  }
+}
+#newOrderModal{
+  .modal-content {
+    .subtype.food, .subtype.fun{
+      td:first-child{
+        width: 110px;
+      }
+      td:nth-child(2){
+        width: 115px;
+        text-align: right;
+      }
+      td:nth-child(3){
+        padding-left: 0;
+        width: 146px;
+        text-align: right;
+        input{
+          left: -15px;
+        }
+      }
+      td:nth-child(4){
+        width: 83px;
+        text-align: right;
       }
     }
   }

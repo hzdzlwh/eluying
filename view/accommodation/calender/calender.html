@@ -17,7 +17,6 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stitle">直接入住</div>
             <div class="stext">选择直接入住，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
@@ -30,7 +29,6 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stitle">补录</div>
             <div class="stext">选择补录，系统将自动清除今天及以后的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
@@ -43,7 +41,6 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stitle">预定</div>
             <div class="stext">选择预定，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
@@ -56,7 +53,6 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stitle">库存不足</div>
             <div class="stext">部分房间库存不足，系统将自动清除不可选的房间。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
@@ -91,6 +87,16 @@
             <div class="btns">
                 <div class="sbtn">返回订单</div>
             </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="alertModal modal fade" role="dialog" id="newFailModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <img src="http://static.dingdandao.com/832D9B75-9290-4E07-8D9D-A106C3E8538E@1x.png" alt="yes">
+            <div class="stitle">预订失败</div>
+            <div class="reason">网速太慢</div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
@@ -197,6 +203,7 @@
                             <span class="svalue">￥99999</span>
                         </div>
                         <div class="item">
+                            &nbsp;&nbsp;&nbsp;
                             <span class="slabel">优惠:</span>
                             <span class="svalue">￥1919</span>
                         </div>
@@ -338,10 +345,7 @@
                     </div>
                     <div class="item item_big">
                         <input type="text">
-                        <select>
-                            <option value="0">1</option>
-                            <option value="1">2</option>
-                        </select>
+                        <div class="select1"></div>
                     </div>
                     <div class="item item_small">
                         <div class="slabel">押金收款</div>
@@ -352,10 +356,7 @@
                     </div>
                     <div class="item item_big">
                         <input type="text">
-                        <select>
-                            <option value="0">1</option>
-                            <option value="1">2</option>
-                        </select>
+                        <div class="select1"></div>
                     </div>
                 </div>
             </div>
@@ -382,10 +383,125 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
+            <div class="sheader">
+                <div class="stitle">
+                    <span>预订</span>
+                </div>
+            </div>
+            <div class="hr2"></div>
+            <div class="guest-info">
+                <div class="sub-title">客户信息</div>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td><input placeholder="姓名" type="text" class="long"><div class="tips warning">必填字段</div></td>
+                        <td>手机号</td>
+                        <td><input placeholder="手机号" type="text" class="short"><div class="tips warning">必填字段</div></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="select1"></div>
+                        </td>
+                        <td><input placeholder="身份证" type="text" class="long"><div class="tips warning">身份证格式错误</div></td>
+                        <td>渠道</td>
+                        <td>
+                            <div class="select1"></div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="hr2"></div>
+            </div>
+            <div class="subtype room">
+                <div class="sub-title">房间信息</div>
+                <table>
+                    <tr>
+                        <td><span>0102</span>&nbsp;(星空迷你木屋)</td>
+                        <td>
+                            <span class="light">入住</span>
+                            &nbsp;<input type="text" class="datePicker">&nbsp;~&nbsp;<input type="text" class="datePicker">&nbsp;
+                            共7晚
+                            <div class="tips warning left">↑房间被占用</div>
+                            <div class="tips warning right">↑房间被占用</div>
+                        </td>
+                        <td>¥10000<div class="sdelete"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="subtype food">
+                <div class="sub-title">
+                    餐饮信息
+                    <div class="sadd">
+                        <img src="http://static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="add">
+                        添加餐饮项目
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td><div class="select1"></div></td>
+                        <td>时间&nbsp;<input type="text" class="datePicker"></td>
+                        <td>
+                            数量&nbsp;
+                            <div class="snumber">
+                                <div class="minus">-</div>
+                                <input type="text" value="1">
+                                <div class="plus">+</div>
+                            </div>
+                            <div class="tips">剩余库存10</div>
+                        </td>
+                        <td>¥10000<div class="sdelete"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="subtype fun">
+                <div class="sub-title">
+                    娱乐信息
+                    <div class="sadd">
+                        <img src="http://static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="add">
+                        添加娱乐项目
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td><div class="select1"></div></td>
+                        <td>时间&nbsp;<input type="text" class="datePicker"></td>
+                        <td>
+                            数量&nbsp;
+                            <div class="snumber">
+                                <div class="minus">-</div>
+                                <input type="text" value="1">
+                                <div class="plus">+</div>
+                            </div>
+                            <div class="tips">剩余库存10</div>
+                        </td>
+                        <td>¥10000<div class="sdelete"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="discount">
+                <div class="slabel">优惠</div>
+                <input placeholder="金额" type="text">
+                <span class="tips">-¥</span>
+            </div>
+            <div class="remark">
+                <div class="slabel">备注</div>
+                <textarea placeholder="请填写备注信息"></textarea>
+            </div>
+            <div class="counter warning">45/140</div>
+            <div class="accounts">
+                <div class="sgive">
+                    <div class="slabel">客户需补</div>
+                    <div class="snum">¥9999</div>
+                </div>
+                <div class="sbtn confirm">完成预订</div>
+                <div class="sbtn cancel">取消</div>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="orderEditModel">
+<div class="modal" role="dialog" id="orderEditModel">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -401,24 +517,18 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td><input type="text" class="long"></td>
+                        <td><input placeholder="姓名" type="text" class="long"><div class="tips warning">必填字段</div></td>
                         <td>手机号</td>
-                        <td><input type="text" class="short"></td>
+                        <td><input placeholder="手机号" type="text" class="short"><div class="tips warning">必填字段</div></td>
                     </tr>
                     <tr>
                         <td>
-                            <select class="short">
-                                <option value="0">身份证</option>
-                                <option value="1">学生证</option>
-                            </select>
+                            <div class="select1"></div>
                         </td>
-                        <td><input type="text" class="long"></td>
+                        <td><input placeholder="身份证" type="text" class="long"><div class="tips warning">身份证格式错误</div></td>
                         <td>渠道</td>
                         <td>
-                            <select class="long">
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                            </select>
+                            <div class="select1"></div>
                         </td>
                     </tr>
                 </table>
@@ -431,19 +541,24 @@
                         <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
                         <td>
                             <span class="light">入住</span>
-                            &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                            <span class="light">共7晚</span>
+                            &nbsp;
+                            <div class="sstart">04-25</div>
+                            &nbsp;~&nbsp;
+                            <div class="send">04-25</div>
+                            &nbsp;共7晚
                         </td>
-                        <td>¥10000</td>
+                        <td>¥10000<div class="sdelete"></div></td>
                     </tr>
                     <tr>
-                        <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <td><span>0102</span>&nbsp;(星空)<div class="sstatus finish">退</div></td>
                         <td>
                             <span class="light">入住</span>
-                            &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                            <span class="light">共7晚</span>
+                            &nbsp;<input type="text" class="datePicker">&nbsp;~&nbsp;<input type="text" class="datePicker">&nbsp;
+                            共7晚
+                            <div class="tips warning left">↑房间被占用</div>
+                            <div class="tips warning right">↑房间被占用</div>
                         </td>
-                        <td>¥10000</td>
+                        <td>¥10000<div class="sdelete"></div></td>
                     </tr>
                 </table>
             </div>
@@ -458,22 +573,18 @@
                 </div>
                 <table>
                     <tr>
-                        <td>烧烤</td>
-                        <td><span class="light">时间</span>&nbsp;0425</td>
-                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                        <td>¥10000</td>
-                    </tr>
-                    <tr>
-                        <td>烧烤</td>
-                        <td><span class="light">时间</span>&nbsp;0425</td>
-                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                        <td>¥10000</td>
-                    </tr>
-                    <tr>
-                        <td>烧烤</td>
-                        <td><span class="light">时间</span>&nbsp;0425</td>
-                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                        <td>¥10000</td>
+                        <td><div class="sname">烧烤烧烤烧烤烧烤烧烤烧烤烧烤烧烤</div></td>
+                        <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <td>数量&nbsp;
+                            <div class="snumber">
+                                <div class="minus">-</div>
+                                <input type="text" value="1">
+                                <div class="plus">+</div>
+                            </div>
+                            &nbsp;(已使用10)
+                            <div class="tips">剩余库存10</div>
+                        </td>
+                        <td>¥10000<div class="sdelete"></div></td>
                     </tr>
                 </table>
             </div>
@@ -488,22 +599,32 @@
                 </div>
                 <table>
                     <tr>
-                        <td>皮划艇</td>
-                        <td><span class="light">时间</span>&nbsp;0425</td>
-                        <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                        <td>¥10000</td>
+                        <td><div class="sname">皮划艇皮划艇皮划艇皮划艇皮划艇</div></td>
+                        <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <td><span class="light">数量</span>&nbsp;
+                            <div class="snumber">
+                                <div class="minus">-</div>
+                                <input type="text" value="1">
+                                <div class="plus">+</div>
+                            </div>
+                            &nbsp;(已使用10)
+                            <div class="tips">剩余库存10</div>
+                        </td>
+                        <td>¥10<div class="sdelete"></div></td>
                     </tr>
                 </table>
             </div>
             <div class="hr2"></div>
             <div class="discount">
                 <div class="slabel">优惠</div>
-                <input type="text">
+                <input type="text" placeholder="金额">
+                <span class="tips">-¥</span>
             </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea></textarea>
+                <textarea placeholder="请填写备注信息"></textarea>
             </div>
+            <div class="counter">45/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
