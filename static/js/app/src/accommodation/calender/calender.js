@@ -180,18 +180,12 @@ $(function(){
             scope.updateGlyphsPos();
         };
         scope.selectAllPRoom = function(){
+            scope.allPRoom = !scope.allPRoom;
+            var flag = scope.allPRoom;
             for(var key in scope.pRoomList){
-                scope.pRoomList[key].selected = true;
+                scope.pRoomList[key].selected = flag;
             }
-            scope.allPRoom = true;
             scope.updateGlyphsPos();
-        };
-        scope.diselectAllPRoom = function(){
-            for(var key in scope.pRoomList){
-                scope.pRoomList[key].selected = false;
-            }
-            scope.allPRoom = false;
-            // scope.updateGlyphsPos();
         };
         scope.updateGlyphsPos = function(){
             var gridHeight = 48;

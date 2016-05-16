@@ -1122,14 +1122,15 @@
             </div>
             <div class="category-filter-menu">
                 <div class="options">
-                    <div class="item category-filter-all selected">
-                        <div class="notCheck" ng-if="!allPRoom" ng-click="selectAllPRoom()"></div>
-                        <div class="yesCheck" ng-if="allPRoom" ng-click="diselectAllPRoom()"></div>
+                    <div class="item category-filter-all selected" ng-click="selectAllPRoom()">
+                        <div class="notCheck" ng-if="!allPRoom"></div>
+                        <div class="yesCheck" ng-if="allPRoom"></div>
                         全选
                     </div>
-                    <div class="item category-filter-single selected" ng-repeat="pRoom in pRoomList">
-                        <div class="notCheck" ng-click="changePRoomSelect(pRoom.id)" ng-if="!pRoom.selected"></div>
-                        <div class="yesCheck" ng-click="changePRoomSelect(pRoom.id)" ng-if="pRoom.selected"></div>
+                    <div class="item category-filter-single selected"
+                         ng-click="changePRoomSelect(pRoom.id)" ng-repeat="pRoom in pRoomList">
+                        <div class="notCheck" ng-if="!pRoom.selected"></div>
+                        <div class="yesCheck" ng-if="pRoom.selected"></div>
                         {{pRoom.name}}
                     </div>
                 </div>
