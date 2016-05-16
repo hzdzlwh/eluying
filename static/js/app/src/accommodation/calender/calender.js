@@ -55,7 +55,7 @@ $(function(){
             //     return false;
             // }
             var date = $(this).attr("date");
-            var room = $(this).parents(".srow").attr("room");
+            var room = $(this).attr("room");
             $(".room-item[room=" + room + "]").addClass("selected");
             $(".date-item[date=" + date + "]").addClass("selected");
         },
@@ -148,28 +148,7 @@ $(function(){
         scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
         scope.datesArray = [];
         scope.calenderDays = [];
-
-        // //type:1退房, 2入住, 3预订
-        // scope.glyphs = [];
-        // var gridWidth = 100;
-        // var gridHeight = 48;
-        // for(var i = 0; i < 1; i++){
-        //    var date_min = new Date("2016-05-14");
-        //    var date_max = new Date("2016-05-16");
-        //    var diff = util.DateDiff(date_min, date_max);
-        //    var startDiff = util.DateDiff(scope.startDate, date_min);
-        //    var room = 0;
-        //    var top = gridHeight * room + 1;
-        //    var left = 100 * startDiff + 2;
-        //    var width = 100 * diff - 6;
-        //    var glyph = {
-        //        type: Math.ceil(Math.random()),
-        //        top: top,
-        //        left: left,
-        //        width: width
-        //    };
-        //    scope.glyphs.push(glyph);
-        // }
+        scope.allPRoom = true;
 
         scope.selectDate = function(date){
             scope.startDate = date;
@@ -186,6 +165,54 @@ $(function(){
             scope.startDate.setMonth(month + 1);
             scope.startDate.setDate(1);
             scope.updateData();
+        };
+        scope.changePRoomSelect = function(id){
+            var flag = true;
+            for(var key in scope.pRoomList){
+                if(scope.pRoomList[key].id == id){
+                    scope.pRoomList[key].selected = !scope.pRoomList[key].selected;
+                }
+                if(!scope.pRoomList[key].selected){
+                    flag = false;
+                }
+            }
+            scope.allPRoom = flag;
+            scope.updateGlyphsPos();
+        };
+        scope.selectAllPRoom = function(){
+            for(var key in scope.pRoomList){
+                scope.pRoomList[key].selected = true;
+            }
+            scope.allPRoom = true;
+            scope.updateGlyphsPos();
+        };
+        scope.diselectAllPRoom = function(){
+            for(var key in scope.pRoomList){
+                scope.pRoomList[key].selected = false;
+            }
+            scope.allPRoom = false;
+            // scope.updateGlyphsPos();
+        };
+        scope.updateGlyphsPos = function(){
+            var gridHeight = 48;
+            var roomIndexHash = {};
+            var tnum = 0;
+            var pRoomList = scope.pRoomList;
+            var cRoomStore = scope.cRoomStore;
+            for(var c in cRoomStore){
+                var tempCRoom = cRoomStore[c];
+                if(!pRoomList[tempCRoom.pId].selected){
+                    continue;
+                }
+                for(var r in tempCRoom.rooms){
+                    roomIndexHash[r] = tnum++;
+                }
+            }
+            scope.glyphs.forEach(function(g){
+                var room = roomIndexHash[g.accommodationId];
+                var top = gridHeight * room + 1;
+                g.top = top;
+            });
         };
         scope.updateData = function(){
             scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
@@ -214,8 +241,7 @@ $(function(){
                 for(var i = 6; i > 0; i--){
                     calenderDays.push(util.diffDate(firstDay, -i));
                 }
-            }
-            else{
+            } else{
                 for(var i = firstDay_weekday-1; i > 0; i--){
                     calenderDays.push(util.diffDate(firstDay, -i));
                 }
@@ -262,10 +288,12 @@ $(function(){
                 }, function(result2){
                     var holiday = result2.data.holidays;
                     var cRooms = result2.data.rs;
+                    var orderList = result2.data.orderList;
                     var cRoomStore = {};
                     var roomStore = [];
                     var pRoomList = {};
                     var cRoomList = {};
+                    //保存父房型和子房型关系
                     for(var i = 0; i < cRooms.length; i++){
                         var cRoom = cRooms[i];
                         if(!cRoomList[cRoom.ti]){
@@ -277,12 +305,14 @@ $(function(){
                             st: cRoom.st
                         };
                     }
+                    //保存子房型列表
                     for(var i = 0; i < pRooms.length; i++){
                         var pRoom = pRooms[i];
                         if(!pRoomList[pRoom.pId]){
                             pRoomList[pRoom.pId] = {
                                 id: pRoom.pId,
-                                name: pRoom.pName
+                                name: pRoom.pName,
+                                selected: true
                             };
                         }
                         if(!cRoomStore[pRoom.cId]){
@@ -294,22 +324,77 @@ $(function(){
                             };
                         }
                     }
+                    //保存房间列表
+                    var roomIndexHash = {};
+                    var tnum = 0;
                     for(var c in cRoomStore){
-                        for(var r in cRoomStore[c].rooms){
-                            for(var k = 0; k < cRoom.st.length; k++){
-                                cRoomStore[c].rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
+                        var tempCRoom = cRoomStore[c];
+                        for(var r in tempCRoom.rooms){
+                            for(var k = 0; k < tempCRoom.rooms[r].st.length; k++){
+                                tempCRoom.rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
                             }
                             var temp = {
+                                pi: tempCRoom.pId,
+                                ti: tempCRoom.id,
                                 id: r,
-                                sn: cRoomStore[c].rooms[r].sn,
-                                st: cRoomStore[c].rooms[r].st
+                                sn: tempCRoom.rooms[r].sn,
+                                st: tempCRoom.rooms[r].st
                             };
+                            roomIndexHash[r] = tnum++;
                             roomStore.push(temp);
                         }
                     }
+                    //生成订单图元
+                    var glyphs = [];
+                    var gridWidth = 100;
+                    var gridHeight = 48;
+                    var stateStr = ["待处理", "已拒绝", "预", "住", "已取消", "完"];
+                    var occupyList = {};
+                    orderList.forEach(function(order){
+                        console.log(order);
+                        var startDate = new Date(order.checkInDate);
+                        var endDate = new Date(order.checkOutDate);
+                        var diff = util.DateDiff(startDate, endDate);
+                        if(diff === 0){
+                            diff = 1;
+                        }
+                        var startDiff = util.DateDiff(scope.startDate, startDate);
+                        var room = roomIndexHash[order.accommodationId];
+                        var top = gridHeight * room + 1;
+                        var left = gridWidth * startDiff + 2;
+                        var width = gridWidth * diff - 6;
+                        var glyph = order;
+                        glyph.top = top;
+                        glyph.left = left;
+                        glyph.width = width;
+                        glyph.stateStr = stateStr[glyph.orderState];
+                        var tempDate = new Date(order.checkInDate);
+                        glyph.checkInDate = order.checkInDate.substr(5, 5);
+                        glyph.checkOutDate = order.checkOutDate.substr(5, 5);
+                        if(util.isSameDay(startDate, endDate)){
+                            occupyList[glyph.checkInDate + order.accommodationId] = true;
+                        }else{
+                            while(tempDate < endDate){
+                                occupyList[util.dateFormatWithoutYear(tempDate) + order.accommodationId] = true;
+                                tempDate = util.diffDate(tempDate, 1);
+                            }
+                        }
+                        if(glyph.orderState == 5){
+                            glyph.classStr = "finish";
+                        }else if(glyph.orderState == 2){
+                            glyph.classStr = "book";
+                        }else if(glyph.orderState == 3){
+                            glyph.classStr = "ing";
+                        }else{
+                            return false;
+                        }
+                        glyphs.push(glyph);
+                    });
                     scope.pRoomList = pRoomList;
                     scope.cRoomStore = cRoomStore;
                     scope.roomStore = roomStore;
+                    scope.glyphs = glyphs;
+                    scope.occupyList = occupyList;
                     scope.$apply();
                 });
             });
