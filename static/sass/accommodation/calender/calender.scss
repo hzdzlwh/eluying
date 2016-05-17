@@ -92,7 +92,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     .hr{
       @include modalHeader();
     }
-    img{
+    .tips-img{
       position: absolute;
       left: 58px;
       top: 42px;
@@ -154,7 +154,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
 #newFailModal{
   .modal-content{
     height: 140px;
-    img{
+    .tips-img{
       left: 85px;
     }
     .stitle{
@@ -458,6 +458,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    .spriteImg{
+      cursor: pointer;
+      position: relative;
+      top: 2px;
+    }
     .hr {
       @include modalHeader();
     }
@@ -560,7 +565,12 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       width: 100%;
       height: 24px;
       margin: 8px 0;
+      overflow-x: hidden;
       overflow-y: hidden;
+      .spriteImg{
+        position: relative;
+        top: -2px;
+      }
       .subtype{
         margin: 8px 0;
         color: #666666;
@@ -699,9 +709,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           position: absolute;
           left: 234px;
           top: -2px;
-          img{
-            cursor: pointer;
-          }
           .desc-box{
             display: none;
             background:#fafafa;
@@ -844,6 +851,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    .spriteImg{
+      cursor: pointer;
+      position: relative;
+      top: 2px;
+    }
     .hr {
       @include modalHeader();
     }
@@ -1347,7 +1359,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       border:1px solid #cccccc;
       border-radius:$BorderRadius;
       position: relative;
-      img{
+      .eluyun_paywithalipay_outer{
         position: absolute;
         left: 10px;
         top: 9px;
@@ -1532,6 +1544,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    .spriteImg{
+      cursor: pointer;
+      position: relative;
+      top: 2px;
+    }
     .hr {
       @include modalHeader();
     }
@@ -1976,6 +1993,149 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   left: 0;
   zoom:1;
   width: 100%;
+  .search{
+    position: absolute;
+    right: 242px;
+    top: -42px;
+    z-index: 999;
+    .search-btn{
+      cursor: pointer;
+      position: relative;
+      top: 2px;
+    }
+    input{
+      display: block;
+      width: 256px;
+      //visibility: hidden;
+      height: 24px;
+      background:#ffffff;
+      color: #cccccc;
+      font-size: 14px;
+      border-radius:2px;
+      position: absolute;
+      right: -5px;
+      top: -3px;
+      z-index: -1;
+      border: none;
+      padding: 0 8px;
+    }
+    .results{
+      background:#fafafa;
+      box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+      border-radius:2px;
+      width:256px;
+      height:auto;
+      position: absolute;
+      right: -5px;
+      top: 22px;
+      .btns{
+        text-align: right;
+        margin: 4px 0 4px 0;
+        padding-right: 8px;
+        .sbtn{
+          @include sbtn();
+          margin-left: 24px;
+          cursor: pointer;
+        }
+        .next{
+          img{
+            -webkit-transform: rotate(-180deg);
+            -moz-transform: rotate(-180deg);
+            -o-transform: rotate(-180deg);
+          }
+        }
+      }
+      .tips{
+        opacity:0.5;
+        font-size:12px;
+        color:#7d7d7d;
+        text-align:left;
+        height: 17px;
+        line-height: 17px;
+        margin: 4px 0;
+        padding: 0 8px;
+      }
+      .hr{
+        width: 210px;
+        height: 1px;
+        background: #ededed;
+        margin: auto;
+      }
+      .item:hover{
+        background: #ededed;
+      }
+      .item{
+        width: 100%;
+        height: 69px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        position: relative;
+        cursor: pointer;
+        .srow{
+          height: 20px;
+          width: 100%;
+          position: relative;
+          .slabel, .desc{
+            height: 100%;
+            line-height: 20px;
+          }
+          .slabel{
+            width: 56px;
+            text-align: left;
+            padding-left: 8px;
+            color: #b3b3b3;
+          }
+          .desc{
+            width: 135px;
+            color: #666666;
+            position: absolute;
+            left: 64px;
+            top: 0;
+          }
+        }
+        .status{
+          position: absolute;
+          top: 4px;
+          right: 8px;
+          font-size:12px;
+          color: white;
+          text-align:center;
+          width: 44px;
+          height: 22px;
+          line-height: 22px;
+          .triangle{
+            position: absolute;
+            top: 0;
+            left: -11px;
+          }
+        }
+        .status.book{
+          background: #82beff;
+          .triangle{
+            border-top: solid transparent 11px;
+            border-bottom: solid transparent 11px;
+            border-right: solid #82beff 11px;
+          }
+        }
+        .status.ing{
+          background: #ffba75;
+          .triangle{
+            border-top: solid transparent 11px;
+            border-bottom: solid transparent 11px;
+            border-right: solid #ffba75 11px;
+          }
+        }
+        .status.finish{
+          background: #bfbfbf;
+          .triangle{
+            border-top: solid transparent 11px;
+            border-bottom: solid transparent 11px;
+            border-right: solid #bfbfbf 11px;
+          }
+        }
+      }
+    }
+  }
   .content {
     width: 100%;
     height: 100%;
@@ -2683,7 +2843,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       //}
     }
     .shopcart{
-      display: none;
+      display: block;
       min-width: 1200px;
       position: fixed;
       height: 102px;

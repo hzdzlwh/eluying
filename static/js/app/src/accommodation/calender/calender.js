@@ -29,17 +29,7 @@ $(function(){
     $(".entryList")[0].onselectstart  = function(){
         return false;
     };
-    // $(".search").show();
 
-    //初始化日历
-    // $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
-    // $("#datePicker").datepicker({
-    //     dateFormat: "yy-mm-dd",
-    //     changeMonth: true,
-    //     changeYear: true
-    // });
-    // $("#datePicker").datepicker( "setDate", new Date());
-    // var locked = false;
     events = {
 
         "show.bs.modal .modal": modal.centerModals,
@@ -149,6 +139,9 @@ $(function(){
         scope.datesArray = [];
         scope.calenderDays = [];
         scope.allPRoom = true;
+
+        //搜索用到的变量
+        scope.searchKeyword = '';
 
         scope.selectDate = function(date){
             scope.startDate = date;
@@ -363,10 +356,10 @@ $(function(){
                         glyph.width = width;
                         glyph.stateStr = stateStr[glyph.orderState];
                         var tempDate = new Date(order.checkInDate);
-                        glyph.checkInDate = order.checkInDate.substr(5, 5);
-                        glyph.checkOutDate = order.checkOutDate.substr(5, 5);
+                        glyph.checkInDateShort = order.checkInDate.substr(5, 5);
+                        glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
                         if(util.isSameDay(startDate, endDate)){
-                            occupyList[glyph.checkInDate + order.accommodationId] = true;
+                            occupyList[glyph.checkInDateShort + order.accommodationId] = true;
                         }else{
                             while(tempDate < endDate){
                                 occupyList[util.dateFormatWithoutYear(tempDate) + order.accommodationId] = true;
@@ -393,7 +386,6 @@ $(function(){
                 });
             });
         };
-
         scope.updateData();
     }]);
 
