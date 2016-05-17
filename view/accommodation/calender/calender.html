@@ -1260,7 +1260,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="glyph ing" ng-repeat="g in glyphs" ng-if="pRoomList[g.categoryId].selected" style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
+                <div class="glyph ing" ng-repeat="g in glyphs" ng-if="pRoomList[cRoomStore[g.id].pId].selected" style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">{{g.channelName}}
                         <img class="status"

@@ -14,6 +14,7 @@ require("datepicker-zh");
 require("bootstrap");
 require("validation");
 
+
 $(function(){
     //初始化界面
     header.showHeader();
@@ -382,6 +383,7 @@ $(function(){
                     scope.roomStore = roomStore;
                     scope.glyphs = glyphs;
                     scope.occupyList = occupyList;
+                    console.log(scope);
                     scope.$apply();
                 });
             });
