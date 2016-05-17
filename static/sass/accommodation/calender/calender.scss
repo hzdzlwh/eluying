@@ -2031,18 +2031,15 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       .btns{
         text-align: right;
         margin: 4px 0 4px 0;
-        padding-right: 8px;
+        padding-right: 12px;
         .sbtn{
           @include sbtn();
+          border: none;
           margin-left: 24px;
           cursor: pointer;
         }
         .next{
-          img{
-            -webkit-transform: rotate(-180deg);
-            -moz-transform: rotate(-180deg);
-            -o-transform: rotate(-180deg);
-          }
+          margin-left: 8px;
         }
       }
       .tips{
@@ -2154,8 +2151,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         z-index: 2;
         background: $bgColor;
         cursor: pointer;
-        img{
+        .spriteImg{
           margin-left: 8px;
+          position: relative;
+          top: 2px;
         }
       }
       .date-table{
@@ -2186,7 +2185,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           margin-top: 8px;
           font-size:14px;
           color:$color1;
-          img{
+          .spriteImg{
             position: relative;
             top: -2px;
             cursor: pointer;
@@ -2198,9 +2197,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           .next{
             vertical-align: middle;
             margin-left: 16px;
-            -webkit-transform: rotate(-180deg);
-            -moz-transform: rotate(-180deg);
-            -o-transform: rotate(-180deg);
           }
         }
         .week-header{
@@ -2288,7 +2284,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       .category-filter-switch{
         cursor: pointer;
       }
-      img{
+      .spriteImg{
         margin-left: 8px;
       }
       .category-filter-menu{
