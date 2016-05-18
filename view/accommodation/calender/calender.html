@@ -1129,7 +1129,8 @@
         <div class="results">
             <div class="tips">共有{{filteredGlyphs().length}}条搜索结果</div>
             <div class="hr"></div>
-            <div ng-repeat="g in filteredGlyphs()">
+            <div ng-repeat="g in filteredGlyphs()"
+                 ng-if="$index >= searchResultPage*searchResultUnit && $index < (searchResultPage+1)*searchResultUnit">
                 <div class="item" orderId="{{g.orderId}}">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
@@ -1148,12 +1149,12 @@
                 <div class="hr"></div>
             </div>
             <div class="btns" ng-if="filteredGlyphs().length > 0">
-                <div class="sbtn previous">
+                <div class="sbtn previous" ng-click="searchResultPreviousPage()">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
                         <div class="eluyun_arrow-left-border"></div>
                     </div>
                 </div>
-                <div class="sbtn next">
+                <div class="sbtn next" ng-click="searchResultNextPage()">
                     <div class="eluyun_arrow-right-border_outer spriteImg">
                         <div class="eluyun_arrow-right-border"></div>
                     </div>

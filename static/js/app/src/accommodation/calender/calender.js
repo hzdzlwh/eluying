@@ -170,6 +170,14 @@ $(function(){
 
         //搜索用到的变量
         scope.searchKeyword = '';
+        scope.searchResultPage = 0;
+        scope.searchResultUnit = 5;
+        scope.searchResultNextPage = function(){
+            scope.searchResultPage < scope.filteredGlyphs().length / scope.searchResultUnit && scope.searchResultPage++;
+        };
+        scope.searchResultPreviousPage = function(){
+            scope.searchResultPage > 0 && scope.searchResultPage--;
+        };
         scope.filteredGlyphs = function(){
             if(!scope.glyphs){
                 return {};
@@ -523,6 +531,7 @@ $(function(){
                     return false;
                 }
             }
+            scope.processBeforeAdd(type);
             $("#newOrderModal").modal("show");
         };
         scope.processBeforeAdd = function(type){
@@ -573,7 +582,46 @@ $(function(){
             }
             scope.selectedRooms = selectedRooms;
             scope.selectedEntries = selectedEntries_new;
-            //TODO 处理成订单所需格式
+            //处理成订单所需格式
+            var entriesArray = [];
+            for(var key in selectedEntries_new){
+                entriesArray.push(selectedEntries_new[key]);
+            }
+            entriesArray.sort(function(a, b){
+                return parseInt(a.roomId) > parseInt(b.roomId) || new Date(a.date2) > new Date(b.date2);
+            });
+            var orderList = [];
+            var entry;
+            entry = entriesArray[0];
+            var temp = {
+                startDate: entry.date2,
+                endDate: entry.date2,
+                roomId: entry.roomId,
+                id: entry.cRoomId,
+                fee: entry.price,
+                sub: true,
+            };
+            for(var i = 1; i < entriesArray.length; i++){
+                entry = entriesArray[i];
+                var date1 = new Date(entry.date2);
+                var date2 = new Date(temp.endDate);
+                if(entry.roomId === temp.roomId && util.DateDiff(date2, date1) === 1){
+                    temp.endDate = entry.date2;
+                    temp.fee += entry.price;
+                }else{
+                    orderList.push(temp);
+                    temp = {
+                        startDate: entry.date2,
+                        endDate: entry.date2,
+                        roomId: entry.roomId,
+                        id: entry.cRoomId,
+                        fee: entry.price,
+                        sub: true,
+                    };
+                }
+            }
+            orderList.push(temp);
+            //TODO 继续下单
             $(".msgModal").modal("hide");
             $("#newOrderModal").modal("show");
         };
