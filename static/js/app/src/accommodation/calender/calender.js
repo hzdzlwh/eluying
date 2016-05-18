@@ -256,6 +256,7 @@ $(function(){
         scope.updateData = function(){
             scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
             scope.datesArray = [];
+            scope.glyphs = [];
             var tempDate = new Date(scope.startDate);
             for(var i = 0; i < 30; i++){
                 scope.datesArray.push({
@@ -391,7 +392,15 @@ $(function(){
                     var occupyList = {};
                     orderList.forEach(function(order){
                         var startDate = new Date(order.checkInDate);
+                        var seeStart = true;
+                        if(startDate < scope.startDate && !util.isSameDay(startDate, scope.startDate)){
+                            startDate = scope.startDate;
+                            seeStart = false;
+                        }
                         var endDate = new Date(order.checkOutDate);
+                        if(endDate > util.diffDate(scope.startDate, 29)){
+                            endDate = util.diffDate(scope.startDate, 29);
+                        }
                         var diff = util.DateDiff(startDate, endDate);
                         if(diff === 0){
                             diff = 1;
@@ -409,6 +418,7 @@ $(function(){
                         var tempDate = new Date(order.checkInDate);
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
+                        glyph.seeStart = seeStart;
                         if(util.isSameDay(startDate, endDate)){
                             occupyList[glyph.checkInDateShort + order.accommodationId] = true;
                         }else{
@@ -425,7 +435,6 @@ $(function(){
                     scope.roomStore = roomStore;
                     scope.glyphs = glyphs;
                     scope.occupyList = occupyList;
-                    console.log(scope);
                     scope.$apply();
                 });
             });

@@ -2668,14 +2668,20 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         }
         .glyph.book{
           background: #82beff;
+        }
+        .glyph.book.seeStart{
           border-left: solid 6px $color1;
         }
         .glyph.finish{
           background: #bfbfbf;
+        }
+        .glyph.finish.seeStart{
           border-left: solid 6px #8c8c8c;
         }
         .glyph.ing{
           background: #ffba75;
+        }
+        .glyph.ing.seeStart{
           border-left: solid 6px #f27c05;
         }
         .srow{
