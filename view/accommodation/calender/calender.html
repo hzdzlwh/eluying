@@ -1130,7 +1130,7 @@
             <div class="tips">共有{{filteredGlyphs().length}}条搜索结果</div>
             <div class="hr"></div>
             <div ng-repeat="g in filteredGlyphs()">
-                <div class="item" ng-click="searchResultOnClick()">
+                <div class="item" ng-click="searchResultOnClick();$event.stopPropagation();">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
                         <div class="desc">{{g.checkInDate}}</div>
@@ -1141,9 +1141,9 @@
                     </div>
                     <div class="srow">
                         <div class="slabel">订单号:</div>
-                        <div class="desc">201604201111111111111</div>
+                        <div class="desc">{{g.serialNum}}</div>
                     </div>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <div class="status {{statusStr[g.orderState].classStr}}"><div class="triangle"></div>{{statusStr[g.orderState].long}}</div>
                 </div>
                 <div class="hr"></div>
             </div>
@@ -1172,11 +1172,11 @@
             <div class="date-table">
                 <div class="tips">选择起始日期，将会显示未来30天的房态</div>
                 <div class="month-selector">
-                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth()">
+                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
                         <div class="eluyun_arrow-left-blue"></div>
                     </div>
                     {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
-                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth()">
+                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
                         <div class="eluyun_arrow-right-blue"></div>
                     </div>
                 </div>
@@ -1190,7 +1190,7 @@
                     <div class="item">日</div>
                 </div>
                 <div class="date-row" ng-repeat="row in calenderDays">
-                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date)">
+                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
                         {{day.text || day.date.getDate()}}
                     </div>
                 </div>
@@ -1205,13 +1205,13 @@
             </div>
             <div class="category-filter-menu">
                 <div class="options">
-                    <div class="item category-filter-all selected" ng-click="selectAllPRoom()">
+                    <div class="item category-filter-all selected" ng-click="selectAllPRoom();$event.stopPropagation();">
                         <div class="notCheck" ng-if="!allPRoom"></div>
                         <div class="yesCheck" ng-if="allPRoom"></div>
                         全选
                     </div>
                     <div class="item category-filter-single selected"
-                         ng-click="changePRoomSelect(pRoom.id)" ng-repeat="pRoom in pRoomList">
+                         ng-click="changePRoomSelect(pRoom.id);$event.stopPropagation();" ng-repeat="pRoom in pRoomList">
                         <div class="notCheck" ng-if="!pRoom.selected"></div>
                         <div class="yesCheck" ng-if="pRoom.selected"></div>
                         {{pRoom.name}}

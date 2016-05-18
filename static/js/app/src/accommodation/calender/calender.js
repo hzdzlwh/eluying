@@ -14,7 +14,15 @@ require("datepicker-zh");
 require("bootstrap");
 require("validation");
 
-
+var locked = true;
+var statusStr = [
+    {},
+    {},
+    {short: '预', long: '已预订', classStr: 'book'},
+    {short: '住', long: '已入住', classStr: 'ing'},
+    {},
+    {short: '完', long: '已完成', classStr: 'finish'}
+];
 $(function(){
     //初始化界面
     header.showHeader();
@@ -61,7 +69,11 @@ $(function(){
             if(ev.which == 3){
                 $(".entryOp").hide();
                 $(this).find(".entryOp").show();
-                // locked = true;
+                locked = true;
+                return false;
+            }
+            if(locked){
+                locked = false;
                 return false;
             }
             if($(this).hasClass("selected")){
@@ -74,29 +86,33 @@ $(function(){
             ev.stopPropagation();
         },
         "click body": function(ev){
-            if(!$(ev.target).hasClass("entryOp")){
-                $(".entryOp").hide();
-                // locked = false;
-            }
-            // if(!$(ev.target).hasClass("category-filter-menu") || !$(ev.target).hasClass("options")){
-            //     $(".category-filter").removeClass("open");
-            //     // locked = false;
-            // }
+            $(".entryOp").hide();
+            $(".search .results").hide();
+            $(".date-selector").removeClass("open");
+            $(".category-filter").removeClass("open");
+            locked = false;
+        },
+        "click body .results": function(ev){
+            ev.stopPropagation();
         },
         "click body .category-filter-switch": function(ev){
             ev.stopPropagation();
             if(!$(".category-filter").hasClass("open")){
                 $(".category-filter").addClass("open");
+                locked = true;
             }else{
                 $(".category-filter").removeClass("open");
+                locked = false;
             }
         },
         "click body .date-selector-switch": function(ev){
             ev.stopPropagation();
             if(!$(".date-selector").hasClass("open")){
                 $(".date-selector").addClass("open");
+                locked = true;
             }else{
                 $(".date-selector").removeClass("open");
+                locked = false;
             }
         },
         "mouseover body .glyph": function(ev){
@@ -116,6 +132,7 @@ $(function(){
             $(this).find(".infos").hide();
         },
         "click body .consume-switch": function (ev) {
+            ev.stopPropagation();
             if($(this).hasClass("open")){
                 $(this).removeClass("open");
                 $(this).parents(".consume-info").animate({
@@ -128,8 +145,12 @@ $(function(){
                 });
             }
         },
+        "click body input.keyword": function(ev){
+            ev.stopPropagation();
+        },
         "focus body input.keyword": function(ev){
             $(".search .results").show();
+            locked = true;
         },
         // "blur body input.keyword": function(ev){
         //     $(".search .results").hide();
@@ -146,6 +167,7 @@ $(function(){
         scope.datesArray = [];
         scope.calenderDays = [];
         scope.allPRoom = true;
+        scope.statusStr = statusStr;
 
         //搜索用到的变量
         scope.searchKeyword = '';
@@ -352,7 +374,6 @@ $(function(){
                     var glyphs = [];
                     var gridWidth = 100;
                     var gridHeight = 48;
-                    var stateStr = ["待处理", "已拒绝", "预", "住", "已取消", "完"];
                     var occupyList = {};
                     orderList.forEach(function(order){
                         console.log(order);
@@ -371,7 +392,7 @@ $(function(){
                         glyph.top = top;
                         glyph.left = left;
                         glyph.width = width;
-                        glyph.stateStr = stateStr[glyph.orderState];
+                        glyph.stateStr = statusStr[glyph.orderState].short;
                         var tempDate = new Date(order.checkInDate);
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
@@ -383,15 +404,7 @@ $(function(){
                                 tempDate = util.diffDate(tempDate, 1);
                             }
                         }
-                        if(glyph.orderState == 5){
-                            glyph.classStr = "finish";
-                        }else if(glyph.orderState == 2){
-                            glyph.classStr = "book";
-                        }else if(glyph.orderState == 3){
-                            glyph.classStr = "ing";
-                        }else{
-                            return false;
-                        }
+                        glyph.classStr = statusStr[glyph.orderState].classStr;
                         glyphs.push(glyph);
                     });
                     scope.pRoomList = pRoomList;
