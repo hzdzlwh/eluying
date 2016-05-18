@@ -1127,10 +1127,10 @@
         </div>
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号" ng-model="searchKeyword">
         <div class="results">
-            <div class="tips">共有100条搜索结果</div>
+            <div class="tips">共有{{filteredGlyphs().length}}条搜索结果</div>
             <div class="hr"></div>
-            <div ng-repeat="g in glyphs">
-                <div class="item">
+            <div ng-repeat="g in filteredGlyphs()">
+                <div class="item" ng-click="searchResultOnClick()">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
                         <div class="desc">{{g.checkInDate}}</div>
@@ -1147,7 +1147,7 @@
                 </div>
                 <div class="hr"></div>
             </div>
-            <div class="btns">
+            <div class="btns" ng-if="filteredGlyphs().length > 0">
                 <div class="sbtn previous">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
                         <div class="eluyun_arrow-left-border"></div>
@@ -1172,11 +1172,11 @@
             <div class="date-table">
                 <div class="tips">选择起始日期，将会显示未来30天的房态</div>
                 <div class="month-selector">
-                    <div class="eluyun_arrow-left-blue_outer spriteImg previous">
+                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth()">
                         <div class="eluyun_arrow-left-blue"></div>
                     </div>
                     {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
-                    <div class="eluyun_arrow-right-blue_outer spriteImg next">
+                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth()">
                         <div class="eluyun_arrow-right-blue"></div>
                     </div>
                 </div>

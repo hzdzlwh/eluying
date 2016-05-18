@@ -126,7 +126,13 @@ $(function(){
                     height: 'auto'
                 });
             }
-        }
+        },
+        "focus body input.keyword": function(ev){
+            $(".search .results").show();
+        },
+        // "blur body input.keyword": function(ev){
+        //     $(".search .results").hide();
+        // },
     };
 
     util.bindDomAction(events);
@@ -142,7 +148,17 @@ $(function(){
 
         //搜索用到的变量
         scope.searchKeyword = '';
-
+        scope.filteredGlyphs = function(){
+            if(!scope.glyphs){
+                return {};
+            }
+            return scope.glyphs.filter(function(d){
+                return d.customerName.indexOf(scope.searchKeyword) > -1 || d.phone.indexOf(scope.searchKeyword) > -1;
+            })
+        };
+        scope.searchResultOnClick = function(){
+            alert(111);
+        };
         scope.selectDate = function(date){
             scope.startDate = date;
             scope.updateData();
