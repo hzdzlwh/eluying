@@ -186,6 +186,14 @@ var util = {
 
             }
         }
-    }
+    },
+    
+    objLen: function(obj){
+        var num = 0;
+        for(var key in obj){
+            num++;
+        }
+        return num;
+    },
 };
 module.exports = util;

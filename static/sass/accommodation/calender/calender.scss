@@ -2513,6 +2513,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           }
           .infos{
             display:none;
+            z-index: 2;
             position: absolute;
             background-color:#fafafa;
             box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
@@ -2855,41 +2856,43 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           margin-left: 16px;
         }
       }
-      .sbtn{
-        @include btn2_normal();
-        @include btn_big();
+      .btns{
         position: absolute;
         bottom: 9px;
-      }
-      .sbtn.addition{
-        background: $color6;
-        right: 132px;
-      }
-      .sbtn.addition:hover{
-        background: $color6Hover;
-      }
-      .sbtn.addition:active{
-        background: $color6Click;
-      }
-      .sbtn.book{
-        background: $color1;
-        right: 132px;
-      }
-      .sbtn.book:hover{
-        background: $color1Hover;
-      }
-      .sbtn.book:active{
-        background: $color1Click;
-      }
-      .sbtn.buy{
-        background: $color5;
         right: 16px;
-      }
-      .sbtn.buy:hover{
-        background: $color5Hover;
-      }
-      .sbtn.buy:active{
-        background: $color5Click;
+        .sbtn{
+          @include btn2_normal();
+          @include btn_big();
+          float: right;
+          margin-right: 16px;
+        }
+        .sbtn.addition{
+          background: $color6;
+        }
+        .sbtn.addition:hover{
+          background: $color6Hover;
+        }
+        .sbtn.addition:active{
+          background: $color6Click;
+        }
+        .sbtn.book{
+          background: $color1;
+        }
+        .sbtn.book:hover{
+          background: $color1Hover;
+        }
+        .sbtn.book:active{
+          background: $color1Click;
+        }
+        .sbtn.buy{
+          background: $color5;
+        }
+        .sbtn.buy:hover{
+          background: $color5Hover;
+        }
+        .sbtn.buy:active{
+          background: $color5Click;
+        }
       }
     }
   }

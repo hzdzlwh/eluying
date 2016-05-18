@@ -14,7 +14,7 @@ require("datepicker-zh");
 require("bootstrap");
 require("validation");
 
-var locked = true;
+var locked = false;
 var statusStr = [
     {},
     {},
@@ -72,15 +72,12 @@ $(function(){
                 locked = true;
                 return false;
             }
-            if(locked){
-                locked = false;
-                return false;
-            }
-            if($(this).hasClass("selected")){
-                $(this).removeClass("selected");
-            }else{
-                $(this).addClass("selected");
-            }
+
+            // if($(this).hasClass("selected")){
+            //     $(this).removeClass("selected");
+            // }else{
+            //     $(this).addClass("selected");
+            // }
         },
         "mousedown body .entryOp": function(ev){
             ev.stopPropagation();
@@ -168,6 +165,8 @@ $(function(){
         scope.calenderDays = [];
         scope.allPRoom = true;
         scope.statusStr = statusStr;
+        scope.selectedEntries = {};
+        scope.selectedRooms = [];
 
         //搜索用到的变量
         scope.searchKeyword = '';
@@ -184,18 +183,24 @@ $(function(){
         };
         scope.selectDate = function(date){
             scope.startDate = date;
+            scope.selectedRooms = [];
+            scope.selectedEntries = {};
             scope.updateData();
         };
         scope.lastMonth = function(){
             var month = scope.startDate.getMonth();
             scope.startDate.setMonth(month - 1);
             scope.startDate.setDate(1);
+            scope.selectedRooms = [];
+            scope.selectedEntries = {};
             scope.updateData();
         };
         scope.nextMonth = function(){
             var month = scope.startDate.getMonth();
             scope.startDate.setMonth(month + 1);
             scope.startDate.setDate(1);
+            scope.selectedRooms = [];
+            scope.selectedEntries = {};
             scope.updateData();
         };
         scope.changePRoomSelect = function(id){
@@ -358,6 +363,7 @@ $(function(){
                         for(var r in tempCRoom.rooms){
                             for(var k = 0; k < tempCRoom.rooms[r].st.length; k++){
                                 tempCRoom.rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(scope.startDate, k));
+                                tempCRoom.rooms[r].st[k].date2 = util.dateFormat(util.diffDate(scope.startDate, k));
                             }
                             var temp = {
                                 pi: tempCRoom.pId,
@@ -376,7 +382,6 @@ $(function(){
                     var gridHeight = 48;
                     var occupyList = {};
                     orderList.forEach(function(order){
-                        console.log(order);
                         var startDate = new Date(order.checkInDate);
                         var endDate = new Date(order.checkOutDate);
                         var diff = util.DateDiff(startDate, endDate);
@@ -416,6 +421,161 @@ $(function(){
                     scope.$apply();
                 });
             });
+        };
+        //下面是订房逻辑
+        scope.addRoom = function(date, roomId){
+            var cRoomStore = scope.cRoomStore;
+            if(locked){
+                locked = false;
+                return false;
+            }
+            if(scope.selectedEntries[roomId + date]){
+                delete scope.selectedEntries[roomId + date];
+            }else{
+                //找房间
+                var roomStore = scope.roomStore;
+                var room;
+                for(var i = 0; i < roomStore.length; i++){
+                    if(roomStore[i].id == roomId){
+                        room = roomStore[i];
+                        break;
+                    }
+                }
+                var dayItem;
+                for(var j = 0; j < room.st.length; j++){
+                    if(room.st[j].date == date){
+                        dayItem = room.st[j];
+                        break;
+                    }
+                }
+                console.log(room, dayItem);
+                scope.selectedEntries[roomId + date] = {
+                    date: date,
+                    date2: dayItem.date2,
+                    roomId: roomId,
+                    price: dayItem.p,
+                    sn: room.sn,
+                    cRoomId: room.ti,
+                    cRoomName: cRoomStore[room.ti].name,
+                    pRoomId: room.pi
+                };
+            }
+            scope.showShopCart();
+        };
+        //购物车显示逻辑
+        scope.shopcartShow = false;
+        scope.bookShow = false;
+        scope.finishShow = false;
+        scope.ingShow = false;
+        scope.t = false;
+        scope.f = false;
+        scope.p = false;
+        scope.showShopCart = function(){
+            var selectedEntries = scope.selectedEntries;
+            if(util.objLen(selectedEntries) === 0){
+                scope.shopcartShow = false;
+            }else{
+                scope.shopcartShow = true;
+                var today = new Date();
+                var p = false;
+                var t = false;
+                var f = false;
+                var roomHash = {};
+                var selectedRooms = [];
+                for(var key in selectedEntries){
+                    var item = selectedEntries[key];
+                    var date = new Date(item.date2);
+                    if(util.isSameDay(date, today)){
+                        t = true;
+                    }else if(date > today){
+                        f = true;
+                    }else if(date < today){
+                        p = true;
+                    }
+                    if(!roomHash[item.cRoomName + item.sn]){
+                        selectedRooms.push(item.cRoomName + item.sn);
+                        roomHash[item.cRoomName + item.sn] = true;
+                    }
+                }
+                scope.t = t;
+                scope.f = f;
+                scope.p = p;
+                scope.selectedRooms = selectedRooms;
+                scope.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
+                scope.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
+                scope.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
+            }
+        };
+        scope.checkBeforeAdd = function(type){
+            if(type == 'finish'){
+                if(scope.t || scope.f){
+                    $("#finishWarningModal").modal("show");
+                    return false;
+                }
+            }else if(type == 'ing'){
+                if(scope.p){
+                    $("#ingWarningModal").modal("show");
+                    return false;
+                }
+            }else if(type == 'book'){
+                if(scope.p){
+                    $("#bookWarningModal").modal("show");
+                    return false;
+                }
+            }
+            $("#newOrderModal").modal("show");
+        };
+        scope.processBeforeAdd = function(type){
+            var selectedEntries = scope.selectedEntries;
+            var selectedEntries_new = {};
+            var today = new Date();
+            var roomHash = {};
+            var selectedRooms = [];
+            if(type == 'finish'){
+                for(var key in selectedEntries){
+                    var item = selectedEntries[key];
+                    var date = new Date(item.date2);
+                    if(util.isSameDay(date, today) || date > today){
+                        continue;
+                    }
+                    if(!roomHash[item.cRoomName + item.sn]){
+                        selectedRooms.push(item.cRoomName + item.sn);
+                        roomHash[item.cRoomName + item.sn] = true;
+                    }
+                    selectedEntries_new[key] = item;
+                }
+            }else if(type == 'ing'){
+                for(var key in selectedEntries){
+                    var item = selectedEntries[key];
+                    var date = new Date(item.date2);
+                    if(!util.isSameDay(date, today) && date < today){
+                        continue;
+                    }
+                    if(!roomHash[item.cRoomName + item.sn]){
+                        selectedRooms.push(item.cRoomName + item.sn);
+                        roomHash[item.cRoomName + item.sn] = true;
+                    }
+                    selectedEntries_new[key] = item;
+                }
+            }else if(type == 'book'){
+                for(var key in selectedEntries){
+                    var item = selectedEntries[key];
+                    var date = new Date(item.date2);
+                    if(!util.isSameDay(date, today) && date < today){
+                        continue;
+                    }
+                    if(!roomHash[item.cRoomName + item.sn]){
+                        selectedRooms.push(item.cRoomName + item.sn);
+                        roomHash[item.cRoomName + item.sn] = true;
+                    }
+                    selectedEntries_new[key] = item;
+                }
+            }
+            scope.selectedRooms = selectedRooms;
+            scope.selectedEntries = selectedEntries_new;
+            //TODO 处理成订单所需格式
+            $(".msgModal").modal("hide");
+            $("#newOrderModal").modal("show");
         };
         scope.updateData();
     }]);

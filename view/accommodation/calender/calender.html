@@ -13,38 +13,38 @@
     <script src="/static/js/app/dist/accommodation/calender.js"></script>
 </head>
 <body ng-controller="calenderCtrl">
-<div class="msgModal modal fade" role="dialog" id="directModal">
+<div class="msgModal modal fade" role="dialog" id="ingWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="stext">选择直接入住，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
-                <div class="sbtn confirm">清除</div>
+                <div class="sbtn confirm" ng-click="processBeforeAdd('ing');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="msgModal modal fade" role="dialog" id="additionalModal">
+<div class="msgModal modal fade" role="dialog" id="finishWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="stext">选择补录，系统将自动清除今天及以后的房态格子。</div>
             <div class="btns">
-                <div class="sbtn cancel">取消</div>
-                <div class="sbtn confirm">清除</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
+                <div class="sbtn confirm" ng-click="processBeforeAdd('finish');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="msgModal modal fade" role="dialog" id="bookModal">
+<div class="msgModal modal fade" role="dialog" id="bookWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="stext">选择预定，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
-                <div class="sbtn cancel">取消</div>
-                <div class="sbtn confirm">清除</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
+                <div class="sbtn confirm" ng-click="processBeforeAdd('book');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -55,7 +55,7 @@
             <div class="hr"></div>
             <div class="stext">部分房间库存不足，系统将自动清除不可选的房间。</div>
             <div class="btns">
-                <div class="sbtn cancel">取消</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
                 <div class="sbtn confirm">清除</div>
             </div>
         </div><!-- /.modal-content -->
@@ -1130,7 +1130,7 @@
             <div class="tips">共有{{filteredGlyphs().length}}条搜索结果</div>
             <div class="hr"></div>
             <div ng-repeat="g in filteredGlyphs()">
-                <div class="item" ng-click="searchResultOnClick();$event.stopPropagation();">
+                <div class="item" orderId="{{g.orderId}}">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
                         <div class="desc">{{g.checkInDate}}</div>
@@ -1245,7 +1245,8 @@
         <div class="calendor-container">
             <div class="entryList">
                 <div class="srow" ng-repeat="r in roomStore" ng-if="pRoomList[r.pi].selected">
-                    <div class="entryItem" room="{{r.id}}" date="{{day.date}}" ng-repeat="day in r.st">
+                    <div class="entryItem" ng-click="addRoom(day.date, r.id);"
+                         ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
                         <div class="inner" ng-if="!occupyList[day.date + r.id]">
                             <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">
                             <div class="date">{{day.date}}</div>
@@ -1260,7 +1261,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="glyph ing" ng-repeat="g in glyphs" ng-if="pRoomList[cRoomStore[g.id].pId].selected" style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
+                <div class="glyph {{statusStr[g.orderState].classStr}}" ng-repeat="g in glyphs" ng-if="pRoomList[cRoomStore[g.id].pId].selected" style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">{{g.channelName}}
                         <img class="status"
@@ -1287,14 +1288,16 @@
                 </div>
             </div>
         </div>
-        <div class="shopcart">
-            <div class="already">已选择<span>100</span>个房间</div>
+        <div class="shopcart" ng-show="shopcartShow">
+            <div class="already">已选择<span>{{selectedRooms.length}}</span>个房间</div>
             <div class="roomList">
-                <div class="item">房间1</div>
+                <div class="item" ng-repeat="r in selectedRooms">{{r}}</div>
             </div>
-            <div class="sbtn addition">补录</div>
-            <div class="sbtn book">预订</div>
-            <div class="sbtn buy" data-toggle="modal" data-target="#getMoneyModal">直接入住</div>
+            <div class="btns">
+                <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish')">补录</div>
+                <div class="sbtn book" ng-show="bookShow" ng-click="checkBeforeAdd('book')">预订</div>
+                <div class="sbtn buy" ng-show="ingShow" ng-click="checkBeforeAdd('ing');">直接入住</div>
+            </div>
         </div>
     </div>
 </div>
