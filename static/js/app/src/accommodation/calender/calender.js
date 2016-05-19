@@ -149,9 +149,12 @@ $(function(){
             $(".search .results").show();
             locked = true;
         },
-        // "blur body input.keyword": function(ev){
-        //     $(".search .results").hide();
-        // },
+        "click body .select1": function(){
+            $(this).find(".select1_options").show();
+        },
+        "click body input.datePicker": function(){
+            $($(this).next(".date-table")[0]).show();
+        }
     };
 
     util.bindDomAction(events);
@@ -651,6 +654,7 @@ $(function(){
             }
             orderList.push(temp);
             //新增订单弹出框数据准备
+            initNewOrder();
             scope.newOrder.type = type;
             scope.newOrder.title = (function(){
                 for(var i = 0; i < STATUS_STR.length; i++){
@@ -662,7 +666,6 @@ $(function(){
             })();
             scope.newOrder.selectedChannel = scope.channels[0].name;
             scope.newOrder.roomList = orderList;
-            console.log(scope);
             $(".msgModal").modal("hide");
             $("#newOrderModal").modal("show");
         };
@@ -706,9 +709,22 @@ $(function(){
                     selectedId: '身份证',
                     idVal: null
                 },
+                checkPhone: function(){
+                    var reg = /^1[3|4|5|7|8]\d{9}$/;
+                    return reg.test(this.guestInfo.phone);
+                },
                 roomList: [],
                 foodList: [],
                 funList: [],
+                changeIds: function(str){
+                    this.guestInfo.selectedId = str;
+                    this.guestInfo.idVal = null;
+                    $(".select1_options").hide();
+                },
+                changeChannel: function(str){
+                    this.selectedChannel = str;
+                    $(".select1_options").hide();
+                },
                 deleteRoom: function(index){
                     this.roomList.splice(index, 1);
                     if(this.roomList.length == 0){
@@ -719,19 +735,124 @@ $(function(){
                     this.foodList.splice(index, 1);
                 },
                 addFood: function(){
-                    this.foodList.push({});
+                    var food = scope.foodList[0];
+                    // this.foodList.push({
+                    //     id: food.itemId,
+                    //     name: food.name,
+                    //     price: food.price,
+                    //     num: 1,
+                    //     date: new Date(),
+                    //     dateStr: util.dateFormat(new Date()),
+                    //     dateStr2: util.dateFormatWithoutYear(new Date()),
+                    // });
+                    AJAXService.ajaxWithToken('GET', 'getItemInfoUrl', {
+                        date: util.dateFormat(new Date()),
+                        id: food.itemId
+                    }, function(result){
+                        console.log(result);
+                        this.foodList.push({
+                            id: food.itemId,
+                            name: food.name,
+                            price: food.price,
+                            num: 1,
+                            date: new Date(),
+                            dateStr: util.dateFormat(new Date()),
+                            dateStr2: util.dateFormatWithoutYear(new Date()),
+                        });
+                        scope.$apply();
+                    });
+                },
+                changeFood: function(foodItem, food){
+                    var index = (this.foodList.indexOf(foodItem));
+                    this.foodList[index] = {
+                        id: food.itemId,
+                        name: food.name,
+                        price: food.price,
+                        num: 1,
+                        date: new Date(),
+                        dateStr: util.dateFormat(new Date()),
+                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                    };
+                    $(".select1_options").hide();
+                },
+                changeFoodTime: function(index, date){
+                    console.log(index, date);
+                },
+                minusFood: function(i){
+                    this.foodList[i].num--;
+                    if(this.foodList[i].num < 1){
+                        this.foodList[i].num = 1
+                    }
+                },
+                plusFood: function(i){
+                    this.foodList[i].num++;
+                    var max = 100;
+                    if(this.foodList[i].num > max){
+                        this.foodList[i].num = max;
+                    }
                 },
                 deleteFun: function(index){
                     this.funList.splice(index, 1);
                 },
                 addFun: function(){
-                    this.funList.push({});
+                    var fun = scope.funList[0];
+                    this.funList.push({
+                        id: fun.itemId,
+                        name: fun.name,
+                        price: fun.price,
+                        num: 1,
+                        date: new Date(),
+                        dateStr: util.dateFormat(new Date()),
+                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                    });
                 },
-                remarks: null,
-                discounts: null,
-            }
+                changeFun: function(funItem, fun){
+                    var index = (this.funList.indexOf(funItem));
+                    this.funList[index] = {
+                        id: fun.itemId,
+                        name: fun.name,
+                        price: fun.price,
+                        num: 1,
+                        date: new Date(),
+                        dateStr: util.dateFormat(new Date()),
+                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                    };
+                    $(".select1_options").hide();
+                },
+                changeFunTime: function(index, date){
+                    console.log(index, date);
+                },
+                minusFun: function(i){
+                    this.funList[i].num--;
+                    if(this.funList[i].num < 1){
+                        this.funList[i].num = 1
+                    }
+                },
+                plusFun: function(i){
+                    this.funList[i].num++;
+                    var max = 100;
+                    if(this.funList[i].num > max){
+                        this.funList[i].num = max;
+                    }
+                },
+                totalPrice: function(){
+                    var price = 0;
+                    for(var i = 0; i < this.roomList.length; i++){
+                        price += this.roomList[i].fee;
+                    }
+                    for(var i = 0; i < this.foodList.length; i++){
+                        price += this.foodList[i].num * this.foodList[i].price;
+                    }
+                    for(var i = 0; i < this.funList.length; i++){
+                        price += this.funList[i].num * this.funList[i].price;
+                    }
+                    price = price - this.discounts;
+                    return price < 0 ? 0.01 : price;
+                },
+                remarks: '',
+                discounts: 0,
+            };
         };
-        initNewOrder();
     }]);
 
 });

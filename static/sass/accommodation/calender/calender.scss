@@ -851,6 +851,112 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    .date-table{
+      display: none;
+      background:#fafafa;
+      box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+      border-radius:$BorderRadius;
+      width:240px;
+      //height:310px;
+      padding-bottom: 3px;
+      height: auto;
+      position: absolute;
+      top: 34px;
+      left: 0;
+      z-index: 3;
+      .tips{
+        width: 100%;
+        opacity:0.5;
+        font-size:12px;
+        color:#7d7d7d;
+        text-align:center;
+        margin-top: 8px;
+      }
+      .month-selector{
+        text-align: center;
+        height: 20px;
+        line-height: 20px;
+        margin-top: 8px;
+        font-size:14px;
+        color:$color1;
+        .spriteImg{
+          position: relative;
+          top: -2px;
+          cursor: pointer;
+        }
+        .previous{
+          vertical-align: middle;
+          margin-right: 16px;
+        }
+        .next{
+          vertical-align: middle;
+          margin-left: 16px;
+        }
+      }
+      .week-header{
+        width: 100%;
+        padding: 0 10px;
+        height: 24px;
+        margin-top: 14px;
+        margin-bottom: 7px;
+        .item{
+          float: left;
+          width: 24px;
+          height: 24px;
+          line-height: 22px;
+          text-align: center;
+          margin: 0 3.5px;
+          font-size:14px;
+          color:#666666;
+        }
+      }
+      .date-row{
+        clear: both;
+        width: 100%;
+        padding: 0 10px;
+        height: 36px;
+        .item{
+          float: left;
+          width: 24px;
+          height: 24px;
+          line-height: 22px;
+          margin: 0 3.5px;
+          text-align: center;
+          font-size:14px;
+          color:#666666;
+          position: relative;
+          border-radius: $BorderRadius;
+          border: solid thin #fafafa;
+          cursor: pointer;
+          //.dot{
+          //  background:#ff9326;
+          //  width:6px;
+          //  height:6px;
+          //  border-radius:100%;
+          //  position: absolute;
+          //  left: 50%;
+          //  margin-left: -3px;
+          //  bottom: 0;
+          //  display: none;
+          //}
+        }
+        .item.invalid{
+          color:#cccccc;
+        }
+        .item.today{
+          color: $color1;
+        }
+        .item:hover{
+          background: #ededed;
+        }
+        .item.selected{
+          //.dot{
+          //  display: block;
+          //}
+          border: $color1 thin solid;
+        }
+      }
+    }
     .spriteImg{
       cursor: pointer;
       position: relative;
@@ -1066,6 +1172,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           position: absolute;
           top: 0;
           text-align: center;
+          cursor: pointer;
         }
         .minus{
           left: 0;
@@ -1095,6 +1202,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         border-radius:$BorderRadius;
         width:57px;
         height:22px;
+        padding: 0 8px;
       }
       table{
         margin: 8px 16px 0;
@@ -1133,12 +1241,19 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       }
       td:nth-child(2){
         width: 219px;
+        position: relative;
         .sstart, .send{
           width: 50.5px;
           height: 22px;
           line-height: 22px;
           text-align: center;
           display: inline-block;
+        }
+        .date-table.start{
+          left: -50px;
+        }
+        .date-table.end{
+          left: 30px;
         }
       }
       td:nth-child(3){
@@ -1147,6 +1262,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       }
     }
     .subtype.food, .subtype.fun{
+      .date-table{
+        left: -30px;
+      }
       .sub-title{
         position: relative;
         .sadd{
@@ -1169,6 +1287,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       td:nth-child(2){
         width: 93px;
         text-align: right;
+        position: relative;
       }
       td:nth-child(3){
         padding-left: 18px;
@@ -2329,14 +2448,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               background-image: url("http://7xsrk6.com2.z0.glb.qiniucdn.com/73FA4C7F-F668-4B66-84CD-F3402290A694@1x.png");
             }
           }
-          //.item.selected{
-          //  //.notCheck{
-          //  //  //display: none;
-          //  //}
-          //  //.yesCheck{
-          //  //  display: block;
-          //  //}
-          //}
           .item:hover{
             background: #ededed;
           }

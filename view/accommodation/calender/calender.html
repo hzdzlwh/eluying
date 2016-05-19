@@ -418,6 +418,7 @@
                 <div class="item item_big">
                     <input type="text">
                     <div class="select1">
+                        <span></span>
                         <div class="select1_options">
                             <div class="item">散客</div>
                             <div class="item">旅行社</div>
@@ -436,6 +437,7 @@
                 <div class="item item_big">
                     <input type="text">
                     <div class="select1">
+                        <span></span>
                         <div class="select1_options">
                             <div class="item">散客</div>
                             <div class="item">旅行社</div>
@@ -477,26 +479,33 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td><input placeholder="姓名" type="text" class="long"><div class="tips warning">必填字段</div></td>
+                        <td><input placeholder="姓名" type="text" ng-model="newOrder.guestInfo.name"
+                                   class="long"><div class="tips warning" ng-if="!newOrder.guestInfo.name">
+                            必填字段</div></td>
                         <td>手机号</td>
-                        <td><input placeholder="手机号" type="text" class="short"><div class="tips warning">必填字段</div></td>
+                        <td><input placeholder="手机号" type="text" ng-model="newOrder.guestInfo.phone"
+                                   class="short"><div class="tips warning" ng-if="!newOrder.checkPhone();">
+                            请填写正确的手机号码</div></td>
                     </tr>
                     <tr>
                         <td>
                             <div class="select1">
-                                {{newOrder.guestInfo.selectedId}}
+                                <span>{{newOrder.guestInfo.selectedId}}</span>
                                 <div class="select1_options">
-                                    <div class="item" ng-repeat="id in idList">{{id.label}}</div>
+                                    <div class="item" ng-click="newOrder.changeIds(id.label);$event.stopPropagation();"
+                                         ng-repeat="id in idList">{{id.label}}</div>
                                 </div>
                             </div>
                         </td>
-                        <td><input placeholder="身份证" type="text" class="long" ng-model="newOrder.guestInfo.idVal"><div class="tips warning">身份证格式错误</div></td>
+                        <td><input placeholder="{{newOrder.guestInfo.selectedId}}" type="text" class="long"
+                                   ng-model="newOrder.guestInfo.idVal"><div class="tips warning" ng-if="false">身份证格式错误</div></td>
                         <td>渠道</td>
                         <td>
                             <div class="select1">
-                                {{newOrder.selectedChannel}}
+                                <span>{{newOrder.selectedChannel}}</span>
                                 <div class="select1_options">
-                                    <div class="item" ng-repeat="c in channels">{{c.name}}</div>
+                                    <div class="item" ng-repeat="c in channels"
+                                         ng-click="newOrder.changeChannel(c.name);$event.stopPropagation();">{{c.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -511,9 +520,59 @@
                         <td><span>{{r.sn}}</span>&nbsp;({{r.name}})</td>
                         <td>
                             <span class="light">入住</span>
-                            &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate">
-                            &nbsp;~&nbsp;
-                            <input type="text" class="datePicker" ng-model="r.sendDate">&nbsp;
+                            &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
+                            <div class="date-table start">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in calenderDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                            &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
+                            <div class="date-table end">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in calenderDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                            &nbsp;
                             共{{r.days}}晚
                             <div class="tips warning left">↑房间被占用</div>
                             <div class="tips warning right">↑房间被占用</div>
@@ -534,7 +593,7 @@
                 </table>
             </div>
             <div class="hr2"></div>
-            <div class="subtype food">
+            <div class="subtype food" ng-if="foodList.length > 0">
                 <div class="sub-title">
                     餐饮信息
                     <div class="sadd" ng-click="newOrder.addFood();">
@@ -548,28 +607,58 @@
                     <tr ng-repeat="food in newOrder.foodList">
                         <td>
                             <div class="select1">
-                                test
+                                <span>{{food.name}}</span>
                                 <div class="select1_options">
-                                    <div class="item" ng-repeat="f in foodList">{{f.name}}</div>
+                                    <div class="item" ng-repeat="f in foodList"
+                                         ng-click="newOrder.changeFood(food, f)">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>时间&nbsp;<input type="text" class="datePicker"></td>
+                        <td>时间&nbsp;
+                            <input type="text" class="datePicker" ng-model="food.dateStr2"
+                                           ng-change="newOrder.changeFoodTime($index, food.dateStr2)"
+                                           readonly="true">
+                            <div class="date-table">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in calenderDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             数量&nbsp;
                             <div class="snumber">
-                                <div class="minus">-</div>
-                                <input type="text" value="1">
-                                <div class="plus">+</div>
+                                <div class="minus" ng-click="newOrder.minusFood($index)">-</div>
+                                <input type="text" ng-model="food.num">
+                                <div class="plus" ng-click="newOrder.plusFood($index)">+</div>
                             </div>
                             <div class="tips">剩余库存10</div>
                         </td>
-                        <td>¥10000<div class="sdelete" ng-click="newOrder.deleteFood($index)"></div></td>
+                        <td>¥{{food.num*food.price}}<div class="sdelete" ng-click="newOrder.deleteFood($index)"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2"></div>
-            <div class="subtype fun">
+            <div class="hr2" ng-if="foodList.length > 0"></div>
+            <div class="subtype fun" ng-if="funList.length > 0">
                 <div class="sub-title">
                     娱乐信息
                     <div class="sadd" ng-click="newOrder.addFun();">
@@ -583,44 +672,74 @@
                     <tr ng-repeat="fun in newOrder.funList">
                         <td>
                             <div class="select1">
-                                test
+                                <span>{{fun.name}}</span>
                                 <div class="select1_options">
-                                    <div class="item" ng-repeat="f in funList">{{f.name}}</div>
+                                    <div class="item" ng-repeat="f in funList"
+                                         ng-click="newOrder.changeFun(fun, f)">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>时间&nbsp;<input type="text" class="datePicker"></td>
+                        <td>时间&nbsp;
+                            <input type="text" class="datePicker" ng-model="fun.dateStr2"
+                                           ng-change="newOrder.changeFunTime($index, food.dateStr2)"
+                                           readonly="true">
+                            <div class="date-table">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in calenderDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             数量&nbsp;
                             <div class="snumber">
-                                <div class="minus">-</div>
-                                <input type="text" value="1">
-                                <div class="plus">+</div>
+                                <div class="minus" ng-click="newOrder.minusFun($index)">-</div>
+                                <input type="text" ng-model="fun.num">
+                                <div class="plus" ng-click="newOrder.plusFun($index)">+</div>
                             </div>
                             <div class="tips">剩余库存10</div>
                         </td>
-                        <td>¥10000<div class="sdelete" ng-click="newOrder.deleteFun($index)"></div></td>
+                        <td>¥{{fun.num*fun.price}}<div class="sdelete" ng-click="newOrder.deleteFun($index)"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2"></div>
+            <div class="hr2" ng-if="funList.length > 0"></div>
             <div class="discount">
                 <div class="slabel">优惠</div>
-                <input placeholder="金额" type="text">
+                <input placeholder="金额" type="text" ng-model="newOrder.discounts">
                 <span class="tips">-¥</span>
             </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea placeholder="请填写备注信息"></textarea>
+                <textarea placeholder="请填写备注信息" ng-model="newOrder.remarks"></textarea>
             </div>
-            <div class="counter warning">45/140</div>
+            <div class="counter" ng-class="{warning: newOrder.remarks.length > 140}">{{newOrder.remarks.length}}/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥9999</div>
+                    <div class="snum">¥{{newOrder.totalPrice()}}</div>
                 </div>
                 <div class="sbtn confirm">完成{{newOrder.title}}</div>
-                <div class="sbtn cancel">取消</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -648,6 +767,7 @@
                     <tr>
                         <td>
                             <div class="select1">
+                                <span></span>
                                 <div class="select1_options">
                                     <div class="item">散客</div>
                                     <div class="item">旅行社</div>
@@ -658,6 +778,7 @@
                         <td>渠道</td>
                         <td>
                             <div class="select1">
+                                <span></span>
                                 <div class="select1_options">
                                     <div class="item">散客</div>
                                     <div class="item">旅行社</div>
@@ -1143,6 +1264,7 @@
                 <div class="item item_big">
                     <input type="text">
                     <div class="select1">
+                        <span></span>
                         <div class="select1_options">
                             <div class="item">散客</div>
                             <div class="item">旅行社</div>
@@ -1161,6 +1283,7 @@
                 <div class="item item_big">
                     <input type="text">
                     <div class="select1">
+                        <span></span>
                         <div class="select1_options">
                             <div class="item">散客</div>
                             <div class="item">旅行社</div>
