@@ -619,7 +619,7 @@
                     <div class="slabel">客户需补</div>
                     <div class="snum">¥9999</div>
                 </div>
-                <div class="sbtn confirm">完成预订</div>
+                <div class="sbtn confirm">完成{{newOrder.title}}</div>
                 <div class="sbtn cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
@@ -1313,9 +1313,9 @@
         <div class="calendor-container">
             <div class="entryList">
                 <div class="srow" ng-repeat="r in roomStore" ng-if="pRoomList[r.pi].selected">
-                    <div class="entryItem" ng-click="addRoom(day.date, r.id);"
+                    <div class="entryItem"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
-                        <div class="inner" ng-if="!occupyList[day.date + r.id]">
+                        <div class="inner" ng-if="!occupyList[day.date + r.id]" ng-click="addRoom(day.date, r.id);">
                             <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">
                             <div class="date">{{day.date}}</div>
                             <div class="price">￥{{day.p}}</div>
@@ -1333,7 +1333,7 @@
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
                      style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
-                    <div class="username">{{g.customerName}}{{g.customerName}}{{g.customerName}}</div>
+                    <div class="username">{{g.customerName}}</div>
                     <div class="where">
                         <div class="stext">{{g.channelName}}</div>
                         <img class="status"
