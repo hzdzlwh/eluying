@@ -2642,28 +2642,35 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             }
           }
           .username{
-            width: 100%;
+            width: 90%;
             height: 20px;
             line-height: 20px;
             padding-left: 6px;
             margin-top: 2px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
           .where{
-            width: 100%;
             height: 17px;
             margin-top: 4px;
             line-height: 17px;
             padding-left: 6px;
             font-size: 12px;
-          }
-          .status{
-            //position: absolute;
-            //bottom: 4px;
-            //left: 40px;
-            margin-left: 5px;
+            width: 100%;
             display: inline-block;
-            position: relative;
-            top: -2px;
+            .status{
+              display: inline-block;
+              position: relative;
+              top: -8px;
+            }
+            .stext{
+              max-width: 70%;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              display: inline-block;
+            }
           }
         }
         .glyph.book{

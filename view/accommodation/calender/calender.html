@@ -417,7 +417,12 @@
                 </div>
                 <div class="item item_big">
                     <input type="text">
-                    <div class="select1"></div>
+                    <div class="select1">
+                        <div class="select1_options">
+                            <div class="item">散客</div>
+                            <div class="item">旅行社</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="item item_small">
                     <div class="slabel">押金收款</div>
@@ -430,7 +435,12 @@
                 </div>
                 <div class="item item_big">
                     <input type="text">
-                    <div class="select1"></div>
+                    <div class="select1">
+                        <div class="select1_options">
+                            <div class="item">散客</div>
+                            <div class="item">旅行社</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="remarks">
@@ -458,7 +468,7 @@
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
-                    <span>预订</span>
+                    <span>{{newOrder.title}}</span>
                 </div>
             </div>
             <div class="hr2"></div>
@@ -473,12 +483,22 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class="select1"></div>
+                            <div class="select1">
+                                {{newOrder.guestInfo.selectedId}}
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="id in idList">{{id.label}}</div>
+                                </div>
+                            </div>
                         </td>
-                        <td><input placeholder="身份证" type="text" class="long"><div class="tips warning">身份证格式错误</div></td>
+                        <td><input placeholder="身份证" type="text" class="long" ng-model="newOrder.guestInfo.idVal"><div class="tips warning">身份证格式错误</div></td>
                         <td>渠道</td>
                         <td>
-                            <div class="select1"></div>
+                            <div class="select1">
+                                {{newOrder.selectedChannel}}
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="c in channels">{{c.name}}</div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -487,24 +507,37 @@
             <div class="subtype room">
                 <div class="sub-title">房间信息</div>
                 <table>
-                    <tr>
-                        <td><span>0102</span>&nbsp;(星空迷你木屋)</td>
+                    <tr ng-repeat="r in newOrder.roomList">
+                        <td><span>{{r.sn}}</span>&nbsp;({{r.name}})</td>
                         <td>
                             <span class="light">入住</span>
-                            &nbsp;<input type="text" class="datePicker">&nbsp;~&nbsp;<input type="text" class="datePicker">&nbsp;
-                            共7晚
+                            &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate">
+                            &nbsp;~&nbsp;
+                            <input type="text" class="datePicker" ng-model="r.sendDate">&nbsp;
+                            共{{r.days}}晚
                             <div class="tips warning left">↑房间被占用</div>
                             <div class="tips warning right">↑房间被占用</div>
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
+                        <td>¥{{r.fee}}<div class="sdelete" ng-click="newOrder.deleteRoom($index);"></div></td>
                     </tr>
+                    <!--<tr>-->
+                        <!--<td><span>0102</span>&nbsp;(星空迷你木屋)</td>-->
+                        <!--<td>-->
+                            <!--<span class="light">入住</span>-->
+                            <!--&nbsp;<input type="text" class="datePicker">&nbsp;~&nbsp;<input type="text" class="datePicker">&nbsp;-->
+                            <!--共7晚-->
+                            <!--<div class="tips warning left">↑房间被占用</div>-->
+                            <!--<div class="tips warning right">↑房间被占用</div>-->
+                        <!--</td>-->
+                        <!--<td>¥10000<div class="sdelete"></div></td>-->
+                    <!--</tr>-->
                 </table>
             </div>
             <div class="hr2"></div>
             <div class="subtype food">
                 <div class="sub-title">
                     餐饮信息
-                    <div class="sadd">
+                    <div class="sadd" ng-click="newOrder.addFood();">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -512,8 +545,15 @@
                     </div>
                 </div>
                 <table>
-                    <tr>
-                        <td><div class="select1"></div></td>
+                    <tr ng-repeat="food in newOrder.foodList">
+                        <td>
+                            <div class="select1">
+                                test
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="f in foodList">{{f.name}}</div>
+                                </div>
+                            </div>
+                        </td>
                         <td>时间&nbsp;<input type="text" class="datePicker"></td>
                         <td>
                             数量&nbsp;
@@ -524,7 +564,7 @@
                             </div>
                             <div class="tips">剩余库存10</div>
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
+                        <td>¥10000<div class="sdelete" ng-click="newOrder.deleteFood($index)"></div></td>
                     </tr>
                 </table>
             </div>
@@ -532,7 +572,7 @@
             <div class="subtype fun">
                 <div class="sub-title">
                     娱乐信息
-                    <div class="sadd">
+                    <div class="sadd" ng-click="newOrder.addFun();">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -540,8 +580,15 @@
                     </div>
                 </div>
                 <table>
-                    <tr>
-                        <td><div class="select1"></div></td>
+                    <tr ng-repeat="fun in newOrder.funList">
+                        <td>
+                            <div class="select1">
+                                test
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="f in funList">{{f.name}}</div>
+                                </div>
+                            </div>
+                        </td>
                         <td>时间&nbsp;<input type="text" class="datePicker"></td>
                         <td>
                             数量&nbsp;
@@ -552,7 +599,7 @@
                             </div>
                             <div class="tips">剩余库存10</div>
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
+                        <td>¥10000<div class="sdelete" ng-click="newOrder.deleteFun($index)"></div></td>
                     </tr>
                 </table>
             </div>
@@ -600,12 +647,22 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class="select1"></div>
+                            <div class="select1">
+                                <div class="select1_options">
+                                    <div class="item">散客</div>
+                                    <div class="item">旅行社</div>
+                                </div>
+                            </div>
                         </td>
                         <td><input placeholder="身份证" type="text" class="long"><div class="tips warning">身份证格式错误</div></td>
                         <td>渠道</td>
                         <td>
-                            <div class="select1"></div>
+                            <div class="select1">
+                                <div class="select1_options">
+                                    <div class="item">散客</div>
+                                    <div class="item">旅行社</div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -1085,7 +1142,12 @@
                 </div>
                 <div class="item item_big">
                     <input type="text">
-                    <div class="select1"></div>
+                    <div class="select1">
+                        <div class="select1_options">
+                            <div class="item">散客</div>
+                            <div class="item">旅行社</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="item item_small">
                     <div class="slabel">押金收款</div>
@@ -1098,7 +1160,12 @@
                 </div>
                 <div class="item item_big">
                     <input type="text">
-                    <div class="select1"></div>
+                    <div class="select1">
+                        <div class="select1_options">
+                            <div class="item">散客</div>
+                            <div class="item">旅行社</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="remarks">
@@ -1266,10 +1333,12 @@
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
                      style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
-                    <div class="username">{{g.customerName}}</div>
-                    <div class="where">{{g.channelName}}
+                    <div class="username">{{g.customerName}}{{g.customerName}}{{g.customerName}}</div>
+                    <div class="where">
+                        <div class="stext">{{g.channelName}}</div>
                         <img class="status"
-                             src="http://7xsrk6.com2.z0.glb.qiniucdn.com/6F62DF58-FC40-4DF1-86F7-F7235C7B2123@1x.png" alt=""></div>
+                             src="http://7xsrk6.com2.z0.glb.qiniucdn.com/6F62DF58-FC40-4DF1-86F7-F7235C7B2123@1x.png" alt="">
+                    </div>
                     <div class="infos ing up">
                         <div class="arrow-up"></div>
                         <div class="arrow-down"></div>

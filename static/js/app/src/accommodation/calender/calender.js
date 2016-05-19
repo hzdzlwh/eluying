@@ -15,13 +15,13 @@ require("bootstrap");
 require("validation");
 
 var locked = false;
-var statusStr = [
+var STATUS_STR = [
     {},
     {},
-    {short: '预', long: '已预订', classStr: 'book'},
-    {short: '住', long: '已入住', classStr: 'ing'},
+    {short: '预', long: '已预订', classStr: 'book', 'title': '预订'},
+    {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
     {},
-    {short: '完', long: '已完成', classStr: 'finish'}
+    {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
 ];
 $(function(){
     //初始化界面
@@ -164,7 +164,7 @@ $(function(){
         scope.datesArray = [];
         scope.calenderDays = [];
         scope.allPRoom = true;
-        scope.statusStr = statusStr;
+        scope.statusStr = STATUS_STR;
         scope.selectedEntries = {};
         scope.selectedRooms = [];
 
@@ -183,7 +183,8 @@ $(function(){
                 return {};
             }
             return scope.glyphs.filter(function(d){
-                return d.customerName.indexOf(scope.searchKeyword) > -1 || d.phone.indexOf(scope.searchKeyword) > -1;
+                return d.serialNum.indexOf(scope.searchKeyword) > -1 ||
+                    d.customerName.indexOf(scope.searchKeyword) > -1 || d.phone.indexOf(scope.searchKeyword) > -1;
             })
         };
         scope.searchResultOnClick = function(){
@@ -414,7 +415,7 @@ $(function(){
                         glyph.top = top;
                         glyph.left = left;
                         glyph.width = width;
-                        glyph.stateStr = statusStr[glyph.orderState].short;
+                        glyph.stateStr = STATUS_STR[glyph.orderState].short;
                         var tempDate = new Date(order.checkInDate);
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
@@ -427,7 +428,7 @@ $(function(){
                                 tempDate = util.diffDate(tempDate, 1);
                             }
                         }
-                        glyph.classStr = statusStr[glyph.orderState].classStr;
+                        glyph.classStr = STATUS_STR[glyph.orderState].classStr;
                         glyphs.push(glyph);
                     });
                     scope.pRoomList = pRoomList;
@@ -465,7 +466,6 @@ $(function(){
                         break;
                     }
                 }
-                console.log(room, dayItem);
                 scope.selectedEntries[roomId + date] = {
                     date: date,
                     date2: dayItem.date2,
@@ -597,18 +597,31 @@ $(function(){
                 entriesArray.push(selectedEntries_new[key]);
             }
             entriesArray.sort(function(a, b){
-                return parseInt(a.roomId) > parseInt(b.roomId) || new Date(a.date2) > new Date(b.date2);
+                if(parseInt(a.roomId) > parseInt(b.roomId)
+                 || (parseInt(a.roomId) === parseInt(b.roomId) && new Date(a.date2) > new Date(b.date2))){
+                    return 1;
+                }if(parseInt(a.roomId) < parseInt(b.roomId)
+                    || (parseInt(a.roomId) === parseInt(b.roomId) && new Date(a.date2) < new Date(b.date2))){
+                    return -1;
+                }else{
+                    return 0;
+                }
             });
             var orderList = [];
             var entry;
             entry = entriesArray[0];
             var temp = {
                 startDate: entry.date2,
+                sstartDate: entry.date,
                 endDate: entry.date2,
+                sendDate: entry.date,
                 roomId: entry.roomId,
                 id: entry.cRoomId,
                 fee: entry.price,
                 sub: true,
+                sn: entry.sn,
+                name: entry.cRoomName,
+                days: 0
             };
             for(var i = 1; i < entriesArray.length; i++){
                 entry = entriesArray[i];
@@ -616,25 +629,109 @@ $(function(){
                 var date2 = new Date(temp.endDate);
                 if(entry.roomId === temp.roomId && util.DateDiff(date2, date1) === 1){
                     temp.endDate = entry.date2;
+                    temp.sendDate = entry.date;
                     temp.fee += entry.price;
+                    temp.days++;
                 }else{
                     orderList.push(temp);
                     temp = {
                         startDate: entry.date2,
+                        sstartDate: entry.date,
                         endDate: entry.date2,
+                        sendDate: entry.date,
                         roomId: entry.roomId,
                         id: entry.cRoomId,
                         fee: entry.price,
                         sub: true,
+                        sn: entry.sn,
+                        name: entry.cRoomName,
+                        days: 0
                     };
                 }
             }
             orderList.push(temp);
-            //TODO 继续下单
+            //新增订单弹出框数据准备
+            scope.newOrder.type = type;
+            scope.newOrder.title = (function(){
+                for(var i = 0; i < STATUS_STR.length; i++){
+                    if(STATUS_STR[i].classStr === type){
+                        return STATUS_STR[i].title;
+                    }
+                }
+                return null;
+            })();
+            scope.newOrder.selectedChannel = scope.channels[0].name;
+            scope.newOrder.roomList = orderList;
+            console.log(scope);
             $(".msgModal").modal("hide");
             $("#newOrderModal").modal("show");
         };
         scope.updateData();
+
+        //新增订单用到的变量
+        AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
+            type: 2
+        }, function(result3){
+            var arr1 = [{name: '散客'}];
+            var arr2 = result3.data.list;
+            scope.channels = arr1.concat(arr2);
+        });
+        AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
+            var items = result.data.list;
+            var foods = [];
+            var funs = [];
+            items.forEach(function(d){
+                if(d.type == 1){
+                    foods.push(d);
+                }else if(d.type == 2){
+                    funs.push(d);
+                }
+            });
+            scope.foodList = foods;
+            scope.funList = funs;
+        });
+        scope.idList = [
+            {key: 'id', label: '身份证'},
+            {key: 'mid', label: '军官证'},
+            {key: 'other', label: '其他'},
+        ];
+        var initNewOrder = function(){
+            scope.newOrder = {
+                title: null,
+                type: null,
+                selectedChannel: null,
+                guestInfo: {
+                    name: null,
+                    phone: null,
+                    selectedId: '身份证',
+                    idVal: null
+                },
+                roomList: [],
+                foodList: [],
+                funList: [],
+                deleteRoom: function(index){
+                    this.roomList.splice(index, 1);
+                    if(this.roomList.length == 0){
+                        $("#newOrderModal").modal("hide");
+                    }
+                },
+                deleteFood: function(index){
+                    this.foodList.splice(index, 1);
+                },
+                addFood: function(){
+                    this.foodList.push({});
+                },
+                deleteFun: function(index){
+                    this.funList.splice(index, 1);
+                },
+                addFun: function(){
+                    this.funList.push({});
+                },
+                remarks: null,
+                discounts: null,
+            }
+        };
+        initNewOrder();
     }]);
 
 });
