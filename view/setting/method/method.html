@@ -13,7 +13,7 @@
 </head>
 <body ng-controller="methodCtrl">
 
-<div class="modal fade" role="dialog" id="wechatMethod">
+<div class="modal fade" role="dialog" id="method-wechatMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -31,7 +31,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="deleteMethod">
+<div class="modal fade" role="dialog" id="method-deleteMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -46,7 +46,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="submitSuccess">
+<div class="modal fade" role="dialog" id="method-submitSuccess">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -59,7 +59,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="submitFail">
+<div class="modal fade" role="dialog" id="method-submitFail">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -75,7 +75,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="newMethod">
+<div class="modal fade" role="dialog" id="method-newMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -95,7 +95,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="alipayMethod">
+<div class="modal fade" role="dialog" id="method-alipayMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -129,13 +129,13 @@
                 <div class="scol scol2"><textarea id="alipayMethod-privateKey" ng-model="privateKey"></textarea></div>
             </div>
             <div class="hr3"></div>
-            <div class="sbtn sbtn-ok" ng-if="alipay === 1" id="alipayMethod-ok">提交审核</div>
-            <div class="sbtn sbtn-ok" ng-if="alipay === 3 || alipay === 2" id="alipayMethod-submit" ng-click="submitAlipay()">提交审核</div>
+            <div class="sbtn sbtn-ok" ng-if="onlinePay.alipay === 1" id="alipayMethod-ok">提交审核</div>
+            <div class="sbtn sbtn-ok" ng-if="onlinePay.alipay === 3 || onlinePay.alipay === 2" id="alipayMethod-submit" ng-click="submitAlipay()">提交审核</div>
             <div class="btn-cancel sbtn sbtn-cancel">取消</div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="comfirmSubmit">
+<div class="modal fade" role="dialog" id="method-comfirmSubmit">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -175,15 +175,14 @@
                                     <img ng-if="onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                     <!--企业支付宝+企业微信支付</td>-->
                                     企业支付宝</td>
-                                <td><div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{onlinePay.alipayCash === 0 ? '未开通' : '已开通'}}</td>
-                                <td class="schange" data-toggle="modal"
-                                    data-target="#alipayMethod">更换账号</td>
+                                <td><div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{alichatStatusStr[onlinePay.alipay]}}</td>
+                                <td class="schange" data-toggle="modal" ng-if="onlinePay.alipay !== 0" data-target="#method-alipayMethod">更换账号</td>
                             </tr>
                             <tr class="wallet">
                                 <td ng-click="chooseMethod(1)">
                                     <img ng-if="onlinePay.walletPaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
                                     <img ng-if="onlinePay.walletPaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">订单钱包</td>
-                                <td><div class="dot" ng-class="{'invalid': onlinePay.walletPayCash === 0 }"></div>{{onlinePay.walletPayCash === 0 ? '未开通' : '已开通'}}</td>
+                                <td><div class="dot" ng-class="{'invalid': onlinePay.walletPayCash === 0 }"></div>{{walletPayStatusStr[onlinePay.walletPay]}}</td>
                                 <td><div class="hr3"></div></td>
                             </tr>
                             <tr class="nothing">
@@ -197,7 +196,7 @@
             </div>
             <div class="othermethod">
                 <div class="stitle">其他自定义收款方式</div>
-                <div class="sbtn" data-toggle="modal" data-target="#newMethod">新增收款方式</div>
+                <div class="sbtn" data-toggle="modal" data-target="#method-newMethod">新增收款方式</div>
                 <div class="sbox">
                     <div class="hr"></div>
                     <table>
@@ -218,7 +217,7 @@
                                 <td>{{pay.name}}</td>
                                 <td><div class="dot"></div>已开通</td>
                                 <td class="delete" method="{{pay.channelId}}" class="btn-delete" data-toggle="modal"
-                                    data-target="#deleteMethod" ng-click="setMethodToDelete(pay.channelId)">删除</td>
+                                    data-target="#method-deleteMethod" ng-click="setMethodToDelete(pay.channelId)">删除</td>
                             </tr>
                         </tbody>
                     </table>

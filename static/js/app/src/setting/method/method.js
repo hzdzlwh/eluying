@@ -46,7 +46,7 @@ $(function(){
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click body #alipayMethod-ok": function(){
             if(checkAlipayForm()){
-                $("#comfirmSubmit").modal("show");
+                $("#method-comfirmSubmit").modal("show");
             }
         }
     };
@@ -63,11 +63,19 @@ $(function(){
         scope.methodToDelete = null;
         scope.errorTips = '';
         scope.onlinePay = {};
+        scope.alichatStatusStr = ['审核中', '验证成功', '审核失败', '未绑定'];
+        scope.walletPayStatusStr = {
+            '-1': '未知',
+            '0': '正常',
+            '1': '冻结'
+        };
         scope.chooseMethod = function(method){
-            if(method == 2 && scope.onlinePay.alipayCash === 0){
+            if(method == 2 && scope.onlinePay.alipay !== 1){
+                modal.somethingAlert("您还未绑定支付宝！");
                 return false;
             }
-            if(method == 1 && scope.onlinePay.walletPayCash === 0){
+            if(method == 1 && scope.onlinePay.walletPay !== 0){
+                modal.somethingAlert("您还未开通订单钱包！");
                 return false;
             }
             AJAXService.ajaxWithToken('GET', 'selectPayWapUrl', {
@@ -110,7 +118,7 @@ $(function(){
                 channelName: newMethod.value
             }, function(result){
                 modal.somethingAlert(result.msg);
-                $("#newMethod").modal("hide");
+                $("#method-newMethod").modal("hide");
                 newMethod.value = '';
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                     scope.onlinePay = result.data.map;
@@ -123,7 +131,7 @@ $(function(){
             scope.methodToDelete = id;
         };
         scope.deleteMethod = function(){
-            $("#deleteMethod").modal("hide");
+            $("#method-deleteMethod").modal("hide");
             AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                 channelId: scope.methodToDelete
             }, function(result){
@@ -147,8 +155,8 @@ $(function(){
                     if(result.code !== 1){
                         util.somethingAlert(result.msg);
                     }else{
-                        $("#comfirmSubmit").modal("hide");
-                        $("#alipayMethod").modal("hide");
+                        $("#method-comfirmSubmit").modal("hide");
+                        $("#method-alipayMethod").modal("hide");
                         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                             scope.onlinePay = result.data.map;
                             scope.payChannelCustomList = result.data.payChannelCustomList;

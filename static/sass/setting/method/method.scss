@@ -114,19 +114,17 @@
     font-size: 16px;
     position: relative;
     .sbtn{
-      border:1px solid $color1;
-      border-radius:2px;
-      width:98px;
-      height:22px;
-      line-height: 22px;
-      float: right;
-      color: $color1;
-      text-align: center;
-      font-size: 14px;
+      @include btn1_normal();
+      @include btn_big();
       position: absolute;
       top: 0;
       right: 0;
-      cursor: pointer;
+    }
+    .sbtn:hover{
+      @include btn1_hover();
+    }
+    .sbtn:active{
+      @include btn1_click();
     }
     .sbox{
       margin-top: 20px;
@@ -211,122 +209,9 @@
       }
     }
   }
-  //.method-add{
-  //  background:#ffffff;
-  //  border:1px solid #4a90e2;
-  //  border-radius:2px;
-  //  width:200px;
-  //  height:30px;
-  //  position: absolute;
-  //  right: 0;
-  //  top: 51px;
-  //  font-size:14px;
-  //  color:#4a90e2;
-  //  line-height: 30px;
-  //  text-align: center;
-  //  cursor: pointer;
-  //}
-  //.method-add:hover, .method-add:active{
-  //  background: #cccccc;
-  //}
-  //.method-list{
-  //  box-shadow:0px 2px 4px 0px #b4c1ce;
-  //  border-radius:2px;
-  //  background: #f6f6f6;
-  //  width:600px;
-  //  //height:465px;
-  //  margin-top: 101px;
-  //  .hr{
-  //    width: 100%;
-  //    background:#4a90e2;
-  //    height:4px;
-  //  }
-  //  .hr2{
-  //    width: 100%;
-  //    background:#dddddd;
-  //    height:1px;
-  //  }
-  //  .row{
-  //    width: 100%;
-  //    text-align: center;
-  //    line-height: 80px;
-  //    height: 80px;
-  //    font-size: 14px;
-  //    color:#526479;
-  //    .col{
-  //      height: 100%;
-  //      float: left;
-  //      text-align: left;
-  //      .hr4{
-  //        width: 90%;
-  //        height: 2px;
-  //        margin: auto;
-  //        background: #526479;
-  //        position: relative;
-  //        top: 39px;
-  //      }
-  //      .btn-binding, .btn-delete{
-  //        background:#4a90e2;
-  //        border-radius:2px;
-  //        width:100px;
-  //        height:40px;
-  //        text-align: center;
-  //        line-height: 40px;
-  //        color: white;
-  //        position: relative;
-  //        top: 20px;
-  //        cursor: pointer;
-  //      }
-  //      span.sclose{
-  //        color: #9e9e9e;
-  //      }
-  //      span.sopen{
-  //        color: #4a90e2;
-  //      }
-  //      span.serror{
-  //        color:#f5a623;
-  //      }
-  //      span.swarning{
-  //        color:#ffb32c;
-  //      }
-  //      .btn-binding:hover, .btn-binding:active, .btn-delete:hover, .btn-delete:active{
-  //        background: #3a71b0;
-  //      }
-  //    }
-  //    .col-center{
-  //      text-align: center;
-  //    }
-  //    .col1{
-  //      width: 114px;
-  //      margin-left: 58px;
-  //    }
-  //    .col2{
-  //      width: 62px;
-  //      margin-left: 97px;
-  //      text-align: center;
-  //    }
-  //    .col3{
-  //      width: 100px;
-  //      margin-left: 129px;
-  //    }
-  //  }
-  //  .row.head{
-  //    height: 60px;
-  //    line-height: 60px;
-  //    .col1{
-  //      text-align: left;
-  //    }
-  //  }
-  //  .row.other{
-  //    .col1{
-  //      line-height: 20px;
-  //      padding-top: 30px;
-  //    }
-  //  }
-  //}
 }
 
-#wechatMethod{
+#method-wechatMethod{
   .modal-dialog {
     width: 500px;
   }
@@ -339,7 +224,7 @@
     .hr{
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
@@ -351,12 +236,12 @@
       width: 100%;
       height: 25px;
       line-height: 25px;
-      color:#4a90e2;
+      color:$color1;
     }
     .stext{
       width: 442px;
       font-size:18px;
-      color:#4a90e2;
+      color:$color1;
       text-align:center;
       margin: auto;
       margin-top: 16px;
@@ -367,40 +252,41 @@
       height: 40px;
       text-align: center;
       .sbtn-ok{
-        background:#4a90e2;
-        border-radius:2px;
-        width:100px;
-        height:40px;
-        line-height: 40px;
-        color: white;
-        text-align: center;
+        @include btn2_normal();
+        @include btn_big();
         display: inline-block;
-        cursor: pointer;
+        height: 40px;
+        line-height: 40px;
         margin: 0 20px;
       }
       .sbtn-cancel{
-        border:1px solid #4a90e2;
-        border-radius:2px;
-        width:100px;
-        height:40px;
-        line-height: 40px;
-        color: #4A90E2;
-        text-align: center;
+        @include btn1_normal();
+        @include btn_big();
         display: inline-block;
+        height: 40px;
+        line-height: 40px;
         margin: 0 20px;
-        cursor: pointer;
       }
-      .sbtn-ok:hover, .sbtn-ok:focus{
-        background: #3a71b0;
+      .sbtn-cancel{
+        @include btn1_normal();
       }
-      .sbtn-cancel:hover, .sbtn-cancel:focus{
-        background: #dddddd;
+      .sbtn-ok:hover{
+        @include btn2_hover();
+      }
+      .sbtn-ok:active{
+        @include btn2_click();
+      }
+      .sbtn-cancel:hover{
+        @include btn1_hover();
+      }
+      .sbtn-cancel:active{
+        @include btn1_click();
       }
     }
   }
 }
 
-#alipayMethod{
+#method-alipayMethod{
   .modal-dialog {
     width: 700px;
   }
@@ -413,7 +299,7 @@
     .hr{
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
@@ -433,7 +319,7 @@
     }
     .stitle{
       font-size:18px;
-      color:#4a90e2;
+      color:$color1;
       text-align:center;
       width: 100%;
       height: 25px;
@@ -499,39 +385,40 @@
       }
     }
     .sbtn-ok{
-      background:#4a90e2;
-      border-radius:2px;
-      width:100px;
+      @include btn2_normal();
+      @include btn_big();
       height:40px;
       line-height: 40px;
-      color: white;
-      text-align: center;
       float: right;
       margin-right: 100px;
-      cursor: pointer;
     }
     .sbtn-cancel{
-      border:1px solid #4a90e2;
-      border-radius:2px;
-      width:100px;
+      @include btn1_normal();
+      @include btn_big();
       height:40px;
       line-height: 40px;
-      color: #4A90E2;
-      text-align: center;
       float: right;
       margin-right: 49px;
-      cursor: pointer;
     }
-    .sbtn-ok:hover, .sbtn-ok:focus{
-      background: #3a71b0;
+    .sbtn-cancel{
+      @include btn1_normal();
     }
-    .sbtn-cancel:hover, .sbtn-cancel:focus{
-      background: #dddddd;
+    .sbtn-ok:hover{
+      @include btn2_hover();
+    }
+    .sbtn-ok:active{
+      @include btn2_click();
+    }
+    .sbtn-cancel:hover{
+      @include btn1_hover();
+    }
+    .sbtn-cancel:active{
+      @include btn1_click();
     }
   }
 }
 
-#newMethod{
+#method-newMethod{
   .modal-dialog {
     width: 700px;
   }
@@ -544,7 +431,7 @@
     .hr{
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
@@ -557,7 +444,7 @@
     }
     .stitle{
       font-size:18px;
-      color:#4a90e2;
+      color:$color1;
       text-align:center;
       width: 100%;
       height: 25px;
@@ -609,40 +496,41 @@
       width: 100%;
       height: 40px;
       .sbtn-ok{
-        background:#4a90e2;
-        border-radius:2px;
-        width:100px;
+        @include btn2_normal();
+        @include btn_big();
         height:40px;
         line-height: 40px;
-        color: white;
-        text-align: center;
         float: right;
         margin-right: 149px;
-        cursor: pointer;
       }
       .sbtn-cancel{
-        border:1px solid #4a90e2;
-        border-radius:2px;
-        width:100px;
+        @include btn1_normal();
+        @include btn_big();
         height:40px;
         line-height: 40px;
-        color: #4A90E2;
-        text-align: center;
         float: right;
         margin-right: 49px;
-        cursor: pointer;
       }
-      .sbtn-ok:hover, .sbtn-ok:focus{
-        background: #3a71b0;
+      .sbtn-cancel{
+        @include btn1_normal();
       }
-      .sbtn-cancel:hover, .sbtn-cancel:focus{
-        background: #dddddd;
+      .sbtn-ok:hover{
+        @include btn2_hover();
+      }
+      .sbtn-ok:active{
+        @include btn2_click();
+      }
+      .sbtn-cancel:hover{
+        @include btn1_hover();
+      }
+      .sbtn-cancel:active{
+        @include btn1_click();
       }
     }
   }
 }
 
-#submitSuccess{
+#method-submitSuccess{
   .modal-dialog {
     width: 318px;
   }
@@ -655,14 +543,14 @@
     .hr {
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
     }
     .stext{
       font-size:18px;
-      color:#4a90e2;
+      color:$color1;
       text-align:center;
       width: 100%;
       margin: auto;
@@ -679,7 +567,7 @@
   }
 }
 
-#submitFail{
+#method-submitFail{
   .modal-dialog {
     width: 318px;
   }
@@ -692,7 +580,7 @@
     .hr {
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
@@ -712,25 +600,23 @@
       margin-top: 8px;
     }
     .sbtn{
-      background:#4a90e2;
-      border-radius:2px;
-      width:100px;
+      @include btn1_normal();
+      @include btn_big();
       height:40px;
+      line-height: 40px;
       margin: auto;
       margin-top: 20px;
-      color: white;
-      font-size: 14px;
-      text-align: center;
-      line-height: 40px;
-      cursor: pointer;
     }
-    .sbtn:hover, .sbtn:focus{
-      background: #3a71b0;
+    .sbtn:hover{
+      @include btn1_hover();
+    }
+    .sbtn:active{
+      @include btn1_click();
     }
   }
 }
 
-#deleteMethod{
+#method-deleteMethod{
   .modal-dialog {
     width: 400px;
   }
@@ -743,14 +629,14 @@
     .hr {
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
     }
     .stext{
       font-size:18px;
-      color:#4a90e2;
+      color:$color1;
       text-align:center;
       width: 342px;
       margin: auto;
@@ -764,40 +650,41 @@
       height: 40px;
       text-align: center;
       .sbtn-ok{
-        background:#4a90e2;
-        border-radius:2px;
-        width:100px;
+        @include btn2_normal();
+        @include btn_big();
         height:40px;
         line-height: 40px;
-        color: white;
-        text-align: center;
         display: inline-block;
         margin: 0 25px;
-        cursor: pointer;
       }
       .sbtn-cancel{
-        border:1px solid #4a90e2;
-        border-radius:2px;
-        width:100px;
+        @include btn1_normal();
+        @include btn_big();
         height:40px;
         line-height: 40px;
-        color: #4A90E2;
-        text-align: center;
         display: inline-block;
         margin: 0 25px;
-        cursor: pointer;
       }
-      .sbtn-ok:hover, .sbtn-ok:focus{
-        background: #3a71b0;
+      .sbtn-cancel{
+        @include btn1_normal();
       }
-      .sbtn-cancel:hover, .sbtn-cancel:focus{
-        background: #dddddd;
+      .sbtn-ok:hover{
+        @include btn2_hover();
+      }
+      .sbtn-ok:active{
+        @include btn2_click();
+      }
+      .sbtn-cancel:hover{
+        @include btn1_hover();
+      }
+      .sbtn-cancel:active{
+        @include btn1_click();
       }
     }
   }
 }
 
-#comfirmSubmit{
+#method-comfirmSubmit{
   .modal-dialog {
     width: 244px;
   }
@@ -811,7 +698,7 @@
     .hr {
       width: 100%;
       height: 4px;
-      background-color: #4A90E2;
+      background-color: $color1;
       position: absolute;
       top: 0;
       left: 0;
@@ -836,41 +723,55 @@
       margin-top: 10px;
       width: 100%;
       height: 24px;
-      text-align: right;
-      padding-right: 24px;
+      text-align: center;
+      //padding-right: 24px;
       font-size: 14px;
       .sbtn-ok{
-        background: $color1;
-        border-radius: $BorderRadius;
-        width:50px;
-        height:24px;
-        line-height: 24px;
-        color: white;
-        text-align: center;
+        //background: $color1;
+        //border-radius: $BorderRadius;
+        //width:50px;
+        //height:24px;
+        //line-height: 24px;
+        //color: white;
+        //text-align: center;
+        //display: inline-block;
+        //margin: 0 10px;
+        //cursor: pointer;
+        @include btn2_normal();
+        @include btn_big();
         display: inline-block;
-        margin: 0 10px;
-        cursor: pointer;
+        margin: 0 5px;
       }
       .sbtn-cancel{
-        border:1px solid #4a90e2;
-        border-radius: $BorderRadius;
-        width:50px;
-        height:24px;
-        line-height: 24px;
-        color: $color1;
-        text-align: center;
+        //border:1px solid $color1;
+        //border-radius: $BorderRadius;
+        //width:50px;
+        //height:24px;
+        //line-height: 24px;
+        //color: $color1;
+        //text-align: center;
+        //display: inline-block;
+        //margin: 0 0;
+        //cursor: pointer;
+        @include btn1_normal();
+        @include btn_big();
         display: inline-block;
-        margin: 0 0;
-        cursor: pointer;
+        margin: 0 5px;
+      }
+      .sbtn-cancel{
+        @include btn1_normal();
       }
       .sbtn-ok:hover{
-        background: $color1Hover;
+        @include btn2_hover();
       }
       .sbtn-ok:active{
-        background: $color1Click;
+        @include btn2_click();
       }
-      .sbtn-cancel:hover, .sbtn-cancel:active{
-        background: #dddddd;
+      .sbtn-cancel:hover{
+        @include btn1_hover();
+      }
+      .sbtn-cancel:active{
+        @include btn1_click();
       }
     }
   }

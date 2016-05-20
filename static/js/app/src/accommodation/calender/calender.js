@@ -193,11 +193,21 @@ $(function(){
         scope.searchResultOnClick = function(){
             alert(111);
         };
+        scope.initialize = function(){
+            initNewOrder();
+            scope.selectedEntries = {};
+            scope.selectedRooms = [];
+            scope.shopcartShow = false;
+            scope.finishShow = false;
+            scope.bookShow = false;
+            scope.ingShow = false;
+        };
         scope.selectDate = function(date){
             scope.startDate = date;
             scope.selectedRooms = [];
             scope.selectedEntries = {};
             scope.updateData();
+            scope.initialize();
         };
         scope.lastMonth = function(){
             var month = scope.startDate.getMonth();
@@ -206,6 +216,7 @@ $(function(){
             scope.selectedRooms = [];
             scope.selectedEntries = {};
             scope.updateData();
+            scope.initialize();
         };
         scope.nextMonth = function(){
             var month = scope.startDate.getMonth();
@@ -214,6 +225,7 @@ $(function(){
             scope.selectedRooms = [];
             scope.selectedEntries = {};
             scope.updateData();
+            scope.initialize();
         };
         scope.changePRoomSelect = function(id){
             var flag = true;
@@ -227,6 +239,7 @@ $(function(){
             }
             scope.allPRoom = flag;
             scope.updateGlyphsPos();
+            scope.initialize();
         };
         scope.selectAllPRoom = function(){
             scope.allPRoom = !scope.allPRoom;
@@ -235,6 +248,7 @@ $(function(){
                 scope.pRoomList[key].selected = flag;
             }
             scope.updateGlyphsPos();
+            scope.initialize();
         };
         scope.updateGlyphsPos = function(){
             var gridHeight = 48;
@@ -745,12 +759,13 @@ $(function(){
                     //     dateStr: util.dateFormat(new Date()),
                     //     dateStr2: util.dateFormatWithoutYear(new Date()),
                     // });
-                    AJAXService.ajaxWithToken('GET', 'getItemInfoUrl', {
+                    var that = this;
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                         date: util.dateFormat(new Date()),
                         id: food.itemId
                     }, function(result){
                         console.log(result);
-                        this.foodList.push({
+                        that.foodList.push({
                             id: food.itemId,
                             name: food.name,
                             price: food.price,
@@ -758,6 +773,7 @@ $(function(){
                             date: new Date(),
                             dateStr: util.dateFormat(new Date()),
                             dateStr2: util.dateFormatWithoutYear(new Date()),
+                            inventory: result.data.inventory
                         });
                         scope.$apply();
                     });

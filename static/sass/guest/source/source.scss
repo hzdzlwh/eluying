@@ -4,30 +4,6 @@
   width:100%;
   height:4px;
 }
-@mixin sbtn1(){
-  background:$color1;
-  border: $color1 solid thin;
-  color: white;
-  border-radius:2px;
-  width:50px;
-  height:24px;
-  line-height: 22px;
-  text-align: center;
-  font-size: 14px;
-  cursor: pointer;
-}
-@mixin sbtn2(){
-  background:#ffffff;
-  border: $color1 solid thin;
-  color: $color1;
-  border-radius:2px;
-  width:50px;
-  height:24px;
-  line-height: 22px;
-  text-align: center;
-  font-size: 14px;
-  cursor: pointer;
-}
 
 #newGuest{
   .modal-dialog {
@@ -96,31 +72,30 @@
       width: 100%;
       height: 24px;
       padding-left: 88px;
+
       .sbtn{
         display: inline-block;
       }
       .sbtn-ok{
-        @include sbtn1();
+        @include btn2_normal();
+        @include btn_big();
       }
       .sbtn-cancel{
-        @include sbtn2();
+        @include btn1_normal();
+        @include btn_big();
         margin-right: 10px;
       }
       .sbtn-ok:hover{
-        background: $color1Hover;
-        border: $color1Hover solid thin;
+        @include btn2_hover();
       }
       .sbtn-ok:active{
-        background: $color1Click;
-        border: $color1Click solid thin;
+        @include btn2_click();
       }
       .sbtn-cancel:hover{
-        color: $color1Hover;
-        border: $color1Hover solid thin;
+        @include btn1_hover();
       }
       .sbtn-cancel:active{
-        color: $color1Click;
-        border: $color1Click solid thin;
+        @include btn1_click();
       }
     }
   }
@@ -167,28 +142,26 @@
         display: inline-block;
       }
       .confirm{
-        @include sbtn1();
+        @include btn2_normal();
+        @include btn_big();
         margin-right: 24px;
       }
       .confirm:hover{
-        background: $color1Hover;
-        border: $color1Hover solid thin;
+        @include btn2_hover();
       }
       .confirm:active{
-        background: $color1Click;
-        border: $color1Click solid thin;
+        @include btn2_click();
       }
       .cancel{
-        @include sbtn2();
+        @include btn1_normal();
+        @include btn_big();
         margin-right: 10px;
       }
       .cancel:hover{
-        color: $color1Hover;
-        border: $color1Hover solid thin;
+        @include btn1_hover();
       }
       .cancel:active{
-        color: $color1Click;
-        border: $color1Click solid thin;
+        @include btn1_click();
       }
     }
   }

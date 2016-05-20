@@ -20,7 +20,8 @@ $(function(){
     modal.modalInit();
 
     $("#coverUpload").fileupload({
-        url: AJAXService.getUrl2("uploadImageUrl"),
+        //url: AJAXService.getUrl2("uploadImageUrl"),
+        url: 'http://xianweisi.imwork.net:13763/ws/image/upload',
         done: function (e, data) {
             var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
             result = JSON.parse(result);
@@ -112,8 +113,6 @@ $(function(){
                 modal.somethingAlert(result.msg);
                 scope.$apply();
             });
-        };
-        scope.uploadCover = function(){
         };
         AJAXService.ajaxWithToken('GET', 'getBasicInfoUrl', {}, function(result){
             var infos = result.data;

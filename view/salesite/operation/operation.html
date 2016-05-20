@@ -87,13 +87,13 @@
                     <!--<div class="sbtn" data-toggle="modal" data-target="#announcement">发布新公告</div>-->
                 </div>
                 <div class="hr2"></div>
-                <div class="formrow website">
+                <div class="formrow website" ng-if="campUrl != ''">
                     <div class="slabel">网站：</div>
                     <div class="stext"><span id="campUrl">{{campUrl}}</span></div>
                     <div class="sbtn" ng-click="copySite()">复制网址</div>
                 </div>
                 <div class="hr2"></div>
-                <div class="formrow erweima">
+                <div class="formrow erweima" ng-if="campQrCode != ''">
                     <div class="slabel">二维码:</div>
                     <img class="erweimapic" src="{{campQrCode}}" alt="营地二维码"/>
                     <!--<div class="sbtn">下载</div>-->
