@@ -40,7 +40,6 @@ $(function(){
     };
 
     events = {
-
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
             var scrollLeft = $(this).scrollLeft();
@@ -72,12 +71,14 @@ $(function(){
                 locked = true;
                 return false;
             }
-
-            // if($(this).hasClass("selected")){
-            //     $(this).removeClass("selected");
-            // }else{
-            //     $(this).addClass("selected");
-            // }
+        },
+        "mousedown body .entryItem>.closeTips": function(ev){
+            if(ev.which == 3){
+                $(".entryOp").hide();
+                $(this).siblings(".entryOp").show();
+                locked = true;
+                return false;
+            }
         },
         "mousedown body .entryOp": function(ev){
             ev.stopPropagation();
@@ -87,6 +88,8 @@ $(function(){
             $(".search .results").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
+            $(".modal .date-table").hide();
+            $(".modal .select1_options").hide();
             locked = false;
         },
         "click body .results": function(ev){
@@ -149,11 +152,15 @@ $(function(){
             $(".search .results").show();
             locked = true;
         },
-        "click body .select1": function(){
+        "click body .select1": function(ev){
+            $(".select1_options").hide();
             $(this).find(".select1_options").show();
+            ev.stopPropagation();
         },
-        "click body input.datePicker": function(){
+        "click body input.datePicker": function(ev){
+            $(".date-table").hide();
             $($(this).next(".date-table")[0]).show();
+            ev.stopPropagation();
         }
     };
 
@@ -170,6 +177,16 @@ $(function(){
         scope.statusStr = STATUS_STR;
         scope.selectedEntries = {};
         scope.selectedRooms = [];
+        scope.closeRoom = function(open, rid, dateItem){
+            AJAXService.ajaxWithToken('GET', 'modifyRoomStatusUrl', {
+                isAll: false,
+                dateList: JSON.stringify([dateItem.date2]),
+                open: !open ? 0 : 1,
+                roomId: rid
+            }, function(result){
+                scope.updateData();
+            });
+        };
 
         //搜索用到的变量
         scope.searchKeyword = '';
@@ -750,26 +767,16 @@ $(function(){
                 },
                 addFood: function(){
                     var food = scope.foodList[0];
-                    // this.foodList.push({
-                    //     id: food.itemId,
-                    //     name: food.name,
-                    //     price: food.price,
-                    //     num: 1,
-                    //     date: new Date(),
-                    //     dateStr: util.dateFormat(new Date()),
-                    //     dateStr2: util.dateFormatWithoutYear(new Date()),
-                    // });
                     var that = this;
                     AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                         date: util.dateFormat(new Date()),
                         id: food.itemId
                     }, function(result){
-                        console.log(result);
                         that.foodList.push({
                             id: food.itemId,
                             name: food.name,
                             price: food.price,
-                            num: 1,
+                            num: (result.data.inventory < 1) ? 0 : 1,
                             date: new Date(),
                             dateStr: util.dateFormat(new Date()),
                             dateStr2: util.dateFormatWithoutYear(new Date()),
@@ -780,15 +787,23 @@ $(function(){
                 },
                 changeFood: function(foodItem, food){
                     var index = (this.foodList.indexOf(foodItem));
-                    this.foodList[index] = {
-                        id: food.itemId,
-                        name: food.name,
-                        price: food.price,
-                        num: 1,
-                        date: new Date(),
-                        dateStr: util.dateFormat(new Date()),
-                        dateStr2: util.dateFormatWithoutYear(new Date()),
-                    };
+                    var that = this;
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(new Date()),
+                        id: food.itemId
+                    }, function(result){
+                        that.foodList[index] = {
+                            id: food.itemId,
+                            name: food.name,
+                            price: food.price,
+                            num: (result.data.inventory < 1) ? 0 : 1,
+                            date: new Date(),
+                            dateStr: util.dateFormat(new Date()),
+                            dateStr2: util.dateFormatWithoutYear(new Date()),
+                            inventory: result.data.inventory
+                        };
+                        scope.$apply();
+                    });
                     $(".select1_options").hide();
                 },
                 changeFoodTime: function(index, date){
@@ -796,13 +811,13 @@ $(function(){
                 },
                 minusFood: function(i){
                     this.foodList[i].num--;
-                    if(this.foodList[i].num < 1){
-                        this.foodList[i].num = 1
+                    if(this.foodList[i].num < 0){
+                        this.foodList[i].num = 0
                     }
                 },
                 plusFood: function(i){
                     this.foodList[i].num++;
-                    var max = 100;
+                    var max = this.foodList[i].inventory;
                     if(this.foodList[i].num > max){
                         this.foodList[i].num = max;
                     }
@@ -812,14 +827,22 @@ $(function(){
                 },
                 addFun: function(){
                     var fun = scope.funList[0];
-                    this.funList.push({
-                        id: fun.itemId,
-                        name: fun.name,
-                        price: fun.price,
-                        num: 1,
-                        date: new Date(),
-                        dateStr: util.dateFormat(new Date()),
-                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                    var that = this;
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(new Date()),
+                        id: fun.itemId
+                    }, function(result){
+                        that.funList.push({
+                            id: fun.itemId,
+                            name: fun.name,
+                            price: fun.price,
+                            num: (result.data.inventory < 1) ? 0 : 1,
+                            date: new Date(),
+                            dateStr: util.dateFormat(new Date()),
+                            dateStr2: util.dateFormatWithoutYear(new Date()),
+                            inventory: result.data.inventory
+                        });
+                        scope.$apply();
                     });
                 },
                 changeFun: function(funItem, fun){
@@ -828,7 +851,7 @@ $(function(){
                         id: fun.itemId,
                         name: fun.name,
                         price: fun.price,
-                        num: 1,
+                        num: (result.data.inventory < 1) ? 0 : 1,
                         date: new Date(),
                         dateStr: util.dateFormat(new Date()),
                         dateStr2: util.dateFormatWithoutYear(new Date()),
@@ -840,8 +863,8 @@ $(function(){
                 },
                 minusFun: function(i){
                     this.funList[i].num--;
-                    if(this.funList[i].num < 1){
-                        this.funList[i].num = 1
+                    if(this.funList[i].num < 0){
+                        this.funList[i].num = 0
                     }
                 },
                 plusFun: function(i){
@@ -864,6 +887,60 @@ $(function(){
                     }
                     price = price - this.discounts;
                     return price < 0 ? 0.01 : price;
+                },
+                createFoodFunCalendar: function(item){
+                    var date = new Date(item.dateStr);
+                    //维护日历
+                    var selectedMonth = null;
+                    var calenderDays = [];
+                    var firstDay = new Date(date);
+                    firstDay.setDate(1);
+                    var firstDay_Month = firstDay.getMonth();
+                    var firstDay_weekday = firstDay.getDay();
+                    if(selectedMonth && firstDay_Month !== selectedMonth){
+                        firstDay.setMonth(selectedMonth);
+                    }
+                    if(firstDay_weekday === 0){
+                        for(var i = 6; i > 0; i--){
+                            calenderDays.push(util.diffDate(firstDay, -i));
+                        }
+                    } else{
+                        for(var i = firstDay_weekday-1; i > 0; i--){
+                            calenderDays.push(util.diffDate(firstDay, -i));
+                        }
+                    }
+                    calenderDays.push(firstDay);
+                    var temp = util.diffDate(firstDay, 1);
+                    while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
+                        calenderDays.push(temp);
+                        temp = util.diffDate(temp, 1);
+                    }
+                    var iter = [];
+                    var days = [];
+                    for(var i = 0; i < calenderDays.length; i++){
+                        var sclass = '';
+                        var today = new Date();
+                        var text = null;
+                        if(util.isSameDay(calenderDays[i], today)){
+                            sclass = 'today';
+                            text = '今';
+                        }else if(calenderDays[i] < today){
+                            sclass = 'invalid';
+                        }
+                        if(util.isSameDay(calenderDays[i], date)){
+                            sclass += ' selected';
+                        }
+                        iter.push({
+                            text: text,
+                            date: calenderDays[i],
+                            sclass: sclass
+                        });
+                        if(i % 7 === 6){
+                            days.push(iter);
+                            iter = [];
+                        }
+                    }
+                    return days;
                 },
                 remarks: '',
                 discounts: 0,

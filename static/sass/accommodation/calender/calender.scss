@@ -2813,6 +2813,39 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             border-right: solid thin $borderColor;
             border-bottom: solid thin $borderColor;
             position: relative;
+            .entryOp{
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              background:#fafafa;
+              box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+              width:88px;
+              height:32px;
+              text-align: center;
+              line-height: 32px;
+              font-size: 14px;
+              cursor: pointer;
+              z-index: 1;
+              display: none;
+            }
+            .entryOp:hover{
+              background: #f1f1f1;
+            }
+            .closeTips{
+              background:#bfbfbf;
+              width:95px;
+              height:43px;
+              color: white;
+              line-height: 43px;
+              text-align: left;
+              padding-left: 14px;
+              font-size: 14px;
+              //display: none;
+              position: absolute;
+              left: 2px;
+              top: 2px;
+              z-index: 0;
+            }
             .inner{
               width: 96px;
               height: $gridHeight - 4px;
@@ -2822,37 +2855,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               position: relative;
               line-height: $gridHeight - 4px;
               text-align: center;
-              .closeTips{
-                background:#bfbfbf;
-                width:95px;
-                height:43px;
-                color: white;
-                line-height: 43px;
-                text-align: left;
-                padding-left: 14px;
-                font-size: 14px;
-                display: none;
-                position: relative;
-                z-index: 2;
-              }
-              .entryOp{
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                background:#fafafa;
-                box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
-                width:88px;
-                height:32px;
-                text-align: center;
-                line-height: 32px;
-                font-size: 14px;
-                cursor: pointer;
-                z-index: 1;
-                display: none;
-              }
-              .entryOp:hover{
-                background: #f1f1f1;
-              }
               img{
                 display: none;
               }
