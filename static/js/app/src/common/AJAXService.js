@@ -76,6 +76,7 @@ var AJAXService = {
         getRoomsAndStausUrl: '/room/getRoomsAndStaus',
         getRoomCategoriesUrl: '/room/getRoomCategories',
         getItemsUrl: '/item/getItems',
+        getItemInfoUrl: '/item/getItemInfo',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

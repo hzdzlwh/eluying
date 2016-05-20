@@ -119,8 +119,8 @@ $headerBg: #393b4a;
 @mixin select1{
   border:1px solid #cccccc;
   border-radius:2px;
-  padding-left: 8px;
-  padding-right: 24px;
+  //padding-left: 8px;
+  //padding-right: 24px;
   text-overflow: ellipsis;
   line-height: 20px;
   width:114px;
@@ -129,10 +129,19 @@ $headerBg: #393b4a;
   color:#666666;
   text-align:left;
   display: block;
-  white-space: nowrap;
-  overflow: visible;
   background: white url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
   position: relative;
+  span{
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 8px;
+    padding-right: 24px;
+  }
   .select1_options{
     display: none;
     background:#fafafa;
