@@ -11,7 +11,7 @@ var shopCategory = {
     list: [],
 
     loadShopCategory: function() {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getShopCategory'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -20,13 +20,17 @@ var shopCategory = {
                 shopCategory.list = result.data.list;
                 shopCategory.render();
             }
+        });*/
+        AJAXService.ajaxWithToken('get','getShopCategory',{},function (result) {
+            shopCategory.list = result.data.list;
+            shopCategory.render();
         });
     },
 
 
 
     editCategory: function(that, item) {
-        $.ajax({
+        /*$.ajax({
             type: "POST",
             url: AJAXService.getUrl('editCategory'),
             data: {subList: JSON.stringify(item)},
@@ -42,6 +46,15 @@ var shopCategory = {
                 shopList.loadShopCategory();
                 shopList.loadShopList();
             }
+        });*/
+        AJAXService.ajaxWithToken('POST','editCategory',{subList: JSON.stringify(item)},function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            shopList.loadShopCategory();
+            shopList.loadShopList();
         });
     },
 
