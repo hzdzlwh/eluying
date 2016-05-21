@@ -863,7 +863,8 @@ $(function(){
                             var sclass = '';
                             var today = new Date();
                             var text = null;
-                            if(calenderDays[i] < today || calenderDays[i] <= startDate || rs.status[i].s!==-1){
+                            if(calenderDays[i] < today || calenderDays[i] <= startDate
+                                || (i > 0 && rs.status[i-1].s!==-1)){
                                 sclass = 'invalid';
                             }
                             if(util.isSameDay(calenderDays[i], today)){
@@ -921,13 +922,54 @@ $(function(){
                     }
                     room.fee = fee;
                     this.createRoomCalendar(room);
-                    scope.$apply();
                 },
                 changeRoomEndDate: function(room, date, sclass){
                     if(sclass == 'invalid'){
                         return false;
                     }
-
+                    var startDate = new Date(room.startDate);
+                    //中间有被占用的房间
+                    var temp = new Date(startDate);
+                    temp = util.diffDate(temp, 1);
+                    for(var i = 0; i < room.endDays.length; i++){
+                        if(util.isSameDay(temp, new Date(date))){
+                            break;
+                        }
+                        var row = room.endDays[i];
+                        for(var j = 0; j < row.length; j++){
+                            if(util.isSameDay(row[j].date, temp)){
+                                if(row[j].sclass === 'invalid'){
+                                    return false;
+                                }
+                                temp = util.diffDate(temp, 1);
+                            }
+                            if(util.isSameDay(temp, new Date(date))){
+                                break;
+                            }
+                        }
+                    }
+                    room.endDate = util.dateFormat(date);
+                    room.sendDate = util.dateFormatWithoutYear(date);
+                    room.days = util.DateDiff(new Date(startDate), new Date(room.endDate));
+                    temp = new Date(startDate);
+                    var fee = 0;
+                    for(var i = 0; i < room.endDays.length; i++){
+                        if(util.isSameDay(temp, new Date(room.endDate))){
+                            break;
+                        }
+                        var row = room.endDays[i];
+                        for(var j = 0; j < row.length; j++){
+                            if(util.isSameDay(temp, row[j].date)){
+                                fee += row[j].price;
+                                temp = util.tomorrow(temp);
+                            }
+                            if(util.isSameDay(temp, new Date(room.endDate))){
+                                break;
+                            }
+                        }
+                    }
+                    room.fee = fee;
+                    this.createRoomCalendar(room);
                 },
                 deleteRoom: function(index){
                     this.roomList.splice(index, 1);
