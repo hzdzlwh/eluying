@@ -633,7 +633,7 @@ $(function(){
                 sub: true,
                 sn: entry.sn,
                 name: entry.cRoomName,
-                days: 0
+                days: 1
             };
             for(var i = 1; i < entriesArray.length; i++){
                 entry = entriesArray[i];
@@ -646,6 +646,10 @@ $(function(){
                     temp.days++;
                 }else{
                     this.newOrder.createRoomCalendar(temp);
+                    //结束日期加一天
+                    var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
+                    temp.endDate = util.dateFormat(checkoutDate);
+                    temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
                     orderList.push(temp);
                     temp = {
                         startDate: entry.date2,
@@ -658,12 +662,17 @@ $(function(){
                         sub: true,
                         sn: entry.sn,
                         name: entry.cRoomName,
-                        days: 0
+                        days: 1
                     };
                 }
             }
             this.newOrder.createRoomCalendar(temp);
+            //结束日期加一天
+            var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
+            temp.endDate = util.dateFormat(checkoutDate);
+            temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
             orderList.push(temp);
+            console.log(orderList);
             //新增订单弹出框数据准备
             scope.newOrder.type = type;
             scope.newOrder.title = (function(){
@@ -676,7 +685,7 @@ $(function(){
             })();
             scope.newOrder.selectedChannel = {
                 name: scope.channels[0].name,
-                id: scope.channels[0].id,
+                id: -1,
             };
             scope.newOrder.roomList = orderList;
             $(".msgModal").modal("hide");
@@ -1062,6 +1071,19 @@ $(function(){
                             }
                         }
                     }
+                    //格式化房间数据
+                    var rooms = [];
+                    this.roomList.forEach(function(d){
+                        var room = {
+                            startDate: d.startDate,
+                            endDate: d.endDate,
+                            roomId: parseInt(d.roomId),
+                            id: d.id,
+                            fee: d.fee,
+                            sub: true,
+                        };
+                        rooms.push(room);
+                    });
                     //准备接口所需数据
                     var items = [];
                     itemList.forEach(function(d, i){
@@ -1075,18 +1097,35 @@ $(function(){
                             type: d.type
                         });
                     });
-                    console.log(items);
+                    var type = 0;
+                    if(this.type === 'book'){
+                        type = 2;
+                    }else if(this.type === 'finish'){
+                        type = 1
+                    }
                     var orderItem = {
                         name: this.guestInfo.name,
                         origin: this.selectedChannel.name,
                         originId: this.selectedChannel.id,
                         phone: this.guestInfo.phone,
                         remark: this.remarks,
-                        type: this.type,
-                        items: items,
-                        payments: [],
-                        rooms: []
-                    }
+                        type: type,
+                        items: JSON.stringify(items),
+                        payments: JSON.stringify([{
+                            fee: this.discounts,
+                            type: 5
+                        }]),
+                        rooms: JSON.stringify(rooms)
+                    };
+                    AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
+                        console.log(result3);
+                        if(result3.code === 1){
+                            $("#newOrderModal").modal("hide");
+                            scope.initialize();
+                            scope.updateData();
+                            scope.$apply();
+                        }
+                    });
                 },
                 remarks: '',
                 discounts: 0,

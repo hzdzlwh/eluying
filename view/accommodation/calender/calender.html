@@ -1445,8 +1445,9 @@
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">
                         <div class="stext">{{g.channelName}}</div>
-                        <img class="status"
-                             src="http://7xsrk6.com2.z0.glb.qiniucdn.com/6F62DF58-FC40-4DF1-86F7-F7235C7B2123@1x.png" alt="">
+                        <img class="status" src="http://static.dingdandao.com/book.png" ng-if="g.orderState === 2">
+                        <img class="status" src="http://static.dingdandao.com/ing.png" ng-if="g.orderState === 3">
+                        <img class="status" src="http://static.dingdandao.com/finish.png" ng-if="g.orderState === 5">
                     </div>
                     <div class="infos ing up">
                         <div class="arrow-up"></div>
