@@ -672,7 +672,7 @@ $(function(){
             temp.endDate = util.dateFormat(checkoutDate);
             temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
             orderList.push(temp);
-            console.log(orderList);
+            // console.log(orderList);
             //新增订单弹出框数据准备
             scope.newOrder.type = type;
             scope.newOrder.title = (function(){
@@ -755,7 +755,7 @@ $(function(){
                     var endCalendar = this.createRoomCalendarEnd(room);
                 },
                 createRoomCalendarStart: function(room){
-                    console.log(room);
+                    // console.log(room);
                     var startDate = new Date(room.startDate);
                     var calenderDays = util.buildCalendar(startDate);
                     AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
@@ -764,7 +764,7 @@ $(function(){
                         id: room.id,
                         sub: true
                     }, function(result2){
-                        console.log(result2);
+                        // console.log(result2);
                     });
                     // var iter = [];
                     // var days = [];
@@ -1118,7 +1118,7 @@ $(function(){
                         rooms: JSON.stringify(rooms)
                     };
                     AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
-                        console.log(result3);
+                        // console.log(result3);
                         if(result3.code === 1){
                             $("#newOrderModal").modal("hide");
                             scope.initialize();
