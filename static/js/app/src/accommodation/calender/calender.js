@@ -685,11 +685,11 @@ $(function(){
                     temp.fee += entry.price;
                     temp.days++;
                 }else{
-                    this.newOrder.createRoomCalendar(temp);
                     //结束日期加一天
                     var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
                     temp.endDate = util.dateFormat(checkoutDate);
                     temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
+                    this.newOrder.createRoomCalendar(temp);
                     orderList.push(temp);
                     temp = {
                         startDate: entry.date2,
@@ -706,11 +706,11 @@ $(function(){
                     };
                 }
             }
-            this.newOrder.createRoomCalendar(temp);
             //结束日期加一天
             var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
             temp.endDate = util.dateFormat(checkoutDate);
             temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
+            this.newOrder.createRoomCalendar(temp);
             orderList.push(temp);
             // console.log(orderList);
             //新增订单弹出框数据准备
@@ -804,56 +804,131 @@ $(function(){
                     $(".select1_options").hide();
                 },
                 createRoomCalendar: function(room){
-                    var startCalendar = this.createRoomCalendarStart(room);
-                    var endCalendar = this.createRoomCalendarEnd(room);
+                    this.createRoomCalendarStart(room);
+                    this.createRoomCalendarEnd(room);
                 },
                 createRoomCalendarStart: function(room){
-                    // console.log(room);
                     var startDate = new Date(room.startDate);
                     var calenderDays = util.buildCalendar(startDate);
-                    AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
+                    AJAXService.ajaxWithToken('GET', 'getRoomStausUrl', {
                         date: util.dateFormat(calenderDays[0]),
                         days: calenderDays.length,
-                        id: room.id,
-                        sub: true
+                        id: room.roomId
                     }, function(result2){
-                        // console.log(result2);
+                        var rs = result2.data.rs;
+                        var iter = [];
+                        var days = [];
+                        for(var i = 0; i < calenderDays.length; i++){
+                            var sclass = '';
+                            var today = new Date();
+                            var text = null;
+                            if(calenderDays[i] < today || rs.status[i].s!==-1){
+                                sclass = 'invalid';
+                            }
+                            if(util.isSameDay(calenderDays[i], today)){
+                                sclass += ' today';
+                                text = '今';
+                            }
+                            if(util.isSameDay(calenderDays[i], startDate)){
+                                sclass += ' selected';
+                            }
+                            iter.push({
+                                text: text,
+                                date: calenderDays[i],
+                                sclass: sclass,
+                                price: rs.status[i].p
+                            });
+                            if(i % 7 === 6){
+                                days.push(iter);
+                                iter = [];
+                            }
+                        }
+                        room.startDays = days;
+                        scope.$apply();
                     });
-                    // var iter = [];
-                    // var days = [];
-                    // for(var i = 0; i < calenderDays.length; i++){
-                    //     var sclass = '';
-                    //     var today = new Date();
-                    //     var text = null;
-                    //     if(util.isSameDay(calenderDays[i], today)){
-                    //         sclass = 'today';
-                    //         text = '今';
-                    //     }else if(calenderDays[i] < today){
-                    //         sclass = 'invalid';
-                    //     }
-                    //     if(util.isSameDay(calenderDays[i], date)){
-                    //         sclass += ' selected';
-                    //     }
-                    //     iter.push({
-                    //         text: text,
-                    //         date: calenderDays[i],
-                    //         sclass: sclass
-                    //     });
-                    //     if(i % 7 === 6){
-                    //         days.push(iter);
-                    //         iter = [];
-                    //     }
-                    // }
-                    // return days;
-                    // AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
-                    //     date: util.dateFormat(scope.startDate),
-                    //     days: 30,
-                    //     sub: true
-                    // }, function(result2){
-                    //
-                    // });
                 },
-                createRoomCalendarEnd: function(room){},
+                createRoomCalendarEnd: function(room){
+                    var startDate = new Date(room.startDate);
+                    var endDate = new Date(room.endDate);
+                    var calenderDays = util.buildCalendar(endDate);
+                    AJAXService.ajaxWithToken('GET', 'getRoomStausUrl', {
+                        date: util.dateFormat(calenderDays[0]),
+                        days: calenderDays.length,
+                        id: room.roomId
+                    }, function(result2){
+                        var rs = result2.data.rs;
+                        var iter = [];
+                        var days = [];
+                        for(var i = 0; i < calenderDays.length; i++){
+                            var sclass = '';
+                            var today = new Date();
+                            var text = null;
+                            if(calenderDays[i] < today || calenderDays[i] <= startDate || rs.status[i].s!==-1){
+                                sclass = 'invalid';
+                            }
+                            if(util.isSameDay(calenderDays[i], today)){
+                                sclass += ' today';
+                                text = '今';
+                            }
+                            if(util.isSameDay(calenderDays[i], endDate)){
+                                sclass += ' selected';
+                            }
+                            iter.push({
+                                text: text,
+                                date: calenderDays[i],
+                                sclass: sclass,
+                                price: rs.status[i].p
+                            });
+                            if(i % 7 === 6){
+                                days.push(iter);
+                                iter = [];
+                            }
+                        }
+                        room.endDays = days;
+                        scope.$apply();
+                    });
+                },
+                changeRoomStartDate: function(room, date, sclass){
+                    if(sclass == 'invalid'){
+                        return false;
+                    }
+                    //开始日期大于结束日期
+                    if(date >= new Date(room.endDate)){
+                        var nendDate = util.diffDate(date, 1);
+                        room.endDate = util.dateFormat(nendDate);
+                        room.sendDate = util.dateFormatWithoutYear(nendDate);
+                        room.days = 1;
+                    }
+                    room.startDate = util.dateFormat(date);
+                    room.sstartDate = util.dateFormatWithoutYear(date);
+                    room.days = util.DateDiff(date, new Date(room.endDate));
+                    var temp = new Date(date);
+                    var fee = 0;
+                    for(var i = 0; i < room.startDays.length; i++){
+                        if(util.isSameDay(temp, new Date(room.endDate))){
+                            break;
+                        }
+                        var row = room.startDays[i];
+                        for(var j = 0; j < row.length; j++){
+                            if(util.isSameDay(temp, row[j].date)){
+                                fee += row[j].price;
+                                temp = util.tomorrow(temp);
+                            }
+                            if(util.isSameDay(temp, new Date(room.endDate))){
+                                break;
+                            }
+                        }
+                    }
+                    room.fee = fee;
+                    this.createRoomCalendar(room);
+                    scope.$apply();
+                },
+                changeRoomEndDate: function(room, date, sclass){
+                    if(sclass == 'invalid'){
+                        return false;
+                    }
+
+                },
                 deleteRoom: function(index){
                     this.roomList.splice(index, 1);
                     if(this.roomList.length == 0){

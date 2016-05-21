@@ -79,6 +79,7 @@ var AJAXService = {
         getInventoryUrl: '/item/getInventory',
         confirmOrderUrl: '/room/confirmOrder',
         getOrderDetailUrl: '/order/getOrderDetail',
+        getRoomStausUrl: '/room/getRoomStaus',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
