@@ -113,7 +113,7 @@
             <div class="sheader">
                 <div class="stitle">
                     <span>订单详情</span>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     <div class="btns">
                         <div class="abtn">编辑订单</div>
                         <div class="abtn">取消订单</div>
@@ -127,15 +127,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>胡晚期</td>
+                        <td>{{orderEdit.customerName}}</td>
                         <td>手机号</td>
-                        <td>13111111111</td>
+                        <td>{{orderEdit.customerPhone}}</td>
                     </tr>
                     <tr>
-                        <td>身份证</td>
-                        <td>440183199209080056</td>
+                        <!--<td>身份证</td>-->
+                        <!--<td>440183199209080056</td>-->
                         <td>渠道</td>
-                        <td>散客</td>
+                        <td>{{orderEdit.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -145,59 +145,49 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <tr ng-repeat="r in orderEdit.rooms">
+                            <td><span>{{r.serialNum}}</span>&nbsp;({{r.name}})
+                                <div class="sstatus {{statusStr2[r.state].classStr}}">
+                                    {{statusStr2[r.state].short}}</div>
+                            </td>
                             <td>
                                 <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
+                                &nbsp;{{r.startDate.substr(5, 5)}}&nbsp;~&nbsp;{{r.endDate.substr(5, 5)}}&nbsp;
+                                <span class="light">共{{r.duration}}晚</span>
                             </td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
-                            <td>
-                                <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
-                            </td>
-                            <td>¥10000</td>
+                            <td>¥{{r.fee}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype food">
+                <div class="hr2" ng-if="orderEdit.foodItems.length > 0"></div>
+                <div class="subtype food" ng-if="orderEdit.foodItems.length > 0">
                     <div class="sub-title">餐饮信息</div>
                     <table>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="f in orderEdit.foodItems">
+                            <td>{{f.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                            <td>
+                                <span class="light">数量</span>
+                                &nbsp;{{f.amount}} &nbsp;
+                                (剩余{{f.amount - f.usedAmount}})
+                            </td>
+                            <td>¥{{f.price * f.amount}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype fun">
+                <div class="hr2" ng-if="orderEdit.playItems.length > 0"></div>
+                <div class="subtype fun" ng-if="orderEdit.playItems.length > 0">
                     <div class="sub-title">娱乐信息</div>
                     <table>
-                        <tr>
-                            <td>皮划艇</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="p in orderEdit.playItems">
+                            <td>{{p.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
+                            <td>
+                                <span class="light">数量</span>
+                                &nbsp;{{p.amount}} &nbsp;
+                                (剩余{{p.amount - p.usedAmount}})
+                            </td>
+                            <td>¥{{p.price * p.amount}}</td>
                         </tr>
                     </table>
                 </div>
@@ -206,7 +196,7 @@
                     <div class="infos">
                         <div class="item">
                             <span class="slabel">订单总价:</span>
-                            <span class="svalue">￥99999</span>
+                            <span class="svalue">￥{{orderEdit.totalPrice}}</span>
                         </div>
                         <div class="item">
                             &nbsp;&nbsp;&nbsp;
@@ -225,23 +215,19 @@
                             <span class="slabel">需退押金:</span>
                             <span class="svalue">￥200</span>
                         </div>
-                        <div class="item">
+                        <div class="item remark">
                             <span class="slabel">备注:</span>
                             <span class="svalue">
-                                没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话
-                                没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话
-                                没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话
-                                没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话
-                                没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话没有备注的话
+                                {{orderEdit.remark}}
                             </span>
                         </div>
                         <div class="item orderid">
                             <span class="slabel">订单号:</span>
-                            <span class="svalue">20160756456456456456456456</span>
+                            <span class="svalue">{{orderEdit.orderNum}}</span>
                         </div>
                         <div class="item staff">
                             <span class="slabel">办理预订员工:</span>
-                            <span class="svalue">小明</span>
+                            <span class="svalue">{{orderEdit.operatorName}}</span>
                         </div>
                     </div>
                     <div class="btns">
@@ -1413,7 +1399,10 @@
                 <div class="date-item"
                      ng-class="{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
                      date="{{d.dateStr}}">
-                    <div class="date">{{d.dateStr == today ? '今天' : d.dateStr}}</div>
+                    <div class="date">
+                        {{holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr}}
+                        <div class="isHoliday" ng-if="holidays[d.dateStrL]">休</div>
+                    </div>
                     <div class="desc">{{d.weekday}}</div>
                 </div>
                 <div class="left">剩{{d.left}}</div>
@@ -1441,6 +1430,7 @@
                 <div class="glyph {{statusStr[g.orderState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
+                     ng-dblclick="getOrderDetail(g.orderId);"
                      style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">

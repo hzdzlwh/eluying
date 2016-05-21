@@ -23,6 +23,11 @@ var STATUS_STR = [
     {},
     {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
 ];
+var STATUS_STR2 = [
+    {short: '预', long: '已预订', classStr: 'book', 'title': '预订'},
+    {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
+    {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
+];
 $(function(){
     //初始化界面
     header.showHeader();
@@ -175,6 +180,7 @@ $(function(){
         scope.calenderDays = [];
         scope.allPRoom = true;
         scope.statusStr = STATUS_STR;
+        scope.statusStr2 = STATUS_STR2;
         scope.selectedEntries = {};
         scope.selectedRooms = [];
         scope.closeRoom = function(open, rid, dateItem){
@@ -256,7 +262,9 @@ $(function(){
             }
             scope.allPRoom = flag;
             scope.updateGlyphsPos();
+            scope.updateLeft();
             scope.initialize();
+            // scope.updateData();
         };
         scope.selectAllPRoom = function(){
             scope.allPRoom = !scope.allPRoom;
@@ -265,6 +273,7 @@ $(function(){
                 scope.pRoomList[key].selected = flag;
             }
             scope.updateGlyphsPos();
+            scope.updateLeft();
             scope.initialize();
         };
         scope.updateGlyphsPos = function(){
@@ -288,6 +297,25 @@ $(function(){
                 g.top = top;
             });
         };
+        scope.updateLeft = function(){
+            //统计每天有多少房间剩余
+            var roomStore = scope.roomStore;
+            var lefts = [];
+            for(var i = 0; i < 30; i++){
+                lefts.push(0);
+            }
+            for(var key in roomStore){
+                var room = roomStore[key];
+                for(var i = 0; i < room.st.length; i++){
+                    if(scope.pRoomList[room.pi].selected && room.st[i].s === -1){
+                        lefts[i]++;
+                    }
+                }
+            }
+            for(var i = 0; i < 30; i++){
+                scope.datesArray[i].left = lefts[i];
+            }
+        };
         scope.updateData = function(){
             scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
             scope.datesArray = [];
@@ -296,9 +324,10 @@ $(function(){
             for(var i = 0; i < 30; i++){
                 scope.datesArray.push({
                     date: tempDate,
+                    dateStrL: util.dateFormat(tempDate),
                     dateStr: util.dateFormatWithoutYear(tempDate),
                     weekday: util.getWeek(tempDate),
-                    left: 111
+                    left: 0
                 });
                 tempDate = util.tomorrow(tempDate);
             }
@@ -339,6 +368,15 @@ $(function(){
                     sub: true
                 }, function(result2){
                     var holiday = result2.data.holidays;
+                    console.log(holiday);
+                    var holidayHash = {};
+                    holiday.forEach(function(d){
+                        holidayHash[d.date] = {
+                            str: d.holiday,
+                            type: d.type
+                        };
+                    });
+                    scope.holidays = holidayHash;
                     var cRooms = result2.data.rs;
                     var orderList = result2.data.orderList;
                     var cRoomStore = {};
@@ -445,8 +483,10 @@ $(function(){
                     scope.pRoomList = pRoomList;
                     scope.cRoomStore = cRoomStore;
                     scope.roomStore = roomStore;
+                    scope.updateLeft();
                     scope.glyphs = glyphs;
                     scope.occupyList = occupyList;
+                    console.log(scope);
                     scope.$apply();
                 });
             });
@@ -720,6 +760,19 @@ $(function(){
             {key: 'mid', label: '军官证'},
             {key: 'other', label: '其他'},
         ];
+        scope.orderEdit = {};
+        scope.getOrderDetail = function(orderId){
+            AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                orderId: orderId
+            }, function(result){
+                console.log(result);
+                if(result.code === 1){
+                    scope.orderEdit = result.data;
+                    scope.$apply();
+                    $("#orderDetailModal").modal("show");
+                }
+            });
+        };
         var initNewOrder = function(){
             scope.newOrder = {
                 title: null,
