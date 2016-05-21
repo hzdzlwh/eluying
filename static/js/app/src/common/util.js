@@ -122,6 +122,40 @@ var util = {
         return m + '-' + d;
     },
 
+    dateFormatWithoutYearCn: function(dateStr){
+        var m = parseInt(dateStr.split('-')[0]);
+        var d = parseInt(dateStr.split('-')[1]);
+        return m + '月' + d + '日';
+    },
+    
+    buildCalendar: function(date){
+        var selectedMonth = null;
+        var calenderDays = [];
+        var firstDay = new Date(date);
+        firstDay.setDate(1);
+        var firstDay_Month = firstDay.getMonth();
+        var firstDay_weekday = firstDay.getDay();
+        if(selectedMonth && firstDay_Month !== selectedMonth){
+            firstDay.setMonth(selectedMonth);
+        }
+        if(firstDay_weekday === 0){
+            for(var i = 6; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        } else{
+            for(var i = firstDay_weekday-1; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        }
+        calenderDays.push(firstDay);
+        var temp = util.diffDate(firstDay, 1);
+        while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
+            calenderDays.push(temp);
+            temp = util.diffDate(temp, 1);
+        }
+        return calenderDays;
+    },
+
     centroidDiv: function(dom, pdom){
         var cw = $(dom).width();
         var pw = $(pdom).width();

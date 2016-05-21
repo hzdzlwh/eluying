@@ -153,7 +153,7 @@ $(function(){
                     privateKey: scope.privateKey,
                 }, function(result){
                     if(result.code !== 1){
-                        util.somethingAlert(result.msg);
+                        modal.somethingAlert(result.msg);
                     }else{
                         $("#method-comfirmSubmit").modal("hide");
                         $("#method-alipayMethod").modal("hide");

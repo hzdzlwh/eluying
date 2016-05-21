@@ -41,7 +41,7 @@ $(function(){
     var app = angular.module('operationApp', []);
     app.controller('operationCtrl', ['$scope', function(scope) {
         scope.status = {
-            pay: {
+            isOnlinePay: {
                 status: false,
                 href: '/view/setting/method/method.html',
                 yesUrl: pics['pay-yes'],
@@ -83,8 +83,10 @@ $(function(){
             AJAXService.ajaxWithToken('GET', 'openCloseDirectNetUrl', {
                 directNetStatus: data
             }, function(result){
-                AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-                    scope.status.pay.status = result.data.alipay;
+                AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
+                    version: 5
+                }, function(result){
+                    scope.status.isOnlinePay.status = result.data.isOnlinePay;
                     scope.status.campBasicInfo.status = result.data.campBasicInfo;
                     scope.$apply();
                 });
@@ -134,9 +136,12 @@ $(function(){
                 $("#campUrl").select();
             }
         };
-        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-            scope.status.pay.status = result.data.alipay;
+        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
+            version: 5
+        }, function(result){
+            scope.status.isOnlinePay.status = result.data.isOnlinePay;
             scope.status.campBasicInfo.status = result.data.campBasicInfo;
+            console.log(scope.status);
             scope.$apply();
         });
         AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){

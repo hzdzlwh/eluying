@@ -172,11 +172,13 @@
                         <tbody>
                             <tr class="alichat">
                                 <td ng-click="chooseMethod(2)"><img ng-if="onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
-                                    <img ng-if="onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
+                                    <img ng-if="onlinePay.alipaySelected == 1" class="scheckbox"
+                                         src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                     <!--企业支付宝+企业微信支付</td>-->
                                     企业支付宝</td>
                                 <td><div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{alichatStatusStr[onlinePay.alipay]}}</td>
-                                <td class="schange" data-toggle="modal" ng-if="onlinePay.alipay !== 0" data-target="#method-alipayMethod">更换账号</td>
+                                <td class="schange" data-toggle="modal" ng-if="onlinePay.alipay !== 0"
+                                    data-target="#method-alipayMethod">{{(onlinePay.alipay === 1) ? '更换账号' : "绑定账号"}}</td>
                             </tr>
                             <tr class="wallet">
                                 <td ng-click="chooseMethod(1)">

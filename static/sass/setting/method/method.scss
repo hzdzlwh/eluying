@@ -395,8 +395,8 @@
     .sbtn-cancel{
       @include btn1_normal();
       @include btn_big();
-      height:40px;
-      line-height: 40px;
+      height:40px!important;
+      line-height: 40px!important;
       float: right;
       margin-right: 49px;
     }
@@ -506,8 +506,8 @@
       .sbtn-cancel{
         @include btn1_normal();
         @include btn_big();
-        height:40px;
-        line-height: 40px;
+        height:40px!important;
+        line-height: 40px!important;
         float: right;
         margin-right: 49px;
       }
@@ -660,8 +660,8 @@
       .sbtn-cancel{
         @include btn1_normal();
         @include btn_big();
-        height:40px;
-        line-height: 40px;
+        height:40px!important;
+        line-height: 40px!important;
         display: inline-block;
         margin: 0 25px;
       }

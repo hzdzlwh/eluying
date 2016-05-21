@@ -20,8 +20,7 @@ $(function(){
     modal.modalInit();
 
     $("#coverUpload").fileupload({
-        //url: AJAXService.getUrl2("uploadImageUrl"),
-        url: 'http://xianweisi.imwork.net:13763/ws/image/upload',
+        url: AJAXService.getUrl2("uploadImageUrl"),
         done: function (e, data) {
             var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
             result = JSON.parse(result);

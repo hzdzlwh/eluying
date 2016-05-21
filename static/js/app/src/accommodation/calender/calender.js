@@ -303,30 +303,7 @@ $(function(){
                 tempDate = util.tomorrow(tempDate);
             }
             //维护日历
-            var selectedMonth = null;
-            var calenderDays = [];
-            var firstDay = new Date(scope.startDate);
-            firstDay.setDate(1);
-            var firstDay_Month = firstDay.getMonth();
-            var firstDay_weekday = firstDay.getDay();
-            if(selectedMonth && firstDay_Month !== selectedMonth){
-                firstDay.setMonth(selectedMonth);
-            }
-            if(firstDay_weekday === 0){
-                for(var i = 6; i > 0; i--){
-                    calenderDays.push(util.diffDate(firstDay, -i));
-                }
-            } else{
-                for(var i = firstDay_weekday-1; i > 0; i--){
-                    calenderDays.push(util.diffDate(firstDay, -i));
-                }
-            }
-            calenderDays.push(firstDay);
-            var temp = util.diffDate(firstDay, 1);
-            while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
-                calenderDays.push(temp);
-                temp = util.diffDate(temp, 1);
-            }
+            var calenderDays = util.buildCalendar(scope.startDate);
             var iter = [];
             var days = [];
             for(var i = 0; i < calenderDays.length; i++){
@@ -578,6 +555,7 @@ $(function(){
             $("#newOrderModal").modal("show");
         };
         scope.processBeforeAdd = function(type){
+            initNewOrder();
             var selectedEntries = scope.selectedEntries;
             var selectedEntries_new = {};
             var today = new Date();
@@ -667,6 +645,7 @@ $(function(){
                     temp.fee += entry.price;
                     temp.days++;
                 }else{
+                    this.newOrder.createRoomCalendar(temp);
                     orderList.push(temp);
                     temp = {
                         startDate: entry.date2,
@@ -683,9 +662,9 @@ $(function(){
                     };
                 }
             }
+            this.newOrder.createRoomCalendar(temp);
             orderList.push(temp);
             //新增订单弹出框数据准备
-            initNewOrder();
             scope.newOrder.type = type;
             scope.newOrder.title = (function(){
                 for(var i = 0; i < STATUS_STR.length; i++){
@@ -695,7 +674,10 @@ $(function(){
                 }
                 return null;
             })();
-            scope.newOrder.selectedChannel = scope.channels[0].name;
+            scope.newOrder.selectedChannel = {
+                name: scope.channels[0].name,
+                id: scope.channels[0].id,
+            };
             scope.newOrder.roomList = orderList;
             $(".msgModal").modal("hide");
             $("#newOrderModal").modal("show");
@@ -752,10 +734,64 @@ $(function(){
                     this.guestInfo.idVal = null;
                     $(".select1_options").hide();
                 },
-                changeChannel: function(str){
-                    this.selectedChannel = str;
+                changeChannel: function(id, name){
+                    this.selectedChannel = {
+                        id: id,
+                        name: name,
+                    };
                     $(".select1_options").hide();
                 },
+                createRoomCalendar: function(room){
+                    var startCalendar = this.createRoomCalendarStart(room);
+                    var endCalendar = this.createRoomCalendarEnd(room);
+                },
+                createRoomCalendarStart: function(room){
+                    console.log(room);
+                    var startDate = new Date(room.startDate);
+                    var calenderDays = util.buildCalendar(startDate);
+                    AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
+                        date: util.dateFormat(calenderDays[0]),
+                        days: calenderDays.length,
+                        id: room.id,
+                        sub: true
+                    }, function(result2){
+                        console.log(result2);
+                    });
+                    // var iter = [];
+                    // var days = [];
+                    // for(var i = 0; i < calenderDays.length; i++){
+                    //     var sclass = '';
+                    //     var today = new Date();
+                    //     var text = null;
+                    //     if(util.isSameDay(calenderDays[i], today)){
+                    //         sclass = 'today';
+                    //         text = '今';
+                    //     }else if(calenderDays[i] < today){
+                    //         sclass = 'invalid';
+                    //     }
+                    //     if(util.isSameDay(calenderDays[i], date)){
+                    //         sclass += ' selected';
+                    //     }
+                    //     iter.push({
+                    //         text: text,
+                    //         date: calenderDays[i],
+                    //         sclass: sclass
+                    //     });
+                    //     if(i % 7 === 6){
+                    //         days.push(iter);
+                    //         iter = [];
+                    //     }
+                    // }
+                    // return days;
+                    // AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
+                    //     date: util.dateFormat(scope.startDate),
+                    //     days: 30,
+                    //     sub: true
+                    // }, function(result2){
+                    //
+                    // });
+                },
+                createRoomCalendarEnd: function(room){},
                 deleteRoom: function(index){
                     this.roomList.splice(index, 1);
                     if(this.roomList.length == 0){
@@ -772,7 +808,8 @@ $(function(){
                         date: util.dateFormat(new Date()),
                         id: food.itemId
                     }, function(result){
-                        that.foodList.push({
+                        var temp = {
+                            type: 1,
                             id: food.itemId,
                             name: food.name,
                             price: food.price,
@@ -780,8 +817,10 @@ $(function(){
                             date: new Date(),
                             dateStr: util.dateFormat(new Date()),
                             dateStr2: util.dateFormatWithoutYear(new Date()),
-                            inventory: result.data.inventory
-                        });
+                            inventory: result.data.inventory,
+                        };
+                        temp.days = that.createFoodFunCalendar(temp);
+                        that.foodList.push(temp);
                         scope.$apply();
                     });
                 },
@@ -802,12 +841,10 @@ $(function(){
                             dateStr2: util.dateFormatWithoutYear(new Date()),
                             inventory: result.data.inventory
                         };
+                        that.foodList[index].days = that.createFoodFunCalendar(that.foodList[index]);
                         scope.$apply();
                     });
                     $(".select1_options").hide();
-                },
-                changeFoodTime: function(index, date){
-                    console.log(index, date);
                 },
                 minusFood: function(i){
                     this.foodList[i].num--;
@@ -832,7 +869,41 @@ $(function(){
                         date: util.dateFormat(new Date()),
                         id: fun.itemId
                     }, function(result){
-                        that.funList.push({
+                        var temp = {
+                            type: 2,
+                            id: fun.itemId,
+                            name: fun.name,
+                            price: fun.price,
+                            num: (result.data.inventory < 1) ? 0 : 1,
+                            date: new Date(),
+                            dateStr: util.dateFormat(new Date()),
+                            dateStr2: util.dateFormatWithoutYear(new Date()),
+                            inventory: result.data.inventory,
+                        };
+                        temp.days = that.createFoodFunCalendar(temp);
+                        that.funList.push(temp);
+                        scope.$apply();
+                    });
+                },
+                changeFun: function(funItem, fun){
+                    // var index = (this.funList.indexOf(funItem));
+                    // this.funList[index] = {
+                    //     id: fun.itemId,
+                    //     name: fun.name,
+                    //     price: fun.price,
+                    //     num: (result.data.inventory < 1) ? 0 : 1,
+                    //     date: new Date(),
+                    //     dateStr: util.dateFormat(new Date()),
+                    //     dateStr2: util.dateFormatWithoutYear(new Date()),
+                    // };
+                    // $(".select1_options").hide();
+                    var index = (this.funList.indexOf(funItem));
+                    var that = this;
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(new Date()),
+                        id: fun.itemId
+                    }, function(result){
+                        that.funList[index] = {
                             id: fun.itemId,
                             name: fun.name,
                             price: fun.price,
@@ -841,25 +912,31 @@ $(function(){
                             dateStr: util.dateFormat(new Date()),
                             dateStr2: util.dateFormatWithoutYear(new Date()),
                             inventory: result.data.inventory
-                        });
+                        };
+                        that.funList[index].days = that.createFoodFunCalendar(that.funList[index]);
                         scope.$apply();
                     });
-                },
-                changeFun: function(funItem, fun){
-                    var index = (this.funList.indexOf(funItem));
-                    this.funList[index] = {
-                        id: fun.itemId,
-                        name: fun.name,
-                        price: fun.price,
-                        num: (result.data.inventory < 1) ? 0 : 1,
-                        date: new Date(),
-                        dateStr: util.dateFormat(new Date()),
-                        dateStr2: util.dateFormatWithoutYear(new Date()),
-                    };
                     $(".select1_options").hide();
                 },
-                changeFunTime: function(index, date){
-                    console.log(index, date);
+                changeItemTime: function(item, date){
+                    var today = new Date();
+                    today.setDate(today.getDate() - 1);
+                    if(date < today){
+                        return false;
+                    }
+                    var that = this;
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(date),
+                        id: item.id
+                    }, function(result){
+                        item.date = date;
+                        item.dateStr = util.dateFormat(date);
+                        item.dateStr2 = util.dateFormatWithoutYear(date);
+                        item.inventory = result.data.inventory;
+                        item.num = (result.data.inventory < 1) ? 0 : 1;
+                        item.days = that.createFoodFunCalendar(item);
+                        scope.$apply();
+                    });
                 },
                 minusFun: function(i){
                     this.funList[i].num--;
@@ -869,7 +946,7 @@ $(function(){
                 },
                 plusFun: function(i){
                     this.funList[i].num++;
-                    var max = 100;
+                    var max = this.funList[i].inventory;
                     if(this.funList[i].num > max){
                         this.funList[i].num = max;
                     }
@@ -891,30 +968,7 @@ $(function(){
                 createFoodFunCalendar: function(item){
                     var date = new Date(item.dateStr);
                     //维护日历
-                    var selectedMonth = null;
-                    var calenderDays = [];
-                    var firstDay = new Date(date);
-                    firstDay.setDate(1);
-                    var firstDay_Month = firstDay.getMonth();
-                    var firstDay_weekday = firstDay.getDay();
-                    if(selectedMonth && firstDay_Month !== selectedMonth){
-                        firstDay.setMonth(selectedMonth);
-                    }
-                    if(firstDay_weekday === 0){
-                        for(var i = 6; i > 0; i--){
-                            calenderDays.push(util.diffDate(firstDay, -i));
-                        }
-                    } else{
-                        for(var i = firstDay_weekday-1; i > 0; i--){
-                            calenderDays.push(util.diffDate(firstDay, -i));
-                        }
-                    }
-                    calenderDays.push(firstDay);
-                    var temp = util.diffDate(firstDay, 1);
-                    while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
-                        calenderDays.push(temp);
-                        temp = util.diffDate(temp, 1);
-                    }
+                    var calenderDays = util.buildCalendar(date);
                     var iter = [];
                     var days = [];
                     for(var i = 0; i < calenderDays.length; i++){
@@ -941,6 +995,98 @@ $(function(){
                         }
                     }
                     return days;
+                },
+                itemLastMonth: function(item){
+                    var that = this;
+                    var date = item.date;
+                    var newDate = new Date(date);
+                    newDate.setMonth(newDate.getMonth()-1);
+                    newDate.setDate(1);
+                    var today = new Date();
+                    if(newDate < today){
+                        newDate = today;
+                    }
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(newDate),
+                        id: item.id
+                    }, function(result){
+                        item.date = newDate;
+                        item.dateStr = util.dateFormat(newDate);
+                        item.dateStr2 = util.dateFormatWithoutYear(newDate);
+                        item.days = that.createFoodFunCalendar(item);
+                        item.inventory = result.data.inventory;
+                        scope.$apply();
+                    });
+                },
+                itemNextMonth: function(item){
+                    var that = this;
+                    var date = item.date;
+                    var newDate = new Date(date);
+                    newDate.setMonth(newDate.getMonth()+1);
+                    newDate.setDate(1);
+                    var today = new Date();
+                    if(newDate < today){
+                        newDate = today;
+                    }
+                    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                        date: util.dateFormat(newDate),
+                        id: item.id
+                    }, function(result){
+                        item.date = newDate;
+                        item.dateStr = util.dateFormat(newDate);
+                        item.dateStr2 = util.dateFormatWithoutYear(newDate);
+                        item.days = that.createFoodFunCalendar(item);
+                        item.inventory = result.data.inventory;
+                        scope.$apply();
+                    });
+                },
+                submitOrder: function(){
+                    //校验库存
+                    var inventory = {};
+                    var itemList = this.foodList.concat(this.funList);
+                    //数量为0的项目去掉,项目日期一样的项目合并
+                    for(var i = 0; i < itemList.length; i++){
+                        var item = itemList[i];
+                        var inv = inventory[item.id + item.dateStr];
+                        if(!inv){
+                            inventory[item.id + item.dateStr] = {
+                                num: item.num,
+                                inventory: item.inventory
+                            }
+                        }else{
+                            inv.num += item.num;
+                            if(inv.num > inv.inventory){
+                                modal.somethingAlert(util.dateFormatWithoutYearCn(item.dateStr2)
+                                    + '的' + item.name + "项目库存不足!");
+                                return false;
+                            }
+                        }
+                    }
+                    //准备接口所需数据
+                    var items = [];
+                    itemList.forEach(function(d, i){
+                        items.push({
+                            amount: d.num,
+                            date: d.dateStr,
+                            id: d.id,
+                            name: d.name,
+                            price: d.price,
+                            priceId: 0,
+                            type: d.type
+                        });
+                    });
+                    console.log(items);
+                    var orderItem = {
+                        name: this.guestInfo.name,
+                        origin: this.selectedChannel.name,
+                        originId: this.selectedChannel.id,
+                        phone: this.guestInfo.phone,
+                        remark: this.remarks,
+                        type: this.type,
+                        items: items,
+                        payments: [],
+                        rooms: []
+                    }
                 },
                 remarks: '',
                 discounts: 0,
