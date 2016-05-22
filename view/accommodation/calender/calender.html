@@ -510,11 +510,11 @@
                             &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                             <div class="date-table start">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.changeRoomStartMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
-                                    {{r.startDate.split('-')[0]}}年{{r.startDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next">
+                                    {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.changeRoomStartMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -529,7 +529,7 @@
                                 </div>
                                 <div class="date-row" ng-repeat="row in r.startDays">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="newOrder.changeRoomStartDate(r, day.date, day.sclass);$event.stopPropagation();">
+                                         ng-click="newOrder.changeRoomStartDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -537,11 +537,11 @@
                             &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                             <div class="date-table end">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.changeRoomEndMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
-                                    {{r.endDate.split('-')[0]}}年{{r.endDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next">
+                                    {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.changeRoomEndMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -556,7 +556,7 @@
                                 </div>
                                 <div class="date-row" ng-repeat="row in r.endDays">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="newOrder.changeRoomEndDate(r, day.date, day.sclass);$event.stopPropagation();">
+                                         ng-click="newOrder.changeRoomEndDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>

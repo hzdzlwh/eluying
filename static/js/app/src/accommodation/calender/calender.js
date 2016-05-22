@@ -665,6 +665,7 @@ $(function(){
             var temp = {
                 startDate: entry.date2,
                 sstartDate: entry.date,
+                scanlerdarDate: entry.date2,
                 endDate: entry.date2,
                 sendDate: entry.date,
                 roomId: entry.roomId,
@@ -689,11 +690,13 @@ $(function(){
                     var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
                     temp.endDate = util.dateFormat(checkoutDate);
                     temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
+                    temp.ecanlerdarDate = util.dateFormat(checkoutDate);
                     this.newOrder.createRoomCalendar(temp);
                     orderList.push(temp);
                     temp = {
                         startDate: entry.date2,
                         sstartDate: entry.date,
+                        scanlerdarDate: entry.date2,
                         endDate: entry.date2,
                         sendDate: entry.date,
                         roomId: entry.roomId,
@@ -710,6 +713,7 @@ $(function(){
             var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
             temp.endDate = util.dateFormat(checkoutDate);
             temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
+            temp.ecanlerdarDate = util.dateFormat(checkoutDate);
             this.newOrder.createRoomCalendar(temp);
             orderList.push(temp);
             // console.log(orderList);
@@ -809,7 +813,8 @@ $(function(){
                 },
                 createRoomCalendarStart: function(room){
                     var startDate = new Date(room.startDate);
-                    var calenderDays = util.buildCalendar(startDate);
+                    var scanlerdarDate = new Date(room.scanlerdarDate);
+                    var calenderDays = util.buildCalendar(scanlerdarDate);
                     AJAXService.ajaxWithToken('GET', 'getRoomStausUrl', {
                         date: util.dateFormat(calenderDays[0]),
                         days: calenderDays.length,
@@ -850,7 +855,8 @@ $(function(){
                 createRoomCalendarEnd: function(room){
                     var startDate = new Date(room.startDate);
                     var endDate = new Date(room.endDate);
-                    var calenderDays = util.buildCalendar(endDate);
+                    var ecanlerdarDate = new Date(room.ecanlerdarDate);
+                    var calenderDays = util.buildCalendar(ecanlerdarDate);
                     AJAXService.ajaxWithToken('GET', 'getRoomStausUrl', {
                         date: util.dateFormat(calenderDays[0]),
                         days: calenderDays.length,
@@ -901,6 +907,7 @@ $(function(){
                         room.days = 1;
                     }
                     room.startDate = util.dateFormat(date);
+                    room.scanlerdarDate = util.dateFormat(date);
                     room.sstartDate = util.dateFormatWithoutYear(date);
                     room.days = util.DateDiff(date, new Date(room.endDate));
                     var temp = new Date(date);
@@ -949,6 +956,7 @@ $(function(){
                         }
                     }
                     room.endDate = util.dateFormat(date);
+                    room.ecanlerdarDate = util.dateFormat(date);
                     room.sendDate = util.dateFormatWithoutYear(date);
                     room.days = util.DateDiff(new Date(startDate), new Date(room.endDate));
                     temp = new Date(startDate);
@@ -970,6 +978,18 @@ $(function(){
                     }
                     room.fee = fee;
                     this.createRoomCalendar(room);
+                },
+                changeRoomStartMonth: function(room, monthDiff){
+                    var scanlerdarDate = new Date(room.scanlerdarDate);
+                    scanlerdarDate.setMonth(scanlerdarDate.getMonth() + monthDiff);
+                    room.scanlerdarDate = util.dateFormat(scanlerdarDate);
+                    this.createRoomCalendarStart(room);
+                },
+                changeRoomEndMonth: function(room, monthDiff){
+                    var ecanlerdarDate = new Date(room.ecanlerdarDate);
+                    ecanlerdarDate.setMonth(ecanlerdarDate.getMonth() + monthDiff);
+                    room.ecanlerdarDate = util.dateFormat(ecanlerdarDate);
+                    this.createRoomCalendarEnd(room);
                 },
                 deleteRoom: function(index){
                     this.roomList.splice(index, 1);
