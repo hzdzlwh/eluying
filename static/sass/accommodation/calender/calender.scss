@@ -932,17 +932,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           border-radius: $BorderRadius;
           border: solid thin #fafafa;
           cursor: pointer;
-          //.dot{
-          //  background:#ff9326;
-          //  width:6px;
-          //  height:6px;
-          //  border-radius:100%;
-          //  position: absolute;
-          //  left: 50%;
-          //  margin-left: -3px;
-          //  bottom: 0;
-          //  display: none;
-          //}
         }
         .item.invalid{
           color:#cccccc;
@@ -954,9 +943,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           background: #ededed;
         }
         .item.selected{
-          //.dot{
-          //  display: block;
-          //}
           border: $color1 thin solid;
         }
       }
@@ -1281,6 +1267,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       td:first-child{
         width: 84px;
         text-overflow: ellipsis;
+        .select1{
+          @include select1();
+          width: 74px;
+          background-position: 60px;
+        }
         .sname{
           width: 84px;
           text-overflow: ellipsis;

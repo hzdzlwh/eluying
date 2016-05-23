@@ -115,9 +115,9 @@
                     <span>订单详情</span>
                     <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     <div class="btns">
-                        <div class="abtn">编辑订单</div>
-                        <div class="abtn">取消订单</div>
-                        <div class="abtn">打印品条</div>
+                        <div class="abtn" ng-click="showOrderEdit()">编辑订单</div>
+                        <div class="abtn" ng-click="showOrderCancel()">取消订单</div>
+                        <div class="abtn">打印凭条</div>
                     </div>
                 </div>
             </div>
@@ -127,15 +127,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>{{orderEdit.customerName}}</td>
+                        <td>{{orderDetail.customerName}}</td>
                         <td>手机号</td>
-                        <td>{{orderEdit.customerPhone}}</td>
+                        <td>{{orderDetail.customerPhone}}</td>
                     </tr>
                     <tr>
                         <!--<td>身份证</td>-->
                         <!--<td>440183199209080056</td>-->
                         <td>渠道</td>
-                        <td>{{orderEdit.origin}}</td>
+                        <td>{{orderDetail.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -145,7 +145,7 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr ng-repeat="r in orderEdit.rooms">
+                        <tr ng-repeat="r in orderDetail.rooms">
                             <td><span>{{r.serialNum}}</span>&nbsp;({{r.name}})
                                 <div class="sstatus {{statusStr2[r.state].classStr}}">
                                     {{statusStr2[r.state].short}}</div>
@@ -159,11 +159,11 @@
                         </tr>
                     </table>
                 </div>
-                <div class="hr2" ng-if="orderEdit.foodItems.length > 0"></div>
-                <div class="subtype food" ng-if="orderEdit.foodItems.length > 0">
+                <div class="hr2" ng-if="orderDetail.foodItems.length > 0"></div>
+                <div class="subtype food" ng-if="orderDetail.foodItems.length > 0">
                     <div class="sub-title">餐饮信息</div>
                     <table>
-                        <tr ng-repeat="f in orderEdit.foodItems">
+                        <tr ng-repeat="f in orderDetail.foodItems">
                             <td>{{f.name}}</td>
                             <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                             <td>
@@ -175,11 +175,11 @@
                         </tr>
                     </table>
                 </div>
-                <div class="hr2" ng-if="orderEdit.playItems.length > 0"></div>
-                <div class="subtype fun" ng-if="orderEdit.playItems.length > 0">
+                <div class="hr2" ng-if="orderDetail.playItems.length > 0"></div>
+                <div class="subtype fun" ng-if="orderDetail.playItems.length > 0">
                     <div class="sub-title">娱乐信息</div>
                     <table>
-                        <tr ng-repeat="p in orderEdit.playItems">
+                        <tr ng-repeat="p in orderDetail.playItems">
                             <td>{{p.name}}</td>
                             <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
                             <td>
@@ -196,7 +196,7 @@
                     <div class="infos">
                         <div class="item">
                             <span class="slabel">订单总价:</span>
-                            <span class="svalue">￥{{orderEdit.totalPrice}}</span>
+                            <span class="svalue">￥{{orderDetail.totalPrice}}</span>
                         </div>
                         <div class="item">
                             &nbsp;&nbsp;&nbsp;
@@ -218,16 +218,16 @@
                         <div class="item remark">
                             <span class="slabel">备注:</span>
                             <span class="svalue">
-                                {{orderEdit.remark}}
+                                {{orderDetail.remark}}
                             </span>
                         </div>
                         <div class="item orderid">
                             <span class="slabel">订单号:</span>
-                            <span class="svalue">{{orderEdit.orderNum}}</span>
+                            <span class="svalue">{{orderDetail.orderNum}}</span>
                         </div>
                         <div class="item staff">
                             <span class="slabel">办理预订员工:</span>
-                            <span class="svalue">{{orderEdit.operatorName}}</span>
+                            <span class="svalue">{{orderDetail.operatorName}}</span>
                         </div>
                     </div>
                     <div class="btns">
@@ -246,7 +246,7 @@
             <div class="sheader">
                 <div class="stitle">
                     <span>取消订单</span>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                 </div>
             </div>
             <div class="hr2"></div>
@@ -255,15 +255,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>吴丹青</td>
+                        <td>{{orderDetail.customerName}}</td>
                         <td>手机号</td>
-                        <td>18768114210</td>
+                        <td>{{orderDetail.customerName}}</td>
                     </tr>
                     <tr>
                         <td>身份证</td>
                         <td>440183199209080056</td>
                         <td>渠道</td>
-                        <td>散客</td>
+                        <td>{{orderDetail.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -277,59 +277,41 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <tr ng-repeat="r in orderDetail.rooms">
+                            <td>
+                                <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
+                                <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                            </td>
                             <td>
                                 <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
+                                &nbsp;{{r.startDate.substr(5, 5)}}&nbsp;~&nbsp;{{r.endDate.substr(5, 5)}}&nbsp;
+                                <span class="light">共{{r.duration}}晚</span>
                             </td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
-                            <td>
-                                <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
-                            </td>
-                            <td>¥10000</td>
+                            <td>¥{{r.fee}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype food">
+                <div class="hr2" ng-if="orderDetail.foodItems.length > 0"></div>
+                <div class="subtype food" ng-if="orderDetail.foodItems.length > 0">
                     <div class="sub-title">餐饮信息</div>
                     <table>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="f in orderDetail.foodItems">
+                            <td>{{f.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                            <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
+                            <td>¥{{f.price * f.amount}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype fun">
+                <div class="hr2" ng-if="orderDetail.playItems.length > 0"></div>
+                <div class="subtype fun" ng-if="orderDetail.playItems.length > 0">
                     <div class="sub-title">娱乐信息</div>
                     <table>
-                        <tr>
-                            <td>皮划艇</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="f in orderDetail.playItems">
+                            <td>{{f.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                            <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
+                            <td>¥{{f.price * f.amount}}</td>
                         </tr>
                     </table>
                 </div>
@@ -433,16 +415,7 @@
             </div>
             <div class="remarks">
                 <div class="slabel">备注:</div>
-                <div class="stext">
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                </div>
+                <div class="stext">{{orderDetail.remark}}</div>
             </div>
             <div class="sbottom">
                 <div class="sbtn">确认取消</div>
@@ -563,8 +536,8 @@
                             </div>
                             &nbsp;
                             共{{r.days}}晚
-                            <div class="tips warning left">↑房间被占用</div>
-                            <div class="tips warning right">↑房间被占用</div>
+                            <!--<div class="tips warning left">↑房间被占用</div>-->
+                            <!--<div class="tips warning right">↑房间被占用</div>-->
                         </td>
                         <td>¥{{r.fee}}<div class="sdelete" ng-click="newOrder.deleteRoom($index);$event.stopPropagation();"></div></td>
                     </tr>
@@ -718,14 +691,14 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal" role="dialog" id="orderEditModel">
+<div class="modal fade" role="dialog" id="orderEditModel">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
                     <span>编辑订单</span>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                 </div>
             </div>
             <div class="hr2"></div>
@@ -734,28 +707,41 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td><input placeholder="姓名" type="text" class="long"><div class="tips warning">必填字段</div></td>
+                        <td>
+                            <input placeholder="姓名" ng-model="orderEdit.customerName"
+                                   type="text" class="long">
+                            <div class="tips warning" ng-if="!orderEdit.customerName">必填字段</div>
+                        </td>
                         <td>手机号</td>
-                        <td><input placeholder="手机号" type="text" class="short"><div class="tips warning">必填字段</div></td>
+                        <td>
+                            <input placeholder="手机号" ng-model="orderEdit.customerPhone"
+                                   type="text" class="short">
+                            <div class="tips warning" ng-if="!orderEdit.checkPhone();">必填字段</div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="select1">
-                                <span></span>
+                                <span>{{newOrder.guestInfo.selectedId}}</span>
                                 <div class="select1_options">
-                                    <div class="item">散客</div>
-                                    <div class="item">旅行社</div>
+                                    <div class="item"
+                                         ng-click="orderEdit.changeIds(id.label);$event.stopPropagation();"
+                                         ng-repeat="id in idList">{{id.label}}</div>
                                 </div>
                             </div>
                         </td>
-                        <td><input placeholder="身份证" type="text" class="long"><div class="tips warning">身份证格式错误</div></td>
+                        <td>
+                            <input placeholder="{{orderEdit.selectedId}}" type="text" class="long"
+                                   ng-model="orderEdit.idVal">
+                            <div class="tips warning">身份证格式错误</div>
+                        </td>
                         <td>渠道</td>
                         <td>
                             <div class="select1">
-                                <span></span>
+                                <span>{{orderEdit.origin}}</span>
                                 <div class="select1_options">
-                                    <div class="item">散客</div>
-                                    <div class="item">旅行社</div>
+                                    <div class="item" ng-repeat="c in channels"
+                                         ng-click="orderEdit.changeChannel(c.id, c.name);$event.stopPropagation();">{{c.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -766,36 +752,89 @@
             <div class="subtype room">
                 <div class="sub-title">房间信息</div>
                 <table>
-                    <tr>
-                        <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                    <tr ng-repeat="r in orderEdit.rooms">
                         <td>
+                            <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
+                            <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                        </td>
+                        <td ng-if="r.state !== 0">
                             <span class="light">入住</span>
                             &nbsp;
-                            <div class="sstart">04-25</div>
+                            <div class="sstart">{{r.startDate.substr(5, 5)}}</div>
                             &nbsp;~&nbsp;
-                            <div class="send">04-25</div>
-                            &nbsp;共7晚
+                            <div class="send">{{r.startDate.substr(5, 5)}}</div>
+                            &nbsp;共{{r.duration}}晚
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
-                    </tr>
-                    <tr>
-                        <td><span>0102</span>&nbsp;(星空)<div class="sstatus finish">退</div></td>
-                        <td>
+                        <td ng-if="r.state === 0">
                             <span class="light">入住</span>
-                            &nbsp;<input type="text" class="datePicker">&nbsp;~&nbsp;<input type="text" class="datePicker">&nbsp;
-                            共7晚
-                            <div class="tips warning left">↑房间被占用</div>
-                            <div class="tips warning right">↑房间被占用</div>
+                            &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
+                            <div class="date-table start">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.changeRoomStartMonth(r, -1);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.changeRoomStartMonth(r, 1);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in r.startDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row"
+                                         ng-click="orderEdit.changeRoomStartDate(r, day.date, day.sclass);">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                            &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
+                            <div class="date-table end">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.changeRoomEndMonth(r, -1);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.changeRoomEndMonth(r, 1);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in r.endDays">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row"
+                                         ng-click="orderEdit.changeRoomEndDate(r, day.date, day.sclass);">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                            &nbsp;
+                            共{{r.duration}}晚
+                            <!--<div class="tips warning left">↑房间被占用</div>-->
+                            <!--<div class="tips warning right">↑房间被占用</div>-->
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
+                        <td>¥{{r.fee}}<div class="sdelete" ng-if="r.state === 0" ng-click="orderEdit.deleteRoom($index);$event.stopPropagation();"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2"></div>
-            <div class="subtype food">
+            <div class="hr2" ng-if="orderEdit.foodItems.length > 0"></div>
+            <div class="subtype food" ng-if="orderEdit.foodItems.length > 0">
                 <div class="sub-title">
                     餐饮信息
-                    <div class="sadd">
+                    <div class="sadd" ng-click="orderEdit.addFood();">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -803,27 +842,63 @@
                     </div>
                 </div>
                 <table>
-                    <tr>
-                        <td><div class="sname">烧烤烧烤烧烤烧烤烧烤烧烤烧烤烧烤</div></td>
-                        <td><span class="light">时间</span>&nbsp;04-25</td>
+                    <tr ng-repeat="food in orderEdit.foodItems">
+                        <td ng-if="!food.isNew">{{food.name}}</td>
+                        <td ng-if="food.isNew">
+                            <div class="select1">
+                                <span>{{food.name}}</span>
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="f in foodList"
+                                         ng-click="orderEdit.changeFood(food, f)">{{f.name}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>时间&nbsp;
+                            <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
+                            <div class="date-table">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.itemLastMonth(food);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.itemNextMonth(food);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in food.days">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="orderEdit.changeItemTime(food, day.date);">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>数量&nbsp;
                             <div class="snumber">
-                                <div class="minus">-</div>
-                                <input type="text" value="1">
-                                <div class="plus">+</div>
+                                <div class="minus" ng-click="orderEdit.minusFood($index)">-</div>
+                                <input type="text" ng-model="food.amount">
+                                <div class="plus" ng-click="orderEdit.plusFood($index)">+</div>
                             </div>
-                            &nbsp;(已使用10)
-                            <div class="tips">剩余库存10</div>
+                            &nbsp;(已使用{{food.usedAmount}})
+                            <div class="tips">剩余库存{{food.inventory}}</div>
                         </td>
-                        <td>¥10000<div class="sdelete"></div></td>
+                        <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="orderEdit.deleteFood($index)"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2"></div>
-            <div class="subtype fun">
+            <div class="hr2" ng-if="orderEdit.playItems.length > 0"></div>
+            <div class="subtype fun" ng-if="orderEdit.playItems.length > 0">
                 <div class="sub-title">
                     娱乐信息
-                    <div class="sadd">
+                    <div class="sadd" ng-click="orderEdit.addFun();">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -831,44 +906,80 @@
                     </div>
                 </div>
                 <table>
-                    <tr>
-                        <td><div class="sname">皮划艇皮划艇皮划艇皮划艇皮划艇</div></td>
-                        <td><span class="light">时间</span>&nbsp;04-25</td>
-                        <td><span class="light">数量</span>&nbsp;
-                            <div class="snumber">
-                                <div class="minus">-</div>
-                                <input type="text" value="1">
-                                <div class="plus">+</div>
+                    <tr ng-repeat="play in orderEdit.playItems">
+                        <td ng-if="!play.isNew">{{play.name}}</td>
+                        <td ng-if="play.isNew">
+                            <div class="select1">
+                                <span>{{play.name}}</span>
+                                <div class="select1_options">
+                                    <div class="item" ng-repeat="f in funList"
+                                         ng-click="orderEdit.changeFun(play, f)">{{f.name}}</div>
+                                </div>
                             </div>
-                            &nbsp;(已使用10)
-                            <div class="tips">剩余库存10</div>
                         </td>
-                        <td>¥10<div class="sdelete"></div></td>
+                        <td>时间&nbsp;
+                            <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                            <div class="date-table">
+                                <div class="month-selector">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.itemLastMonth(play);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-left-blue"></div>
+                                    </div>
+                                    {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.itemNextMonth(play);$event.stopPropagation();">
+                                        <div class="eluyun_arrow-right-blue"></div>
+                                    </div>
+                                </div>
+                                <div class="week-header">
+                                    <div class="item">一</div>
+                                    <div class="item">二</div>
+                                    <div class="item">三</div>
+                                    <div class="item">四</div>
+                                    <div class="item">五</div>
+                                    <div class="item">六</div>
+                                    <div class="item">日</div>
+                                </div>
+                                <div class="date-row" ng-repeat="row in play.days">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="orderEdit.changeItemTime(play, day.date);">
+                                        {{day.text || day.date.getDate()}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>数量&nbsp;
+                            <div class="snumber">
+                                <div class="minus" ng-click="orderEdit.minusFun($index)">-</div>
+                                <input type="text" ng-model="play.amount">
+                                <div class="plus" ng-click="orderEdit.plusFun($index)">+</div>
+                            </div>
+                            &nbsp;(已使用{{play.usedAmount}})
+                            <div class="tips">剩余库存{{play.inventory}}</div>
+                        </td>
+                        <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="orderEdit.deleteFun($index)"></div></td>
                     </tr>
                 </table>
             </div>
             <div class="hr2"></div>
             <div class="discount">
                 <div class="slabel">优惠</div>
-                <input type="text" placeholder="金额">
+                <input placeholder="金额" type="text" ng-model="orderEdit.discounts">
                 <span class="tips">-¥</span>
             </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea placeholder="请填写备注信息"></textarea>
+                <textarea placeholder="请填写备注信息" ng-model="orderEdit.remark"></textarea>
             </div>
-            <div class="counter">45/140</div>
+            <div class="counter" ng-class="{warning: orderEdit.remark.length > 140}">{{orderEdit.remark.length}}/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥9999</div>
+                    <div class="snum">¥{{orderEdit.calPrice()}}</div>
                 </div>
-                <div class="deposit">
-                    <div class="slabel">已收押金</div>
-                    <div class="snum">¥99</div>
-                </div>
-                <div class="sbtn confirm">保存</div>
-                <div class="sbtn cancel">取消</div>
+                <!--<div class="deposit">-->
+                    <!--<div class="slabel">已收押金</div>-->
+                    <!--<div class="snum">¥99</div>-->
+                <!--</div>-->
+                <div class="sbtn confirm" ng-click="orderEdit.submitOrder()">保存</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -1089,15 +1200,17 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>吴丹青</td>
+                        <td>{{getMoneyItem.customerName}}</td>
                         <td>手机号</td>
-                        <td>18768114210</td>
+                        <td>{{getMoneyItem.customerName}}</td>
                     </tr>
                     <tr>
                         <td>身份证</td>
                         <td>440183199209080056</td>
+                        <!--<td></td>-->
+                        <!--<td></td>-->
                         <td>渠道</td>
-                        <td>散客</td>
+                        <td>{{getMoneyItem.customerName}}</td>
                     </tr>
                 </table>
             </div>
@@ -1111,59 +1224,45 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <tr ng-repeat="r in getMoneyItem.rooms">
+                            <td>
+                                <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
+                                <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                            </td>
                             <td>
                                 <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
+                                &nbsp;{{r.startDate.substr(5, 5)}}&nbsp;~&nbsp;{{r.endDate.substr(5, 5)}}&nbsp;
+                                <span class="light">共{{r.duration}}晚</span>
                             </td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
-                            <td>
-                                <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
-                            </td>
-                            <td>¥10000</td>
+                            <td>¥{{r.fee}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype food">
+                <div class="hr2" ng-if="getMoneyItem.foodItems.length > 0"></div>
+                <div class="subtype food" ng-if="getMoneyItem.foodItems.length > 0">
                     <div class="sub-title">餐饮信息</div>
                     <table>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr>
-                            <td>烧烤</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="f in getMoneyItem.foodItems">
+                            <td>{{f.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                            <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;
+                                (剩余{{f.amount - f.usedAmount}})
+                            </td>
+                            <td>¥{{f.price * f.amount}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="subtype fun">
+                <div class="hr2" ng-if="getMoneyItem.playItems.length > 0"></div>
+                <div class="subtype fun" ng-if="getMoneyItem.playItems.length > 0">
                     <div class="sub-title">娱乐信息</div>
                     <table>
-                        <tr>
-                            <td>皮划艇</td>
-                            <td><span class="light">时间</span>&nbsp;0425</td>
-                            <td><span class="light">数量</span>&nbsp;24 &nbsp;(剩余10)</td>
-                            <td>¥10000</td>
+                        <tr ng-repeat="f in getMoneyItem.playItems">
+                            <td>{{f.name}}</td>
+                            <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                            <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;
+                                (剩余{{f.amount - f.usedAmount}})
+                            </td>
+                            <td>¥{{f.price * f.amount}}</td>
                         </tr>
                     </table>
                 </div>
@@ -1171,8 +1270,9 @@
             </div>
             <div class="infos">
                 <div class="item">
-                    <div class="sbold">商家需退:</div>
-                    <div class="num">¥100000</div>
+                    <div class="sbold" ng-if="getMoneyItem.type === 'new'">客户应付:</div>
+                    <div class="sbold" ng-if="false">商家需退:</div>
+                    <div class="num">¥{{getMoneyItem.totalPrice}}</div>
                     <div class="desc">
                         <div class="eluyun_tips_outer spriteImg">
                             <div class="eluyun_tips"></div>
@@ -1181,28 +1281,24 @@
                             <div class="subt">订单总结：</div>
                             <div class="sitem">
                                 <div class="sl">订单总价</div>
-                                <div class="sval">¥10000</div>
+                                <div class="sval">¥{{getMoneyItem.totalPrice}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="sitem">
                                 <div class="sl">优惠：</div>
-                                <div class="sval">- ¥100</div>
+                                <div class="sval">- ¥{{getMoneyItem.discounts}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="sitem">
                                 <div class="sl">客户应付：</div>
-                                <div class="sval">¥10000</div>
+                                <div class="sval">¥{{getMoneyItem.totalPrice - getMoneyItem.discounts}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">订单收支明细</div>
-                            <div class="sitem">
-                                <div class="sl">客户已付（现金）：</div>
-                                <div class="sval1">¥10000</div>
-                            </div>
-                            <div class="sitem">
-                                <div class="sl">客户已付（支付宝）：</div>
-                                <div class="sval1">¥10000</div>
+                            <div class="sitem" ng-repeat="p in payments" ng-if="p.type !== 5">
+                                <div class="sl">客户已付（{{p.payChannel}}）：</div>
+                                <div class="sval1">¥{{p.fee}}</div>
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">押金收支明细</div>
@@ -1267,16 +1363,7 @@
             </div>
             <div class="remarks">
                 <div class="slabel">备注:</div>
-                <div class="stext">
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                    备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注
-                </div>
+                <div class="stext">{{getMoneyItem.remark}}</div>
             </div>
             <div class="sbottom">
                 <div class="sbtn1">确认收银</div>
