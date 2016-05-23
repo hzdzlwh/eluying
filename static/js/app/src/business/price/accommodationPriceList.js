@@ -60,11 +60,11 @@ var accommodationPriceList = {
             $(".second").removeClass("hide");
         },
         "click #editSalePriceButton": function(){
-            $("#retailPrice").val($(".selected").html());
+            $("#retailPrice").val($("td.selected").html());
         },
         "click #editNetPriceButton": function(){
-            $("#netPrice").val($(".selected").find("p:eq(0)").html());
-            $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
+            $("#netPrice").val($("td.selected").find("p:eq(0)").html());
+            $("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
         },
         "click #editSalePriceOk": function(){
             if (!$("#editSalePrice form").valid()) {
@@ -144,7 +144,7 @@ var accommodationPriceList = {
     editSalePrice: function(that){
         var items = [{
             channelId: 0,
-            date: $(".selected").attr("date"),
+            date: $("td.selected").attr("date"),
             newAgreementPrice: 0,
             newNetPrice: 0,
             newSalePrice: $("#retailPrice").val()
@@ -168,10 +168,10 @@ var accommodationPriceList = {
         })*/
         AJAXService.ajaxWithToken("GET","batchModifyAccommodationSpecialPrice",{
                 items: JSON.stringify(items),
-                categoryId: $(".selected").attr("category-id")
+                categoryId: $("td.selected").attr("category-id")
             },function(result){
                 if (util.errorHandler(result)) {
-                    $(".selected").html($("#retailPrice").val());
+                    $("td.selected").html($("#retailPrice").val());
 
                     modal.clearModal(that);
                 }
@@ -181,8 +181,8 @@ var accommodationPriceList = {
     //改网络价和协议价
     editNetAgreePrice: function(that){
         var items = [{
-            channelId: $(".selected").attr("channel-id"),
-            date: $(".selected").attr("date"),
+            channelId: $("td.selected").attr("channel-id"),
+            date: $("td.selected").attr("date"),
             newAgreementPrice: $("#netPrice").val(),
             newNetPrice: $("#netPrice").val(),
             newSalePrice: $("#netPrice").val()
@@ -206,11 +206,11 @@ var accommodationPriceList = {
         })*/
         AJAXService.ajaxWithToken("GET","batchModifyAccommodationSpecialPrice",{
             items: JSON.stringify(items),
-            categoryId: $(".selected").attr("category-id")
+            categoryId: $("td.selected").attr("category-id")
         },function(result){
             if (util.errorHandler(result)) {
-                $(".selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $(".selected").find("p:eq(0)").html($("#netPrice").val());
+                $("td.selected").find("p:eq(0)").html($("#commissionPrice").val());
+                $("td.selected").find("p:eq(0)").html($("#netPrice").val());
                 modal.clearModal(that);
             }
         });

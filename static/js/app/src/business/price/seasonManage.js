@@ -88,7 +88,7 @@ var seasonManage = {
             }
         })*/
         AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
-            categoryId: $(".selected").attr("category-id"),
+            categoryId: $("td.selected").attr("category-id"),
             startDate: seasonManage.fromBusyDate,
             endDate: seasonManage.toBusyDate
         },function(result){
@@ -122,7 +122,7 @@ var seasonManage = {
             }
         });*/
         AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
-            categoryId: $(".selected").attr("category-id"),
+            categoryId: $("td.selected").attr("category-id"),
             startDate: seasonManage.fromSlackDate,
             endDate: seasonManage.toSlackDate
         },function(result) {
@@ -334,7 +334,7 @@ var seasonManage = {
             }
             $("#editSeason .selected").addClass("changed");
             var that = this;
-            $(".selected").find("p").html($("#seasonRetailPrice").val());
+            $("td.selected").find("p").html($("#seasonRetailPrice").val());
             modal.clearModal(that);
         },
         "click #editSeasonNetPriceOk": function(){
@@ -344,7 +344,7 @@ var seasonManage = {
             $("#editSeason .selected").addClass("changed");
             var that = this;
             /*$(".selected").find("p:eq(0)").html($("#seasonCommissionPrice").val());*/
-            $(".selected").find("p:eq(0)").html($("#seasonNetPrice").val());
+            $("td.selected").find("p:eq(0)").html($("#seasonNetPrice").val());
             modal.clearModal(that);
         },
         "click #editSeasonOk": function(){
