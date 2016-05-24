@@ -14,6 +14,9 @@ require("datepicker-zh");
 require("bootstrap");
 require("validation");
 
+var storeService = require('./services/store/storeService.js');
+var mainCalendarService = require('./services/calendar/mainCalendarService.js');
+
 var locked = false;
 var STATUS_STR = [
     {},
@@ -172,7 +175,9 @@ $(function(){
     util.bindDomAction(events);
 
     var app = angular.module('calenderApp', []);
-    app.controller('calenderCtrl', ['$scope', function(scope) {
+    storeService(app);
+    mainCalendarService(app);
+    app.controller('calenderCtrl', ['$scope', 'storeService', 'mainCalendarService', function(scope, storeService, mainCalendarService) {
         scope.today = util.dateFormatWithoutYear(new Date());
         scope.startDate = util.diffDate(new Date(), -2);
         scope.startDateStr = util.dateFormatWithoutYear(scope.startDate);
@@ -332,33 +337,9 @@ $(function(){
                 tempDate = util.tomorrow(tempDate);
             }
             //维护日历
-            var calenderDays = util.buildCalendar(scope.startDate);
-            var iter = [];
-            var days = [];
-            for(var i = 0; i < calenderDays.length; i++){
-                var sclass = '';
-                var today = new Date();
-                var text = null;
-                if(util.isSameDay(calenderDays[i], today)){
-                    sclass = 'today';
-                    text = '今';
-                }else if(calenderDays[i] < today){
-                    sclass = 'invalid';
-                }
-                if(util.isSameDay(calenderDays[i], scope.startDate)){
-                    sclass += ' selected';
-                }
-                iter.push({
-                    text: text,
-                    date: calenderDays[i],
-                    sclass: sclass
-                });
-                if(i % 7 === 6){
-                    days.push(iter);
-                    iter = [];
-                }
-            }
-            scope.calenderDays = days;
+            var startDate = scope.startDate;
+            scope.calenderDays = mainCalendarService.createCalendar(startDate);
+            //mainCalendarService.createCalendar();
             //拉取房态
             AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){
                 var pRooms = result.data.list;
@@ -734,33 +715,8 @@ $(function(){
         };
         scope.updateData();
 
-        //新增订单用到的变量
-        AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-            type: 2
-        }, function(result3){
-            var arr1 = [{name: '散客'}];
-            var arr2 = result3.data.list;
-            scope.channels = arr1.concat(arr2);
-        });
-        AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
-            var items = result.data.list;
-            var foods = [];
-            var funs = [];
-            items.forEach(function(d){
-                if(d.type == 1){
-                    foods.push(d);
-                }else if(d.type == 2){
-                    funs.push(d);
-                }
-            });
-            scope.foodList = foods;
-            scope.funList = funs;
-        });
-        scope.idList = [
-            {key: 'id', label: '身份证'},
-            {key: 'mid', label: '军官证'},
-            {key: 'other', label: '其他'},
-        ];
+        storeService.init();
+
         scope.orderDetail = {};
         scope.getOrderDetail = function(orderId){
             AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
