@@ -45,7 +45,6 @@ var endDateCalendarService = function(app){
                     }
                 }
                 room.ecalendar = days;
-                scope.$apply();
             });
         };
         this.changeMonth = function(room, monthDiff){

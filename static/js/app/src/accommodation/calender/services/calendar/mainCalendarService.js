@@ -1,12 +1,14 @@
-var calendarService = require("./calendarService.js");
 var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
+var calendarService = require("./calendarService.js");
+
 var mainCalendarService = function(app){
     calendarService(app);
     app.service("mainCalendarService", ["$rootScope", 'calendarService', function(rootScope, calendarService){
-        this.createCalendar = function(startDate){
+        this.createCalendar = function(){
+            var startDate = rootScope.startDate;
             var calenderTable = calendarService.buildCalendarTable(startDate);
             var iter = [];
             var days = [];
@@ -33,7 +35,32 @@ var mainCalendarService = function(app){
                     iter = [];
                 }
             }
-            return days;
+            rootScope.calenderDays =  days;
+        };
+        this.selectDate = function(date){
+            rootScope.startDate = date;
+            rootScope.selectedRooms = [];
+            rootScope.selectedEntries = {};
+            rootScope.updateData();
+            rootScope.initialize();
+        };
+        this.lastMonth = function(){
+            var month = rootScope.startDate.getMonth();
+            rootScope.startDate.setMonth(month - 1);
+            rootScope.startDate.setDate(1);
+            rootScope.selectedRooms = [];
+            rootScope.selectedEntries = {};
+            rootScope.updateData();
+            rootScope.initialize();
+        };
+        this.nextMonth = function(){
+            var month = rootScope.startDate.getMonth();
+            rootScope.startDate.setMonth(month + 1);
+            rootScope.startDate.setDate(1);
+            rootScope.selectedRooms = [];
+            rootScope.selectedEntries = {};
+            rootScope.updateData();
+            rootScope.initialize();
         };
     }]);
 };

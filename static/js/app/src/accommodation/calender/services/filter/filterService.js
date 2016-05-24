@@ -2,8 +2,13 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
+var accommodationService = require('../accommodation/accommodationService.js');
+var glyphService = require('../accommodation/glyphService.js');
+
 var filterService = function(app){
-    app.service("filterService", ["$rootScope", function(rootScope){
+    accommodationService(app);
+    glyphService(app);
+    app.service("filterService", ["$rootScope", 'accommodationService', "glyphService", function(rootScope, accommodationService, glyphService){
         this.init = function(){
             rootScope.allPRoom = true;
         };
@@ -14,9 +19,9 @@ var filterService = function(app){
             for(var key in pRoomList){
                 pRoomList[key].selected = flag;
             }
-            //scope.updateGlyphsPos();
-            //scope.updateLeft();
-            //scope.initialize();
+            glyphService.updateGlyphsPos();
+            accommodationService.updateLeft();
+            rootScope.initialize();
         };
         this.changePRoomSelect = function(id){
             var flag = true;
@@ -30,9 +35,9 @@ var filterService = function(app){
                 }
             }
             rootScope.allPRoom = flag;
-            //scope.updateGlyphsPos();
-            //scope.updateLeft();
-            //scope.initialize();
+            glyphService.updateGlyphsPos();
+            accommodationService.updateLeft();
+            rootScope.initialize();
         };
     }]);
 };
