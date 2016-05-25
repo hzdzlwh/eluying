@@ -198,26 +198,49 @@ var util = {
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
         camps = JSON.parse(camps);
-        var flag = false;
+        var authFlag = false;
+        var expiredFlag = false;
+        var upgradeFlag = false;
         //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
         for(var i = 0; i < camps.length; i++){
             var camp = camps[i];
-            if(campId == camp.campId && camp.userType != 2){
-                flag = true;
+            if(campId == camp.campId){
+                if(camp.userType === 2){
+                    authFlag = true;
+                }
+                if(camp.type === 0 && camp.days <= 0){
+                    expiredFlag = true;
+                }else if(camp.type === 1 && camp.days <= 0){
+                    upgradeFlag = true;
+                }
             }
         }
         var href = window.location.href;
-        if(!flag){
-            if(href.indexOf("/view/tips/noauth.html") > 0){
-
-            }else{
-                window.location.href = '/view/tips/noauth.html';
+        if(authFlag){ //有权限
+            if(expiredFlag){ //试用到期
+                if(href.indexOf("/view/tips/expired.html") > 0){
+                    
+                }else{
+                    window.location.href = '/view/tips/expired.html';
+                }
             }
-        }else{
+            if(upgradeFlag){ //提醒续费
+                if(href.indexOf("/view/tips/upgrade.html") > 0){
+
+                }else{
+                    window.location.href = '/view/tips/upgrade.html';
+                }
+            }
             if(href.indexOf("/view/tips/noauth.html") > 0){
                 window.location.href = '/view/business/category/room.html';
             }else{
 
+            }
+        }else{ //无权限
+            if(href.indexOf("/view/tips/noauth.html") > 0){
+
+            }else{
+                window.location.href = '/view/tips/noauth.html';
             }
         }
     },
