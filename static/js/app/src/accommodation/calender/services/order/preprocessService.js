@@ -5,15 +5,6 @@ require("angular");
 var startDateCalendarService = require("../calendar/startDateCalendarService.js");
 var endDateCalendarService = require("../calendar/endDateCalendarService.js");
 
-var STATUS_STR = [
-    {},
-    {},
-    {short: 'Ô¤', long: 'ÒÑÔ¤¶©', classStr: 'book', 'title': 'Ô¤¶©'},
-    {short: '×¡', long: 'ÒÑÈë×¡', classStr: 'ing', 'title': 'Èë×¡'},
-    {},
-    {short: 'Íê', long: 'ÒÑÍê³É', classStr: 'finish', 'title': '²¹Â¼'}
-];
-
 var preprocessService = function(app){
     startDateCalendarService(app);
     endDateCalendarService(app);
@@ -39,7 +30,7 @@ var preprocessService = function(app){
             $("#newOrderModal").modal("show");
         };
         this.processBeforeAdd = function(type){
-            //´¦ÀíÒ»ÏÂÑ¡ÔñµÄ·¿¼ä
+            //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ñ¡ï¿½ï¿½Ä·ï¿½ï¿½ï¿½
             var selectedEntries = rootScope.selectedEntries;
             var selectedEntries_new = {};
             var today = new Date();
@@ -87,7 +78,7 @@ var preprocessService = function(app){
             }
             rootScope.selectedRooms = selectedRooms;
             rootScope.selectedEntries = selectedEntries_new;
-            //´¦Àí³É¶©µ¥ËùÐè¸ñÊ½
+            //ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
             var entriesArray = [];
             for(var key in selectedEntries_new){
                 entriesArray.push(selectedEntries_new[key]);
@@ -130,7 +121,7 @@ var preprocessService = function(app){
                     temp.fee += entry.price;
                     temp.days++;
                 }else{
-                    //½áÊøÈÕÆÚ¼ÓÒ»Ìì
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½Ò»ï¿½ï¿½
                     var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
                     temp.endDate = util.dateFormat(checkoutDate);
                     temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
@@ -154,7 +145,7 @@ var preprocessService = function(app){
                     };
                 }
             }
-            //½áÊøÈÕÆÚ¼ÓÒ»Ìì
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½Ò»ï¿½ï¿½
             var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
             temp.endDate = util.dateFormat(checkoutDate);
             temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
@@ -162,7 +153,7 @@ var preprocessService = function(app){
             startDateCalendarService.createCalendar(temp);
             endDateCalendarService.createCalendar(temp);
             orderList.push(temp);
-            //ÐÂÔö¶©µ¥µ¯³ö¿òÊý¾Ý×¼±¸
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½
             rootScope.orderNew.type = type;
             rootScope.orderNew.title = (function(){
                 for(var i = 0; i < STATUS_STR.length; i++){

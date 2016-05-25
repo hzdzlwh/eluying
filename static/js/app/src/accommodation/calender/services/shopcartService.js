@@ -4,23 +4,12 @@ require("angular");
 
 var shopcartService = function(app){
     app.service("shopcartService", ["$rootScope", function(rootScope){
-        this.init = function(){
-            rootScope.t = false;
-            rootScope.f = false;
-            rootScope.p = false;
-            rootScope.selectedEntries = {};
-            rootScope.selectedRooms = [];
-            rootScope.shopcartShow = false;
-            rootScope.finishShow = false;
-            rootScope.bookShow = false;
-            rootScope.ingShow = false;
-        };
-        this.showShopCart = function(){
-            var selectedEntries = rootScope.selectedEntries;
+        this.showShopCart = function(scope){
+            var selectedEntries = scope.selectedEntries;
             if(util.objLen(selectedEntries) === 0){
-                rootScope.shopcartShow = false;
+                scope.shopcartShow = false;
             }else{
-                rootScope.shopcartShow = true;
+                scope.shopcartShow = true;
                 var today = new Date();
                 var p = false;
                 var t = false;
@@ -42,13 +31,13 @@ var shopcartService = function(app){
                         roomHash[item.cRoomName + item.sn] = true;
                     }
                 }
-                rootScope.t = t;
-                rootScope.f = f;
-                rootScope.p = p;
-                rootScope.selectedRooms = selectedRooms;
-                rootScope.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
-                rootScope.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
-                rootScope.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
+                scope.t = t;
+                scope.f = f;
+                scope.p = p;
+                scope.selectedRooms = selectedRooms;
+                scope.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
+                scope.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
+                scope.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
             }
         };
     }]);

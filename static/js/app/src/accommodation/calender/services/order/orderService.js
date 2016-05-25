@@ -23,7 +23,7 @@ var orderService = function(app){
                 guestInfo: {
                     name: null,
                     phone: null,
-                    selectedId: '…Ì∑›÷§',
+                    selectedId: 'Ë∫´‰ªΩËØÅ',
                     idVal: null
                 },
                 roomList: [],

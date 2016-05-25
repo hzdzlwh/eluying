@@ -2,7 +2,7 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
-var calendarService = require("./calendarService.js");
+var calendarService = require("./../calendarService.js");
 
 var mainCalendarService = function(app){
     calendarService(app);

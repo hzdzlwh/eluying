@@ -16,7 +16,7 @@ var itemCalendarService = function(app){
                 var text = null;
                 if(util.isSameDay(calendarTable[i], today)){
                     sclass = 'today';
-                    text = '½ñ';
+                    text = 'ï¿½ï¿½';
                 }else if(calendarTable[i] < today){
                     sclass = 'invalid';
                 }

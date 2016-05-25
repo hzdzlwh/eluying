@@ -12,7 +12,7 @@
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/accommodation/calender.js"></script>
 </head>
-<body ng-controller="calenderCtrl">
+<body ng-controller="accommodationCtrl">
 <div class="msgModal modal fade" role="dialog" id="ingWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -1372,34 +1372,34 @@
     </div><!-- /.modal -->
 </div>
 <div class="accommodation-mainContainer">
-    <div class="search">
+    <div class="search" ng-controller="orderSearch">
         <div class="eluyun_search_outer spriteImg search-btn">
             <div class="eluyun_search"></div>
         </div>
-        <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号" ng-model="searchKeyword">
-        <div class="results">
-            <div class="tips">共有{{filteredGlyphs().length}}条搜索结果</div>
+        <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
+               ng-model="searchKeyword" ng-change="search()">
+        <div class="results" ng-if="searchKeyword !== '' && searchResultsNum > 0">
+            <div class="tips">共有{{searchResultsNum}}条搜索结果</div>
             <div class="hr"></div>
-            <div ng-repeat="g in filteredGlyphs()"
-                 ng-if="$index >= searchResultPage*searchResultUnit && $index < (searchResultPage+1)*searchResultUnit">
+            <div ng-repeat="g in searchResults">
                 <div class="item" orderId="{{g.orderId}}">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
-                        <div class="desc">{{g.checkInDate}}</div>
+                        <div class="desc">{{g.startDate}}</div>
                     </div>
                     <div class="srow">
                         <div class="slabel">客户:</div>
-                        <div class="desc">{{g.customerName}}({{g.phone}})</div>
+                        <div class="desc">{{g.customerName}}({{g.customerPhone}})</div>
                     </div>
                     <div class="srow">
                         <div class="slabel">订单号:</div>
-                        <div class="desc">{{g.serialNum}}</div>
+                        <div class="desc">{{g.orderNum}}</div>
                     </div>
-                    <div class="status {{statusStr[g.orderState].classStr}}"><div class="triangle"></div>{{statusStr[g.orderState].long}}</div>
+                    <div class="status {{g.classStr}}"><div class="triangle"></div>{{g.html}}</div>
                 </div>
                 <div class="hr"></div>
             </div>
-            <div class="btns" ng-if="filteredGlyphs().length > 0">
+            <div class="btns" ng-if="searchKeyword !== '' && searchResultsNum > 0">
                 <div class="sbtn previous" ng-click="searchResultPreviousPage()">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
                         <div class="eluyun_arrow-left-border"></div>
@@ -1414,7 +1414,7 @@
         </div>
     </div>
     <div class="content">
-        <div class="date-selector">
+        <div class="date-selector" ng-controller="dateSelectorCtrl">
             <div class="date-selector-switch">
                 {{startDateStr}}
                 <div class="eluyun_calendar_outer spriteImg">
@@ -1424,11 +1424,11 @@
             <div class="date-table">
                 <div class="tips">选择起始日期，将会显示未来30天的房态</div>
                 <div class="month-selector">
-                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="lastMonth();$event.stopPropagation();">
+                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeMainMonth(-1);$event.stopPropagation();">
                         <div class="eluyun_arrow-left-blue"></div>
                     </div>
                     {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
-                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="nextMonth();$event.stopPropagation();">
+                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeMainMonth(1);$event.stopPropagation();">
                         <div class="eluyun_arrow-right-blue"></div>
                     </div>
                 </div>
@@ -1441,14 +1441,14 @@
                     <div class="item">六</div>
                     <div class="item">日</div>
                 </div>
-                <div class="date-row" ng-repeat="row in calenderDays">
-                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="selectDate(day.date);$event.stopPropagation();">
+                <div class="date-row" ng-repeat="row in mainCalendar">
+                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
                         {{day.text || day.date.getDate()}}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="category-filter">
+        <div class="category-filter" ng-controller="pRoomFilterCtrl">
             <div class="category-filter-switch">
                 筛选房型
                 <div class="eluyun_arrow-down-grey_outer spriteImg next">
@@ -1502,7 +1502,7 @@
                 <div class="srow" ng-repeat="r in roomStore" ng-if="pRoomList[r.pi].selected">
                     <div class="entryItem"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
-                        <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="addRoom(day.date, r.id);">
+                        <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
                             <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">
                             <div class="date">{{day.date}}</div>
                             <div class="price">￥{{day.p}}</div>

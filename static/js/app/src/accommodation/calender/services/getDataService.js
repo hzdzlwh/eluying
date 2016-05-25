@@ -2,34 +2,24 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
-var accommodationService = require('../accommodation/accommodationService.js');
+var constService = require("./constService");
 
-var STATUS_STR = [
-    {},
-    {},
-    {short: '预', long: '已预订', classStr: 'book', 'title': '预订'},
-    {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
-    {},
-    {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
-];
-
-var storeService = function(app){
-    accommodationService(app);
-    app.service("storeService", ["$rootScope", 'accommodationService', function(rootScope, accommodationService){
-        this.init = function(){
-            this.getChannel();
-            this.getItems();
-        };
-        this.getChannel = function(){
+var getDataService = function(app){
+    constService(app);
+    app.service("getDataService", ['constService', function(constService){
+        this.getChannel = function(callback){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
                 type: 2
             }, function(result){
                 var arr1 = [{name: '散客'}];
                 var arr2 = result.data.list;
-                rootScope.channels = arr1.concat(arr2);
+                var channels = arr1.concat(arr2);
+                callback({
+                    channels: channels
+                })
             });
         };
-        this.getItems = function(){
+        this.getItems = function(callback){
             AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
                 var items = result.data.list;
                 var foods = [];
@@ -41,22 +31,35 @@ var storeService = function(app){
                         plays.push(d);
                     }
                 });
-                rootScope.foodList = foods;
-                rootScope.funList = plays;
+                callback({
+                    foodList: foods,
+                    funList: plays,
+                });
             });
         };
-        this.getIDs = function(){
-            rootScope.idList = [
+        this.getIDs = function(callback){
+            var IDs = [
                 {key: 'id', label: '身份证'},
                 {key: 'mid', label: '军官证'},
                 {key: 'other', label: '其他'},
             ];
+            callback({
+                IDs: IDs
+            })
         };
-        this.getRoomCategories = function(){
-
+        this.getOrderDetail = function(orderId){
+            AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                orderId: orderId
+            }, function(result){
+                if(result.code === 1){
+                    // rootScope.orderDetail = result.data;
+                    // rootScope.$apply();
+                    // $("#orderDetailModal").modal("show");
+                }
+            });
         };
-        this.getRoomsAndStatus = function(){
-            var startDate = rootScope.startDate;
+        this.getRoomsAndStatus = function(scope){
+            var startDate = scope.startDate;
             AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){
                 var pRooms = result.data.list;
                 AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
@@ -159,7 +162,7 @@ var storeService = function(app){
                         glyph.top = top;
                         glyph.left = left;
                         glyph.width = width;
-                        glyph.stateStr = STATUS_STR[glyph.orderState].short;
+                        glyph.stateStr = constService.statusStr[glyph.orderState].short;
                         var tempDate = new Date(order.checkInDate);
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
@@ -172,20 +175,20 @@ var storeService = function(app){
                                 tempDate = util.diffDate(tempDate, 1);
                             }
                         }
-                        glyph.classStr = STATUS_STR[glyph.orderState].classStr;
+                        glyph.classStr = constService.statusStr[glyph.orderState].classStr;
                         glyphs.push(glyph);
                     });
-                    rootScope.holidays = holidayHash;
-                    rootScope.pRoomList = pRoomList;
-                    rootScope.cRoomStore = cRoomStore;
-                    rootScope.roomStore = roomStore;
-                    rootScope.glyphs = glyphs;
-                    rootScope.occupyList = occupyList;
-                    rootScope.$apply();
+                    scope.holidays = holidayHash;
+                    scope.pRoomList = pRoomList;
+                    scope.cRoomStore = cRoomStore;
+                    scope.roomStore = roomStore;
+                    scope.glyphs = glyphs;
+                    scope.occupyList = occupyList;
+                    scope.$apply();
                 });
             });
         };
     }]);
 };
 
-module.exports = storeService;
+module.exports = getDataService;
