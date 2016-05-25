@@ -5,6 +5,7 @@ require("angular");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
 var shopcartService = require("../services/shopcartService");
+var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var calendarService = require("../services/calendarService");
 var constService = require("../services/constService");
@@ -13,12 +14,13 @@ var accommodationCtrl = function(app){
     getDataService(app);
     accommodationService(app);
     shopcartService(app);
+    orderService(app);
     orderNewService(app);
     calendarService(app);
     constService(app);
     app.controller("accommodationCtrl", ['$rootScope', '$scope', 'getDataService',
-        'accommodationService', 'shopcartService', 'orderNewService', 'calendarService','constService',
-        function(rootScope, scope, getDataService, accommodationService, shopcartService, orderNewService,
+        'accommodationService', 'shopcartService', 'orderService', 'orderNewService', 'calendarService','constService',
+        function(rootScope, scope, getDataService, accommodationService, shopcartService, orderService, orderNewService,
                  calendarService, constService){
             rootScope.startDate = util.diffDate(new Date(), -2);
             rootScope.startDateStr = util.dateFormatWithoutYear(rootScope.startDate);
@@ -78,7 +80,7 @@ var accommodationCtrl = function(app){
                         pRoomId: room.pi
                     };
                 }
-                shopcartService.showShopCart();
+                shopcartService.showShopCart(rootScope);
             };
             rootScope.processSelectedEntries = function(type){
                 var selectedEntries = rootScope.selectedEntries;
@@ -146,7 +148,7 @@ var accommodationCtrl = function(app){
                 var orderList = [];
                 var entry;
                 entry = entriesArray[0];
-                var temp = orderNewService.createRoomItem(entry);
+                var temp = orderService.createRoomItem(entry);
                 for(var i = 1; i < entriesArray.length; i++){
                     entry = entriesArray[i];
                     var date1 = new Date(entry.date2);
@@ -164,7 +166,7 @@ var accommodationCtrl = function(app){
                         calendarService.createRoomStartDateCalendar(temp);
                         calendarService.createRoomEndDateCalendar(temp);
                         orderList.push(temp);
-                        temp = orderNewService.createRoomItem(entry);
+                        temp = orderService.createRoomItem(entry);
                     }
                 }
                 var checkoutDate = util.diffDate(new Date(temp.endDate), 1);
@@ -174,21 +176,28 @@ var accommodationCtrl = function(app){
                 calendarService.createRoomStartDateCalendar(temp);
                 calendarService.createRoomEndDateCalendar(temp);
                 orderList.push(temp);
-                // rootScope.orderNew.type = type;
-                // rootScope.orderNew.title = (function(){
-                //     for(var i = 0; i < STATUS_STR.length; i++){
-                //         if(STATUS_STR[i].classStr === type){
-                //             return STATUS_STR[i].title;
-                //         }
-                //     }
-                //     return null;
-                // })();
-                // rootScope.orderNew.selectedChannel = {
-                //     name: rootScope.channels[0].name,
-                //     id: -1,
-                // };
-                // rootScope.orderNew.roomList = orderList;
+                rootScope.orderNew = orderNewService.resetOrderNew(type, orderList, rootScope.channels[0].name, -1);
                 $(".msgModal").modal("hide");
+                $("#newOrderModal").modal("show");
+            };
+            rootScope.checkBeforeAdd = function(type){
+                if(type == 'finish'){
+                    if(rootScope.t || rootScope.f){
+                        $("#finishWarningModal").modal("show");
+                        return false;
+                    }
+                }else if(type == 'ing'){
+                    if(rootScope.p){
+                        $("#ingWarningModal").modal("show");
+                        return false;
+                    }
+                }else if(type == 'book'){
+                    if(rootScope.p){
+                        $("#bookWarningModal").modal("show");
+                        return false;
+                    }
+                }
+                rootScope.processSelectedEntries(type);
                 $("#newOrderModal").modal("show");
             };
 
@@ -200,7 +209,7 @@ var accommodationCtrl = function(app){
                 rootScope.funList = result.funList;
             });
             getDataService.getIDs(function(result){
-                rootScope.IDs = result.IDs;
+                rootScope.idList = result.idList;
             });
             getDataService.getRoomsAndStatus(rootScope);
 

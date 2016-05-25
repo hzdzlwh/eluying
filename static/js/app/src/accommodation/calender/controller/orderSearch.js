@@ -20,22 +20,22 @@ var orderSearch = function(app){
                 limit: scope.searchResultUnit,
                 searchType: 1
             }, function(result){
-                console.log(result);
-                //scope.searchResults = result.data.list;
-                //scope.searchResults.forEach(function(d){
-                //    d.classStr = constService.statusStr[d.orderState].classStr;
-                //    d.html = constService.statusStr[d.orderState].long;
-                //});
-                //scope.searchResultsNum = scope.searchResults.length;
-                //scope.$apply();
+                scope.searchResults = result.data.orderList;
+                scope.searchResults.forEach(function(d){
+                    d.classStr = rootScope.statusStr[d.orderState].classStr;
+                    d.html = rootScope.statusStr[d.orderState].long;
+                });
+                scope.searchResultsNum = result.data.orderAmount;
+                scope.$apply();
             });
         };
         scope.searchResultNextPage = function(){
-            scope.searchResultPage++;
+            (scope.searchResultPage+1) * scope.searchResultUnit < scope.searchResultsNum
+            && scope.searchResultPage++;
             scope.search();
         };
         scope.searchResultPreviousPage = function(){
-            scope.searchResultNextPage && scope.searchResultPage--;
+            scope.searchResultPage > 0 && scope.searchResultPage--;
             scope.search();
         };
         scope.searchResultOnClick = function(){

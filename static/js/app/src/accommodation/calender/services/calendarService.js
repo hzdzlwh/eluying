@@ -141,7 +141,6 @@ var calendarService = function(app){
                     }
                 }
                 room.ecalendar = days;
-                scope.$apply();
             });
         };
     });

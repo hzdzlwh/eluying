@@ -1,5 +1,5 @@
 /*
-¶©µ¥´´½¨¡¢±à¼­¡¢È¡ÏûµÈ¹ı³ÌÖĞËùÓÃµ½µÄËùÓĞÍ¨ÓÃµÄ·½·¨
+è®¢å•åˆ›å»ºã€ç¼–è¾‘ã€å–æ¶ˆç­‰è¿‡ç¨‹ä¸­æ‰€ç”¨åˆ°çš„æ‰€æœ‰é€šç”¨çš„æ–¹æ³•
  */
 var AJAXService = require("AJAXService");
 var util = require("util");
@@ -54,7 +54,7 @@ var orderService = function(app){
             if(sclass == 'invalid'){
                 return false;
             }
-            //¿ªÊ¼ÈÕÆÚ´óÓÚ½áÊøÈÕÆÚ
+            //å¼€å§‹æ—¥æœŸå¤§äºç»“æŸæ—¥æœŸ
             if(date >= new Date(room.endDate)){
                 var nendDate = util.diffDate(date, 1);
                 room.endDate = util.dateFormat(nendDate);
@@ -91,7 +91,7 @@ var orderService = function(app){
                 return false;
             }
             var startDate = new Date(room.startDate);
-            //ÖĞ¼äÓĞ±»Õ¼ÓÃµÄ·¿¼ä
+            //ä¸­é—´æœ‰è¢«å ç”¨çš„æˆ¿é—´
             var temp = new Date(startDate);
             temp = util.diffDate(temp, 1);
             for(var i = 0; i < room.ecalendar.length; i++){

@@ -84,7 +84,7 @@ $(function(){
         },
         "click body": function(ev){
             $(".entryOp").hide();
-            // $(".search .results").hide();
+             $(".search .results").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();

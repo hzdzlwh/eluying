@@ -423,9 +423,9 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="newOrderModal" ng-if="orderNew" ng-controller="orderNewCtrl">
+<div class="modal fade" role="dialog" id="newOrderModal"  ng-controller="orderNewCtrl">
     <div class="modal-dialog">
-        <div class="modal-content" >
+        <div class="modal-content" ng-if="orderNew">
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
@@ -683,7 +683,7 @@
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥{{calPrice()}}</div>
+                    <div class="snum">¥{{calPrice(orderNew)}}</div>
                 </div>
                 <div class="sbtn confirm" ng-click="submitOrder()">完成{{orderNew.title}}</div>
                 <div class="sbtn cancel btn-cancel">取消</div>
@@ -691,9 +691,9 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="orderEditModel" ng-if="orderEdit" ng-controller="orderEditCtrl">
+<div class="modal fade" role="dialog" id="orderEditModel" ng-controller="orderEditCtrl">
     <div class="modal-dialog">
-        <div class="modal-content" >
+        <div class="modal-content" ng-if="orderEdit">
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
@@ -972,7 +972,7 @@
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥{{calPrice()}}</div>
+                    <div class="snum">¥{{calPrice(orderEdit)}}</div>
                 </div>
                 <!--<div class="deposit">-->
                     <!--<div class="slabel">已收押金</div>-->
@@ -1379,8 +1379,9 @@
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
                ng-model="searchKeyword" ng-change="search()">
         <div class="results" ng-if="searchKeyword !== '' && searchResultsNum > 0">
-            <div class="tips">共有{{searchResultsNum}}条搜索结果</div>
-            <div class="hr"></div>
+            <div class="tips" ng-if="searchResultsNum === 0">无结果</div>
+            <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
+            <div class="hr" ng-if="searchResultsNum > 0"></div>
             <div ng-repeat="g in searchResults">
                 <div class="item" orderId="{{g.orderId}}">
                     <div class="srow">
@@ -1556,8 +1557,8 @@
                 <div class="item" ng-repeat="r in selectedRooms">{{r}}</div>
             </div>
             <div class="btns">
-                <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish')">补录</div>
-                <div class="sbtn book" ng-show="bookShow" ng-click="checkBeforeAdd('book')">预订</div>
+                <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish');">补录</div>
+                <div class="sbtn book" ng-show="bookShow" ng-click="checkBeforeAdd('book');">预订</div>
                 <div class="sbtn buy" ng-show="ingShow" ng-click="checkBeforeAdd('ing');">直接入住</div>
             </div>
         </div>
