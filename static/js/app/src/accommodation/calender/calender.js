@@ -54,7 +54,7 @@ $(function(){
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);
             $(".accommodation-mainContainer .content .leftHeader").css("margin-top", -scrollTop);
         },
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click body .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "mouseover body .entryItem": function(){
             var date = $(this).attr("date");
             var room = $(this).attr("room");

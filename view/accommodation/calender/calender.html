@@ -20,7 +20,7 @@
             <div class="stext">选择直接入住，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processBeforeAdd('ing');">清除</div>
+                <div class="sbtn confirm" ng-click="processSelectedEntries('ing');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -32,7 +32,7 @@
             <div class="stext">选择补录，系统将自动清除今天及以后的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processBeforeAdd('finish');">清除</div>
+                <div class="sbtn confirm" ng-click="processSelectedEntries('finish');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -44,7 +44,7 @@
             <div class="stext">选择预定，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processBeforeAdd('book');">清除</div>
+                <div class="sbtn confirm" ng-click="processSelectedEntries('book');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -500,7 +500,7 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in r.startDays">
+                                <div class="date-row" ng-repeat="row in r.scalendar">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
                                          ng-click="changeRoomStartDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
@@ -527,7 +527,7 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in r.endDays">
+                                <div class="date-row" ng-repeat="row in r.ecalendar">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
                                          ng-click="changeRoomEndDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
@@ -535,7 +535,7 @@
                                 </div>
                             </div>
                             &nbsp;
-                            共{{r.days}}晚
+                            共{{r.duration}}晚
                             <!--<div class="tips warning left">↑房间被占用</div>-->
                             <!--<div class="tips warning right">↑房间被占用</div>-->
                         </td>
@@ -555,7 +555,7 @@
                     </div>
                 </div>
                 <table>
-                    <tr ng-repeat="food in foodItems">
+                    <tr ng-repeat="food in orderNew.foodItems">
                         <td>
                             <div class="select1">
                                 <span>{{food.name}}</span>
@@ -741,7 +741,7 @@
                                 <span>{{orderEdit.origin}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="c in channels"
-                                         ng-click="changeChannel(c.id, c.name);$event.stopPropagation();">{{c.name}}</div>
+                                         ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -857,7 +857,7 @@
                             <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                             <div class="date-table">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food. -1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
@@ -1537,7 +1537,7 @@
                         <div class="booktime">
                             <div class="start"><span>{{g.checkInDateShort}}</span>入住</div>
                             <div class="end"><span>{{g.checkOutDateShort}}</span>离店</div>
-                            <div class="stotal">共<span>{{g.days}}</span>晚</div>
+                            <div class="stotal">共<span>{{g.duration}}</span>晚</div>
                             <div class="from">{{g.channelName}}</div>
                         </div>
                         <div class="bhr"></div>

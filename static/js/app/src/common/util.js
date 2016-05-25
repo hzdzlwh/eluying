@@ -205,7 +205,7 @@ var util = {
         for(var i = 0; i < camps.length; i++){
             var camp = camps[i];
             if(campId == camp.campId){
-                if(camp.userType === 2){
+                if(camp.userType === 1 || camp.userType === 3){
                     authFlag = true;
                 }
                 if(camp.type === 0 && camp.days <= 0){

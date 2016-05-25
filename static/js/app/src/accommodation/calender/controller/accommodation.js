@@ -128,8 +128,8 @@ var accommodationCtrl = function(app){
                         selectedEntries_new[key] = item;
                     }
                 }
-                scope.selectedRooms = selectedRooms;
-                scope.selectedEntries = selectedEntries_new;
+                rootScope.selectedRooms = selectedRooms;
+                rootScope.selectedEntries = selectedEntries_new;
                 var entriesArray = [];
                 for(var key in selectedEntries_new){
                     entriesArray.push(selectedEntries_new[key]);

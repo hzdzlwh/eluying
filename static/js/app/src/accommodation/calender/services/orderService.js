@@ -11,7 +11,8 @@ var calendarService = require("../services/calendarService");
 var orderService = function(app){
     constService(app);
     calendarService(app);
-    app.service("orderService", ['constService', 'calendarService', function(constService, calendarService){
+    app.service("orderService", ['$rootScope', 'constService', 'calendarService',
+        function(rootScope, constService, calendarService){
         this.createRoomItem = function(data){
             return {
                 startDate: data.date2,
@@ -25,7 +26,7 @@ var orderService = function(app){
                 sub: true,
                 sn: data.sn,
                 name: data.cRoomName,
-                days: 1
+                duration: 1
             }
         };
         this.changeIds = function(method, order){
@@ -67,11 +68,11 @@ var orderService = function(app){
             room.duration = util.DateDiff(date, new Date(room.endDate));
             var temp = new Date(date);
             var fee = 0;
-            for(var i = 0; i < room.startDays.length; i++){
+            for(var i = 0; i < room.scalendar.length; i++){
                 if(util.isSameDay(temp, new Date(room.endDate))){
                      break;
                 }
-                var row = room.startDays[i];
+                var row = room.scalendar[i];
                 for(var j = 0; j < row.length; j++){
                     if(util.isSameDay(temp, row[j].date)){
                         fee += row[j].price;
@@ -142,7 +143,7 @@ var orderService = function(app){
                 $("#newOrderModal").modal("hide");
             }
         };
-        this.addItem = function(type, itemList, order){
+        this.addItem = function(type, itemList, order, scope){
             var item = itemList[0];
             if(!item){
                 return false;
@@ -152,6 +153,7 @@ var orderService = function(app){
                 id: item.itemId
             }, function(result){
                 var temp = {
+                    isNew: true,
                     type: type,
                     id: item.itemId,
                     name: item.name,
@@ -162,12 +164,13 @@ var orderService = function(app){
                     dateStr2: util.dateFormatWithoutYear(new Date()),
                     inventory: result.data.inventory
                 };
-                temp.calendar = calendarService.createCalendar(temp);
+                temp.calendar = calendarService.createCalendar(temp.date);
                 if(type === 1){
                     order.foodItems.push(temp);
                 }else if(type === 2){
                     order.playItems.push(temp);
                 }
+                rootScope.$apply();
             });
         };
         this.changeItem = function(items, item, ITEM){
@@ -187,9 +190,10 @@ var orderService = function(app){
                     dateStr2: util.dateFormatWithoutYear(new Date()),
                     inventory: result.data.inventory
                 };
-                temp.calendar = calendarService.createCalendar(temp);
+                temp.calendar = calendarService.createCalendar(temp.date);
                 items[index] = temp;
                 $(".select1_options").hide();
+                rootScope.$apply();
             });
         };
         this.changeItemNum = function(item, num){
@@ -210,14 +214,15 @@ var orderService = function(app){
             var that = this;
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(date),
-                id: item.id
+                id: item.categoryId
             }, function(result){
                 item.date = date;
                 item.dateStr = util.dateFormat(date);
                 item.dateStr2 = util.dateFormatWithoutYear(date);
                 item.inventory = result.data.inventory;
                 item.num = (result.data.inventory < 1) ? 0 : 1;
-                item.calendar = calendarService.createCalendar(item);
+                item.calendar = calendarService.createCalendar(item.date);
+                rootScope.$apply();
             });
         };
         this.calPrice = function(order){
@@ -226,10 +231,10 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
-                price += order.foodItems[i].num * order.foodItems[i].price;
+                price += order.foodItems[i].amount * order.foodItems[i].price;
             }
             for(var i = 0; i < order.playItems.length; i++){
-                price += order.playItems[i].num * order.playItems[i].price;
+                price += order.playItems[i].amount * order.playItems[i].price;
             }
             price = price - order.discounts;
             return price < 0 ? 0.01 : price;
@@ -254,8 +259,9 @@ var orderService = function(app){
                 item.date = newDate;
                 item.dateStr = util.dateFormat(newDate);
                 item.dateStr2 = util.dateFormatWithoutYear(newDate);
-                item.calendar = calendarService.createCalendar(item);
+                item.calendar = calendarService.createCalendar(item.date);
                 item.inventory = result.data.inventory;
+                rootScope.$apply();
             });
         };
     }]);

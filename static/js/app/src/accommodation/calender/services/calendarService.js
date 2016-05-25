@@ -3,7 +3,7 @@ var util = require("util");
 require("angular");
 
 var calendarService = function(app){
-    app.service("calendarService", function(){
+    app.service("calendarService", ["$rootScope", function(rootScope){
         var self = this;
         this.buildCalendarTable = function(date){
             var selectedMonth = null;
@@ -99,6 +99,7 @@ var calendarService = function(app){
                     }
                 }
                 room.scalendar = days;
+                rootScope.$apply();
             });
         };
         this.createRoomEndDateCalendar = function(room){
@@ -141,9 +142,10 @@ var calendarService = function(app){
                     }
                 }
                 room.ecalendar = days;
+                rootScope.$apply();
             });
         };
-    });
+    }]);
 };
 
 module.exports = calendarService;

@@ -8,7 +8,7 @@ var orderDetailCtrl = function(app){
     app.controller("orderDetailCtrl", ['$rootScope', '$scope', 'orderEditService',
         function(rootScope, scope, orderEditService){
         scope.showOrderEdit = function(){
-            rootScope.orderEdit = orderEditService.resetOrderEdit();
+            rootScope.orderEdit = orderEditService.resetOrderEdit(rootScope);
             $("#orderDetailModal").modal("hide");
             $("#orderEditModel").modal("show");
         };
