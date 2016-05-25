@@ -106,7 +106,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="orderDetailModal">
+<div class="modal fade" role="dialog" id="orderDetailModal" ng-if="orderDetail" ng-controller="orderDetailCtrl">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -423,13 +423,13 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="newOrderModal">
+<div class="modal fade" role="dialog" id="newOrderModal" ng-if="orderNew" ng-controller="orderNewCtrl">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
-                    <span>{{newOrder.title}}</span>
+                    <span>{{orderNew.title}}</span>
                 </div>
             </div>
             <div class="hr2"></div>
@@ -438,34 +438,34 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td><input placeholder="姓名" type="text" ng-model="newOrder.guestInfo.name"
-                                   class="long"><div class="tips warning" ng-if="!newOrder.guestInfo.name">
+                        <td><input placeholder="姓名" type="text" ng-model="orderNew.customerName"
+                                   class="long"><div class="tips warning" ng-if="!orderNew.customerName">
                             必填字段</div></td>
                         <td>手机号</td>
-                        <td><input placeholder="手机号" type="text" ng-model="newOrder.guestInfo.phone"
-                                   class="short"><div class="tips warning" ng-if="!newOrder.checkPhone();">
+                        <td><input placeholder="手机号" type="text" ng-model="orderNew.customerPhone"
+                                   class="short"><div class="tips warning" ng-if="!checkPhone(orderNew.customerPhone);">
                             请填写正确的手机号码</div></td>
                     </tr>
                     <tr>
                         <td>
                             <div class="select1">
-                                <span>{{newOrder.guestInfo.selectedId}}</span>
+                                <span>{{orderNew.selectedId}}</span>
                                 <div class="select1_options">
                                     <div class="item"
-                                         ng-click="newOrder.changeIds(id.label);$event.stopPropagation();"
+                                         ng-click="changeIds(id.label, orderNew);$event.stopPropagation();"
                                          ng-repeat="id in idList">{{id.label}}</div>
                                 </div>
                             </div>
                         </td>
-                        <td><input placeholder="{{newOrder.guestInfo.selectedId}}" type="text" class="long"
-                                   ng-model="newOrder.guestInfo.idVal"><div class="tips warning" ng-if="false">身份证格式错误</div></td>
+                        <td><input placeholder="{{orderNew.selectedId}}" type="text" class="long"
+                                   ng-model="orderNew.idVal"><div class="tips warning" ng-if="false">身份证格式错误</div></td>
                         <td>渠道</td>
                         <td>
                             <div class="select1">
-                                <span>{{newOrder.selectedChannel.name}}</span>
+                                <span>{{orderNew.origin}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="c in channels"
-                                         ng-click="newOrder.changeChannel(c.id, c.name);$event.stopPropagation();">{{c.name}}</div>
+                                         ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -476,18 +476,18 @@
             <div class="subtype room">
                 <div class="sub-title">房间信息</div>
                 <table>
-                    <tr ng-repeat="r in newOrder.roomList">
+                    <tr ng-repeat="r in orderNew.rooms">
                         <td><span>{{r.sn}}</span>&nbsp;({{r.name}})</td>
                         <td>
                             <span class="light">入住</span>
                             &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                             <div class="date-table start">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.changeRoomStartMonth(r, -1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.changeRoomStartMonth(r, 1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -502,7 +502,7 @@
                                 </div>
                                 <div class="date-row" ng-repeat="row in r.startDays">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="newOrder.changeRoomStartDate(r, day.date, day.sclass);">
+                                         ng-click="changeRoomStartDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -510,11 +510,11 @@
                             &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                             <div class="date-table end">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.changeRoomEndMonth(r, -1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.changeRoomEndMonth(r, 1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -529,7 +529,7 @@
                                 </div>
                                 <div class="date-row" ng-repeat="row in r.endDays">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="newOrder.changeRoomEndDate(r, day.date, day.sclass);">
+                                         ng-click="changeRoomEndDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -539,7 +539,7 @@
                             <!--<div class="tips warning left">↑房间被占用</div>-->
                             <!--<div class="tips warning right">↑房间被占用</div>-->
                         </td>
-                        <td>¥{{r.fee}}<div class="sdelete" ng-click="newOrder.deleteRoom($index);$event.stopPropagation();"></div></td>
+                        <td>¥{{r.fee}}<div class="sdelete" ng-click="deleteRoom(orderNew.rooms, $index);$event.stopPropagation();"></div></td>
                     </tr>
                 </table>
             </div>
@@ -547,7 +547,7 @@
             <div class="subtype food" ng-if="foodList.length > 0">
                 <div class="sub-title">
                     餐饮信息
-                    <div class="sadd" ng-click="newOrder.addFood();">
+                    <div class="sadd" ng-click="addItem(1, foodList, orderNew);">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -555,13 +555,13 @@
                     </div>
                 </div>
                 <table>
-                    <tr ng-repeat="food in newOrder.foodList">
+                    <tr ng-repeat="food in foodItems">
                         <td>
                             <div class="select1">
                                 <span>{{food.name}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="f in foodList"
-                                         ng-click="newOrder.changeFood(food, f)">{{f.name}}</div>
+                                         ng-click="changeItem(orderNew.foodItems, food, f);">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -569,11 +569,11 @@
                             <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                             <div class="date-table">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.itemLastMonth(food);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.itemNextMonth(food);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -586,8 +586,8 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in food.days">
-                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="newOrder.changeItemTime(food, day.date);">
+                                <div class="date-row" ng-repeat="row in food.calendar">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(food, day.date);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -596,13 +596,13 @@
                         <td>
                             数量&nbsp;
                             <div class="snumber">
-                                <div class="minus" ng-click="newOrder.minusFood($index)">-</div>
-                                <input type="text" ng-model="food.num">
-                                <div class="plus" ng-click="newOrder.plusFood($index)">+</div>
+                                <div class="minus" ng-click="changeItemNum(food, food.amount-1);">-</div>
+                                <input type="text" ng-model="food.amount">
+                                <div class="plus" ng-click="changeItemNum(food, food.amount+1);">+</div>
                             </div>
                             <div class="tips">剩余库存{{food.inventory}}</div>
                         </td>
-                        <td>¥{{food.num*food.price}}<div class="sdelete" ng-click="newOrder.deleteFood($index)"></div></td>
+                        <td>¥{{food.amount*food.price}}<div class="sdelete" ng-click="deleteItem(orderNew.foodItems, $index)"></div></td>
                     </tr>
                 </table>
             </div>
@@ -610,7 +610,7 @@
             <div class="subtype fun" ng-if="funList.length > 0">
                 <div class="sub-title">
                     娱乐信息
-                    <div class="sadd" ng-click="newOrder.addFun();">
+                    <div class="sadd" ng-click="addItem(2, funList, orderNew);">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -618,25 +618,25 @@
                     </div>
                 </div>
                 <table>
-                    <tr ng-repeat="fun in newOrder.funList">
+                    <tr ng-repeat="play in orderNew.playItems">
                         <td>
                             <div class="select1">
-                                <span>{{fun.name}}</span>
+                                <span>{{play.name}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="f in funList"
-                                         ng-click="newOrder.changeFun(fun, f)">{{f.name}}</div>
+                                         ng-click="changeItem(orderNew.playItems, play, f)">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
                         <td>时间&nbsp;
-                            <input type="text" class="datePicker" ng-model="fun.dateStr2" readonly="true">
+                            <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                             <div class="date-table">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="newOrder.itemLastMonth(fun);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
-                                    {{fun.date.getFullYear()}}年{{fun.date.getMonth()+1}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.itemNextMonth(fun);$event.stopPropagation();">
+                                    {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -649,8 +649,8 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in fun.days">
-                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="newOrder.changeItemTime(fun, day.date);">
+                                <div class="date-row" ng-repeat="row in play.calendar">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -659,39 +659,39 @@
                         <td>
                             数量&nbsp;
                             <div class="snumber">
-                                <div class="minus" ng-click="newOrder.minusFun($index)">-</div>
-                                <input type="text" ng-model="fun.num">
-                                <div class="plus" ng-click="newOrder.plusFun($index)">+</div>
+                                <div class="minus" ng-click="changeItemNum(play, play.amount-1);">-</div>
+                                <input type="text" ng-model="play.amount">
+                                <div class="plus" ng-click="changeItemNum(play, play.amount+1);">+</div>
                             </div>
-                            <div class="tips">剩余库存{{fun.inventory}}</div>
+                            <div class="tips">剩余库存{{play.inventory}}</div>
                         </td>
-                        <td>¥{{fun.num*fun.price}}<div class="sdelete" ng-click="newOrder.deleteFun($index)"></div></td>
+                        <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
                     </tr>
                 </table>
             </div>
             <div class="hr2" ng-if="funList.length > 0"></div>
             <div class="discount">
                 <div class="slabel">优惠</div>
-                <input placeholder="金额" type="text" ng-model="newOrder.discounts">
+                <input placeholder="金额" type="text" ng-model="orderNew.discounts">
                 <span class="tips">-¥</span>
             </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea placeholder="请填写备注信息" ng-model="newOrder.remarks"></textarea>
+                <textarea placeholder="请填写备注信息" ng-model="orderNew.remark"></textarea>
             </div>
-            <div class="counter" ng-class="{warning: newOrder.remarks.length > 140}">{{newOrder.remarks.length}}/140</div>
+            <div class="counter" ng-class="{warning: orderNew.remark.length > 140}">{{orderNew.remark.length}}/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥{{newOrder.totalPrice()}}</div>
+                    <div class="snum">¥{{calPrice()}}</div>
                 </div>
-                <div class="sbtn confirm" ng-click="newOrder.submitOrder()">完成{{newOrder.title}}</div>
+                <div class="sbtn confirm" ng-click="submitOrder()">完成{{orderNew.title}}</div>
                 <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="orderEditModel">
+<div class="modal fade" role="dialog" id="orderEditModel" ng-if="orderEdit" ng-controller="orderEditCtrl">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
@@ -716,16 +716,16 @@
                         <td>
                             <input placeholder="手机号" ng-model="orderEdit.customerPhone"
                                    type="text" class="short">
-                            <div class="tips warning" ng-if="!orderEdit.checkPhone();">必填字段</div>
+                            <div class="tips warning" ng-if="!checkPhone(orderEdit.customerPhone);">必填字段</div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="select1">
-                                <span>{{newOrder.guestInfo.selectedId}}</span>
+                                <span>{{orderEdit.selectedId}}</span>
                                 <div class="select1_options">
                                     <div class="item"
-                                         ng-click="orderEdit.changeIds(id.label);$event.stopPropagation();"
+                                         ng-click="changeIds(id.label, orderEdit);$event.stopPropagation();"
                                          ng-repeat="id in idList">{{id.label}}</div>
                                 </div>
                             </div>
@@ -741,7 +741,7 @@
                                 <span>{{orderEdit.origin}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="c in channels"
-                                         ng-click="orderEdit.changeChannel(c.id, c.name);$event.stopPropagation();">{{c.name}}</div>
+                                         ng-click="changeChannel(c.id, c.name);$event.stopPropagation();">{{c.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -770,11 +770,11 @@
                             &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                             <div class="date-table start">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.changeRoomStartMonth(r, -1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.changeRoomStartMonth(r, 1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -787,9 +787,9 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in r.startDays">
+                                <div class="date-row" ng-repeat="row in r.scalendar">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="orderEdit.changeRoomStartDate(r, day.date, day.sclass);">
+                                         ng-click="changeRoomStartDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -797,11 +797,11 @@
                             &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                             <div class="date-table end">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.changeRoomEndMonth(r, -1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.changeRoomEndMonth(r, 1);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -814,9 +814,9 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in r.endDays">
+                                <div class="date-row" ng-repeat="row in r.ecalendar">
                                     <div class="item {{day.sclass}}" ng-repeat="day in row"
-                                         ng-click="orderEdit.changeRoomEndDate(r, day.date, day.sclass);">
+                                         ng-click="changeRoomEndDate(r, day.date, day.sclass);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -826,15 +826,15 @@
                             <!--<div class="tips warning left">↑房间被占用</div>-->
                             <!--<div class="tips warning right">↑房间被占用</div>-->
                         </td>
-                        <td>¥{{r.fee}}<div class="sdelete" ng-if="r.state === 0" ng-click="orderEdit.deleteRoom($index);$event.stopPropagation();"></div></td>
+                        <td>¥{{r.fee}}<div class="sdelete" ng-if="r.state === 0" ng-click="deleteRoom(orderEdit.rooms, $index);$event.stopPropagation();"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2" ng-if="orderEdit.foodItems.length > 0"></div>
-            <div class="subtype food" ng-if="orderEdit.foodItems.length > 0">
+            <div class="hr2" ng-if="foodList.length > 0"></div>
+            <div class="subtype food" ng-if="foodList.length > 0">
                 <div class="sub-title">
                     餐饮信息
-                    <div class="sadd" ng-click="orderEdit.addFood();">
+                    <div class="sadd" ng-click="addItem(1, foodList, orderEdit);">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -849,7 +849,7 @@
                                 <span>{{food.name}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="f in foodList"
-                                         ng-click="orderEdit.changeFood(food, f)">{{f.name}}</div>
+                                         ng-click="changeItem(orderEdit.foodItems, food, f)">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -857,11 +857,11 @@
                             <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                             <div class="date-table">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.itemLastMonth(food);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food. -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="newOrder.itemNextMonth(food);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -874,8 +874,8 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in food.days">
-                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="orderEdit.changeItemTime(food, day.date);">
+                                <div class="date-row" ng-repeat="row in food.calendar">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(food, day.date);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -883,22 +883,22 @@
                         </td>
                         <td>数量&nbsp;
                             <div class="snumber">
-                                <div class="minus" ng-click="orderEdit.minusFood($index)">-</div>
+                                <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
                                 <input type="text" ng-model="food.amount">
-                                <div class="plus" ng-click="orderEdit.plusFood($index)">+</div>
+                                <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                             </div>
                             &nbsp;(已使用{{food.usedAmount}})
                             <div class="tips">剩余库存{{food.inventory}}</div>
                         </td>
-                        <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="orderEdit.deleteFood($index)"></div></td>
+                        <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.foodItems, food)"></div></td>
                     </tr>
                 </table>
             </div>
-            <div class="hr2" ng-if="orderEdit.playItems.length > 0"></div>
-            <div class="subtype fun" ng-if="orderEdit.playItems.length > 0">
+            <div class="hr2" ng-if="funList.length > 0"></div>
+            <div class="subtype fun" ng-if="funList.length > 0">
                 <div class="sub-title">
                     娱乐信息
-                    <div class="sadd" ng-click="orderEdit.addFun();">
+                    <div class="sadd" ng-click="addItem(2, funList, orderEdit)">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -913,7 +913,7 @@
                                 <span>{{play.name}}</span>
                                 <div class="select1_options">
                                     <div class="item" ng-repeat="f in funList"
-                                         ng-click="orderEdit.changeFun(play, f)">{{f.name}}</div>
+                                         ng-click="changeItem(orderEdit.playItems, play, f)">{{f.name}}</div>
                                 </div>
                             </div>
                         </td>
@@ -921,11 +921,11 @@
                             <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                             <div class="date-table">
                                 <div class="month-selector">
-                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="orderEdit.itemLastMonth(play);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-left-blue"></div>
                                     </div>
                                     {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="orderEdit.itemNextMonth(play);$event.stopPropagation();">
+                                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
                                         <div class="eluyun_arrow-right-blue"></div>
                                     </div>
                                 </div>
@@ -938,8 +938,8 @@
                                     <div class="item">六</div>
                                     <div class="item">日</div>
                                 </div>
-                                <div class="date-row" ng-repeat="row in play.days">
-                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="orderEdit.changeItemTime(play, day.date);">
+                                <div class="date-row" ng-repeat="row in play.calendar">
+                                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date);">
                                         {{day.text || day.date.getDate()}}
                                     </div>
                                 </div>
@@ -947,14 +947,14 @@
                         </td>
                         <td>数量&nbsp;
                             <div class="snumber">
-                                <div class="minus" ng-click="orderEdit.minusFun($index)">-</div>
+                                <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
                                 <input type="text" ng-model="play.amount">
-                                <div class="plus" ng-click="orderEdit.plusFun($index)">+</div>
+                                <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
                             </div>
                             &nbsp;(已使用{{play.usedAmount}})
                             <div class="tips">剩余库存{{play.inventory}}</div>
                         </td>
-                        <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="orderEdit.deleteFun($index)"></div></td>
+                        <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.playItems, $index)"></div></td>
                     </tr>
                 </table>
             </div>
@@ -972,13 +972,13 @@
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
-                    <div class="snum">¥{{orderEdit.calPrice()}}</div>
+                    <div class="snum">¥{{calPrice()}}</div>
                 </div>
                 <!--<div class="deposit">-->
                     <!--<div class="slabel">已收押金</div>-->
                     <!--<div class="snum">¥99</div>-->
                 <!--</div>-->
-                <div class="sbtn confirm" ng-click="orderEdit.submitOrder()">保存</div>
+                <div class="sbtn confirm" ng-click="submitOrder()">保存</div>
                 <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
@@ -1519,7 +1519,7 @@
                 <div class="glyph {{statusStr[g.orderState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
-                     ng-dblclick="getOrderDetail(g.orderId);"
+                     ng-dblclick="showOrderDetail(g.orderId);"
                      style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">

@@ -10,22 +10,24 @@ var orderSearch = function(app){
         function(rootScope, scope, constService){
         scope.searchKeyword = '';
         scope.searchResultPage = 0;
-        scope.searchResultUnit = 10;
+        scope.searchResultUnit = 5;
         scope.searchResultsNum = 0;
         scope.searchResults = [];
         scope.search = function(){
-            AJAXService.ajaxWithToken('GET', 'orderSearchUrl', {
+            AJAXService.ajaxWithToken('GET', 'orderSearchPCUrl', {
                 keyword: scope.searchKeyword,
                 page: scope.searchResultPage,
-                searchType: 1,
+                limit: scope.searchResultUnit,
+                searchType: 1
             }, function(result){
-                scope.searchResults = result.data.list;
-                scope.searchResults.forEach(function(d){
-                    d.classStr = constService.statusStr[d.orderState].classStr;
-                    d.html = constService.statusStr[d.orderState].long;
-                });
-                scope.searchResultsNum = scope.searchResults.length;
-                scope.$apply();
+                console.log(result);
+                //scope.searchResults = result.data.list;
+                //scope.searchResults.forEach(function(d){
+                //    d.classStr = constService.statusStr[d.orderState].classStr;
+                //    d.html = constService.statusStr[d.orderState].long;
+                //});
+                //scope.searchResultsNum = scope.searchResults.length;
+                //scope.$apply();
             });
         };
         scope.searchResultNextPage = function(){

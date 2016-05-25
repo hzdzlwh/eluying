@@ -1,3 +1,4 @@
+var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
@@ -60,7 +61,7 @@ var calendarService = function(app){
             }
             return days;
         };
-        this.createRoomStartDateCalendar = function(room, scope){
+        this.createRoomStartDateCalendar = function(room){
             var startDate = new Date(room.startDate);
             var scanlerdarDate = new Date(room.scanlerdarDate);
             var calenderTable = this.buildCalendarTable(scanlerdarDate);
@@ -98,7 +99,6 @@ var calendarService = function(app){
                     }
                 }
                 room.scalendar = days;
-                scope.$apply();
             });
         };
         this.createRoomEndDateCalendar = function(room){
@@ -144,7 +144,6 @@ var calendarService = function(app){
                 scope.$apply();
             });
         };
-
     });
 };
 

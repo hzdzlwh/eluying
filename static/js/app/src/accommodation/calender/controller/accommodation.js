@@ -7,22 +7,28 @@ var accommodationService = require("../services/accommodationService");
 var shopcartService = require("../services/shopcartService");
 var orderNewService = require("../services/orderNewService");
 var calendarService = require("../services/calendarService");
+var constService = require("../services/constService");
 
 var accommodationCtrl = function(app){
     getDataService(app);
     accommodationService(app);
     shopcartService(app);
     orderNewService(app);
-    app.controller("accommodationCtrl", ['$rootScope', '$scope', 'getDataService', 
-        'accommodationService', 'shopcartService', 'orderNewService', 'calendarService',
-        function(rootScope, scope, getDataService, accommodationService, shopcartService, orderNewService, calendarService){
+    calendarService(app);
+    constService(app);
+    app.controller("accommodationCtrl", ['$rootScope', '$scope', 'getDataService',
+        'accommodationService', 'shopcartService', 'orderNewService', 'calendarService','constService',
+        function(rootScope, scope, getDataService, accommodationService, shopcartService, orderNewService,
+                 calendarService, constService){
             rootScope.startDate = util.diffDate(new Date(), -2);
             rootScope.startDateStr = util.dateFormatWithoutYear(rootScope.startDate);
             rootScope.selectedEntries = {};
-            getDataService.getRoomsAndStatus(rootScope);
-            
+            rootScope.statusStr = constService.statusStr;
+            rootScope.statusStr2 = constService.statusStr2;
             rootScope.update = function(){};
-            
+            rootScope.showOrderDetail = function(orderId){
+                getDataService.getOrderDetail(orderId, rootScope);
+            };
             rootScope.closeRoom = function(open, rid, dateItem){
                 AJAXService.ajaxWithToken('GET', 'modifyRoomStatusUrl', {
                     isAll: false,
@@ -30,10 +36,17 @@ var accommodationCtrl = function(app){
                     open: !open ? 0 : 1,
                     roomId: rid
                 }, function(result){
-                    accommodationService.updateAccommodation(rootScope);
+                    if(result.code === 1){
+                        if(dateItem.s === -1){
+                            dateItem.s = 100;
+                        }else{
+                            dateItem.s = -1;
+                        }
+                        accommodationService.updateDateInventory(rootScope);
+                        rootScope.$apply();
+                    }
                 });
             };
-            
             rootScope.selectEntry = function(date, roomId){
                 var cRoomStore = rootScope.cRoomStore;
                 if(rootScope.selectedEntries[roomId + date]){
@@ -67,18 +80,6 @@ var accommodationCtrl = function(app){
                 }
                 shopcartService.showShopCart();
             };
-
-            getDataService.getChannel(function(result){
-                rootScope.channels = result.channels;
-            });
-            getDataService.getItems(function(result){
-                rootScope.foodList = result.foodList;
-                rootScope.funList = result.funList;
-            });
-            getDataService.getIDs(function(result){
-                rootScope.IDs = result.IDs;
-            });
-
             rootScope.processSelectedEntries = function(type){
                 var selectedEntries = rootScope.selectedEntries;
                 var selectedEntries_new = {};
@@ -190,7 +191,19 @@ var accommodationCtrl = function(app){
                 $(".msgModal").modal("hide");
                 $("#newOrderModal").modal("show");
             };
-            
+
+            getDataService.getChannel(function(result){
+                rootScope.channels = result.channels;
+            });
+            getDataService.getItems(function(result){
+                rootScope.foodList = result.foodList;
+                rootScope.funList = result.funList;
+            });
+            getDataService.getIDs(function(result){
+                rootScope.IDs = result.IDs;
+            });
+            getDataService.getRoomsAndStatus(rootScope);
+
     }]);
 };
 

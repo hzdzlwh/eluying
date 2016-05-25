@@ -19,6 +19,7 @@ var pRoomFilterCtrl = require('./controller/pRoomFilter');
 var dateSelectorCtrl = require('./controller/dateSelector');
 var orderNewCtrl = require('./controller/orderNew');
 var orderEditCtrl = require('./controller/orderEdit');
+var orderDetailCtrl = require('./controller/orderDetail');
 var orderSearch = require('./controller/orderSearch');
 
 // var storeService = require('./services/store/getDataService.js');
@@ -164,8 +165,8 @@ $(function(){
     accommodationCtrl(app);
     orderNewCtrl(app);
     orderEditCtrl(app);
+    orderDetailCtrl(app);
     orderSearch(app);
-
     // app.controller('calenderCtrl', ['$rootScope', 'scope', function(rootScope, scope) {
     //
     //     rootScope.datesArray = [];

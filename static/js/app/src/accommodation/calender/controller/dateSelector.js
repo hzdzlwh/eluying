@@ -2,11 +2,13 @@ var util = require("util");
 require("angular");
 
 var calendarService = require("../services/calendarService");
+var getDataService = require("../services/getDataService");
 
 var dateSelectorCtrl = function(app){
     calendarService(app);
-    app.controller("dateSelectorCtrl", ['$rootScope', '$scope', 'calendarService',
-        function(rootScope, scope, calendarService){
+    getDataService(app);
+    app.controller("dateSelectorCtrl", ['$rootScope', '$scope', 'calendarService', 'getDataService',
+        function(rootScope, scope, calendarService, getDataService){
             rootScope.today = util.dateFormatWithoutYear(new Date());
             scope.mainCalendar = null;
             
@@ -41,6 +43,9 @@ var dateSelectorCtrl = function(app){
             scope.changeMainDate = function(date){
                 rootScope.startDate = date;
                 update();
+                rootScope.glyphs = null;
+                rootScope.occupyList = null;
+                getDataService.getRoomsAndStatus(rootScope);
             };
             update();
     }]);

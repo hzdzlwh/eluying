@@ -3,10 +3,12 @@ var util = require("util");
 require("angular");
 
 var constService = require("./constService");
+var accommodationService = require("./accommodationService");
 
 var getDataService = function(app){
     constService(app);
-    app.service("getDataService", ['constService', function(constService){
+    accommodationService(app);
+    app.service("getDataService", ['constService', 'accommodationService', function(constService, accommodationService){
         this.getChannel = function(callback){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
                 type: 2
@@ -47,14 +49,14 @@ var getDataService = function(app){
                 IDs: IDs
             })
         };
-        this.getOrderDetail = function(orderId){
+        this.getOrderDetail = function(orderId, scope){
             AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
                 orderId: orderId
             }, function(result){
                 if(result.code === 1){
-                    // rootScope.orderDetail = result.data;
-                    // rootScope.$apply();
-                    // $("#orderDetailModal").modal("show");
+                    scope.orderDetail = result.data;
+                    scope.$apply();
+                    $("#orderDetailModal").modal("show");
                 }
             });
         };
@@ -139,21 +141,21 @@ var getDataService = function(app){
                     var gridHeight = 48;
                     var occupyList = {};
                     orderList.forEach(function(order){
-                        var startDate = new Date(order.checkInDate);
+                        var checkInDate = new Date(order.checkInDate);
                         var seeStart = true;
-                        if(startDate < startDate && !util.isSameDay(startDate, startDate)){
-                            startDate = startDate;
+                        if(checkInDate < startDate && !util.isSameDay(checkInDate, startDate)){
+                            checkInDate = startDate;
                             seeStart = false;
                         }
-                        var endDate = new Date(order.checkOutDate);
-                        if(endDate > util.diffDate(startDate, 29)){
-                            endDate = util.diffDate(startDate, 29);
+                        var checkOutDate = new Date(order.checkOutDate);
+                        if(checkOutDate > util.diffDate(checkInDate, 29)){
+                            checkOutDate = util.diffDate(checkInDate, 29);
                         }
-                        var diff = util.DateDiff(startDate, endDate);
+                        var diff = util.DateDiff(checkInDate, checkOutDate);
                         if(diff === 0){
                             diff = 1;
                         }
-                        var startDiff = util.DateDiff(startDate, startDate);
+                        var startDiff = util.DateDiff(startDate, checkInDate);
                         var room = roomIndexHash[order.accommodationId];
                         var top = gridHeight * room + 1;
                         var left = gridWidth * startDiff + 2;
@@ -167,10 +169,10 @@ var getDataService = function(app){
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
                         glyph.seeStart = seeStart;
-                        if(util.isSameDay(startDate, endDate)){
+                        if(util.isSameDay(checkInDate, checkOutDate)){
                             occupyList[glyph.checkInDateShort + order.accommodationId] = true;
                         }else{
-                            while(tempDate < endDate){
+                            while(tempDate < checkOutDate){
                                 occupyList[util.dateFormatWithoutYear(tempDate) + order.accommodationId] = true;
                                 tempDate = util.diffDate(tempDate, 1);
                             }
@@ -184,6 +186,7 @@ var getDataService = function(app){
                     scope.roomStore = roomStore;
                     scope.glyphs = glyphs;
                     scope.occupyList = occupyList;
+                    accommodationService.updateDateInventory(scope);
                     scope.$apply();
                 });
             });
