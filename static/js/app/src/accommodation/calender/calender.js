@@ -21,6 +21,7 @@ var orderNewCtrl = require('./controller/orderNew');
 var orderEditCtrl = require('./controller/orderEdit');
 var orderDetailCtrl = require('./controller/orderDetail');
 var orderSearch = require('./controller/orderSearch');
+var getMoney = require('./controller/getMoney');
 
 $(function(){
     //初始化界面
@@ -158,4 +159,5 @@ $(function(){
     orderEditCtrl(app);
     orderDetailCtrl(app);
     orderSearch(app);
+    getMoney(app);
 });

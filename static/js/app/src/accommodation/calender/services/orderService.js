@@ -155,7 +155,7 @@ var orderService = function(app){
                 var temp = {
                     isNew: true,
                     type: type,
-                    id: item.itemId,
+                    categoryId: item.itemId,
                     name: item.name,
                     price: item.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
@@ -238,6 +238,19 @@ var orderService = function(app){
             }
             price = price - order.discounts;
             return price < 0 ? 0.01 : price;
+        };
+        this.itemPrice = function(order){
+            var price = 0;
+            for(var i = 0; i < order.rooms.length; i++){
+                price += order.rooms[i].fee;
+            }
+            for(var i = 0; i < order.foodItems.length; i++){
+                price += order.foodItems[i].amount * order.foodItems[i].price;
+            }
+            for(var i = 0; i < order.playItems.length; i++){
+                price += order.playItems[i].amount * order.playItems[i].price;
+            }
+            return price;
         };
         this.deleteItem = function(items, index){
             items.splice(index, 1);

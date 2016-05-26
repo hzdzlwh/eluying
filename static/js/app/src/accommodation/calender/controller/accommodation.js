@@ -211,6 +211,9 @@ var accommodationCtrl = function(app){
             getDataService.getIDs(function(result){
                 rootScope.idList = result.idList;
             });
+            getDataService.getPayChannels(function(result){
+                rootScope.payChannels = result.payChannels;
+            });
             getDataService.getRoomsAndStatus(rootScope);
 
     }]);

@@ -1,16 +1,20 @@
+var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
 var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var validateService = require("../services/validateService");
+var getMoneyService = require("../services/getMoneyService");
 
 var orderNewCtrl = function(app){
     orderService(app);
     orderNewService(app);
     validateService(app);
-    app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService', 'orderService', 'validateService',
-        function(rootScope, scope, orderNewService, orderService, validateService){
+    getMoneyService(app);
+    app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService',
+        'orderService', 'validateService', 'getMoneyService',
+        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService){
         scope.checkPhone = validateService.checkPhone;
         scope.changeIds = orderService.changeIds;
         scope.changeChannel = orderService.changeChannel;
@@ -30,12 +34,11 @@ var orderNewCtrl = function(app){
             var orderNew = rootScope.orderNew;
             var inventory = {};
             var itemList = orderNew.foodItems.concat(orderNew.playItems);
-            //数量为0的项目去掉,项目日期一样的项目合并
             for(var i = 0; i < itemList.length; i++){
                 var item = itemList[i];
-                var inv = inventory[item.id + item.dateStr];
+                var inv = inventory[item.categoryId + item.dateStr];
                 if(!inv){
-                    inventory[item.id + item.dateStr] = {
+                    inventory[item.categoryId + item.dateStr] = {
                         amount: item.amount,
                         inventory: item.inventory
                     }
@@ -43,12 +46,11 @@ var orderNewCtrl = function(app){
                     inv.amount += item.amount;
                     if(inv.amount > inv.inventory){
                         modal.somethingAlert(util.dateFormatWithoutYearCn(item.dateStr2)
-                            + '的' + item.name + "项目库存不足!");
+                            + '的' + item.name + "购买数量超过库存量!");
                         return false;
                     }
                 }
             }
-            //格式化房间数据
             var rooms = [];
             orderNew.rooms.forEach(function(d){
                 var room = {
@@ -61,13 +63,12 @@ var orderNewCtrl = function(app){
                 };
                 rooms.push(room);
             });
-            //准备接口所需数据
             var items = [];
             itemList.forEach(function(d, i){
                 items.push({
                     amount: d.amount,
                     date: d.dateStr,
-                    id: d.id,
+                    id: d.categoryId,
                     name: d.name,
                     price: d.price,
                     priceId: 0,
@@ -96,20 +97,30 @@ var orderNewCtrl = function(app){
             };
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
-                    AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
-                        orderId: result3.data.orderId
-                    }, function(result){
-                        if(result.code === 1){
-                            //跳到收银台
-                            // initGetMoneyItem();
-                            // rootScope.getMoneyItem.newOrder(result.data);
-                            // $("#newOrderModal").modal("hide");
-                            // $("#getMoneyModal").modal("show");
-                            // rootScope.initialize();
-                            // rootScope.updateData();
-                            // rootScope.$apply();
-                        }
-                    });
+                    rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
+                    console.log(rootScope.getMoney);
+                    rootScope.$apply();
+                    $("#newOrderModal").modal("hide");
+                    $("#getMoneyModal").modal("show");
+                    //AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                    //    orderId: result3.data.orderId
+                    //}, function(result){
+                    //    if(result.code === 1){
+                    //        console.log(result.data);
+                    //        //rootScope.getMoneyItem = getMoneyService.resetGetMoney(orderNew);
+                    //        //$(".msgModal").modal("hide");
+                    //        //$("#newOrderModal").modal("show");
+                    //
+                    //
+                    //        // initGetMoneyItem();
+                    //        // rootScope.getMoneyItem.newOrder(result.data);
+                    //        // $("#newOrderModal").modal("hide");
+                    //        // $("#getMoneyModal").modal("show");
+                    //        // rootScope.initialize();
+                    //        // rootScope.updateData();
+                    //        // rootScope.$apply();
+                    //    }
+                    //});
                 }
             });
         };

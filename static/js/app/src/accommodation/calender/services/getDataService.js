@@ -4,11 +4,14 @@ require("angular");
 
 var constService = require("./constService");
 var accommodationService = require("./accommodationService");
+var orderDetailService = require("./orderDetailService");
 
 var getDataService = function(app){
     constService(app);
     accommodationService(app);
-    app.service("getDataService", ['constService', 'accommodationService', function(constService, accommodationService){
+    orderDetailService(app);
+    app.service("getDataService", ['constService', 'accommodationService', 'orderDetailService',
+        function(constService, accommodationService, orderDetailService){
         this.getChannel = function(callback){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
                 type: 2
@@ -49,12 +52,20 @@ var getDataService = function(app){
                 idList: idList
             })
         };
+        this.getPayChannels = function(callback){
+            AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                var payChannels = result.data.payChannelCustomList;
+                callback({
+                    payChannels: payChannels
+                });
+            });
+        };
         this.getOrderDetail = function(orderId, scope){
             AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
                 orderId: orderId
             }, function(result){
                 if(result.code === 1){
-                    scope.orderDetail = result.data;
+                    scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
                     scope.$apply();
                     $("#orderDetailModal").modal("show");
                 }
