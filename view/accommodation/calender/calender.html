@@ -113,11 +113,14 @@
             <div class="sheader">
                 <div class="stitle">
                     <span>订单详情</span>
-                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
+                    <div class="status {{orderStatusStr[orderDetail.orderState].classStr}}">
+                        <div class="triangle"></div>{{orderStatusStr[orderDetail.orderState].long}}
+                    </div>
                     <div class="btns">
-                        <div class="abtn" ng-click="showOrderEdit()">编辑订单</div>
-                        <div class="abtn" ng-click="showOrderCancel()">取消订单</div>
-                        <div class="abtn" ng-if="false">打印凭条</div>
+                        <div class="abtn" ng-if="orderDetail.orderState === 3 || orderDetail.orderState === 2"
+                             ng-click="showOrderEdit()">编辑订单</div>
+                        <div class="abtn" ng-if="orderDetail.orderState === 2" ng-click="showOrderCancel()">取消订单</div>
+                        <div class="abtn">打印凭条</div>
                     </div>
                 </div>
             </div>
@@ -231,10 +234,12 @@
                         </div>
                     </div>
                     <div class="btns">
-                        <div class="sbtn" ng-if="false">提前退房</div>
-                        <div class="sbtn" ng-if="false">办理退房</div>
-                        <div class="sbtn" ng-if="false">办理入住</div>
-                        <div class="sbtn">收银</div>
+                        <div class="sbtn" ng-if="orderDetail.orderState === 3">提前退房</div>
+                        <div class="sbtn" ng-if="orderDetail.orderState === 3">办理退房</div>
+                        <div class="sbtn" ng-if="orderDetail.orderState === 3 || orderDetail.orderState === 2"
+                             ng-click="showCheckin()">办理入住</div>
+                        <div class="sbtn" ng-click="showGetMoney();"
+                             ng-if="orderDetail.orderState === 3 || orderDetail.orderState === 2">收银</div>
                     </div>
                 </div>
             </div>
@@ -1040,7 +1045,7 @@
             <div class="sheader">
                 <div class="stitle">
                     <span>办理退房</span>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                 </div>
             </div>
             <div class="hr2"></div>
@@ -1049,15 +1054,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>胡晚期</td>
+                        <td>{{checkout.customerName}}</td>
                         <td>手机号</td>
-                        <td>13111111111</td>
+                        <td>{{checkout.customerPhone}}</td>
                     </tr>
                     <tr>
                         <td>身份证</td>
                         <td>440183199209080056</td>
                         <td>渠道</td>
-                        <td>散客</td>
+                        <td>{{checkout.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -1066,23 +1071,24 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr>
-                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <tr ng-repeat="r in checkout.rooms">
+                            <td>
+                                <div class="scheckbox" ng-class="{'checked': r.selected}"
+                                     ng-if="r.state === 1" ng-click="selectCheckoutRoom(r)">
+                                    <div class="inner"></div>
+                                </div>
+                                <span>{{r.serialNum}}</span>
+                                &nbsp;({{r.name}})
+                                <div class="sstatus {{statusStr2[r.state].classStr}}">
+                                    {{statusStr2[r.state].short}}
+                                </div>
+                            </td>
                             <td>
                                 <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
+                                &nbsp;{{r.startDate.substr(5, 5)}}&nbsp;~&nbsp;{{r.endDate.substr(5, 5)}}&nbsp;
+                                <span class="light">共{{r.duration}}晚</span>
                             </td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr class="disabled">
-                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
-                            <td>
-                                <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
-                            </td>
-                            <td>¥10000</td>
+                            <td>¥{{r.fee}}</td>
                         </tr>
                     </table>
                 </div>
@@ -1090,7 +1096,7 @@
                 <div class="subtype food">
                     <div class="sub-title">
                         餐饮信息
-                        <div class="sadd">
+                        <div class="sadd" ng-click="addItem(1, foodList, checkin);">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
@@ -1098,19 +1104,22 @@
                         </div>
                     </div>
                     <table>
-                        <tr>
-                            <td><div class="sname">烧烤烧烤烧烤烧烤烧烤烧烤烧烤烧烤</div></td>
-                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <tr ng-repeat="food in checkin.foodItems">
+                            <td><div class="sname">{{food.name}}</div></td>
+                            <td><span class="light">时间</span>&nbsp;{{food.dateStr2}}</td>
                             <td>数量&nbsp;
                                 <div class="snumber">
-                                    <div class="minus">-</div>
-                                    <input type="text" value="1">
-                                    <div class="plus">+</div>
+                                    <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
+                                    <input type="text" value="1" ng-model="food.amount">
+                                    <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                 </div>
-                                &nbsp;(已使用10)
-                                <div class="tips">剩余库存10</div>
+                                &nbsp;(已使用{{food.usedAmount}})
+                                <div class="tips">剩余库存{{food.inventory}}</div>
                             </td>
-                            <td>¥10000<div class="sdelete"></div></td>
+                            <td>
+                                ¥{{food.amount * food.price}}
+                                <div class="sdelete" ng-click="deleteItem(checkin.foodItems, $index)"></div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1118,7 +1127,7 @@
                 <div class="subtype fun">
                     <div class="sub-title">
                         娱乐信息
-                        <div class="sadd">
+                        <div class="sadd" ng-click="addItem(2, funList, checkin);">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
@@ -1126,19 +1135,22 @@
                         </div>
                     </div>
                     <table>
-                        <tr>
-                            <td><div class="sname">皮划艇皮划艇皮划艇皮划艇皮划艇</div></td>
-                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <tr ng-repeat="play in checkin.playItems">
+                            <td><div class="sname">{{play.name}}</div></td>
+                            <td><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
                             <td><span class="light">数量</span>&nbsp;
                                 <div class="snumber">
-                                    <div class="minus">-</div>
-                                    <input type="text" value="1">
-                                    <div class="plus">+</div>
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
+                                    <input type="text" value="1" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
                                 </div>
-                                &nbsp;(已使用10)
-                                <div class="tips">剩余库存10</div>
+                                &nbsp;(已使用{{play.usedAmount}})
+                                <div class="tips">剩余库存{{play.inventory}}</div>
                             </td>
-                            <td>¥10<div class="sdelete"></div></td>
+                            <td>
+                                ¥{{play.amount * play.price}}
+                                <div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1157,8 +1169,9 @@
             </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea placeholder="请填写备注信息"></textarea>
+                <textarea placeholder="请填写备注信息" ng-model="checkin.remark"></textarea>
             </div>
+            <div class="counter" ng-class="{warning: checkin.remark.length > 140}">{{checkin.remark.length}}/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
@@ -1168,8 +1181,8 @@
                     <div class="slabel">已收押金</div>
                     <div class="snum">¥99</div>
                 </div>
-                <div class="sbtn confirm">确定退房</div>
-                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm" ng-click="submitCheckin();">确定退房</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -1180,8 +1193,8 @@
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
-                    <span>办理退房</span>
-                    <div class="status book"><div class="triangle"></div>已预订</div>
+                    <span>办理入住</span>
+                    <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                 </div>
             </div>
             <div class="hr2"></div>
@@ -1190,15 +1203,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>胡晚期</td>
+                        <td>{{checkin.customerName}}</td>
                         <td>手机号</td>
-                        <td>13111111111</td>
+                        <td>{{checkin.customerPhone}}</td>
                     </tr>
                     <tr>
                         <td>身份证</td>
                         <td>440183199209080056</td>
                         <td>渠道</td>
-                        <td>散客</td>
+                        <td>{{checkin.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -1207,23 +1220,24 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr>
-                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                        <tr ng-repeat="r in checkin.rooms" ng-class="{'disabled': r.state !== 0}">
+                            <td>
+                                <div class="scheckbox" ng-class="{'checked': r.selected}"
+                                     ng-if="r.state === 0" ng-click="selectCheckinRoom(r)">
+                                    <div class="inner"></div>
+                                </div>
+                                <span>{{r.serialNum}}</span>
+                                &nbsp;({{r.name}})
+                                <div class="sstatus {{statusStr2[r.state].classStr}}">
+                                    {{statusStr2[r.state].short}}
+                                </div>
+                            </td>
                             <td>
                                 <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
+                                &nbsp;{{r.startDate.substr(5, 5)}}&nbsp;~&nbsp;{{r.endDate.substr(5, 5)}}&nbsp;
+                                <span class="light">共{{r.duration}}晚</span>
                             </td>
-                            <td>¥10000</td>
-                        </tr>
-                        <tr class="disabled">
-                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
-                            <td>
-                                <span class="light">入住</span>
-                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
-                                <span class="light">共7晚</span>
-                            </td>
-                            <td>¥10000</td>
+                            <td>¥{{r.fee}}</td>
                         </tr>
                     </table>
                 </div>
@@ -1231,7 +1245,7 @@
                 <div class="subtype food">
                     <div class="sub-title">
                         餐饮信息
-                        <div class="sadd">
+                        <div class="sadd" ng-click="addItem(1, foodList, checkin);">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
@@ -1239,19 +1253,22 @@
                         </div>
                     </div>
                     <table>
-                        <tr>
-                            <td><div class="sname">烧烤烧烤烧烤烧烤烧烤烧烤烧烤烧烤</div></td>
-                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <tr ng-repeat="food in checkin.foodItems">
+                            <td><div class="sname">{{food.name}}</div></td>
+                            <td><span class="light">时间</span>&nbsp;{{food.dateStr2}}</td>
                             <td>数量&nbsp;
                                 <div class="snumber">
-                                    <div class="minus">-</div>
-                                    <input type="text" value="1">
-                                    <div class="plus">+</div>
+                                    <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
+                                    <input type="text" value="1" ng-model="food.amount">
+                                    <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                 </div>
-                                &nbsp;(已使用10)
-                                <div class="tips">剩余库存10</div>
+                                &nbsp;(已使用{{food.usedAmount}})
+                                <div class="tips">剩余库存{{food.inventory}}</div>
                             </td>
-                            <td>¥10000<div class="sdelete"></div></td>
+                            <td>
+                                ¥{{food.amount * food.price}}
+                                <div class="sdelete" ng-click="deleteItem(checkin.foodItems, $index)"></div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1259,7 +1276,7 @@
                 <div class="subtype fun">
                     <div class="sub-title">
                         娱乐信息
-                        <div class="sadd">
+                        <div class="sadd" ng-click="addItem(2, funList, checkin);">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
@@ -1267,39 +1284,33 @@
                         </div>
                     </div>
                     <table>
-                        <tr>
-                            <td><div class="sname">皮划艇皮划艇皮划艇皮划艇皮划艇</div></td>
-                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                        <tr ng-repeat="play in checkin.playItems">
+                            <td><div class="sname">{{play.name}}</div></td>
+                            <td><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
                             <td><span class="light">数量</span>&nbsp;
                                 <div class="snumber">
-                                    <div class="minus">-</div>
-                                    <input type="text" value="1">
-                                    <div class="plus">+</div>
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
+                                    <input type="text" value="1" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
                                 </div>
-                                &nbsp;(已使用10)
-                                <div class="tips">剩余库存10</div>
+                                &nbsp;(已使用{{play.usedAmount}})
+                                <div class="tips">剩余库存{{play.inventory}}</div>
                             </td>
-                            <td>¥10<div class="sdelete"></div></td>
+                            <td>
+                                ¥{{play.amount * play.price}}
+                                <div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div>
+                            </td>
                         </tr>
                     </table>
                 </div>
                 <div class="hr2"></div>
 
             </div>
-            <div class="inadvanced">
-                <div class="pull-left">
-                    未入住部分房价：￥299
-                </div>
-                <div class="pull-right">
-                    提前退房违约金
-                    <span>¥</span>
-                    <input type="text" placeholder="金额">
-                </div>
-            </div>
             <div class="remark">
                 <div class="slabel">备注</div>
-                <textarea placeholder="请填写备注信息"></textarea>
+                <textarea placeholder="请填写备注信息" ng-model="checkin.remark"></textarea>
             </div>
+            <div class="counter" ng-class="{warning: checkin.remark.length > 140}">{{checkin.remark.length}}/140</div>
             <div class="accounts">
                 <div class="sgive">
                     <div class="slabel">客户需补</div>
@@ -1309,8 +1320,8 @@
                     <div class="slabel">已收押金</div>
                     <div class="snum">¥99</div>
                 </div>
-                <div class="sbtn confirm">确定退房</div>
-                <div class="sbtn cancel">取消</div>
+                <div class="sbtn confirm" ng-click="submitCheckin();">办理入住</div>
+                <div class="sbtn cancel btn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->

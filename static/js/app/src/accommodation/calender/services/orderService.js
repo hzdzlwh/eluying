@@ -143,7 +143,7 @@ var orderService = function(app){
                 $("#newOrderModal").modal("hide");
             }
         };
-        this.addItem = function(type, itemList, order, scope){
+        this.addItem = function(type, itemList, order){
             var item = itemList[0];
             if(!item){
                 return false;

@@ -13,6 +13,7 @@ var orderDetailService = function(app){
                     orderDetail.discounts = d.fee;
                 }
             });
+            console.log(orderDetail);
             return orderDetail;
         };
     });

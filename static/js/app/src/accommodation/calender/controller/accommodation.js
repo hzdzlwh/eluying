@@ -27,6 +27,7 @@ var accommodationCtrl = function(app){
             rootScope.selectedEntries = {};
             rootScope.statusStr = constService.statusStr;
             rootScope.statusStr2 = constService.statusStr2;
+            rootScope.orderStatusStr = constService.orderStatusStr;
             rootScope.update = function(){};
             rootScope.showOrderDetail = function(orderId){
                 getDataService.getOrderDetail(orderId, rootScope);

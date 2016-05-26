@@ -17,6 +17,15 @@ var constService = function(app){
             {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
             {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
         ];
+        //0-待处理，1--已拒绝，2-已预订，3-进行中，4-已取消，5-已完成
+        this.orderStatusStr = [
+            {short: '待', long: '待处理', classStr: 'wait'},
+            {short: '拒', long: '已拒绝', classStr: 'refuse'},
+            {short: '预', long: '已预订', classStr: 'book'},
+            {short: '住', long: '进行中', classStr: 'ing'},
+            {short: '取', long: '已取消', classStr: 'cancel'},
+            {short: '完', long: '已完成', classStr: 'finish'}
+        ];
     });
 };
 
