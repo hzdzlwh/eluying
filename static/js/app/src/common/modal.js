@@ -26,7 +26,7 @@ function clearModal(that){
 
 function modalInit(){
     $(".modal").modal({
-        // backdrop: "static",
+        backdrop: "static",
         show: false,
         keyboard: true
     });
