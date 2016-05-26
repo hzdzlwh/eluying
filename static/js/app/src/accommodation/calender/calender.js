@@ -20,8 +20,11 @@ var dateSelectorCtrl = require('./controller/dateSelector');
 var orderNewCtrl = require('./controller/orderNew');
 var orderEditCtrl = require('./controller/orderEdit');
 var orderDetailCtrl = require('./controller/orderDetail');
-var orderSearch = require('./controller/orderSearch');
-var getMoney = require('./controller/getMoney');
+var orderSearchCtrl = require('./controller/orderSearch');
+var getMoneyCtrl = require('./controller/getMoney');
+var orderCancelCtrl = require('./controller/orderCancel');
+var checkoutCtrl = require('./controller/checkout');
+var checkinCtrl = require('./controller/checkin');
 
 $(function(){
     //初始化界面
@@ -158,6 +161,9 @@ $(function(){
     orderNewCtrl(app);
     orderEditCtrl(app);
     orderDetailCtrl(app);
-    orderSearch(app);
-    getMoney(app);
+    orderSearchCtrl(app);
+    getMoneyCtrl(app);
+    orderCancelCtrl(app);
+    checkoutCtrl(app);
+    checkinCtrl(app);
 });

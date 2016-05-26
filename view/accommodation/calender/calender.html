@@ -106,9 +106,9 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="orderDetailModal" ng-if="orderDetail" ng-controller="orderDetailCtrl">
+<div class="modal fade" role="dialog" id="orderDetailModal" ng-controller="orderDetailCtrl">
     <div class="modal-dialog">
-        <div class="modal-content" >
+        <div class="modal-content" ng-if="orderDetail">
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
@@ -117,7 +117,7 @@
                     <div class="btns">
                         <div class="abtn" ng-click="showOrderEdit()">编辑订单</div>
                         <div class="abtn" ng-click="showOrderCancel()">取消订单</div>
-                        <div class="abtn">打印凭条</div>
+                        <div class="abtn" ng-if="false">打印凭条</div>
                     </div>
                 </div>
             </div>
@@ -231,7 +231,9 @@
                         </div>
                     </div>
                     <div class="btns">
-                        <div class="sbtn">办理入住</div>
+                        <div class="sbtn" ng-if="false">提前退房</div>
+                        <div class="sbtn" ng-if="false">办理退房</div>
+                        <div class="sbtn" ng-if="false">办理入住</div>
                         <div class="sbtn">收银</div>
                     </div>
                 </div>
@@ -255,15 +257,15 @@
                 <table>
                     <tr>
                         <td>姓名</td>
-                        <td>{{orderDetail.customerName}}</td>
+                        <td>{{orderCancel.customerName}}</td>
                         <td>手机号</td>
-                        <td>{{orderDetail.customerName}}</td>
+                        <td>{{orderCancel.customerPhone}}</td>
                     </tr>
                     <tr>
                         <td>身份证</td>
                         <td>440183199209080056</td>
                         <td>渠道</td>
-                        <td>{{orderDetail.origin}}</td>
+                        <td>{{orderCancel.origin}}</td>
                     </tr>
                 </table>
             </div>
@@ -277,7 +279,7 @@
                 <div class="subtype room">
                     <div class="sub-title">房间信息</div>
                     <table>
-                        <tr ng-repeat="r in orderDetail.rooms">
+                        <tr ng-repeat="r in orderCancel.rooms">
                             <td>
                                 <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
                                 <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
@@ -291,11 +293,11 @@
                         </tr>
                     </table>
                 </div>
-                <div class="hr2" ng-if="orderDetail.foodItems.length > 0"></div>
-                <div class="subtype food" ng-if="orderDetail.foodItems.length > 0">
+                <div class="hr2" ng-if="orderCancel.foodItems.length > 0"></div>
+                <div class="subtype food" ng-if="orderCancel.foodItems.length > 0">
                     <div class="sub-title">餐饮信息</div>
                     <table>
-                        <tr ng-repeat="f in orderDetail.foodItems">
+                        <tr ng-repeat="f in orderCancel.foodItems">
                             <td>{{f.name}}</td>
                             <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                             <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
@@ -303,11 +305,11 @@
                         </tr>
                     </table>
                 </div>
-                <div class="hr2" ng-if="orderDetail.playItems.length > 0"></div>
-                <div class="subtype fun" ng-if="orderDetail.playItems.length > 0">
+                <div class="hr2" ng-if="orderCancel.playItems.length > 0"></div>
+                <div class="subtype fun" ng-if="orderCancel.playItems.length > 0">
                     <div class="sub-title">娱乐信息</div>
                     <table>
-                        <tr ng-repeat="f in orderDetail.playItems">
+                        <tr ng-repeat="f in orderCancel.playItems">
                             <td>{{f.name}}</td>
                             <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                             <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
@@ -329,43 +331,30 @@
                             <div class="subt">订单总结：</div>
                             <div class="sitem">
                                 <div class="sl">订单总价</div>
-                                <div class="sval">¥10000</div>
+                                <div class="sval">¥{{orderCancel.totalPrice}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="sitem">
                                 <div class="sl">优惠：</div>
-                                <div class="sval">- ¥100</div>
+                                <div class="sval">- ¥{{orderCancel.discounts}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="sitem">
                                 <div class="sl">客户应付：</div>
-                                <div class="sval">¥10000</div>
+                                <div class="sval">¥{{orderCancel.totalPrice - orderCancel.discounts}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">订单收支明细</div>
-                            <div class="sitem">
-                                <div class="sl">客户已付（现金）：</div>
-                                <div class="sval1">¥10000</div>
-                            </div>
-                            <div class="sitem">
-                                <div class="sl">客户已付（支付宝）：</div>
-                                <div class="sval1">¥10000</div>
+                            <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 0">
+                                <div class="sl">客户已付（{{p.payChannel}}）：</div>
+                                <div class="sval1">¥{{p.fee}}</div>
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">押金收支明细</div>
-                            <div class="sitem">
-                                <div class="sl">押金（现金）：</div>
-                                <div class="sval1">¥10000</div>
-                            </div>
-                            <div class="hr3"></div>
-                            <div class="sitem">
-                                <div class="sl1">商家需退：</div>
-                                <div class="sval2">¥100000</div>
-                            </div>
-                            <div class="sitem">
-                                <div class="sl1">需退押金：</div>
-                                <div class="sval2">¥100</div>
+                            <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1">
+                                <div class="sl">押金（{{p.payChannel}}）：</div>
+                                <div class="sval1">¥{{p.fee}}</div>
                             </div>
                         </div>
                     </div>
@@ -375,8 +364,8 @@
                     <div class="num">¥150</div>
                 </div>
                 <div class="item item_small refund">
-                    <div class="slabel">订单收款</div>
-                    <div class="sadd">
+                    <div class="slabel">订单退款</div>
+                    <div class="sadd" ng-click="addRefund()">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -394,12 +383,12 @@
                     </div>
                 </div>
                 <div class="item item_small">
-                    <div class="slabel">押金收款</div>
+                    <div class="slabel">押金退款</div>
                     <div class="sadd">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
-                        添加押金收款
+                        添加押金退款
                     </div>
                 </div>
                 <div class="item item_big">
@@ -413,12 +402,12 @@
                     </div>
                 </div>
             </div>
-            <div class="remarks">
+            <div class="remarks" ng-if="orderCancel.remark">
                 <div class="slabel">备注:</div>
-                <div class="stext">{{orderDetail.remark}}</div>
+                <div class="stext">{{orderCancel.remark}}</div>
             </div>
             <div class="sbottom">
-                <div class="sbtn">确认取消</div>
+                <div class="sbtn" ng-click="submitOrderCancel();">确认取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -1045,6 +1034,147 @@
     </div><!-- /.modal -->
 </div>
 <div class="modal fade" role="dialog" id="checkoutModal" ng-controller="checkoutCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="sheader">
+                <div class="stitle">
+                    <span>办理退房</span>
+                    <div class="status book"><div class="triangle"></div>已预订</div>
+                </div>
+            </div>
+            <div class="hr2"></div>
+            <div class="guest-info">
+                <div class="sub-title">客户信息</div>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td>胡晚期</td>
+                        <td>手机号</td>
+                        <td>13111111111</td>
+                    </tr>
+                    <tr>
+                        <td>身份证</td>
+                        <td>440183199209080056</td>
+                        <td>渠道</td>
+                        <td>散客</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="hr2"></div>
+            <div class="consume-info">
+                <div class="subtype room">
+                    <div class="sub-title">房间信息</div>
+                    <table>
+                        <tr>
+                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                            <td>
+                                <span class="light">入住</span>
+                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
+                                <span class="light">共7晚</span>
+                            </td>
+                            <td>¥10000</td>
+                        </tr>
+                        <tr class="disabled">
+                            <td><div class="scheckbox"><div class="inner"></div></div><span>0102</span>&nbsp;(星空迷你木屋)<div class="sstatus book">预</div></td>
+                            <td>
+                                <span class="light">入住</span>
+                                &nbsp;04-25&nbsp;~&nbsp;04-26&nbsp;
+                                <span class="light">共7晚</span>
+                            </td>
+                            <td>¥10000</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="hr2"></div>
+                <div class="subtype food">
+                    <div class="sub-title">
+                        餐饮信息
+                        <div class="sadd">
+                            <div class="eluyun_new_outer spriteImg">
+                                <div class="eluyun_new"></div>
+                            </div>
+                            添加餐饮项目
+                        </div>
+                    </div>
+                    <table>
+                        <tr>
+                            <td><div class="sname">烧烤烧烤烧烤烧烤烧烤烧烤烧烤烧烤</div></td>
+                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus">-</div>
+                                    <input type="text" value="1">
+                                    <div class="plus">+</div>
+                                </div>
+                                &nbsp;(已使用10)
+                                <div class="tips">剩余库存10</div>
+                            </td>
+                            <td>¥10000<div class="sdelete"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="hr2"></div>
+                <div class="subtype fun">
+                    <div class="sub-title">
+                        娱乐信息
+                        <div class="sadd">
+                            <div class="eluyun_new_outer spriteImg">
+                                <div class="eluyun_new"></div>
+                            </div>
+                            添加娱乐项目
+                        </div>
+                    </div>
+                    <table>
+                        <tr>
+                            <td><div class="sname">皮划艇皮划艇皮划艇皮划艇皮划艇</div></td>
+                            <td><span class="light">时间</span>&nbsp;04-25</td>
+                            <td><span class="light">数量</span>&nbsp;
+                                <div class="snumber">
+                                    <div class="minus">-</div>
+                                    <input type="text" value="1">
+                                    <div class="plus">+</div>
+                                </div>
+                                &nbsp;(已使用10)
+                                <div class="tips">剩余库存10</div>
+                            </td>
+                            <td>¥10<div class="sdelete"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="hr2"></div>
+
+            </div>
+            <div class="inadvanced">
+                <div class="pull-left">
+                    未入住部分房价：￥299
+                </div>
+                <div class="pull-right">
+                    提前退房违约金
+                    <span>¥</span>
+                    <input type="text" placeholder="金额">
+                </div>
+            </div>
+            <div class="remark">
+                <div class="slabel">备注</div>
+                <textarea placeholder="请填写备注信息"></textarea>
+            </div>
+            <div class="accounts">
+                <div class="sgive">
+                    <div class="slabel">客户需补</div>
+                    <div class="snum">¥9999</div>
+                </div>
+                <div class="deposit">
+                    <div class="slabel">已收押金</div>
+                    <div class="snum">¥99</div>
+                </div>
+                <div class="sbtn confirm">确定退房</div>
+                <div class="sbtn cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="checkinModal" ng-controller="checkinCtrl">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
