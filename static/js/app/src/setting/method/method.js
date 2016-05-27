@@ -63,7 +63,7 @@ $(function(){
         scope.methodToDelete = null;
         scope.errorTips = '';
         scope.onlinePay = {};
-        scope.alichatStatusStr = ['审核中', '验证成功', '审核失败', '未绑定'];
+        scope.alichatStatusStr = ['审核中', '已开通', '审核失败', '未绑定'];
         scope.walletPayStatusStr = {
             '-1': '未知',
             '0': '正常',
@@ -72,6 +72,10 @@ $(function(){
         scope.chooseMethod = function(method){
             if(method == 2 && scope.onlinePay.alipay !== 1){
                 modal.somethingAlert("您还未绑定支付宝！");
+                return false;
+            }
+            if(method == 2 && scope.onlinePay.weixinPay !== 1){
+                modal.somethingAlert("您还未绑定微信！");
                 return false;
             }
             if(method == 1 && scope.onlinePay.walletPay !== 0){
@@ -136,7 +140,6 @@ $(function(){
                 channelId: scope.methodToDelete
             }, function(result){
                 scope.methodToDelete = null;
-                modal.somethingAlert(result.msg);
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                     scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
@@ -166,8 +169,22 @@ $(function(){
                 });
             }
         };
+        scope.submitWechat = function(){
+            AJAXService.ajaxWithToken('GET', 'applyWxPayUrl', {}, function(result){
+                if(result.code !== 1){
+                    modal.somethingAlert(result.msg);
+                }else{
+                    $("#method-comfirmSubmit").modal("hide");
+                    $("#method-wechatMethod").modal("hide");
+                    AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                        scope.onlinePay = result.data.map;
+                        scope.payChannelCustomList = result.data.payChannelCustomList;
+                        scope.$apply();
+                    });
+                }
+            });
+        };
         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-            console.log(result.data.map);
             scope.onlinePay = result.data.map;
             scope.payChannelCustomList = result.data.payChannelCustomList;
             scope.$apply();

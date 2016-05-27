@@ -164,33 +164,61 @@
                     <table>
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>收款方式</th>
                                 <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="alichat">
-                                <td ng-click="chooseMethod(2)"><img ng-if="onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
-                                    <img ng-if="onlinePay.alipaySelected == 1" class="scheckbox"
-                                         src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
-                                    <!--企业支付宝+企业微信支付</td>-->
-                                    企业支付宝</td>
-                                <td><div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{alichatStatusStr[onlinePay.alipay]}}</td>
-                                <td class="schange" data-toggle="modal" ng-if="onlinePay.alipay !== 0"
-                                    data-target="#method-alipayMethod">{{(onlinePay.alipay === 1) ? '更换账号' : "绑定账号"}}</td>
+                            <tr class="wechat">
+                                <td ng-click="chooseMethod(2)">
+                                    <img ng-if="!(onlinePay.weixinSelected === 1 && onlinePay.alipaySelected === 1)"
+                                         class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
+                                    <img ng-if="onlinePay.weixinSelected === 1 && onlinePay.alipaySelected === 1"
+                                         class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
+                                </td>
+                                <td>
+                                    企业微信
+                                </td>
+                                <td>
+                                    <div class="dot" ng-class="{'invalid': onlinePay.weixinPayCash === 0 }"></div>{{alichatStatusStr[onlinePay.weixinPay]}}
+                                </td>
+                                <td class="schange" data-toggle="modal" ng-if="onlinePay.weixinPay !== 0" data-target="#method-wechatMethod">
+                                    {{(onlinePay.weixinPayCash === 1) ? '更换账号' : "绑定账号"}}
+                                </td>
+                            </tr>
+                            <tr class="alipay">
+                                <td></td>
+                                <td>
+                                    企业支付宝
+                                </td>
+                                <td>
+                                    <div class="dot" ng-class="{'invalid': onlinePay.alipayCash === 0 }"></div>{{alichatStatusStr[onlinePay.alipay]}}
+                                </td>
+                                <td class="schange" data-toggle="modal" ng-if="onlinePay.alipay !== 0" data-target="#method-alipayMethod">
+                                    {{(onlinePay.alipayCash === 1) ? '更换账号' : "绑定账号"}}
+                                </td>
                             </tr>
                             <tr class="wallet">
                                 <td ng-click="chooseMethod(1)">
                                     <img ng-if="onlinePay.walletPaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
-                                    <img ng-if="onlinePay.walletPaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">订单钱包</td>
-                                <td><div class="dot" ng-class="{'invalid': onlinePay.walletPayCash === 0 }"></div>{{walletPayStatusStr[onlinePay.walletPay]}}</td>
+                                    <img ng-if="onlinePay.walletPaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
+                                </td>
+                                <td>
+                                    订单钱包
+                                </td>
+                                <td>
+                                    <div class="dot" ng-class="{'invalid': onlinePay.walletPayCash === 0 }"></div>{{walletPayStatusStr[onlinePay.walletPay]}}
+                                </td>
                                 <td><div class="hr3"></div></td>
                             </tr>
                             <tr class="nothing">
-                                <td ng-click="chooseMethod(0)"><img ng-if="onlinePay.walletPaySelected == 1 || onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
+                                <td ng-click="chooseMethod(0)">
+                                    <img ng-if="onlinePay.walletPaySelected == 1 || onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
                                     <img ng-if="onlinePay.walletPaySelected == 0 && onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
-                                    不使用线上收款（直销网站不能上线）</td>
+                                </td>
+                                <td>不使用线上收款（直销网站不能上线）</td>
                             </tr>
                         </tbody>
                     </table>

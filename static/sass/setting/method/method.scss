@@ -14,7 +14,7 @@
       background:$colorBgGrey;
       border-radius:$BorderRadius;
       width:618px;
-      height:161px;
+      height:190px;
       overflow: hidden;
       .hr{
         width: 100%;
@@ -37,15 +37,19 @@
             padding-bottom: 8px;
             border-bottom: #dddddd solid thin;
             th:first-child{
-              width: 300px;
-              padding-left: 44px;
-              text-align: left;
+              width: 38px;
+              text-align: right;
             }
             th:nth-child(2){
+              width: 262px;
+              padding: 6px;
+              text-align: left;
+            }
+            th:nth-child(3){
               width: 226px;
               text-align: center;
             }
-            th:nth-child(3){
+            th:nth-child(4){
               width: 92px;
               padding-left: 17px;
               text-align: left;
@@ -67,11 +71,15 @@
               left: 24px;
             }
             td:first-child{
-              width: 300px;
-              padding-left: 44px;
-              text-align: left;
+              width: 38px;
+              text-align: right;
             }
             td:nth-child(2){
+              width: 262px;
+              padding: 6px;
+              text-align: left;
+            }
+            td:nth-child(3){
               width: 226px;
               text-align: center;
               .dot{
@@ -86,23 +94,28 @@
                 background: $colorInvalid;
               }
             }
-            td:nth-child(3){
+            td:nth-child(4){
               color: $color1;
               width: 92px;
               padding-left: 17px;
               text-align: left;
             }
           }
-          .alichat{
-            .schange{
-              cursor: pointer;
+          tr:first-child{
+            td:first-child{
+              img{
+                top: 30px;
+              }
             }
-            .schange:hover{
-              color: $color1Hover;
-            }
-            .schange:active{
-              color: $color1Click;
-            }
+          }
+          .schange{
+            cursor: pointer;
+          }
+          .schange:hover{
+            color: $color1Hover;
+          }
+          .schange:active{
+            color: $color1Click;
           }
         }
       }
@@ -263,8 +276,8 @@
         @include btn1_normal();
         @include btn_big();
         display: inline-block;
-        height: 40px;
-        line-height: 40px;
+        height: 40px!important;
+        line-height: 40px!important;
         margin: 0 20px;
       }
       .sbtn-cancel{
