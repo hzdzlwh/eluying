@@ -239,6 +239,27 @@ var orderService = function(app){
             price = price - order.discounts;
             return price < 0 ? 0.01 : price;
         };
+        this.calLeft = function(order){
+            var price = 0;
+            for(var i = 0; i < order.rooms.length; i++){
+                price += order.rooms[i].fee;
+            }
+            for(var i = 0; i < order.foodItems.length; i++){
+                price += order.foodItems[i].amount * order.foodItems[i].price;
+            }
+            for(var i = 0; i < order.playItems.length; i++){
+                price += order.playItems[i].amount * order.playItems[i].price;
+            }
+            price = price - order.discounts;
+            var payments = order.payments;
+            var left = price;
+            for(var i = 0; i < payments.length; i++){
+                if(payments[i].type === 0){
+                    left -= payments[i].fee;
+                }
+            }
+            return left;
+        };
         this.itemPrice = function(order){
             var price = 0;
             for(var i = 0; i < order.rooms.length; i++){

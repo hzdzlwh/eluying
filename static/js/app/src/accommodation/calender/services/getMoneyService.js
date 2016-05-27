@@ -1,11 +1,14 @@
+var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
 var constService = require("../services/constService");
+var orderService = require("../services/orderService");
 
 var getMoneyService = function(app){
     constService(app);
-    app.service("getMoneyService", ['constService', function(constService){
+    orderService(app);
+    app.service("getMoneyService", ['constService', 'orderService', function(constService, orderService){
         this.resetGetMoney = function(order, orderId, type){
             var getMoney = {};
             for(var key in order){
@@ -16,13 +19,20 @@ var getMoneyService = function(app){
             getMoney.remark = '';
             if(type === 0){
                 getMoney.payments = [{type: 5, fee: order.discounts}]
+            } else{
+
             }
+            console.log(getMoney);
             return getMoney;
         };
-        this.addPayment = function(payments, type, payChannel){
+        this.addPayment = function(payments, type, payChannel, getMoney){
+            var left = 0;
+            if(type === 0){
+                left = orderService.calLeft(getMoney);
+            }
             var payment = {
                 isNew: true,
-                fee: 0,
+                fee: left,
                 payChannel: payChannel[0].name,
                 payChannelId: payChannel[0].channelId,
                 type: type

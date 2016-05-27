@@ -250,7 +250,7 @@
 </div>
 <div class="modal fade" role="dialog" id="orderCancelModal" ng-controller="orderCancelCtrl">
     <div class="modal-dialog">
-        <div class="modal-content" >
+        <div class="modal-content" ng-if="orderCancel">
             <div class="hr"></div>
             <div class="sheader">
                 <div class="stitle">
@@ -329,7 +329,7 @@
             <div class="infos">
                 <div class="item">
                     <div class="sbold">商家需退:</div>
-                    <div class="num">¥{{calRefund();}}</div>
+                    <div class="num">¥{{calRefund(orderCancel)}}</div>
                     <div class="desc">
                         <div class="eluyun_tips_outer spriteImg">
                             <div class="eluyun_tips"></div>
@@ -343,7 +343,7 @@
                             </div>
                             <div class="sitem">
                                 <div class="sl">优惠：</div>
-                                <div class="sval">- ¥{{orderCancel.discounts}}</div>
+                                <div class="sval">- ¥{{orderCancel.discounts || 0}}</div>
                                 <div class="clearline"></div>
                             </div>
                             <div class="sitem">
@@ -353,58 +353,67 @@
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">订单收支明细</div>
-                            <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 0">
+                            <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 0">
                                 <div class="sl">客户已付（{{p.payChannel}}）：</div>
                                 <div class="sval1">¥{{p.fee}}</div>
                             </div>
                             <div class="hr3"></div>
                             <div class="subt">押金收支明细</div>
-                            <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1">
+                            <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 1">
                                 <div class="sl">押金（{{p.payChannel}}）：</div>
                                 <div class="sval1">¥{{p.fee}}</div>
+                            </div>
+                            <div class="hr3"></div>
+                            <div class="sitem">
+                                <div class="sl">商家需退：</div>
+                                <div class="sval2">¥{{calRefund(orderCancel)}}</div>
+                            </div>
+                            <div class="sitem">
+                                <div class="sl">需退押金：</div>
+                                <div class="sval2">¥{{calDeposit(orderCancel)}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="sbold">需退押金:</div>
-                    <div class="num">¥150</div>
+                    <div class="num">¥{{calDeposit(orderCancel)}}</div>
                 </div>
                 <div class="item item_small refund">
                     <div class="slabel">订单退款</div>
-                    <div class="sadd" ng-click="addRefund()">
+                    <div class="sadd" ng-click="addNewPayments(orderCancel, 2, payChannels)">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
                         添加订单退款
                     </div>
                 </div>
-                <div class="item item_big">
-                    <input type="text">
+                <div class="item item_big" ng-repeat="p in orderCancel.newPayments" ng-if="p.type === 2">
+                    <input type="text" ng-model="p.fee">
                     <div class="select1">
-                        <span></span>
+                        <span>{{p.payChannel}}</span>
                         <div class="select1_options">
-                            <div class="item">散客</div>
-                            <div class="item">旅行社</div>
+                            <div class="item" ng-click="changePayChannel(p, payment);"
+                                 ng-repeat="payment in payChannels">{{payment.name}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="item item_small">
                     <div class="slabel">押金退款</div>
-                    <div class="sadd">
+                    <div class="sadd" ng-click="addNewPayments(orderCancel, 3, payChannels)">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
                         添加押金退款
                     </div>
                 </div>
-                <div class="item item_big">
-                    <input type="text">
+                <div class="item item_big" ng-repeat="p in orderCancel.newPayments" ng-if="p.type === 3">
+                    <input type="text" ng-model="p.fee">
                     <div class="select1">
-                        <span></span>
+                        <span>{{p.payChannel}}</span>
                         <div class="select1_options">
-                            <div class="item">散客</div>
-                            <div class="item">旅行社</div>
+                            <div class="item" ng-click="changePayChannel(p, payment);"
+                                 ng-repeat="payment in payChannels">{{payment.name}}</div>
                         </div>
                     </div>
                 </div>
@@ -1619,7 +1628,7 @@
                 </div>
                 <div class="item item_small refund">
                     <div class="slabel">订单收款</div>
-                    <div class="sadd" ng-click="addPayment(getMoney.payments, 0, payChannels)">
+                    <div class="sadd" ng-click="addPayment(getMoney.payments, 0, payChannels, getMoney)">
                         <div class="eluyun_new_outer spriteImg">
                             <div class="eluyun_new"></div>
                         </div>
@@ -1631,7 +1640,7 @@
                     <div class="select1">
                         <span>{{p.payChannel}}</span>
                         <div class="select1_options">
-                            <div class="item" ng-click="changePayChannel(p, payment);" ng-repeat="payment in payChannels">{{payment.name}}</div>
+                            <div class="item" ng-click="changePayChannel(p, payment, oderCancel);" ng-repeat="payment in payChannels">{{payment.name}}</div>
                         </div>
                     </div>
                 </div>
@@ -1649,7 +1658,7 @@
                     <div class="select1">
                         <span>{{p.payChannel}}</span>
                         <div class="select1_options">
-                            <div class="item" ng-click="changePayChannel(p, payment)" ng-repeat="payment in payChannels">{{payment.name}}</div>
+                            <div class="item" ng-click="changePayChannel(p, payment, oderCancel)" ng-repeat="payment in payChannels">{{payment.name}}</div>
                         </div>
                     </div>
                 </div>

@@ -31,7 +31,7 @@ var getMoneyCtrl = function(app){
                 }, function(result){
                     if(result.code === 1){
                         //TODO 提示收银成功
-                        $("#getMoneyModal").hide();
+                        $("#getMoneyModal").modal("hide");
                         getDataService.getRoomsAndStatus(rootScope);
                     }
                 });

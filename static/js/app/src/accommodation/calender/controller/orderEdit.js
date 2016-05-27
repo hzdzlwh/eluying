@@ -69,7 +69,7 @@ var orderEditCtrl = function(app){
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){
-
+                        //提示编辑订单成功
                     }
                 });
             };
