@@ -2,21 +2,21 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
-var checkoutService = function(app){
-    app.service("checkoutService",function(){
-        this.resetCheckout = function(scope){
+var checkoutAdService = function(app){
+    app.service("checkoutAdService",function(){
+        this.resetCheckoutAd = function(scope){
             var orderDetail = scope.orderDetail;
-            var checkout = {};
+            var checkoutAd = {};
             for(var key in orderDetail){
-                checkout[key] = orderDetail[key];
+                checkoutAd[key] = orderDetail[key];
             }
-            //checkout.penaltyAd = 0;
-            checkout.payments.forEach(function(d){
+            checkoutAd.penaltyAd = 0;
+            checkoutAd.payments.forEach(function(d){
                 if(d.type === 5){
-                    checkout.discounts = d.fee;
+                    checkoutAd.discounts = d.fee;
                 }
             });
-            checkout.foodItems.forEach(function(d){
+            checkoutAd.foodItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,
                     id: d.categoryId
@@ -28,7 +28,7 @@ var checkoutService = function(app){
                     scope.$apply();
                 });
             });
-            checkout.playItems.forEach(function(d){
+            checkoutAd.playItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,
                     id: d.categoryId
@@ -40,12 +40,12 @@ var checkoutService = function(app){
                     scope.$apply();
                 });
             });
-            return checkout;
+            return checkoutAd;
         };
-        this.selectCheckoutRoom = function(room){
+        this.selectCheckoutAdRoom = function(room){
             room.selected = !room.selected;
         }
     });
 };
 
-module.exports = checkoutService;
+module.exports = checkoutAdService;

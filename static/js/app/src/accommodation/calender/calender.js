@@ -24,6 +24,7 @@ var orderSearchCtrl = require('./controller/orderSearch');
 var getMoneyCtrl = require('./controller/getMoney');
 var orderCancelCtrl = require('./controller/orderCancel');
 var checkoutCtrl = require('./controller/checkout');
+var checkoutAdCtrl = require('./controller/checkoutAd');
 var checkinCtrl = require('./controller/checkin');
 
 $(function(){
@@ -165,5 +166,6 @@ $(function(){
     getMoneyCtrl(app);
     orderCancelCtrl(app);
     checkoutCtrl(app);
+    checkoutAdCtrl(app);
     checkinCtrl(app);
 });

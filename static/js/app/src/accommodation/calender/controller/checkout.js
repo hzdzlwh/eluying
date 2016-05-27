@@ -11,11 +11,11 @@ var checkoutCtrl = function(app){
         function(rootScope, scope, checkoutService, orderService){
             scope.addItem = function(){};
             scope.deleteItem = orderService.deleteItem;
-            scope.selectCheckinRoom = checkoutService.selectCheckoutRoom;
+            scope.selectCheckoutRoom = checkoutService.selectCheckoutRoom;
             scope.addItem = orderService.addItem;
             scope.changeItemNum = orderService.changeItemNum;
             scope.submitCheckout = function(){
-
+                console.log(rootScope.checkout);
             }
         }]);
 };
