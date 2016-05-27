@@ -209,32 +209,31 @@ var util = {
                     authFlag = true;
                 }
                 if(camp.type === 0 && camp.days <= 0){
-                    expiredFlag = true;
-                }else if(camp.type === 1 && camp.days <= 0){
                     upgradeFlag = true;
+                }else if(camp.type === 1 && camp.days <= 0){
+                    expiredFlag = true;
                 }
             }
         }
         var href = window.location.href;
-        if(authFlag){ //有权限
-            if(expiredFlag){ //试用到期
-                if(href.indexOf("/view/tips/expired.html") > 0){
-                    
-                }else{
+        var isInTipsPage = href.indexOf("/view/tips/expired.html") > 0
+            || href.indexOf("/view/tips/upgrade.html") > 0
+            || href.indexOf("/view/tips/noauth.html") > 0;
+        if(authFlag){
+            if(expiredFlag){
+                if(href.indexOf("/view/tips/expired.html") < 0){
                     window.location.href = '/view/tips/expired.html';
                 }
+                return false;
             }
-            if(upgradeFlag){ //提醒续费
-                if(href.indexOf("/view/tips/upgrade.html") > 0){
-
-                }else{
+            if(upgradeFlag){
+                if(href.indexOf("/view/tips/upgrade.html") < 0){
                     window.location.href = '/view/tips/upgrade.html';
                 }
+                return false;
             }
-            if(href.indexOf("/view/tips/noauth.html") > 0){
+            if(isInTipsPage){
                 window.location.href = '/view/business/category/room.html';
-            }else{
-
             }
         }else{ //无权限
             if(href.indexOf("/view/tips/noauth.html") > 0){

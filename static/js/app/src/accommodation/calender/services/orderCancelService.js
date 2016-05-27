@@ -9,8 +9,17 @@ var orderCancelService = function(app){
             for(var key in orderDetail){
                 orderCancel[key] = orderDetail[key];
             }
-            console.log(orderCancel);
             return orderCancel;
+        };
+        this.calRefund = function(orderCancel){
+            var payments = orderCancel.payments;
+            var refund = 0;
+            payments.forEach(function(d){
+                if(d.type === 0){
+                    refund += d.fee;
+                }
+            });
+            return refund;
         };
     });
 };

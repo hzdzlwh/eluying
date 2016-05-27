@@ -7,7 +7,7 @@ var orderCancelCtrl = function(app){
     orderCancelService(app);
     app.controller("orderCancelCtrl", ['$rootScope', '$scope', 'orderCancelService',
         function(rootScope, scope, orderCancelService){
-
+            this.calRefund = orderCancelService.calRefund;
         }]);
 };
 

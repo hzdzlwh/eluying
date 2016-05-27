@@ -24,6 +24,7 @@ var header = {
         $("#" + menu + "Menu").addClass("active");
         util.bindDomAction(this.events);
         AJAXService.ajaxWithToken("get","/user/getPersonalInfoInNetwork",{},function (data) {
+            localStorage.setItem("camps", JSON.stringify(data.data.camps));
             var campId = localStorage.getItem("campId");
             if(data.code == 1){
                 var result = data.data.camps;

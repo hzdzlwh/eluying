@@ -16,7 +16,6 @@ var checkinService = function(app){
                     checkin.discounts = d.fee;
                 }
             });
-            //准备好餐饮数据
             checkin.foodItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,
@@ -29,7 +28,6 @@ var checkinService = function(app){
                     scope.$apply();
                 });
             });
-            //准备好娱乐数据
             checkin.playItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,
