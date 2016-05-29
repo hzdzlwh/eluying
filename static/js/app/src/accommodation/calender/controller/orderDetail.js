@@ -55,6 +55,7 @@ var orderDetailCtrl = function(app){
             };
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
+            scope.itemsExist = orderService.itemsExist;
     }]);
 };
 

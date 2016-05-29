@@ -53,7 +53,24 @@ var checkinCtrl = function(app){
                         serviceId: d.isNew ? 0 : d.serviceId,
                         type: d.type,
                     };
+                    if(d.type === 3){
+                        // delete item.price;
+                        delete item.priceId;
+                        delete item.date;
+                    }
                     items.push(item);
+                });
+                var postRooms = [];
+                rooms.forEach(function(d){
+                    var room = {
+                        endDate: d.endDate,
+                        fee: d.fee,
+                        id: d.typeId,
+                        roomId: d.roomId,
+                        startDate: d.startDate,
+                        sub: d.sub,
+                    };
+                    postRooms.push(room);
                 });
                 var order = {
                     name: checkin.customerName,
@@ -63,7 +80,7 @@ var checkinCtrl = function(app){
                     origin: checkin.origin,
                     originId: checkin.originId,
                     payments: JSON.stringify([]),
-                    rooms: JSON.stringify(rooms),
+                    rooms: JSON.stringify(postRooms),
                     items: JSON.stringify(items)
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
@@ -85,7 +102,7 @@ var checkinCtrl = function(app){
                             }
                         });
                     }else {
-                        $("#aFailModal").modal("show");
+                        modal.somethingAlert(result3.msg);
                     }
                 });
             }

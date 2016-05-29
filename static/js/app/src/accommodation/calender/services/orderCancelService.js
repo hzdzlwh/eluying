@@ -85,13 +85,13 @@ var orderCancelService = function(app){
             orderCancel.newPayments.push(payment);
         };
         this.changePayChannel = function(p, pp, orderCancel){
-            var left = 0;
-            if(p.type === 2){
-                left = calRefundLeft(orderCancel);
-            }else if(p.type === 3){
-                left = calDeposit(orderCancel);
-            }
-            p.fee = left;
+            // var left = 0;
+            // if(p.type === 2){
+            //     left = calRefundLeft(orderCancel);
+            // }else if(p.type === 3){
+            //     left = calDeposit(orderCancel);
+            // }
+            // p.fee = left;
             p.payChannel = pp.name;
             p.payChannelId = pp.channelId;
         };

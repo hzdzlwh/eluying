@@ -1,5 +1,6 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var orderService = require("../services/orderService");
@@ -102,6 +103,8 @@ var orderNewCtrl = function(app){
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
                     $("#getMoneyModal").modal("show");
+                }else{
+                    modal.somethingAlert(result3.msg);
                 }
             });
         };

@@ -188,8 +188,8 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="orderDetail.foodItems.length > 0"></div>
-                    <div class="subtype food" ng-if="orderDetail.foodItems.length > 0">
+                    <div class="hr2" ng-if="itemsExist(orderDetail.foodItems)"></div>
+                    <div class="subtype food" ng-if="itemsExist(orderDetail.foodItems)">
                         <div class="sub-title">餐饮项目</div>
                         <table>
                             <tr ng-repeat="f in orderDetail.foodItems">
@@ -204,8 +204,8 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="orderDetail.playItems.length > 0"></div>
-                    <div class="subtype fun" ng-if="orderDetail.playItems.length > 0">
+                    <div class="hr2" ng-if="itemsExist(orderDetail.playItems)"></div>
+                    <div class="subtype fun" ng-if="itemsExist(orderDetail.playItems)">
                         <div class="sub-title">娱乐项目</div>
                         <table>
                             <tr ng-repeat="p in orderDetail.playItems">
@@ -220,8 +220,8 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="orderDetail.goodsItems.length > 0"></div>
-                    <div class="subtype goods" ng-if="orderDetail.goodsItems.length > 0">
+                    <div class="hr2" ng-if="itemsExist(orderDetail.goodsItems)"></div>
+                    <div class="subtype goods" ng-if="itemsExist(orderDetail.goodsItems)">
                         <div class="sub-title">商超项目</div>
                         <table>
                             <tr ng-repeat="p in orderDetail.goodsItems">
@@ -278,7 +278,8 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom-fixed">
+            <div class="bottom-fixed" ng-if="orderDetail.checkoutAdable || orderDetail.checkoutable
+            || orderDetail.checkinable || orderDetail.getMoneyable">
                 <div class="btns">
                     <div class="sbtn" ng-if="orderDetail.checkoutAdable"
                          ng-click="showCheckoutAd()">提前退房</div>
@@ -441,7 +442,9 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment);"
+                                <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
+                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -7
+                                     && payment.payChannelId != -8"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -460,7 +463,9 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment);"
+                                <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
+                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -7
+                                     && payment.payChannelId != -8"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -760,7 +765,8 @@
                                 </div>
                                 <!--<div class="tips">剩余库存{{goods.inventory}}</div>-->
                             </td>
-                            <td>¥{{goods.amount * goods.price}}<div class="sdelete" ng-click="deleteItem(orderNew.goodsItems, $index)"></div></td>
+                            <td>¥{{goods.amount * goods.price}}<div class="sdelete"
+                                                                    ng-if="goods.isNew" ng-click="deleteItem(orderNew.goodsItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -943,7 +949,7 @@
                         </div>
                     </div>
                     <table>
-                        <tr ng-repeat="food in orderEdit.foodItems">
+                        <tr ng-repeat="food in orderEdit.foodItems" ng-if="food.amount > 0 || food.isNew">
                             <td ng-if="!food.isNew">{{food.name}}</td>
                             <td ng-if="food.isNew">
                                 <div class="select1">
@@ -1008,7 +1014,7 @@
                         </div>
                     </div>
                     <table>
-                        <tr ng-repeat="play in orderEdit.playItems">
+                        <tr ng-repeat="play in orderEdit.playItems" ng-if="play.amount > 0 || play.isNew">
                             <td ng-if="!play.isNew">{{play.name}}</td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
@@ -1094,7 +1100,7 @@
                                 <!--<div class="tips">剩余库存{{play.inventory}}</div>-->
                             </td>
                             <td ng-if="!goods.isNew">数量&nbsp;{{goods.amount}}</td>
-                            <td>¥{{goods.amount * goods.price}}<div class="sdelete"
+                            <td>¥{{goods.amount * goods.price}}<div class="sdelete" ng-if="goods.isNew"
                                                                     ng-click="deleteItem(orderEdit.goodsItems, $index)"></div></td>
                         </tr>
                     </table>
@@ -1468,7 +1474,7 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="food in checkoutAd.foodItems">
+                            <tr ng-repeat="food in checkoutAd.foodItems" ng-if="food.amount > 0 || food.isNew">
                                 <td ng-if="!food.isNew"><div class="sname">{{food.name}}</div></td>
                                 <td ng-if="food.isNew">
                                     <div class="select1">
@@ -1536,7 +1542,7 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkoutAd.playItems">
+                            <tr ng-repeat="play in checkoutAd.playItems" ng-if="play.amount > 0 || play.isNew">
                                 <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
                                 <td ng-if="play.isNew">
                                     <div class="select1">
@@ -1626,7 +1632,7 @@
                                 <td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>
                                 <td>
                                     ¥{{goods.amount * goods.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkoutAd.goodsItems, $index)"></div>
+                                    <div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkoutAd.goodsItems, $index)"></div>
                                 </td>
                             </tr>
                         </table>
@@ -1895,7 +1901,7 @@
                                 <td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>
                                 <td>
                                     ¥{{goods.amount * goods.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkin.goodsItems, $index)"></div>
+                                    <div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkin.goodsItems, $index)"></div>
                                 </td>
                             </tr>
                         </table>
@@ -2083,7 +2089,8 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment, oderCancel);" ng-repeat="payment in payChannels">{{payment.name}}</div>
+                                <div class="item" ng-click="changePayChannel(p, payment);"
+                                     ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
                     </div>
@@ -2101,7 +2108,8 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment, oderCancel)" ng-repeat="payment in payChannels">{{payment.name}}</div>
+                                <div class="item" ng-click="changePayChannel(p, payment)"
+                                     ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
                     </div>

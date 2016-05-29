@@ -1,5 +1,6 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var orderCancelService = require("../services/orderCancelService");
@@ -17,10 +18,12 @@ var orderCancelCtrl = function(app){
                 var orderCancel = rootScope.orderCancel;
                 if(orderCancelService.calRefundLeft(orderCancel) !== 0){
                     //提示未完成退款
+                    modal.somethingAlert("还有款项未退完");
                     return false;
                 }
                 if(orderCancelService.calDepositLeft(orderCancel) !== 0){
                     //提示未完成押金退款
+                    modal.somethingAlert("还有押金未退完");
                     return false;
                 }
                 AJAXService.ajaxWithToken('GET', 'orderCancelUrl', {

@@ -59,7 +59,7 @@ var orderEditCtrl = function(app){
                         type: d.type,
                     };
                     if(d.type === 3){
-                        delete item.price;
+                        // delete item.price;
                         delete item.priceId;
                         delete item.date;
                     }

@@ -223,8 +223,8 @@ var orderService = function(app){
         };
         this.changeItemNum = function(item, num){
             item.amount = num;
-            if(num < 0){
-                item.amount = 0;
+            if(num < 1){
+                item.amount = 1;
             }
             if(item.inventory && num > item.inventory){
                 item.amount = item.inventory;
@@ -317,8 +317,28 @@ var orderService = function(app){
             }
             return price;
         };
+        this.itemsExist = function(items){
+            if(items.length === 0){
+                return false;
+            }else {
+                var flag = false;
+                items.forEach(function(d){
+                    if(d.amount > 0){
+                        flag = true;
+                    }
+                });
+                return flag;
+            }
+        };
+        // this.deleteItem = function(items, index){
+        //     items.splice(index, 1);
+        // };
         this.deleteItem = function(items, index){
-            items.splice(index, 1);
+            if(items[index].isNew){
+                items.splice(index, 1);
+            }else{
+                items[index].amount = 0;
+            }
         };
         this.changeItemMonth = function(item, monthDiff){
             var that = this;
