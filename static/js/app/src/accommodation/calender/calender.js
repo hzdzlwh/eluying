@@ -81,7 +81,7 @@ $(function(){
         },
         "click body": function(ev){
             $(".entryOp").hide();
-             $(".search .results").hide();
+            // $(".search .results").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();
@@ -142,9 +142,9 @@ $(function(){
         // "focus body input.keyword": function(ev){
         //     $(".search .results").show();
         // },
-        "click body .select1": function(ev){
+        "click body .select1>span": function(ev){
             $(".select1_options").hide();
-            $(this).find(".select1_options").show();
+            $(this).siblings(".select1_options").show();
             ev.stopPropagation();
         },
         "click body input.datePicker": function(ev){

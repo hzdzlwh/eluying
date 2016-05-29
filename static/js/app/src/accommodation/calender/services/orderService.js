@@ -226,7 +226,7 @@ var orderService = function(app){
             if(num < 1){
                 item.amount = 1;
             }
-            if(item.inventory && num > item.inventory){
+            if(item.inventory !== undefined && num > item.inventory){
                 item.amount = item.inventory;
             }
         };
@@ -337,7 +337,7 @@ var orderService = function(app){
             if(items[index].isNew){
                 items.splice(index, 1);
             }else{
-                items[index].amount = 0;
+                items[index].amount = items[index].usedAmount || 0;
             }
         };
         this.changeItemMonth = function(item, monthDiff){
@@ -352,7 +352,7 @@ var orderService = function(app){
             }
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(newDate),
-                id: item.id
+                id: item.categoryId
             }, function(result){
                 item.date = newDate;
                 item.dateStr = util.dateFormat(newDate);

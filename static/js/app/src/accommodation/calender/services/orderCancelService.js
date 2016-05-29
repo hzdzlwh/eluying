@@ -1,5 +1,6 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var orderCancelService = function(app){
@@ -40,12 +41,12 @@ var orderCancelService = function(app){
             var refund = 0;
             payments.forEach(function(d){
                 if(d.type === 0){
-                    refundTotal += d.fee;
+                    refundTotal += parseFloat(d.fee);
                 }
             });
             newPayments.forEach(function(d){
                 if(d.type === 2){
-                    refund += d.fee;
+                    refund += parseFloat(d.fee);
                 }
             });
             return refundTotal - refund;
@@ -57,12 +58,12 @@ var orderCancelService = function(app){
             var deposit = 0;
             payments.forEach(function(d){
                 if(d.type === 1){
-                    depositTotal += d.fee;
+                    depositTotal += parseFloat(d.fee);
                 }
             });
             newPayments.forEach(function(d){
                 if(d.type === 3){
-                    deposit += d.fee;
+                    deposit += parseFloat(d.fee);
                 }
             });
             return depositTotal - deposit;
@@ -74,7 +75,11 @@ var orderCancelService = function(app){
             if(type === 2){
                 left = calRefundLeft(orderCancel);
             }else if(type === 3){
-                left = calDeposit(orderCancel);
+                left = calDepositLeft(orderCancel);
+            }
+            if(left <= 0){
+                modal.somethingAlert("已退完所有款项!");
+                return false;
             }
             var payment = {
                 fee: left,

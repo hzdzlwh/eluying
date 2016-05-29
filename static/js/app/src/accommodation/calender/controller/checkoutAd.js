@@ -42,7 +42,7 @@ var checkoutAdCtrl = function(app){
                 if(!flag){
                     var items = checkoutAd.foodItems.concat(checkoutAd.playItems);
                     items.forEach(function(d){
-                        if(d.amount !== d.useAmount){
+                        if(d.amount !== d.usedAmount){
                             flag2 = true;
                         }
                     })

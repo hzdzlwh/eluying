@@ -60,8 +60,6 @@ var getDataService = function(app){
         this.getIDs = function(callback){
             var idList = [
                 {key: 'id', label: '身份证'},
-                {key: 'mid', label: '军官证'},
-                {key: 'other', label: '其他'},
             ];
             callback({
                 idList: idList

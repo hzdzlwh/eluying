@@ -238,26 +238,28 @@
                     <div class="accounts">
                         <div class="sub-title">收银信息</div>
                         <div class="infos">
-                            <div class="item">
-                                <span class="slabel">订单总价:</span>
-                                <span class="svalue">￥{{orderDetail.totalPrice}}</span>
-                            </div>
-                            <div class="item">
-                                &nbsp;&nbsp;&nbsp;
-                                <span class="slabel">优惠:</span>
-                                <span class="svalue">￥{{orderDetail.discounts || 0}}</span>
-                            </div>
-                            <div class="item diff1" ng-if="calLeft(orderDetail) >= 0">
-                                <span class="slabel">客户需补:</span>
-                                <span class="svalue">￥{{calLeft(orderDetail)}}</span>
-                            </div>
-                            <div class="item diff2" ng-if="calLeft(orderDetail) < 0">
-                                <span class="slabel">商家需退:</span>
-                                <span class="svalue">￥{{-calLeft(orderDetail)}}</span>
-                            </div>
-                            <div class="item deposit">
-                                <span class="slabel">需退押金:</span>
-                                <span class="svalue">￥{{calDeposit(orderDetail)}}</span>
+                            <div style="min-width: 500px;">
+                                <div class="item">
+                                    <span class="slabel">订单总价:</span>
+                                    <span class="svalue">￥{{orderDetail.totalPrice}}</span>
+                                </div>
+                                <div class="item">
+                                    &nbsp;&nbsp;&nbsp;
+                                    <span class="slabel">优惠:</span>
+                                    <span class="svalue">￥{{orderDetail.discounts || 0}}</span>
+                                </div>
+                                <div class="item diff1" ng-if="calLeft(orderDetail) >= 0">
+                                    <span class="slabel">客户需补:</span>
+                                    <span class="svalue">￥{{calLeft(orderDetail)}}</span>
+                                </div>
+                                <div class="item diff2" ng-if="calLeft(orderDetail) < 0">
+                                    <span class="slabel">商家需退:</span>
+                                    <span class="svalue">￥{{-calLeft(orderDetail)}}</span>
+                                </div>
+                                <div class="item deposit">
+                                    <span class="slabel">需退押金:</span>
+                                    <span class="svalue">￥{{calDeposit(orderDetail)}}</span>
+                                </div>
                             </div>
                             <div class="item remark">
                                 <span class="slabel">备注:</span>
@@ -502,11 +504,10 @@
                     <table>
                         <tr>
                             <td>姓名</td>
-                            <td><input placeholder="姓名" type="text" ng-model="orderNew.customerName"
-                                       class="long"><div class="tips warning" ng-if="!orderNew.customerName">
-                                必填字段</div></td>
+                            <td><input placeholder="姓名" type="text" ng-model="orderNew.customerName" minlength="2" maxlength="16"
+                                       class="long"><div class="tips warning" ng-if="!orderNew.customerName">必填字段</div></td>
                             <td>手机号</td>
-                            <td><input placeholder="手机号" type="text" ng-model="orderNew.customerPhone"
+                            <td><input placeholder="手机号" type="text" ng-model="orderNew.customerPhone" maxlength="11"
                                        class="short"><div class="tips warning" ng-if="!checkPhone(orderNew.customerPhone);">
                                 请填写正确的手机号码</div></td>
                         </tr>
@@ -521,7 +522,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><input placeholder="{{orderNew.selectedId}}" type="text" class="long"
+                            <td><input placeholder="{{orderNew.selectedId}}" type="text" class="long" maxlength="18"
                                        ng-model="orderNew.idVal"><div class="tips warning" ng-if="false">身份证格式错误</div></td>
                             <td>渠道</td>
                             <td>
@@ -603,7 +604,8 @@
                                 <!--<div class="tips warning left">↑房间被占用</div>-->
                                 <!--<div class="tips warning right">↑房间被占用</div>-->
                             </td>
-                            <td>¥{{r.fee}}<div class="sdelete" ng-click="deleteRoom(orderNew.rooms, $index);$event.stopPropagation();"></div></td>
+                            <td>¥{{r.fee}}<div class="sdelete" ng-if="orderNew.rooms.length > 1"
+                                               ng-click="deleteRoom(orderNew.rooms, $index);$event.stopPropagation();"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1237,7 +1239,7 @@
                     <div class="subtype food">
                         <div class="sub-title">
                             餐饮信息
-                            <div class="sadd" ng-click="addItem(1, foodList, checkin);">
+                            <div class="sadd" ng-click="addItem(1, foodList, checkout);">
                                 <div class="eluyun_new_outer spriteImg">
                                     <div class="eluyun_new"></div>
                                 </div>
@@ -1731,7 +1733,7 @@
                         </table>
                     </div>
                     <div class="hr2"></div>
-                    <div class="subtype food" ng-if="foodList > 0 || checkin.foodItems.length > 0">
+                    <div class="subtype food" ng-if="foodList.length > 0 || checkin.foodItems.length > 0">
                         <div class="sub-title">
                             餐饮项目
                             <div class="sadd" ng-click="addItem(1, foodList, checkin);">
@@ -1798,8 +1800,8 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="foodList > 0 || checkin.foodItems.length > 0"></div>
-                    <div class="subtype fun" ng-if="funList > 0 || checkin.playItems.length > 0">
+                    <div class="hr2" ng-if="foodList.length > 0 || checkin.foodItems.length > 0"></div>
+                    <div class="subtype fun" ng-if="funList.length > 0 || checkin.playItems.length > 0">
                         <div class="sub-title">
                             娱乐项目
                             <div class="sadd" ng-click="addItem(2, funList, checkin);">
@@ -1867,7 +1869,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="funList > 0 || checkin.playItems.length > 0"></div>
+                    <div class="hr2" ng-if="funList.length > 0 || checkin.playItems.length > 0"></div>
                     <div class="subtype goods" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0">
                         <div class="sub-title">
                             商超项目
@@ -2146,16 +2148,16 @@
 </div>
 <div class="accommodation-mainContainer">
     <div class="search" ng-controller="orderSearch">
-        <div class="eluyun_search_outer spriteImg search-btn">
+        <div class="eluyun_search_outer spriteImg search-btn" ng-click="search(true);$event.stopPropagation();">
             <div class="eluyun_search"></div>
         </div>
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
-               ng-model="searchKeyword" ng-change="search()">
-        <div class="results" ng-if="searchKeyword !== '' && searchResultsNum > 0">
+               ng-model="searchKeyword">
+        <div class="results" ng-show="showResults">
             <div class="tips" ng-if="searchResultsNum === 0">无结果</div>
             <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
             <div class="hr" ng-if="searchResultsNum > 0"></div>
-            <div ng-repeat="g in searchResults">
+            <div ng-repeat="g in searchResults" ng-click="searchResultOnClick(g.orderId)">
                 <div class="item" orderId="{{g.orderId}}">
                     <div class="srow">
                         <div class="slabel">开始于:</div>
@@ -2173,13 +2175,15 @@
                 </div>
                 <div class="hr"></div>
             </div>
-            <div class="btns" ng-if="searchKeyword !== '' && searchResultsNum > 0">
-                <div class="sbtn previous" ng-click="searchResultPreviousPage()">
+            <div class="btns" ng-if="searchResultsNum > 5">
+                <div class="sbtn previous" ng-click="searchResultPreviousPage()"
+                     ng-class="{'disabled': searchResultPage === 1}">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
                         <div class="eluyun_arrow-left-border"></div>
                     </div>
                 </div>
-                <div class="sbtn next" ng-click="searchResultNextPage()">
+                <div class="sbtn next" ng-click="searchResultNextPage()"
+                     ng-class="{'disabled': searchResultPage * 5 >= searchResultsNum}">
                     <div class="eluyun_arrow-right-border_outer spriteImg">
                         <div class="eluyun_arrow-right-border"></div>
                     </div>

@@ -33,6 +33,19 @@ var orderNewCtrl = function(app){
         scope.calPrice = orderService.calPrice;
         scope.submitOrder = function(){
             var orderNew = rootScope.orderNew;
+            orderNew.customerName = orderNew.customerName.trim();
+            if(!validateService.checkName(orderNew.customerName)){
+                modal.somethingAlert("请输入2~16位用户名!");
+                return false;
+            }
+            if(!validateService.checkPhone(orderNew.customerPhone)){
+                modal.somethingAlert("请输入正确的11位手机号!");
+                return false;
+            }
+            if(!validateService.checkRemark(orderNew.remark)){
+                modal.somethingAlert("备注最多输入140个字!");
+                return false;
+            }
             var inventory = {};
             var itemList = orderNew.foodItems.concat(orderNew.playItems).concat(orderNew.goodsItems);
             for(var i = 0; i < itemList.length; i++){
@@ -96,10 +109,17 @@ var orderNewCtrl = function(app){
                 }]),
                 rooms: JSON.stringify(rooms)
             };
+            if(orderNew.idVal){
+                orderItem.customerIdCardArr = JSON.stringify([
+                    {
+                        idCardNum: orderNew.idVal,
+                        idCardType: orderNew.selectedId,
+                    }
+                ])
+            }
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
-                    console.log(rootScope.getMoney);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
                     $("#getMoneyModal").modal("show");
