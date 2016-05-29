@@ -16,6 +16,15 @@ var checkoutService = function(app){
                     checkout.discounts = d.fee;
                 }
             });
+            var today = new Date();
+            checkout.rooms.forEach(function(r){
+                var endDate = new Date(r.endDate);
+                if(r.state === 1 && (endDate < today) || util.isSameDay(endDate, today)){
+                    r.selectable = true;
+                }else{
+                    r.selectable = false;
+                }
+            });
             checkout.foodItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,
@@ -44,7 +53,7 @@ var checkoutService = function(app){
         };
         this.selectCheckoutRoom = function(room){
             room.selected = !room.selected;
-        }
+        };
     });
 };
 

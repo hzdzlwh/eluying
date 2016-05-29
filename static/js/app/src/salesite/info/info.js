@@ -100,6 +100,22 @@ $(function(){
             var province = scope.provinceItems[scope.selectedProvince];
             var recePhone = scope.phone;
             var type = scope.selectedType;
+            if(!address || !province || !city){
+                modal.somethingAlert("请填写完整地址!");
+                return false;
+            }
+            if(!imgUrl){
+                modal.somethingAlert("请上传图片!");
+                return false;
+            }
+            if(!type){
+                modal.somethingAlert("请选择一种类型!");
+                return false;
+            }
+            if(!recePhone){
+                modal.somethingAlert("请填写前台电话!");
+                return false;
+            }
             AJAXService.ajaxWithToken('GET', 'editBasicInfoUrl', {
                 address: address,
                 campType: type,

@@ -27,6 +27,7 @@ var orderNewService = function(app){
                 rooms: rooms,
                 foodItems: [],
                 playItems: [],
+                goodsItems: [],
                 remark: '',
                 discounts: 0,
             }

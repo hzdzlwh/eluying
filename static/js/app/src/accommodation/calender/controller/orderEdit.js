@@ -1,13 +1,18 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var orderService = require("../services/orderService");
 var validateService = require("../services/validateService");
+var getDataService = require("../services/validateService");
 
 var orderEditCtrl = function(app){
-    app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService',
-        function(rootScope, scope, orderService, validateService){
+    orderService(app);
+    validateService(app);
+    getDataService(app);
+    app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService',
+        function(rootScope, scope, orderService, validateService, getDataService){
             scope.checkPhone = validateService.checkPhone;
             scope.changeIds = orderService.changeIds;
             scope.changeChannel = orderService.changeChannel;
@@ -23,6 +28,7 @@ var orderEditCtrl = function(app){
             scope.changeItemTime = orderService.changeItemTime;
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.calPrice = orderService.calPrice;
+            scope.calLeft = orderService.calLeft;
             scope.submitOrder = function(){
                 console.log(rootScope.orderEdit);
                 var orderEdit = rootScope.orderEdit;
@@ -39,7 +45,7 @@ var orderEditCtrl = function(app){
                     rooms.push(room);
                 });
                 var items = [];
-                var oldItems = orderEdit.foodItems.concat(orderEdit.playItems);
+                var oldItems = orderEdit.foodItems.concat(orderEdit.playItems).concat(orderEdit.goodsItems);
                 oldItems.forEach(function(d){
                     console.log(d);
                     var item = {
@@ -52,6 +58,11 @@ var orderEditCtrl = function(app){
                         serviceId: d.isNew ? 0 : d.serviceId,
                         type: d.type,
                     };
+                    if(d.type === 3){
+                        delete item.price;
+                        delete item.priceId;
+                        delete item.date;
+                    }
                     items.push(item);
                 });
                 var order = {
@@ -70,6 +81,10 @@ var orderEditCtrl = function(app){
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){
                         //提示编辑订单成功
+                        $("#orderEditModel").modal("hide");
+                        getDataService.getOrderDetail(orderEdit.orderId, rootScope);
+                    }else{
+                        modal.somethingAlert(result3.msg);
                     }
                 });
             };

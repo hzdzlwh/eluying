@@ -148,40 +148,65 @@ var orderService = function(app){
             if(!item){
                 return false;
             }
-            AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                date: util.dateFormat(new Date()),
-                id: item.itemId
-            }, function(result){
-                var temp = {
+            if(type === 1 || type === 2){
+                AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                    date: util.dateFormat(new Date()),
+                    id: item.itemId
+                }, function(result){
+                    var temp = {
+                        isNew: true,
+                        type: type,
+                        categoryId: item.itemId,
+                        name: item.name,
+                        price: item.price,
+                        amount: (result.data.inventory < 1) ? 0 : 1,
+                        date: new Date(),
+                        dateStr: util.dateFormat(new Date()),
+                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                        inventory: result.data.inventory
+                    };
+                    temp.calendar = calendarService.createCalendar(temp.date);
+                    if(type === 1){
+                        order.foodItems.push(temp);
+                    }else if(type === 2){
+                        order.playItems.push(temp);
+                    }
+                    rootScope.$apply();
+                });
+            }else if(type === 3){
+                order.goodsItems.push({
                     isNew: true,
                     type: type,
                     categoryId: item.itemId,
                     name: item.name,
                     price: item.price,
-                    amount: (result.data.inventory < 1) ? 0 : 1,
-                    date: new Date(),
-                    dateStr: util.dateFormat(new Date()),
-                    dateStr2: util.dateFormatWithoutYear(new Date()),
-                    inventory: result.data.inventory
-                };
-                temp.calendar = calendarService.createCalendar(temp.date);
-                if(type === 1){
-                    order.foodItems.push(temp);
-                }else if(type === 2){
-                    order.playItems.push(temp);
-                }
-                rootScope.$apply();
-            });
+                    amount: 1,
+                });
+            }
+
         };
-        this.changeItem = function(items, item, ITEM){
+        this.changeItem = function(items, item, ITEM, isGoods){
             var index = (items.indexOf(item));
+            if(isGoods){
+                items[index] = {
+                    isNew: item.isNew,
+                    type: 3,
+                    categoryId: ITEM.itemId,
+                    name: ITEM.name,
+                    price: ITEM.price,
+                    amount: 1
+                };
+                $(".select1_options").hide();
+                return false;
+            }
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(new Date()),
                 id: ITEM.itemId
             }, function(result){
                 var temp = {
+                    isNew: item.isNew,
                     type: 1,
-                    id: ITEM.itemId,
+                    categoryId: ITEM.itemId,
                     name: ITEM.name,
                     price: ITEM.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
@@ -201,7 +226,7 @@ var orderService = function(app){
             if(num < 0){
                 item.amount = 0;
             }
-            if(num > item.inventory){
+            if(item.inventory && num > item.inventory){
                 item.amount = item.inventory;
             }
         };
@@ -211,10 +236,9 @@ var orderService = function(app){
             if(date < today){
                 return false;
             }
-            var that = this;
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(date),
-                id: item.categoryId
+                id: item.categoryId || item.id
             }, function(result){
                 item.date = date;
                 item.dateStr = util.dateFormat(date);
@@ -236,7 +260,11 @@ var orderService = function(app){
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
             }
+            for(var i = 0; i < order.goodsItems.length; i++){
+                price += order.goodsItems[i].amount * order.goodsItems[i].price;
+            }
             price = price - order.discounts;
+            price = price.toFixed(2);
             return price < 0 ? 0.01 : price;
         };
         this.calLeft = function(order){
@@ -250,6 +278,9 @@ var orderService = function(app){
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
             }
+            for(var i = 0; i < order.goodsItems.length; i++){
+                price += order.goodsItems[i].amount * order.goodsItems[i].price;
+            }
             price = price - order.discounts;
             var payments = order.payments;
             var left = price;
@@ -258,7 +289,17 @@ var orderService = function(app){
                     left -= payments[i].fee;
                 }
             }
-            return left;
+            return left.toFixed(0);
+        };
+        this.calDeposit = function(order){
+            var deposit = 0;
+            var payments = order.payments;
+            for(var i = 0; i < payments.length; i++){
+                if(payments[i].type === 1){
+                    deposit += parseFloat(payments[i].fee);
+                }
+            }
+            return deposit;
         };
         this.itemPrice = function(order){
             var price = 0;
@@ -270,6 +311,9 @@ var orderService = function(app){
             }
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
+            }
+            for(var i = 0; i < order.goodsItems.length; i++){
+                price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
             return price;
         };

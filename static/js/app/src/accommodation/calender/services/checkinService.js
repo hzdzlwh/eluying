@@ -10,7 +10,7 @@ var checkinService = function(app){
             for(var key in orderDetail){
                 checkin[key] = orderDetail[key];
             }
-            checkin.penaltyAd = 0;
+            // checkin.penaltyAd = 0;
             checkin.payments.forEach(function(d){
                 if(d.type === 5){
                     checkin.discounts = d.fee;

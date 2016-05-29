@@ -86,6 +86,9 @@ var AJAXService = {
         finishPaymentUrl: '/cashier/finishPayment',
         applyWxPayUrl: '/collectionMethod/applyWxPay',
         orderCancelUrl: '/order/cancel',
+        checkInOrCheckoutUrl: '/order/checkInOrCheckout',
+        getRoomFeeUrl: '/order/getRoomFee',
+        shopListUrl: '/shop/list',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

@@ -1,5 +1,6 @@
 var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var getDataService = require("../services/getDataService");
@@ -9,6 +10,7 @@ var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var calendarService = require("../services/calendarService");
 var constService = require("../services/constService");
+var getMoneyService = require("../services/getMoneyService");
 
 var accommodationCtrl = function(app){
     getDataService(app);
@@ -18,10 +20,12 @@ var accommodationCtrl = function(app){
     orderNewService(app);
     calendarService(app);
     constService(app);
+    getMoneyService(app);
     app.controller("accommodationCtrl", ['$rootScope', '$scope', 'getDataService',
-        'accommodationService', 'shopcartService', 'orderService', 'orderNewService', 'calendarService','constService',
-        function(rootScope, scope, getDataService, accommodationService, shopcartService, orderService, orderNewService,
-                 calendarService, constService){
+        'accommodationService', 'shopcartService', 'orderService', 'orderNewService',
+        'calendarService','constService', 'getMoneyService',
+        function(rootScope, scope, getDataService, accommodationService,
+                 shopcartService, orderService, orderNewService, calendarService, constService, getMoneyService){
             rootScope.startDate = util.diffDate(new Date(), -2);
             rootScope.startDateStr = util.dateFormatWithoutYear(rootScope.startDate);
             rootScope.selectedEntries = {};
@@ -201,6 +205,94 @@ var accommodationCtrl = function(app){
                 rootScope.processSelectedEntries(type);
                 $("#newOrderModal").modal("show");
             };
+            rootScope.checkoutAfterConfirm = function(type){
+                var order;
+                if(type === 4){
+                    order = rootScope.checkoutAd;
+                }else if(type === 2){
+                    order = rootScope.checkout;
+                }else{
+                    return false;
+                }
+                var rooms = [];
+                order.rooms.forEach(function(d){
+                    var room = {
+                        endDate: d.endDate,
+                        fee: d.fee,
+                        id: d.typeId,
+                        roomId: d.roomId,
+                        startDate: d.startDate,
+                        sub: d.sub,
+                    };
+                    rooms.push(room);
+                });
+                var items = [];
+                var oldItems = order.foodItems.concat(order.playItems);
+                oldItems.forEach(function(d){
+                    var item = {
+                        amount: d.amount,
+                        date: d.dateStr,
+                        id: d.isNew ? d.categoryId : 0,
+                        name: d.name,
+                        price: d.price,
+                        priceId: d.priceId,
+                        serviceId: d.isNew ? 0 : d.serviceId,
+                        type: d.type,
+                    };
+                    items.push(item);
+                });
+                var orderItem = {
+                    name: order.customerName,
+                    phone: order.customerPhone,
+                    remark: order.remark,
+                    orderId: order.orderId,
+                    origin: order.origin,
+                    originId: order.originId,
+                    payments: JSON.stringify([]),
+                    rooms: JSON.stringify(rooms),
+                    items: JSON.stringify(items)
+                };
+                AJAXService.ajaxWithToken('GET', 'orderModifyUrl', orderItem, function(result3){
+                    if(result3.code === 1){
+                        //开始入住
+                        var rooms = [];
+                        order.rooms.forEach(function(d){
+                            if(d.selected){
+                                rooms.push({
+                                    startDate: d.startDate,
+                                    endDate: d.endDate,
+                                    roomId: d.roomId,
+                                });
+                            }
+                        });
+                        var checkoutType;
+                        if(type === 4){
+                            checkoutType = 2;
+                        }else if (type === 2){
+                            checkoutType = 1;
+                        }
+                        AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
+                            payments: JSON.stringify([]),
+                            orderId: order.orderId,
+                            type: checkoutType,
+                            rooms: JSON.stringify(rooms)
+                        }, function(result){
+                            if(result.code === 1){
+                                rootScope.getMoney = getMoneyService.resetGetMoney(order, order.orderId, 4);
+                                rootScope.$apply();
+                                $("#keepOrNotModal").modal("hide");
+                                $("#checkoutAdModal").modal("hide");
+                                $("#checkoutModal").modal("hide");
+                                $("#getMoneyModal").modal("show");
+                            }else{
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                    }else {
+                        modal.somethingAlert(result3.msg);
+                    }
+                });
+            };
 
             getDataService.getChannel(function(result){
                 rootScope.channels = result.channels;
@@ -208,6 +300,7 @@ var accommodationCtrl = function(app){
             getDataService.getItems(function(result){
                 rootScope.foodList = result.foodList;
                 rootScope.funList = result.funList;
+                rootScope.goodsList = result.goodsList;
             });
             getDataService.getIDs(function(result){
                 rootScope.idList = result.idList;

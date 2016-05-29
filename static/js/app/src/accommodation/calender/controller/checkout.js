@@ -1,4 +1,6 @@
+var AJAXService = require("AJAXService");
 var util = require("util");
+var modal = require("modal");
 require("angular");
 
 var orderService = require("../services/orderService");
@@ -13,9 +15,53 @@ var checkoutCtrl = function(app){
             scope.deleteItem = orderService.deleteItem;
             scope.selectCheckoutRoom = checkoutService.selectCheckoutRoom;
             scope.addItem = orderService.addItem;
+            scope.changeItem = orderService.changeItem;
+            scope.changeItemTime = orderService.changeItemTime;
+            scope.changeItemMonth = orderService.changeItemMonth;
             scope.changeItemNum = orderService.changeItemNum;
+            scope.calLeft = orderService.calLeft;
+            scope.calDeposit = orderService.calDeposit;
             scope.submitCheckout = function(){
-                console.log(rootScope.checkout);
+                var checkout = rootScope.checkout;
+                var rooms = checkout.rooms;
+                var selectedRooms = [];
+                rooms.forEach(function(d){
+                    if(d.selected){
+                        selectedRooms.push({
+                            startDate: d.startDate,
+                            endDate: d.endDate,
+                            roomId: d.roomId,
+                        });
+                    }
+                });
+                if(selectedRooms.length === 0){
+                    modal.somethingAlert("请选择退房房间!");
+                    return false;
+                }
+
+                //如果正在退最后一间房
+                var flag = false;
+                var flag2 = false;
+                rooms.forEach(function(d){
+                    if(!d.selected && d.state !== 2){
+                        flag = true;
+                    }
+                });
+                //如果有项目没用完
+                if(!flag){
+                    var items = checkout.foodItems.concat(checkout.playItems);
+                    items.forEach(function(d){
+                        if(d.amount !== d.useAmount){
+                            flag2 = true;
+                        }
+                    })
+                }
+                if(!flag && flag2){
+                    $("#keepOrNotModal").modal("show");
+                    return false;
+                }
+
+                rootScope.checkoutAfterConfirm(2);
             }
         }]);
 };

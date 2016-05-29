@@ -36,9 +36,23 @@ var getDataService = function(app){
                         plays.push(d);
                     }
                 });
-                callback({
-                    foodList: foods,
-                    funList: plays,
+                AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
+                    var goods = [];
+                    result1.data.list.forEach(function(d){
+                        d.gList.forEach(function(dd){
+                            goods.push({
+                                itemId: dd.i,
+                                price: dd.p,
+                                name: dd.n,
+                                type: 3
+                            });
+                        });
+                    });
+                    callback({
+                        foodList: foods,
+                        funList: plays,
+                        goodsList: goods,
+                    });
                 });
             });
         };
@@ -55,6 +69,26 @@ var getDataService = function(app){
         this.getPayChannels = function(callback){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
+                var map = result.data.map;
+                if(map.alipaySelected){
+                    payChannels.push({
+                        channelId: -6,
+                        name: '支付宝'
+                    });
+                }else if(map.walletPaySelected){
+                    payChannels.push({
+                        channelId: -8,
+                        name: '订单钱包'
+                    });
+                }
+                payChannels.push({
+                    channelId: -1,
+                    name: '现金'
+                });
+                payChannels.sort(function(a, b){
+                    return a.channelId - b.channelId;
+                });
+                console.log(payChannels);
                 callback({
                     payChannels: payChannels
                 });

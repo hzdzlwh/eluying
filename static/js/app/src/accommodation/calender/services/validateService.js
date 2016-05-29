@@ -1,5 +1,5 @@
 /*
- ¶©µ¥´´½¨¡¢±à¼­¡¢È¡ÏûµÈ¹ý³ÌÖÐËùÓÃµ½µÄËùÓÐÍ¨ÓÃµÄ·½·¨
+ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¼­ï¿½ï¿½È¡ï¿½ï¿½ï¿½È¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ÃµÄ·ï¿½ï¿½ï¿½
  */
 var util = require("util");
 require("angular");
@@ -10,6 +10,15 @@ var validateService = function(app){
             var reg = /^1[3|4|5|7|8]\d{9}$/;
             return reg.test(phoneStr);
         };
+        this.checkRemark = function(remark){
+            return remark.length <= 140;
+        };
+        this.checkId = function(idVal){
+            return idVal <= 16;
+        };
+        this.checkRooms = function(order){
+            return order.rooms.length > 0;
+        }
     });
 };
 

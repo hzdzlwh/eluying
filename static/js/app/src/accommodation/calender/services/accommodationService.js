@@ -2,8 +2,11 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
+var shopcartService = require("./shopcartService");
+
 var accommodationService = function(app){
-    app.service("accommodationService", function(){
+    shopcartService(app);
+    app.service("accommodationService", ["shopcartService", function(shopcartService){
         this.updateDateInventory = function(scope){
             var roomStore = scope.roomStore;
             var lefts = [];
@@ -45,7 +48,12 @@ var accommodationService = function(app){
             });
         };
         
-    });
+        this.emptySelectedEntries = function(rootScope){
+            rootScope.selectedEntries = {};
+            shopcartService.showShopCart(rootScope);
+        }
+        
+    }]);
 };
 
 module.exports = accommodationService;

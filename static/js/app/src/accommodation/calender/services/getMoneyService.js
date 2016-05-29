@@ -16,7 +16,7 @@ var getMoneyService = function(app){
             }
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
-            getMoney.remark = '';
+            // getMoney.remark = '';
             if(type === 0){
                 getMoney.payments = [{type: 5, fee: order.discounts}]
             } else{
@@ -40,7 +40,6 @@ var getMoneyService = function(app){
             payments.push(payment)
         };
         this.changePayChannel = function(p, pp){
-            p.fee = 0;
             p.payChannel = pp.name;
             p.payChannelId = pp.channelId;
         };

@@ -33,7 +33,7 @@ var orderNewCtrl = function(app){
         scope.submitOrder = function(){
             var orderNew = rootScope.orderNew;
             var inventory = {};
-            var itemList = orderNew.foodItems.concat(orderNew.playItems);
+            var itemList = orderNew.foodItems.concat(orderNew.playItems).concat(orderNew.goodsItems);
             for(var i = 0; i < itemList.length; i++){
                 var item = itemList[i];
                 var inv = inventory[item.categoryId + item.dateStr];
@@ -102,25 +102,6 @@ var orderNewCtrl = function(app){
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
                     $("#getMoneyModal").modal("show");
-                    //AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
-                    //    orderId: result3.data.orderId
-                    //}, function(result){
-                    //    if(result.code === 1){
-                    //        console.log(result.data);
-                    //        //rootScope.getMoneyItem = getMoneyService.resetGetMoney(orderNew);
-                    //        //$(".msgModal").modal("hide");
-                    //        //$("#newOrderModal").modal("show");
-                    //
-                    //
-                    //        // initGetMoneyItem();
-                    //        // rootScope.getMoneyItem.newOrder(result.data);
-                    //        // $("#newOrderModal").modal("hide");
-                    //        // $("#getMoneyModal").modal("show");
-                    //        // rootScope.initialize();
-                    //        // rootScope.updateData();
-                    //        // rootScope.$apply();
-                    //    }
-                    //});
                 }
             });
         };

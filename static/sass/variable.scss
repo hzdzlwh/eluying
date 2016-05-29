@@ -153,6 +153,8 @@ $headerBg: #393b4a;
     top: 24px;
     left: 0;
     z-index: 3;
+    max-height: 120px;
+    overflow-y: auto;
     .item{
       background:#fafafa;
       width: 100%;
@@ -166,6 +168,7 @@ $headerBg: #393b4a;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      margin-bottom: 0;
     }
     .item:hover{
       background: #ededed;

@@ -1,6 +1,7 @@
 var util = require("util");
 require("angular");
 
+var orderService = require("../services/orderService");
 var orderEditService = require("../services/orderEditService");
 var orderCancelService = require("../services/orderCancelService");
 var checkoutService = require("../services/checkinService");
@@ -8,16 +9,18 @@ var checkoutAdService = require("../services/checkinService");
 var checkinService = require("../services/checkinService");
 var getMoneyService = require("../services/getMoneyService");
 
+
 var orderDetailCtrl = function(app){
+    orderService(app);
     orderEditService(app);
     orderCancelService(app);
     checkoutService(app);
     checkoutAdService(app);
     checkinService(app);
     getMoneyService(app);
-    app.controller("orderDetailCtrl", ['$rootScope', '$scope', 'orderEditService', 'orderCancelService',
+    app.controller("orderDetailCtrl", ['$rootScope', '$scope', 'orderService', 'orderEditService', 'orderCancelService',
         'checkoutService', 'checkinService', 'getMoneyService', 'checkoutAdService',
-        function(rootScope, scope, orderEditService, orderCancelService, checkoutService, checkinService,
+        function(rootScope, scope, orderService, orderEditService, orderCancelService, checkoutService, checkinService,
                  getMoneyService, checkoutAdService){
             scope.showOrderEdit = function(){
                 rootScope.orderEdit = orderEditService.resetOrderEdit(rootScope);
@@ -50,6 +53,8 @@ var orderDetailCtrl = function(app){
                 $("#orderDetailModal").modal("hide");
                 $("#getMoneyModal").modal("show");
             };
+            scope.calLeft = orderService.calLeft;
+            scope.calDeposit = orderService.calDeposit;
     }]);
 };
 
