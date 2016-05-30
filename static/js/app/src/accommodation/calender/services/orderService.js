@@ -249,6 +249,7 @@ var orderService = function(app){
                 rootScope.$apply();
             });
         };
+        //计算订单中客户应付多少钱
         this.calPrice = function(order){
             var price = 0;
             for(var i = 0; i < order.rooms.length; i++){
@@ -264,9 +265,10 @@ var orderService = function(app){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
             price = price - order.discounts;
-            price = price.toFixed(2);
-            return price < 0 ? 0.01 : price;
+            price = price.toFixed(2)*100/100;
+            return price < 0 ? 0 : price;
         };
+        //计算商家需付/客户需补
         this.calLeft = function(order){
             var price = 0;
             for(var i = 0; i < order.rooms.length; i++){
@@ -281,16 +283,23 @@ var orderService = function(app){
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
-            price = price - order.discounts;
-            var payments = order.payments;
             var left = price;
+            left = left - order.discounts;
+            left = left < 0 ? 0 : left.toFixed(2)*100/100;
+            var payments = order.payments;
             for(var i = 0; i < payments.length; i++){
                 if(payments[i].type === 0){
                     left -= payments[i].fee;
                 }
             }
-            return left.toFixed(0);
+            for(var i = 0; i < payments.length; i++){
+                if(payments[i].type === 2){
+                    left += payments[i].fee;
+                }
+            }
+            return left;
         };
+        //计算已收押金
         this.calDeposit = function(order){
             var deposit = 0;
             var payments = order.payments;
@@ -317,6 +326,7 @@ var orderService = function(app){
             }
             return price;
         };
+        //判断订单中有无项目(数量为0的项目表示已经删除的)
         this.itemsExist = function(items){
             if(items.length === 0){
                 return false;

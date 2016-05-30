@@ -39,19 +39,38 @@ var getMoneyService = function(app){
             }
             return getMoney;
         };
-        this.addPayment = function(payments, type, payChannel, getMoney){
+        /*
+        payChannels: 用户的收款方式
+        type: 0-支付，1-押金，2-退款，3-已退押金，4-违约金,5-优惠
+         */
+        this.addPayment = function(getMoney, payChannels, type){
             var left = 0;
             if(type === 0){
                 left = orderService.calLeft(getMoney);
+            }else if(type === 2){
+                left = -orderService.calLeft(getMoney);
+            }
+            var payChannel, payChannelId;
+            if(type === 2 || type === 3){
+                for(var i = 0; i < payChannels.length; i++){
+                    if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
+                        payChannel = payChannels[i].name;
+                        payChannelId = payChannels[i].channelId;
+                        break;
+                    }
+                }
+            }else{
+                payChannel = payChannels[0].name;
+                payChannelId = payChannels[0].channelId;
             }
             var payment = {
                 isNew: true,
                 fee: left,
-                payChannel: payChannel[0].name,
-                payChannelId: payChannel[0].channelId,
+                payChannel: payChannel,
+                payChannelId: payChannelId,
                 type: type
             };
-            payments.push(payment)
+            getMoney.payments.push(payment)
         };
         this.changePayChannel = function(p, pp){
             p.payChannel = pp.name;

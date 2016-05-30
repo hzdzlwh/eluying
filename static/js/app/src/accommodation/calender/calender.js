@@ -152,6 +152,9 @@ $(function(){
             $(".date-table").hide();
             $($(this).next(".date-table")[0]).show();
             ev.stopPropagation();
+        },
+        "click body .modal-close": function(ev){
+            var that = this; modal.clearModal(that);
         }
     };
 

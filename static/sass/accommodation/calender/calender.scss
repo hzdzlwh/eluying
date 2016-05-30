@@ -3213,3 +3213,22 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     }
   }
 }
+.modal-close{
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center!important;
+  font-size: 20px!important;
+  color: #999999!important;
+  cursor: pointer;
+  //position: absolute;
+  //top: 5px;
+  //right: 0;
+  float: right;
+  position: relative;
+  top: 10px;
+  margin-left: 16px;
+}
+.modal-close:hover{
+  color: #666666!important;
+}

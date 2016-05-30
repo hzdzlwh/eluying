@@ -140,6 +140,7 @@
                         <div class="status {{orderStatusStr[orderDetail.orderState].classStr}}">
                             <div class="triangle"></div>{{orderStatusStr[orderDetail.orderState].long}}
                         </div>
+                        <span class="modal-close">&times;</span>
                         <div class="btns">
                             <div class="abtn" ng-if="orderDetail.editable"
                                  ng-click="showOrderEdit()">编辑订单</div>
@@ -304,6 +305,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>取消订单</span>
+                        <span class="modal-close">&times;</span>
                         <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
@@ -494,6 +496,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>{{orderNew.title}}</span>
+                        <span class="modal-close">&times;</span>
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -805,6 +808,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>编辑订单</span>
+                        <span class="modal-close">&times;</span>
                         <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
@@ -935,7 +939,8 @@
                                 <!--<div class="tips warning left">↑房间被占用</div>-->
                                 <!--<div class="tips warning right">↑房间被占用</div>-->
                             </td>
-                            <td>¥{{r.fee}}<div class="sdelete" ng-if="r.state === 0" ng-click="deleteRoom(orderEdit.rooms, $index);$event.stopPropagation();"></div></td>
+                            <td>¥{{r.fee}}<div class="sdelete" ng-if="r.state === 0 && orderEdit.rooms.length > 1"
+                                               ng-click="deleteRoom(orderEdit.rooms, $index);$event.stopPropagation();"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1000,7 +1005,7 @@
                                 &nbsp;<span ng-if="food.usedAmount">(已使用{{food.usedAmount}})</span>
                                 <div class="tips">剩余库存{{food.inventory}}</div>
                             </td>
-                            <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.foodItems, food)"></div></td>
+                            <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.foodItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1168,6 +1173,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>办理退房</span>
+                        <span class="modal-close">&times;</span>
                         <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
@@ -1397,6 +1403,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>提前退房</span>
+                        <span class="modal-close">&times;</span>
                         <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
@@ -1664,6 +1671,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>办理入住</span>
+                        <span class="modal-close">&times;</span>
                         <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
@@ -1923,6 +1931,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>收银</span>
+                        <span class="modal-close">&times;</span>
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -1973,7 +1982,7 @@
                     </div>
                     <div class="hr2" ng-if="getMoney.foodItems.length > 0"></div>
                     <div class="subtype food" ng-if="getMoney.foodItems.length > 0">
-                        <div class="sub-title">餐饮信息</div>
+                        <div class="sub-title">餐饮项目</div>
                         <table>
                             <tr ng-repeat="f in getMoney.foodItems">
                                 <td>{{f.name}}</td>
@@ -1987,7 +1996,7 @@
                     </div>
                     <div class="hr2" ng-if="getMoney.playItems.length > 0"></div>
                     <div class="subtype fun" ng-if="getMoney.playItems.length > 0">
-                        <div class="sub-title">娱乐信息</div>
+                        <div class="sub-title">娱乐项目</div>
                         <table>
                             <tr ng-repeat="f in getMoney.playItems">
                                 <td>{{f.name}}</td>
@@ -1999,11 +2008,25 @@
                             </tr>
                         </table>
                     </div>
+                    <div class="hr2" ng-if="getMoney.goodsItems.length > 0"></div>
+                    <div class="subtype goods" ng-if="getMoney.goodsItems.length > 0">
+                        <div class="sub-title">商超项目</div>
+                        <table>
+                            <tr ng-repeat="f in getMoney.goodsItems">
+                                <td>{{f.name}}</td>
+                                <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
+                                <td><span class="light">数量</span>&nbsp;{{f.amount}}
+                                </td>
+                                <td>¥{{f.price * f.amount}}</td>
+                            </tr>
+                        </table>
+                    </div>
                     <div class="hr2"></div>
                 </div>
                 <div class="infos">
+                    <!--新建订单显示的收款信息-->
                     <div class="item" ng-if="getMoney.getMoneyType === 0">
-                        <div class="sbold">客户应付:</div>
+                        <div class="sbold">客户应付</div>
                         <div class="num">¥{{calLeft(getMoney)}}</div>
                         <div class="desc">
                             <div class="eluyun_tips_outer spriteImg">
@@ -2038,21 +2061,12 @@
                                     <div class="sl">押金（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <!--<div class="hr3" ng-if="getMoney.getMoneyType === 2"></div>-->
-                                <!--<div class="sitem">-->
-                                <!--<div class="sl1">商家需退：</div>-->
-                                <!--<div class="sval2">¥100000</div>-->
-                                <!--</div>-->
-                                <!--<div class="sitem" ng-if="getMoney.getMoneyType === 2">-->
-                                <!--<div class="sl1">需退押金：</div>-->
-                                <!--<div class="sval2">¥100</div>-->
-                                <!--</div>-->
                             </div>
                         </div>
                     </div>
                     <div class="item" ng-if="getMoney.getMoneyType !== 0">
-                        <div class="sbold">客户需补:</div>
-                        <div class="num">¥{{calLeft(getMoney)}}</div>
+                        <div class="sbold">{{getMoney.feeMode === 0 ? '客户需补:' : '商家需退:'}}</div>
+                        <div class="num">¥{{getMoney.feeMode === 0 ? calLeft(getMoney) : -calLeft(getMoney)}}</div>
                         <div class="desc">
                             <div class="eluyun_tips_outer spriteImg">
                                 <div class="eluyun_tips"></div>
@@ -2071,7 +2085,7 @@
                                 </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
-                                    <div class="sval">¥{{itemPrice(getMoney) - (getMoney.discounts || 0)}}</div>
+                                    <div class="sval">¥{{calPrice(getMoney)}}</div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="hr3"></div>
@@ -2080,20 +2094,28 @@
                                     <div class="sl">客户已付（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 2">
+                                    <div class="sl">商家已退（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
                                 <div class="hr3"></div>
                                 <div class="subt">押金收支明细</div>
                                 <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1">
                                     <div class="sl">押金（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <div class="hr3" ng-if="getMoney.getMoneyType === 2"></div>
-                                <div class="sitem">
-                                    <div class="sl1">商家需退：</div>
-                                    <div class="sval2">¥100000</div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 3">
+                                    <div class="sl">已退押金（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <div class="sitem" ng-if="getMoney.getMoneyType === 2">
-                                    <div class="sl1">需退押金：</div>
-                                    <div class="sval2">¥100</div>
+                                <div class="hr3"></div>
+                                <div class="sitem">
+                                    <div class="sl1">{{getMoney.feeMode === 0 ? '客户需补:' : '商家需退:'}}</div>
+                                    <div class="sval2">¥{{getMoney.feeMode === 0 ? calLeft(getMoney) : -calLeft(getMoney)}}</div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl1">{{getMoney.depositMode === 0 ? '已收押金:' : '需退押金:'}}</div>
+                                    <div class="sval2">¥{{calDeposit(getMoney)}}</div>
                                 </div>
                             </div>
                         </div>
@@ -2102,16 +2124,17 @@
                         <div class="sbold">已收押金:</div>
                         <div class="num">¥{{calDeposit(getMoney)}}</div>
                     </div>
-                    <div class="item item_small refund">
+                    <div class="item item_small refund" ng-if="getMoney.feeMode === 0">
                         <div class="slabel">订单收款</div>
-                        <div class="sadd" ng-click="addPayment(getMoney.payments, 0, payChannels, getMoney)">
+                        <div class="sadd" ng-click="addPayment(getMoney, payChannels, 0)">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
                             添加订单收款
                         </div>
                     </div>
-                    <div class="item item_big" ng-repeat="p in getMoney.payments" ng-if="p.type === 0 && p.isNew">
+                    <div class="item item_big" ng-repeat="p in getMoney.payments"
+                         ng-if="getMoney.feeMode === 0 &&p.type === 0 && p.isNew">
                         <input type="text" ng-model="p.fee">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
@@ -2121,22 +2144,71 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item item_small">
+                    <div class="item item_small refund" ng-if="getMoney.feeMode === 1">
+                        <div class="slabel">订单退款</div>
+                        <div class="sadd" ng-click="addPayment(getMoney, payChannels, 2)">
+                            <div class="eluyun_new_outer spriteImg">
+                                <div class="eluyun_new"></div>
+                            </div>
+                            添加订单退款
+                        </div>
+                    </div>
+                    <div class="item item_big" ng-repeat="p in getMoney.payments"
+                         ng-if="getMoney.feeMode === 1 &&p.type === 2 && p.isNew">
+                        <input type="text" ng-model="p.fee">
+                        <div class="select1">
+                            <span>{{p.payChannel}}</span>
+                            <div class="select1_options">
+                                <div class="item" ng-click="changePayChannel(p, payment);"
+                                ng-repeat="payment in payChannels"
+                                ng-if="payment.channelId != -8 && payment.channelId != -6">
+                                    {{payment.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item item_small" ng-if="getMoney.depositMode === 0">
                         <div class="slabel">押金收款</div>
-                        <div class="sadd" ng-click="addPayment(getMoney.payments, 1, payChannels)">
+                        <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_new_outer spriteImg">
                                 <div class="eluyun_new"></div>
                             </div>
                             添加押金收款
                         </div>
                     </div>
-                    <div class="item item_big" ng-repeat="p in getMoney.payments" ng-if="p.type === 1 && p.isNew">
+                    <div class="item item_big" ng-repeat="p in getMoney.payments"
+                         ng-if="getMoney.depositMode === 0 && p.type === 1 && p.isNew">
                         <input type="text" ng-model="p.fee">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="item" ng-click="changePayChannel(p, payment)"
-                                     ng-repeat="payment in payChannels">{{payment.name}}</div>
+                                ng-repeat="payment in payChannels">
+                                    {{payment.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item item_small" ng-if="getMoney.depositMode === 1">
+                        <div class="slabel">押金退款</div>
+                        <div class="sadd" ng-click="addPayment(getMoney, payChannels, 3)">
+                            <div class="eluyun_new_outer spriteImg">
+                                <div class="eluyun_new"></div>
+                            </div>
+                            添加押金退款
+                        </div>
+                    </div>
+                    <div class="item item_big" ng-repeat="p in getMoney.payments"
+                         ng-if="getMoney.depositMode === 1 && p.type === 3 && p.isNew">
+                        <input type="text" ng-model="p.fee">
+                        <div class="select1">
+                            <span>{{p.payChannel}}</span>
+                            <div class="select1_options">
+                                <div class="item" ng-click="changePayChannel(p, payment)"
+                                     ng-repeat="payment in payChannels"
+                                     ng-if="payment.channelId != -8 && payment.channelId != -6">
+                                    {{payment.name}}
+                                </div>
                             </div>
                         </div>
                     </div>

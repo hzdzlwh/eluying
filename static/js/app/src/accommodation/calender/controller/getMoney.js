@@ -30,20 +30,25 @@ var getMoneyCtrl = function(app){
                 var payments_new = [];
                 var alipayMoneyTotal = 0;
                 getMoney.payments.forEach(function(d){
-                    console.log(d);
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
-                        if(d.payChannelId === -6){
+                        if(d.payChannelId === -6 || d.payChannelId === -8){
                             alipayMoneyTotal += parseFloat(d.fee);
                         }
                     }
                 });
-                
+
+                if(payments_new.length === 0){
+                    modal.somethingAlert('请选择一种付款方式!');
+                }
+
                 if(alipayMoneyTotal > 0){
+                    //要去扫码付钱
                     rootScope.getMoneyWithGun =
                         getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId);
                     $("#payWithAlipayModal").modal("show");
                 }else{
+                    //直接提交
                     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                         payments: JSON.stringify(payments_new),
                         remark: getMoney.remark,
