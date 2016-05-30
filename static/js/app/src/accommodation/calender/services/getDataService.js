@@ -71,17 +71,17 @@ var getDataService = function(app){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
                 var map = result.data.map;
-                if(map.alipaySelected){
-                    payChannels.push({
-                        channelId: -6,
-                        name: '支付宝'
-                    });
-                }else if(map.walletPaySelected){
-                    payChannels.push({
-                        channelId: -8,
-                        name: '订单钱包'
-                    });
-                }
+                //if(map.alipaySelected){
+                //    payChannels.push({
+                //        channelId: -6,
+                //        name: '支付宝'
+                //    });
+                //}else if(map.walletPaySelected){
+                //    payChannels.push({
+                //        channelId: -8,
+                //        name: '订单钱包'
+                //    });
+                //}
                 payChannels.push({
                     channelId: -1,
                     name: '现金'
