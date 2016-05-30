@@ -112,7 +112,8 @@ gulp.task('webpack2', function () {
                 "setting/method": "./static/js/app/src/setting/method/method.js",
                 "tips/noauth": "./static/js/app/src/tips/noauth.js",
                 "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
-                "tips/expired": "./static/js/app/src/tips/expired.js"
+                "tips/expired": "./static/js/app/src/tips/expired.js",
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
             },
             output: {
 

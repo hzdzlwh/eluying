@@ -26,6 +26,7 @@ var orderCancelCtrl = require('./controller/orderCancel');
 var checkoutCtrl = require('./controller/checkout');
 var checkoutAdCtrl = require('./controller/checkoutAd');
 var checkinCtrl = require('./controller/checkin');
+var getMoneyWithGunCtrl = require('./controller/getMoneyWithGun');
 
 $(function(){
     //初始化界面
@@ -168,4 +169,5 @@ $(function(){
     checkoutCtrl(app);
     checkoutAdCtrl(app);
     checkinCtrl(app);
+    getMoneyWithGunCtrl(app);
 });

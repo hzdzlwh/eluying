@@ -69,17 +69,17 @@ var getDataService = function(app){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
                 var map = result.data.map;
-                //if(map.alipaySelected){
-                //    payChannels.push({
-                //        channelId: -6,
-                //        name: '支付宝'
-                //    });
-                //}else if(map.walletPaySelected){
-                //    payChannels.push({
-                //        channelId: -8,
-                //        name: '订单钱包'
-                //    });
-                //}
+                if(map.alipaySelected){
+                   payChannels.push({
+                       channelId: -6,
+                       name: '支付宝'
+                   });
+                }else if(map.walletPaySelected){
+                   payChannels.push({
+                       channelId: -8,
+                       name: '订单钱包'
+                   });
+                }
                 payChannels.push({
                     channelId: -1,
                     name: '现金'
@@ -87,7 +87,6 @@ var getDataService = function(app){
                 payChannels.sort(function(a, b){
                     return a.channelId - b.channelId;
                 });
-                console.log(payChannels);
                 callback({
                     payChannels: payChannels
                 });
@@ -208,7 +207,7 @@ var getDataService = function(app){
                         glyph.top = top;
                         glyph.left = left;
                         glyph.width = width;
-                        glyph.stateStr = constService.statusStr[glyph.orderState].short;
+                        glyph.stateStr = constService.statusStr2[glyph.roomState].short;
                         var tempDate = new Date(order.checkInDate);
                         glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                         glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
@@ -221,7 +220,7 @@ var getDataService = function(app){
                                 tempDate = util.diffDate(tempDate, 1);
                             }
                         }
-                        glyph.classStr = constService.statusStr[glyph.orderState].classStr;
+                        glyph.classStr = constService.statusStr2[glyph.roomState].classStr;
                         glyphs.push(glyph);
                     });
                     scope.holidays = holidayHash;

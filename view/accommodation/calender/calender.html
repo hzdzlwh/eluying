@@ -1136,25 +1136,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="modal fade" role="dialog" id="payWithAlipayModal">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="hr"></div>
-            <div class="erweima">
-                <div class="eluyun_paywithalipay_outer spriteImg">
-                    <div class="eluyun_paywithalipay"></div>
-                </div>
-                <input type="text" placeholder="付款码使用条码枪录入，也可手动录入。">
-            </div>
-            <div class="infos">
-                <div class="item">应收金额：￥19999</div>
-                <div class="item">订单编号：12399932199998876700</div>
-                <div class="item">收银员：001</div>
-            </div>
-            <div class="sbtn">确认收款</div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 <div class="modal fade" role="dialog" id="arrearsModal">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -2072,6 +2053,50 @@
                     <div class="item" ng-if="getMoney.getMoneyType !== 0">
                         <div class="sbold">客户需补:</div>
                         <div class="num">¥{{calLeft(getMoney)}}</div>
+                        <div class="desc">
+                            <div class="eluyun_tips_outer spriteImg">
+                                <div class="eluyun_tips"></div>
+                            </div>
+                            <div class="desc-box">
+                                <div class="subt">订单总结：</div>
+                                <div class="sitem">
+                                    <div class="sl">订单总价</div>
+                                    <div class="sval">¥{{itemPrice(getMoney)}}</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl">优惠：</div>
+                                    <div class="sval">- ¥{{getMoney.discounts || 0}}</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="sitem">
+                                    <div class="sl">客户应付：</div>
+                                    <div class="sval">¥{{itemPrice(getMoney) - (getMoney.discounts || 0)}}</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="hr3"></div>
+                                <div class="subt">订单收支明细</div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 0">
+                                    <div class="sl">客户已付（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
+                                <div class="hr3"></div>
+                                <div class="subt">押金收支明细</div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1">
+                                    <div class="sl">押金（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
+                                <div class="hr3" ng-if="getMoney.getMoneyType === 2"></div>
+                                <div class="sitem">
+                                    <div class="sl1">商家需退：</div>
+                                    <div class="sval2">¥100000</div>
+                                </div>
+                                <div class="sitem" ng-if="getMoney.getMoneyType === 2">
+                                    <div class="sl1">需退押金：</div>
+                                    <div class="sval2">¥100</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item" ng-if="getMoney.getMoneyType !== 0">
                         <div class="sbold">已收押金:</div>
@@ -2143,6 +2168,26 @@
                 <div class="sbtn cancel btn-cancel">不保留,去删除</div>
                 <div class="sbtn confirm" ng-click="checkoutAfterConfirm(4);">保留</div>
             </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="payWithAlipayModal" ng-controller="getMoneyWithGunCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content" ng-if="getMoneyWithGun">
+            <div class="hr"></div>
+            <div class="erweima">
+                <div class="eluyun_paywithalipay_outer spriteImg">
+                    <div class="eluyun_paywithalipay"></div>
+                </div>
+                <input type="text" placeholder="付款码使用条码枪录入，也可手动录入。"
+                ng-model="getMoneyWithGun.userCode">
+            </div>
+            <div class="infos">
+                <div class="item">应收金额：￥{{getMoneyWithGun.fee}}</div>
+                <div class="item">订单编号：{{getMoneyWithGun.orderId}}</div>
+                <div class="item">收银员：{{getMoneyWithGun.operator}}</div>
+            </div>
+            <div class="sbtn">确认收款</div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
@@ -2294,7 +2339,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="glyph {{statusStr[g.orderState].classStr}}"
+                <div class="glyph {{statusStr2[g.roomState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
                      ng-dblclick="showOrderDetail(g.orderId);"

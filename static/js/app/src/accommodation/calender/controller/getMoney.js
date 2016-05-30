@@ -7,15 +7,17 @@ var orderService = require("../services/orderService");
 var getMoneyService = require("../services/getMoneyService");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
+var getMoneyWithGunService = require("../services/getMoneyWithGunService");
 
 var getMoneyCtrl = function(app){
     orderService(app);
     getMoneyService(app);
     getDataService(app);
     accommodationService(app);
+    getMoneyWithGunService(app);
     app.controller("getMoneyCtrl", ['$rootScope', '$scope', 'orderService', 'getMoneyService',
-        'getDataService', 'accommodationService',
-        function(rootScope, scope, orderService, getMoneyService, getDataService, accommodationService){
+        'getMoneyWithGunService', 'getDataService', 'accommodationService',
+        function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService, getDataService, accommodationService){
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
             scope.totalPrice = orderService.totalPrice;
@@ -26,11 +28,37 @@ var getMoneyCtrl = function(app){
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
                 var payments_new = [];
+                var alipayMoneyTotal = 0;
                 getMoney.payments.forEach(function(d){
+                    console.log(d);
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
+                        if(d.payChannelId === -6){
+                            alipayMoneyTotal += parseFloat(d.fee);
+                        }
                     }
                 });
+                
+                if(alipayMoneyTotal > 0){
+                    rootScope.getMoneyWithGun =
+                        getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId);
+                    $("#payWithAlipayModal").modal("show");
+                }else{
+                    AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
+                        payments: JSON.stringify(payments_new),
+                        remark: getMoney.remark,
+                        orderId: getMoney.orderId
+                    }, function(result){
+                        if(result.code === 1){
+                            modal.somethingAlert("收银成功");
+                            $("#getMoneyModal").modal("hide");
+                            getDataService.getRoomsAndStatus(rootScope);
+                            accommodationService.emptySelectedEntries(rootScope);
+                        }else{
+                            modal.somethingAlert(result.msg);
+                        }
+                    });
+                }
                 // var rooms = [];
                 // getMoney.rooms.forEach(function(d){
                 //     if(d.selected){
@@ -56,18 +84,18 @@ var getMoneyCtrl = function(app){
                 //     }
                 // });
 
-                AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                    payments: JSON.stringify(payments_new),
-                    remark: getMoney.remark,
-                    orderId: getMoney.orderId
-                }, function(result){
-                    if(result.code === 1){
-                        //TODO 提示收银成功
-                        $("#getMoneyModal").modal("hide");
-                        getDataService.getRoomsAndStatus(rootScope);
-                        accommodationService.emptySelectedEntries(rootScope);
-                    }
-                });
+                // AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
+                //     payments: JSON.stringify(payments_new),
+                //     remark: getMoney.remark,
+                //     orderId: getMoney.orderId
+                // }, function(result){
+                //     if(result.code === 1){
+                //         //TODO 提示收银成功
+                //         $("#getMoneyModal").modal("hide");
+                //         getDataService.getRoomsAndStatus(rootScope);
+                //         accommodationService.emptySelectedEntries(rootScope);
+                //     }
+                // });
             };
         }]);
 };
