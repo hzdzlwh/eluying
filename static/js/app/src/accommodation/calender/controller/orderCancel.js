@@ -3,13 +3,18 @@ var util = require("util");
 var modal = require("modal");
 require("angular");
 
+var orderService = require("../services/orderService");
 var orderCancelService = require("../services/orderCancelService");
 var getDataService = require("../services/getDataService");
 
 var orderCancelCtrl = function(app){
     orderCancelService(app);
-    app.controller("orderCancelCtrl", ['$rootScope', '$scope', 'orderCancelService', 'getDataService',
-        function(rootScope, scope, orderCancelService, getDataService){
+    orderService(app);
+    getDataService(app);
+    app.controller("orderCancelCtrl", ['$rootScope', '$scope', 'orderCancelService', 'getDataService', 'orderService',
+        function(rootScope, scope, orderCancelService, getDataService, orderService){
+            scope.itemPrice = orderService.itemPrice;
+            scope.calPrice = orderService.calPrice;
             scope.calRefund = orderCancelService.calRefund;
             scope.calDeposit = orderCancelService.calDeposit;
             scope.addNewPayments = orderCancelService.addNewPayments;

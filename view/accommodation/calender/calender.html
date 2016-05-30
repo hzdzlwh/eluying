@@ -391,7 +391,7 @@
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
                                     <div class="sl">订单总价</div>
-                                    <div class="sval">¥{{orderCancel.totalPrice}}</div>
+                                    <div class="sval">¥{{itemPrice(orderCancel)}}</div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="sitem">
@@ -401,13 +401,17 @@
                                 </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
-                                    <div class="sval">¥{{orderCancel.totalPrice - orderCancel.discounts}}</div>
+                                    <div class="sval">¥{{calPrice(orderCancel)}}</div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="hr3"></div>
                                 <div class="subt">订单收支明细</div>
                                 <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 0">
                                     <div class="sl">客户已付（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 2">
+                                    <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
                                 <div class="hr3"></div>
@@ -447,8 +451,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
-                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -7
-                                     && payment.payChannelId != -8"
+                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -8"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -468,8 +471,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
-                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -7
-                                     && payment.payChannelId != -8"
+                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -8"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>

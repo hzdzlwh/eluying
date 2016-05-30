@@ -21,6 +21,9 @@ var orderCancelService = function(app){
                 if(d.type === 0){
                     refund += d.fee;
                 }
+                if(d.type === 2){
+                    refund -= d.fee;
+                }
             });
             return refund;
         };
@@ -81,22 +84,24 @@ var orderCancelService = function(app){
                 modal.somethingAlert("已退完所有款项!");
                 return false;
             }
+            var payChannel, payChannelId;
+            //退款不能用支付宝或者订单钱包
+            for(var i = 0; i < payChannels.length; i++){
+                if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
+                    payChannel = payChannels[i].name;
+                    payChannelId = payChannels[i].channelId;
+                    break;
+                }
+            }
             var payment = {
                 fee: left,
-                payChannel: payChannels[0].name,
-                payChannelId: payChannels[0].channelId,
+                payChannel: payChannel,
+                payChannelId: payChannelId,
                 type: type
             };
             orderCancel.newPayments.push(payment);
         };
-        this.changePayChannel = function(p, pp, orderCancel){
-            // var left = 0;
-            // if(p.type === 2){
-            //     left = calRefundLeft(orderCancel);
-            // }else if(p.type === 3){
-            //     left = calDeposit(orderCancel);
-            // }
-            // p.fee = left;
+        this.changePayChannel = function(p, pp){
             p.payChannel = pp.name;
             p.payChannelId = pp.channelId;
         };
