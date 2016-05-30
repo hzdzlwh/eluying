@@ -18,8 +18,17 @@ var getMoneyCtrl = function(app){
     app.controller("getMoneyCtrl", ['$rootScope', '$scope', 'orderService', 'getMoneyService',
         'getMoneyWithGunService', 'getDataService', 'accommodationService',
         function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService, getDataService, accommodationService){
-            scope.calPrice = orderService.calPrice;
-            scope.calLeft = orderService.calLeft;
+            scope.calPrice = function(getMoney){
+                var price = orderService.calPrice(getMoney);
+                if(getMoney.penaltyAd){
+                    price += parseFloat(getMoney.penaltyAd);
+                }
+                if(getMoney.roomsRefund){
+                    price -= parseFloat(getMoney.roomsRefund);
+                }
+                return price;
+            };
+            scope.calLeft = getMoneyService.calLeft;
             scope.totalPrice = orderService.totalPrice;
             scope.calDeposit = orderService.calDeposit;
             scope.itemPrice = orderService.itemPrice;
@@ -38,69 +47,46 @@ var getMoneyCtrl = function(app){
                     }
                 });
 
-                if(payments_new.length === 0){
-                    modal.somethingAlert('请选择一种付款方式!');
-                }
-
                 if(alipayMoneyTotal > 0){
                     //要去扫码付钱
                     rootScope.getMoneyWithGun =
                         getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId);
                     $("#payWithAlipayModal").modal("show");
                 }else{
-                    //直接提交
-                    AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                        payments: JSON.stringify(payments_new),
-                        remark: getMoney.remark,
-                        orderId: getMoney.orderId
-                    }, function(result){
-                        if(result.code === 1){
-                            modal.somethingAlert("收银成功");
-                            $("#getMoneyModal").modal("hide");
-                            getDataService.getRoomsAndStatus(rootScope);
-                            accommodationService.emptySelectedEntries(rootScope);
-                        }else{
-                            modal.somethingAlert(result.msg);
-                        }
-                    });
+                    if(!getMoney.async){
+                        //直接提交
+                        AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
+                            payments: JSON.stringify(payments_new),
+                            remark: getMoney.remark,
+                            orderId: getMoney.orderId
+                        }, function(result){
+                            if(result.code === 1){
+                                modal.somethingAlert("收银成功");
+                                $("#getMoneyModal").modal("hide");
+                                getDataService.getRoomsAndStatus(rootScope);
+                                accommodationService.emptySelectedEntries(rootScope);
+                            }else{
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                    }else{
+                        AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
+                            payments: JSON.stringify(payments_new),
+                            orderId: getMoney.orderId,
+                            rooms: JSON.stringify(getMoney.checkoutRooms),
+                            type: getMoney.checkoutType,
+                        }, function(result){
+                            if(result.code === 1){
+                                modal.somethingAlert("操作成功!");
+                                $("#getMoneyModal").modal("hide");
+                                getDataService.getRoomsAndStatus(rootScope);
+                                accommodationService.emptySelectedEntries(rootScope);
+                            }else{
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                    }
                 }
-                // var rooms = [];
-                // getMoney.rooms.forEach(function(d){
-                //     if(d.selected){
-                //         rooms.push({
-                //             startDate: d.startDate,
-                //             endDate: d.endDate,
-                //             roomId: d.roomId,
-                //         });
-                //     }
-                // });
-                // AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
-                //     payments: JSON.stringify(payments_new),
-                //     orderId: getMoney.orderId,
-                //     type: 0,
-                //     rooms: JSON.stringify(rooms)
-                // }, function(result){
-                //     if(result.code === 1){
-                //         //TODO 提示入住/退房成功
-                //         $("#getMoneyModal").modal("hide");
-                //         getDataService.getRoomsAndStatus(rootScope);
-                //     }else{
-                //         modal.somethingAlert(result.msg);
-                //     }
-                // });
-
-                // AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                //     payments: JSON.stringify(payments_new),
-                //     remark: getMoney.remark,
-                //     orderId: getMoney.orderId
-                // }, function(result){
-                //     if(result.code === 1){
-                //         //TODO 提示收银成功
-                //         $("#getMoneyModal").modal("hide");
-                //         getDataService.getRoomsAndStatus(rootScope);
-                //         accommodationService.emptySelectedEntries(rootScope);
-                //     }
-                // });
             };
         }]);
 };

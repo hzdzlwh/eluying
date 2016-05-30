@@ -227,7 +227,7 @@ var accommodationCtrl = function(app){
                     rooms.push(room);
                 });
                 var items = [];
-                var oldItems = order.foodItems.concat(order.playItems);
+                var oldItems = order.foodItems.concat(order.playItems).concat(order.goodsItems);
                 oldItems.forEach(function(d){
                     var item = {
                         amount: d.amount,
@@ -254,7 +254,6 @@ var accommodationCtrl = function(app){
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', orderItem, function(result3){
                     if(result3.code === 1){
-                        //开始入住
                         var rooms = [];
                         order.rooms.forEach(function(d){
                             if(d.selected){
@@ -271,23 +270,47 @@ var accommodationCtrl = function(app){
                         }else if (type === 2){
                             checkoutType = 1;
                         }
-                        AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
-                            payments: JSON.stringify([]),
-                            orderId: order.orderId,
-                            type: checkoutType,
-                            rooms: JSON.stringify(rooms)
-                        }, function(result){
-                            if(result.code === 1){
-                                rootScope.getMoney = getMoneyService.resetGetMoney(order, order.orderId, 4);
-                                rootScope.$apply();
-                                $("#keepOrNotModal").modal("hide");
-                                $("#checkoutAdModal").modal("hide");
-                                $("#checkoutModal").modal("hide");
-                                $("#getMoneyModal").modal("show");
-                            }else{
-                                modal.somethingAlert(result.msg);
-                            }
-                        });
+                        var asyncObj = {
+                            penaltyAd: order.penaltyAd,
+                            checkoutAdRefund: order.roomsRefund,
+                            async: true,
+                            checkoutType: checkoutType,
+                            checkoutRooms: rooms,
+                        };
+                        rootScope.getMoney =
+                            getMoneyService.resetGetMoney(order, order.orderId, type, asyncObj);
+                        // //加上提前违约金
+                        // if(type == 4){
+                        //     rootScope.getMoney.payments.push(
+                        //         {type: 4, fee: order.penaltyAd}
+                        //     );
+                        //     rootScope.getMoney.penaltyAd = parseFloat(order.penaltyAd);
+                        //     rootScope.getMoney.checkoutAdRefund = order.roomsRefund;
+                        // }
+                        // rootScope.getMoney.async = true; //付款和退房同步
+                        rootScope.$apply();
+                        $("#keepOrNotModal").modal("hide");
+                        $("#checkoutAdModal").modal("hide");
+                        $("#checkoutModal").modal("hide");
+                        $("#getMoneyModal").modal("show");
+
+                        // AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
+                        //     payments: JSON.stringify([]),
+                        //     orderId: order.orderId,
+                        //     type: checkoutType,
+                        //     rooms: JSON.stringify(rooms)
+                        // }, function(result){
+                        //     if(result.code === 1){
+                        //         rootScope.getMoney = getMoneyService.resetGetMoney(order, order.orderId, 4);
+                        //         rootScope.$apply();
+                        //         $("#keepOrNotModal").modal("hide");
+                        //         $("#checkoutAdModal").modal("hide");
+                        //         $("#checkoutModal").modal("hide");
+                        //         $("#getMoneyModal").modal("show");
+                        //     }else{
+                        //         modal.somethingAlert(result.msg);
+                        //     }
+                        // });
                     }else {
                         modal.somethingAlert(result3.msg);
                     }

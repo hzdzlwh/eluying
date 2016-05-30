@@ -20,7 +20,7 @@ var checkoutAdCtrl = function(app){
             scope.changeItemTime = orderService.changeItemTime;
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.changeItemNum = orderService.changeItemNum;
-            scope.calRoomFee = checkoutAdService.calRoomFee;
+            scope.calRoomRefund = checkoutAdService.calRoomRefund;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
             scope.submitCheckoutAd = function(){
@@ -54,6 +54,24 @@ var checkoutAdCtrl = function(app){
                 
                 rootScope.checkoutAfterConfirm(4);
             };
+            scope.totalPrice = function(checkoutAd){
+                var left = orderService.itemPrice(checkoutAd);
+                left -= parseFloat(checkoutAd.roomsRefund || 0);
+                left = left - checkoutAd.discounts;
+                left = left < 0 ? 0 : left.toFixed(2)*100/100;
+                left += parseFloat(checkoutAd.penaltyAd || 0);
+                var payments = checkoutAd.payments;
+                if(payments){
+                    for(var i = 0; i < payments.length; i++){
+                        if(payments[i].type === 0){
+                            left -= parseFloat(payments[i].fee);
+                        }else if(payments[i].type === 2){
+                            left += parseFloat(payments[i].fee);
+                        }
+                    }
+                }
+                return left;
+            }
         }]);
 };
 

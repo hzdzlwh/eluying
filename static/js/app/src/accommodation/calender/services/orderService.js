@@ -287,14 +287,15 @@ var orderService = function(app){
             left = left - order.discounts;
             left = left < 0 ? 0 : left.toFixed(2)*100/100;
             var payments = order.payments;
-            for(var i = 0; i < payments.length; i++){
-                if(payments[i].type === 0){
-                    left -= payments[i].fee;
-                }
-            }
-            for(var i = 0; i < payments.length; i++){
-                if(payments[i].type === 2){
-                    left += payments[i].fee;
+            if(payments){
+                for(var i = 0; i < payments.length; i++){
+                    if(payments[i].type === 0){
+                        left -= parseFloat(payments[i].fee);
+                    }else if(payments[i].type === 2){
+                        left += parseFloat(payments[i].fee);
+                    }else if(payments[i].type === 4){
+                        left += parseFloat(payments[i].fee);
+                    }
                 }
             }
             return left;

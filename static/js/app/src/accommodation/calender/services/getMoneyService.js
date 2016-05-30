@@ -9,10 +9,37 @@ var getMoneyService = function(app){
     constService(app);
     orderService(app);
     app.service("getMoneyService", ['constService', 'orderService', function(constService, orderService){
-        this.resetGetMoney = function(order, orderId, type){
+        var calLeft = function(getMoney){
+            var left = orderService.itemPrice(getMoney);
+            left -= parseFloat(getMoney.roomsRefund || 0);
+            left = left - getMoney.discounts;
+            left = left < 0 ? 0 : left.toFixed(2)*100/100;
+            left += parseFloat(getMoney.penaltyAd || 0);
+            var payments = getMoney.payments;
+            if(payments){
+                for(var i = 0; i < payments.length; i++){
+                    if(payments[i].type === 0){
+                        left -= parseFloat(payments[i].fee);
+                    }else if(payments[i].type === 2){
+                        left += parseFloat(payments[i].fee);
+                    }
+                }
+            }
+            return left;
+        };
+        this.calLeft = calLeft;
+        this.resetGetMoney = function(order, orderId, type, asyncObj){
             var getMoney = {};
             for(var key in order){
                 getMoney[key] = order[key];
+            }
+            if(asyncObj){
+                for(var key in asyncObj){
+                    getMoney[key] = asyncObj[key];
+                }
+                getMoney.payments.push({
+                    type: 4, fee: asyncObj.penaltyAd
+                });
             }
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
@@ -25,7 +52,7 @@ var getMoneyService = function(app){
             if(type === 2 || type === 4){
                 depositMode = 1;
             }
-            var feeLeft = orderService.calLeft(order);
+            var feeLeft = calLeft(getMoney);
             if(feeLeft < 0){
                 feeMode = 1;
             }
@@ -35,7 +62,7 @@ var getMoneyService = function(app){
             if(type === 0){
                 getMoney.payments = [{type: 5, fee: order.discounts}]
             } else{
-
+                
             }
             return getMoney;
         };
@@ -46,9 +73,11 @@ var getMoneyService = function(app){
         this.addPayment = function(getMoney, payChannels, type){
             var left = 0;
             if(type === 0){
-                left = orderService.calLeft(getMoney);
+                left = calLeft(getMoney);
             }else if(type === 2){
-                left = -orderService.calLeft(getMoney);
+                left = -calLeft(getMoney);
+            }else if(type === 3){
+                left = orderService.calDeposit(getMoney);
             }
             var payChannel, payChannelId;
             if(type === 2 || type === 3){

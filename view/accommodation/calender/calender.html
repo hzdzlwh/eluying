@@ -1633,7 +1633,7 @@
                 </div>
                 <div class="inadvanced">
                     <div class="pull-left">
-                        未入住部分房价：￥{{calRoomFee(checkoutAd)}}
+                        未入住部分房价：￥{{checkoutAd.roomsRefund}}
                     </div>
                     <div class="pull-right">
                         提前退房违约金
@@ -1650,9 +1650,11 @@
             <div class="bottom-fixed">
                 <div class="accounts">
                     <div class="sgive">
-                        <div class="slabel" ng-if="calLeft(checkoutAd) > 0">客户需补</div>
-                        <div class="slabel" ng-if="calLeft(checkoutAd) <= 0">商家需退</div>
-                        <div class="snum">¥{{calLeft(checkoutAd) > 0 ? calLeft(checkoutAd) : -calLeft(checkoutAd)}}</div>
+                        <div class="slabel" ng-if="totalPrice(checkoutAd) >= 0">客户需补</div>
+                        <div class="slabel" ng-if="totalPrice(checkoutAd) < 0">商家需退</div>
+                        <div class="snum">
+                            ¥{{totalPrice(checkoutAd) > 0 ? totalPrice(checkoutAd) : -totalPrice(checkoutAd)}}
+                        </div>
                     </div>
                     <div class="deposit">
                         <div class="slabel">已收押金</div>
@@ -2038,7 +2040,9 @@
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
                                     <div class="sl">订单总价</div>
-                                    <div class="sval">¥{{itemPrice(getMoney)}}</div>
+                                    <div class="sval">
+                                        ¥{{itemPrice(getMoney) - (getMoney.roomsRefund || 0)}}
+                                    </div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="sitem">
@@ -2077,12 +2081,18 @@
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
                                     <div class="sl">订单总价</div>
-                                    <div class="sval">¥{{itemPrice(getMoney)}}</div>
+                                    <div class="sval">¥{{itemPrice(getMoney)
+                                        - (getMoney.roomsRefund || 0)}}</div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="sitem">
                                     <div class="sl">优惠：</div>
                                     <div class="sval">- ¥{{getMoney.discounts || 0}}</div>
+                                    <div class="clearline"></div>
+                                </div>
+                                <div class="sitem" ng-if="getMoney.penaltyAd !== null">
+                                    <div class="sl">提前退房违约金：</div>
+                                    <div class="sval">¥{{getMoney.penaltyAd}}</div>
                                     <div class="clearline"></div>
                                 </div>
                                 <div class="sitem">
@@ -2273,7 +2283,7 @@
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
                ng-model="searchKeyword">
         <div class="results" ng-show="showResults">
-            <div class="tips" ng-if="searchResultsNum === 0">无结果</div>
+            <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
             <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
             <div class="hr" ng-if="searchResultsNum > 0"></div>
             <div ng-repeat="g in searchResults" ng-click="searchResultOnClick(g.orderId)">
@@ -2439,8 +2449,8 @@
                         <div class="bhr"></div>
                         <div class="bprice">
                             <div class="stotal"><span class="slabel">订单总价：</span><span class="num">¥ {{g.amountPay}}</span></div>
-                            <div class="sleft" ng-if="g.needPay < 0"><span class="slabel">客户需补：</span><span class="num">¥ {{-g.needPay}}</span></div>
-                            <div class="sgive" ng-if="g.needPay > 0"><span class="slabel">商家需退：</span><span class="num">¥ {{g.needPay}}</span></div>
+                            <div class="sleft" ng-if="g.needPay < 0"><span class="slabel">商家需退：</span><span class="num">¥ {{-g.needPay}}</span></div>
+                            <div class="sgive" ng-if="g.needPay >= 0"><span class="slabel">客户需补：</span><span class="num">¥ {{g.needPay}}</span></div>
                         </div>
                         <div class="remarks"><span>备注：</span>{{g.remark || '无备注'}}</div>
                     </div>
