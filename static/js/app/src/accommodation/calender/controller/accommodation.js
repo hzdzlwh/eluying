@@ -168,8 +168,8 @@ var accommodationCtrl = function(app){
                         temp.endDate = util.dateFormat(checkoutDate);
                         temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
                         temp.ecanlerdarDate = util.dateFormat(checkoutDate);
-                        calendarService.createRoomStartDateCalendar(temp);
-                        calendarService.createRoomEndDateCalendar(temp);
+                        calendarService.createRoomStartDateCalendar(temp, type);
+                        calendarService.createRoomEndDateCalendar(temp, type);
                         orderList.push(temp);
                         temp = orderService.createRoomItem(entry);
                     }
@@ -178,8 +178,8 @@ var accommodationCtrl = function(app){
                 temp.endDate = util.dateFormat(checkoutDate);
                 temp.sendDate = util.dateFormatWithoutYear(checkoutDate);
                 temp.ecanlerdarDate = util.dateFormat(checkoutDate);
-                calendarService.createRoomStartDateCalendar(temp);
-                calendarService.createRoomEndDateCalendar(temp);
+                calendarService.createRoomStartDateCalendar(temp, type);
+                calendarService.createRoomEndDateCalendar(temp, type);
                 orderList.push(temp);
                 rootScope.orderNew = orderNewService.resetOrderNew(type, orderList, rootScope.channels[0].name, -1);
                 $(".msgModal").modal("hide");

@@ -61,7 +61,7 @@ var calendarService = function(app){
             }
             return days;
         };
-        this.createRoomStartDateCalendar = function(room){
+        this.createRoomStartDateCalendar = function(room, orderNewType){
             var startDate = new Date(room.startDate);
             var scanlerdarDate = new Date(room.scanlerdarDate);
             var calenderTable = this.buildCalendarTable(scanlerdarDate);
@@ -76,9 +76,29 @@ var calendarService = function(app){
                 for(var i = 0; i < calenderTable.length; i++){
                     var sclass = '';
                     var today = new Date();
+                    var yesterday = util.diffDate(today, -1);
                     var text = null;
-                    if(calenderTable[i] < today || rs.status[i].s!==-1){
-                        sclass = 'invalid';
+                    if(rs.status[i].s!==-1){
+                        sclass += ' invalid';
+                    }else{
+                        //直接入住的入住时间只能是今天，不能改成别的时间
+                        if(orderNewType === 'ing'){
+                            if(!util.isSameDay(calenderTable[i], today)){
+                                sclass += ' invalid';
+                            }
+                        }
+                        //补录的入住时间只能是昨天及之前
+                        else if(orderNewType === 'finish'){
+                            if(!util.isSameDay(calenderTable[i], yesterday) && calenderTable[i] > yesterday){
+                                sclass += ' invalid';
+                            }
+                        }
+                        //预定的入住时间只能在今天之后
+                        else{
+                            if(calenderTable[i] < today){
+                                sclass += ' invalid';
+                            }
+                        }
                     }
                     if(util.isSameDay(calenderTable[i], today)){
                         sclass += ' today';
@@ -102,7 +122,7 @@ var calendarService = function(app){
                 rootScope.$apply();
             });
         };
-        this.createRoomEndDateCalendar = function(room){
+        this.createRoomEndDateCalendar = function(room, orderNewType){
             var startDate = new Date(room.startDate);
             var endDate = new Date(room.endDate);
             var ecanlerdarDate = new Date(room.ecanlerdarDate);
@@ -119,9 +139,23 @@ var calendarService = function(app){
                     var sclass = '';
                     var today = new Date();
                     var text = null;
-                    if(calenderTable[i] < today || calenderTable[i] <= startDate
-                        || (i > 0 && rs.status[i-1].s!==-1)){
+                    //房间被占用
+                    if(i > 0 && rs.status[i-1].s!==-1){
                         sclass = 'invalid';
+                    }else{
+                        //补录的离店时间只能是今天及以前
+                        if(orderNewType === 'finish'){
+                            if(calenderTable[i] <= startDate || (calenderTable[i] > today
+                                && !util.isSameDay(calenderTable[i], today))){
+                                sclass = 'invalid';
+                            }
+                        }
+                        //离店时间在入住时间之后
+                        else{
+                            if(calenderTable[i] <= startDate){
+                                sclass = 'invalid';
+                            }
+                        }
                     }
                     if(util.isSameDay(calenderTable[i], today)){
                         sclass += ' today';

@@ -30,7 +30,6 @@ var orderEditCtrl = function(app){
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
             scope.submitOrder = function(){
-                console.log(rootScope.orderEdit);
                 var orderEdit = rootScope.orderEdit;
                 var rooms = [];
                 orderEdit.rooms.forEach(function(d){

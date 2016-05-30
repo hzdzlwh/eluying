@@ -39,20 +39,20 @@ var orderService = function(app){
             order.originId = cid;
             $(".select1_options").hide();
         };
-        this.changeRoomStartDateMonth = function(room, monthDiff){
+        this.changeRoomStartDateMonth = function(room, monthDiff, orderNewType){
             var scanlerdarDate = new Date(room.scanlerdarDate);
             scanlerdarDate.setMonth(scanlerdarDate.getMonth() + monthDiff);
             room.scanlerdarDate = util.dateFormat(scanlerdarDate);
-            calendarService.createRoomStartDateCalendar(room);
+            calendarService.createRoomStartDateCalendar(room, orderNewType);
         };
-        this.changeRoomEndDateMonth = function(room, monthDiff){
+        this.changeRoomEndDateMonth = function(room, monthDiff, orderNewType){
             var ecanlerdarDate = new Date(room.ecanlerdarDate);
             ecanlerdarDate.setMonth(ecanlerdarDate.getMonth() + monthDiff);
             room.ecanlerdarDate = util.dateFormat(ecanlerdarDate);
-            calendarService.createRoomEndDateCalendar(room);
+            calendarService.createRoomEndDateCalendar(room, orderNewType);
         };
-        this.changeRoomStartDate = function(room, date, sclass){
-            if(sclass == 'invalid'){
+        this.changeRoomStartDate = function(room, date, sclass, orderNewType){
+            if(sclass.indexOf('invalid') != -1){
                 return false;
             }
             //开始日期大于结束日期
@@ -84,11 +84,11 @@ var orderService = function(app){
                 }
             }
             room.fee = fee;
-            calendarService.createRoomStartDateCalendar(room);
-            calendarService.createRoomEndDateCalendar(room);
+            calendarService.createRoomStartDateCalendar(room, orderNewType);
+            calendarService.createRoomEndDateCalendar(room, orderNewType);
         };
-        this.changeRoomEndDate = function(room, date, sclass){
-            if(sclass == 'invalid'){
+        this.changeRoomEndDate = function(room, date, sclass, orderNewType){
+            if(sclass.indexOf('invalid') != -1){
                 return false;
             }
             var startDate = new Date(room.startDate);
@@ -134,8 +134,8 @@ var orderService = function(app){
                 }
             }
             room.fee = fee;
-            calendarService.createRoomStartDateCalendar(room);
-            calendarService.createRoomEndDateCalendar(room);
+            calendarService.createRoomStartDateCalendar(room, orderNewType);
+            calendarService.createRoomEndDateCalendar(room, orderNewType);
         };
         this.deleteRoom = function(rooms, index){
             rooms.splice(index, 1);

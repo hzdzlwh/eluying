@@ -22,6 +22,8 @@ var orderEditService = function(app){
             });
             //准备好房间数据
             orderEdit.rooms.forEach(function(d){
+                d.ostartDate = d.startDate;
+                d.oendDate = d.endDate;
                 d.sstartDate = d.startDate.substr(5, 5);
                 d.scanlerdarDate = d.startDate;
                 d.sendDate = d.endDate.substr(5, 5);
