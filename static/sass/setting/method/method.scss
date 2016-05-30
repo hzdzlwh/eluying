@@ -73,11 +73,15 @@
             td:first-child{
               width: 38px;
               text-align: right;
+              img{
+                cursor: pointer;
+              }
             }
             td:nth-child(2){
               width: 262px;
               padding: 6px;
               text-align: left;
+              cursor: pointer;
             }
             td:nth-child(3){
               width: 226px;

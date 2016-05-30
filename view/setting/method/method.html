@@ -173,12 +173,12 @@
                         <tbody>
                             <tr class="wechat">
                                 <td ng-click="chooseMethod(2)">
-                                    <img ng-if="!(onlinePay.weixinSelected === 1 && onlinePay.alipaySelected === 1)"
+                                    <img ng-if="onlinePay.alipaySelected === 0"
                                          class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
-                                    <img ng-if="onlinePay.weixinSelected === 1 && onlinePay.alipaySelected === 1"
+                                    <img ng-if="onlinePay.alipaySelected === 1"
                                          class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                 </td>
-                                <td>
+                                <td ng-click="chooseMethod(2)">
                                     企业微信
                                 </td>
                                 <td>
@@ -189,8 +189,8 @@
                                 </td>
                             </tr>
                             <tr class="alipay">
-                                <td></td>
-                                <td>
+                                <td ng-click="chooseMethod(2)"></td>
+                                <td ng-click="chooseMethod(2)">
                                     企业支付宝
                                 </td>
                                 <td>
@@ -205,7 +205,7 @@
                                     <img ng-if="onlinePay.walletPaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
                                     <img ng-if="onlinePay.walletPaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                 </td>
-                                <td>
+                                <td ng-click="chooseMethod(1)">
                                     订单钱包
                                 </td>
                                 <td>
@@ -218,7 +218,7 @@
                                     <img ng-if="onlinePay.walletPaySelected == 1 || onlinePay.alipaySelected == 1" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png" alt="checked">
                                     <img ng-if="onlinePay.walletPaySelected == 0 && onlinePay.alipaySelected == 0" class="scheckbox" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png" alt="checked">
                                 </td>
-                                <td>不使用线上收款（直销网站不能上线）</td>
+                                <td ng-click="chooseMethod(0)">不使用线上收款（直销网站不能上线）</td>
                             </tr>
                         </tbody>
                     </table>
