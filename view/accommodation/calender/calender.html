@@ -2397,7 +2397,7 @@
         <div class="calendor-container">
             <div class="entryList">
                 <div class="srow" ng-repeat="r in roomStore" ng-if="pRoomList[r.pi].selected">
-                    <div class="entryItem"
+                    <div class="entryItem" date="{{day.date}}" room="{{r.id}}"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
                         <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
                             <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">

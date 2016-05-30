@@ -56,8 +56,8 @@ $(function(){
         "mouseover body .entryItem": function(){
             var date = $(this).attr("date");
             var room = $(this).attr("room");
-            $(".room-item[room=" + room + "]").addClass("selected");
-            $(".date-item[date=" + date + "]").addClass("selected");
+            $(".room-item[room='" + room + "']").addClass("selected");
+            $(".date-item[date='" + date + "']").addClass("selected");
         },
         "mouseleave body .entryItem": function(){
             $(".room-item").removeClass("selected");
