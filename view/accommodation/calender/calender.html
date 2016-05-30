@@ -451,7 +451,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
-                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -8"
+                                     ng-if="payment.channelId != -8 && payment.channelId != -6"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -471,7 +471,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
-                                     ng-if="payment.payChannelId != -6 && payment.payChannelId != -8"
+                                     ng-if="payment.channelId != -8 && payment.channelId != -6"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -2146,7 +2146,7 @@
                         </div>
                     </div>
                     <div class="item item_big" ng-repeat="p in getMoney.payments"
-                         ng-if="getMoney.feeMode === 0 &&p.type === 0 && p.isNew">
+                         ng-if="getMoney.feeMode === 0 && p.type === 0 && p.isNew">
                         <input type="text" ng-model="p.fee">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
