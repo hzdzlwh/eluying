@@ -108,8 +108,12 @@ gulp.task('webpack2', function () {
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "guest/source": "./static/js/app/src/guest/source/source.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tips/noauth": "./static/js/app/src/tips/noauth.js"
+                "tips/noauth": "./static/js/app/src/tips/noauth.js",
+                "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
+                "tips/expired": "./static/js/app/src/tips/expired.js",
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
             },
             output: {
 
@@ -185,8 +189,12 @@ gulp.task('webpack', function () {
                 "category/shopEntry": "./static/js/app/src/business/category/shop/shopEntry.js",
                 "salesite/info": "./static/js/app/src/salesite/info/info.js",
                 "salesite/operation": "./static/js/app/src/salesite/operation/operation.js",
+                "guest/source": "./static/js/app/src/guest/source/source.js",
                 "setting/method": "./static/js/app/src/setting/method/method.js",
-                "tips/noauth": "./static/js/app/src/tips/noauth.js"
+                "tips/noauth": "./static/js/app/src/tips/noauth.js",
+                "tips/expired": "./static/js/app/src/tips/expired.js",
+                "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
             },
             output: {
                 filename: "[name].js",
@@ -245,6 +253,7 @@ gulp.task('webpack', function () {
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
     gulp.watch('static/js/app/src/**/*.js', ['webpack']);
+    gulp.watch('static/js/app/src/common/*.html', ['webpack']);
     gulp.watch("**/*.html").on('change', reload);
 });
 

@@ -56,7 +56,7 @@ $(function(){
     var app = angular.module('infoApp', []);
     app.controller('infoCtrl',['$scope', function(scope) {
         scope.types = ["营地", "景区", "农庄", "游乐园","度假村","客栈","青旅"];
-        scope.selectedType = 0;
+        scope.selectedType = null;
         scope.selectType = function(type){
             scope.selectedType = type;
         };
@@ -100,6 +100,22 @@ $(function(){
             var province = scope.provinceItems[scope.selectedProvince];
             var recePhone = scope.phone;
             var type = scope.selectedType;
+            if(!address || !province || !city){
+                modal.somethingAlert("请填写完整地址!");
+                return false;
+            }
+            if(!imgUrl){
+                modal.somethingAlert("请上传图片!");
+                return false;
+            }
+            if(type === null){
+                modal.somethingAlert("请选择一种类型!");
+                return false;
+            }
+            if(!recePhone){
+                modal.somethingAlert("请填写前台电话!");
+                return false;
+            }
             AJAXService.ajaxWithToken('GET', 'editBasicInfoUrl', {
                 address: address,
                 campType: type,
@@ -112,8 +128,6 @@ $(function(){
                 modal.somethingAlert(result.msg);
                 scope.$apply();
             });
-        };
-        scope.uploadCover = function(){
         };
         AJAXService.ajaxWithToken('GET', 'getBasicInfoUrl', {}, function(result){
             var infos = result.data;

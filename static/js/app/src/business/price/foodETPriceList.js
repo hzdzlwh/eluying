@@ -63,11 +63,11 @@ var foodETPriceList = {
             newSalePrice: $("#retailPrice").val(),
             newNetPrice: 0,
             newAgreementPrice: 0,
-            categoryId: $(".selected").attr("category-id"),
+            categoryId: $("td.selected").attr("category-id"),
             channelId: 0
         },function(result){
             if (util.errorHandler(result)) {
-                $(".selected").html($("#retailPrice").val());
+                $("td.selected").html($("#retailPrice").val());
                 modal.clearModal(that);
             }
         });
@@ -97,12 +97,12 @@ var foodETPriceList = {
             newSalePrice: $("#netPrice").val(),
             newNetPrice: $("#netPrice").val(),
             newAgreementPrice: $("#netPrice").val(),
-            categoryId: $(".selected").attr("category-id"),
-            channelId: $(".selected").attr("channel-id")
+            categoryId: $("td.selected").attr("category-id"),
+            channelId: $("td.selected").attr("channel-id")
         },function(result){
             if (util.errorHandler(result)) {
-                $(".selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $(".selected").find("p:eq(0)").html($("#netPrice").val());
+                $("td.selected").find("p:eq(0)").html($("#commissionPrice").val());
+                $("td.selected").find("p:eq(0)").html($("#netPrice").val());
                 modal.clearModal(that);
             }
         })
@@ -126,11 +126,11 @@ var foodETPriceList = {
                 $(".second").removeClass("hide");
             },
             "click #editSalePriceButton": function(){
-                $("#retailPrice").val($(".selected").html());
+                $("#retailPrice").val($("td.selected").html());
             },
             "click #editNetPriceButton": function(){
-                $("#netPrice").val($(".selected").find("p:eq(0)").html());
-                $("#commissionPrice").val($(".selected").find("p:eq(0)").html());
+                $("#netPrice").val($("td.selected").find("p:eq(0)").html());
+                $("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
             },
             "click #editSalePriceOk": function(){
                 var that = this

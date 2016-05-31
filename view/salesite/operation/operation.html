@@ -17,7 +17,7 @@
         <div class="modal-content" >
             <div class="hr"></div>
             <div class="label1">复制成功!</div>
-            <div class="label2">正在进入系统</div>
+            <!--<div class="label2">正在进入系统</div>-->
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
@@ -47,55 +47,52 @@
     <div class="content clearfloat">
         <div class="salesite-operation-status">
             <div class="slabel">网站状态：</div>
-            <div class="scontent fail" ng-if="directNetStatus === 0 && (!status.alipay.status || !status.campBasicInfo.status)">未完成准备工作，未上线</div>
+            <div class="scontent fail" ng-if="directNetStatus === 0 && (!status.isOnlinePay.status || !status.campBasicInfo.status)">未完成准备工作，未上线</div>
             <div class="scontent on" ng-if="directNetStatus === 1">已上线</div>
-            <div class="scontent ready" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)">已完成准备工作，未上线</div>
-            <div class="sbtn openbtn" ng-if="directNetStatus === 0 && (status.alipay.status && status.campBasicInfo.status)" ng-click="changeSiteState()">网站上线</div>
+            <div class="scontent ready" ng-if="directNetStatus === 0 && (status.isOnlinePay.status && status.campBasicInfo.status)">已完成准备工作，未上线</div>
+            <div class="sbtn openbtn" ng-if="directNetStatus === 0 && (status.isOnlinePay.status && status.campBasicInfo.status)" ng-click="changeSiteState()">网站上线</div>
             <div class="sbtn closebtn" ng-if="directNetStatus === 1" ng-click="changeSiteState()">关闭网站</div>
         </div>
-        <div class="salesite-operation-fail" ng-if="!(status.alipay.status && status.campBasicInfo.status)">
+        <div class="salesite-operation-fail" ng-if="!(status.isOnlinePay.status && status.campBasicInfo.status)">
             <div class="failbox">
                 <div class="hr"></div>
                 <div class="stitle">上线准备工作</div>
-                <div class="hr2"></div>
                 <div class="wrapper">
                     <div class="item" ng-repeat="s in status">
                         <div class="itemBox" ng-class="{'active': s.status}" ng-click="onWebsite(s)">
                             <img class="yesTips" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
                             <img class="logo" src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
-                            <div class="stext" ng-if="s.status">{{s.yesText}}</div>
+                            <div class="stext active" ng-if="s.status">{{s.yesText}}</div>
                             <div class="stext" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
                         </div>
                     </div>
-                    <!--<div class="item"></div>-->
-                    <!--<div class="item"></div>-->
-                    <!--<div class="item"></div>-->
                 </div>
-                <div class="sbtn" ng-class="{'disabled': !status['alipay'].status || !status['campBasicInfo'].status}" ng-click="changeSiteState()">网站上线</div>
+                <div class="sbtn" ng-class="{'disabled': !status['isOnlinePay'].status || !status['campBasicInfo'].status}" ng-click="changeSiteState()">网站上线</div>
             </div>
         </div>
-        <div class="salesite-operation-success" ng-if="(status.alipay.status && status.campBasicInfo.status)">
+        <div class="salesite-operation-success" ng-if="(status.isOnlinePay.status && status.campBasicInfo.status)">
             <div class="successbox">
                 <div class="hr"></div>
                 <div class="formrow notice">
-                    <div class="stext">公告:{{notice || "无"}}</div>
+                    <div class="slabel">公告：</div>
+                    <div class="stext">{{notice || "无"}}</div>
                     <div class="stime">{{noticeTime || ''}}</div>
                     <div class="sbtn" data-toggle="modal" data-target="#announcement">发布新公告</div>
+                    <!--<div class="stext">公告:{{notice || "无"}}</div>-->
+                    <!--<div class="stime">{{noticeTime || ''}}</div>-->
+                    <!--<div class="sbtn" data-toggle="modal" data-target="#announcement">发布新公告</div>-->
                 </div>
-                <div class="hr2"></div>
-                <div class="formrow">
-                    <div class="stext">网站: <span id="campUrl">{{campUrl}}</span></div>
+                <div class="hr2" ng-if="campUrl != ''"></div>
+                <div class="formrow website" ng-if="campUrl != ''">
+                    <div class="slabel">网站：</div>
+                    <div class="stext"><span id="campUrl">{{campUrl}}</span></div>
                     <div class="sbtn" ng-click="copySite()">复制网址</div>
                 </div>
-                <div class="hr2"></div>
-                <div class="formrow erweima">
-                    <div class="stext">
-                        <span>二维码:</span>
-                        <div class="erweimapic">
-                            <img src="{{campQrCode}}" alt="营地二维码"/>
-                        </div>
-                    </div>
+                <div class="hr2" ng-if="campUrl != ''"></div>
+                <div class="formrow erweima" ng-if="campQrCode != ''">
+                    <div class="slabel">二维码:</div>
+                    <img class="erweimapic" src="{{campQrCode}}" alt="营地二维码"/>
                     <!--<div class="sbtn">下载</div>-->
                 </div>
             </div>

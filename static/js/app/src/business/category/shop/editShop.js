@@ -17,7 +17,7 @@ var editShop = {
         $('#editPrice').val($('.categoryGrid .mainActive').find('td:eq(4)').html());
         $('#editBrand').val($('.categoryGrid .mainActive').find('td:eq(5)').html());
         $('#editDescription').val($('.categoryGrid .mainActive').find('td:eq(6)').html());
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getShopCategory'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -32,6 +32,16 @@ var editShop = {
                 $('#editCategory').html(str);
                 $('#editCategory').val($('.categoryGrid .mainActive').attr('data-categoryId'));
             }
+        });*/
+        AJAXService.ajaxWithToken('get','/category/getGoodTypeInfo',{},function (result) {
+            var category = result.data.list;
+            var str = '';
+            $.each(category, function(index, el) {
+                str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
+            });
+
+            $('#editCategory').html(str);
+            $('#editCategory').val($('.categoryGrid .mainActive').attr('data-categoryId'));
         });
     },
 
@@ -50,7 +60,7 @@ var editShop = {
     },
 
     edit: function(data, that) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('editGood'),
             type: 'POST',
             data: data,
@@ -66,6 +76,15 @@ var editShop = {
                 shopList.loadShopCategory();
                 shopList.loadShopList();
             }
+        });*/
+        AJAXService.ajaxWithToken('post','editGood',data,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            shopList.loadShopCategory();
+            shopList.loadShopList();
         });
     },
 

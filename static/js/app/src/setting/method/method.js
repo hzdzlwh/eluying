@@ -8,6 +8,9 @@ require("angular");
 require("bootstrap");
 require("validation");
 
+var checkedUrl = 'http://7xsrk6.com2.z0.glb.qiniucdn.com/C348E5DF-BF35-474F-99D0-18B4ECE48ABF@1x.png';
+var uncheckedUrl = 'http://7xsrk6.com2.z0.glb.qiniucdn.com/B8DB0EA1-D946-44FF-A073-566D9F7DF283@1x.png';
+
 $(function(){
     //检测IE
     util.checkExplorer();
@@ -43,7 +46,7 @@ $(function(){
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click body #alipayMethod-ok": function(){
             if(checkAlipayForm()){
-                $("#comfirmSubmit").modal("show");
+                $("#method-comfirmSubmit").modal("show");
             }
         }
     };
@@ -59,6 +62,37 @@ $(function(){
         scope.publicKey = '';
         scope.methodToDelete = null;
         scope.errorTips = '';
+        scope.onlinePay = {};
+        scope.alichatStatusStr = ['审核中', '已开通', '审核失败', '未绑定'];
+        scope.walletPayStatusStr = {
+            '-1': '未知',
+            '0': '正常',
+            '1': '冻结'
+        };
+        scope.chooseMethod = function(method){
+            if(method == 2 && scope.onlinePay.alipay !== 1){
+                modal.somethingAlert("您还未绑定支付宝！");
+                return false;
+            }
+            if(method == 2 && scope.onlinePay.weixinPay !== 1){
+                modal.somethingAlert("您还未绑定微信！");
+                return false;
+            }
+            if(method == 1 && scope.onlinePay.walletPay !== 0){
+                modal.somethingAlert("您还未开通订单钱包！");
+                return false;
+            }
+            AJAXService.ajaxWithToken('GET', 'selectPayWapUrl', {
+                type: method
+            }, function(result){
+                AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                    console.log(result.data.map);
+                    scope.onlinePay = result.data.map;
+                    scope.payChannelCustomList = result.data.payChannelCustomList;
+                    scope.$apply();
+                });
+            });
+        };
         scope.addMethod = function(){
             var newMethod = document.getElementById("newMethod-input");
             if(!newMethod.checkValidity()){
@@ -88,11 +122,10 @@ $(function(){
                 channelName: newMethod.value
             }, function(result){
                 modal.somethingAlert(result.msg);
-                $("#newMethod").modal("hide");
+                $("#method-newMethod").modal("hide");
                 newMethod.value = '';
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    scope.cash = result.data.map.cash;
-                    scope.alipay = result.data.map.alipay;
+                    scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();
                 });
@@ -102,15 +135,13 @@ $(function(){
             scope.methodToDelete = id;
         };
         scope.deleteMethod = function(){
-            $("#deleteMethod").modal("hide");
+            $("#method-deleteMethod").modal("hide");
             AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                 channelId: scope.methodToDelete
             }, function(result){
                 scope.methodToDelete = null;
-                modal.somethingAlert(result.msg);
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    scope.cash = result.data.map.cash;
-                    scope.alipay = result.data.map.alipay;
+                    scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();
                 });
@@ -125,13 +156,12 @@ $(function(){
                     privateKey: scope.privateKey,
                 }, function(result){
                     if(result.code !== 1){
-                        util.somethingAlert(result.msg);
+                        modal.somethingAlert(result.msg);
                     }else{
-                        $("#comfirmSubmit").modal("hide");
-                        $("#alipayMethod").modal("hide");
+                        $("#method-comfirmSubmit").modal("hide");
+                        $("#method-alipayMethod").modal("hide");
                         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                            scope.cash = result.data.map.cash;
-                            scope.alipay = result.data.map.alipay;
+                            scope.onlinePay = result.data.map;
                             scope.payChannelCustomList = result.data.payChannelCustomList;
                             scope.$apply();
                         });
@@ -139,9 +169,23 @@ $(function(){
                 });
             }
         };
+        scope.submitWechat = function(){
+            AJAXService.ajaxWithToken('GET', 'applyWxPayUrl', {}, function(result){
+                if(result.code !== 1){
+                    modal.somethingAlert(result.msg);
+                }else{
+                    $("#method-comfirmSubmit").modal("hide");
+                    $("#method-wechatMethod").modal("hide");
+                    AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
+                        scope.onlinePay = result.data.map;
+                        scope.payChannelCustomList = result.data.payChannelCustomList;
+                        scope.$apply();
+                    });
+                }
+            });
+        };
         AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-            scope.cash = result.data.map.cash;
-            scope.alipay = result.data.map.alipay;
+            scope.onlinePay = result.data.map;
             scope.payChannelCustomList = result.data.payChannelCustomList;
             scope.$apply();
         });

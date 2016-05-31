@@ -16,7 +16,7 @@ var shopList = {
 
     //读取商超列表
     loadShopList: function () {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getShopList'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -25,11 +25,15 @@ var shopList = {
                 shopList.list = result.data.list;
                 shopList.render();
             }
+        });*/
+        AJAXService.ajaxWithToken('get','getShopList',{},function (result) {
+            shopList.list = result.data.list;
+            shopList.render();
         });
     },
 
     loadShopCategory: function() {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getShopCategory'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -38,6 +42,10 @@ var shopList = {
                 shopList.categoryList = result.data.list;
                 shopList.renderCategory();
             }
+        });*/
+        AJAXService.ajaxWithToken('get','getShopCategory',{},function (result) {
+            shopList.categoryList = result.data.list;
+            shopList.renderCategory();
         });
     },
 
@@ -79,7 +87,7 @@ var shopList = {
 
     deleteGood: function () {
         var id = $(".mainActive").attr('data-id');
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl("deleteGood"),
             data: {id: id},
             success: function (result) {
@@ -97,6 +105,18 @@ var shopList = {
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
             }
+        });*/
+        AJAXService.ajaxWithToken('get','deleteGood',{id: id},function (result) {
+            if (!util.errorHandler(result)) {
+                return;
+            }
+            $.each(shopList.list, function (index, element) {
+                if (element.id == id) {
+                    shopList.list.splice(index, 1);
+                    return false; //等于break
+                }
+            });
+            shopList.render();
         });
     },
 

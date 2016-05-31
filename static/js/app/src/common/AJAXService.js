@@ -66,9 +66,29 @@ var AJAXService = {
         editBasicInfoUrl: '/directNet/editBasicInfo',
         checkDirectNetOnlineUrl: '/directNet/checkDirectNetOnline',
         getOperationInfoUrl: '/directNet/getOperationInfo',
+        selectPayWapUrl: '/directNet/selectPayWap',
         getPaymentMethodAndStateUrl: '/collectionMethod/getPaymentMethodAndState',
         bindAlipayAccountUrl: '/collectionMethod/bindAlipayAccount',
         newDeleteCollectionMethodUrl: '/collectionMethod/newDeleteCollectionMethod',
+        getChannelsUrl: '/user/getChannels',
+        removeChannelUrl: '/user/removeChannel',
+        addChannelUrl: '/user/addChannel',
+        getRoomsAndStausUrl: '/room/getRoomsAndStaus',
+        getRoomCategoriesUrl: '/room/getRoomCategories',
+        getItemsUrl: '/item/getItems',
+        getInventoryUrl: '/item/getInventory',
+        confirmOrderUrl: '/room/confirmOrder',
+        getOrderDetailUrl: '/order/getOrderDetail',
+        getRoomStausUrl: '/room/getRoomStaus',
+        orderSearchUrl: '/order/search',
+        orderSearchPCUrl: '/order/searchFormPc',
+        orderModifyUrl: '/order/modify',
+        finishPaymentUrl: '/cashier/finishPayment',
+        applyWxPayUrl: '/collectionMethod/applyWxPay',
+        orderCancelUrl: '/order/cancel',
+        checkInOrCheckoutUrl: '/order/checkInOrCheckout',
+        getRoomFeeUrl: '/order/getRoomFee',
+        shopListUrl: '/shop/list',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);
@@ -93,7 +113,7 @@ var AJAXService = {
             //data.uid = 85;
             // data.kick = true;
             data.terminal = 1;
-            data.version = 4;
+            data.version = data.version || 4;
             // data.token = localStorage.getItem("token");
             var array = [];
             for(var key in data){
@@ -110,6 +130,13 @@ var AJAXService = {
             url: AJAXService.getUrl2(path),
             async: asy,
             data: data,
+            dataFilter: function(data){
+                if(data.code == 5){
+                    window.localStorage.clear();
+                    window.location.href = "/login.html";
+                }
+                return data;
+            },
             success: callback,
             error: errorCallback,
         });

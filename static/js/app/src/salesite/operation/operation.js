@@ -9,14 +9,8 @@ require("bootstrap");
 require("validation");
 
 var pics = {
-    "wechat-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/wechat-no.pngA470F11E-' +
-    'D4FB-4DC0-AA40-B29B04963F58@1x.png',
-    "wechat-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/wechat-yes.pngAA606F8D-' +
-    '006E-4097-B26C-AD7932941D68@1x.png',
-    "alipay-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/alipay-yes.png3CEBA994-' +
-    '4117-4311-A979-43880CB06009@1x.png',
-    "alipay-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/alipay-no.png691A00BF-' +
-    '7DC3-47E2-B869-DA60BDF169C2@1x.png',
+    "pay-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/ABAFF64A-FBF7-4673-BDBE-FE35E1681567@1x.png',
+    "pay-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/69E97833-57EE-4CC5-982E-E4257220D538@1x.png',
     "info-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-yes.png74E426B7-1EAC-' +
     '4805-808B-46E45FF261CD@1x.png',
     "info-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-no.png38DB2513-13DF-' +
@@ -47,13 +41,13 @@ $(function(){
     var app = angular.module('operationApp', []);
     app.controller('operationCtrl', ['$scope', function(scope) {
         scope.status = {
-            alipay: {
+            isOnlinePay: {
                 status: false,
                 href: '/view/setting/method/method.html',
-                yesUrl: pics['alipay-yes'],
-                yesText: '绑定企业支付宝',
-                noUrl: pics['alipay-no'],
-                noText: '点我去绑定企业支付宝'
+                yesUrl: pics['pay-yes'],
+                yesText: '选择线上收款方式',
+                noUrl: pics['pay-no'],
+                noText: '点我去选择线上收款方式'
             },
             campBasicInfo: {
                 status: false,
@@ -89,8 +83,10 @@ $(function(){
             AJAXService.ajaxWithToken('GET', 'openCloseDirectNetUrl', {
                 directNetStatus: data
             }, function(result){
-                AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-                    scope.status.alipay.status = result.data.alipay;
+                AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
+                    version: 5
+                }, function(result){
+                    scope.status.isOnlinePay.status = result.data.isOnlinePay;
                     scope.status.campBasicInfo.status = result.data.campBasicInfo;
                     scope.$apply();
                 });
@@ -131,18 +127,23 @@ $(function(){
         scope.copySite = function(){
             if(window.clipboardData && window.clipboardData.setData){
                 window.clipboardData.setData('Text', scope.campUrl);
-                $("#copySuccess").modal("show");
-                setTimeout(function(){
-                    window.location.href = scope.campUrl;
-                }, 1000);
+                modal.somethingAlert("复制成功!");
+                // $("#copySuccess").modal("show");
+                // setTimeout(function(){
+                //     window.location.href = scope.campUrl;
+                // }, 1000);
             }else{
+                // modal.somethingAlert("复制成功!");
                 modal.somethingAlert("您的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。");
                 $("#campUrl").select();
             }
         };
-        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {}, function(result){
-            scope.status.alipay.status = result.data.alipay;
+        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
+            version: 5
+        }, function(result){
+            scope.status.isOnlinePay.status = result.data.isOnlinePay;
             scope.status.campBasicInfo.status = result.data.campBasicInfo;
+            console.log(scope.status);
             scope.$apply();
         });
         AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){

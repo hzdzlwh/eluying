@@ -13,7 +13,7 @@ var createShop = {
 
     //获取商品类型数据
     init: function() {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('getShopCategory'),
             dataFilter: function (result) {
                 return AJAXService.sessionValidate(result);
@@ -27,6 +27,14 @@ var createShop = {
                 $('#category').html(str);
 
             }
+        });*/
+        AJAXService.ajaxWithToken('get','/category/getGoodTypeInfo',{},function (result) {
+            var category = result.data.list;
+            var str = '';
+            $.each(category, function(index, el) {
+                str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
+            });
+            $('#category').html(str);        
         });
     },
 
@@ -44,7 +52,7 @@ var createShop = {
     },
 
     create: function(data, that) {
-        $.ajax({
+        /*$.ajax({
             url: AJAXService.getUrl('addGood'),
             type: 'POST',
             data: data,
@@ -60,6 +68,15 @@ var createShop = {
                 shopList.loadShopCategory();
                 shopList.loadShopList();
             }
+        });*/
+        AJAXService.ajaxWithToken('get','/category/addNewGood',data,function (result) {
+            if (util.errorHandler(result)) {
+                modal.clearModal(that);
+            } else {
+                return;
+            }
+            shopList.loadShopCategory();
+            shopList.loadShopList();
         });
     },
 

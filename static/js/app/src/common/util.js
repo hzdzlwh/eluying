@@ -52,6 +52,11 @@ var util = {
         return y + '-' + m + '-' + d;
     },
 
+    tomorrow: function(date){
+        var d = date.getDate();
+        return new Date(date.setDate(d + 1));
+    },
+
     prevWeek: function(){
         var currentDate = $("#datePicker").datepicker( "getDate" );
         $("#datePicker").datepicker( "setDate", new Date(currentDate.setDate(currentDate.getDate() - 7)));
@@ -93,6 +98,10 @@ var util = {
         return new Date(date.valueOf() + diff*24*60*60*1000);
     },
 
+    DateDiff: function(date1, date2){
+        return Math.ceil((date2.valueOf() - date1.valueOf())/24/60/60/1000);
+    },
+
     compareDates: function(date1, date2){
         //return date1.getFullYear() > date2.getFullYear() || (date1.getFullYear() == date2.getFullYear()
         //    && date1.getMonth() > date2.getMonth()) || (date1.getFullYear() == date2.getFullYear()
@@ -111,6 +120,40 @@ var util = {
         var d = date.getDate();
         d = d < 10 ? ('0' + d) : d;
         return m + '-' + d;
+    },
+
+    dateFormatWithoutYearCn: function(dateStr){
+        var m = parseInt(dateStr.split('-')[0]);
+        var d = parseInt(dateStr.split('-')[1]);
+        return m + '月' + d + '日';
+    },
+    
+    buildCalendar: function(date){
+        var selectedMonth = null;
+        var calenderDays = [];
+        var firstDay = new Date(date);
+        firstDay.setDate(1);
+        var firstDay_Month = firstDay.getMonth();
+        var firstDay_weekday = firstDay.getDay();
+        if(selectedMonth && firstDay_Month !== selectedMonth){
+            firstDay.setMonth(selectedMonth);
+        }
+        if(firstDay_weekday === 0){
+            for(var i = 6; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        } else{
+            for(var i = firstDay_weekday-1; i > 0; i--){
+                calenderDays.push(util.diffDate(firstDay, -i));
+            }
+        }
+        calenderDays.push(firstDay);
+        var temp = util.diffDate(firstDay, 1);
+        while(temp.getMonth() === firstDay_Month || calenderDays.length % 7 !== 0){
+            calenderDays.push(temp);
+            temp = util.diffDate(temp, 1);
+        }
+        return calenderDays;
     },
 
     centroidDiv: function(dom, pdom){
@@ -155,58 +198,58 @@ var util = {
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
         camps = JSON.parse(camps);
-        var flag = false;
+        var authFlag = false;
+        var expiredFlag = false;
+        var upgradeFlag = false;
         //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
         for(var i = 0; i < camps.length; i++){
             var camp = camps[i];
-            if(campId == camp.campId && camp.userType != 2){
-                flag = true;
+            if(campId == camp.campId){
+                if(camp.userType === 1 || camp.userType === 3){
+                    authFlag = true;
+                }
+                if(camp.type === 0 && camp.days <= 0){
+                    upgradeFlag = true;
+                }else if(camp.type === 1 && camp.days <= 0){
+                    expiredFlag = true;
+                }
             }
         }
         var href = window.location.href;
-        if(!flag){
+        var isInTipsPage = href.indexOf("/view/tips/expired.html") > 0
+            || href.indexOf("/view/tips/upgrade.html") > 0
+            || href.indexOf("/view/tips/noauth.html") > 0;
+        if(authFlag){
+            if(expiredFlag){
+                if(href.indexOf("/view/tips/expired.html") < 0){
+                    window.location.href = '/view/tips/expired.html';
+                }
+                return false;
+            }
+            if(upgradeFlag){
+                if(href.indexOf("/view/tips/upgrade.html") < 0){
+                    window.location.href = '/view/tips/upgrade.html';
+                }
+                return false;
+            }
+            if(isInTipsPage){
+                window.location.href = '/view/business/category/room.html';
+            }
+        }else{ //无权限
             if(href.indexOf("/view/tips/noauth.html") > 0){
 
             }else{
                 window.location.href = '/view/tips/noauth.html';
             }
-        }else{
-            if(href.indexOf("/view/tips/noauth.html") > 0){
-                window.location.href = '/view/business/category/room.html';
-            }else{
-
-            }
         }
     },
-
-    //checkAuth: function(){
-    //    //var userType = window.localStorage.getItem("userType");
-    //    //if(userType != 1){
-    //    //    window.location.href = '/view/tips/noauth.html'
-    //    var campId = localStorage.getItem("campId");
-    //    var camps = localStorage.getItem("camps");
-    //    camps = JSON.parse(camps);
-    //    var flag = false;
-    //    for(var i = 0; i < camps.length; i++){
-    //        var camp = camps[i];
-    //        if(campId == camp.campId && camp.userType == 1){
-    //            flag = true;
-    //        }
-    //    }
-    //    if(!flag){
-    //        if(href.indexOf("/view/tips/noauth.html") > 0){
-    //
-    //        }else{
-    //            window.location.href = '/view/tips/noauth.html';
-    //        }
-    //    }else{
-    //        var href = window.location.href;
-    //        if(href.indexOf("/view/tips/noauth.html") > 0){
-    //            window.location.href = '/view/business/category/room.html';
-    //        }else{
-    //            window.location.reload();
-    //        }
-    //    }
-    //}
+    
+    objLen: function(obj){
+        var num = 0;
+        for(var key in obj){
+            num++;
+        }
+        return num;
+    },
 };
 module.exports = util;
