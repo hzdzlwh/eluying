@@ -14,7 +14,7 @@ var orderSearch = function(app){
         scope.searchKeyword = '';
         scope.showResults = false;
         scope.searchResultPage = 1;
-        scope.searchResultUnit = 5;
+        scope.searchResultUnit = 4;
         scope.searchResultsNum = 0;
         scope.searchResults = [];
         scope.search = function(flag){
@@ -28,6 +28,7 @@ var orderSearch = function(app){
                 searchType: 1
             }, function(result){
                 if(result.code === 1){
+                    $(".search .results").show();
                     scope.showResults = true;
                     scope.searchResults = result.data.orderList;
                     scope.searchResults.forEach(function(d){
@@ -42,7 +43,7 @@ var orderSearch = function(app){
             });
         };
         scope.searchResultNextPage = function(){
-            if(scope.searchResultPage * 5 >= scope.searchResultsNum){
+            if(scope.searchResultPage * scope.searchResultUnit >= scope.searchResultsNum){
                 return false;
             }
             scope.searchResultPage++;

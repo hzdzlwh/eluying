@@ -155,18 +155,20 @@
                 <div class="guest-info">
                     <div class="sub-title">客户信息</div>
                     <table>
-                        <tr>
-                            <td>姓名</td>
-                            <td>{{orderDetail.customerName}}</td>
-                            <td>手机号</td>
-                            <td>{{orderDetail.customerPhone}}</td>
-                        </tr>
-                        <tr>
-                            <!--<td>身份证</td>-->
-                            <!--<td>440183199209080056</td>-->
-                            <td>渠道</td>
-                            <td>{{orderDetail.origin}}</td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>姓名</td>
+                                <td>{{orderDetail.customerName}}</td>
+                                <td>手机号</td>
+                                <td>{{orderDetail.customerPhone}}</td>
+                            </tr>
+                            <tr>
+                                <!--<td>身份证</td>-->
+                                <!--<td>440183199209080056</td>-->
+                                <td>渠道</td>
+                                <td>{{orderDetail.origin}}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="hr2"></div>
@@ -174,7 +176,7 @@
                     <div class="sub-title">消费信息</div>
                     <div class="subtype room">
                         <div class="sub-title">房间信息</div>
-                        <table>
+                        <table ng-if="orderDetail.rooms">
                             <tr ng-repeat="r in orderDetail.rooms">
                                 <td><span>{{r.serialNum}}</span>&nbsp;({{r.name}})
                                     <div class="sstatus {{statusStr2[r.state].classStr}}">
@@ -192,7 +194,7 @@
                     <div class="hr2" ng-if="itemsExist(orderDetail.foodItems)"></div>
                     <div class="subtype food" ng-if="itemsExist(orderDetail.foodItems)">
                         <div class="sub-title">餐饮项目</div>
-                        <table>
+                        <table ng-if="orderDetail.foodItems">
                             <tr ng-repeat="f in orderDetail.foodItems">
                                 <td>{{f.name}}</td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
@@ -208,7 +210,7 @@
                     <div class="hr2" ng-if="itemsExist(orderDetail.playItems)"></div>
                     <div class="subtype fun" ng-if="itemsExist(orderDetail.playItems)">
                         <div class="sub-title">娱乐项目</div>
-                        <table>
+                        <table ng-if="orderDetail.playItems">
                             <tr ng-repeat="p in orderDetail.playItems">
                                 <td>{{p.name}}</td>
                                 <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
@@ -224,7 +226,7 @@
                     <div class="hr2" ng-if="itemsExist(orderDetail.goodsItems)"></div>
                     <div class="subtype goods" ng-if="itemsExist(orderDetail.goodsItems)">
                         <div class="sub-title">商超项目</div>
-                        <table>
+                        <table ng-if="orderDetail.goodsItems">
                             <tr ng-repeat="p in orderDetail.goodsItems">
                                 <td>{{p.name}}</td>
                                 <td></td>
@@ -339,7 +341,7 @@
                     <div class="subtype room">
                         <div class="sub-title">房间信息</div>
                         <table>
-                            <tr ng-repeat="r in orderCancel.rooms">
+                            <tr ng-if="orderCancel.rooms" ng-repeat="r in orderCancel.rooms">
                                 <td>
                                     <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
                                     <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
@@ -357,7 +359,7 @@
                     <div class="subtype food" ng-if="orderCancel.foodItems.length > 0">
                         <div class="sub-title">餐饮信息</div>
                         <table>
-                            <tr ng-repeat="f in orderCancel.foodItems">
+                            <tr ng-if="orderCancel.foodItems" ng-repeat="f in orderCancel.foodItems">
                                 <td>{{f.name}}</td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                                 <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
@@ -369,7 +371,7 @@
                     <div class="subtype fun" ng-if="orderCancel.playItems.length > 0">
                         <div class="sub-title">娱乐信息</div>
                         <table>
-                            <tr ng-repeat="f in orderCancel.playItems">
+                            <tr ng-if="orderCancel.playItems" ng-repeat="f in orderCancel.playItems">
                                 <td>{{f.name}}</td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                                 <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;(剩余{{f.amount - f.usedAmount}})</td>
@@ -406,17 +408,17 @@
                                 </div>
                                 <div class="hr3"></div>
                                 <div class="subt">订单收支明细</div>
-                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 0">
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 0 && orderCancel.payments">
                                     <div class="sl">客户已付（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 2">
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 2 && orderCancel.payments">
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
                                 <div class="hr3"></div>
                                 <div class="subt">押金收支明细</div>
-                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 1">
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 1 && orderCancel.payments">
                                     <div class="sl">押金（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
@@ -445,11 +447,11 @@
                             添加订单退款
                         </div>
                     </div>
-                    <div class="item item_big" ng-repeat="p in orderCancel.newPayments" ng-if="p.type === 2">
+                    <div class="item item_big" ng-repeat="p in orderCancel.newPayments" ng-if="orderCancel.newPayments && p.type === 2">
                         <input type="text" ng-model="p.fee">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
-                            <div class="select1_options">
+                            <div class="select1_options" ng-if="payChannels">
                                 <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
@@ -2282,7 +2284,7 @@
         </div>
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
                ng-model="searchKeyword">
-        <div class="results" ng-show="showResults">
+        <div class="results"  ng-class="{'sshow': showResults}">
             <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
             <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
             <div class="hr" ng-if="searchResultsNum > 0"></div>
@@ -2304,7 +2306,7 @@
                 </div>
                 <div class="hr"></div>
             </div>
-            <div class="btns" ng-if="searchResultsNum > 5">
+            <div class="btns" ng-if="searchResultsNum > searchResultUnit">
                 <div class="sbtn previous" ng-click="searchResultPreviousPage()"
                      ng-class="{'disabled': searchResultPage === 1}">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
@@ -2312,7 +2314,7 @@
                     </div>
                 </div>
                 <div class="sbtn next" ng-click="searchResultNextPage()"
-                     ng-class="{'disabled': searchResultPage * 5 >= searchResultsNum}">
+                     ng-class="{'disabled': searchResultPage * searchResultUnit >= searchResultsNum}">
                     <div class="eluyun_arrow-right-border_outer spriteImg">
                         <div class="eluyun_arrow-right-border"></div>
                     </div>

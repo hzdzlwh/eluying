@@ -52,7 +52,7 @@ $(function(){
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);
             $(".accommodation-mainContainer .content .leftHeader").css("margin-top", -scrollTop);
         },
-        "click body .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "mouseover body .entryItem": function(){
             var date = $(this).attr("date");
             var room = $(this).attr("room");
@@ -82,7 +82,7 @@ $(function(){
         },
         "click body": function(ev){
             $(".entryOp").hide();
-            // $(".search .results").hide();
+            $(".search .results").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();
@@ -154,7 +154,10 @@ $(function(){
             ev.stopPropagation();
         },
         "click body .modal-close": function(ev){
-            var that = this; modal.clearModal(that);
+            $(this).parents(".modal").modal("hide");
+        },
+        "click body .header>img.logo": function(){
+            window.location.reload();
         }
     };
 

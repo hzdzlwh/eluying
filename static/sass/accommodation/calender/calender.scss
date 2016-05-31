@@ -2309,7 +2309,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       padding: 0 8px;
     }
     .results{
-      //display: none;
+      display: none;
       background:#fafafa;
       box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
       border-radius:2px;
@@ -2427,6 +2427,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           }
         }
       }
+    }
+    .results.sshow{
+      display: block;
     }
   }
   .content {
@@ -2647,7 +2650,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       }
     }
     .category-filter.open{
-      img{
+      .eluyun_arrow-down-grey_outer{
         -webkit-transform: rotate(-180deg);
         -moz-transform: rotate(-180deg);
         -o-transform: rotate(-180deg);

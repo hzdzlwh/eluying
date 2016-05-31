@@ -98,6 +98,7 @@ var getDataService = function(app){
             }, function(result){
                 if(result.code === 1){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
+                    console.log(scope.orderDetail);
                     scope.$apply();
                     $("#orderDetailModal").modal("show");
                 }
