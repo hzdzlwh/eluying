@@ -65,8 +65,8 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="eluyun_success_outer tips-img">
-                <div class="eluyun_success"></div>
+            <div class="eluyun_tick-big_outer tips-img">
+                <div class="eluyun_tick-big"></div>
             </div>
             <div class="stitle">操作成功</div>
         </div><!-- /.modal-content -->
@@ -76,8 +76,8 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="eluyun_fail_outer tips-img">
-                <div class="eluyun_fail"></div>
+            <div class="eluyun_ex-big_outer tips-img">
+                <div class="eluyun_ex-big"></div>
             </div>
             <div class="stitle">操作失败</div>
             <div class="reason">网速太慢</div>
@@ -88,8 +88,8 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="eluyun_success_outer tips-img">
-                <div class="eluyun_success"></div>
+            <div class="eluyun_tick-big_outer tips-img">
+                <div class="eluyun_tick-big"></div>
             </div>
             <div class="stitle">收款成功</div>
             <div class="money">实收金额：￥19999</div>
@@ -105,8 +105,8 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="eluyun_fail_outer tips-img">
-                <div class="eluyun_fail"></div>
+            <div class="eluyun_ex-big_outer tips-img">
+                <div class="eluyun_ex-big"></div>
             </div>
             <div class="stitle">收款失败</div>
             <div class="reason">客户支付宝余额不足</div>
@@ -121,8 +121,8 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="eluyun_fail_outer tips-img">
-                <div class="eluyun_fail"></div>
+            <div class="eluyun_ex-big_outer tips-img">
+                <div class="eluyun_ex-big"></div>
             </div>
             <div class="stitle">预订失败</div>
             <div class="reason">网速太慢</div>
@@ -137,8 +137,17 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>订单详情</span>
-                        <div class="status {{orderStatusStr[orderDetail.orderState].classStr}}">
-                            <div class="triangle"></div>{{orderStatusStr[orderDetail.orderState].long}}
+                        <!--<div class="status {{orderStatusStr[orderDetail.orderState].classStr}}">-->
+                            <!--<div class="triangle"></div>{{orderStatusStr[orderDetail.orderState].long}}-->
+                        <!--</div>-->
+                        <div class="eluyun_book_outer spriteImg" ng-if="orderDetail.orderState === 2">
+                            <div class="eluyun_book"></div>
+                        </div>
+                        <div class="eluyun_ing_outer spriteImg" ng-if="orderDetail.orderState === 3">
+                            <div class="eluyun_ing"></div>
+                        </div>
+                        <div class="eluyun_finish_outer spriteImg" ng-if="orderDetail.orderState === 5">
+                            <div class="eluyun_finish"></div>
                         </div>
                         <span class="modal-close">&times;</span>
                         <div class="btns">
@@ -179,8 +188,15 @@
                         <table ng-if="orderDetail.rooms">
                             <tr ng-repeat="r in orderDetail.rooms">
                                 <td><span>{{r.serialNum}}</span>&nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">
-                                        {{statusStr2[r.state].short}}</div>
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="light">入住</span>
@@ -334,8 +350,8 @@
                 <div class="hr2"></div>
                 <div class="consume-info">
                     <div class="sub-title consume-switch">消费信息
-                        <div class="eluyun_arrow-down-blue_outer spriteImg">
-                            <div class="eluyun_arrow-down-blue"></div>
+                        <div class="eluyun_arrow-down-big-copy_outer spriteImg">
+                            <div class="eluyun_arrow-down-big-copy"></div>
                         </div>
                     </div>
                     <div class="subtype room">
@@ -344,7 +360,15 @@
                             <tr ng-if="orderCancel.rooms" ng-repeat="r in orderCancel.rooms">
                                 <td>
                                     <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="light">入住</span>
@@ -386,8 +410,8 @@
                         <div class="sbold">商家需退:</div>
                         <div class="num">¥{{calRefund(orderCancel)}}</div>
                         <div class="desc">
-                            <div class="eluyun_tips_outer spriteImg">
-                                <div class="eluyun_tips"></div>
+                            <div class="eluyun_detail_outer spriteImg">
+                                <div class="eluyun_detail"></div>
                             </div>
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
@@ -441,8 +465,8 @@
                     <div class="item item_small refund">
                         <div class="slabel">订单退款</div>
                         <div class="sadd" ng-click="addNewPayments(orderCancel, 2, payChannels)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加订单退款
                         </div>
@@ -461,8 +485,8 @@
                     <div class="item item_small">
                         <div class="slabel">押金退款</div>
                         <div class="sadd" ng-click="addNewPayments(orderCancel, 3, payChannels)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加押金退款
                         </div>
@@ -555,12 +579,12 @@
                                 &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                                 <div class="date-table start">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1, orderNew.type);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1, orderNew.type);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1, orderNew.type);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1, orderNew.type);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -582,12 +606,12 @@
                                 &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                                 <div class="date-table end">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1, orderNew.type);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1, orderNew.type);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1, orderNew.type);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1, orderNew.type);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -621,8 +645,8 @@
                     <div class="sub-title">
                         餐饮项目
                         <div class="sadd" ng-click="addItem(1, foodList, orderNew);">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加餐饮项目
                         </div>
@@ -642,12 +666,12 @@
                                 <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                                 <div class="date-table">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -684,8 +708,8 @@
                     <div class="sub-title">
                         娱乐项目
                         <div class="sadd" ng-click="addItem(2, funList, orderNew);">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加娱乐项目
                         </div>
@@ -705,12 +729,12 @@
                                 <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                 <div class="date-table">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -747,8 +771,8 @@
                     <div class="sub-title">
                         商超项目
                         <div class="sadd" ng-click="addItem(3, goodsList, orderNew);">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加商超项目
                         </div>
@@ -813,7 +837,15 @@
                     <div class="stitle">
                         <span>编辑订单</span>
                         <span class="modal-close">&times;</span>
-                        <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
+                        <div class="eluyun_book_outer spriteImg" ng-if="orderEdit.orderState === 2">
+                            <div class="eluyun_book"></div>
+                        </div>
+                        <div class="eluyun_ing_outer spriteImg" ng-if="orderEdit.orderState === 3">
+                            <div class="eluyun_ing"></div>
+                        </div>
+                        <div class="eluyun_finish_outer spriteImg" ng-if="orderEdit.orderState === 5">
+                            <div class="eluyun_finish"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -872,7 +904,15 @@
                         <tr ng-repeat="r in orderEdit.rooms">
                             <td>
                                 <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
-                                <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                                <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                    <div class="eluyun_book-small"></div>
+                                </div>
+                                <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                    <div class="eluyun_ing-small"></div>
+                                </div>
+                                <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                    <div class="eluyun_finish-small"></div>
+                                </div>
                             </td>
                             <td ng-if="r.state !== 0">
                                 <span class="light">入住</span>
@@ -887,12 +927,12 @@
                                 &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                                 <div class="date-table start">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{r.scanlerdarDate.split('-')[0]}}年{{r.scanlerdarDate.split('-')[1]}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeRoomStartDateMonth(r, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -914,12 +954,12 @@
                                 &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                                 <div class="date-table end">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{r.ecanlerdarDate.split('-')[0]}}年{{r.ecanlerdarDate.split('-')[1]}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeRoomEndDateMonth(r, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -953,8 +993,8 @@
                     <div class="sub-title">
                         餐饮项目
                         <div class="sadd" ng-click="addItem(1, foodList, orderEdit);">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加餐饮项目
                         </div>
@@ -976,12 +1016,12 @@
                                 <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                                 <div class="date-table">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -1018,8 +1058,8 @@
                     <div class="sub-title">
                         娱乐项目
                         <div class="sadd" ng-click="addItem(2, funList, orderEdit)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加娱乐项目
                         </div>
@@ -1041,12 +1081,12 @@
                                 <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                 <div class="date-table">
                                     <div class="month-selector">
-                                        <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-left-blue"></div>
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
                                         </div>
                                         {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                        <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
-                                            <div class="eluyun_arrow-right-blue"></div>
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
                                     <div class="week-header">
@@ -1083,8 +1123,8 @@
                     <div class="sub-title">
                         商超项目
                         <div class="sadd" ng-click="addItem(3, goodsList, orderEdit)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加商超项目
                         </div>
@@ -1213,8 +1253,14 @@
                                     </div>
                                     <span>{{r.serialNum}}</span>
                                     &nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">
-                                        {{statusStr2[r.state].short}}
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
                                     </div>
                                 </td>
                                 <td>
@@ -1231,8 +1277,8 @@
                         <div class="sub-title">
                             餐饮信息
                             <div class="sadd" ng-click="addItem(1, foodList, checkout);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加餐饮项目
                             </div>
@@ -1254,12 +1300,12 @@
                                     <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1299,8 +1345,8 @@
                         <div class="sub-title">
                             娱乐信息
                             <div class="sadd" ng-click="addItem(2, funList, checkout);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加娱乐项目
                             </div>
@@ -1322,12 +1368,12 @@
                                     <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1408,7 +1454,6 @@
                     <div class="stitle">
                         <span>提前退房</span>
                         <span class="modal-close">&times;</span>
-                        <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -1443,8 +1488,14 @@
                                     </div>
                                     <span>{{r.serialNum}}</span>
                                     &nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">
-                                        {{statusStr2[r.state].short}}
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
                                     </div>
                                 </td>
                                 <td>
@@ -1461,8 +1512,8 @@
                         <div class="sub-title">
                             餐饮信息
                             <div class="sadd" ng-click="addItem(1, foodList, checkoutAd);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加餐饮项目
                             </div>
@@ -1484,12 +1535,12 @@
                                     <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1529,8 +1580,8 @@
                         <div class="sub-title">
                             娱乐信息
                             <div class="sadd" ng-click="addItem(2, funList, checkoutAd);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加娱乐项目
                             </div>
@@ -1552,12 +1603,12 @@
                                     <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1597,8 +1648,8 @@
                         <div class="sub-title">
                             商超项目
                             <div class="sadd" ng-click="addItem(3, goodsList, checkoutAd);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加商超项目
                             </div>
@@ -1714,8 +1765,14 @@
                                     </div>
                                     <span>{{r.serialNum}}</span>
                                     &nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">
-                                        {{statusStr2[r.state].short}}
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
                                     </div>
                                 </td>
                                 <td>
@@ -1732,8 +1789,8 @@
                         <div class="sub-title">
                             餐饮项目
                             <div class="sadd" ng-click="addItem(1, foodList, checkin);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加餐饮项目
                             </div>
@@ -1755,12 +1812,12 @@
                                     <input type="text" class="datePicker" ng-model="food.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(food, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{food.date.getFullYear()}}年{{food.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(food, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1800,8 +1857,8 @@
                         <div class="sub-title">
                             娱乐项目
                             <div class="sadd" ng-click="addItem(2, funList, checkin);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加娱乐项目
                             </div>
@@ -1824,12 +1881,12 @@
                                     <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                     <div class="date-table">
                                         <div class="month-selector">
-                                            <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-left-blue"></div>
+                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1);$event.stopPropagation();">
+                                                <div class="eluyun_left"></div>
                                             </div>
                                             {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
-                                                <div class="eluyun_arrow-right-blue"></div>
+                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1);$event.stopPropagation();">
+                                                <div class="eluyun_right"></div>
                                             </div>
                                         </div>
                                         <div class="week-header">
@@ -1869,8 +1926,8 @@
                         <div class="sub-title">
                             商超项目
                             <div class="sadd" ng-click="addItem(3, goodsList, checkin);">
-                                <div class="eluyun_new_outer spriteImg">
-                                    <div class="eluyun_new"></div>
+                                <div class="eluyun_add_outer spriteImg">
+                                    <div class="eluyun_add"></div>
                                 </div>
                                 添加商超项目
                             </div>
@@ -1965,8 +2022,8 @@
                 <div class="hr2"></div>
                 <div class="consume-info">
                     <div class="sub-title consume-switch">消费信息
-                        <div class="eluyun_arrow-down-blue_outer spriteImg">
-                            <div class="eluyun_arrow-down-blue"></div>
+                        <div class="eluyun_arrow-down-big-copy_outer spriteImg">
+                            <div class="eluyun_arrow-down-big-copy"></div>
                         </div>
                     </div>
                     <div class="subtype room">
@@ -1975,7 +2032,15 @@
                             <tr ng-repeat="r in getMoney.rooms">
                                 <td>
                                     <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
-                                    <div class="sstatus {{statusStr2[r.state].classStr}}">{{statusStr2[r.state].short}}</div>
+                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing-small"></div>
+                                    </div>
+                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish-small"></div>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="light">入住</span>
@@ -2035,8 +2100,8 @@
                         <div class="sbold">客户应付</div>
                         <div class="num">¥{{calLeft(getMoney)}}</div>
                         <div class="desc">
-                            <div class="eluyun_tips_outer spriteImg">
-                                <div class="eluyun_tips"></div>
+                            <div class="eluyun_detail_outer spriteImg">
+                                <div class="eluyun_detail"></div>
                             </div>
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
@@ -2076,8 +2141,8 @@
                         <div class="sbold">{{getMoney.feeMode === 0 ? '客户需补:' : '商家需退:'}}</div>
                         <div class="num">¥{{getMoney.feeMode === 0 ? calLeft(getMoney) : -calLeft(getMoney)}}</div>
                         <div class="desc">
-                            <div class="eluyun_tips_outer spriteImg">
-                                <div class="eluyun_tips"></div>
+                            <div class="eluyun_detail_outer spriteImg">
+                                <div class="eluyun_detail"></div>
                             </div>
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
@@ -2141,8 +2206,8 @@
                     <div class="item item_small refund" ng-if="getMoney.feeMode === 0">
                         <div class="slabel">订单收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 0)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加订单收款
                         </div>
@@ -2161,8 +2226,8 @@
                     <div class="item item_small refund" ng-if="getMoney.feeMode === 1">
                         <div class="slabel">订单退款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 2)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加订单退款
                         </div>
@@ -2184,8 +2249,8 @@
                     <div class="item item_small" ng-if="getMoney.depositMode === 0">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加押金收款
                         </div>
@@ -2206,8 +2271,8 @@
                     <div class="item item_small" ng-if="getMoney.depositMode === 1">
                         <div class="slabel">押金退款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 3)">
-                            <div class="eluyun_new_outer spriteImg">
-                                <div class="eluyun_new"></div>
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
                             </div>
                             添加押金退款
                         </div>
@@ -2262,8 +2327,8 @@
         <div class="modal-content" ng-if="getMoneyWithGun">
             <div class="hr"></div>
             <div class="erweima">
-                <div class="eluyun_paywithalipay_outer spriteImg">
-                    <div class="eluyun_paywithalipay"></div>
+                <div class="eluyun_scan_outer spriteImg">
+                    <div class="eluyun_scan"></div>
                 </div>
                 <input type="text" placeholder="付款码使用条码枪录入，也可手动录入。"
                 ng-model="getMoneyWithGun.userCode">
@@ -2279,11 +2344,15 @@
 </div>
 <div class="accommodation-mainContainer">
     <div class="search" ng-controller="orderSearch">
-        <div class="eluyun_search_outer spriteImg search-btn" ng-click="search(true);$event.stopPropagation();">
-            <div class="eluyun_search"></div>
+        <div class="eluyun_search-grey_outer spriteImg search-btn" ng-if="searchKeyword === ''">
+            <div class="eluyun_search-grey"></div>
+        </div>
+        <div class="eluyun_search-blue_outer spriteImg search-btn" ng-if="searchKeyword !== ''"
+             ng-click="search(true);$event.stopPropagation();">
+            <div class="eluyun_search-blue"></div>
         </div>
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
-               ng-model="searchKeyword">
+               ng-model="searchKeyword" ng-keypress="enterKeyPress($event);">
         <div class="results"  ng-class="{'sshow': showResults}">
             <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
             <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
@@ -2303,20 +2372,40 @@
                         <div class="desc">{{g.orderNum}}</div>
                     </div>
                     <div class="status {{g.classStr}}"><div class="triangle"></div>{{g.html}}</div>
+                    <div class="origin">{{g.origin}}</div>
+                    <!--<div class="eluyun_book_outer spriteImg" ng-if="g.orderState === 2">-->
+                        <!--<div class="eluyun_book"></div>-->
+                    <!--</div>-->
+                    <!--<div class="eluyun_ing_outer spriteImg" ng-if="g.orderState === 3">-->
+                        <!--<div class="eluyun_ing"></div>-->
+                    <!--</div>-->
+                    <!--<div class="eluyun_finish_outer spriteImg" ng-if="g.orderState === 5">-->
+                        <!--<div class="eluyun_finish"></div>-->
+                    <!--</div>-->
                 </div>
                 <div class="hr"></div>
             </div>
             <div class="btns" ng-if="searchResultsNum > searchResultUnit">
                 <div class="sbtn previous" ng-click="searchResultPreviousPage()"
-                     ng-class="{'disabled': searchResultPage === 1}">
-                    <div class="eluyun_arrow-left-border_outer spriteImg">
-                        <div class="eluyun_arrow-left-border"></div>
+                     ng-if="searchResultPage !== 1">
+                    <div class="eluyun_forward_outer spriteImg">
+                        <div class="eluyun_forward"></div>
+                    </div>
+                </div>
+                <div class="sbtn privious" ng-if="searchResultPage === 1">
+                    <div class="eluyun_3_outer spriteImg">
+                        <div class="eluyun_3"></div>
                     </div>
                 </div>
                 <div class="sbtn next" ng-click="searchResultNextPage()"
-                     ng-class="{'disabled': searchResultPage * searchResultUnit >= searchResultsNum}">
-                    <div class="eluyun_arrow-right-border_outer spriteImg">
-                        <div class="eluyun_arrow-right-border"></div>
+                     ng-if="searchResultPage * searchResultUnit < searchResultsNum">
+                    <div class="eluyun_backward_outer spriteImg">
+                        <div class="eluyun_backward"></div>
+                    </div>
+                </div>
+                <div class="sbtn next" ng-if="searchResultPage * searchResultUnit >= searchResultsNum">
+                    <div class="eluyun_4_outer spriteImg">
+                        <div class="eluyun_4"></div>
                     </div>
                 </div>
             </div>
@@ -2333,12 +2422,12 @@
             <div class="date-table">
                 <div class="tips">选择起始日期，将会显示未来30天的房态</div>
                 <div class="month-selector">
-                    <div class="eluyun_arrow-left-blue_outer spriteImg previous" ng-click="changeMainMonth(-1);$event.stopPropagation();">
-                        <div class="eluyun_arrow-left-blue"></div>
+                    <div class="eluyun_left_outer spriteImg previous" ng-click="changeMainMonth(-1);$event.stopPropagation();">
+                        <div class="eluyun_left"></div>
                     </div>
                     {{startDate.getFullYear()}}年{{startDate.getMonth()+1}}月
-                    <div class="eluyun_arrow-right-blue_outer spriteImg next" ng-click="changeMainMonth(1);$event.stopPropagation();">
-                        <div class="eluyun_arrow-right-blue"></div>
+                    <div class="eluyun_right_outer spriteImg next" ng-click="changeMainMonth(1);$event.stopPropagation();">
+                        <div class="eluyun_right"></div>
                     </div>
                 </div>
                 <div class="week-header">
@@ -2358,28 +2447,34 @@
             </div>
         </div>
         <div class="category-filter" ng-controller="pRoomFilterCtrl">
-            <div class="category-filter-switch">
+            <div class="category-filter-switch" ng-click="resetFilter();$event.stopPropagation();">
                 筛选房型
-                <div class="eluyun_arrow-down-grey_outer spriteImg next">
-                    <div class="eluyun_arrow-down-grey"></div>
+                <div class="eluyun_arrow-down-big_outer spriteImg next">
+                    <div class="eluyun_arrow-down-big"></div>
                 </div>
             </div>
             <div class="category-filter-menu">
                 <div class="options">
                     <div class="item category-filter-all selected" ng-click="selectAllPRoom();$event.stopPropagation();">
-                        <div class="notCheck" ng-if="!allPRoom"></div>
-                        <div class="yesCheck" ng-if="allPRoom"></div>
+                        <div class="notCheck" ng-if="!isAllSelected()"></div>
+                        <div class="eluyun_tick-small_outer spriteImg next yesCheck"
+                             ng-if="isAllSelected()">
+                            <div class="eluyun_tick-small"></div>
+                        </div>
                         全选
                     </div>
                     <div class="item category-filter-single selected"
-                         ng-click="changePRoomSelect(pRoom.id);$event.stopPropagation();" ng-repeat="pRoom in pRoomList">
-                        <div class="notCheck" ng-if="!pRoom.selected"></div>
-                        <div class="yesCheck" ng-if="pRoom.selected"></div>
+                         ng-click="selectPRoom(pRoom.id);$event.stopPropagation();" ng-repeat="pRoom in pRoomList">
+                        <div class="notCheck" ng-if="!isSelected[pRoom.id]"></div>
+                        <div class="eluyun_tick-small_outer spriteImg next yesCheck"
+                             ng-if="isSelected[pRoom.id]">
+                            <div class="eluyun_tick-small"></div>
+                        </div>
                         {{pRoom.name}}
                     </div>
                 </div>
                 <hr>
-                <div class="sbtn">确定</div>
+                <div class="sbtn" ng-click="filterPRoom();$event.stopPropagation();">确定</div>
             </div>
         </div>
         <div class="leftHeader">
@@ -2399,7 +2494,10 @@
                      date="{{d.dateStr}}">
                     <div class="date">
                         {{holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr}}
-                        <div class="isHoliday" ng-if="holidays[d.dateStrL]">休</div>
+                        <!--<div class="isHoliday" ng-if="holidays[d.dateStrL]">休</div>-->
+                        <div class="eluyun_rest_outer spriteImg isHoliday" ng-if="holidays[d.dateStrL]">
+                            <div class="eluyun_rest"></div>
+                        </div>
                     </div>
                     <div class="desc">{{d.weekday}}</div>
                 </div>
@@ -2412,10 +2510,13 @@
                     <div class="entryItem" date="{{day.date}}" room="{{r.id}}"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
                         <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
-                            <img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">
+                            <!--<img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">-->
+                            <div class="eluyun_tick_outer spriteImg">
+                                <div class="eluyun_tick"></div>
+                            </div>
                             <div class="date">{{day.date}}</div>
                             <div class="price">￥{{day.p}}</div>
-                            <div class="name">{{r.sn}}（房型名称)</div>
+                            <div class="name">{{r.sn}}（{{cRoomStore[r.ti].name}})</div>
                         </div>
                         <div class="closeTips" ng-if="day.s === 100">
                             已关闭
@@ -2433,15 +2534,33 @@
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">
                         <div class="stext">{{g.channelName}}</div>
-                        <img class="status" src="http://static.dingdandao.com/book.png" ng-if="g.orderState === 2">
-                        <img class="status" src="http://static.dingdandao.com/ing.png" ng-if="g.orderState === 3">
-                        <img class="status" src="http://static.dingdandao.com/finish.png" ng-if="g.orderState === 5">
+                        <!--<div class="eluyun_book_outer spriteImg status" ng-if="g.orderState === 2">-->
+                            <!--<div class="eluyun_book"></div>-->
+                        <!--</div>-->
+                        <!--<div class="eluyun_book_outer spriteImg status" ng-if="g.orderState === 3">-->
+                            <!--<div class="eluyun_book"></div>-->
+                        <!--</div>-->
+                        <!--<div class="eluyun_book_outer spriteImg status" ng-if="g.orderState === 5">-->
+                            <!--<div class="eluyun_book"></div>-->
+                        <!--</div>-->
+                        <img class="status" src="http://static.dingdandao.com/book.png" ng-if="g.roomState === 0">
+                        <img class="status" src="http://static.dingdandao.com/ing.png" ng-if="g.roomState === 1">
+                        <img class="status" src="http://static.dingdandao.com/finish.png" ng-if="g.roomState === 2">
                     </div>
                     <div class="infos ing up">
                         <div class="arrow-up"></div>
                         <div class="arrow-down"></div>
                         <div class="susername">{{g.customerName}}（{{g.phone}})</div>
-                        <div class="sstatus {{g.classStr}}">{{g.stateStr}}</div>
+                        <!--<div class="sstatus {{g.classStr}}">{{g.stateStr}}</div>-->
+                        <div class="eluyun_book-small_outer spriteImg" ng-if="g.roomState === 0">
+                            <div class="eluyun_book-small"></div>
+                        </div>
+                        <div class="eluyun_ing-small_outer spriteImg" ng-if="g.roomState === 1">
+                            <div class="eluyun_ing-small"></div>
+                        </div>
+                        <div class="eluyun_finish-small_outer spriteImg" ng-if="g.roomState === 2">
+                            <div class="eluyun_finish-small"></div>
+                        </div>
                         <div class="booktime">
                             <div class="start"><span>{{g.checkInDateShort}}</span>入住</div>
                             <div class="end"><span>{{g.checkOutDateShort}}</span>离店</div>

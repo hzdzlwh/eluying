@@ -91,14 +91,14 @@ $(function(){
         "click body .results": function(ev){
             ev.stopPropagation();
         },
-        "click body .category-filter-switch": function(ev){
-            ev.stopPropagation();
-            if(!$(".category-filter").hasClass("open")){
-                $(".category-filter").addClass("open");
-            }else{
-                $(".category-filter").removeClass("open");
-            }
-        },
+        // "click body .category-filter-switch": function(ev){
+        //     ev.stopPropagation();
+        //     if(!$(".category-filter").hasClass("open")){
+        //         $(".category-filter").addClass("open");
+        //     }else{
+        //         $(".category-filter").removeClass("open");
+        //     }
+        // },
         "click body .date-selector-switch": function(ev){
             ev.stopPropagation();
             if(!$(".date-selector").hasClass("open")){
@@ -158,6 +158,9 @@ $(function(){
         },
         "click body .header>img.logo": function(){
             window.location.reload();
+        },
+        "click body .category-filter": function(ev){
+            ev.stopPropagation();
         }
     };
 

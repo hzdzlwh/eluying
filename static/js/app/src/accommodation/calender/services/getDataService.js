@@ -148,6 +148,7 @@ var getDataService = function(app){
                                 name: pRoom.pName,
                                 selected: true
                             };
+                            scope.isSelected[pRoom.pId] = true;
                         }
                         if(!cRoomStore[pRoom.cId]){
                             cRoomStore[pRoom.cId] = {
@@ -179,6 +180,8 @@ var getDataService = function(app){
                             roomStore.push(temp);
                         }
                     }
+                    console.log(cRoomStore);
+                    console.log(roomStore);
                     //生成订单图元
                     var glyphs = [];
                     var gridWidth = 100;

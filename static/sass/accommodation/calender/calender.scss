@@ -223,45 +223,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           color: $color1;
           text-align:left;
         }
-        .status{
-          position: absolute;
-          top: 12px;
-          left: 106px;
-          font-size:12px;
-          color: white;
-          text-align:center;
-          width: 44px;
-          height: 22px;
-          line-height: 22px;
-          .triangle{
-            position: absolute;
-            top: 0;
-            left: -11px;
-          }
-        }
-        .status.book{
-          background: #82beff;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #82beff 11px;
-          }
-        }
-        .status.ing{
-          background: #ffba75;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #ffba75 11px;
-          }
-        }
-        .status.finish{
-          background: #bfbfbf;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #bfbfbf 11px;
-          }
+        .spriteImg{
+          position: relative;
+          top: 4px;
+          left: 4px;
         }
       }
     }
@@ -331,25 +296,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         .subtype.room{
           td:first-child{
             width: 190px;
-            .sstatus{
-              display: inline-block;
-              border-radius:$BorderRadius;
-              width:16px;
-              height:16px;
-              color: white;
-              font-size: 10px;
-              text-align: center;
-              line-height: 16px;
-              margin-left: 10px;
-            }
-            .sstatus.book{
-              background:#82beff;
-            }
-            .sstatus.finish{
-              background:#bfbfbf;
-            }
-            .sstatus.ing{
-              background: #ffba75;
+            .spriteImg{
+              position: relative;
+              top: 3px;
             }
           }
           td:nth-child(2){
@@ -479,6 +428,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       cursor: pointer;
       position: relative;
       top: 2px;
+      left: 2px;
     }
     .hr {
       @include modalHeader();
@@ -503,45 +453,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           color: $color1;
           text-align:left;
         }
-        .status{
-          position: absolute;
-          top: 12px;
-          left: 106px;
-          font-size:12px;
-          color: white;
-          text-align:center;
-          width: 44px;
-          height: 22px;
-          line-height: 22px;
-          .triangle{
-            position: absolute;
-            top: 0;
-            left: -11px;
-          }
-        }
-        .status.book{
-          background: #82beff;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #82beff 11px;
-          }
-        }
-        .status.ing{
-          background: #ffba75;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #ffba75 11px;
-          }
-        }
-        .status.finish{
-          background: #bfbfbf;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #bfbfbf 11px;
-          }
+        .spriteImg{
+          position: relative;
+          top: 4px;
+          left: 4px;
         }
       }
     }
@@ -618,25 +533,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         .subtype.room{
           td:first-child{
             width: 190px;
-            .sstatus{
-              display: inline-block;
-              border-radius:$BorderRadius;
-              width:16px;
-              height:16px;
-              color: white;
-              font-size: 10px;
-              text-align: center;
-              line-height: 16px;
-              margin-left: 10px;
-            }
-            .sstatus.book{
-              background:#82beff;
-            }
-            .sstatus.finish{
-              background:#bfbfbf;
-            }
-            .sstatus.ing{
-              background: #ffba75;
+            .spriteImg{
+              position: relative;
+              top: 3px;
             }
           }
           td:nth-child(2){
@@ -668,7 +567,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           cursor: pointer;
         }
         .sub-title.open{
-          img{
+          .spriteImg{
             -webkit-transform: rotate(-180deg);
             -moz-transform: rotate(-180deg);
             -o-transform: rotate(-180deg);
@@ -1011,45 +910,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           color: $color1;
           text-align:left;
         }
-        .status{
-          position: absolute;
-          top: 12px;
-          left: 106px;
-          font-size:12px;
-          color: white;
-          text-align:center;
-          width: 44px;
-          height: 22px;
-          line-height: 22px;
-          .triangle{
-            position: absolute;
-            top: 0;
-            left: -11px;
-          }
-        }
-        .status.book{
-          background: #82beff;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #82beff 11px;
-          }
-        }
-        .status.ing{
-          background: #ffba75;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #ffba75 11px;
-          }
-        }
-        .status.finish{
-          background: #bfbfbf;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #bfbfbf 11px;
-          }
+        .spriteImg{
+          position: relative;
+          top: 4px;
+          left: 4px;
         }
       }
     }
@@ -1253,25 +1117,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       .subtype.room{
         td:first-child{
           width: 165px;
-          .sstatus{
-            display: inline-block;
-            border-radius:$BorderRadius;
-            width:16px;
-            height:16px;
-            color: white;
-            font-size: 10px;
-            text-align: center;
-            line-height: 16px;
-            margin-left: 5px;
-          }
-          .sstatus.book{
-            background:#82beff;
-          }
-          .sstatus.finish{
-            background:#bfbfbf;
-          }
-          .sstatus.ing{
-            background: #ffba75;
+          .spriteImg{
+            position: relative;
+            top: 3px;
           }
         }
         td:nth-child(2){
@@ -1829,45 +1677,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           color: $color1;
           text-align:left;
         }
-        .status{
-          position: absolute;
-          top: 12px;
-          left: 106px;
-          font-size:12px;
-          color: white;
-          text-align:center;
-          width: 44px;
-          height: 22px;
-          line-height: 22px;
-          .triangle{
-            position: absolute;
-            top: 0;
-            left: -11px;
-          }
-        }
-        .status.book{
-          background: #82beff;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #82beff 11px;
-          }
-        }
-        .status.ing{
-          background: #ffba75;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #ffba75 11px;
-          }
-        }
-        .status.finish{
-          background: #bfbfbf;
-          .triangle{
-            border-top: solid transparent 11px;
-            border-bottom: solid transparent 11px;
-            border-right: solid #bfbfbf 11px;
-          }
+        .spriteImg{
+          position: relative;
+          top: 4px;
+          left: 4px;
         }
       }
     }
@@ -2060,25 +1873,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
                 display: inline-block;
               }
             }
-            .sstatus{
-              display: inline-block;
-              border-radius:$BorderRadius;
-              width:16px;
-              height:16px;
-              color: white;
-              font-size: 10px;
-              text-align: center;
-              line-height: 16px;
-              margin-left: 10px;
-            }
-            .sstatus.book{
-              background:#82beff;
-            }
-            .sstatus.finish{
-              background:#bfbfbf;
-            }
-            .sstatus.ing{
-              background: #ffba75;
+            .spriteImg{
+              position: relative;
+              top: 3px;
             }
           }
           td:nth-child(2){
@@ -2328,9 +2125,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           margin-left: 24px;
           cursor: pointer;
         }
-        .sbtn.disabled{
-          cursor: not-allowed;
-        }
+        //.sbtn.disabled{
+        //  cursor: not-allowed;
+        //}
         .next{
           margin-left: 8px;
         }
@@ -2386,6 +2183,19 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             text-overflow: ellipsis;
           }
         }
+        .origin{
+          position: absolute;
+          top: 30px;
+          right: 8px;
+          line-height: 20px;
+          height: 20px;
+          width: 44px;
+          color: #b3b3b3;
+          text-align: right;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
         .status{
           position: absolute;
           top: 4px;
@@ -2418,7 +2228,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             border-right: solid #ffba75 11px;
           }
         }
-        .status.finish{
+        .status.finish, .status.cancel, .status.wait, .status.refuse{
           background: #bfbfbf;
           .triangle{
             border-top: solid transparent 11px;
@@ -2608,22 +2418,22 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             position: relative;
             padding-left: 24px;
             .notCheck{
-              width: 12px;
-              height: 12px;
+              width: 14px;
+              height: 14px;
               border-radius: 100%;
               border: solid thin #666666;
               position: absolute;
-              left: 8px;
-              top: 6px;
+              left: 6px;
+              top: 4px;
             }
             .yesCheck{
-              width: 12px;
-              height: 12px;
               border-radius: 100%;
               position: absolute;
-              left: 8px;
-              top: 6px;
-              background-image: url("http://7xsrk6.com2.z0.glb.qiniucdn.com/73FA4C7F-F668-4B66-84CD-F3402290A694@1x.png");
+              left: -2px;
+              top: 4px;
+              //left: 8px;
+              //top: 6px;
+              //background-image: url("http://7xsrk6.com2.z0.glb.qiniucdn.com/73FA4C7F-F668-4B66-84CD-F3402290A694@1x.png");
             }
           }
           .item:hover{
@@ -2744,17 +2554,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             line-height: 23px;
           }
           .isHoliday{
-            width: 16px;
-            height: 16px;
-            background: $color1;
-            color: white;
-            text-align: center;
-            line-height: 16px;
-            font-size: 9px;
-            border-radius: 100%;
             position: relative;
-            top: -1px;
-            left: 5px;
+            top: 2px;
+            left: 2px;
             display: inline-block;
           }
         }
@@ -2853,24 +2655,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               float: left;
               margin-left: 8px;
             }
-            .sstatus{
-              text-align:center;
-              width: 16px;
-              height: 16px;
-              line-height: 16px;
+            .spriteImg{
               float: right;
               margin-right: 8px;
-              color: white;
-              font-size: 10px;
-            }
-            .sstatus.book{
-              background: $color1;
-            }
-            .sstatus.ing{
-               background: $color5;
-            }
-            .sstatus.finish{
-              background: #bfbfbf;
             }
             .booktime{
               clear: both;
@@ -3047,9 +2834,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               margin-top: 2px;
               font-size: 12px;
               position: relative;
-              line-height: $gridHeight - 4px;
+              line-height: $gridHeight;
               text-align: center;
-              img{
+              .spriteImg{
                 display: none;
               }
               .date{
@@ -3089,15 +2876,15 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             .inner{
               background: $highlightColor;
               border: solid thin $color1;
-              img{
-                display: inline;
+              .spriteImg{
+                display: inline-block;
               }
             }
           }
           .entryItem{
             .inner:hover{
               border: solid thin $color1;
-              img{
+              .spriteImg{
                 display: none;
               }
               .date, .price, .name{
@@ -3111,7 +2898,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             }
             .inner:hover{
               border: none;
-              img{
+              .spriteImg{
                 display: none;
               }
               .date, .price, .name{
