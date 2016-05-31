@@ -52,7 +52,7 @@ $(function(){
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);
             $(".accommodation-mainContainer .content .leftHeader").css("margin-top", -scrollTop);
         },
-        "click body .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "mouseover body .entryItem": function(){
             var date = $(this).attr("date");
             var room = $(this).attr("room");
@@ -154,7 +154,7 @@ $(function(){
             ev.stopPropagation();
         },
         "click body .modal-close": function(ev){
-            var that = this; modal.clearModal(that);
+            $(this).parents(".modal").modal("hide");
         }
     };
 
