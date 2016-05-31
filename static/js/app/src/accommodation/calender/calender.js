@@ -82,7 +82,7 @@ $(function(){
         },
         "click body": function(ev){
             $(".entryOp").hide();
-            // $(".search .results").hide();
+            $(".search .results").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();
@@ -155,6 +155,9 @@ $(function(){
         },
         "click body .modal-close": function(ev){
             $(this).parents(".modal").modal("hide");
+        },
+        "click body .header>img.logo": function(){
+            window.location.reload();
         }
     };
 

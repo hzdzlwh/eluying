@@ -2284,7 +2284,7 @@
         </div>
         <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
                ng-model="searchKeyword">
-        <div class="results" ng-show="showResults">
+        <div class="results"  ng-class="{'sshow': showResults}">
             <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
             <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
             <div class="hr" ng-if="searchResultsNum > 0"></div>
@@ -2306,7 +2306,7 @@
                 </div>
                 <div class="hr"></div>
             </div>
-            <div class="btns" ng-if="searchResultsNum > 5">
+            <div class="btns" ng-if="searchResultsNum > searchResultUnit">
                 <div class="sbtn previous" ng-click="searchResultPreviousPage()"
                      ng-class="{'disabled': searchResultPage === 1}">
                     <div class="eluyun_arrow-left-border_outer spriteImg">
@@ -2314,7 +2314,7 @@
                     </div>
                 </div>
                 <div class="sbtn next" ng-click="searchResultNextPage()"
-                     ng-class="{'disabled': searchResultPage * 5 >= searchResultsNum}">
+                     ng-class="{'disabled': searchResultPage * searchResultUnit >= searchResultsNum}">
                     <div class="eluyun_arrow-right-border_outer spriteImg">
                         <div class="eluyun_arrow-right-border"></div>
                     </div>
