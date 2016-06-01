@@ -44,18 +44,31 @@ $(function(){
         return false;
     };
 
+    var timer;
     events = {
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
             var selection = $(this);
-            if (selection[0].scrollHeight - selection.scrollTop() == selection.height()) {
-                console.log(selection.scrollTop());
-                // var body = angular.element(document.body);
-                // var rootScope = body.scope().$root;
-                // rootScope.entryRows += 20;
-                // console.log(rootScope.entryRows);
-                // rootScope.$apply();
-            }
+            var scrollHeight = selection[0].scrollHeight;
+            var height = selection.height();
+            var top = selection.scrollTop();
+            // var body = angular.element(document.body);
+            // var rootScope = body.scope().$root;
+            // rootScope.entryRowsMin += top / 48;
+            // rootScope.entryRowsMax += (top + height) / 48;
+            // rootScope.$apply();
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var height = $(window).height() - $(".calendor-container").offset().top;
+                var top = $(".calendor-container").scrollTop();
+                var body = angular.element(document.body);
+                var rootScope = body.scope().$root;
+                rootScope.entryRowsMin = parseInt(top / 48);
+                rootScope.entryRowsMax = parseInt((top + height) / 48);
+                console.log(rootScope.entryRowsMin, rootScope.entryRowsMax);
+                rootScope.$apply();
+            }, 150);
+
             var scrollLeft = selection.scrollLeft();
             var scrollTop = selection.scrollTop();
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);

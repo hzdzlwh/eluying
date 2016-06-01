@@ -27,9 +27,11 @@ var constService = function(app){
             {short: '完', long: '已完成', classStr: 'finish'}
         ];
         this.days = parseInt(window.outerWidth / 100);
-        this.entryRows = 100;
-        console.log(this.entryRows);
-        console.log(this.days);
+        if(this.days < 30){
+            this.days = 30;
+        }
+        this.entryRowsMin = 0;
+        this.entryRowsMax = parseInt(window.outerHeight / 48);
         $(".entryList, .accommodation-mainContainer > .content > .sheader").width(this.days * 100);
     }]);
 };

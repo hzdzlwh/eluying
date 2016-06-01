@@ -260,7 +260,6 @@ var util = {
             var height = $(d).height();
             var top = $(d).position().top;
             var scrollHeight = height + top;
-            console.log(cHeight, cScrollTop, height, top);
             if(top > cScrollHeight || cScrollTop > scrollHeight){
                 $(d).find('.category-name span').css({
                     'top': '50%'
@@ -288,6 +287,18 @@ var util = {
                 });
             }
         });
+    },
+
+    countTags: function(node){
+        var node=node?node:window.document;
+        var nums=0;
+        if(node.nodeType==1){
+            nums++;
+        }
+        for(var i=0,l=node.childNodes.length;i<l;i++){
+            nums += this.countTags(node.childNodes[i]);
+        }
+        return nums;
     }
 };
 module.exports = util;

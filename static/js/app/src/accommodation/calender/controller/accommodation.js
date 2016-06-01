@@ -32,7 +32,8 @@ var accommodationCtrl = function(app){
             rootScope.statusStr = constService.statusStr;
             rootScope.statusStr2 = constService.statusStr2;
             rootScope.orderStatusStr = constService.orderStatusStr;
-            rootScope.entryRows = constService.entryRows;
+            rootScope.entryRowsMin = constService.entryRowsMin;
+            rootScope.entryRowsMax = constService.entryRowsMax;
             rootScope.update = function(){};
             rootScope.showOrderDetail = function(orderId){
                 getDataService.getOrderDetail(orderId, rootScope);

@@ -2377,20 +2377,11 @@
                         </div>
                         <div class="status {{g.classStr}}"><div class="triangle"></div>{{g.html}}</div>
                         <div class="origin">{{g.origin}}</div>
-                        <!--<div class="eluyun_book_outer spriteImg" ng-if="g.orderState === 2">-->
-                        <!--<div class="eluyun_book"></div>-->
-                        <!--</div>-->
-                        <!--<div class="eluyun_ing_outer spriteImg" ng-if="g.orderState === 3">-->
-                        <!--<div class="eluyun_ing"></div>-->
-                        <!--</div>-->
-                        <!--<div class="eluyun_finish_outer spriteImg" ng-if="g.orderState === 5">-->
-                        <!--<div class="eluyun_finish"></div>-->
-                        <!--</div>-->
                     </div>
                     <div class="hr"></div>
                 </div>
                 <div class="btns" ng-if="searchResultsNum > searchResultUnit">
-                    <div class="sbtn previous" ng-click="searchResultPreviousPage()"
+                    <div class="sbtn previous" ng-click="searchResultPreviousPage();$event.stopPropagation();"
                          ng-if="searchResultPage !== 1">
                         <div class="eluyun_forward_outer spriteImg">
                             <div class="eluyun_forward"></div>
@@ -2401,7 +2392,7 @@
                             <div class="eluyun_3"></div>
                         </div>
                     </div>
-                    <div class="sbtn next" ng-click="searchResultNextPage()"
+                    <div class="sbtn next" ng-click="searchResultNextPage();$event.stopPropagation();"
                          ng-if="searchResultPage * searchResultUnit < searchResultsNum">
                         <div class="eluyun_backward_outer spriteImg">
                             <div class="eluyun_backward"></div>
@@ -2445,8 +2436,8 @@
                     <div class="item">日</div>
                 </div>
                 <div class="date-row" ng-repeat="row in mainCalendar">
-                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
-                        {{day.text || day.date.getDate()}}
+                    <div class="item {{day.sclass}}" ng-repeat="day in ::row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
+                        {{::(day.text || day.date.getDate())}}
                     </div>
                 </div>
             </div>
@@ -2475,7 +2466,7 @@
                              ng-if="isSelected[pRoom.id]">
                             <div class="eluyun_tick-small"></div>
                         </div>
-                        {{pRoom.name}}
+                        {{::pRoom.name}}
                     </div>
                 </div>
                 <hr>
@@ -2485,33 +2476,38 @@
         <div class="leftHeader">
             <div class="category-item" ng-repeat="c in cRoomStore" ng-if="pRoomList[c.pId].selected">
                 <div class="category-name">
-                    <span class="stext">{{c.name}}</span>
+                    <span class="stext">{{::c.name}}</span>
                 </div>
                 <div class="category-list">
-                    <div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.sn}}</div>
+                    <div class="room-item" room="{{::r.id}}" ng-repeat="r in c.rooms">{{::r.sn}}</div>
                 </div>
             </div>
         </div>
         <div class="sheader">
             <div class="sheader-item" ng-repeat="d in datesArray">
                 <div class="date-item"
-                     ng-class="{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
-                     date="{{d.dateStr}}">
+                     ng-class="::{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
+                     date="{{::d.dateStr}}">
                     <div class="date">
-                        {{holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr}}
+                        {{::(holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr)}}
                         <!--<div class="isHoliday" ng-if="holidays[d.dateStrL]">休</div>-->
                         <div class="eluyun_rest_outer spriteImg isHoliday" ng-if="holidays[d.dateStrL]">
                             <div class="eluyun_rest"></div>
                         </div>
                     </div>
-                    <div class="desc">{{d.weekday}}</div>
+                    <div class="desc">{{::d.weekday}}</div>
                 </div>
                 <div class="left">剩{{d.left}}</div>
             </div>
         </div>
         <div class="calendor-container">
             <div class="entryList">
-                <div class="srow" ng-repeat="r in roomStore track by r.id" ng-if="$index < entryRows && pRoomList[r.pi].selected">
+                <div class="srow" ng-repeat="r in roomStore track by r.id"
+                     ng-if="$index < entryRowsMin && pRoomList[r.pi].selected">
+
+                </div>
+                <div class="srow" ng-repeat="r in roomStore track by r.id"
+                     ng-if="$index <= entryRowsMax && $index >= entryRowsMin && pRoomList[r.pi].selected">
                     <div class="entryItem" date="{{day.date}}" room="{{r.id}}"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st track by day.date">
                         <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
@@ -2519,17 +2515,21 @@
                             <div class="eluyun_tick_outer spriteImg">
                                 <div class="eluyun_tick"></div>
                             </div>
-                            <div class="date">{{day.date}}</div>
-                            <div class="price">￥{{day.p}}</div>
-                            <div class="name">{{r.sn}}（{{cRoomStore[r.ti].name}})</div>
+                            <div class="date">{{::day.date}}</div>
+                            <div class="price">￥{{::day.p}}</div>
+                            <div class="name">{{::r.sn}}（{{::cRoomStore[r.ti].name}})</div>
                         </div>
                         <div class="closeTips" ng-if="day.s === 100">
                             已关闭
                         </div>
                         <div class="entryOp" ng-click="closeRoom(day.s === 100, r.id, day);">
-                            {{day.s === 100 ? '打开房间' : '关闭房间'}}
+                            {{(day.s === 100 ? '打开房间' : '关闭房间')}}
                         </div>
                     </div>
+                </div>
+                <div class="srow" ng-repeat="r in roomStore track by r.id"
+                     ng-if="$index > entryRowsMax && pRoomList[r.pi].selected">
+
                 </div>
                 <div class="glyph {{statusStr2[g.roomState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
@@ -2586,7 +2586,7 @@
         <div class="shopcart" ng-show="shopcartShow">
             <div class="already">已选择<span>{{selectedRooms.length}}</span>个房间</div>
             <div class="roomList">
-                <div class="item" ng-repeat="r in ::selectedRooms">{{r}}</div>
+                <div class="item" ng-repeat="r in selectedRooms">{{::r}}</div>
             </div>
             <div class="btns">
                 <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish');">补录</div>
