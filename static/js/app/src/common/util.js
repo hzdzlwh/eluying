@@ -251,5 +251,43 @@ var util = {
         }
         return num;
     },
+
+    leftHeaderAdjustLineHeight: function(){
+        var cHeight = $(".calendor-container").height();
+        var cScrollTop = $(".calendor-container").scrollTop();
+        var cScrollHeight = cScrollTop + cHeight;
+        $(".category-item").each(function(i,d){
+            var height = $(d).height();
+            var top = $(d).position().top;
+            var scrollHeight = height + top;
+            console.log(cHeight, cScrollTop, height, top);
+            if(top > cScrollHeight || cScrollTop > scrollHeight){
+                $(d).find('.category-name span').css({
+                    'top': '50%'
+                });
+            }else{
+                var result;
+                if(top >= cScrollTop && top < cScrollHeight){
+                    if((height - (scrollHeight - cScrollHeight)) < 40){
+                        result = 50;
+                    }else {
+                        result = (height - (scrollHeight - cScrollHeight)) / height * 100 / 2;
+                    }
+                }
+                if(cScrollTop > top && scrollHeight >= cScrollHeight){
+                    result = (2 * (cScrollTop - top) + cHeight) / height * 100 / 2;
+                }
+                if(top >= cScrollTop && scrollHeight < cScrollHeight){
+                    result = 50;
+                }
+                if(top < cScrollTop && scrollHeight < cScrollHeight){
+                    result = (2 * height - (scrollHeight - cScrollTop)) / height * 100 / 2;
+                }
+                $(d).find('.category-name span').css({
+                    'top': result + '%'
+                });
+            }
+        });
+    }
 };
 module.exports = util;

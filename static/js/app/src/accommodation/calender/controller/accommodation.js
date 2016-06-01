@@ -32,6 +32,7 @@ var accommodationCtrl = function(app){
             rootScope.statusStr = constService.statusStr;
             rootScope.statusStr2 = constService.statusStr2;
             rootScope.orderStatusStr = constService.orderStatusStr;
+            rootScope.entryRows = constService.entryRows;
             rootScope.update = function(){};
             rootScope.showOrderDetail = function(orderId){
                 getDataService.getOrderDetail(orderId, rootScope);
@@ -279,38 +280,11 @@ var accommodationCtrl = function(app){
                         };
                         rootScope.getMoney =
                             getMoneyService.resetGetMoney(order, order.orderId, type, asyncObj);
-                        // //加上提前违约金
-                        // if(type == 4){
-                        //     rootScope.getMoney.payments.push(
-                        //         {type: 4, fee: order.penaltyAd}
-                        //     );
-                        //     rootScope.getMoney.penaltyAd = parseFloat(order.penaltyAd);
-                        //     rootScope.getMoney.checkoutAdRefund = order.roomsRefund;
-                        // }
-                        // rootScope.getMoney.async = true; //付款和退房同步
                         rootScope.$apply();
                         $("#keepOrNotModal").modal("hide");
                         $("#checkoutAdModal").modal("hide");
                         $("#checkoutModal").modal("hide");
                         $("#getMoneyModal").modal("show");
-
-                        // AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
-                        //     payments: JSON.stringify([]),
-                        //     orderId: order.orderId,
-                        //     type: checkoutType,
-                        //     rooms: JSON.stringify(rooms)
-                        // }, function(result){
-                        //     if(result.code === 1){
-                        //         rootScope.getMoney = getMoneyService.resetGetMoney(order, order.orderId, 4);
-                        //         rootScope.$apply();
-                        //         $("#keepOrNotModal").modal("hide");
-                        //         $("#checkoutAdModal").modal("hide");
-                        //         $("#checkoutModal").modal("hide");
-                        //         $("#getMoneyModal").modal("show");
-                        //     }else{
-                        //         modal.somethingAlert(result.msg);
-                        //     }
-                        // });
                     }else {
                         modal.somethingAlert(result3.msg);
                     }

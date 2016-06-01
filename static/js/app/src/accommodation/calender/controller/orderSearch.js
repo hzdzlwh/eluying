@@ -20,6 +20,7 @@ var orderSearch = function(app){
         scope.enterKeyPress = function(ev){
             if(ev.which === 13 && scope.searchKeyword !== ''){
                 scope.search(true);
+                console.log(rootScope);
             }
         };
         scope.search = function(flag){

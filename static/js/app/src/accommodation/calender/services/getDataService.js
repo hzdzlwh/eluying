@@ -98,7 +98,6 @@ var getDataService = function(app){
             }, function(result){
                 if(result.code === 1){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
-                    console.log(scope.orderDetail);
                     scope.$apply();
                     $("#orderDetailModal").modal("show");
                 }
@@ -110,7 +109,7 @@ var getDataService = function(app){
                 var pRooms = result.data.list;
                 AJAXService.ajaxWithToken('GET', 'getRoomsAndStausUrl', {
                     date: util.dateFormat(startDate),
-                    days: 30,
+                    days: constService.days,
                     sub: true
                 }, function(result2){
                     var holiday = result2.data.holidays;
@@ -235,6 +234,7 @@ var getDataService = function(app){
                     scope.occupyList = occupyList;
                     accommodationService.updateDateInventory(scope);
                     scope.$apply();
+                    util.leftHeaderAdjustLineHeight();
                 });
             });
         };

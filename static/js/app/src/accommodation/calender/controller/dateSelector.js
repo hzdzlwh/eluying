@@ -3,19 +3,21 @@ require("angular");
 
 var calendarService = require("../services/calendarService");
 var getDataService = require("../services/getDataService");
+var constService = require("../services/constService");
 
 var dateSelectorCtrl = function(app){
     calendarService(app);
     getDataService(app);
-    app.controller("dateSelectorCtrl", ['$rootScope', '$scope', 'calendarService', 'getDataService',
-        function(rootScope, scope, calendarService, getDataService){
+    constService(app);
+    app.controller("dateSelectorCtrl", ['$rootScope', '$scope', 'calendarService', 'getDataService', 'constService',
+        function(rootScope, scope, calendarService, getDataService, constService){
             rootScope.today = util.dateFormatWithoutYear(new Date());
             scope.mainCalendar = null;
             
             var create30Days = function(){
                 rootScope.datesArray = [];
                 var tempDate = new Date(rootScope.startDate);
-                for(var i = 0; i < 30; i++){
+                for(var i = 0; i < constService.days; i++){
                     rootScope.datesArray.push({
                         date: tempDate,
                         dateStrL: util.dateFormat(tempDate),

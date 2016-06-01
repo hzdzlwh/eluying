@@ -3,7 +3,7 @@ var util = require("util");
 require("angular");
 
 var constService = function(app){
-    app.service("constService", function(){
+    app.service("constService", ["$window", function(window){
         this.statusStr = [
             {},
             {},
@@ -26,7 +26,12 @@ var constService = function(app){
             {short: '取', long: '已取消', classStr: 'cancel'},
             {short: '完', long: '已完成', classStr: 'finish'}
         ];
-    });
+        this.days = parseInt(window.outerWidth / 100);
+        this.entryRows = 100;
+        console.log(this.entryRows);
+        console.log(this.days);
+        $(".entryList, .accommodation-mainContainer > .content > .sheader").width(this.days * 100);
+    }]);
 };
 
 module.exports = constService;

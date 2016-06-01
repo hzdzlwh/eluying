@@ -3,14 +3,16 @@ var util = require("util");
 require("angular");
 
 var shopcartService = require("./shopcartService");
+var constService = require("./constService");
 
 var accommodationService = function(app){
     shopcartService(app);
-    app.service("accommodationService", ["shopcartService", function(shopcartService){
+    constService(app);
+    app.service("accommodationService", ["shopcartService", 'constService', function(shopcartService, constService){
         this.updateDateInventory = function(scope){
             var roomStore = scope.roomStore;
             var lefts = [];
-            for(var i = 0; i < 30; i++){
+            for(var i = 0; i < constService.days; i++){
                 lefts.push(0);
             }
             for(var key in roomStore){
@@ -21,7 +23,7 @@ var accommodationService = function(app){
                     }
                 }
             }
-            for(var i = 0; i < 30; i++){
+            for(var i = 0; i < constService.days; i++){
                 scope.datesArray[i].left = lefts[i];
             }
         };

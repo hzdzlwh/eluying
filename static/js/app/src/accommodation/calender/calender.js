@@ -47,10 +47,20 @@ $(function(){
     events = {
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
-            var scrollLeft = $(this).scrollLeft();
-            var scrollTop = $(this).scrollTop();
+            var selection = $(this);
+            if (selection[0].scrollHeight - selection.scrollTop() == selection.height()) {
+                console.log(selection.scrollTop());
+                // var body = angular.element(document.body);
+                // var rootScope = body.scope().$root;
+                // rootScope.entryRows += 20;
+                // console.log(rootScope.entryRows);
+                // rootScope.$apply();
+            }
+            var scrollLeft = selection.scrollLeft();
+            var scrollTop = selection.scrollTop();
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);
             $(".accommodation-mainContainer .content .leftHeader").css("margin-top", -scrollTop);
+            util.leftHeaderAdjustLineHeight();
         },
         "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "mouseover body .entryItem": function(){
@@ -93,14 +103,6 @@ $(function(){
         "click body .results": function(ev){
             ev.stopPropagation();
         },
-        // "click body .category-filter-switch": function(ev){
-        //     ev.stopPropagation();
-        //     if(!$(".category-filter").hasClass("open")){
-        //         $(".category-filter").addClass("open");
-        //     }else{
-        //         $(".category-filter").removeClass("open");
-        //     }
-        // },
         "click body .date-selector-switch": function(ev){
             ev.stopPropagation();
             if(!$(".date-selector").hasClass("open")){

@@ -2511,9 +2511,9 @@
         </div>
         <div class="calendor-container">
             <div class="entryList">
-                <div class="srow" ng-repeat="r in roomStore" ng-if="pRoomList[r.pi].selected">
+                <div class="srow" ng-repeat="r in roomStore track by r.id" ng-if="$index < entryRows && pRoomList[r.pi].selected">
                     <div class="entryItem" date="{{day.date}}" room="{{r.id}}"
-                         ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st">
+                         ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st track by day.date">
                         <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
                             <!--<img src="http://7xsrk6.com2.z0.glb.qiniucdn.com/EFE699E7-4888-4F50-B17F-B9FAF5A19B8B@1x.png" alt="selected">-->
                             <div class="eluyun_tick_outer spriteImg">
@@ -2586,7 +2586,7 @@
         <div class="shopcart" ng-show="shopcartShow">
             <div class="already">已选择<span>{{selectedRooms.length}}</span>个房间</div>
             <div class="roomList">
-                <div class="item" ng-repeat="r in selectedRooms">{{r}}</div>
+                <div class="item" ng-repeat="r in ::selectedRooms">{{r}}</div>
             </div>
             <div class="btns">
                 <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish');">补录</div>
