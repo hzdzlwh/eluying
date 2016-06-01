@@ -20,7 +20,7 @@
             <div class="stext">选择直接入住，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processSelectedEntries('ing');">清除</div>
+                <div class="sbtn confirm" ng-click="clearSelectedEntriesByType('ing');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -32,7 +32,7 @@
             <div class="stext">选择补录，系统将自动清除今天及以后的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processSelectedEntries('finish');">清除</div>
+                <div class="sbtn confirm" ng-click="clearSelectedEntriesByType('finish');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -44,7 +44,7 @@
             <div class="stext">选择预定，系统将自动清除今天以前的房态格子。</div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">取消</div>
-                <div class="sbtn confirm" ng-click="processSelectedEntries('book');">清除</div>
+                <div class="sbtn confirm" ng-click="clearSelectedEntriesByType('book');">清除</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -545,16 +545,16 @@
                         <tr>
                             <td>
                                 <div class="select1">
-                                    <span>{{orderNew.selectedId}}</span>
+                                    <span>{{orderNew.selectedIdLabel}}</span>
                                     <div class="select1_options">
                                         <div class="item"
-                                             ng-click="changeIds(id.label, orderNew);$event.stopPropagation();"
+                                             ng-click="changeIds(id.key, id.label, orderNew);$event.stopPropagation();"
                                              ng-repeat="id in idList">{{id.label}}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td><input placeholder="{{orderNew.selectedId}}" type="text" class="long" maxlength="18"
-                                       ng-model="orderNew.idVal"><div class="tips warning" ng-if="false">身份证格式错误</div></td>
+                            <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18"
+                                       ng-model="orderNew.idVal"><div class="tips warning" ng-if="false">{{orderNew.selectedIdLabel}}格式错误</div></td>
                             <td>渠道</td>
                             <td>
                                 <div class="select1">
@@ -2436,8 +2436,8 @@
                     <div class="item">日</div>
                 </div>
                 <div class="date-row" ng-repeat="row in mainCalendar">
-                    <div class="item {{day.sclass}}" ng-repeat="day in ::row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
-                        {{::(day.text || day.date.getDate())}}
+                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
+                        {{(day.text || day.date.getDate())}}
                     </div>
                 </div>
             </div>
@@ -2466,7 +2466,7 @@
                              ng-if="isSelected[pRoom.id]">
                             <div class="eluyun_tick-small"></div>
                         </div>
-                        {{::pRoom.name}}
+                        {{pRoom.name}}
                     </div>
                 </div>
                 <hr>
@@ -2476,26 +2476,26 @@
         <div class="leftHeader">
             <div class="category-item" ng-repeat="c in cRoomStore" ng-if="pRoomList[c.pId].selected">
                 <div class="category-name">
-                    <span class="stext">{{::c.name}}</span>
+                    <span class="stext">{{c.name}}</span>
                 </div>
                 <div class="category-list">
-                    <div class="room-item" room="{{::r.id}}" ng-repeat="r in c.rooms">{{::r.sn}}</div>
+                    <div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.sn}}</div>
                 </div>
             </div>
         </div>
         <div class="sheader">
             <div class="sheader-item" ng-repeat="d in datesArray">
                 <div class="date-item"
-                     ng-class="::{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
-                     date="{{::d.dateStr}}">
+                     ng-class="{'today':d.dateStr == today, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
+                     date="{{d.dateStr}}">
                     <div class="date">
-                        {{::(holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr)}}
+                        {{(holidays[d.dateStrL].type === 0 ? holidays[d.dateStrL].str : false || d.dateStr == today ? '今天' : d.dateStr)}}
                         <!--<div class="isHoliday" ng-if="holidays[d.dateStrL]">休</div>-->
                         <div class="eluyun_rest_outer spriteImg isHoliday" ng-if="holidays[d.dateStrL]">
                             <div class="eluyun_rest"></div>
                         </div>
                     </div>
-                    <div class="desc">{{::d.weekday}}</div>
+                    <div class="desc">{{d.weekday}}</div>
                 </div>
                 <div class="left">剩{{d.left}}</div>
             </div>
@@ -2515,9 +2515,9 @@
                             <div class="eluyun_tick_outer spriteImg">
                                 <div class="eluyun_tick"></div>
                             </div>
-                            <div class="date">{{::day.date}}</div>
-                            <div class="price">￥{{::day.p}}</div>
-                            <div class="name">{{::r.sn}}（{{::cRoomStore[r.ti].name}})</div>
+                            <div class="date">{{day.date}}</div>
+                            <div class="price">￥{{day.p}}</div>
+                            <div class="name">{{r.sn}}（{{cRoomStore[r.ti].name}})</div>
                         </div>
                         <div class="closeTips" ng-if="day.s === 100">
                             已关闭
@@ -2586,7 +2586,7 @@
         <div class="shopcart" ng-show="shopcartShow">
             <div class="already">已选择<span>{{selectedRooms.length}}</span>个房间</div>
             <div class="roomList">
-                <div class="item" ng-repeat="r in selectedRooms">{{::r}}</div>
+                <div class="item" ng-repeat="r in selectedRooms">{{r}}</div>
             </div>
             <div class="btns">
                 <div class="sbtn addition" ng-show="finishShow" ng-click="checkBeforeAdd('finish');">补录</div>

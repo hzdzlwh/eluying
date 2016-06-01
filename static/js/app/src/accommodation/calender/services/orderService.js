@@ -29,9 +29,10 @@ var orderService = function(app){
                 duration: 1
             }
         };
-        this.changeIds = function(method, order){
-            order.guestInfo.selectedId = method;
-            order.guestInfo.idVal = null;
+        this.changeIds = function(method, methodLabel, order){
+            order.selectedId = method;
+            order.selectedIdLabel = methodLabel;
+            order.idVal = null;
             $(".select1_options").hide();
         };
         this.changeChannel = function(cid, cname, order){

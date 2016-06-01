@@ -52,22 +52,16 @@ $(function(){
             var scrollHeight = selection[0].scrollHeight;
             var height = selection.height();
             var top = selection.scrollTop();
-            // var body = angular.element(document.body);
-            // var rootScope = body.scope().$root;
-            // rootScope.entryRowsMin += top / 48;
-            // rootScope.entryRowsMax += (top + height) / 48;
-            // rootScope.$apply();
             clearTimeout(timer);
             timer = setTimeout(function () {
                 var height = $(window).height() - $(".calendor-container").offset().top;
                 var top = $(".calendor-container").scrollTop();
                 var body = angular.element(document.body);
                 var rootScope = body.scope().$root;
-                rootScope.entryRowsMin = parseInt(top / 48);
-                rootScope.entryRowsMax = parseInt((top + height) / 48);
-                console.log(rootScope.entryRowsMin, rootScope.entryRowsMax);
+                rootScope.entryRowsMin = parseInt(top / 48)-20;
+                rootScope.entryRowsMax = parseInt((top + height) / 48)+20;
                 rootScope.$apply();
-            }, 150);
+            }, 100);
 
             var scrollLeft = selection.scrollLeft();
             var scrollTop = selection.scrollTop();

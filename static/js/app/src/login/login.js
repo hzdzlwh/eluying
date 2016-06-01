@@ -291,7 +291,8 @@ $(document).ready(function(){
     $("#loginBox .log button").on("click", function(){
         var loginName = $("#loginBox .log .loginName").val();
         var password = $("#loginBox .log .password").val();
-        var result = loginValidate.phoneValidate(loginName);
+        // var result = loginValidate.phoneValidate(loginName);
+        var result = true;
         /*if(result == true) {
             result = loginValidate.passwordValidate(password);
         }*/

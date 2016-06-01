@@ -46,6 +46,10 @@ var orderNewCtrl = function(app){
                 modal.somethingAlert("备注最多输入140个字!");
                 return false;
             }
+            if(orderNew.idVal && !validateService.checkRemark(orderNew.idVal)){
+                modal.somethingAlert("请填入16位身份证号!");
+                return false;
+            }
             var inventory = {};
             var itemList = orderNew.foodItems.concat(orderNew.playItems).concat(orderNew.goodsItems);
             for(var i = 0; i < itemList.length; i++){

@@ -59,7 +59,11 @@ var getDataService = function(app){
         };
         this.getIDs = function(callback){
             var idList = [
-                {key: 'id', label: '身份证'},
+                {key: '0', label: '身份证'},
+                // {key: '1', label: '军官证'},
+                // {key: '2', label: '通行证'},
+                // {key: '3', label: '护照'},
+                // {key: '4', label: '其他'},
             ];
             callback({
                 idList: idList
@@ -235,19 +239,6 @@ var getDataService = function(app){
                     accommodationService.updateDateInventory(scope);
                     scope.$apply();
                     util.leftHeaderAdjustLineHeight();
-                    // (function () {
-                    //     var elts = document.getElementsByClassName('ng-scope');
-                    //     var watches = [];
-                    //     var visited_ids = {};
-                    //     for (var i=0; i < elts.length; i++) {
-                    //         var scope = angular.element(elts[i]).scope();
-                    //         if (scope.$id in visited_ids)
-                    //             continue;
-                    //         visited_ids[scope.$id] = true;
-                    //         watches.push.apply(watches, scope.$$watchers);
-                    //     }
-                    //     alert(watches.length);
-                    // })();
                 });
             });
         };
