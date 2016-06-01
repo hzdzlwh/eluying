@@ -65,6 +65,8 @@ var orderSearch = function(app){
         scope.searchResultOnClick = function(orderId){
             scope.showResults = false;
             $(".search .results").hide();
+            $(".search .search-switch").show();
+            $(".search .wrapper").hide();
             getDataService.getOrderDetail(orderId, rootScope);
         };
     }]);

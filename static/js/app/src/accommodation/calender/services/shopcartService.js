@@ -8,8 +8,10 @@ var shopcartService = function(app){
             var selectedEntries = scope.selectedEntries;
             if(util.objLen(selectedEntries) === 0){
                 scope.shopcartShow = false;
+                $(".accommodation-mainContainer").css("bottom", "0");
             }else{
                 scope.shopcartShow = true;
+                $(".accommodation-mainContainer").css("bottom", "102px");
                 var today = new Date();
                 var p = false;
                 var t = false;

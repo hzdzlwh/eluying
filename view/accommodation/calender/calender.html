@@ -2344,68 +2344,73 @@
 </div>
 <div class="accommodation-mainContainer">
     <div class="search" ng-controller="orderSearch">
-        <div class="eluyun_search-grey_outer spriteImg search-btn" ng-if="searchKeyword === ''">
-            <div class="eluyun_search-grey"></div>
+        <div class="eluyun_search-light_outer spriteImg search-switch">
+            <div class="eluyun_search-light"></div>
         </div>
-        <div class="eluyun_search-blue_outer spriteImg search-btn" ng-if="searchKeyword !== ''"
-             ng-click="search(true);$event.stopPropagation();">
-            <div class="eluyun_search-blue"></div>
-        </div>
-        <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
-               ng-model="searchKeyword" ng-keypress="enterKeyPress($event);">
-        <div class="results"  ng-class="{'sshow': showResults}">
-            <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
-            <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
-            <div class="hr" ng-if="searchResultsNum > 0"></div>
-            <div ng-repeat="g in searchResults" ng-click="searchResultOnClick(g.orderId)">
-                <div class="item" orderId="{{g.orderId}}">
-                    <div class="srow">
-                        <div class="slabel">开始于:</div>
-                        <div class="desc">{{g.startDate}}</div>
-                    </div>
-                    <div class="srow">
-                        <div class="slabel">客户:</div>
-                        <div class="desc">{{g.customerName}}({{g.customerPhone}})</div>
-                    </div>
-                    <div class="srow">
-                        <div class="slabel">订单号:</div>
-                        <div class="desc">{{g.orderNum}}</div>
-                    </div>
-                    <div class="status {{g.classStr}}"><div class="triangle"></div>{{g.html}}</div>
-                    <div class="origin">{{g.origin}}</div>
-                    <!--<div class="eluyun_book_outer spriteImg" ng-if="g.orderState === 2">-->
-                        <!--<div class="eluyun_book"></div>-->
-                    <!--</div>-->
-                    <!--<div class="eluyun_ing_outer spriteImg" ng-if="g.orderState === 3">-->
-                        <!--<div class="eluyun_ing"></div>-->
-                    <!--</div>-->
-                    <!--<div class="eluyun_finish_outer spriteImg" ng-if="g.orderState === 5">-->
-                        <!--<div class="eluyun_finish"></div>-->
-                    <!--</div>-->
-                </div>
-                <div class="hr"></div>
+        <div class="wrapper">
+            <div class="eluyun_search-grey_outer spriteImg search-btn" ng-if="searchKeyword === ''">
+                <div class="eluyun_search-grey"></div>
             </div>
-            <div class="btns" ng-if="searchResultsNum > searchResultUnit">
-                <div class="sbtn previous" ng-click="searchResultPreviousPage()"
-                     ng-if="searchResultPage !== 1">
-                    <div class="eluyun_forward_outer spriteImg">
-                        <div class="eluyun_forward"></div>
+            <div class="eluyun_search-blue_outer spriteImg search-btn" ng-if="searchKeyword !== ''"
+                 ng-click="search(true);$event.stopPropagation();">
+                <div class="eluyun_search-blue"></div>
+            </div>
+            <input class="keyword" type="text" placeholder="搜索客户姓名/手机号/订单号"
+                   ng-model="searchKeyword" ng-keypress="enterKeyPress($event);">
+            <div class="results"  ng-class="{'sshow': showResults}">
+                <div class="tips" ng-if="searchResultsNum === 0">没有搜索结果</div>
+                <div class="tips" ng-if="searchResultsNum > 0">共有{{searchResultsNum}}条搜索结果</div>
+                <div class="hr" ng-if="searchResultsNum > 0"></div>
+                <div ng-repeat="g in searchResults" ng-click="searchResultOnClick(g.orderId)">
+                    <div class="item" orderId="{{g.orderId}}">
+                        <div class="srow">
+                            <div class="slabel">开始于:</div>
+                            <div class="desc">{{g.startDate}}</div>
+                        </div>
+                        <div class="srow">
+                            <div class="slabel">客户:</div>
+                            <div class="desc">{{g.customerName}}({{g.customerPhone}})</div>
+                        </div>
+                        <div class="srow">
+                            <div class="slabel">订单号:</div>
+                            <div class="desc">{{g.orderNum}}</div>
+                        </div>
+                        <div class="status {{g.classStr}}"><div class="triangle"></div>{{g.html}}</div>
+                        <div class="origin">{{g.origin}}</div>
+                        <!--<div class="eluyun_book_outer spriteImg" ng-if="g.orderState === 2">-->
+                        <!--<div class="eluyun_book"></div>-->
+                        <!--</div>-->
+                        <!--<div class="eluyun_ing_outer spriteImg" ng-if="g.orderState === 3">-->
+                        <!--<div class="eluyun_ing"></div>-->
+                        <!--</div>-->
+                        <!--<div class="eluyun_finish_outer spriteImg" ng-if="g.orderState === 5">-->
+                        <!--<div class="eluyun_finish"></div>-->
+                        <!--</div>-->
                     </div>
+                    <div class="hr"></div>
                 </div>
-                <div class="sbtn privious" ng-if="searchResultPage === 1">
-                    <div class="eluyun_3_outer spriteImg">
-                        <div class="eluyun_3"></div>
+                <div class="btns" ng-if="searchResultsNum > searchResultUnit">
+                    <div class="sbtn previous" ng-click="searchResultPreviousPage()"
+                         ng-if="searchResultPage !== 1">
+                        <div class="eluyun_forward_outer spriteImg">
+                            <div class="eluyun_forward"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="sbtn next" ng-click="searchResultNextPage()"
-                     ng-if="searchResultPage * searchResultUnit < searchResultsNum">
-                    <div class="eluyun_backward_outer spriteImg">
-                        <div class="eluyun_backward"></div>
+                    <div class="sbtn privious" ng-if="searchResultPage === 1">
+                        <div class="eluyun_3_outer spriteImg">
+                            <div class="eluyun_3"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="sbtn next" ng-if="searchResultPage * searchResultUnit >= searchResultsNum">
-                    <div class="eluyun_4_outer spriteImg">
-                        <div class="eluyun_4"></div>
+                    <div class="sbtn next" ng-click="searchResultNextPage()"
+                         ng-if="searchResultPage * searchResultUnit < searchResultsNum">
+                        <div class="eluyun_backward_outer spriteImg">
+                            <div class="eluyun_backward"></div>
+                        </div>
+                    </div>
+                    <div class="sbtn next" ng-if="searchResultPage * searchResultUnit >= searchResultsNum">
+                        <div class="eluyun_4_outer spriteImg">
+                            <div class="eluyun_4"></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -83,6 +83,8 @@ $(function(){
         "click body": function(ev){
             $(".entryOp").hide();
             $(".search .results").hide();
+            $(".search .search-switch").show();
+            $(".search .wrapper").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();
@@ -160,6 +162,14 @@ $(function(){
             window.location.reload();
         },
         "click body .category-filter": function(ev){
+            ev.stopPropagation();
+        },
+        "click body .search-switch": function(ev){
+            $(".search .search-switch").hide();
+            $(".search .wrapper").show();
+            ev.stopPropagation();
+        },
+        "click body .search": function(ev){
             ev.stopPropagation();
         }
     };

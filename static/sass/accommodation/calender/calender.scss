@@ -2084,6 +2084,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     right: 242px;
     top: -42px;
     z-index: 999;
+    .wrapper{
+      display: none;
+    }
     .search-btn{
       cursor: pointer;
       position: relative;
@@ -2104,6 +2107,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       z-index: -1;
       border: none;
       padding: 0 8px;
+    }
+    input::-ms-clear {
+      display: none;
     }
     .results{
       display: none;
@@ -2589,7 +2595,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       height: auto;
       overflow-x: auto;
       overflow-y: auto;
-      padding-bottom: 102px;
+      //padding-bottom: 102px;
       .entryList{
         width: 3000px;
         height: auto;
@@ -2937,7 +2943,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       position: fixed;
       height: 102px;
       width: 100%;
-      bottom: 0px;
+      bottom: 0;
       background:#fafafa;
       box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
       .already{
