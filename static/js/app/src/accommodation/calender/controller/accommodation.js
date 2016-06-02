@@ -202,6 +202,23 @@ var accommodationCtrl = function(app){
                 $("#arrearsModal").modal("hide");
                 getMoneyService.pay(rootScope);
             };
+            
+            rootScope.calShowIndex = function(index){
+                var roomStore = rootScope.roomStore;  
+                var pRoomList = rootScope.pRoomList;  
+                var result = 0;
+                var count = 0;
+                for(var key in roomStore){
+                    if(count === index){
+                        return result;
+                    }
+                    var r = roomStore[key];
+                    count++;
+                    if(pRoomList[r.pi].selected){
+                        result++;
+                    }
+                }
+            };
 
             getDataService.getChannel(function(result){
                 rootScope.channels = result.channels;

@@ -16,7 +16,7 @@ var validateService = function(app){
             return remark.length <= 140;
         };
         this.checkId = function(idVal){
-            var regex = /^[0-9xX]{16}$/;
+            var regex = /^[0-9xX]{18}$/;
             return regex.test(idVal);
         };
         this.checkRooms = function(order){
