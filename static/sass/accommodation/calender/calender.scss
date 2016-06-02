@@ -588,11 +588,16 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           line-height: 22px;
           margin-bottom: 8px;
           position: relative;
+          left: -15px;
           clear: both;
           .select1{
             @include select1();
             width: 120px;
             float: right;
+            .select1_options{
+              width: 118px;
+              position: fixed;
+            }
           }
           .sbold{
             font-size:16px;
@@ -641,6 +646,8 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               background:#fafafa;
               box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
               width:208px;
+              max-height: 300px;
+              overflow-y: auto;
               //height:298px;
               //margin-left: -213px;
               //margin-top: -14px;
@@ -719,8 +726,37 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         .item_big{
           height: 24px;
           line-height: 24px;
+          position: relative;
           input{
             padding: 0 8px;
+          }
+          .errorTips{
+            position: absolute;
+            right: -153px;
+            top: -2px;
+            background:#ffffff;
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+            border-radius:$borderColor;
+            width:120px;
+            height:26px;
+            line-height:26px;
+            font-size:12px;
+            color:#666666;
+            text-align:center;
+          }
+          .sdelete{
+            position: absolute;
+            left: 234px;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            background: $trash_grey;
+            display: inline-block;
+            cursor: pointer;
+          }
+          .sdelete:hover{
+            background: $trash_blue;
+            background-size: 14px 14px;
           }
         }
       }

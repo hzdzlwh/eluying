@@ -31,6 +31,13 @@ var orderNewCtrl = function(app){
         scope.changeItemTime = orderService.changeItemTime;
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
+        scope.discountsChange = function(){
+            var orderNew = rootScope.orderNew;
+            var itemPrice = orderService.itemPrice(orderNew);
+            if(orderNew.discounts > itemPrice){
+                orderNew.discounts = itemPrice;
+            }
+        };
         scope.submitOrder = function(){
             var orderNew = rootScope.orderNew;
             orderNew.customerName = orderNew.customerName.trim();

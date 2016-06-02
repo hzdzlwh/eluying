@@ -154,7 +154,7 @@
                             <div class="abtn" ng-if="orderDetail.editable"
                                  ng-click="showOrderEdit()">编辑订单</div>
                             <div class="abtn" ng-if="orderDetail.cancelable" ng-click="showOrderCancel()">取消订单</div>
-                            <div class="abtn">打印凭条</div>
+                            <!--<div class="abtn">打印凭条</div>-->
                         </div>
                     </div>
                 </div>
@@ -476,7 +476,7 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options" ng-if="payChannels">
-                                <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
+                                <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
@@ -496,7 +496,7 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment, orderCancel);"
+                                <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
@@ -547,7 +547,7 @@
                                 <div class="select1">
                                     <span>{{orderNew.selectedIdLabel}}</span>
                                     <div class="select1_options">
-                                        <div class="item"
+                                        <div class="oitem"
                                              ng-click="changeIds(id.key, id.label, orderNew);$event.stopPropagation();"
                                              ng-repeat="id in idList">{{id.label}}</div>
                                     </div>
@@ -560,7 +560,7 @@
                                 <div class="select1">
                                     <span>{{orderNew.origin}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="c in channels"
+                                        <div class="oitem" ng-repeat="c in channels"
                                              ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
                                     </div>
                                 </div>
@@ -657,7 +657,7 @@
                                 <div class="select1">
                                     <span>{{food.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in foodList"
+                                        <div class="oitem" ng-repeat="f in foodList"
                                              ng-click="changeItem(orderNew.foodItems, food, f);">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -720,7 +720,7 @@
                                 <div class="select1">
                                     <span>{{play.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in funList"
+                                        <div class="oitem" ng-repeat="f in funList"
                                              ng-click="changeItem(orderNew.playItems, play, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -783,7 +783,7 @@
                                 <div class="select1">
                                     <span>{{goods.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in goodsList"
+                                        <div class="oitem" ng-repeat="f in goodsList"
                                              ng-click="changeItem(orderNew.goodsItems, goods, f, true)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -806,7 +806,7 @@
                 <div class="hr2" ng-if="goodsList.length > 0"></div>
                 <div class="discount">
                     <div class="slabel">优惠</div>
-                    <input placeholder="金额" type="text" ng-model="orderNew.discounts">
+                    <input placeholder="金额" type="text" ng-model="orderNew.discounts" ng-change="discountsChange();">
                     <span class="tips">-¥</span>
                 </div>
                 <div class="remark">
@@ -873,7 +873,7 @@
                                 <div class="select1">
                                     <span>{{orderEdit.selectedId}}</span>
                                     <div class="select1_options">
-                                        <div class="item"
+                                        <div class="oitem"
                                              ng-click="changeIds(id.label, orderEdit);$event.stopPropagation();"
                                              ng-repeat="id in idList">{{id.label}}</div>
                                     </div>
@@ -889,7 +889,7 @@
                                 <div class="select1">
                                     <span>{{orderEdit.origin}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="c in channels"
+                                        <div class="oitem" ng-repeat="c in channels"
                                              ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
                                     </div>
                                 </div>
@@ -1006,7 +1006,7 @@
                                 <div class="select1">
                                     <span>{{food.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in foodList"
+                                        <div class="oitem" ng-repeat="f in foodList"
                                              ng-click="changeItem(orderEdit.foodItems, food, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -1071,7 +1071,7 @@
                                 <div class="select1">
                                     <span>{{play.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in funList"
+                                        <div class="oitem" ng-repeat="f in funList"
                                              ng-click="changeItem(orderEdit.playItems, play, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -1136,7 +1136,7 @@
                                 <div class="select1">
                                     <span>{{goods.name}}</span>
                                     <div class="select1_options">
-                                        <div class="item" ng-repeat="f in goodsList"
+                                        <div class="oitem" ng-repeat="f in goodsList"
                                              ng-click="changeItem(orderEdit.goodsItems, goods, f, true)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -1159,7 +1159,7 @@
                 <div class="hr2"></div>
                 <div class="discount">
                     <div class="slabel">优惠</div>
-                    <input placeholder="金额" type="text" ng-model="orderEdit.discounts">
+                    <input placeholder="金额" type="text" ng-model="orderEdit.discounts" ng-change="discountsChange();">
                     <span class="tips">-¥</span>
                 </div>
                 <div class="remark">
@@ -1181,30 +1181,6 @@
                     <div class="sbtn confirm" ng-click="submitOrder()">保存</div>
                     <div class="sbtn cancel btn-cancel">取消</div>
                 </div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<div class="modal fade" role="dialog" id="arrearsModal">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="hr"></div>
-            <div class="stitle">
-                款项未结清
-            </div>
-            <div class="scontent">
-                <div class="srow sgive">
-                    <div class="slabel">客户需补订单：</div>
-                    <div class="snum">￥5000</div>
-                </div>
-                <div class="srow srefund">
-                    <div class="slabel">需退押金：</div>
-                    <div class="snum">￥100</div>
-                </div>
-            </div>
-            <div class="btns">
-                <div class="sbtn confirm">没关系,继续</div>
-                <div class="sbtn cancel">返回编辑收银</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -1290,7 +1266,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList"
                                                  ng-click="changeItem(checkout.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1358,7 +1334,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList"
                                                  ng-click="changeItem(checkout.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1525,7 +1501,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList"
                                                  ng-click="changeItem(checkoutAd.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1593,7 +1569,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList"
                                                  ng-click="changeItem(checkoutAd.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1661,7 +1637,7 @@
                                     <div class="select1">
                                         <span>{{goods.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in goodsList"
+                                            <div class="oitem" ng-repeat="f in goodsList"
                                                  ng-click="changeItem(checkoutAd.goodsItems, goods, f, true)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1802,7 +1778,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList"
                                                  ng-click="changeItem(checkin.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1870,7 +1846,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList"
                                                  ng-click="changeItem(checkin.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1939,7 +1915,7 @@
                                     <div class="select1">
                                         <span>{{goods.name}}</span>
                                         <div class="select1_options">
-                                            <div class="item" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList"
                                                  ng-click="changeItem(checkin.goodsItems, goods, f, true)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -2218,9 +2194,16 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment);"
+                                <div class="oitem" ng-click="changePayChannel(p, payment);"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
+                        </div>
+                        <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
+                        <div class="errorTips" ng-if="false">
+                            <div class="eluyun_ex-red_outer spriteImg">
+                                <div class="eluyun_ex-red"></div>
+                            </div>
+                            请选择收款方式
                         </div>
                     </div>
                     <div class="item item_small refund" ng-if="getMoney.feeMode === 1">
@@ -2238,13 +2221,13 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment);"
-                                ng-repeat="payment in payChannels"
-                                ng-if="payment.channelId != -8 && payment.channelId != -6">
+                                <div class="oitem" ng-click="changePayChannel(p, payment);"
+                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
                             </div>
                         </div>
+                        <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
                     <div class="item item_small" ng-if="getMoney.depositMode === 0">
                         <div class="slabel">押金收款</div>
@@ -2261,12 +2244,19 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment)"
-                                ng-repeat="payment in payChannels">
+                                <div class="oitem" ng-click="changePayChannel(p, payment)"
+                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
                             </div>
+                            <div class="errorTips" ng-if="false">
+                                <div class="eluyun_ex-red_outer spriteImg">
+                                    <div class="eluyun_ex-red"></div>
+                                </div>
+                                请选择收款方式
+                            </div>
                         </div>
+                        <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
                     <div class="item item_small" ng-if="getMoney.depositMode === 1">
                         <div class="slabel">押金退款</div>
@@ -2283,13 +2273,14 @@
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
-                                <div class="item" ng-click="changePayChannel(p, payment)"
+                                <div class="oitem" ng-click="changePayChannel(p, payment)"
                                      ng-repeat="payment in payChannels"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
                             </div>
                         </div>
+                        <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
                 </div>
                 <div class="remarks">
@@ -2317,26 +2308,50 @@
             </div>
             <div class="btns">
                 <div class="sbtn cancel btn-cancel">不保留,去删除</div>
-                <div class="sbtn confirm" ng-click="checkoutAfterConfirm(4);">保留</div>
+                <div class="sbtn confirm" ng-click="checkoutAfterConfirm(selectedCheckoutType);">保留</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="arrearsModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                款项未结清
+            </div>
+            <div class="scontent">
+                <div class="srow sgive">
+                    <div class="slabel">客户需补订单：</div>
+                    <div class="snum">￥{{arrearLeft}}</div>
+                </div>
+                <div class="srow srefund">
+                    <div class="slabel">需退押金：</div>
+                    <div class="snum">￥{{arrearDeposit}}</div>
+                </div>
+            </div>
+            <div class="btns">
+                <div class="sbtn confirm" ng-click="payWithItems()">没关系,继续</div>
+                <div class="sbtn cancel btn-cancel">返回编辑收银</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
 <div class="modal fade" role="dialog" id="payWithAlipayModal" ng-controller="getMoneyWithGunCtrl">
     <div class="modal-dialog">
-        <div class="modal-content" ng-if="getMoneyWithGun">
+        <div class="modal-content">
             <div class="hr"></div>
             <div class="erweima">
                 <div class="eluyun_scan_outer spriteImg">
                     <div class="eluyun_scan"></div>
                 </div>
                 <input type="text" placeholder="付款码使用条码枪录入，也可手动录入。"
-                ng-model="getMoneyWithGun.userCode">
+                       ng-model="getMoneyWithGun.userCode" ng-keyup="inputOnKeyUp($event)">
             </div>
             <div class="infos">
-                <div class="item">应收金额：￥{{getMoneyWithGun.fee}}</div>
-                <div class="item">订单编号：{{getMoneyWithGun.serialNum}}</div>
-                <div class="item">收银员：{{getMoneyWithGun.operator}}</div>
+                <div class="item">应收金额：￥{{getMoneyWithGun && getMoneyWithGun.fee}}</div>
+                <div class="item">订单编号：{{getMoneyWithGun && getMoneyWithGun.serialNum}}</div>
+                <div class="item">收银员：{{getMoneyWithGun && getMoneyWithGun.operator}}</div>
             </div>
             <div class="sbtn" ng-click="submitPayWithAlipay()">确认收款</div>
         </div><!-- /.modal-content -->

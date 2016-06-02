@@ -312,6 +312,20 @@ var orderService = function(app){
             }
             return deposit;
         };
+        this.calDepositLeft = function(order){
+            var payments = order.payments;
+            var depositTotal = 0;
+            var deposit = 0;
+            payments.forEach(function(d){
+                if(d.type === 1){
+                    depositTotal += parseFloat(d.fee);
+                }
+                if(d.type === 3){
+                    deposit += parseFloat(d.fee);
+                }
+            });
+            return depositTotal - deposit;
+        };
         this.itemPrice = function(order){
             var price = 0;
             for(var i = 0; i < order.rooms.length; i++){

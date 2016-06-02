@@ -74,10 +74,10 @@ var getDataService = function(app){
                 var payChannels = result.data.payChannelCustomList;
                 var map = result.data.map;
                 if(map.alipaySelected){
-                   payChannels.push({
-                       channelId: -6,
-                       name: '支付宝'
-                   });
+                   // payChannels.push({
+                   //     channelId: -6,
+                   //     name: '支付宝'
+                   // });
                 }else if(map.walletPaySelected){
                    payChannels.push({
                        channelId: -8,

@@ -183,18 +183,25 @@ var accommodationCtrl = function(app){
                             checkoutRooms: rooms,
                         };
                         rootScope.getMoney =
-                            getMoneyService.resetGetMoney(order, order.orderId, type, asyncObj);
+                            getMoneyService.resetGetMoney(order, order.orderId, type, asyncObj, rootScope.isLast);
                         rootScope.$apply();
                         $("#keepOrNotModal").modal("hide");
                         $("#checkoutAdModal").modal("hide");
                         $("#checkoutModal").modal("hide");
                         $("#getMoneyModal").modal("show");
+                        rootScope.selectedCheckoutType = null;
+                        rootScope.isLast = false;
                     }else {
                         modal.somethingAlert(result3.msg);
                     }
                 });
             };
             rootScope.clearSelectedEntriesByType = accommodationService.clearSelectedEntriesByType;
+
+            rootScope.payWithItems = function(){
+                $("#arrearsModal").modal("hide");
+                getMoneyService.pay(rootScope);
+            };
 
             getDataService.getChannel(function(result){
                 rootScope.channels = result.channels;

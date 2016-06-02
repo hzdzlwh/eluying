@@ -29,6 +29,13 @@ var orderEditCtrl = function(app){
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
+            scope.discountsChange = function(){
+                var orderEdit = rootScope.orderEdit;
+                var itemPrice = orderService.itemPrice(orderEdit);
+                if(orderEdit.discounts > itemPrice){
+                    orderEdit.discounts = itemPrice;
+                }
+            };
             scope.submitOrder = function(){
                 var orderEdit = rootScope.orderEdit;
                 var rooms = [];

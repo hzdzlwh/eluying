@@ -180,7 +180,21 @@ $(function(){
         },
         "click body .search": function(ev){
             ev.stopPropagation();
-        }
+        },
+        "shown.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focus();
+            $("#payWithAlipayModal input").focusout(function(){
+                $("#payWithAlipayModal input").focus();
+            });
+        },
+        "hidden.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focusout(function(){});
+            $("#payWithAlipayModal input").focusout();
+        },
+        // $("#payWitJ2001hAlipayModal input").focus();
+        // $("#payWithAlipayModal input").focusout(function(){
+        //     $("#payWithAlipayModal input").focus();
+        // });
     };
 
     util.bindDomAction(events);

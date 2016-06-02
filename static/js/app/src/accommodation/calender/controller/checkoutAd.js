@@ -48,6 +48,8 @@ var checkoutAdCtrl = function(app){
                     })
                 }
                 if(!flag && flag2){
+                    rootScope.selectedCheckoutType = 4;
+                    rootScope.isLast = true;
                     $("#keepOrNotModal").modal("show");
                     return false;
                 }
