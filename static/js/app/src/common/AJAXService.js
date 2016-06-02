@@ -89,6 +89,7 @@ var AJAXService = {
         checkInOrCheckoutUrl: '/order/checkInOrCheckout',
         getRoomFeeUrl: '/order/getRoomFee',
         shopListUrl: '/shop/list',
+        barcodePayUrl: '/cashier/barcodePay',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

@@ -2335,10 +2335,10 @@
             </div>
             <div class="infos">
                 <div class="item">应收金额：￥{{getMoneyWithGun.fee}}</div>
-                <div class="item">订单编号：{{getMoneyWithGun.orderId}}</div>
+                <div class="item">订单编号：{{getMoneyWithGun.serialNum}}</div>
                 <div class="item">收银员：{{getMoneyWithGun.operator}}</div>
             </div>
-            <div class="sbtn">确认收款</div>
+            <div class="sbtn" ng-click="submitPayWithAlipay()">确认收款</div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>

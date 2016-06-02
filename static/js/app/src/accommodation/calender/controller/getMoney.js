@@ -38,19 +38,24 @@ var getMoneyCtrl = function(app){
                 var getMoney = rootScope.getMoney;
                 var payments_new = [];
                 var alipayMoneyTotal = 0;
+                var onlineType = null;
+                var paymentType = null;
                 getMoney.payments.forEach(function(d){
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
                         if(d.payChannelId === -6 || d.payChannelId === -8){
                             alipayMoneyTotal += parseFloat(d.fee);
+                            onlineType = d.payChannelId;
+                            paymentType = d.type;
                         }
                     }
                 });
 
                 if(alipayMoneyTotal > 0){
                     //要去扫码付钱
+                    onlineType = onlineType === -6 ? 2 : 1;
                     rootScope.getMoneyWithGun =
-                        getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId);
+                        getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId, onlineType, paymentType, getMoney.orderNum);
                     $("#payWithAlipayModal").modal("show");
                 }else{
                     if(!getMoney.async){
