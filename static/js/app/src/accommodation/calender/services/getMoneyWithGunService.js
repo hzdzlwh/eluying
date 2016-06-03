@@ -8,8 +8,8 @@ var getMoneyWithGunService = function(app){
             // , getMoney.orderId, onlineType, paymentType, getMoney.orderNum
             var getMoneyWithGun = {};
             getMoneyWithGun.userCode = '';
-            // getMoneyWithGun.fee = fee;
-            getMoneyWithGun.fee = 100000000;
+            getMoneyWithGun.fee = fee;
+            // getMoneyWithGun.fee = 100000000;
             getMoneyWithGun.orderId = getMoney.orderId;
             getMoneyWithGun.operator = localStorage.getItem("userName");
             getMoneyWithGun.collectionOnlineType = collectionOnlineType;
