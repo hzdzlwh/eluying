@@ -20,8 +20,8 @@ var orderNewService = function(app){
                 type: type,
                 origin: channel,
                 originId: channelId,
-                customerName: null,
-                customerPhone: null,
+                customerName: '',
+                customerPhone: '',
                 selectedId: 0,
                 selectedIdLabel: '身份证',
                 idVal: null,
@@ -30,7 +30,7 @@ var orderNewService = function(app){
                 playItems: [],
                 goodsItems: [],
                 remark: '',
-                discounts: 0,
+                discounts: null,
             }
         };
     }]);

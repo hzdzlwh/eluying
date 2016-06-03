@@ -535,12 +535,11 @@
                     <table>
                         <tr>
                             <td>姓名</td>
-                            <td><input placeholder="姓名" type="text" ng-model="orderNew.customerName" minlength="2" maxlength="16"
-                                       class="long"><div class="tips warning" ng-if="!orderNew.customerName">必填字段</div></td>
+                            <td><input placeholder="姓名" type="text" ng-model="orderNew.customerName" minlength="1" maxlength="16"
+                                       class="long"><div class="tips warning" ng-if="errorTips.name">必填字段</div></td>
                             <td>手机号</td>
                             <td><input placeholder="手机号" type="text" ng-model="orderNew.customerPhone" maxlength="11"
-                                       class="short"><div class="tips warning" ng-if="!checkPhone(orderNew.customerPhone);">
-                                请填写正确的手机号码</div></td>
+                                       class="short"><div class="tips warning" ng-if="errorTips.phone">请填写11位手机号码</div></td>
                         </tr>
                         <tr>
                             <td>
@@ -554,7 +553,7 @@
                                 </div>
                             </td>
                             <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18"
-                                       ng-model="orderNew.idVal"><div class="tips warning" ng-if="false">{{orderNew.selectedIdLabel}}格式错误</div></td>
+                                       ng-model="orderNew.idVal"><div class="tips warning" ng-if="errorTips.id">{{orderNew.selectedIdLabel}}格式错误</div></td>
                             <td>渠道</td>
                             <td>
                                 <div class="select1">
@@ -857,32 +856,32 @@
                         <tr>
                             <td>姓名</td>
                             <td>
-                                <input placeholder="姓名" ng-model="orderEdit.customerName"
+                                <input placeholder="姓名" ng-model="orderEdit.customerName" minlength="1" maxlength="16"
                                        type="text" class="long">
-                                <div class="tips warning" ng-if="!orderEdit.customerName">必填字段</div>
+                                <div class="tips warning" ng-if="errorTips.name">必填字段</div>
                             </td>
                             <td>手机号</td>
                             <td>
-                                <input placeholder="手机号" ng-model="orderEdit.customerPhone"
+                                <input placeholder="手机号" ng-model="orderEdit.customerPhone" maxlength="11"
                                        type="text" class="short">
-                                <div class="tips warning" ng-if="!checkPhone(orderEdit.customerPhone);">必填字段</div>
+                                <div class="tips warning" ng-if="errorTips.phone">必填字段</div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="select1">
-                                    <span>{{orderEdit.selectedId}}</span>
+                                    <span>{{orderEdit.selectedIdLabel}}</span>
                                     <div class="select1_options">
                                         <div class="oitem"
-                                             ng-click="changeIds(id.label, orderEdit);$event.stopPropagation();"
+                                             ng-click="changeIds(id.key, id.label, orderNew);$event.stopPropagation();"
                                              ng-repeat="id in idList">{{id.label}}</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <input placeholder="{{orderEdit.selectedId}}" type="text" class="long"
+                                <input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long"
                                        ng-model="orderEdit.idVal">
-                                <div class="tips warning">身份证格式错误</div>
+                                <div class="tips warning" ng-if="errorTips.id">{{orderEdit.selectedIdLabel}}格式错误</div>
                             </td>
                             <td>渠道</td>
                             <td>
@@ -2460,7 +2459,7 @@
         <div class="category-filter" ng-controller="pRoomFilterCtrl">
             <div class="category-filter-switch" ng-click="resetFilter();$event.stopPropagation();">
                 筛选房型
-                <div class="eluyun_arrow-down-big_outer spriteImg next">
+                <div class="eluyun_arrow-down-big_outer spriteImg">
                     <div class="eluyun_arrow-down-big"></div>
                 </div>
             </div>
@@ -2549,7 +2548,7 @@
                 <div class="glyph {{statusStr2[g.roomState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
-                     ng-dblclick="showOrderDetail(g.orderId);"
+                     ng-click="showOrderDetail(g.orderId);"
                      style="left: {{g.left}}px;width: {{g.width}}px;top: {{g.top}}px;">
                     <div class="username">{{g.customerName}}</div>
                     <div class="where">

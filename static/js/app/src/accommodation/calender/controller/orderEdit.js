@@ -36,8 +36,36 @@ var orderEditCtrl = function(app){
                     orderEdit.discounts = itemPrice;
                 }
             };
+            scope.errorTips = {
+                name: false,
+                phone: false,
+                id: false
+            };
             scope.submitOrder = function(){
                 var orderEdit = rootScope.orderEdit;
+                var flag = false;
+                if(!validateService.checkName(orderEdit.customerName)){
+                    //modal.somethingAlert("请输入2~16位用户名!");
+                    scope.errorTips.name = true;
+                    flag = true;
+                }
+                if(!validateService.checkPhone(orderEdit.customerPhone)){
+                    //modal.somethingAlert("请输入正确的11位手机号!");
+                    scope.errorTips.phone = true;
+                    flag = true;
+                }
+                if(!validateService.checkRemark(orderEdit.remark)){
+                    //modal.somethingAlert("备注最多输入140个字!");
+                    flag = true;
+                }
+                if(orderEdit.idVal && !validateService.checkRemark(orderEdit.idVal)){
+                    //modal.somethingAlert("请填入16位身份证号!");
+                    scope.errorTips.id = true;
+                    flag = true;
+                }
+                if(flag){
+                    return false;
+                }
                 var rooms = [];
                 orderEdit.rooms.forEach(function(d){
                     var room = {

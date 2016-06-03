@@ -31,6 +31,20 @@ var orderNewCtrl = function(app){
         scope.changeItemTime = orderService.changeItemTime;
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
+        scope.errorTips = {
+            name: false,
+            phone: false,
+            id: false
+        };
+        //scope.inputChange = function(type){
+        //    if(type === 'name'){
+        //        scope.errorTips.name = !validateService.checkName(rootScope.orderNew.customerName);
+        //    }else if(type === 'phone'){
+        //        scope.errorTips.phone = !validateService.checkPhone(rootScope.orderNew.customerPhone);
+        //    }else if(type === 'id'){
+        //        scope.errorTips.id = !validateService.checkId(rootScope.orderNew.idVal);
+        //    }
+        //};
         scope.discountsChange = function(){
             var orderNew = rootScope.orderNew;
             var itemPrice = orderService.itemPrice(orderNew);
@@ -40,21 +54,28 @@ var orderNewCtrl = function(app){
         };
         scope.submitOrder = function(){
             var orderNew = rootScope.orderNew;
-            orderNew.customerName = orderNew.customerName.trim();
+            orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
+            var flag = false;
             if(!validateService.checkName(orderNew.customerName)){
-                modal.somethingAlert("请输入2~16位用户名!");
-                return false;
+                //modal.somethingAlert("请输入2~16位用户名!");
+                scope.errorTips.name = true;
+                flag = true;
             }
             if(!validateService.checkPhone(orderNew.customerPhone)){
-                modal.somethingAlert("请输入正确的11位手机号!");
-                return false;
+                //modal.somethingAlert("请输入正确的11位手机号!");
+                scope.errorTips.phone = true;
+                flag = true;
             }
             if(!validateService.checkRemark(orderNew.remark)){
-                modal.somethingAlert("备注最多输入140个字!");
-                return false;
+                //modal.somethingAlert("备注最多输入140个字!");
+                flag = true;
             }
             if(orderNew.idVal && !validateService.checkRemark(orderNew.idVal)){
-                modal.somethingAlert("请填入16位身份证号!");
+                //modal.somethingAlert("请填入16位身份证号!");
+                scope.errorTips.id = true;
+                flag = true;
+            }
+            if(flag){
                 return false;
             }
             var inventory = {};
@@ -115,7 +136,7 @@ var orderNewCtrl = function(app){
                 type: type,
                 items: JSON.stringify(items),
                 payments: JSON.stringify([{
-                    fee: orderNew.discounts,
+                    fee: orderNew.discounts || 0,
                     type: 5
                 }]),
                 rooms: JSON.stringify(rooms)
