@@ -36,15 +36,6 @@ var orderNewCtrl = function(app){
             phone: false,
             id: false
         };
-        //scope.inputChange = function(type){
-        //    if(type === 'name'){
-        //        scope.errorTips.name = !validateService.checkName(rootScope.orderNew.customerName);
-        //    }else if(type === 'phone'){
-        //        scope.errorTips.phone = !validateService.checkPhone(rootScope.orderNew.customerPhone);
-        //    }else if(type === 'id'){
-        //        scope.errorTips.id = !validateService.checkId(rootScope.orderNew.idVal);
-        //    }
-        //};
         scope.discountsChange = function(){
             var orderNew = rootScope.orderNew;
             var itemPrice = orderService.itemPrice(orderNew);
