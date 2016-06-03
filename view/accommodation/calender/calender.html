@@ -255,7 +255,61 @@
                         </table>
                     </div>
                     <div class="accounts">
-                        <div class="sub-title">收银信息</div>
+                        <div class="sub-title">
+                            收银信息
+                            <div class="desc">
+                                <div class="eluyun_detail_outer spriteImg">
+                                    <div class="eluyun_detail"></div>
+                                </div>
+                                <div class="desc-box">
+                                    <div class="subt">订单总结：</div>
+                                    <div class="sitem">
+                                        <div class="sl">订单总价</div>
+                                        <div class="sval">¥{{itemPrice(orderDetail)}}</div>
+                                        <div class="clearline"></div>
+                                    </div>
+                                    <div class="sitem">
+                                        <div class="sl">优惠：</div>
+                                        <div class="sval">- ¥{{orderDetail.discounts || 0}}</div>
+                                        <div class="clearline"></div>
+                                    </div>
+                                    <div class="sitem">
+                                        <div class="sl">客户应付：</div>
+                                        <div class="sval">¥{{calPrice(orderDetail)}}</div>
+                                        <div class="clearline"></div>
+                                    </div>
+                                    <div class="hr3"></div>
+                                    <div class="subt">订单收支明细</div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 0">
+                                        <div class="sl">客户已付（{{p.payChannel}}）：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 2">
+                                        <div class="sl">商家已退（{{p.payChannel}}）：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
+                                    <div class="hr3"></div>
+                                    <div class="subt">押金收支明细</div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 1">
+                                        <div class="sl">押金（{{p.payChannel}}）：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 3">
+                                        <div class="sl">已退押金（{{p.payChannel}}）：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
+                                    <div class="hr3"></div>
+                                    <div class="sitem">
+                                        <div class="sl1">{{calLeft(orderDetail) >= 0 ? '客户需补:' : '商家需退:'}}</div>
+                                        <div class="sval2">¥{{calLeft(orderDetail) >= 0 ? calLeft(orderDetail) : -calLeft(orderDetail)}}</div>
+                                    </div>
+                                    <div class="sitem">
+                                        <div class="sl1">已收押金</div>
+                                        <div class="sval2">¥{{calDeposit(orderDetail)}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="infos">
                             <div style="min-width: 500px;">
                                 <div class="item">

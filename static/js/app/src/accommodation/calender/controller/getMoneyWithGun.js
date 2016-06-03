@@ -26,8 +26,42 @@ var getMoneyWithGunCtrl = function(app){
                     paymentType: paymentType,
                 }, function(result){
                     if(result.code === 1){
-                        $("#payWithAlipayModal").modal("hide");
-                        getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                        // $("#payWithAlipayModal").modal("hide");
+                        // getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                        var status = result.data.status;
+                        var tradeNum = result.data.tradeNum;
+                        if(status === 0){
+                            $("#payWithAlipayModal").modal("hide");
+                            getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                        }else if(status === 1){
+                            modal.somethingAlert("收款失败");
+                            setTimeout(function(){
+                                $("#payWithAlipayModal").modal("hide");
+                                $("#getMoneyModal").modal("show");
+                            }, 2500);
+                        }else if(status === 2){
+                            var inter = setInterval(function(){
+                                AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
+                                    tradeNum: tradeNum
+                                }, function(result1){
+                                    if(result1.code === 1){
+                                        var status1 = result1.data.status;
+                                        if(status1 === 0){
+                                            clearInterval(inter);
+                                            $("#payWithAlipayModal").modal("hide");
+                                            getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                                        }else if(status1 === 1){
+                                            modal.somethingAlert("收款失败");
+                                            setTimeout(function(){
+                                                $("#payWithAlipayModal").modal("hide");
+                                                $("#getMoneyModal").modal("show");
+                                            }, 2500);
+                                            clearInterval(inter);
+                                        }
+                                    }
+                                });
+                            }, 5000);
+                        }
                     }else{
                         $("#payWithAlipayModal .input").val('');
                         modal.somethingAlert(result.msg);

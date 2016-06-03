@@ -267,7 +267,7 @@ var orderService = function(app){
             }
             price = price - order.discounts;
             price = price.toFixed(2)*100/100;
-            return price < 0 ? 0 : price;
+            return price;
         };
         //计算商家需付/客户需补
         this.calLeft = function(order){
@@ -286,7 +286,6 @@ var orderService = function(app){
             }
             var left = price;
             left = left - order.discounts;
-            left = left < 0 ? 0 : left.toFixed(2)*100/100;
             var payments = order.payments;
             if(payments){
                 for(var i = 0; i < payments.length; i++){
