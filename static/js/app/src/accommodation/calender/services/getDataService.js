@@ -37,7 +37,6 @@ var getDataService = function(app){
                     }
                 });
                 AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
-                    console.log(result1);
                     var goods = [];
                     result1.data.list.forEach(function(d){
                         d.gList.forEach(function(dd){
@@ -179,8 +178,6 @@ var getDataService = function(app){
                             roomStore.push(temp);
                         }
                     }
-                    console.log(cRoomStore);
-                    console.log(roomStore);
                     //生成订单图元
                     var glyphs = [];
                     var gridWidth = 100;

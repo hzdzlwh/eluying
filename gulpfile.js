@@ -113,7 +113,8 @@ gulp.task('webpack2', function () {
                 "tips/noauth": "./static/js/app/src/tips/noauth.js",
                 "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
                 "tips/expired": "./static/js/app/src/tips/expired.js",
-                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js",
+                "manageVip/vipItems": "./static/js/app/src/manageVip/vipItems/vipItems.js"
             },
             output: {
 
@@ -194,7 +195,8 @@ gulp.task('webpack', function () {
                 "tips/noauth": "./static/js/app/src/tips/noauth.js",
                 "tips/expired": "./static/js/app/src/tips/expired.js",
                 "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
-                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js"
+                "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js",
+                "manageVip/vipItems": "./static/js/app/src/manageVip/vipItems/vipItems.js"
             },
             output: {
                 filename: "[name].js",

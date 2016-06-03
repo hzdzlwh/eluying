@@ -65,7 +65,6 @@ $(function(){
                 var rootScope = body.scope().$root;
                 rootScope.entryRowsMin = parseInt(top / 48);
                 rootScope.entryRowsMax = parseInt((top + height) / 48);
-                console.log(rootScope.entryRowsMin, rootScope.entryRowsMax);
                 rootScope.$apply();
             }, 150);
 

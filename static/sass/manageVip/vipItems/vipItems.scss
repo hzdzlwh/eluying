@@ -1,0 +1,62 @@
+.container-manageVip {
+  width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  top: 68px;
+  height: 20px;
+  .vip-top {
+    width: 1200px;
+    float: left;
+    .vip-left {
+      float: left;
+      margin-top: 12px;
+      font-size: 16px;
+      color: #178ce6;
+      height: 22px;
+      line-height: 22px;
+    }
+    .vip-right {
+      float: right;
+      margin-top: 12px;
+      margin-left: 32px;
+      font-size: 14px;
+      height: 20px;
+      line-height: 20px;
+      color: #178ce6;
+      img {
+        margin-right: 4px;
+        margin-bottom: 1px;
+      }
+    }
+    input.search {
+      width: 256px;
+      height: 24px;
+      margin-top: 10px;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      line-height: 24px;
+      padding: 0 8px;
+    }
+  }
+  .clearboth {
+    clear: both;
+    height: 10px;
+    width: 100%;
+  }
+  .table-container {
+    table {
+      width: 100%;
+      border-top: 2px solid #178ce6;
+      font-family:PingFangSC-Medium;
+      thead {
+        height: 48px;
+        line-height: 48px;
+        background: #fafafa;
+        th {
+          text-align: center;
+          color: #666;
+        }
+      }
+    }
+  }
+}
