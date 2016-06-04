@@ -12,6 +12,9 @@ require("datepicker-zh");
 require("bootstrap");
 require("validation");
 
+var itemsCtrl = require('./controller/items');
+
+
 $(function() {
     //初始化界面
     header.showHeader();
@@ -21,6 +24,21 @@ $(function() {
     $(".manageVipEntry").addClass("selected");
     modal.modalInit();
 
+    events = {
+        /*"click .outPut-excel": function(ev){
+            ev.stopPropagation();
+            AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
+        }*/
+        "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
+        "click body .dialog-close": function(){
+            $(this).parents(".modal").modal("hide");
+        }
+    };
+    util.bindDomAction(events);
+
+
     var app = angular.module('vipApp', []);
+    itemsCtrl(app);
+    
 
 });

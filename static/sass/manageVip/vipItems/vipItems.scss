@@ -1,9 +1,23 @@
+@import "../../variable";
+$headerHeight: 48px;
+$subHeaderHeight: 32px;
+$gridHeight: 48px;
+$borderColor: #e6e6e6;
+$bgColor: #f8f9fc;
+$highlightColor: #e6f1ff;
+$trash_grey: url("http://static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
+$trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
+@mixin modalHeader(){
+  background:$color1;
+  width:100%;
+  height:4px;
+}
+
 .container-manageVip {
   width: 1200px;
   margin: 0 auto;
   position: relative;
   top: 68px;
-  height: 20px;
   .vip-top {
     width: 1200px;
     float: left;
@@ -28,6 +42,12 @@
         margin-bottom: 1px;
       }
     }
+    .outPut-excel:hover {
+      cursor: pointer;
+    }
+    .add-newVip:hover {
+      cursor: pointer;
+    }
     input.search {
       width: 256px;
       height: 24px;
@@ -48,15 +68,235 @@
       width: 100%;
       border-top: 2px solid #178ce6;
       font-family:PingFangSC-Medium;
+      background:#ffffff;
+      box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+      border-radius:2px;
       thead {
         height: 48px;
         line-height: 48px;
         background: #fafafa;
+        border-bottom: 1px solid #ededed;
         th {
           text-align: center;
           color: #666;
         }
       }
+      tbody>tr {
+        height: 46px;
+        line-height: 46px;
+        font-family:PingFangSC-Regular;
+        color:#666666;
+        text-align:center;
+        border-bottom: 1px solid #ededed;
+        td:last-child{
+          padding-right: 16px;
+          color: #178ce6;
+          .operation:hover {
+            cursor: pointer;
+          }
+        }
+        td:first-child{
+          padding-left: 16px;
+        }
+      }
+    }
+  }
+}
+#newVipModal {
+  .modal-dialog {
+    width: 340px;
+  }
+  .modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+    width: 340px;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    .top-fixed{
+      width: 100%;
+      overflow-x: hidden;
+        .dialog-close{
+          width: 20px;
+          text-align: center!important;
+          font-size: 20px!important;
+          color: #999999!important;
+          cursor: pointer;
+          float: right;
+          position: relative;
+          top: 0;
+          margin-left: 16px;
+        }
+        .dialog-close:hover{
+          color: #666666!important;
+        }
+    }
+    .add-container{
+      margin-bottom: 22px;
+      font-family:PingFangSC-Medium;
+      .dialog-mainTitle{
+        font-size:16px;
+        color:#178ce6;
+        text-align:left;
+        margin-left: 20px;
+        margin-bottom: 8px;
+      }
+      .dialog-subTitle {
+        font-size:14px;
+        color:#178ce6;
+        text-align:left;
+        margin-left: 20px;
+      }
+    }
+  }
+  .vipInfo {
+    margin: 16px 0 18px;
+    p {
+      width: 300px;
+      margin: 0 auto 16px;
+      span {
+        font-family: PingFangSC-Regular;
+        width: 52px;
+        text-align: right;
+        vertical-align: top;
+        height: 20px;
+        line-height: 20px;
+        display: inline-block;
+        color: #666666;
+      }
+      input {
+        width: 240px;
+        height: 24px;
+        margin-left: 8px;
+      }
+      textarea {
+        width: 240px;
+        height: 184px;
+        margin-left: 8px;
+      }
+    }
+    div.not-single {
+      width: 300px;
+      margin: 0 auto 16px;
+      span {
+        font-family: PingFangSC-Regular;
+        text-align: right;
+        vertical-align: top;
+        height: 20px;
+        line-height: 20px;
+        display: inline-block;
+        color: #666666;
+        &:first-child {
+          width: 52px;
+        }
+      }
+      input.first {
+        width: 73px;
+        height: 24px;
+        margin: 0 16px 0 8px;
+      }
+      input.second {
+        width: 110px;
+        height: 24px;
+        margin-left: 8px;
+      }
+    }
+    input, textarea {
+      padding: 0 8px;
+    }
+  }
+  .dialog-foot {
+    margin: 0 0 20px 80px;
+    button {
+      width: 50px;
+      height: 24px;
+      font-family:PingFangSC-Regular;
+      font-size:14px;
+      text-align:center;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      margin-right: 20px;
+      &:hover {
+        background: #178ce6;
+        color: #ffffff;
+      }
+    }
+    .vip-confirm {
+      background: #178ce6;
+      color: #ffffff;
+    }
+    .vip-cancel {
+      background: #fff;
+      color: #178ce6;
+    }
+  }
+}
+#removeVipModal {
+  .modal-dialog {
+    width: 300px;
+  }
+  .modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    .top-fixed {
+      width: 100%;
+      overflow-x: hidden;
+      .dialog-close {
+        width: 20px;
+        text-align: center !important;
+        font-size: 20px !important;
+        color: #999999 !important;
+        cursor: pointer;
+        float: right;
+        position: relative;
+        top: 0;
+        margin-left: 16px;
+      }
+      .dialog-close:hover {
+        color: #666666 !important;
+      }
+    }
+    .remove-container {
+      width: 224px;
+      height: 44px;
+      font-family:PingFangSC-Medium;
+      font-size:16px;
+      color:#666666;
+      text-align:left;
+      margin: 8px auto 21px;
+    }
+  }
+  .foot-remove {
+    margin: 0 0 20px 125px;
+    button {
+      width: 50px;
+      height: 24px;
+      font-family:PingFangSC-Regular;
+      font-size:14px;
+      text-align:center;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      margin-right: 20px;
+      &:hover {
+        background: #178ce6;
+        color: #ffffff;
+      }
+    }
+    .remove-confirm {
+      background: #178ce6;
+      color: #ffffff;
+    }
+    .remove-cancel {
+      background: #fff;
+      color: #178ce6;
     }
   }
 }
