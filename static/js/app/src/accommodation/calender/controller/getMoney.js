@@ -8,6 +8,7 @@ var getMoneyService = require("../services/getMoneyService");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
 var getMoneyWithGunService = require("../services/getMoneyWithGunService");
+var validateService = require("../services/validateService");
 
 var getMoneyCtrl = function(app){
     orderService(app);
@@ -15,9 +16,11 @@ var getMoneyCtrl = function(app){
     getDataService(app);
     accommodationService(app);
     getMoneyWithGunService(app);
+    validateService(app);
     app.controller("getMoneyCtrl", ['$rootScope', '$scope', 'orderService', 'getMoneyService',
-        'getMoneyWithGunService', 'getDataService', 'accommodationService',
-        function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService, getDataService, accommodationService){
+        'getMoneyWithGunService', 'getDataService', 'accommodationService', 'validateService',
+        function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService,
+                 getDataService, accommodationService, validateService){
             scope.calPrice = function(getMoney){
                 var price = orderService.calPrice(getMoney);
                 if(getMoney.penaltyAd){
@@ -37,6 +40,10 @@ var getMoneyCtrl = function(app){
             scope.changePayChannel = getMoneyService.changePayChannel;
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
+                //直接提交
+                if(!validateService.checkRemark(getMoney.payRemark)){
+                    return false;
+                }
                 var left = getMoneyService.calLeft(getMoney);
                 var deposit = orderService.calDepositLeft(getMoney);
                 //如果是最后一项了而且还没有付清所有款项

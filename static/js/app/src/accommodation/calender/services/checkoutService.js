@@ -34,6 +34,9 @@ var checkoutService = function(app){
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
                     d.inventory = result.data.inventory;
+                    if(checkout.foodsAmount && checkout.foodsAmount[d.dateStr]){
+                        d.inventory += checkout.foodsAmount[d.dateStr];
+                    }
                     scope.$apply();
                 });
             });
@@ -46,6 +49,9 @@ var checkoutService = function(app){
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
                     d.inventory = result.data.inventory;
+                    if(checkout.foodsAmount && checkout.foodsAmount[d.dateStr]){
+                        d.inventory += checkout.foodsAmount[d.dateStr];
+                    }
                     scope.$apply();
                 });
             });

@@ -13,7 +13,7 @@ var orderEditCtrl = function(app){
     getDataService(app);
     app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService',
         function(rootScope, scope, orderService, validateService, getDataService){
-            scope.checkPhone = validateService.checkPhone;
+            // scope.checkPhone = validateService.checkPhone;
             scope.changeIds = orderService.changeIds;
             scope.changeChannel = orderService.changeChannel;
             scope.changeRoomStartDateMonth = orderService.changeRoomStartDateMonth;

@@ -1260,8 +1260,8 @@
                             <td>{{checkout.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td>身份证</td>
-                            <td>440183199209080056</td>
+                            <td ng-if="checkout.selectedId!==undefined">{{checkout.selectedIdLabel}}</td>
+                            <td ng-if="checkout.selectedId!==undefined">{{checkout.idVal}}</td>
                             <td>渠道</td>
                             <td>{{checkout.origin}}</td>
                         </tr>
@@ -1495,8 +1495,8 @@
                             <td>{{checkoutAd.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td>身份证</td>
-                            <td>440183199209080056</td>
+                            <td ng-if="checkoutAd.selectedId!==undefined">{{checkoutAd.selectedIdLabel}}</td>
+                            <td ng-if="checkoutAd.selectedId!==undefined">{{checkoutAd.idVal}}</td>
                             <td>渠道</td>
                             <td>{{checkoutAd.origin}}</td>
                         </tr>
@@ -1771,8 +1771,8 @@
                             <td>{{checkin.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td>身份证</td>
-                            <td>440183199209080056</td>
+                            <td ng-if="checkin.selectedId!==undefined">{{checkin.selectedIdLabel}}</td>
+                            <td ng-if="checkin.selectedId!==undefined">{{checkin.idVal}}</td>
                             <td>渠道</td>
                             <td>{{checkin.origin}}</td>
                         </tr>
@@ -2036,10 +2036,8 @@
                             <td>{{getMoney.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td>身份证</td>
-                            <td>440183199209080056</td>
-                            <!--<td></td>-->
-                            <!--<td></td>-->
+                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.selectedIdLabel}}</td>
+                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.idVal}}</td>
                             <td>渠道</td>
                             <td>{{getMoney.origin}}</td>
                         </tr>
@@ -2333,10 +2331,11 @@
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
                 </div>
-                <div class="remarks">
-                    <div class="slabel">备注:</div>
-                    <div class="stext">{{getMoney.remark}}</div>
+                <div class="remark">
+                    <div class="slabel">备注</div>
+                    <textarea placeholder="请填写备注信息" ng-model="getMoney.payRemark"></textarea>
                 </div>
+                <div class="counter" ng-class="{warning: getMoney.payRemark.length > 140}">{{getMoney.payRemark.length}}/140</div>
             </div>
             <div class="bottom-fixed">
                 <div class="sbottom">

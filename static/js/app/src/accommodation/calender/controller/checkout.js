@@ -11,6 +11,7 @@ var checkoutCtrl = function(app){
     orderService(app);
     app.controller("checkoutCtrl", ['$rootScope', '$scope', 'checkoutService', 'orderService',
         function(rootScope, scope, checkoutService, orderService){
+            scope.changeIds = orderService.changeIds;
             scope.addItem = function(){};
             scope.deleteItem = orderService.deleteItem;
             scope.selectCheckoutRoom = checkoutService.selectCheckoutRoom;
@@ -21,6 +22,11 @@ var checkoutCtrl = function(app){
             scope.changeItemNum = orderService.changeItemNum;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
+            scope.errorTips = {
+                name: false,
+                phone: false,
+                id: false
+            };
             scope.submitCheckout = function(){
                 var checkout = rootScope.checkout;
                 var rooms = checkout.rooms;

@@ -8,6 +8,7 @@ var orderService = require("../services/orderService");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
 var getMoneyWithGunService = require("../services/getMoneyWithGunService");
+var validateService = require("../services/validateService");
 
 var getMoneyService = function(app){
     constService(app);
@@ -15,9 +16,10 @@ var getMoneyService = function(app){
     getDataService(app);
     accommodationService(app);
     getMoneyWithGunService(app);
+    validateService(app);
     app.service("getMoneyService", ['constService', 'orderService', 'getDataService', 'accommodationService', 
-        'getMoneyWithGunService',
-        function(constService, orderService, getDataService, accommodationService, getMoneyWithGunService){
+        'getMoneyWithGunService', 'validateService',
+        function(constService, orderService, getDataService, accommodationService, getMoneyWithGunService, validateService){
         var calLeft = function(getMoney){
             var left = orderService.itemPrice(getMoney);
             left -= parseFloat(getMoney.roomsRefund || 0);
@@ -73,6 +75,7 @@ var getMoneyService = function(app){
             } else{
                 
             }
+            getMoney.payRemark = '';
             return getMoney;
         };
         /*
@@ -117,21 +120,21 @@ var getMoneyService = function(app){
             p.payChannel = pp.name;
             p.payChannelId = pp.channelId;
         };
-        this.finishPay = function(payments, orderId, remark){
-            AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                payments: JSON.stringify(payments_new),
-                remark: getMoney.remark,
-                orderId: getMoney.orderId
-            }, function(result){
-                // if(result.code === 1){
-                //     //TODO 提示收银成功
-                //     $("#getMoneyModal").modal("hide");
-                //     getDataService.getRoomsAndStatus(rootScope);
-                //     accommodationService.emptySelectedEntries(rootScope);
-                // }
-                callback(result);
-            });
-        };
+        // this.finishPay = function(payments, orderId, remark){
+        //     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
+        //         payments: JSON.stringify(payments_new),
+        //         remark: getMoney.remark,
+        //         orderId: getMoney.orderId
+        //     }, function(result){
+        //         // if(result.code === 1){
+        //         //     //TODO 提示收银成功
+        //         //     $("#getMoneyModal").modal("hide");
+        //         //     getDataService.getRoomsAndStatus(rootScope);
+        //         //     accommodationService.emptySelectedEntries(rootScope);
+        //         // }
+        //         callback(result);
+        //     });
+        // };
         var submitGetMoney = function(getMoney, scope){
             var payments_new = [];
             getMoney.payments.forEach(function(d){
@@ -142,10 +145,9 @@ var getMoneyService = function(app){
                 }
             });
             if(!getMoney.async){
-                //直接提交
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                     payments: JSON.stringify(payments_new),
-                    remark: getMoney.remark,
+                    remark: getMoney.payRemark,
                     orderId: getMoney.orderId
                 }, function(result){
                     if(result.code === 1){
