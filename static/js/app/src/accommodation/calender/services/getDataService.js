@@ -127,6 +127,7 @@ var getDataService = function(app){
                     var cRooms = result2.data.rs;
                     var orderList = result2.data.orderList;
                     var cRoomStore = {};
+                    var cRoomArray = [];
                     var roomStore = [];
                     var pRoomList = {};
                     var cRoomList = {};
@@ -157,19 +158,24 @@ var getDataService = function(app){
                             if(!cRoomList[pRoom.cId] || cRoomList[pRoom.cId].length === 0){
                                 continue;
                             }
-                            cRoomStore[pRoom.cId] = {
+                            var temp = {
                                 id: pRoom.cId,
                                 name: pRoom.cName,
                                 pId: pRoom.pId,
                                 rooms: cRoomList[pRoom.cId]
                             };
+                            cRoomStore[pRoom.cId] = temp;
+                            cRoomArray.push(temp);
                         }
                     }
+                    cRoomArray.sort(function(a, b){
+                       return a.pId - b.pId;
+                    });
                     //保存房间列表
                     var roomIndexHash = {};
                     var tnum = 0;
-                    for(var c in cRoomStore){
-                        var tempCRoom = cRoomStore[c];
+                    for(var i = 0; i < cRoomArray.length; i++){
+                        var tempCRoom = cRoomArray[i];
                         for(var r in tempCRoom.rooms){
                             for(var k = 0; k < tempCRoom.rooms[r].st.length; k++){
                                 tempCRoom.rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(startDate, k));
@@ -233,6 +239,7 @@ var getDataService = function(app){
                     });
                     scope.holidays = holidayHash;
                     scope.pRoomList = pRoomList;
+                    scope.cRoomArray = cRoomArray;
                     scope.cRoomStore = cRoomStore;
                     scope.roomStore = roomStore;
                     scope.glyphs = glyphs;

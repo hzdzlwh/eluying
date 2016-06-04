@@ -58,8 +58,8 @@ $(function(){
                 var top = $(".calendor-container").scrollTop();
                 var body = angular.element(document.body);
                 var rootScope = body.scope().$root;
-                rootScope.entryRowsMin = parseInt(top / 48)-20;
-                rootScope.entryRowsMax = parseInt((top + height) / 48)+20;
+                rootScope.entryRowsMin = parseInt(top / 48)-5;
+                rootScope.entryRowsMax = parseInt((top + height) / 48)+5;
                 rootScope.$apply();
             }, 100);
 

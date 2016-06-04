@@ -151,7 +151,7 @@ var orderService = function(app){
             }
             if(type === 1 || type === 2){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                    date: util.dateFormat(new Date()),
+                    date: util.dateFormat(new Date(order.itemStartDate)),
                     id: item.itemId
                 }, function(result){
                     var temp = {
@@ -161,18 +161,44 @@ var orderService = function(app){
                         name: item.name,
                         price: item.price,
                         amount: (result.data.inventory < 1) ? 0 : 1,
-                        date: new Date(),
-                        dateStr: util.dateFormat(new Date()),
-                        dateStr2: util.dateFormatWithoutYear(new Date()),
+                        date: new Date(order.itemStartDate),
+                        dateStr: util.dateFormat(new Date(order.itemStartDate)),
+                        dateStr2: util.dateFormatWithoutYear(new Date(order.itemStartDate)),
                         inventory: result.data.inventory
                     };
-                    temp.calendar = calendarService.createCalendar(temp.date);
-                    if(type === 1){
-                        order.foodItems.push(temp);
-                    }else if(type === 2){
-                        order.playItems.push(temp);
+                    if(type === 1 && order.foodsAmount && order.foodsAmount[item.date]){
+                        temp.inventory += order.foodsAmount[item.date];
                     }
-                    rootScope.$apply();
+                    if(type === 2 && order.playsAmount && order.playsAmount[item.date]){
+                        temp.inventory += order.playsAmount[item.date];
+                    }
+                    temp.calendar = calendarService.createCalendar(temp.date);
+                    var sday = util.dateFormat(temp.calendar[0][0].date);
+                    var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
+                    AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
+                        startDate: sday,
+                        endDate: eday,
+                        categoryId: temp.categoryId,
+                    }, function(result1){
+                        if(result1.code === 1){
+                            var inventoryList = result1.data.list;
+                            inventoryList.forEach(function(d, i){
+                                if(d.remain === 0){
+                                    if(temp.calendar[Math.floor(i/7)][i%7].sclass.indexOf('invalid') === -1){
+                                        temp.calendar[Math.floor(i/7)][i%7].sclass += ' invalid';
+                                    }
+                                }
+                            });
+                            if(type === 1){
+                                order.foodItems.push(temp);
+                            }else if(type === 2){
+                                order.playItems.push(temp);
+                            }
+                            rootScope.$apply();
+                        }else{
+
+                        }
+                    });
                 });
             }else if(type === 3){
                 order.goodsItems.push({
@@ -186,7 +212,7 @@ var orderService = function(app){
             }
 
         };
-        this.changeItem = function(items, item, ITEM, isGoods){
+        this.changeItem = function(order, items, item, ITEM, isGoods){
             var index = (items.indexOf(item));
             if(isGoods){
                 items[index] = {
@@ -211,15 +237,33 @@ var orderService = function(app){
                     name: ITEM.name,
                     price: ITEM.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
-                    date: new Date(),
-                    dateStr: util.dateFormat(new Date()),
-                    dateStr2: util.dateFormatWithoutYear(new Date()),
+                    date: new Date(order.itemStartDate),
+                    dateStr: util.dateFormat(new Date(order.itemStartDate)),
+                    dateStr2: util.dateFormatWithoutYear(new Date(order.itemStartDate)),
                     inventory: result.data.inventory
                 };
                 temp.calendar = calendarService.createCalendar(temp.date);
-                items[index] = temp;
-                $(".select1_options").hide();
-                rootScope.$apply();
+                var sday = util.dateFormat(temp.calendar[0][0].date);
+                var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
+                AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
+                    startDate: sday,
+                    endDate: eday,
+                    categoryId: temp.categoryId,
+                }, function(result1){
+                    if(result1.code === 1){
+                        var inventoryList = result1.data.list;
+                        inventoryList.forEach(function(d, i){
+                            if(d.remain === 0){
+                                if(temp.calendar[Math.floor(i/7)][i%7].sclass.indexOf('invalid') === -1){
+                                    temp.calendar[Math.floor(i/7)][i%7].sclass += ' invalid';
+                                }
+                            }
+                        });
+                        items[index] = temp;
+                        $(".select1_options").hide();
+                        rootScope.$apply();
+                    }
+                });
             });
         };
         this.changeItemNum = function(item, num){
@@ -231,10 +275,8 @@ var orderService = function(app){
                 item.amount = item.inventory;
             }
         };
-        this.changeItemTime = function(item, date){
-            var today = new Date();
-            today.setDate(today.getDate() - 1);
-            if(date < today){
+        this.changeItemTime = function(item, date, sclass){
+            if(sclass.indexOf('invalid') !== -1){
                 return false;
             }
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
@@ -247,7 +289,26 @@ var orderService = function(app){
                 item.inventory = result.data.inventory;
                 item.num = (result.data.inventory < 1) ? 0 : 1;
                 item.calendar = calendarService.createCalendar(item.date);
-                rootScope.$apply();
+                var sday = util.dateFormat(item.calendar[0][0].date);
+                var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);
+                AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
+                    startDate: sday,
+                    endDate: eday,
+                    categoryId: item.categoryId,
+                }, function(result1){
+                    if(result1.code === 1){
+                        var inventoryList = result1.data.list;
+                        inventoryList.forEach(function(d, i){
+                            if(d.remain === 0){
+                                if(item.calendar[Math.floor(i/7)][i%7].sclass.indexOf('invalid') === -1){
+                                    item.calendar[Math.floor(i/7)][i%7].sclass += ' invalid';
+                                }
+                            }
+                        });
+                        rootScope.$apply();
+                    }
+                });
+
             });
         };
         //计算订单中客户应付多少钱
@@ -365,7 +426,7 @@ var orderService = function(app){
                 items[index].amount = items[index].usedAmount || 0;
             }
         };
-        this.changeItemMonth = function(item, monthDiff){
+        this.changeItemMonth = function(item, monthDiff, order){
             var that = this;
             var date = item.date;
             var newDate = new Date(date);
@@ -384,6 +445,12 @@ var orderService = function(app){
                 item.dateStr2 = util.dateFormatWithoutYear(newDate);
                 item.calendar = calendarService.createCalendar(item.date);
                 item.inventory = result.data.inventory;
+                if(item.type === 1 && order.foodsAmount && order.foodsAmount[item.date]){
+                    item.inventory += order.foodsAmount[item.date];
+                }
+                if(item.type === 2 && order.playsAmount && order.playsAmount[item.date]){
+                    item.inventory += order.playsAmount[item.date];
+                }
                 rootScope.$apply();
             });
         };

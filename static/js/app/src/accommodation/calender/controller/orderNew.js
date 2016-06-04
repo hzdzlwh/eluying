@@ -67,6 +67,7 @@ var orderNewCtrl = function(app){
                 flag = true;
             }
             if(flag){
+                modal.somethingAlert("信息填写有误!");
                 return false;
             }
             var inventory = {};

@@ -8,7 +8,7 @@ var constService = function(app){
             {},
             {},
             {short: '预', long: '已预订', classStr: 'book', 'title': '预订'},
-            {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
+            {short: '住', long: '已入住', classStr: 'ing', 'title': '直接入住'},
             {},
             {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
         ];

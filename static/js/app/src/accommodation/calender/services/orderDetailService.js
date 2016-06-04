@@ -2,11 +2,20 @@ var util = require("util");
 require("angular");
 
 var orderDetailService = function(app){
-    app.service("orderDetailService",function(){
+    app.service("orderDetailService", ['$rootScope', function(rootScope){
         this.resetOrderDetail = function(order){
             var orderDetail = {};
             for(var key in order){
                 orderDetail[key] = order[key];
+            }
+            if(orderDetail['customerIdCardArr'].length !== 0){
+                orderDetail.selectedId = orderDetail['customerIdCardArr'][0].idCardType;
+                rootScope.idList.forEach(function(d){
+                    if(d.key == orderDetail.selectedId) {
+                        orderDetail.selectedIdLabel = d.label;
+                    }
+                });
+                orderDetail.idVal = orderDetail['customerIdCardArr'][0].idCardNum;
             }
             orderDetail.discounts = 0;
             orderDetail.payments.forEach(function(d){
@@ -21,7 +30,11 @@ var orderDetailService = function(app){
             orderDetail.checkinable = false;
             orderDetail.getMoneyable = false;
             var rooms = orderDetail.rooms;
+            var itemStartDate;
             rooms.forEach(function(d){
+                if(!itemStartDate || new Date(d.startDate) < itemStartDate){
+                    itemStartDate = d.startDate;
+                }
                 if(d.state === 0){
                     orderDetail.editable = true;
                     orderDetail.checkinable = true;
@@ -41,13 +54,36 @@ var orderDetailService = function(app){
                     orderDetail.cancelable = false;
                 }
             });
+            orderDetail.itemStartDate = itemStartDate;
             if(orderDetail.orderState !== 2){
                 orderDetail.cancelable = false;
             }
-            console.log(orderDetail)
+            var foods = orderDetail.foodItems;
+            var foodsAmounts = {};
+            foods.forEach(function(d){
+                if(!foodsAmounts[d.date]){
+                    foodsAmounts[d.date] = parseFloat(d.amount);
+                }
+                else{
+                    foodsAmounts[d.date] += parseFloat(d.amount);
+                }
+            });
+            orderDetail.foodsAmount = foodsAmounts;
+            var plays = orderDetail.playItems;
+            var playsAmounts = {};
+            plays.forEach(function(d){
+                if(!playsAmounts[d.date]){
+                    playsAmounts[d.date] = parseFloat(d.amount);
+                }
+                else{
+                    playsAmounts[d.date] += parseFloat(d.amount);
+                }
+            });
+            orderDetail.playsAmount = playsAmounts;
+            console.log(orderDetail);
             return orderDetail;
         };
-    });
+    }]);
 };
 
 module.exports = orderDetailService;

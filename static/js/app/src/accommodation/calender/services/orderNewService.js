@@ -15,6 +15,12 @@ var orderNewService = function(app){
                 }
                 return null;
             })();
+            var itemStartDate;
+            rooms.forEach(function(d){
+                if(!itemStartDate || new Date(d.startDate) < itemStartDate){
+                    itemStartDate = d.startDate;
+                }
+            });
             return {
                 title: title,
                 type: type,
@@ -31,6 +37,7 @@ var orderNewService = function(app){
                 goodsItems: [],
                 remark: '',
                 discounts: null,
+                itemStartDate: itemStartDate
             }
         };
     }]);

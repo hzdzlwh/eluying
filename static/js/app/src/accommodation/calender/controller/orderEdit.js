@@ -29,6 +29,7 @@ var orderEditCtrl = function(app){
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
+            scope.calDeposit = orderService.calDeposit;
             scope.discountsChange = function(){
                 var orderEdit = rootScope.orderEdit;
                 var itemPrice = orderService.itemPrice(orderEdit);
@@ -64,6 +65,7 @@ var orderEditCtrl = function(app){
                     flag = true;
                 }
                 if(flag){
+                    modal.somethingAlert("信息填写有误!");
                     return false;
                 }
                 var rooms = [];
@@ -112,6 +114,14 @@ var orderEditCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items)
                 };
+                if(orderEdit.idVal){
+                    order.customerIdCardArr = JSON.stringify([
+                        {
+                            idCardNum: orderEdit.idVal,
+                            idCardType: orderEdit.selectedId,
+                        }
+                    ])
+                }
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){
                         //提示编辑订单成功
