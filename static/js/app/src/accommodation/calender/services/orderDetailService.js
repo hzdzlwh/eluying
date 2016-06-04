@@ -22,6 +22,11 @@ var orderDetailService = function(app){
                 if(d.type === 5){
                     orderDetail.discounts = d.fee;
                 }
+                if(d.type === 0 || d.type === 2){
+                    orderDetail.isPaid = true;
+                }else if(d.type === 1 || d.type === 3){
+                    orderDetail.isDepositPaid = true;
+                }
             });
             orderDetail.editable = false;
             orderDetail.cancelable = true;

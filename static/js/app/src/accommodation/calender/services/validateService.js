@@ -4,7 +4,7 @@ require("angular");
 var validateService = function(app){
     app.service("validateService", function(){
         this.checkName = function(name){
-            var regex = /^[0-9A-Za-z\u4E00-\u9FA5\s]{1,30}$/;
+            var regex = /^[0-9A-Za-z\u4E00-\u9FA5\s]{2,30}$/;
             return regex.test(name);
         };
         this.checkPhone = function(phoneStr){

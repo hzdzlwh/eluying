@@ -72,7 +72,7 @@ var checkoutAdCtrl = function(app){
                         }
                     }
                 }
-                return left;
+                return left.toFixed(2);
             }
         }]);
 };

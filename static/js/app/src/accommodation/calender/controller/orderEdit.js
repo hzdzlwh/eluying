@@ -39,19 +39,31 @@ var orderEditCtrl = function(app){
             };
             scope.errorTips = {
                 name: false,
+                nameEmpty: false,
                 phone: false,
+                phoneEmpty: false,
                 id: false
             };
             scope.submitOrder = function(){
                 var orderEdit = rootScope.orderEdit;
                 var flag = false;
-                if(!validateService.checkName(orderEdit.customerName)){
+                if(orderEdit.customerName.length === 0){
+                    scope.errorTips.nameEmpty = true;
+                    scope.errorTips.name = false;
+                    flag = true;
+                } else if(!validateService.checkName(orderEdit.customerName)){
                     //modal.somethingAlert("请输入2~16位用户名!");
+                    scope.errorTips.nameEmpty = false;
                     scope.errorTips.name = true;
                     flag = true;
                 }
-                if(!validateService.checkPhone(orderEdit.customerPhone)){
+                if(orderEdit.customerPhone.length === 0){
+                    scope.errorTips.phone = false;
+                    scope.errorTips.phoneEmpty = true;
+                    flag = true;
+                } else if(!validateService.checkPhone(orderEdit.customerPhone)){
                     //modal.somethingAlert("请输入正确的11位手机号!");
+                    scope.errorTips.phoneEmpty = false;
                     scope.errorTips.phone = true;
                     flag = true;
                 }

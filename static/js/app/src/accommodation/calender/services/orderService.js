@@ -359,7 +359,7 @@ var orderService = function(app){
                     }
                 }
             }
-            return left;
+            return left.toFixed(2);
         };
         //计算已收押金
         this.calDeposit = function(order){

@@ -191,6 +191,11 @@ $(function(){
             $("#payWithAlipayModal input").focusout(function(){});
             $("#payWithAlipayModal input").focusout();
         },
+        'change body input.moneyInput': function(ev){
+            var val = $(this).val();
+            val = parseFloat(val) || 0;
+            $(this).val(val.toFixed(2));
+        }
         // $("#payWitJ2001hAlipayModal input").focus();
         // $("#payWithAlipayModal input").focusout(function(){
         //     $("#payWithAlipayModal input").focus();

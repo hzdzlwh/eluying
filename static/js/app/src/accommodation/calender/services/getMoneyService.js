@@ -64,16 +64,17 @@ var getMoneyService = function(app){
                 depositMode = 1;
             }
             var feeLeft = calLeft(getMoney);
+            getMoney.feeLeft = feeLeft;
+            getMoney.depositTotal = orderService.calDepositLeft(getMoney);
             if(feeLeft < 0){
                 feeMode = 1;
             }
             getMoney.depositMode = depositMode;
             getMoney.feeMode = feeMode;
-
             if(type === 0){
                 getMoney.payments = [{type: 5, fee: order.discounts}]
             } else{
-                
+
             }
             getMoney.payRemark = '';
             return getMoney;
@@ -90,6 +91,9 @@ var getMoneyService = function(app){
                 left = -calLeft(getMoney);
             }else if(type === 3){
                 left = orderService.calDeposit(getMoney);
+            }
+            if(left < 0){
+                left = 0;
             }
             var payChannel, payChannelId;
             if(type === 2 || type === 3 || type === 1){

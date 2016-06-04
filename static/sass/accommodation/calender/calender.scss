@@ -1358,6 +1358,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           margin-left: 52px;
           text-align: right;
           padding-right: 8px;
+          padding-left: 30px;
         }
         span.tips{
           display: block;
@@ -1565,6 +1566,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       position: absolute;
       bottom: 20px;
       right: 35px;
+    }
+    .sbtn.sbtn-cancel{
+      right: 145px;
     }
     .sbtn:hover{
       @include btn1_hover();

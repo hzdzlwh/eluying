@@ -79,6 +79,10 @@ var getMoneyWithGunCtrl = function(app){
                     scope.submitPayWithAlipay();
                 }
             };
+            scope.returnToGetMoney = function(){
+                $("#payWithAlipayModal").modal("hide");
+                $("#getMoneyModal").modal("show");
+            };
         }]);
 };
 

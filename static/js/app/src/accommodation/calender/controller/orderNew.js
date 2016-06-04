@@ -32,7 +32,9 @@ var orderNewCtrl = function(app){
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
         scope.errorTips = {
+            nameEmpty: false,
             name: false,
+            phoneEmpty: false,
             phone: false,
             id: false
         };
@@ -47,13 +49,23 @@ var orderNewCtrl = function(app){
             var orderNew = rootScope.orderNew;
             orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
             var flag = false;
-            if(!validateService.checkName(orderNew.customerName)){
+            if(orderNew.customerName.length === 0){
+                scope.errorTips.nameEmpty = true;
+                scope.errorTips.name = false;
+                flag = true;
+            } else if(!validateService.checkName(orderNew.customerName)){
                 //modal.somethingAlert("请输入2~16位用户名!");
+                scope.errorTips.nameEmpty = false;
                 scope.errorTips.name = true;
                 flag = true;
             }
-            if(!validateService.checkPhone(orderNew.customerPhone)){
+            if(orderNew.customerPhone.length === 0){
+                scope.errorTips.phone = false;
+                scope.errorTips.phoneEmpty = true;
+                flag = true;
+            } else if(!validateService.checkPhone(orderNew.customerPhone)){
                 //modal.somethingAlert("请输入正确的11位手机号!");
+                scope.errorTips.phoneEmpty = false;
                 scope.errorTips.phone = true;
                 flag = true;
             }
