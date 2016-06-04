@@ -91,6 +91,7 @@ var AJAXService = {
         shopListUrl: '/shop/list',
         barcodePayUrl: '/cashier/barcodePay',
         getPayStatus4BarcodeUrl: '/cashier/getPayStatus4Barcode',
+        getEmployeeDetailUrl: '/user/getEmployeeDetail',
     },
     getUrl: function(path){
         var url = this.urls.host + (this.urls[path] || path);

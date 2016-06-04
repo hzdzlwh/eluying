@@ -42,8 +42,8 @@ var orderDetailService = function(app){
                 }
                 if(d.state === 0){
                     orderDetail.editable = true;
-                    orderDetail.checkinable = true;
                     orderDetail.getMoneyable = true;
+                    orderDetail.checkinable = true;
                 }else if(d.state === 1){
                     orderDetail.cancelable = false;
                     orderDetail.editable = true;

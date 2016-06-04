@@ -1283,7 +1283,7 @@
                         <table>
                             <tr ng-repeat="r in checkout.rooms" ng-class="{'disabled': !r.selectable}">
                                 <td>
-                                    <div class="scheckbox" ng-class="{'checked': !r.selected}" ng-click="selectCheckoutRoom(r)">
+                                    <div class="scheckbox" ng-class="{'checked': r.selected}" ng-click="selectCheckoutRoom(r)">
                                         <div class="inner"></div>
                                     </div>
                                     <span>{{r.serialNum}}</span>

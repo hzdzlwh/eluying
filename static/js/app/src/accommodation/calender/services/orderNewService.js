@@ -36,6 +36,7 @@ var orderNewService = function(app){
                 playItems: [],
                 goodsItems: [],
                 remark: '',
+                payments: [],
                 discounts: null,
                 itemStartDate: itemStartDate
             }

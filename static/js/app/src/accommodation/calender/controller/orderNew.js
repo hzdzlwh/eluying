@@ -7,15 +7,17 @@ var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var validateService = require("../services/validateService");
 var getMoneyService = require("../services/getMoneyService");
+var getDataService = require("../services/getDataService");
 
 var orderNewCtrl = function(app){
     orderService(app);
     orderNewService(app);
     validateService(app);
     getMoneyService(app);
+    getDataService(app);
     app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService',
-        'orderService', 'validateService', 'getMoneyService',
-        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService){
+        'orderService', 'validateService', 'getMoneyService', 'getDataService',
+        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService, getDataService){
         scope.checkPhone = validateService.checkPhone;
         scope.changeIds = orderService.changeIds;
         scope.changeChannel = orderService.changeChannel;
@@ -155,6 +157,7 @@ var orderNewCtrl = function(app){
             }
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
+                    getDataService.getRoomsAndStatus(rootScope);
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
