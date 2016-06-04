@@ -198,24 +198,7 @@ var util = {
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
         camps = JSON.parse(camps);
-        // AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
-        //     payments: JSON.stringify(payments_new),
-        //     orderId: getMoney.orderId,
-        //     rooms: JSON.stringify(getMoney.checkoutRooms),
-        //     type: getMoney.checkoutType,
-        // }, function(result){
-        //     if(result.code === 1){
-        //         modal.somethingAlert("操作成功!");
-        //         $("#getMoneyModal").modal("hide");
-        //         getDataService.getRoomsAndStatus(scope);
-        //         accommodationService.emptySelectedEntries(scope);
-        //         // setTimeout(function(){
-        //         //     getDataService.getOrderDetail(getMoney.orderId, scope);
-        //         // }, 2500);
-        //     }else{
-        //         modal.somethingAlert(result.msg);
-        //     }
-        // });
+        
         var authFlag = false;
         var expiredFlag = false;
         var upgradeFlag = false;

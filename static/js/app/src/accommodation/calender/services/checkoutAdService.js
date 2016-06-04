@@ -18,6 +18,7 @@ var checkoutAdService = function(app){
                 var endDate = new Date(r.endDate);
                 if(r.state === 1 && endDate > today){
                     r.selectable = true;
+                    r.selected = true;
                 }else{
                     r.selectable = false;
                 }
