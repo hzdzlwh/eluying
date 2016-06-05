@@ -13,7 +13,7 @@ var orderEditCtrl = function(app){
     getDataService(app);
     app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService',
         function(rootScope, scope, orderService, validateService, getDataService){
-            scope.checkPhone = validateService.checkPhone;
+            // scope.checkPhone = validateService.checkPhone;
             scope.changeIds = orderService.changeIds;
             scope.changeChannel = orderService.changeChannel;
             scope.changeRoomStartDateMonth = orderService.changeRoomStartDateMonth;
@@ -29,8 +29,57 @@ var orderEditCtrl = function(app){
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
+            scope.calDeposit = orderService.calDeposit;
+            scope.discountsChange = function(){
+                var orderEdit = rootScope.orderEdit;
+                var itemPrice = orderService.itemPrice(orderEdit);
+                if(orderEdit.discounts > itemPrice){
+                    orderEdit.discounts = itemPrice;
+                }
+            };
+            scope.errorTips = {
+                name: false,
+                nameEmpty: false,
+                phone: false,
+                phoneEmpty: false,
+                id: false
+            };
             scope.submitOrder = function(){
                 var orderEdit = rootScope.orderEdit;
+                var flag = false;
+                if(orderEdit.customerName.length === 0){
+                    scope.errorTips.nameEmpty = true;
+                    scope.errorTips.name = false;
+                    flag = true;
+                } else if(!validateService.checkName(orderEdit.customerName)){
+                    //modal.somethingAlert("请输入2~16位用户名!");
+                    scope.errorTips.nameEmpty = false;
+                    scope.errorTips.name = true;
+                    flag = true;
+                }
+                if(orderEdit.customerPhone.length === 0){
+                    scope.errorTips.phone = false;
+                    scope.errorTips.phoneEmpty = true;
+                    flag = true;
+                } else if(!validateService.checkPhone(orderEdit.customerPhone)){
+                    //modal.somethingAlert("请输入正确的11位手机号!");
+                    scope.errorTips.phoneEmpty = false;
+                    scope.errorTips.phone = true;
+                    flag = true;
+                }
+                if(!validateService.checkRemark(orderEdit.remark)){
+                    //modal.somethingAlert("备注最多输入140个字!");
+                    flag = true;
+                }
+                if(orderEdit.idVal && !validateService.checkRemark(orderEdit.idVal)){
+                    //modal.somethingAlert("请填入16位身份证号!");
+                    scope.errorTips.id = true;
+                    flag = true;
+                }
+                if(flag){
+                    modal.somethingAlert("信息填写有误!");
+                    return false;
+                }
                 var rooms = [];
                 orderEdit.rooms.forEach(function(d){
                     var room = {
@@ -77,6 +126,14 @@ var orderEditCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items)
                 };
+                if(orderEdit.idVal){
+                    order.customerIdCardArr = JSON.stringify([
+                        {
+                            idCardNum: orderEdit.idVal,
+                            idCardType: orderEdit.selectedId,
+                        }
+                    ])
+                }
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){
                         //提示编辑订单成功

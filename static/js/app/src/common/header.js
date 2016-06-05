@@ -63,12 +63,13 @@ var header = {
                     if(data.code == 1){
                         localStorage.setItem("campId", campId);
                         localStorage.setItem("campName", campName);
+                        localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
                         window.location.reload();
                     }else if(data.code == 11002){
-                        alert(data.msg);
+                        modal.somethingAlert(data.msg);
                         logout.logout();
                     }else{
-                        alert(data.msg);
+                        modal.somethingAlert(data.msg);
                     }
                 })
             });

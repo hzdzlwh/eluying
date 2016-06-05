@@ -19,9 +19,9 @@
             <div class="stitle">新增客源</div>
             <div class="maintext">
                 <div class="slabel">客源名称</div>
-                <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest"/></div>
-                <div class="errorTips">
-
+                <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest" maxlength="16"/></div>
+                <div class="errorTips" ng-show="errorTipsShow">
+                    必填字段
                 </div>
             </div>
             <div class="btns clearfloat">

@@ -109,7 +109,7 @@ var calendarService = function(app){
                             }
                             //预定的入住时间只能在今天之后
                             else{
-                                if(calenderTable[i] < today){
+                                if(calenderTable[i] < today && !util.isSameDay(calenderTable[i], today)){
                                     sclass += ' invalid';
                                 }
                             }

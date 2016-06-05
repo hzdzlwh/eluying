@@ -58,7 +58,11 @@ var getDataService = function(app){
         };
         this.getIDs = function(callback){
             var idList = [
-                {key: 'id', label: '身份证'},
+                {key: '0', label: '身份证'},
+                // {key: '1', label: '军官证'},
+                // {key: '2', label: '通行证'},
+                // {key: '3', label: '护照'},
+                // {key: '4', label: '其他'},
             ];
             callback({
                 idList: idList
@@ -69,10 +73,10 @@ var getDataService = function(app){
                 var payChannels = result.data.payChannelCustomList;
                 var map = result.data.map;
                 if(map.alipaySelected){
-                   payChannels.push({
-                       channelId: -6,
-                       name: '支付宝'
-                   });
+                   // payChannels.push({
+                   //     channelId: -6,
+                   //     name: '支付宝'
+                   // });
                 }else if(map.walletPaySelected){
                    payChannels.push({
                        channelId: -8,
@@ -122,6 +126,7 @@ var getDataService = function(app){
                     var cRooms = result2.data.rs;
                     var orderList = result2.data.orderList;
                     var cRoomStore = {};
+                    var cRoomArray = [];
                     var roomStore = [];
                     var pRoomList = {};
                     var cRoomList = {};
@@ -149,19 +154,27 @@ var getDataService = function(app){
                             scope.isSelected[pRoom.pId] = true;
                         }
                         if(!cRoomStore[pRoom.cId]){
-                            cRoomStore[pRoom.cId] = {
+                            if(!cRoomList[pRoom.cId] || cRoomList[pRoom.cId].length === 0){
+                                continue;
+                            }
+                            var temp = {
                                 id: pRoom.cId,
                                 name: pRoom.cName,
                                 pId: pRoom.pId,
                                 rooms: cRoomList[pRoom.cId]
                             };
+                            cRoomStore[pRoom.cId] = temp;
+                            cRoomArray.push(temp);
                         }
                     }
+                    cRoomArray.sort(function(a, b){
+                       return a.pId - b.pId;
+                    });
                     //保存房间列表
                     var roomIndexHash = {};
                     var tnum = 0;
-                    for(var c in cRoomStore){
-                        var tempCRoom = cRoomStore[c];
+                    for(var i = 0; i < cRoomArray.length; i++){
+                        var tempCRoom = cRoomArray[i];
                         for(var r in tempCRoom.rooms){
                             for(var k = 0; k < tempCRoom.rooms[r].st.length; k++){
                                 tempCRoom.rooms[r].st[k].date = util.dateFormatWithoutYear(util.diffDate(startDate, k));
@@ -225,6 +238,7 @@ var getDataService = function(app){
                     });
                     scope.holidays = holidayHash;
                     scope.pRoomList = pRoomList;
+                    scope.cRoomArray = cRoomArray;
                     scope.cRoomStore = cRoomStore;
                     scope.roomStore = roomStore;
                     scope.glyphs = glyphs;
@@ -232,19 +246,6 @@ var getDataService = function(app){
                     accommodationService.updateDateInventory(scope);
                     scope.$apply();
                     util.leftHeaderAdjustLineHeight();
-                    // (function () {
-                    //     var elts = document.getElementsByClassName('ng-scope');
-                    //     var watches = [];
-                    //     var visited_ids = {};
-                    //     for (var i=0; i < elts.length; i++) {
-                    //         var scope = angular.element(elts[i]).scope();
-                    //         if (scope.$id in visited_ids)
-                    //             continue;
-                    //         visited_ids[scope.$id] = true;
-                    //         watches.push.apply(watches, scope.$$watchers);
-                    //     }
-                    //     alert(watches.length);
-                    // })();
                 });
             });
         };

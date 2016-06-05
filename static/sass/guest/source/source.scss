@@ -65,10 +65,11 @@
         height: 24px;
         color: red;
         line-height: 24px;
+        font-size: 12px;
       }
     }
     .btns{
-      margin-top: 20px;
+      margin-top: 24px;
       width: 100%;
       height: 24px;
       padding-left: 88px;
@@ -79,6 +80,7 @@
       .sbtn-ok{
         @include btn2_normal();
         @include btn_big();
+        border: none!important;
       }
       .sbtn-cancel{
         @include btn1_normal();

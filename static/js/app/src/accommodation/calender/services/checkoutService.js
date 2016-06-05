@@ -21,6 +21,7 @@ var checkoutService = function(app){
                 var endDate = new Date(r.endDate);
                 if(r.state === 1 && (endDate < today) || util.isSameDay(endDate, today)){
                     r.selectable = true;
+                    r.selected = true;
                 }else{
                     r.selectable = false;
                 }
@@ -34,6 +35,9 @@ var checkoutService = function(app){
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
                     d.inventory = result.data.inventory;
+                    if(checkout.foodsAmount && checkout.foodsAmount[d.dateStr]){
+                        d.inventory += checkout.foodsAmount[d.dateStr];
+                    }
                     scope.$apply();
                 });
             });
@@ -46,6 +50,9 @@ var checkoutService = function(app){
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
                     d.inventory = result.data.inventory;
+                    if(checkout.foodsAmount && checkout.foodsAmount[d.dateStr]){
+                        d.inventory += checkout.foodsAmount[d.dateStr];
+                    }
                     scope.$apply();
                 });
             });

@@ -17,8 +17,8 @@
         <div class="vip-top">
             <span class="vip-left">共<span ng-bind="dataItems.length"></span>个会员</span>
             <input type="text" class="vip-right search" placeholder="搜索客户姓名/手机号/证件号">
-            <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="../../../static/image/vipAdditional.png">新增会员</span>
-            <span class="vip-right outPut-excel" ng-click="outPutExcel()"><img src="../../../static/image/vipOutput.png">导出</span>
+            <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="../../static/image/vipAdditional.png">新增会员</span>
+            <span class="vip-right outPut-excel" ng-click="outPutExcel()"><img src="../../static/image/vipOutput.png">导出</span>
         </div>
         <div class="clearboth"></div>
         <div class="table-container">
@@ -54,7 +54,7 @@
             </table>
         </div>
     </div>
-    <div id="newVipModal" class="modal fade" role="dialog">
+    <div id="newVipModal" class="modal fade" role="dialog" ng-controller="createVipCtrl">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="top-fixed">
@@ -65,21 +65,36 @@
                         <p class="dialog-mainTitle">新增会员</p>
                         <p class="dialog-subTitle">基本信息</p>
                         <div class="vipInfo">
-                            <p><span>姓名</span><input type="text" minlength="2" maxlength="16" ></p>
-                            <p><span>手机号</span><input type="text" minlength="2" maxlength="16" ></p>
-                            <p><span>证件号</span><input type="text" minlength="2" maxlength="16" ></p>
-                            <div class="not-single">
-                                <span>性别</span><input class="first" type="text" placeholder="-性别-" >
-                                <span>生日</span><input class="second" type="text" placeholder="-年 月 日-" >
-                            </div>
+                            <p><span>姓名</span><input ng-model="newVip.name" type="text" minlength="2" maxlength="16" ></p>
+                            <p><span>手机号</span><input ng-model="newVip.phone" type="text" minlength="2" maxlength="16" ></p>
+                            <p><span>证件号</span><input ng-model="newVip.idCardNum" type="text" minlength="2" maxlength="16" ></p>
+                            <table class="single-line">
+                            <tr>
+                                <td class="gender">
+                                    <label>性别</label>
+                                    <div class="select1 gender-select">
+                                        <span>{{selectedGenderLabel || '-性别-'}}</span>
+                                        <div class="select1_options">
+                                            <div class="oitem"
+                                                 ng-click="changeGender(gender.key, gender.label);$event.stopPropagation();"
+                                                 ng-repeat="gender in genderList">{{gender.label}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="birthday">
+                                    <label>生日</label><input class="second" type="text" placeholder="-年 月 日-" >
+                                </td>
+                            </tr>
+                            </table>
                             <p><span>地区</span><input type="text" placeholder="-省 市 区-" ></p>
-                            <p><span>邮箱</span><input type="text" minlength="2" maxlength="16" ></p>
-                            <p><span>备注</span><textarea type="text" placeholder="-请填写描述-" ></textarea>
+                            <p><span>邮箱</span><input ng-model="email" type="text" minlength="2" maxlength="16" ></p>
+                            <p><span>备注</span><textarea ng-model="remark" type="text" placeholder="-请填写描述-" ></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="dialog-foot">
-                    <button class="vip-confirm">确定</button>
+                    <button class="vip-confirm" ng-click="createVip()">确定</button>
                     <button class="vip-cancel btn-cancel">取消</button>
                 </div>
             </div>

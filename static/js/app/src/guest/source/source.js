@@ -20,7 +20,7 @@ $(function(){
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
-        "click .btn-ok": function(){var that = this; modal.clearModal(that);}
+        // "click .btn-ok": function(){var that = this; modal.clearModal(that);}
     };
 
     util.bindDomAction(events);
@@ -30,7 +30,8 @@ $(function(){
     app.controller('guestCtrl', ['$scope', function(scope) {
         scope.guestList = [];
         scope.guestToDelete = null;
-        scope.newGuest = null;
+        scope.newGuest = '';
+        scope.errorTipsShow = false;
         AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
             type: 2
         }, function(result){
@@ -39,6 +40,7 @@ $(function(){
         });
         scope.addGuest = function(){
             if(!scope.newGuest){
+                scope.errorTipsShow = true;
                 return false;
             }
             AJAXService.ajaxWithToken('GET', 'addChannelUrl', {
@@ -49,6 +51,8 @@ $(function(){
                     type: 2
                 }, function(result){
                     scope.guestList = result.data.list;
+                    scope.newGuest = '';
+                    $(".modal").modal("hide");
                     scope.$apply();
                 });
             });
@@ -62,6 +66,7 @@ $(function(){
                     type: 2
                 }, function(result){
                     scope.guestList = result.data.list;
+                    $(".modal").modal("hide");
                     scope.$apply();
                 });
             });

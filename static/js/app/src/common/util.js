@@ -197,7 +197,15 @@ var util = {
     checkAuth: function(){
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
+        var bottom = localStorage.getItem("bottom");
         camps = JSON.parse(camps);
+        bottom = JSON.parse(bottom);
+        // $(".header .accomodationEntry").hide();
+        for(var i = 0; i < bottom.length; i++){
+            if(bottom[i].type === 2 && bottom[i].status === 1){
+                $(".header .accomodationEntry").show();
+            }
+        }
         var authFlag = false;
         var expiredFlag = false;
         var upgradeFlag = false;

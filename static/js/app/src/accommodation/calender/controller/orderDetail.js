@@ -56,6 +56,23 @@ var orderDetailCtrl = function(app){
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
             scope.itemsExist = orderService.itemsExist;
+            scope.itemPrice = orderService.itemPrice;
+            scope.calLeft = orderService.calLeft;
+            scope.calDeposit = orderService.calDeposit;
+            scope.calPrice = function(orderDetail){
+                var payments = orderDetail.payments;
+                var penaltyAd = null;
+                payments.forEach(function(d){
+                    if(d.type === 4){
+                        penaltyAd = d.fee;
+                    }
+                });
+                var price = orderService.calPrice(orderDetail);
+                if(orderDetail.penaltyAd){
+                    price += parseFloat(orderDetail.penaltyAd);
+                }
+                return price;
+            };
     }]);
 };
 

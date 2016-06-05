@@ -13,7 +13,7 @@ require("bootstrap");
 require("validation");
 
 var itemsCtrl = require('./controller/items');
-
+var createVipCtrl = require('./controller/createVipCtrl');
 
 $(function() {
     //初始化界面
@@ -32,6 +32,11 @@ $(function() {
         "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "click body .dialog-close": function(){
             $(this).parents(".modal").modal("hide");
+        },
+        "click body .select1>span": function(ev){
+            $(".select1_options").hide();
+            $(this).siblings(".select1_options").show();
+            ev.stopPropagation();
         }
     };
     util.bindDomAction(events);
@@ -39,6 +44,7 @@ $(function() {
 
     var app = angular.module('vipApp', []);
     itemsCtrl(app);
+    createVipCtrl(app);
     
 
 });

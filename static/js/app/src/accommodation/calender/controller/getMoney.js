@@ -8,6 +8,7 @@ var getMoneyService = require("../services/getMoneyService");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
 var getMoneyWithGunService = require("../services/getMoneyWithGunService");
+var validateService = require("../services/validateService");
 
 var getMoneyCtrl = function(app){
     orderService(app);
@@ -15,9 +16,11 @@ var getMoneyCtrl = function(app){
     getDataService(app);
     accommodationService(app);
     getMoneyWithGunService(app);
+    validateService(app);
     app.controller("getMoneyCtrl", ['$rootScope', '$scope', 'orderService', 'getMoneyService',
-        'getMoneyWithGunService', 'getDataService', 'accommodationService',
-        function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService, getDataService, accommodationService){
+        'getMoneyWithGunService', 'getDataService', 'accommodationService', 'validateService',
+        function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService,
+                 getDataService, accommodationService, validateService){
             scope.calPrice = function(getMoney){
                 var price = orderService.calPrice(getMoney);
                 if(getMoney.penaltyAd){
@@ -33,60 +36,24 @@ var getMoneyCtrl = function(app){
             scope.calDeposit = orderService.calDeposit;
             scope.itemPrice = orderService.itemPrice;
             scope.addPayment = getMoneyService.addPayment;
+            scope.deletePayment = getMoneyService.deletePayment;
             scope.changePayChannel = getMoneyService.changePayChannel;
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
-                var payments_new = [];
-                var alipayMoneyTotal = 0;
-                getMoney.payments.forEach(function(d){
-                    if(d.isNew && d.fee > 0){
-                        payments_new.push(d);
-                        if(d.payChannelId === -6 || d.payChannelId === -8){
-                            alipayMoneyTotal += parseFloat(d.fee);
-                        }
-                    }
-                });
-
-                if(alipayMoneyTotal > 0){
-                    //要去扫码付钱
-                    rootScope.getMoneyWithGun =
-                        getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, getMoney.orderId);
-                    $("#payWithAlipayModal").modal("show");
-                }else{
-                    if(!getMoney.async){
-                        //直接提交
-                        AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                            payments: JSON.stringify(payments_new),
-                            remark: getMoney.remark,
-                            orderId: getMoney.orderId
-                        }, function(result){
-                            if(result.code === 1){
-                                modal.somethingAlert("收银成功");
-                                $("#getMoneyModal").modal("hide");
-                                getDataService.getRoomsAndStatus(rootScope);
-                                accommodationService.emptySelectedEntries(rootScope);
-                            }else{
-                                modal.somethingAlert(result.msg);
-                            }
-                        });
-                    }else{
-                        AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
-                            payments: JSON.stringify(payments_new),
-                            orderId: getMoney.orderId,
-                            rooms: JSON.stringify(getMoney.checkoutRooms),
-                            type: getMoney.checkoutType,
-                        }, function(result){
-                            if(result.code === 1){
-                                modal.somethingAlert("操作成功!");
-                                $("#getMoneyModal").modal("hide");
-                                getDataService.getRoomsAndStatus(rootScope);
-                                accommodationService.emptySelectedEntries(rootScope);
-                            }else{
-                                modal.somethingAlert(result.msg);
-                            }
-                        });
-                    }
+                //直接提交
+                if(!validateService.checkRemark(getMoney.payRemark)){
+                    return false;
                 }
+                var left = getMoneyService.calLeft(getMoney);
+                var deposit = orderService.calDepositLeft(getMoney);
+                //如果是最后一项了而且还没有付清所有款项
+                if(getMoney.isLast && (left !== 0 || deposit !== 0)){
+                    $("#arrearsModal").modal('show');
+                    rootScope.arrearLeft = left;
+                    rootScope.arrearDeposit = deposit;
+                    return false;
+                }
+                getMoneyService.pay(rootScope);
             };
         }]);
 };

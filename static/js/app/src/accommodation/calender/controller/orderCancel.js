@@ -39,6 +39,8 @@ var orderCancelCtrl = function(app){
                         //提示退款成功
                         $("#orderCancelModal").modal("hide");
                         getDataService.getRoomsAndStatus(rootScope);
+                    }else{
+                        modal.somethingAlert(result.msg);
                     }
                 });
             };

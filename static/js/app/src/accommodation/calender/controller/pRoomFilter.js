@@ -1,8 +1,12 @@
 var util = require("util");
 require("angular");
 
+var accommodationService = require('../services/accommodationService');
+
 var pRoomFilterCtrl = function(app){
-    app.controller("pRoomFilterCtrl", ['$rootScope', '$scope', function(rootScope, scope){
+    accommodationService(app);
+    app.controller("pRoomFilterCtrl", ['$rootScope', '$scope', 'accommodationService',
+        function(rootScope, scope, accommodationService){
         rootScope.allPRoom = true;
         rootScope.isSelected = {};
         rootScope.isAllSelected = function(){
@@ -39,6 +43,7 @@ var pRoomFilterCtrl = function(app){
             for(var key in rootScope.isSelected){
                 rootScope.pRoomList[key].selected = rootScope.isSelected[key];
             }
+            accommodationService.updateDateInventory(rootScope);
             $(".category-filter").removeClass("open");
         };
     }]);

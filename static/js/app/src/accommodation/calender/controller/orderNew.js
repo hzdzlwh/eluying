@@ -7,15 +7,17 @@ var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var validateService = require("../services/validateService");
 var getMoneyService = require("../services/getMoneyService");
+var getDataService = require("../services/getDataService");
 
 var orderNewCtrl = function(app){
     orderService(app);
     orderNewService(app);
     validateService(app);
     getMoneyService(app);
+    getDataService(app);
     app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService',
-        'orderService', 'validateService', 'getMoneyService',
-        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService){
+        'orderService', 'validateService', 'getMoneyService', 'getDataService',
+        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService, getDataService){
         scope.checkPhone = validateService.checkPhone;
         scope.changeIds = orderService.changeIds;
         scope.changeChannel = orderService.changeChannel;
@@ -31,19 +33,55 @@ var orderNewCtrl = function(app){
         scope.changeItemTime = orderService.changeItemTime;
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
+        scope.errorTips = {
+            nameEmpty: false,
+            name: false,
+            phoneEmpty: false,
+            phone: false,
+            id: false
+        };
+        scope.discountsChange = function(){
+            var orderNew = rootScope.orderNew;
+            var itemPrice = orderService.itemPrice(orderNew);
+            if(orderNew.discounts > itemPrice){
+                orderNew.discounts = itemPrice;
+            }
+        };
         scope.submitOrder = function(){
             var orderNew = rootScope.orderNew;
-            orderNew.customerName = orderNew.customerName.trim();
-            if(!validateService.checkName(orderNew.customerName)){
-                modal.somethingAlert("请输入2~16位用户名!");
-                return false;
+            orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
+            var flag = false;
+            if(orderNew.customerName.length === 0){
+                scope.errorTips.nameEmpty = true;
+                scope.errorTips.name = false;
+                flag = true;
+            } else if(!validateService.checkName(orderNew.customerName)){
+                //modal.somethingAlert("请输入2~16位用户名!");
+                scope.errorTips.nameEmpty = false;
+                scope.errorTips.name = true;
+                flag = true;
             }
-            if(!validateService.checkPhone(orderNew.customerPhone)){
-                modal.somethingAlert("请输入正确的11位手机号!");
-                return false;
+            if(orderNew.customerPhone.length === 0){
+                scope.errorTips.phone = false;
+                scope.errorTips.phoneEmpty = true;
+                flag = true;
+            } else if(!validateService.checkPhone(orderNew.customerPhone)){
+                //modal.somethingAlert("请输入正确的11位手机号!");
+                scope.errorTips.phoneEmpty = false;
+                scope.errorTips.phone = true;
+                flag = true;
             }
             if(!validateService.checkRemark(orderNew.remark)){
-                modal.somethingAlert("备注最多输入140个字!");
+                //modal.somethingAlert("备注最多输入140个字!");
+                flag = true;
+            }
+            if(orderNew.idVal && !validateService.checkRemark(orderNew.idVal)){
+                //modal.somethingAlert("请填入16位身份证号!");
+                scope.errorTips.id = true;
+                flag = true;
+            }
+            if(flag){
+                modal.somethingAlert("信息填写有误!");
                 return false;
             }
             var inventory = {};
@@ -104,7 +142,7 @@ var orderNewCtrl = function(app){
                 type: type,
                 items: JSON.stringify(items),
                 payments: JSON.stringify([{
-                    fee: orderNew.discounts,
+                    fee: orderNew.discounts || 0,
                     type: 5
                 }]),
                 rooms: JSON.stringify(rooms)
@@ -119,6 +157,7 @@ var orderNewCtrl = function(app){
             }
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
+                    getDataService.getRoomsAndStatus(rootScope);
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");

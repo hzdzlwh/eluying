@@ -175,32 +175,47 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         width: 240px;
         height: 184px;
         margin-left: 8px;
+        border:1px solid #cccccc;
+        border-radius:2px;
       }
     }
-    div.not-single {
+    .single-line {
+      //overflow: hidden;
       width: 300px;
       margin: 0 auto 16px;
-      span {
+      label {
         font-family: PingFangSC-Regular;
-        text-align: right;
-        vertical-align: top;
-        height: 20px;
-        line-height: 20px;
-        display: inline-block;
-        color: #666666;
-        &:first-child {
+        font-size:14px;
+        color:#666666;
+        text-align:right;
+        margin-bottom: 0;
+      }
+      .select1 {
+        margin-left: 8px;
+      }
+      .gender {
+        label {
           width: 52px;
         }
+        float: left;
+        .gender-select {
+          width: 73px;
+          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
+          background-position: 60px;
+          span {
+            width: 120%
+          }
+        }
       }
-      input.first {
-        width: 73px;
-        height: 24px;
-        margin: 0 16px 0 8px;
-      }
-      input.second {
-        width: 110px;
-        height: 24px;
-        margin-left: 8px;
+      .birthday {
+        float: left;
+        label {
+          margin-left: 21px;
+        }
+        input {
+          width: 110px;
+          margin-left: 8px;
+        }
       }
     }
     input, textarea {
@@ -299,4 +314,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       color: #178ce6;
     }
   }
+}
+.select1 {
+  @include select1();
+  float: right;
+  height: 24px;
+  //position: relative;
 }
