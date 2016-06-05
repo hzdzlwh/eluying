@@ -318,6 +318,7 @@ $(document).ready(function(){
                         setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
                     }
                     localStorage.setItem("camps", JSON.stringify(data.data.camps));
+                    localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
                     localStorage.setItem("avatar", data.data.user.avatar);
                     localStorage.setItem("userName", data.data.user.realName);
                     localStorage.setItem("userType", data.data.user.userType);

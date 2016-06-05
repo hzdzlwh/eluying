@@ -268,8 +268,8 @@ var orderService = function(app){
         };
         this.changeItemNum = function(item, num){
             item.amount = num;
-            if(num < 1){
-                item.amount = 1;
+            if(num < 0){
+                item.amount = 0;
             }
             if(item.inventory !== undefined && num > item.inventory){
                 item.amount = item.inventory;
@@ -287,7 +287,7 @@ var orderService = function(app){
                 item.dateStr = util.dateFormat(date);
                 item.dateStr2 = util.dateFormatWithoutYear(date);
                 item.inventory = result.data.inventory;
-                item.num = (result.data.inventory < 1) ? 0 : 1;
+                item.amount = 1;
                 item.calendar = calendarService.createCalendar(item.date);
                 var sday = util.dateFormat(item.calendar[0][0].date);
                 var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);

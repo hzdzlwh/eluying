@@ -195,6 +195,20 @@ $(function(){
             var val = $(this).val();
             val = parseFloat(val) || 0;
             $(this).val(val.toFixed(2));
+        },
+        'keypress body .numberInput': function(ev){
+            if(!(ev.charCode >= 48 && ev.charCode <= 57)){
+                return false;
+            }
+        },
+        'keyup body .numberInput': function(ev){
+            var val = parseInt($(this).val());
+            var inventory = parseInt($(this).attr("inventory"));
+            if(val === ''){
+                $(this).val(0);
+            }else if(inventory && val > inventory){
+                $(this).val(inventory);
+            }
         }
         // $("#payWitJ2001hAlipayModal input").focus();
         // $("#payWithAlipayModal input").focusout(function(){
