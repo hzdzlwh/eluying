@@ -863,7 +863,7 @@
                 <div class="hr2" ng-if="goodsList.length > 0"></div>
                 <div class="discount">
                     <div class="slabel">优惠</div>
-                    <input class="moneyInput" placeholder="金额" type="text" ng-model="orderNew.discounts">
+                    <input class="moneyInput" placeholder="金额" type="text" ng-model="orderNew.discounts" ng-change="discountsChange();">
                     <span class="tips">-¥</span>
                 </div>
                 <div class="remark">
@@ -2408,7 +2408,7 @@
             </div>
             <div class="infos">
                 <div class="item">应收金额：￥{{getMoneyWithGun && getMoneyWithGun.fee}}</div>
-                <div class="item">订单编号：{{getMoneyWithGun && getMoneyWithGun.serialNum}}</div>
+                <div class="item" ng-if="getMoney.serialNum">订单编号：{{getMoneyWithGun && getMoneyWithGun.serialNum}}</div>
                 <div class="item">收银员：{{getMoneyWithGun && getMoneyWithGun.operator}}</div>
             </div>
             <div class="sbtn sbtn-cancel" ng-click="returnToGetMoney()">取消</div>
@@ -2578,10 +2578,9 @@
             <div class="entryList">
                 <div class="srow" ng-repeat="r in roomStore track by r.id"
                      ng-if="calShowIndex($index) < entryRowsMin && pRoomList[r.pi].selected">
-
                 </div>
                 <div class="srow" ng-repeat="r in roomStore track by r.id"
-                     ng-if="calShowIndex($index) <= entryRowsMax && $index >= entryRowsMin && pRoomList[r.pi].selected">
+                     ng-if="calShowIndex($index) < entryRowsMax && calShowIndex($index) >= entryRowsMin && pRoomList[r.pi].selected">
                     <div class="entryItem" date="{{day.date}}" room="{{r.id}}"
                          ng-class="{'selected': selectedEntries[r.id + day.date]}" ng-repeat="day in r.st track by day.date">
                         <div class="inner" ng-if="!occupyList[day.date + r.id] && day.s !== 100" ng-click="selectEntry(day.date, r.id);">
@@ -2602,7 +2601,7 @@
                     </div>
                 </div>
                 <div class="srow" ng-repeat="r in roomStore track by r.id"
-                     ng-if="calShowIndex($index) > entryRowsMax && pRoomList[r.pi].selected">
+                     ng-if="calShowIndex($index) >= entryRowsMax && pRoomList[r.pi].selected">
 
                 </div>
                 <div class="glyph {{statusStr2[g.roomState].classStr}}"

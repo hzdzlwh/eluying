@@ -33,6 +33,9 @@ var dateSelectorCtrl = function(app){
                 rootScope.startDateStr = util.dateFormatWithoutYear(rootScope.startDate);
                 create30Days();
                 scope.mainCalendar = calendarService.createCalendar(rootScope.startDate);
+                rootScope.glyphs = null;
+                rootScope.occupyList = null;
+                getDataService.getRoomsAndStatus(rootScope)
             };
     
             scope.changeMainMonth = function(monthDiff){

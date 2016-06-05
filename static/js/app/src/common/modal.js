@@ -53,6 +53,24 @@ function somethingAlert(message){
     }, 2500);
 }
 
+function ajaxWaiting(message){
+    $("body").prepend(
+        "<div class='modal fade' role='dialog' id='waitingModal'>" +
+        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-content clearfloat'>" +
+        "<div class='modal-header'>" +
+        "<p>" + "请稍后" + "</p>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<p>" + message + "</p>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>");
+    $("#errorAlert").modal("show");
+    centerModals();
+}
+
 //确认弹出框
 function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
     dialogConfig= dialogConfig||{title:"提醒", message:"您确定要这么做吗？"};
@@ -95,3 +113,4 @@ exports.clearModal = clearModal;
 exports.modalInit = modalInit;
 exports.somethingAlert = somethingAlert;
 exports.confirmDialog = confirmDialog;
+exports.ajaxWaiting = ajaxWaiting;

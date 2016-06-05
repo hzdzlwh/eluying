@@ -36,6 +36,7 @@ $(function(){
     $(".accomodationEntry").addClass("selected");
     topMenu.showTopMenu();
     modal.modalInit();
+    modal.centerModals();
 
     $(".entryList")[0].oncontextmenu = function(){
         return false;

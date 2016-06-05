@@ -44,6 +44,7 @@ var pRoomFilterCtrl = function(app){
                 rootScope.pRoomList[key].selected = rootScope.isSelected[key];
             }
             accommodationService.updateDateInventory(rootScope);
+            accommodationService.updateGlyphsPos(rootScope);
             $(".category-filter").removeClass("open");
         };
     }]);
