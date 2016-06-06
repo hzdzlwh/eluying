@@ -49,36 +49,22 @@ var orderEditCtrl = function(app){
                 idcObj.init();
                 idcObj.read(5, 1, rootScope);
             };
-            scope.submitOrder = function(){
+            scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;
                 var flag = false;
-                if(orderEdit.customerName.length === 0){
-                    scope.errorTips.nameEmpty = true;
-                    scope.errorTips.name = false;
-                    flag = true;
-                } else if(!validateService.checkName(orderEdit.customerName)){
-                    //modal.somethingAlert("请输入2~16位用户名!");
-                    scope.errorTips.nameEmpty = false;
-                    scope.errorTips.name = true;
+                var orderEditCustomerName = orderEditForm.orderEditCustomerName;
+                var orderEditCustomerPhone = orderEditForm.orderEditCustomerPhone;
+                var orderEditId = orderEditForm.orderEditId;
+                if(orderEditCustomerName.$invalid){
                     flag = true;
                 }
-                if(orderEdit.customerPhone.length === 0){
-                    scope.errorTips.phone = false;
-                    scope.errorTips.phoneEmpty = true;
+                if(orderEditCustomerPhone.$invalid){
                     flag = true;
-                } else if(!validateService.checkPhone(orderEdit.customerPhone)){
-                    //modal.somethingAlert("请输入正确的11位手机号!");
-                    scope.errorTips.phoneEmpty = false;
-                    scope.errorTips.phone = true;
+                }
+                if(orderEditId.$invalid){
                     flag = true;
                 }
                 if(!validateService.checkRemark(orderEdit.remark)){
-                    //modal.somethingAlert("备注最多输入140个字!");
-                    flag = true;
-                }
-                if(orderEdit.idVal && !validateService.checkRemark(orderEdit.idVal)){
-                    //modal.somethingAlert("请填入16位身份证号!");
-                    scope.errorTips.id = true;
                     flag = true;
                 }
                 if(flag){

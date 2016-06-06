@@ -57,33 +57,19 @@ var orderNewCtrl = function(app){
             var orderNew = rootScope.orderNew;
             orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
             var flag = false;
-            if(orderNew.customerName.length === 0){
-                // scope.errorTips.nameEmpty = true;
-                // scope.errorTips.name = false;
-                flag = true;
-            } else if(!validateService.checkName(orderNew.customerName)){
-                //modal.somethingAlert("请输入2~16位用户名!");
-                // scope.errorTips.nameEmpty = false;
-                // scope.errorTips.name = true;
+            var orderNewCustomerName = orderNewForm.orderNewCustomerName;
+            var orderNewCustomerPhone = orderNewForm.orderNewCustomerPhone;
+            var orderNewId = orderNewForm.orderNewId;
+            if(orderNewCustomerName.$invalid){
                 flag = true;
             }
-            if(orderNew.customerPhone.length === 0){
-                // scope.errorTips.phone = false;
-                // scope.errorTips.phoneEmpty = true;
+            if(orderNewCustomerPhone.$invalid){
                 flag = true;
-            } else if(!validateService.checkPhone(orderNew.customerPhone)){
-                //modal.somethingAlert("请输入正确的11位手机号!");
-                // scope.errorTips.phoneEmpty = false;
-                // scope.errorTips.phone = true;
+            }
+            if(orderNewId.$invalid){
                 flag = true;
             }
             if(!validateService.checkRemark(orderNew.remark)){
-                //modal.somethingAlert("备注最多输入140个字!");
-                flag = true;
-            }
-            if(orderNew.idVal && !validateService.checkRemark(orderNew.idVal)){
-                //modal.somethingAlert("请填入16位身份证号!");
-                // scope.errorTips.id = true;
                 flag = true;
             }
             if(flag){

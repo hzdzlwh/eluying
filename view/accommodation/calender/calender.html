@@ -628,9 +628,8 @@
                                     </div>
                                 </td>
                                 <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderNewId" ng-pattern="/^[0-9xX]{18}$/"
-                                           ng-model="orderNew.idVal" required>
+                                           ng-model="orderNew.idVal">
                                     <div class="tips warning" ng-if="orderNewForm.orderNewId.$invalid
-                                && !orderNewForm.orderNewId.$error.required
                                 && orderNewForm.orderNewId.$dirty">{{orderNew.selectedIdLabel}}格式错误</div>
                                 </td>
                                 <td>渠道</td>
@@ -967,9 +966,8 @@
                                     </div>
                                 </td>
                                 <td><input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderEditId" ng-pattern="/^[0-9xX]{18}$/"
-                                           ng-model="orderEdit.idVal" required>
+                                           ng-model="orderEdit.idVal">
                                     <div class="tips warning" ng-if="orderEditForm.orderEditId.$invalid
-                                && !orderEditForm.orderEditId.$error.required
                                 && orderEditForm.orderEditId.$dirty">{{orderEdit.selectedIdLabel}}格式错误</div>
                                 </td>
                                 <td>渠道</td>
@@ -1312,7 +1310,7 @@
                         <div class="slabel">已收押金</div>
                         <div class="snum">¥{{calDeposit(orderEdit)}}</div>
                     </div>
-                    <div class="sbtn confirm" ng-click="submitOrder()">保存</div>
+                    <div class="sbtn confirm" ng-click="submitOrder(orderEditForm)">保存</div>
                     <div class="sbtn cancel btn-cancel">取消</div>
                 </div>
             </div>

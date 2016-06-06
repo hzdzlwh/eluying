@@ -15,6 +15,9 @@ var orderEditService = function(app){
             for(var key in orderDetail){
                 orderEdit[key] = orderDetail[key];
             }
+            if(!orderEdit.selectedId){
+                orderEdit.selectedId = 0;
+            }
             orderEdit.payments.forEach(function(d){
                 if(d.type === 5){
                     orderEdit.discounts = d.fee;
