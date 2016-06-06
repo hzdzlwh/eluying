@@ -47,7 +47,7 @@ var orderEditService = function(app){
                     if(orderEdit.foodsAmount && orderEdit.foodsAmount[d.dateStr]){
                         d.inventory += orderEdit.foodsAmount[d.dateStr];
                     }
-                    d.calendar = calendarService.createCalendar(d.date);
+                    d.calendar = calendarService.createItemCalendar(d.date);
                     scope.$apply();
                 });
             });
@@ -64,7 +64,7 @@ var orderEditService = function(app){
                     if(orderEdit.playsAmount && orderEdit.playsAmount[d.dateStr]){
                         d.inventory += orderEdit.playsAmount[d.dateStr];
                     }
-                    d.calendar = calendarService.createCalendar(d.date);
+                    d.calendar = calendarService.createItemCalendar(d.date);
                     scope.$apply();
                 });
             });

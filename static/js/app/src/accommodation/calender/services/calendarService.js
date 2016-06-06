@@ -61,6 +61,33 @@ var calendarService = function(app){
             }
             return days;
         };
+        this.createItemCalendar = function(startDate){
+            var calenderTable = this.buildCalendarTable(startDate);
+            var iter = [];
+            var days = [];
+            for(var i = 0; i < calenderTable.length; i++){
+                var sclass = '';
+                var today = new Date();
+                var text = null;
+                if(util.isSameDay(calenderTable[i], today)){
+                    sclass = 'today';
+                    text = '今';
+                }
+                if(util.isSameDay(calenderTable[i], startDate)){
+                    sclass += ' selected';
+                }
+                iter.push({
+                    text: text,
+                    date: calenderTable[i],
+                    sclass: sclass
+                });
+                if(i % 7 === 6){
+                    days.push(iter);
+                    iter = [];
+                }
+            }
+            return days;
+        };
         this.createRoomStartDateCalendar = function(room, orderNewType){
             var ostartDate = room.ostartDate && new Date(room.ostartDate);
             var oendDate = room.oendDate && new Date(room.oendDate);
