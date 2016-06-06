@@ -236,21 +236,21 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="hr2" ng-if="itemsExist(orderDetail.goodsItems)"></div>
-                    <div class="subtype goods" ng-if="itemsExist(orderDetail.goodsItems)">
-                        <div class="sub-title">商超项目</div>
-                        <table ng-if="orderDetail.goodsItems">
-                            <tr ng-repeat="p in orderDetail.goodsItems">
-                                <td>{{p.name}}</td>
-                                <td></td>
-                                <td>
-                                    <span class="light">数量</span>
-                                    &nbsp;{{p.amount}} &nbsp;
-                                </td>
-                                <td>¥{{p.price * p.amount}}</td>
-                            </tr>
-                        </table>
-                    </div>
+                    <!--<div class="hr2" ng-if="itemsExist(orderDetail.goodsItems)"></div>-->
+                    <!--<div class="subtype goods" ng-if="itemsExist(orderDetail.goodsItems)">-->
+                        <!--<div class="sub-title">商超项目</div>-->
+                        <!--<table ng-if="orderDetail.goodsItems">-->
+                            <!--<tr ng-repeat="p in orderDetail.goodsItems">-->
+                                <!--<td>{{p.name}}</td>-->
+                                <!--<td></td>-->
+                                <!--<td>-->
+                                    <!--<span class="light">数量</span>-->
+                                    <!--&nbsp;{{p.amount}} &nbsp;-->
+                                <!--</td>-->
+                                <!--<td>¥{{p.price * p.amount}}</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
                     <div class="accounts">
                         <div class="sub-title">
                             收银信息
@@ -824,43 +824,43 @@
                     </table>
                 </div>
                 <div class="hr2" ng-if="funList.length > 0"></div>
-                <div class="subtype goods" ng-if="goodsList.length > 0">
-                    <div class="sub-title">
-                        商超项目
-                        <div class="sadd" ng-click="addItem(3, goodsList, orderNew);">
-                            <div class="eluyun_add_outer spriteImg">
-                                <div class="eluyun_add"></div>
-                            </div>
-                            添加商超项目
-                        </div>
-                    </div>
-                    <table>
-                        <tr ng-repeat="goods in orderNew.goodsItems">
-                            <td>
-                                <div class="select1">
-                                    <span>{{goods.name}}</span>
-                                    <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in goodsList"
-                                             ng-click="changeItem(orderNew, orderNew.goodsItems, goods, f, true)">{{f.name}}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td>
-                                数量&nbsp;
-                                <div class="snumber">
-                                    <div class="minus" ng-click="changeItemNum(goods, goods.amount-1);">-</div>
-                                    <input type="text" class="numberInput" ng-model="goods.amount">
-                                    <div class="plus" ng-click="changeItemNum(goods, goods.amount+1);">+</div>
-                                </div>
-                                <!--<div class="tips">剩余库存{{goods.inventory}}</div>-->
-                            </td>
-                            <td>¥{{goods.amount * goods.price}}<div class="sdelete"
-                                                                    ng-if="goods.isNew" ng-click="deleteItem(orderNew.goodsItems, $index)"></div></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="hr2" ng-if="goodsList.length > 0"></div>
+                <!--<div class="subtype goods" ng-if="goodsList.length > 0">-->
+                    <!--<div class="sub-title">-->
+                        <!--商超项目-->
+                        <!--<div class="sadd" ng-click="addItem(3, goodsList, orderNew);">-->
+                            <!--<div class="eluyun_add_outer spriteImg">-->
+                                <!--<div class="eluyun_add"></div>-->
+                            <!--</div>-->
+                            <!--添加商超项目-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<table>-->
+                        <!--<tr ng-repeat="goods in orderNew.goodsItems">-->
+                            <!--<td>-->
+                                <!--<div class="select1">-->
+                                    <!--<span>{{goods.name}}</span>-->
+                                    <!--<div class="select1_options">-->
+                                        <!--<div class="oitem" ng-repeat="f in goodsList"-->
+                                             <!--ng-click="changeItem(orderNew, orderNew.goodsItems, goods, f, true)">{{f.name}}</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                            <!--<td></td>-->
+                            <!--<td>-->
+                                <!--数量&nbsp;-->
+                                <!--<div class="snumber">-->
+                                    <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount-1);">-</div>-->
+                                    <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                    <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount+1);">+</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;<div class="tips">剩余库存{{goods.inventory}}</div>&ndash;&gt;-->
+                            <!--</td>-->
+                            <!--<td>¥{{goods.amount * goods.price}}<div class="sdelete"-->
+                                                                    <!--ng-if="goods.isNew" ng-click="deleteItem(orderNew.goodsItems, $index)"></div></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+                <!--<div class="hr2" ng-if="goodsList.length > 0"></div>-->
                 <div class="discount">
                     <div class="slabel">优惠</div>
                     <input class="moneyInput" placeholder="金额" type="text" ng-model="orderNew.discounts">
@@ -1178,44 +1178,44 @@
                     </table>
                 </div>
                 <div class="hr2" ng-if="goodsList.length > 0"></div>
-                <div class="subtype goods" ng-if="goodsList.length > 0">
-                    <div class="sub-title">
-                        商超项目
-                        <div class="sadd" ng-click="addItem(3, goodsList, orderEdit)">
-                            <div class="eluyun_add_outer spriteImg">
-                                <div class="eluyun_add"></div>
-                            </div>
-                            添加商超项目
-                        </div>
-                    </div>
-                    <table>
-                        <tr ng-repeat="goods in orderEdit.goodsItems">
-                            <td ng-if="!goods.isNew">{{goods.name}}</td>
-                            <td ng-if="goods.isNew">
-                                <div class="select1">
-                                    <span>{{goods.name}}</span>
-                                    <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in goodsList"
-                                             ng-click="changeItem(orderEdit, orderEdit.goodsItems, goods, f, true)">{{f.name}}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td ng-if="goods.isNew">数量&nbsp;
-                                <div class="snumber">
-                                    <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                    <input type="text" class="numberInput" ng-model="goods.amount">
-                                    <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
-                                </div>
-                                <!--<div class="tips">剩余库存{{play.inventory}}</div>-->
-                            </td>
-                            <td ng-if="!goods.isNew">数量&nbsp;{{goods.amount}}</td>
-                            <td>¥{{goods.amount * goods.price}}<div class="sdelete" ng-if="goods.isNew"
-                                                                    ng-click="deleteItem(orderEdit.goodsItems, $index)"></div></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="hr2"></div>
+                <!--<div class="subtype goods" ng-if="goodsList.length > 0">-->
+                    <!--<div class="sub-title">-->
+                        <!--商超项目-->
+                        <!--<div class="sadd" ng-click="addItem(3, goodsList, orderEdit)">-->
+                            <!--<div class="eluyun_add_outer spriteImg">-->
+                                <!--<div class="eluyun_add"></div>-->
+                            <!--</div>-->
+                            <!--添加商超项目-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<table>-->
+                        <!--<tr ng-repeat="goods in orderEdit.goodsItems">-->
+                            <!--<td ng-if="!goods.isNew">{{goods.name}}</td>-->
+                            <!--<td ng-if="goods.isNew">-->
+                                <!--<div class="select1">-->
+                                    <!--<span>{{goods.name}}</span>-->
+                                    <!--<div class="select1_options">-->
+                                        <!--<div class="oitem" ng-repeat="f in goodsList"-->
+                                             <!--ng-click="changeItem(orderEdit, orderEdit.goodsItems, goods, f, true)">{{f.name}}</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                            <!--<td></td>-->
+                            <!--<td ng-if="goods.isNew">数量&nbsp;-->
+                                <!--<div class="snumber">-->
+                                    <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
+                                    <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                    <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;<div class="tips">剩余库存{{play.inventory}}</div>&ndash;&gt;-->
+                            <!--</td>-->
+                            <!--<td ng-if="!goods.isNew">数量&nbsp;{{goods.amount}}</td>-->
+                            <!--<td>¥{{goods.amount * goods.price}}<div class="sdelete" ng-if="goods.isNew"-->
+                                                                    <!--ng-click="deleteItem(orderEdit.goodsItems, $index)"></div></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+                <!--<div class="hr2"></div>-->
                 <div class="discount">
                     <div class="slabel">优惠</div>
                     <input class="moneyInput" placeholder="金额" type="text" ng-model="orderEdit.discounts" ng-change="discountsChange();">
@@ -1679,45 +1679,45 @@
                         </table>
                     </div>
                     <div class="hr2"></div>
-                    <div class="subtype goods">
-                        <div class="sub-title">
-                            商超项目
-                            <div class="sadd" ng-click="addItem(3, goodsList, checkoutAd);">
-                                <div class="eluyun_add_outer spriteImg">
-                                    <div class="eluyun_add"></div>
-                                </div>
-                                添加商超项目
-                            </div>
-                        </div>
-                        <table>
-                            <tr ng-repeat="goods in checkoutAd.goodsItems">
-                                <td ng-if="!goods.isNew"><div class="sname">{{goods.name}}</div></td>
-                                <td ng-if="goods.isNew">
-                                    <div class="select1">
-                                        <span>{{goods.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in goodsList"
-                                                 ng-click="changeItem(checkoutAd, checkoutAd.goodsItems, goods, f, true)">{{f.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td ng-if="goods.isNew">数量&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                        <input type="text" class="numberInput" ng-model="goods.amount">
-                                        <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
-                                    </div>
-                                </td>
-                                <td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>
-                                <td>
-                                    ¥{{goods.amount * goods.price}}
-                                    <div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkoutAd.goodsItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="hr2"></div>
+                    <!--<div class="subtype goods">-->
+                        <!--<div class="sub-title">-->
+                            <!--商超项目-->
+                            <!--<div class="sadd" ng-click="addItem(3, goodsList, checkoutAd);">-->
+                                <!--<div class="eluyun_add_outer spriteImg">-->
+                                    <!--<div class="eluyun_add"></div>-->
+                                <!--</div>-->
+                                <!--添加商超项目-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<table>-->
+                            <!--<tr ng-repeat="goods in checkoutAd.goodsItems">-->
+                                <!--<td ng-if="!goods.isNew"><div class="sname">{{goods.name}}</div></td>-->
+                                <!--<td ng-if="goods.isNew">-->
+                                    <!--<div class="select1">-->
+                                        <!--<span>{{goods.name}}</span>-->
+                                        <!--<div class="select1_options">-->
+                                            <!--<div class="oitem" ng-repeat="f in goodsList"-->
+                                                 <!--ng-click="changeItem(checkoutAd, checkoutAd.goodsItems, goods, f, true)">{{f.name}}</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                                <!--<td></td>-->
+                                <!--<td ng-if="goods.isNew">数量&nbsp;-->
+                                    <!--<div class="snumber">-->
+                                        <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
+                                        <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                        <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                                <!--<td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>-->
+                                <!--<td>-->
+                                    <!--¥{{goods.amount * goods.price}}-->
+                                    <!--<div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkoutAd.goodsItems, $index)"></div>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
+                    <!--<div class="hr2"></div>-->
                 </div>
                 <div class="inadvanced">
                     <div class="pull-left">
@@ -1957,45 +1957,45 @@
                         </table>
                     </div>
                     <div class="hr2" ng-if="funList.length > 0 || checkin.playItems.length > 0"></div>
-                    <div class="subtype goods" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0">
-                        <div class="sub-title">
-                            商超项目
-                            <div class="sadd" ng-click="addItem(3, goodsList, checkin);">
-                                <div class="eluyun_add_outer spriteImg">
-                                    <div class="eluyun_add"></div>
-                                </div>
-                                添加商超项目
-                            </div>
-                        </div>
-                        <table>
-                            <tr ng-repeat="goods in checkin.goodsItems">
-                                <td ng-if="!goods.isNew"><div class="sname">{{goods.name}}</div></td>
-                                <td ng-if="goods.isNew">
-                                    <div class="select1">
-                                        <span>{{goods.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList"
-                                                 ng-click="changeItem(checkin, checkin.goodsItems, goods, f, true)">{{f.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td ng-if="goods.isNew">数量&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                        <input type="text" class="numberInput" ng-model="goods.amount">
-                                        <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
-                                    </div>
-                                </td>
-                                <td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>
-                                <td>
-                                    ¥{{goods.amount * goods.price}}
-                                    <div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkin.goodsItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="hr2" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0"></div>
+                    <!--<div class="subtype goods" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0">-->
+                        <!--<div class="sub-title">-->
+                            <!--商超项目-->
+                            <!--<div class="sadd" ng-click="addItem(3, goodsList, checkin);">-->
+                                <!--<div class="eluyun_add_outer spriteImg">-->
+                                    <!--<div class="eluyun_add"></div>-->
+                                <!--</div>-->
+                                <!--添加商超项目-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<table>-->
+                            <!--<tr ng-repeat="goods in checkin.goodsItems">-->
+                                <!--<td ng-if="!goods.isNew"><div class="sname">{{goods.name}}</div></td>-->
+                                <!--<td ng-if="goods.isNew">-->
+                                    <!--<div class="select1">-->
+                                        <!--<span>{{goods.name}}</span>-->
+                                        <!--<div class="select1_options">-->
+                                            <!--<div class="oitem" ng-repeat="f in funList"-->
+                                                 <!--ng-click="changeItem(checkin, checkin.goodsItems, goods, f, true)">{{f.name}}</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                                <!--<td></td>-->
+                                <!--<td ng-if="goods.isNew">数量&nbsp;-->
+                                    <!--<div class="snumber">-->
+                                        <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
+                                        <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                        <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                                <!--<td ng-if="!goods.isNew"><span class="light">数量</span>&nbsp;{{goods.amount}}</td>-->
+                                <!--<td>-->
+                                    <!--¥{{goods.amount * goods.price}}-->
+                                    <!--<div class="sdelete" ng-if="goods.isNew" ng-click="deleteItem(checkin.goodsItems, $index)"></div>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
+                    <!--<div class="hr2" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0"></div>-->
                 </div>
                 <div class="remark">
                     <div class="slabel">备注</div>
@@ -2113,19 +2113,19 @@
                         </table>
                     </div>
                     <div class="hr2" ng-if="getMoney.goodsItems.length > 0"></div>
-                    <div class="subtype goods" ng-if="getMoney.goodsItems.length > 0">
-                        <div class="sub-title">商超项目</div>
-                        <table>
-                            <tr ng-repeat="f in getMoney.goodsItems">
-                                <td>{{f.name}}</td>
-                                <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
-                                <td><span class="light">数量</span>&nbsp;{{f.amount}}
-                                </td>
-                                <td>¥{{f.price * f.amount}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="hr2"></div>
+                    <!--<div class="subtype goods" ng-if="getMoney.goodsItems.length > 0">-->
+                        <!--<div class="sub-title">商超项目</div>-->
+                        <!--<table>-->
+                            <!--<tr ng-repeat="f in getMoney.goodsItems">-->
+                                <!--<td>{{f.name}}</td>-->
+                                <!--<td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>-->
+                                <!--<td><span class="light">数量</span>&nbsp;{{f.amount}}-->
+                                <!--</td>-->
+                                <!--<td>¥{{f.price * f.amount}}</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
+                    <!--<div class="hr2"></div>-->
                 </div>
                 <div class="infos">
                     <!--新建订单显示的收款信息-->

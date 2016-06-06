@@ -35,7 +35,7 @@ var getMoneyService = function(app){
                     }
                 }
             }
-            return left;
+            return left.toFixed(2);
         };
         this.calLeft = calLeft;
         this.resetGetMoney = function(order, orderId, type, asyncObj, isLast){

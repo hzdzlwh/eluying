@@ -29,7 +29,7 @@ var getMoneyCtrl = function(app){
                 if(getMoney.roomsRefund){
                     price -= parseFloat(getMoney.roomsRefund);
                 }
-                return price;
+                return price.toFixed(2);
             };
             scope.calLeft = getMoneyService.calLeft;
             scope.totalPrice = orderService.totalPrice;
