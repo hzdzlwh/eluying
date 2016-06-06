@@ -432,10 +432,6 @@ var orderService = function(app){
             var newDate = new Date(date);
             newDate.setMonth(newDate.getMonth() + monthDiff);
             newDate.setDate(1);
-            var today = new Date();
-            if(newDate < today){
-                newDate = today;
-            }
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(newDate),
                 id: item.categoryId
@@ -451,6 +447,25 @@ var orderService = function(app){
                 if(item.type === 2 && order.playsAmount && order.playsAmount[item.date]){
                     item.inventory += order.playsAmount[item.date];
                 }
+                var sday = util.dateFormat(item.calendar[0][0].date);
+                var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);
+                AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
+                    startDate: sday,
+                    endDate: eday,
+                    categoryId: item.categoryId,
+                }, function(result1){
+                    if(result1.code === 1){
+                        var inventoryList = result1.data.list;
+                        inventoryList.forEach(function(d, i){
+                            if(d.remain === 0){
+                                if(item.calendar[Math.floor(i/7)][i%7].sclass.indexOf('invalid') === -1){
+                                    item.calendar[Math.floor(i/7)][i%7].sclass += ' invalid';
+                                }
+                            }
+                        });
+                        rootScope.$apply();
+                    }
+                });
                 rootScope.$apply();
             });
         };
