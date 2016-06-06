@@ -19,8 +19,11 @@ var createVipCtrl = function(app) {
             };
             scope.createVip = function() {
                 createVipService.createVip(scope.newVip);
-            }
-        }])
+            };
+            scope.editVip = function(){
+                createVipService.editVip(rootScope.item);
+            };
+        }]);
 };
 
 module.exports = createVipCtrl;

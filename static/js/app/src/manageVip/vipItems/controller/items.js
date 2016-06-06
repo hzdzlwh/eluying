@@ -24,6 +24,13 @@ var itemsCtrl = function(app){
             };
             rootScope.addNewVip = function(){
                 $("#newVipModal").modal("show");
+                rootScope.modify = false;
+            };
+            rootScope.modifyVip = function(item){
+                $("#newVipModal").modal("show");
+                console.log(item);
+                rootScope.item = item;
+                rootScope.modify = true;
             };
             rootScope.removeVip = function(){
                 $("#removeVipModal").modal("show");

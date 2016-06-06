@@ -13,6 +13,15 @@ var createVipService = function(app){
                     }
                 }
             )
+        };
+        this.editVip = function(item) {
+            AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', item,
+                function(result) {
+                    if (result.code === 1) {
+                        alert('成功');
+                    }
+                }
+            )
         }
     }]);
 };

@@ -44,6 +44,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     }
     .outPut-excel:hover {
       cursor: pointer;
+      a:hover {
+        text-decoration: none;
+      }
     }
     .add-newVip:hover {
       cursor: pointer;
@@ -156,7 +159,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     p {
       width: 300px;
       margin: 0 auto 16px;
-      span {
+      .newVip {
         font-family: PingFangSC-Regular;
         width: 52px;
         text-align: right;
@@ -165,6 +168,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         line-height: 20px;
         display: inline-block;
         color: #666666;
+      }
+      .modifyVip {
+        margin-left: 16px;
       }
       input {
         width: 240px;
