@@ -35,13 +35,13 @@ var orderNewCtrl = function(app){
         scope.changeItemTime = orderService.changeItemTime;
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
-        scope.errorTips = {
-            nameEmpty: false,
-            name: false,
-            phoneEmpty: false,
-            phone: false,
-            id: false
-        };
+        // scope.errorTips = {
+        //     nameEmpty: false,
+        //     name: false,
+        //     phoneEmpty: false,
+        //     phone: false,
+        //     id: false
+        // };
         scope.discountsChange = function(){
             var orderNew = rootScope.orderNew;
             var itemPrice = orderService.itemPrice(orderNew);
@@ -49,28 +49,31 @@ var orderNewCtrl = function(app){
                 orderNew.discounts = itemPrice;
             }
         };
-        scope.submitOrder = function(){
+        scope.submitOrder = function(orderNewForm){
+            orderNewForm.orderNewCustomerPhone.$setDirty();
+            orderNewForm.orderNewCustomerName.$setDirty();
+            orderNewForm.$setSubmitted();
             var orderNew = rootScope.orderNew;
             orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
             var flag = false;
             if(orderNew.customerName.length === 0){
-                scope.errorTips.nameEmpty = true;
-                scope.errorTips.name = false;
+                // scope.errorTips.nameEmpty = true;
+                // scope.errorTips.name = false;
                 flag = true;
             } else if(!validateService.checkName(orderNew.customerName)){
                 //modal.somethingAlert("请输入2~16位用户名!");
-                scope.errorTips.nameEmpty = false;
-                scope.errorTips.name = true;
+                // scope.errorTips.nameEmpty = false;
+                // scope.errorTips.name = true;
                 flag = true;
             }
             if(orderNew.customerPhone.length === 0){
-                scope.errorTips.phone = false;
-                scope.errorTips.phoneEmpty = true;
+                // scope.errorTips.phone = false;
+                // scope.errorTips.phoneEmpty = true;
                 flag = true;
             } else if(!validateService.checkPhone(orderNew.customerPhone)){
                 //modal.somethingAlert("请输入正确的11位手机号!");
-                scope.errorTips.phoneEmpty = false;
-                scope.errorTips.phone = true;
+                // scope.errorTips.phoneEmpty = false;
+                // scope.errorTips.phone = true;
                 flag = true;
             }
             if(!validateService.checkRemark(orderNew.remark)){
@@ -79,7 +82,7 @@ var orderNewCtrl = function(app){
             }
             if(orderNew.idVal && !validateService.checkRemark(orderNew.idVal)){
                 //modal.somethingAlert("请填入16位身份证号!");
-                scope.errorTips.id = true;
+                // scope.errorTips.id = true;
                 flag = true;
             }
             if(flag){
@@ -162,6 +165,7 @@ var orderNewCtrl = function(app){
             }
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
+                    orderNewForm.$setPristine();
                     getDataService.getRoomsAndStatus(rootScope);
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
                     accommodationService.emptySelectedEntries(rootScope);

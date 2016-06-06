@@ -22,11 +22,6 @@ var checkoutCtrl = function(app){
             scope.changeItemNum = orderService.changeItemNum;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
-            scope.errorTips = {
-                name: false,
-                phone: false,
-                id: false
-            };
             scope.submitCheckout = function(){
                 var checkout = rootScope.checkout;
                 var rooms = checkout.rooms;
