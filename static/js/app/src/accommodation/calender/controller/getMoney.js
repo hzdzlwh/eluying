@@ -23,11 +23,14 @@ var getMoneyCtrl = function(app){
                  getDataService, accommodationService, validateService){
             scope.calPrice = function(getMoney){
                 var price = orderService.calPrice(getMoney);
-                if(getMoney.penaltyAd){
-                    price += parseFloat(getMoney.penaltyAd);
-                }
                 if(getMoney.roomsRefund){
                     price -= parseFloat(getMoney.roomsRefund);
+                }
+                if(price < 0){
+                    price = 0;
+                }
+                if(getMoney.penaltyAd){
+                    price += parseFloat(getMoney.penaltyAd);
                 }
                 return price.toFixed(2);
             };
@@ -47,7 +50,7 @@ var getMoneyCtrl = function(app){
                 var left = getMoneyService.calLeft(getMoney);
                 var deposit = orderService.calDepositLeft(getMoney);
                 //如果是最后一项了而且还没有付清所有款项
-                if(getMoney.isLast && (left !== 0 || deposit !== 0)){
+                if(getMoney.isLast && (left != 0 || deposit != 0)){
                     $("#arrearsModal").modal('show');
                     rootScope.arrearLeft = left;
                     rootScope.arrearDeposit = deposit;

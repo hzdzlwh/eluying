@@ -24,6 +24,9 @@ var getMoneyService = function(app){
             var left = orderService.itemPrice(getMoney);
             left -= parseFloat(getMoney.roomsRefund || 0);
             left = left - getMoney.discounts;
+            if(left < 0){
+                left = 0;
+            }
             left += parseFloat(getMoney.penaltyAd || 0);
             var payments = getMoney.payments;
             if(payments){

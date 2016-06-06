@@ -751,7 +751,7 @@
                                 数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(food, food.amount-1);">-</div>
-                                    <input class="numberInput" ng-change="changeItemNum(food, food.amount);" ng-model="food.amount">
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount);" ng-model="food.amount">
                                     <div class="plus" ng-click="changeItemNum(food, food.amount+1);">+</div>
                                 </div>
                                 <div class="tips">剩余库存{{food.inventory}}</div>
@@ -814,7 +814,7 @@
                                 数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(play, play.amount-1);">-</div>
-                                    <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount);" ng-model="play.amount">
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount);" ng-model="play.amount">
                                     <div class="plus" ng-click="changeItemNum(play, play.amount+1);">+</div>
                                 </div>
                                 <div class="tips">剩余库存{{play.inventory}}</div>
@@ -850,7 +850,7 @@
                                 <!--数量&nbsp;-->
                                 <!--<div class="snumber">-->
                                     <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount-1);">-</div>-->
-                                    <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                    <!--<input type="number" class="numberInput" ng-model="goods.amount">-->
                                     <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount+1);">+</div>-->
                                 <!--</div>-->
                                 <!--&lt;!&ndash;<div class="tips">剩余库存{{goods.inventory}}</div>&ndash;&gt;-->
@@ -1059,7 +1059,7 @@
                         </div>
                     </div>
                     <table>
-                        <tr ng-repeat="food in orderEdit.foodItems" ng-if="food.amount > 0 || food.isNew">
+                        <tr ng-repeat="food in orderEdit.foodItems">
                             <td ng-if="!food.isNew">{{food.name}}</td>
                             <td ng-if="food.isNew">
                                 <div class="select1">
@@ -1102,7 +1102,7 @@
                             <td>数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
-                                    <input type="text" class="numberInput" ng-change="changeItemNum(food, food.amount)" ng-model="food.amount">
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount)" ng-model="food.amount">
                                     <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                 </div>
                                 &nbsp;<span ng-if="food.usedAmount">(已使用{{food.usedAmount}})</span>
@@ -1124,7 +1124,7 @@
                         </div>
                     </div>
                     <table>
-                        <tr ng-repeat="play in orderEdit.playItems" ng-if="play.amount > 0 || play.isNew">
+                        <tr ng-repeat="play in orderEdit.playItems">
                             <td ng-if="!play.isNew">{{play.name}}</td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
@@ -1167,7 +1167,7 @@
                             <td>数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
-                                    <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
                                     <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
                                 </div>
                                 &nbsp;(已使用{{play.usedAmount}})
@@ -1204,7 +1204,7 @@
                             <!--<td ng-if="goods.isNew">数量&nbsp;-->
                                 <!--<div class="snumber">-->
                                     <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
-                                    <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                    <!--<input type="number" class="numberInput" ng-model="goods.amount">-->
                                     <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
                                 <!--</div>-->
                                 <!--&lt;!&ndash;<div class="tips">剩余库存{{play.inventory}}</div>&ndash;&gt;-->
@@ -1362,7 +1362,7 @@
                                 <td>数量&nbsp;
                                     <div class="snumber">
                                         <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
+                                        <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
                                         <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                     </div>
                                     &nbsp;(已使用{{food.usedAmount}})
@@ -1554,7 +1554,7 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="food in checkoutAd.foodItems" ng-if="food.amount > 0 || food.isNew">
+                            <tr ng-repeat="food in checkoutAd.foodItems">
                                 <td ng-if="!food.isNew"><div class="sname">{{food.name}}</div></td>
                                 <td ng-if="food.isNew">
                                     <div class="select1">
@@ -1597,7 +1597,7 @@
                                 <td>数量&nbsp;
                                     <div class="snumber">
                                         <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
+                                        <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
                                         <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                     </div>
                                     &nbsp;(已使用{{food.usedAmount}})
@@ -1622,7 +1622,7 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkoutAd.playItems" ng-if="play.amount > 0 || play.isNew">
+                            <tr ng-repeat="play in checkoutAd.playItems">
                                 <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
                                 <td ng-if="play.isNew">
                                     <div class="select1">
@@ -1705,7 +1705,7 @@
                                 <!--<td ng-if="goods.isNew">数量&nbsp;-->
                                     <!--<div class="snumber">-->
                                         <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
-                                        <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                        <!--<input type="number" class="numberInput" ng-model="goods.amount">-->
                                         <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
                                     <!--</div>-->
                                 <!--</td>-->
@@ -1874,7 +1874,7 @@
                                 <td>数量&nbsp;
                                     <div class="snumber">
                                         <div class="minus" ng-click="changeItemNum(food, food.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
+                                        <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount)" value="1" ng-model="food.amount">
                                         <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                     </div>
                                     &nbsp;<span ng-if="food.usedAmount">(已使用{{food.usedAmount}})</span>
@@ -1983,7 +1983,7 @@
                                 <!--<td ng-if="goods.isNew">数量&nbsp;-->
                                     <!--<div class="snumber">-->
                                         <!--<div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>-->
-                                        <!--<input type="text" class="numberInput" ng-model="goods.amount">-->
+                                        <!--<input type="number" class="numberInput" ng-model="goods.amount">-->
                                         <!--<div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>-->
                                     <!--</div>-->
                                 <!--</td>-->

@@ -327,6 +327,9 @@ var orderService = function(app){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
             price = price - order.discounts;
+            if(price < 0){
+                price = 0;
+            }
             price = price.toFixed(2)*100/100;
             return price;
         };
