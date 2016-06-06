@@ -6,6 +6,7 @@ require("angular");
 var orderService = require("../services/orderService");
 var validateService = require("../services/validateService");
 var getDataService = require("../services/validateService");
+var idcObj = require("../ieidc");
 
 var orderEditCtrl = function(app){
     orderService(app);
@@ -43,6 +44,10 @@ var orderEditCtrl = function(app){
                 phone: false,
                 phoneEmpty: false,
                 id: false
+            };
+            scope.beginReadId = function(){
+                idcObj.init();
+                idcObj.read(5, 1, rootScope);
             };
             scope.submitOrder = function(){
                 var orderEdit = rootScope.orderEdit;

@@ -1084,6 +1084,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       }
       .guest-info{
         margin: 8px 0 8px;
+        .readBtn{
+          cursor: pointer;
+        }
         table {
           margin: 8px 16px 12px;
           td {

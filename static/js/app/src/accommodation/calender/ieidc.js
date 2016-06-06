@@ -1,8 +1,10 @@
 /**
  * Created by huwanqi on 16/6/6.
  */
-var idcObj = {};
+require("angular");
+var modal = require("modal");
 
+var idcObj = {};
 idcObj.init = function(){
     var ie = document.getElementById("ieIdc");
     var ff = document.getElementById("myIdc");
@@ -11,7 +13,8 @@ idcObj.init = function(){
     }else if(typeof(ff.idcard)!='undefined') {
         this.idc = ff;
     }else{
-        // alert("IDCardWeb控件装入失败！");
+        modal.somethingAlert("IDCardWeb控件装入失败！");
+        $(".readBtn").hide();
         return;
     }
     this.data = this.idc.IDCard;
@@ -35,7 +38,7 @@ idcObj.init = function(){
     this.idc.PicFormat = "jpg";
 };
 
-idcObj.read = function(timeout, type){
+idcObj.read = function(timeout, type, scope){
     //- timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
     var cid = this.idc.ReadOneCID(timeout);
     /*******************************************************************************************************************
@@ -73,11 +76,19 @@ idcObj.read = function(timeout, type){
         var name = this.data.IDname;
         var num = this.data.IDCardNo;
         if(type === 0){
-            $("input[name=orderNewCustomerName]").val(name);
-            $("input[name=orderNewCustomerId]").val(num);
+            scope.orderNew.customerName = name;
+            scope.orderNew.idVal = num;
+            scope.selectedId = 0;
+            scope.selectedIdLabel = '身份证';
+            // scope.$apply();
+            // $("input[name=orderNewCustomerName]").val(name);
+            // $("input[name=orderNewId]").val(num);
         }else if(type === 1){
-            $("input[name=orderEditCustomerName]").val(name);
-            $("input[name=orderEditCustomerId]").val(num);
+            scope.orderEdit.customerName = name;
+            scope.orderEdit.idVal = num;
+            scope.orderEdit.selectedId = 0;
+            scope.orderEdit.selectedIdLabel = '身份证';
+            // scope.$apply();
         }
     }
 };

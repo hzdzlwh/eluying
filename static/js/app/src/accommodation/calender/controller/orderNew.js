@@ -9,6 +9,7 @@ var validateService = require("../services/validateService");
 var getMoneyService = require("../services/getMoneyService");
 var getDataService = require("../services/getDataService");
 var accommodationService = require("../services/accommodationService");
+var idcObj = require("../ieidc");
 
 var orderNewCtrl = function(app){
     orderService(app);
@@ -176,6 +177,10 @@ var orderNewCtrl = function(app){
                     modal.somethingAlert(result3.msg);
                 }
             });
+        };
+        scope.beginReadId = function(){
+            idcObj.init();
+            idcObj.read(5, 0, rootScope);
         };
         scope.$watch("orderNew.discounts", function(){
             if(!rootScope.orderNew || !rootScope.orderNew.discounts){

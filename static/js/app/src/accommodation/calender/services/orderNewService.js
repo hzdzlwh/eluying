@@ -22,7 +22,6 @@ var orderNewService = function(app){
                     itemStartDate = d.startDate;
                 }
             });
-            idcObj.read(3, 0);
             return {
                 title: title,
                 type: type,
