@@ -50,7 +50,7 @@ var orderDetailService = function(app){
                     orderDetail.getMoneyable = true;
                     var today = new Date();
                     var endDate = new Date(d.endDate);
-                    if(endDate > today || !util.isSameDay(endDate, today)){
+                    if(endDate > today && !util.isSameDay(endDate, today)){
                         orderDetail.checkoutAdable = true;
                     }else{
                         orderDetail.checkoutable = true;

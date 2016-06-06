@@ -8,6 +8,7 @@ var orderNewService = require("../services/orderNewService");
 var validateService = require("../services/validateService");
 var getMoneyService = require("../services/getMoneyService");
 var getDataService = require("../services/getDataService");
+var accommodationService = require("../services/accommodationService");
 
 var orderNewCtrl = function(app){
     orderService(app);
@@ -15,9 +16,10 @@ var orderNewCtrl = function(app){
     validateService(app);
     getMoneyService(app);
     getDataService(app);
+    accommodationService(app);
     app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService',
-        'orderService', 'validateService', 'getMoneyService', 'getDataService',
-        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService, getDataService){
+        'orderService', 'validateService', 'getMoneyService', 'getDataService', 'accommodationService',
+        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService, getDataService, accommodationService){
         scope.checkPhone = validateService.checkPhone;
         scope.changeIds = orderService.changeIds;
         scope.changeChannel = orderService.changeChannel;
@@ -117,6 +119,9 @@ var orderNewCtrl = function(app){
             });
             var items = [];
             itemList.forEach(function(d, i){
+                if(d.amount === 0){
+                    return false;
+                }
                 items.push({
                     amount: d.amount,
                     date: d.dateStr,
@@ -159,6 +164,7 @@ var orderNewCtrl = function(app){
                 if(result3.code === 1){
                     getDataService.getRoomsAndStatus(rootScope);
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
+                    accommodationService.emptySelectedEntries(rootScope);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
                     $("#getMoneyModal").modal("show");
@@ -167,6 +173,20 @@ var orderNewCtrl = function(app){
                 }
             });
         };
+        scope.$watch("orderNew.discounts", function(){
+            if(!rootScope.orderNew || !rootScope.orderNew.discounts){
+                return false;
+            }
+            var itemPrice = orderService.itemPrice(rootScope.orderNew);
+            if(rootScope.orderNew.discounts > itemPrice){
+                rootScope.orderNew.discounts = itemPrice;
+            }
+            var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+            if(!reg.test(parseFloat(rootScope.orderNew.discounts))){
+                rootScope.orderNew.discounts =
+                    rootScope.orderNew.discounts.substr(0, rootScope.orderNew.discounts.length - 1);
+            }
+        })
     }]);
 };
 

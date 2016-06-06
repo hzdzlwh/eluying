@@ -95,7 +95,9 @@ var orderEditCtrl = function(app){
                 var items = [];
                 var oldItems = orderEdit.foodItems.concat(orderEdit.playItems).concat(orderEdit.goodsItems);
                 oldItems.forEach(function(d){
-                    console.log(d);
+                    if(d.amount === 0){
+                        return false;
+                    }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
@@ -144,6 +146,20 @@ var orderEditCtrl = function(app){
                     }
                 });
             };
+            scope.$watch("orderEdit.discounts", function(){
+                if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){
+                    return false;
+                }
+                var itemPrice = orderService.itemPrice(rootScope.orderEdit);
+                if(rootScope.orderEdit.discounts > itemPrice){
+                    rootScope.orderEdit.discounts = itemPrice;
+                }
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(rootScope.orderEdit.discounts))){
+                    rootScope.orderEdit.discounts =
+                        rootScope.orderEdit.discounts.substr(0, rootScope.orderEdit.discounts.length - 1);
+                }
+            })
     }]);
 };
 

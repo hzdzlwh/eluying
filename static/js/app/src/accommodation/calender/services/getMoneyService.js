@@ -76,7 +76,7 @@ var getMoneyService = function(app){
             } else{
 
             }
-            getMoney.payRemark = '';
+            // getMoney.payRemark = '';
             return getMoney;
         };
         /*
@@ -151,7 +151,7 @@ var getMoneyService = function(app){
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                     payments: JSON.stringify(payments_new),
-                    remark: getMoney.payRemark,
+                    remark: getMoney.remark,
                     orderId: getMoney.orderId
                 }, function(result){
                     if(result.code === 1){

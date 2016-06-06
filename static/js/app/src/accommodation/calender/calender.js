@@ -193,9 +193,9 @@ $(function(){
             $("#payWithAlipayModal input").focusout();
         },
         'change body input.moneyInput': function(ev){
-            var val = $(this).val();
-            val = parseFloat(val) || 0;
-            $(this).val(val.toFixed(2));
+            // var val = $(this).val();
+            // val = parseFloat(val) || 0;
+            // $(this).val(val.toFixed(2));
         },
         'keypress body .numberInput': function(ev){
             if(!(ev.charCode >= 48 && ev.charCode <= 57)){
@@ -203,13 +203,17 @@ $(function(){
             }
         },
         'keyup body .numberInput': function(ev){
-            var val = parseInt($(this).val());
-            var inventory = parseInt($(this).attr("inventory"));
-            if(val === ''){
-                $(this).val(0);
-            }else if(inventory && val > inventory){
-                $(this).val(inventory);
-            }
+            // var val = parseInt($(this).val());
+            // var inventory = parseInt($(this).attr("inventory"));
+            // var body = angular.element(document.body);
+            // var rootScope = body.scope().$root;
+            // if(val === ''){
+            //     $(this).val(0);
+            // }else if(inventory && val > inventory){
+            //     $(this).val(inventory);
+            // }
+            // $(this).trigger('input');
+            // rootScope.$apply();
         }
         // $("#payWitJ2001hAlipayModal input").focus();
         // $("#payWithAlipayModal input").focusout(function(){

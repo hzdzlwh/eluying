@@ -41,7 +41,7 @@ var getMoneyCtrl = function(app){
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
                 //直接提交
-                if(!validateService.checkRemark(getMoney.payRemark)){
+                if(!validateService.checkRemark(getMoney.remark)){
                     return false;
                 }
                 var left = getMoneyService.calLeft(getMoney);
@@ -55,6 +55,13 @@ var getMoneyCtrl = function(app){
                 }
                 getMoneyService.pay(rootScope);
             };
+            scope.moneyChange = function(payment){
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(payment.fee))){
+                    payment.fee = payment.fee.toString();
+                    payment.fee = payment.fee.substr(0, payment.fee.length - 1);
+                }
+            }
         }]);
 };
 

@@ -454,6 +454,10 @@ var orderService = function(app){
                 rootScope.$apply();
             });
         };
+        this.moneyInputChange = function(money){
+            money = parseFloat(money) || 0;
+            money = money.toFixed(2);
+        };
     }]);
 };
 
