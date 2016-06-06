@@ -2,6 +2,7 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
+var idcObj = require('../ieidc');
 var getDataService = require("../services/getDataService");
 var calendarService = require("../services/calendarService");
 
@@ -68,7 +69,7 @@ var orderEditService = function(app){
                     scope.$apply();
                 });
             });
-            console.log(orderEdit);
+            idcObj.read(3, 1);
             return orderEdit;
         };
     }]);

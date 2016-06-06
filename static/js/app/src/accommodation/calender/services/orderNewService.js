@@ -2,6 +2,7 @@ var util = require("util");
 require("angular");
 
 var constService = require("../services/constService");
+var idcObj = require("../ieidc");
 
 var orderNewService = function(app){
     constService(app);
@@ -21,6 +22,7 @@ var orderNewService = function(app){
                     itemStartDate = d.startDate;
                 }
             });
+            idcObj.read(3, 0);
             return {
                 title: title,
                 type: type,
