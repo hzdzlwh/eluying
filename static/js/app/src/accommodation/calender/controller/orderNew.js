@@ -167,15 +167,16 @@ var orderNewCtrl = function(app){
         scope.beginReadId = function(){
             var mode = $("#newOrderModal .readBtn").html();
             if(mode === '开始读卡'){
-                $("#newOrderModal .readBtn").html('停止读卡');
+                $("#newOrderModal .readBtn").html('正在读卡...');
+                $("#newOrderModal .readBtn").addClass('ing');
                 setTimeout(function(){
                     idcObj.init();
-                    idcObj.read(5, 0, rootScope);
+                    idcObj.read(3, 0, rootScope);
                 }, 500)
             }else{
-                $("#newOrderModal .readBtn").html('开始读卡');
-                idcObj.init();
-                idcObj.idc && idcObj.idc.ReadClose();
+                // $("#newOrderModal .readBtn").html('开始读卡');
+                // idcObj.init();
+                // idcObj.idc && idcObj.idc.ReadClose();
             }
         };
         scope.$watch("orderNew.discounts", function(){

@@ -14,6 +14,7 @@ idcObj.init = function(){
         this.idc = ff;
     }else{
         $(".readBtn").html('开始读卡');
+        $(".readBtn").removeClass('ing');
         modal.somethingAlert("IDCardWeb控件装入失败！");
         return;
     }
@@ -23,7 +24,7 @@ idcObj.init = function(){
     this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
     
     //- 停止自动读卡间隔时间（秒），默认600秒
-    //this.idc.AutoStopTime = 300;
+    this.idc.AutoStopTime = 300;
     
     //- 设置界面大小，0－无界面（0*0），1－图标界面（20*20）(默认)，2－基本信息界面（40*134，只显示姓名和身份证号），3－标准界面（220*450），4－照片界面（176*134）
     this.idc.Size = 0;
@@ -73,7 +74,7 @@ idcObj.read = function(timeout, type, scope){
      SAMID				阅读器的设备ID
      *******************************************************************************************************************/
     if(cid==""){
-        $("#newOrderModal .readBtn").html('开始读卡');
+        $(".readBtn").html('开始读卡');
     }else{
         //- 阅读数据写入input
         var name = this.data.IDname;
@@ -83,7 +84,9 @@ idcObj.read = function(timeout, type, scope){
             scope.orderNew.idVal = num;
             scope.selectedId = 0;
             scope.selectedIdLabel = '身份证';
+            scope.$apply();
             $("#newOrderModal .readBtn").html('开始读卡');
+            $(".readBtn").removeClass('ing');
             // scope.$apply();
             // $("input[name=orderNewCustomerName]").val(name);
             // $("input[name=orderNewId]").val(num);
@@ -92,7 +95,9 @@ idcObj.read = function(timeout, type, scope){
             scope.orderEdit.idVal = num;
             scope.orderEdit.selectedId = 0;
             scope.orderEdit.selectedIdLabel = '身份证';
+            scope.$apply();
             $("#orderEditModal .readBtn").html('开始读卡');
+            $(".readBtn").removeClass('ing');
             // scope.$apply();
         }
     }
