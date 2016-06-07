@@ -15,7 +15,7 @@ idcObj.init = function(){
     }else{
         $(".readBtn").html('开始读卡');
         $(".readBtn").removeClass('ing');
-        modal.somethingAlert("IDCardWeb控件装入失败！");
+        modal.somethingAlert("请使用IE或IE内核、火狐、Opera、Chrome（低于44版）、WEBKIT内核等浏览器并安装IDCardWeb控件!");
         return;
     }
     this.data = this.idc.IDCard;
@@ -75,6 +75,7 @@ idcObj.read = function(timeout, type, scope){
      *******************************************************************************************************************/
     if(cid==""){
         $(".readBtn").html('开始读卡');
+        $(".readBtn").removeClass('ing');
     }else{
         //- 阅读数据写入input
         var name = this.data.IDname;
