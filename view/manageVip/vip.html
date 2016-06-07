@@ -18,7 +18,7 @@
             <span class="vip-left">共<span ng-bind="dataItems.length"></span>个会员</span>
             <input type="text" class="vip-right search" placeholder="搜索客户姓名/手机号/证件号">
             <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="../../static/image/vipAdditional.png">新增会员</span>
-            <span class="vip-right outPut-excel" ng-click="outPutExcel()"><a><img src="../../static/image/vipOutput.png">导出</a></span>
+            <span class="vip-right outPut-excel"><a ng-href="{{outPutExcel()}}"><img src="../../static/image/vipOutput.png">导出</a></span>
         </div>
         <div class="clearboth"></div>
         <div class="table-container">
@@ -48,7 +48,7 @@
                         <td ng-bind="item.birthday"></td>
                         <td ng-bind="item.county"></td>
                         <td ng-bind="item.remark"></td>
-                        <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVip()">删除</span></td>
+                        <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVip(item)">删除</span></td>
                     </tr>
                 </tbody>
             </table>

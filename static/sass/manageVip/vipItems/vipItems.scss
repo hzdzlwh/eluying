@@ -44,9 +44,21 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     }
     .outPut-excel:hover {
       cursor: pointer;
-      a:hover {
-        text-decoration: none;
-      }
+    }
+    a {
+      text-decoration: none;
+    }
+    a:link {
+      text-decoration: none;
+    }
+    a:visited {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+    a:active {
+      text-decoration: none;
     }
     .add-newVip:hover {
       cursor: pointer;

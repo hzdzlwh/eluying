@@ -20,7 +20,12 @@ var itemsCtrl = function(app){
                 scope.$apply();
             });*/
             rootScope.outPutExcel = function(){
-                AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
+                var campId = localStorage.getItem("campId");
+                var uid = localStorage.getItem("uid");
+                var host = AJAXService.getUrl2('/vipUser/vipUserListToExcel');
+                var url = host + '?' + 'campId='+ campId + '&uid='+ uid;
+                return url;
+                // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
             rootScope.addNewVip = function(){
                 $("#newVipModal").modal("show");
@@ -28,12 +33,12 @@ var itemsCtrl = function(app){
             };
             rootScope.modifyVip = function(item){
                 $("#newVipModal").modal("show");
-                console.log(item);
                 rootScope.item = item;
                 rootScope.modify = true;
             };
-            rootScope.removeVip = function(){
+            rootScope.removeVip = function(item){
                 $("#removeVipModal").modal("show");
+                rootScope.item = item;
             };
             getItemsService.getVipItems(1,scope);
             getItemsService.getIdList(function(result){

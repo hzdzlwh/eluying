@@ -9,7 +9,7 @@ var createVipService = function(app){
             AJAXService.ajaxWithToken('POST', '/vipUser/addVipUser', newVip,
                 function(result) {
                     if (result.code === 1) {
-                        alert('成功');
+                        $("#newVipModal").modal("hide");
                     }
                 }
             )
@@ -18,7 +18,7 @@ var createVipService = function(app){
             AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', item,
                 function(result) {
                     if (result.code === 1) {
-                        alert('成功');
+                        $("#newVipModal").modal("hide");
                     }
                 }
             )
