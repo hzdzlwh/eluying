@@ -11,7 +11,8 @@ require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
 require("validation");
-
+require('../../common/ngDatePicker');
+require('../../common/ngPagination');
 var itemsCtrl = require('./controller/items');
 var createVipCtrl = require('./controller/createVipCtrl');
 
@@ -42,7 +43,7 @@ $(function() {
     util.bindDomAction(events);
 
 
-    var app = angular.module('vipApp', []);
+    var app = angular.module('vipApp', ['ng-pagination', 'ng-datepicker']);
     itemsCtrl(app);
     createVipCtrl(app);
     

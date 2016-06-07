@@ -5,7 +5,6 @@ var AJAXService = require("AJAXService");
 var util = require("util");
 var modal = require("modal");
 require("angular");
-
 var getItemsService = require("../services/getItemsService");
 
 var itemsCtrl = function(app){
@@ -40,13 +39,14 @@ var itemsCtrl = function(app){
                 $("#removeVipModal").modal("show");
                 rootScope.item = item;
             };
-            getItemsService.getVipItems(1,scope);
-            getItemsService.getIdList(function(result){
-                rootScope.idList = result.idList;
-            });
-            getItemsService.getGender(function(result){
-                rootScope.genderList = result.genderList;
-            });
+            scope.pageSize = 1;
+            scope.onPageChange = function () {
+                getItemsService.getVipItems(scope.currentPage, scope.pageSize, scope);
+            };
+            // getItemsService.getVipUserCount(scope);
+            scope.vipUserCount = 4;
+            scope.pageCount = !!scope.vipUserCount && Math.ceil(scope.vipUserCount / scope.pageSize);
+            getItemsService.getVipItems(1, scope.pageSize, scope);
         }
     ]);
 };
