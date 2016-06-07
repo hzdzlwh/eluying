@@ -179,6 +179,10 @@ var orderNewCtrl = function(app){
                 // idcObj.idc && idcObj.idc.ReadClose();
             }
         };
+        scope.hideModal = function(orderNewForm){
+            orderNewForm.$setPristine();
+            $("#newOrdermodal").modal("hide");
+        };
         scope.$watch("orderNew.discounts", function(){
             if(!rootScope.orderNew || !rootScope.orderNew.discounts){
                 return false;

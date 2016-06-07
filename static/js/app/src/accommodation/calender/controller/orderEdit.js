@@ -158,6 +158,10 @@ var orderEditCtrl = function(app){
                     }
                 });
             };
+            scope.hideModal = function(orderEditForm){
+                orderEditForm.$setPristine();
+                $("#orderEditmodal").modal("hide");
+            };
             scope.$watch("orderEdit.discounts", function(){
                 if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){
                     return false;

@@ -596,7 +596,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>{{orderNew.title}}</span>
-                        <span class="modal-close">&times;</span>
+                        <span class="modal-close" ng-click="hideModal(orderNewForm);">&times;</span>
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -911,7 +911,7 @@
                         <div class="snum">¥{{calPrice(orderNew)}}</div>
                     </div>
                     <div class="sbtn confirm" ng-click="submitOrder(orderNewForm)">完成{{orderNew.title}}</div>
-                    <div class="sbtn cancel btn-cancel">取消</div>
+                    <div class="sbtn cancel btn-cancel" ng-click="hideModal(orderNewForm);">取消</div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
@@ -925,7 +925,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>编辑订单</span>
-                        <span class="modal-close">&times;</span>
+                        <span class="modal-close" ng-click="hideModal(orderEditForm);">&times;</span>
                         <div class="eluyun_book_outer spriteImg" ng-if="orderEdit.orderState === 2">
                             <div class="eluyun_book"></div>
                         </div>
@@ -1322,7 +1322,7 @@
                         <div class="snum">¥{{calDeposit(orderEdit)}}</div>
                     </div>
                     <div class="sbtn confirm" ng-click="submitOrder(orderEditForm)">保存</div>
-                    <div class="sbtn cancel btn-cancel">取消</div>
+                    <div class="sbtn cancel btn-cancel" ng-click="hideModal(orderEditForm);">取消</div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
