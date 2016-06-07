@@ -15,7 +15,7 @@
 <body ng-controller="itemsCtrl">
     <div class="container-manageVip">
         <div class="vip-top">
-            <span class="vip-left">共<span ng-bind="dataItems.length"></span>个会员</span>
+            <span class="vip-left">共<span ng-bind="vipUserCount"></span>个会员</span>
             <input type="text" class="vip-right search" placeholder="搜索客户姓名/手机号/证件号">
             <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="../../static/image/vipAdditional.png">新增会员</span>
             <span class="vip-right outPut-excel" ng-click="outPutExcel()"><img src="../../static/image/vipOutput.png">导出</span>
@@ -53,6 +53,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="pagination-container">
+            <pager page-count="pageCount" current-page="currentPage" on-page-change="onPageChange()"></pager>
+        </div>
     </div>
     <div id="newVipModal" class="modal fade" role="dialog" ng-controller="createVipCtrl">
         <div class="modal-dialog">
@@ -83,7 +86,7 @@
                                     </div>
                                 </td>
                                 <td class="birthday">
-                                    <label>生日</label><input class="second" type="text" placeholder="-年 月 日-" >
+                                    <label>生日</label><datepicker placeholder="-年 月 日-" format-selected-date="newVip.birthday"></datepicker>
                                 </td>
                             </tr>
                             </table>

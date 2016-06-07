@@ -1,4 +1,6 @@
 @import "../../variable";
+@import "../../pagination";
+@import "../../datepicker";
 $headerHeight: 48px;
 $subHeaderHeight: 32px;
 $gridHeight: 48px;
@@ -320,4 +322,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   float: right;
   height: 24px;
   //position: relative;
+}
+.pagination-container {
+  overflow: hidden;
+  margin-top: 10px;
+  .ng-pagination {
+    float: right;
+  }
 }
