@@ -46,8 +46,16 @@ var orderEditCtrl = function(app){
                 id: false
             };
             scope.beginReadId = function(){
-                idcObj.init();
-                idcObj.read(5, 1, rootScope);
+                var mode = $("#orderEditModal .readBtn").html();
+                if(mode === '开始读卡'){
+                    $("#orderEditModal .readBtn").html('停止读卡');
+                    idcObj.init();
+                    idcObj.read(5, 1, rootScope);
+                }else{
+                    $("#orderEditModal .readBtn").html('开始读卡');
+                    idcObj.init();
+                    idcObj.idc && idcObj.idc.ReadClose();
+                }
             };
             scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;

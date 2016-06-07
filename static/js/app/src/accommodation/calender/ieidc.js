@@ -13,8 +13,8 @@ idcObj.init = function(){
     }else if(typeof(ff.idcard)!='undefined') {
         this.idc = ff;
     }else{
+        $(".readBtn").html('开始读卡');
         modal.somethingAlert("IDCardWeb控件装入失败！");
-        $(".readBtn").hide();
         return;
     }
     this.data = this.idc.IDCard;
@@ -40,6 +40,9 @@ idcObj.init = function(){
 
 idcObj.read = function(timeout, type, scope){
     //- timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
+    if(!this.idc){
+        return false;
+    }
     var cid = this.idc.ReadOneCID(timeout);
     /*******************************************************************************************************************
      读卡后数据获取（通过控件的idcard对象）
@@ -80,6 +83,7 @@ idcObj.read = function(timeout, type, scope){
             scope.orderNew.idVal = num;
             scope.selectedId = 0;
             scope.selectedIdLabel = '身份证';
+            $("#newOrderModal .readBtn").html('开始读卡');
             // scope.$apply();
             // $("input[name=orderNewCustomerName]").val(name);
             // $("input[name=orderNewId]").val(num);
@@ -88,6 +92,7 @@ idcObj.read = function(timeout, type, scope){
             scope.orderEdit.idVal = num;
             scope.orderEdit.selectedId = 0;
             scope.orderEdit.selectedIdLabel = '身份证';
+            $("#orderEditModal .readBtn").html('开始读卡');
             // scope.$apply();
         }
     }
