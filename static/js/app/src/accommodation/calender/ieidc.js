@@ -73,7 +73,7 @@ idcObj.read = function(timeout, type, scope){
      SAMID				阅读器的设备ID
      *******************************************************************************************************************/
     if(cid==""){
-        
+        $("#newOrderModal .readBtn").html('开始读卡');
     }else{
         //- 阅读数据写入input
         var name = this.data.IDname;

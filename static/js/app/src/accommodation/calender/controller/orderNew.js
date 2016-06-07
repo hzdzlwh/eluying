@@ -168,8 +168,10 @@ var orderNewCtrl = function(app){
             var mode = $("#newOrderModal .readBtn").html();
             if(mode === '开始读卡'){
                 $("#newOrderModal .readBtn").html('停止读卡');
-                idcObj.init();
-                idcObj.read(5, 0, rootScope);
+                setTimeout(function(){
+                    idcObj.init();
+                    idcObj.read(5, 0, rootScope);
+                }, 500)
             }else{
                 $("#newOrderModal .readBtn").html('开始读卡');
                 idcObj.init();
