@@ -7,15 +7,20 @@ var orderService = require("../services/orderService");
 var orderNewService = require("../services/orderNewService");
 var validateService = require("../services/validateService");
 var getMoneyService = require("../services/getMoneyService");
+var getDataService = require("../services/getDataService");
+var accommodationService = require("../services/accommodationService");
+var idcObj = require("../ieidc");
 
 var orderNewCtrl = function(app){
     orderService(app);
     orderNewService(app);
     validateService(app);
     getMoneyService(app);
+    getDataService(app);
+    accommodationService(app);
     app.controller("orderNewCtrl", ['$rootScope', '$scope', 'orderNewService',
-        'orderService', 'validateService', 'getMoneyService',
-        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService){
+        'orderService', 'validateService', 'getMoneyService', 'getDataService', 'accommodationService',
+        function(rootScope, scope, orderNewService, orderService, validateService, getMoneyService, getDataService, accommodationService){
         scope.checkPhone = validateService.checkPhone;
         scope.changeIds = orderService.changeIds;
         scope.changeChannel = orderService.changeChannel;
@@ -31,19 +36,44 @@ var orderNewCtrl = function(app){
         scope.changeItemTime = orderService.changeItemTime;
         scope.changeItemMonth = orderService.changeItemMonth;
         scope.calPrice = orderService.calPrice;
-        scope.submitOrder = function(){
+        // scope.errorTips = {
+        //     nameEmpty: false,
+        //     name: false,
+        //     phoneEmpty: false,
+        //     phone: false,
+        //     id: false
+        // };
+        scope.discountsChange = function(){
             var orderNew = rootScope.orderNew;
-            orderNew.customerName = orderNew.customerName.trim();
-            if(!validateService.checkName(orderNew.customerName)){
-                modal.somethingAlert("请输入2~16位用户名!");
-                return false;
+            var itemPrice = orderService.itemPrice(orderNew);
+            if(orderNew.discounts > itemPrice){
+                orderNew.discounts = itemPrice;
             }
-            if(!validateService.checkPhone(orderNew.customerPhone)){
-                modal.somethingAlert("请输入正确的11位手机号!");
-                return false;
+        };
+        scope.submitOrder = function(orderNewForm){
+            orderNewForm.orderNewCustomerPhone.$setDirty();
+            orderNewForm.orderNewCustomerName.$setDirty();
+            orderNewForm.$setSubmitted();
+            var orderNew = rootScope.orderNew;
+            orderNew.customerName = orderNew.customerName && orderNew.customerName.trim();
+            var flag = false;
+            var orderNewCustomerName = orderNewForm.orderNewCustomerName;
+            var orderNewCustomerPhone = orderNewForm.orderNewCustomerPhone;
+            var orderNewId = orderNewForm.orderNewId;
+            if(orderNewCustomerName.$invalid){
+                flag = true;
+            }
+            if(orderNewCustomerPhone.$invalid){
+                flag = true;
+            }
+            if(orderNewId.$invalid){
+                flag = true;
             }
             if(!validateService.checkRemark(orderNew.remark)){
-                modal.somethingAlert("备注最多输入140个字!");
+                flag = true;
+            }
+            if(flag){
+                modal.somethingAlert("信息填写有误!");
                 return false;
             }
             var inventory = {};
@@ -79,6 +109,9 @@ var orderNewCtrl = function(app){
             });
             var items = [];
             itemList.forEach(function(d, i){
+                if(d.amount === 0){
+                    return false;
+                }
                 items.push({
                     amount: d.amount,
                     date: d.dateStr,
@@ -104,7 +137,7 @@ var orderNewCtrl = function(app){
                 type: type,
                 items: JSON.stringify(items),
                 payments: JSON.stringify([{
-                    fee: orderNew.discounts,
+                    fee: orderNew.discounts || 0,
                     type: 5
                 }]),
                 rooms: JSON.stringify(rooms)
@@ -119,7 +152,10 @@ var orderNewCtrl = function(app){
             }
             AJAXService.ajaxWithToken('GET', 'confirmOrderUrl', orderItem, function(result3){
                 if(result3.code === 1){
+                    orderNewForm.$setPristine();
+                    getDataService.getRoomsAndStatus(rootScope);
                     rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
+                    accommodationService.emptySelectedEntries(rootScope);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
                     $("#getMoneyModal").modal("show");
@@ -128,6 +164,39 @@ var orderNewCtrl = function(app){
                 }
             });
         };
+        scope.beginReadId = function(){
+            var mode = $("#newOrderModal .readBtn").html();
+            if(mode === '开始读卡'){
+                $("#newOrderModal .readBtn").html('正在读卡...');
+                $("#newOrderModal .readBtn").addClass('ing');
+                setTimeout(function(){
+                    idcObj.init();
+                    idcObj.read(3, 0, rootScope);
+                }, 500)
+            }else{
+                // $("#newOrderModal .readBtn").html('开始读卡');
+                // idcObj.init();
+                // idcObj.idc && idcObj.idc.ReadClose();
+            }
+        };
+        scope.hideModal = function(orderNewForm){
+            orderNewForm.$setPristine();
+            $("#newOrdermodal").modal("hide");
+        };
+        scope.$watch("orderNew.discounts", function(){
+            if(!rootScope.orderNew || !rootScope.orderNew.discounts){
+                return false;
+            }
+            var itemPrice = orderService.itemPrice(rootScope.orderNew);
+            if(rootScope.orderNew.discounts > itemPrice){
+                rootScope.orderNew.discounts = itemPrice;
+            }
+            var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+            if(!reg.test(parseFloat(rootScope.orderNew.discounts))){
+                rootScope.orderNew.discounts =
+                    rootScope.orderNew.discounts.substr(0, rootScope.orderNew.discounts.length - 1);
+            }
+        })
     }]);
 };
 

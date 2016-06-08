@@ -2,10 +2,11 @@ var util = require("util");
 require("angular");
 
 var constService = require("../services/constService");
+var idcObj = require("../ieidc");
 
 var orderNewService = function(app){
     constService(app);
-    app.service("orderNewService", ['constService', function(constService){
+    app.service("orderNewService", ['$rootScope', 'constService', function(rootScope, constService){
         this.resetOrderNew = function(type, rooms, channel, channelId){
             var title = (function(){
                 for(var i = 0; i < constService.statusStr.length; i++){
@@ -15,21 +16,30 @@ var orderNewService = function(app){
                 }
                 return null;
             })();
+            var itemStartDate;
+            rooms.forEach(function(d){
+                if(!itemStartDate || new Date(d.startDate) < itemStartDate){
+                    itemStartDate = d.startDate;
+                }
+            });
             return {
                 title: title,
                 type: type,
                 origin: channel,
                 originId: channelId,
-                customerName: null,
-                customerPhone: null,
-                selectedId: '身份证',
+                customerName: '',
+                customerPhone: '',
+                selectedId: 0,
+                selectedIdLabel: '身份证',
                 idVal: null,
                 rooms: rooms,
                 foodItems: [],
                 playItems: [],
                 goodsItems: [],
                 remark: '',
-                discounts: 0,
+                payments: [],
+                discounts: null,
+                itemStartDate: itemStartDate
             }
         };
     }]);

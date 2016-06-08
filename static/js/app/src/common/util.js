@@ -197,7 +197,17 @@ var util = {
     checkAuth: function(){
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
+        var bottom = localStorage.getItem("bottom");
         camps = JSON.parse(camps);
+        bottom = JSON.parse(bottom);
+        // $(".header .accomodationEntry").hide();
+        var aflag = false;
+        for(var i = 0; i < bottom.length; i++){
+            if(bottom[i].type === 2 && bottom[i].status === 1){
+                $(".header .accomodationEntry").show();
+                aflag = true;
+            }
+        }
         var authFlag = false;
         var expiredFlag = false;
         var upgradeFlag = false;
@@ -232,10 +242,16 @@ var util = {
                 }
                 return false;
             }
-            if(isInTipsPage){
-                window.location.href = '/view/business/category/room.html';
+            if(!aflag && href.indexOf("/view/accommodation/calender/calender.html") > -1) {
+                window.location.href = '/view/tips/noauthfora.html';
             }
-        }else{ //无权限
+            if(aflag && href.indexOf("/view/tips/noauthfora.html") > -1){
+                window.location.href = '/view/accommodation/calender/calender.html';
+            }
+            if(isInTipsPage){
+                window.location.href = '/view/accommodation/calender/calender.html';
+            }
+        }else{
             if(href.indexOf("/view/tips/noauth.html") > 0){
 
             }else{
@@ -251,5 +267,54 @@ var util = {
         }
         return num;
     },
+
+    leftHeaderAdjustLineHeight: function(){
+        var cHeight = $(".calendor-container").height();
+        var cScrollTop = $(".calendor-container").scrollTop();
+        var cScrollHeight = cScrollTop + cHeight;
+        $(".category-item").each(function(i,d){
+            var height = $(d).height();
+            var top = $(d).position().top;
+            var scrollHeight = height + top;
+            if(top > cScrollHeight || cScrollTop > scrollHeight){
+                $(d).find('.category-name span').css({
+                    'top': '50%'
+                });
+            }else{
+                var result;
+                if(top >= cScrollTop && top < cScrollHeight){
+                    if((height - (scrollHeight - cScrollHeight)) < 40){
+                        result = 50;
+                    }else {
+                        result = (height - (scrollHeight - cScrollHeight)) / height * 100 / 2;
+                    }
+                }
+                if(cScrollTop > top && scrollHeight >= cScrollHeight){
+                    result = (2 * (cScrollTop - top) + cHeight) / height * 100 / 2;
+                }
+                if(top >= cScrollTop && scrollHeight < cScrollHeight){
+                    result = 50;
+                }
+                if(top < cScrollTop && scrollHeight < cScrollHeight){
+                    result = (2 * height - (scrollHeight - cScrollTop)) / height * 100 / 2;
+                }
+                $(d).find('.category-name span').css({
+                    'top': result + '%'
+                });
+            }
+        });
+    },
+
+    countTags: function(node){
+        var node=node?node:window.document;
+        var nums=0;
+        if(node.nodeType==1){
+            nums++;
+        }
+        for(var i=0,l=node.childNodes.length;i<l;i++){
+            nums += this.countTags(node.childNodes[i]);
+        }
+        return nums;
+    }
 };
 module.exports = util;

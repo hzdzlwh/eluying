@@ -6,6 +6,7 @@ require("angular");
 var orderService = require("../services/orderService");
 var validateService = require("../services/validateService");
 var getDataService = require("../services/validateService");
+var idcObj = require("../ieidc");
 
 var orderEditCtrl = function(app){
     orderService(app);
@@ -13,7 +14,7 @@ var orderEditCtrl = function(app){
     getDataService(app);
     app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService',
         function(rootScope, scope, orderService, validateService, getDataService){
-            scope.checkPhone = validateService.checkPhone;
+            // scope.checkPhone = validateService.checkPhone;
             scope.changeIds = orderService.changeIds;
             scope.changeChannel = orderService.changeChannel;
             scope.changeRoomStartDateMonth = orderService.changeRoomStartDateMonth;
@@ -29,8 +30,68 @@ var orderEditCtrl = function(app){
             scope.changeItemMonth = orderService.changeItemMonth;
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
-            scope.submitOrder = function(){
+            scope.calDeposit = orderService.calDeposit;
+            scope.discountsChange = function(){
                 var orderEdit = rootScope.orderEdit;
+                var itemPrice = orderService.itemPrice(orderEdit);
+                if(orderEdit.discounts > itemPrice){
+                    orderEdit.discounts = itemPrice;
+                }
+            };
+            scope.errorTips = {
+                name: false,
+                nameEmpty: false,
+                phone: false,
+                phoneEmpty: false,
+                id: false
+            };
+            scope.beginReadId = function(){
+                // var mode = $("#orderEditModal .readBtn").html();
+                // if(mode === '开始读卡'){
+                //     $("#orderEditModal .readBtn").html('停止读卡');
+                //     idcObj.init();
+                //     idcObj.read(5, 1, rootScope);
+                // }else{
+                //     $("#orderEditModal .readBtn").html('开始读卡');
+                //     idcObj.init();
+                //     idcObj.idc && idcObj.idc.ReadClose();
+                // }
+                var mode = $("#orderEditModal .readBtn").html();
+                if(mode === '开始读卡'){
+                    $("#orderEditModal .readBtn").html('正在读卡...');
+                    setTimeout(function(){
+                        idcObj.init();
+                        idcObj.read(3, 0, rootScope);
+                    }, 500)
+                }else{
+                    // $("#orderEditModal .readBtn").html('开始读卡');
+                    // $("#idcWarningModal").modal("hide");
+                    // idcObj.init();
+                    // idcObj.idc && idcObj.idc.ReadClose();
+                }
+            };
+            scope.submitOrder = function(orderEditForm){
+                var orderEdit = rootScope.orderEdit;
+                var flag = false;
+                var orderEditCustomerName = orderEditForm.orderEditCustomerName;
+                var orderEditCustomerPhone = orderEditForm.orderEditCustomerPhone;
+                var orderEditId = orderEditForm.orderEditId;
+                if(orderEditCustomerName.$invalid){
+                    flag = true;
+                }
+                if(orderEditCustomerPhone.$invalid){
+                    flag = true;
+                }
+                if(orderEditId.$invalid){
+                    flag = true;
+                }
+                if(!validateService.checkRemark(orderEdit.remark)){
+                    flag = true;
+                }
+                if(flag){
+                    modal.somethingAlert("信息填写有误!");
+                    return false;
+                }
                 var rooms = [];
                 orderEdit.rooms.forEach(function(d){
                     var room = {
@@ -46,7 +107,9 @@ var orderEditCtrl = function(app){
                 var items = [];
                 var oldItems = orderEdit.foodItems.concat(orderEdit.playItems).concat(orderEdit.goodsItems);
                 oldItems.forEach(function(d){
-                    console.log(d);
+                    if(d.amount === 0){
+                        return false;
+                    }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
@@ -77,6 +140,14 @@ var orderEditCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items)
                 };
+                if(orderEdit.idVal){
+                    order.customerIdCardArr = JSON.stringify([
+                        {
+                            idCardNum: orderEdit.idVal,
+                            idCardType: orderEdit.selectedId,
+                        }
+                    ])
+                }
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){
                         //提示编辑订单成功
@@ -87,6 +158,24 @@ var orderEditCtrl = function(app){
                     }
                 });
             };
+            scope.hideModal = function(orderEditForm){
+                orderEditForm.$setPristine();
+                $("#orderEditmodal").modal("hide");
+            };
+            scope.$watch("orderEdit.discounts", function(){
+                if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){
+                    return false;
+                }
+                var itemPrice = orderService.itemPrice(rootScope.orderEdit);
+                if(rootScope.orderEdit.discounts > itemPrice){
+                    rootScope.orderEdit.discounts = itemPrice;
+                }
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(rootScope.orderEdit.discounts))){
+                    rootScope.orderEdit.discounts =
+                        rootScope.orderEdit.discounts.substr(0, rootScope.orderEdit.discounts.length - 1);
+                }
+            })
     }]);
 };
 

@@ -3,12 +3,12 @@ var util = require("util");
 require("angular");
 
 var constService = function(app){
-    app.service("constService", function(){
+    app.service("constService", ["$window", function(window){
         this.statusStr = [
             {},
             {},
             {short: '预', long: '已预订', classStr: 'book', 'title': '预订'},
-            {short: '住', long: '已入住', classStr: 'ing', 'title': '入住'},
+            {short: '住', long: '已入住', classStr: 'ing', 'title': '直接入住'},
             {},
             {short: '完', long: '已完成', classStr: 'finish', 'title': '补录'}
         ];
@@ -26,7 +26,11 @@ var constService = function(app){
             {short: '取', long: '已取消', classStr: 'cancel'},
             {short: '完', long: '已完成', classStr: 'finish'}
         ];
-    });
+        this.days = 30
+        this.entryRowsMin = 0;
+        this.entryRowsMax = parseInt(window.outerHeight / 48) + 20;
+        $(".entryList, .accommodation-mainContainer > .content > .sheader").width(this.days * 100);
+    }]);
 };
 
 module.exports = constService;

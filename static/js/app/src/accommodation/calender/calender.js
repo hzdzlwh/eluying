@@ -36,6 +36,7 @@ $(function(){
     $(".accomodationEntry").addClass("selected");
     topMenu.showTopMenu();
     modal.modalInit();
+    modal.centerModals();
 
     $(".entryList")[0].oncontextmenu = function(){
         return false;
@@ -44,13 +45,30 @@ $(function(){
         return false;
     };
 
+    var timer;
     events = {
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
-            var scrollLeft = $(this).scrollLeft();
-            var scrollTop = $(this).scrollTop();
+            var selection = $(this);
+            var scrollHeight = selection[0].scrollHeight;
+            var height = selection.height();
+            var top = selection.scrollTop();
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var height = $(window).height() - $(".calendor-container").offset().top;
+                var top = $(".calendor-container").scrollTop();
+                var body = angular.element(document.body);
+                var rootScope = body.scope().$root;
+                rootScope.entryRowsMin = parseInt(top / 48)-5;
+                rootScope.entryRowsMax = parseInt((top + height) / 48)+5;
+                rootScope.$apply();
+            }, 100);
+
+            var scrollLeft = selection.scrollLeft();
+            var scrollTop = selection.scrollTop();
             $(".accommodation-mainContainer .content .sheader").css("margin-left", -scrollLeft);
             $(".accommodation-mainContainer .content .leftHeader").css("margin-top", -scrollTop);
+            util.leftHeaderAdjustLineHeight();
         },
         "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "mouseover body .entryItem": function(){
@@ -83,6 +101,8 @@ $(function(){
         "click body": function(ev){
             $(".entryOp").hide();
             $(".search .results").hide();
+            $(".search .search-switch").show();
+            $(".search .wrapper").hide();
             $(".date-selector").removeClass("open");
             $(".category-filter").removeClass("open");
             $(".modal .date-table").hide();
@@ -90,14 +110,6 @@ $(function(){
         },
         "click body .results": function(ev){
             ev.stopPropagation();
-        },
-        "click body .category-filter-switch": function(ev){
-            ev.stopPropagation();
-            if(!$(".category-filter").hasClass("open")){
-                $(".category-filter").addClass("open");
-            }else{
-                $(".category-filter").removeClass("open");
-            }
         },
         "click body .date-selector-switch": function(ev){
             ev.stopPropagation();
@@ -158,6 +170,40 @@ $(function(){
         },
         "click body .header>img.logo": function(){
             window.location.reload();
+        },
+        "click body .category-filter": function(ev){
+            ev.stopPropagation();
+        },
+        "click body .search-switch": function(ev){
+            $(".search .search-switch").hide();
+            $(".search .wrapper").show();
+            ev.stopPropagation();
+        },
+        "click body .search": function(ev){
+            ev.stopPropagation();
+        },
+        "shown.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focus();
+            $("#payWithAlipayModal input").focusout(function(){
+                $("#payWithAlipayModal input").focus();
+            });
+        },
+        "hidden.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focusout(function(){});
+            $("#payWithAlipayModal input").focusout();
+        },
+        'keypress body input.moneyInput': function(ev){
+            if(!((ev.charCode >= 48 && ev.charCode <= 57) || ev.charCode == 46)){
+                return false;
+            }
+        },
+        'keypress body .numberInput': function(ev){
+            if(!(ev.charCode >= 48 && ev.charCode <= 57)){
+                return false;
+            }
+        },
+        'keyup body .numberInput': function(ev){
+
         }
     };
 

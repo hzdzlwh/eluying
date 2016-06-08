@@ -14,7 +14,10 @@ var orderEditService = function(app){
             var orderEdit = {};
             for(var key in orderDetail){
                 orderEdit[key] = orderDetail[key];
-            };
+            }
+            if(!orderEdit.selectedId){
+                orderEdit.selectedId = 0;
+            }
             orderEdit.payments.forEach(function(d){
                 if(d.type === 5){
                     orderEdit.discounts = d.fee;
@@ -43,8 +46,11 @@ var orderEditService = function(app){
                     d.dateStr = d.date;
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
-                    d.inventory = result.data.inventory;
-                    d.calendar = calendarService.createCalendar(d.date);
+                    d.inventory = parseInt(result.data.inventory);
+                    if(orderEdit.foodsAmount && orderEdit.foodsAmount[d.dateStr]){
+                        d.inventory += orderEdit.foodsAmount[d.dateStr];
+                    }
+                    d.calendar = calendarService.createItemCalendar(d.date);
                     scope.$apply();
                 });
             });
@@ -57,13 +63,14 @@ var orderEditService = function(app){
                     d.dateStr = d.date;
                     d.dateStr2 = d.date.substr(5, 5);
                     d.date = new Date(d.date);
-                    d.inventory = result.data.inventory;
-                    d.calendar = calendarService.createCalendar(d.date);
+                    d.inventory = parseInt(result.data.inventory);
+                    if(orderEdit.playsAmount && orderEdit.playsAmount[d.dateStr]){
+                        d.inventory += orderEdit.playsAmount[d.dateStr];
+                    }
+                    d.calendar = calendarService.createItemCalendar(d.date);
                     scope.$apply();
                 });
             });
-            orderEdit.selectedId = '身份证';
-            orderEdit.idVal = null;
             return orderEdit;
         };
     }]);

@@ -81,7 +81,11 @@ var orderCancelService = function(app){
                 left = calDepositLeft(orderCancel);
             }
             if(left <= 0){
-                modal.somethingAlert("已退完所有款项!");
+                if(type === 2){
+                    modal.somethingAlert("已退完所有款项!");
+                }else if(type === 3){
+                    modal.somethingAlert("已退完所有押金!");
+                }
                 return false;
             }
             var payChannel, payChannelId;

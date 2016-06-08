@@ -291,7 +291,8 @@ $(document).ready(function(){
     $("#loginBox .log button").on("click", function(){
         var loginName = $("#loginBox .log .loginName").val();
         var password = $("#loginBox .log .password").val();
-        var result = loginValidate.phoneValidate(loginName);
+        // var result = loginValidate.phoneValidate(loginName);
+        var result = true;
         /*if(result == true) {
             result = loginValidate.passwordValidate(password);
         }*/
@@ -314,9 +315,10 @@ $(document).ready(function(){
                                 localStorage.setItem("campId", el.campId);
                             }
                         });
-                        setTimeout("window.location.href = 'view/business/category/room.html';", 1000);
+                        setTimeout("window.location.href = '/view/accommodation/calender/calender.html';", 1000);
                     }
                     localStorage.setItem("camps", JSON.stringify(data.data.camps));
+                    localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
                     localStorage.setItem("avatar", data.data.user.avatar);
                     localStorage.setItem("userName", data.data.user.realName);
                     localStorage.setItem("userType", data.data.user.userType);

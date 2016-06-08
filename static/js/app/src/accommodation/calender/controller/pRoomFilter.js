@@ -1,35 +1,51 @@
 var util = require("util");
 require("angular");
 
+var accommodationService = require('../services/accommodationService');
+
 var pRoomFilterCtrl = function(app){
-    app.controller("pRoomFilterCtrl", ['$rootScope', '$scope', function(rootScope, scope){
+    accommodationService(app);
+    app.controller("pRoomFilterCtrl", ['$rootScope', '$scope', 'accommodationService',
+        function(rootScope, scope, accommodationService){
         rootScope.allPRoom = true;
-        scope.selectAllPRoom = function(){
-            scope.allPRoom = !scope.allPRoom;
-            var flag = scope.allPRoom;
-            var pRoomList = rootScope.pRoomList;
-            for(var key in pRoomList){
-                pRoomList[key].selected = flag;
-            }
-            // glyphService.updateGlyphsPos();
-            // accommodationService.updateLeft();
-            // rootScope.initialize();
-        };
-        scope.changePRoomSelect = function(id){
+        rootScope.isSelected = {};
+        rootScope.isAllSelected = function(){
             var flag = true;
-            var pRoomList = rootScope.pRoomList;
-            for(var key in pRoomList){
-                if(pRoomList[key].id == id){
-                    pRoomList[key].selected = !pRoomList[key].selected;
-                }
-                if(!pRoomList[key].selected){
+            for(var key in rootScope.isSelected){
+                if(!rootScope.isSelected[key]){
                     flag = false;
                 }
             }
-            scope.allPRoom = flag;
-            // glyphService.updateGlyphsPos();
-            // accommodationService.updateLeft();
-            // rootScope.initialize();
+            return flag
+        };
+        rootScope.selectAllPRoom = function(){
+            var flag = !rootScope.isAllSelected();
+            for(var key in rootScope.isSelected){
+                rootScope.isSelected[key] = flag;
+            }
+        };
+        rootScope.selectPRoom = function(id){
+            rootScope.isSelected[id] = !rootScope.isSelected[id];
+            console.log(rootScope);
+        };
+        rootScope.resetFilter = function(){
+            for(var key in rootScope.pRoomList){
+                rootScope.isSelected[key] = rootScope.pRoomList[key].selected;
+            }
+            var filterDom = $(".category-filter");
+            if(!filterDom.hasClass("open")){
+                filterDom.addClass("open");
+            }else{
+                filterDom.removeClass("open");
+            }
+        };
+        rootScope.filterPRoom = function() {
+            for(var key in rootScope.isSelected){
+                rootScope.pRoomList[key].selected = rootScope.isSelected[key];
+            }
+            accommodationService.updateDateInventory(rootScope);
+            accommodationService.updateGlyphsPos(rootScope);
+            $(".category-filter").removeClass("open");
         };
     }]);
 };

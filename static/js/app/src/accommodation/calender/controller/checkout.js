@@ -11,6 +11,7 @@ var checkoutCtrl = function(app){
     orderService(app);
     app.controller("checkoutCtrl", ['$rootScope', '$scope', 'checkoutService', 'orderService',
         function(rootScope, scope, checkoutService, orderService){
+            scope.changeIds = orderService.changeIds;
             scope.addItem = function(){};
             scope.deleteItem = orderService.deleteItem;
             scope.selectCheckoutRoom = checkoutService.selectCheckoutRoom;
@@ -56,7 +57,11 @@ var checkoutCtrl = function(app){
                         }
                     })
                 }
+                if(!flag){
+                    rootScope.isLast = true;
+                }
                 if(!flag && flag2){
+                    rootScope.selectedCheckoutType = 2;
                     $("#keepOrNotModal").modal("show");
                     return false;
                 }

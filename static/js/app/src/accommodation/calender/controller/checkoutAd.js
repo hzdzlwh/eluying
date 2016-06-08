@@ -47,11 +47,14 @@ var checkoutAdCtrl = function(app){
                         }
                     })
                 }
+                if(!flag){
+                    rootScope.isLast = true;
+                }
                 if(!flag && flag2){
+                    rootScope.selectedCheckoutType = 4;
                     $("#keepOrNotModal").modal("show");
                     return false;
                 }
-                
                 rootScope.checkoutAfterConfirm(4);
             };
             scope.totalPrice = function(checkoutAd){
@@ -70,8 +73,18 @@ var checkoutAdCtrl = function(app){
                         }
                     }
                 }
-                return left;
+                return left.toFixed(2);
             }
+            scope.$watch("checkoutAd.penaltyAd", function(){
+                if(!rootScope.checkoutAd || !rootScope.checkoutAd.penaltyAd){
+                    return false;
+                }
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(rootScope.checkoutAd.penaltyAd))){
+                    rootScope.checkoutAd.penaltyAd =
+                        rootScope.checkoutAd.penaltyAd.substr(0, rootScope.checkoutAd.penaltyAd.length - 1);
+                }
+            })
         }]);
 };
 
