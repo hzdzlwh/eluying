@@ -16,12 +16,12 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
 }
 
 .container-manageVip {
-  width: 1200px;
+  width: 1149px;
   margin: 0 auto;
   position: relative;
   top: 68px;
   .vip-top {
-    width: 1200px;
+    width: 1149px;
     float: left;
     .vip-left {
       float: left;
@@ -30,6 +30,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       color: #178ce6;
       height: 22px;
       line-height: 22px;
+    }
+    .filter-img {
+      position: absolute;
+      right: 7px;
+      top: 16px;
     }
     .vip-right {
       float: right;
@@ -83,6 +88,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   .table-container {
     table {
       width: 100%;
+      table-layout: fixed;
       border-top: 2px solid #178ce6;
       font-family:PingFangSC-Medium;
       background:#ffffff;
@@ -96,14 +102,15 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         th {
           text-align: center;
           color: #666;
+          word-wrap: break-word;
         }
       }
       tbody>tr {
         height: 46px;
-        line-height: 46px;
+        max-height: 46px;
         font-family:PingFangSC-Regular;
         color:#666666;
-        text-align:center;
+        text-align:left;
         border-bottom: 1px solid #ededed;
         td:last-child{
           padding-right: 16px;
@@ -112,8 +119,21 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             cursor: pointer;
           }
         }
-        td:first-child{
+        td{
           padding-left: 16px;
+          word-wrap: break-word;
+          &:nth-child(6) {
+            text-align: center;
+            padding-right: 16px;
+          }
+          &:nth-child(3) {
+            text-align: center;
+            padding: 0;
+          }
+          &:nth-child(2) {
+            text-align: center;
+            padding-right: 16px;
+          }
         }
       }
     }
@@ -170,6 +190,131 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   }
   .vipInfo {
     margin: 16px 0 18px;
+
+    .formrow{
+      width: 300px;
+      height: 24px;
+      margin: 0 auto 16px;
+      font-family: PingFangSC-Regular;
+      color: #666666;
+      .slabel{
+        width: 52px;
+        height: 24px;
+        line-height: 24px;
+        float: left;
+        text-align: right;
+        margin-right: 8px;
+        .require{
+          position: relative;
+          top: -1px;
+          right: 3px;
+        }
+      }
+      .scontent{
+        width: 240px;
+        height: 24px;
+        line-height: 24px;
+        float: left;
+        text-align: left;
+        .selectBox{
+          display: block;
+          width: 85%;
+          .item{
+            width: 100%;
+            height: 24px;
+            background:#ffffff;
+            padding-left: 8px;
+          }
+          .item.selected{
+            position: relative;
+            border:1px solid #cccccc;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            .triangle{
+              width:0;
+              height:0;
+              border-left:4px solid transparent;
+              border-right:4px solid transparent;
+              border-top:6px solid #cccccc;
+              position: absolute;
+              right: 3px;
+              top: 10px;
+            }
+          }
+          .toselect-container{
+            display: none;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+            margin-top: -1px;
+            border-bottom: 1px solid #cccccc;
+            background: #ffffff;
+          }
+          .toselect-container.toselect-first {
+            border-left:1px solid #cccccc;
+          }
+          .toselect-container.toselect-last {
+            border-right:1px solid #cccccc;
+          }
+          .item.toselect{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .item.toselect:hover{
+            background:#edeef4;
+          }
+        }
+        .selectBox.small{
+          width: 80px;
+          float: left;
+        }
+        input{
+          display: block;
+          width: 85%;
+          height: 24px;
+          background:#ffffff;
+          border:1px solid #cccccc;
+          border-radius:2px;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+        .thumbpic{
+          width: 200px;
+          height: 150px;
+          background: white;
+          float: left;
+          margin-right: 15px;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+          .cross{
+            width: 100%;
+            position: relative;
+            height: 1px;
+            .item1, .item2{
+              width: 111.8%;
+              height: 1px;
+              background: green;
+              position: absolute;
+              left: 0;
+              top: 0;
+            }
+            .item1{
+              transform:rotate(20deg);
+            }
+            .item2{
+              transform:rotate(-20deg);
+            }
+          }
+        }
+      }
+    }
+
     p {
       width: 300px;
       margin: 0 auto 16px;
@@ -182,6 +327,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         line-height: 20px;
         display: inline-block;
         color: #666666;
+        img {
+          margin-right: 4px;
+        }
       }
       .modifyVip {
         margin-left: 16px;
@@ -202,10 +350,16 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     .single-line {
       //overflow: hidden;
       width: 300px;
-      margin: 0 auto 16px;
+      margin: 0 auto;
+      color: #666666;
+      tr {
+        margin-bottom: 16px;
+        display: inline-block;
+      }
       label {
         font-family: PingFangSC-Regular;
         font-size:14px;
+        font-weight: normal;
         color:#666666;
         text-align:right;
         margin-bottom: 0;
@@ -222,15 +376,44 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           width: 73px;
           background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
           background-position: 60px;
+          font-family: PingFangSC-Regular;
           span {
             width: 120%
           }
         }
       }
+      .identification {
+        label {
+          width: 52px;
+          float: left;
+          display: inline-block;
+        }
+        .idcard-select {
+          font-family: PingFangSC-Regular;
+          width: 70px;
+          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 57px no-repeat;
+          display: inline-block;
+          float: left;
+          border-radius: 0px;
+          border-right: none;
+        }
+        span {
+          width: 100%;
+          padding-right: 15px;
+        }
+        input {
+          width: 170px;
+          float: right;
+          display: inline-block;
+          height: 24px;
+          line-height: 24px;
+          border: solid 1px #cccccc;
+        }
+      }
       .birthday {
         float: left;
         label {
-          margin-left: 21px;
+          width: 52px;
         }
         input {
           width: 110px;
@@ -247,6 +430,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     button {
       width: 50px;
       height: 24px;
+      line-height: 20px;
       font-family:PingFangSC-Regular;
       font-size:14px;
       text-align:center;
@@ -347,4 +531,48 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   .ng-pagination {
     float: right;
   }
+}
+.idType {
+  width: 16px;
+  height: 20px;
+  display: inline-block;
+  background: #bfbfbf;
+  border-radius: 2px;
+  margin-left: 2px;
+  text-align: center;
+}
+.tip-name {
+  position: absolute;
+  left: 80px;
+  top: 112px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-phone {
+  position: absolute;
+  left: 80px;
+  top: 152px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-email {
+  position: absolute;
+  left: 80px;
+  top: 312px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-email-modify {
+  position: absolute;
+  left: 80px;
+  top: 304px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.selected-area {
+  background:#edeef4 !important;
 }

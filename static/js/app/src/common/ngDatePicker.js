@@ -51,7 +51,6 @@ function datePickerDirective() {
             '</div>',
         replace: true,
         scope: {
-            selectedDate: '=',
             placeholder: '@',
             formatSelectedDate: '='
         },

@@ -35,18 +35,32 @@ var itemsCtrl = function(app){
                 rootScope.item = item;
                 rootScope.modify = true;
             };
-            rootScope.removeVip = function(item){
+            rootScope.removeVipModal = function(item){
                 $("#removeVipModal").modal("show");
                 rootScope.item = item;
             };
-            scope.pageSize = 1;
-            scope.onPageChange = function () {
-                getItemsService.getVipItems(scope.currentPage, scope.pageSize, scope);
+            rootScope.removeVip = function(){
+                AJAXService.ajaxWithToken('GET', '/vipUser/removeVipUserPC', {vipId: rootScope.item.vipId},
+                    function(result){
+                        if (result.code === 1) {
+                            $("#removeVipModal").modal("hide");
+                            getItemsService.getVipItems(1, rootScope.pageSize, '', rootScope);
+                            getItemsService.getVipUserCount(rootScope);
+                        }
+                    });
             };
-            // getItemsService.getVipUserCount(scope);
-            scope.vipUserCount = 4;
-            scope.pageCount = !!scope.vipUserCount && Math.ceil(scope.vipUserCount / scope.pageSize);
-            getItemsService.getVipItems(1, scope.pageSize, scope);
+            rootScope.pageSize = 20;
+            scope.filterSearch = function (ev) {
+                if (ev.keyCode === 13) {
+                    getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                }
+            };
+            scope.onPageChange = function () {
+                getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+            };
+            getItemsService.getVipUserCount(rootScope);
+            scope.pageCount = !!scope.vipUserCount && Math.ceil(scope.vipUserCount / rootScope.pageSize);
+            getItemsService.getVipItems(1, rootScope.pageSize, scope.searchPattern, rootScope);
         }
     ]);
 };

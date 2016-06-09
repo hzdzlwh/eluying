@@ -7,18 +7,23 @@ require("angular");
 
 var getItemsService = function(app){
     app.service("getItemsService",[function(){
-        this.getVipItems = function(pageNo, pageSize, scope){
+        this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
                 pageNo: pageNo,
-                pageSize: pageSize
+                pageSize: pageSize,
+                searchPattern: searchPattern
             }, function(result){
-                scope.dataItems = result.data.list;
-                scope.$apply();
+                rootScope.dataItems = result.data.list;
+                rootScope.$apply();
             });
         };
-        this.getVipUserCount = function(scope) {
+        this.getVipUserCount = function(rootScope) {
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {},
             function(result) {
+                if (result.code === 1) {
+                    rootScope.vipUserCount = result.data;
+                    rootScope.$apply();
+                }
             })
         };
         this.getIdList = function(callback){

@@ -114,7 +114,7 @@ gulp.task('webpack2', function () {
                 "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
                 "tips/expired": "./static/js/app/src/tips/expired.js",
                 "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js",
-                "manageVip/vipItems": "./static/js/app/src/manageVip/vipItems/vipItems.js"
+                "manageVip/vip": "./static/js/app/src/manageVip/vipItems/vip.js"
             },
             output: {
 
@@ -196,7 +196,7 @@ gulp.task('webpack', function () {
                 "tips/expired": "./static/js/app/src/tips/expired.js",
                 "tips/upgrade": "./static/js/app/src/tips/upgrade.js",
                 "accommodation/calender": "./static/js/app/src/accommodation/calender/calender.js",
-                "manageVip/vipItems": "./static/js/app/src/manageVip/vipItems/vipItems.js"
+                "manageVip/vip": "./static/js/app/src/manageVip/vipItems/vip.js"
             },
             output: {
                 filename: "[name].js",

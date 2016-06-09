@@ -1,5 +1,7 @@
 .ng-datepicker {
   position: relative;
+  display: inline-block;
+  width: 115px;
 }
 .ng-datepicker-calendar {
   position: absolute;
@@ -9,6 +11,7 @@
   box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
   border-radius:2px;
   padding: 8px 11.5px;
+  z-index: 3;
 }
 .ng-datepicker-week {
   display: inline-block;

@@ -13,7 +13,7 @@ require("bootstrap");
 require("validation");
 require('../../common/ngDatePicker');
 require('../../common/ngPagination');
-var itemsCtrl = require('./controller/items');
+var itemsCtrl = require('./controller/mainAppCtrl');
 var createVipCtrl = require('./controller/createVipCtrl');
 
 $(function() {
@@ -33,6 +33,18 @@ $(function() {
         "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "click body .dialog-close": function(){
             $(this).parents(".modal").modal("hide");
+        },
+        "click body .toselect-last": function(){
+            $(".selectBox .toselect-container").hide();
+        },
+        "click body .toselect-container>.toselect": function(){
+            $(this).siblings(".toselect").removeClass("selected-area");
+            $(this).addClass("selected-area");
+        },
+        "click .item.selected": function(ev){
+            ev.stopPropagation();
+            $(".selectBox .toselect-container").show();
+            // $(this).siblings(".toselect-container").show();
         },
         "click body .select1>span": function(ev){
             $(".select1_options").hide();
