@@ -427,6 +427,9 @@ object{
             min-height: 20px;
             margin-bottom: 10px;
             min-width: 117px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             clear: both;
             .slabel{
               opacity:0.5;

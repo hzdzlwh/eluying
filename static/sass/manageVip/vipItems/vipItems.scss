@@ -1,0 +1,578 @@
+@import "../../variable";
+@import "../../pagination";
+@import "../../datepicker";
+$headerHeight: 48px;
+$subHeaderHeight: 32px;
+$gridHeight: 48px;
+$borderColor: #e6e6e6;
+$bgColor: #f8f9fc;
+$highlightColor: #e6f1ff;
+$trash_grey: url("http://static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
+$trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
+@mixin modalHeader(){
+  background:$color1;
+  width:100%;
+  height:4px;
+}
+
+.container-manageVip {
+  width: 1149px;
+  margin: 0 auto;
+  position: relative;
+  top: 68px;
+  .vip-top {
+    width: 1149px;
+    float: left;
+    .vip-left {
+      float: left;
+      margin-top: 12px;
+      font-size: 16px;
+      color: #178ce6;
+      height: 22px;
+      line-height: 22px;
+    }
+    .filter-img {
+      position: absolute;
+      right: 7px;
+      top: 16px;
+    }
+    .vip-right {
+      float: right;
+      margin-top: 12px;
+      margin-left: 32px;
+      font-size: 14px;
+      height: 20px;
+      line-height: 20px;
+      color: #178ce6;
+      img {
+        margin-right: 4px;
+        margin-bottom: 1px;
+      }
+    }
+    .outPut-excel:hover {
+      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+    }
+    a:link {
+      text-decoration: none;
+    }
+    a:visited {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+    a:active {
+      text-decoration: none;
+    }
+    .add-newVip:hover {
+      cursor: pointer;
+    }
+    input.search {
+      width: 256px;
+      height: 24px;
+      margin-top: 10px;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      line-height: 24px;
+      padding: 0 8px;
+    }
+  }
+  .clearboth {
+    clear: both;
+    height: 10px;
+    width: 100%;
+  }
+  .table-container {
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-top: 2px solid #178ce6;
+      font-family:PingFangSC-Medium;
+      background:#ffffff;
+      box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+      border-radius:2px;
+      thead {
+        height: 48px;
+        line-height: 48px;
+        background: #fafafa;
+        border-bottom: 1px solid #ededed;
+        th {
+          text-align: center;
+          color: #666;
+          word-wrap: break-word;
+        }
+      }
+      tbody>tr {
+        height: 46px;
+        max-height: 46px;
+        font-family:PingFangSC-Regular;
+        color:#666666;
+        text-align:left;
+        border-bottom: 1px solid #ededed;
+        td:last-child{
+          padding-right: 16px;
+          color: #178ce6;
+          .operation:hover {
+            cursor: pointer;
+          }
+        }
+        td{
+          padding-left: 16px;
+          word-wrap: break-word;
+          &:nth-child(6) {
+            text-align: center;
+            padding-right: 16px;
+          }
+          &:nth-child(3) {
+            text-align: center;
+            padding: 0;
+          }
+          &:nth-child(2) {
+            text-align: center;
+            padding-right: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+#newVipModal {
+  .modal-dialog {
+    width: 340px;
+  }
+  .modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+    width: 340px;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    .top-fixed{
+      width: 100%;
+      overflow-x: hidden;
+        .dialog-close{
+          width: 20px;
+          text-align: center!important;
+          font-size: 20px!important;
+          color: #999999!important;
+          cursor: pointer;
+          float: right;
+          position: relative;
+          top: 0;
+          margin-left: 16px;
+        }
+        .dialog-close:hover{
+          color: #666666!important;
+        }
+    }
+    .add-container{
+      margin-bottom: 22px;
+      font-family:PingFangSC-Medium;
+      .dialog-mainTitle{
+        font-size:16px;
+        color:#178ce6;
+        text-align:left;
+        margin-left: 20px;
+        margin-bottom: 8px;
+      }
+      .dialog-subTitle {
+        font-size:14px;
+        color:#178ce6;
+        text-align:left;
+        margin-left: 20px;
+      }
+    }
+  }
+  .vipInfo {
+    margin: 16px 0 18px;
+
+    .formrow{
+      width: 300px;
+      height: 24px;
+      margin: 0 auto 16px;
+      font-family: PingFangSC-Regular;
+      color: #666666;
+      .slabel{
+        width: 52px;
+        height: 24px;
+        line-height: 24px;
+        float: left;
+        text-align: right;
+        margin-right: 8px;
+        .require{
+          position: relative;
+          top: -1px;
+          right: 3px;
+        }
+      }
+      .scontent{
+        width: 240px;
+        height: 24px;
+        line-height: 24px;
+        float: left;
+        text-align: left;
+        .selectBox{
+          display: block;
+          width: 85%;
+          .item{
+            width: 100%;
+            height: 24px;
+            background:#ffffff;
+            padding-left: 8px;
+          }
+          .item.selected{
+            position: relative;
+            border:1px solid #cccccc;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            .triangle{
+              width:0;
+              height:0;
+              border-left:4px solid transparent;
+              border-right:4px solid transparent;
+              border-top:6px solid #cccccc;
+              position: absolute;
+              right: 3px;
+              top: 10px;
+            }
+          }
+          .toselect-container{
+            display: none;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+            margin-top: -1px;
+            border-bottom: 1px solid #cccccc;
+            background: #ffffff;
+          }
+          .toselect-container.toselect-first {
+            border-left:1px solid #cccccc;
+          }
+          .toselect-container.toselect-last {
+            border-right:1px solid #cccccc;
+          }
+          .item.toselect{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .item.toselect:hover{
+            background:#edeef4;
+          }
+        }
+        .selectBox.small{
+          width: 80px;
+          float: left;
+        }
+        input{
+          display: block;
+          width: 85%;
+          height: 24px;
+          background:#ffffff;
+          border:1px solid #cccccc;
+          border-radius:2px;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+        .thumbpic{
+          width: 200px;
+          height: 150px;
+          background: white;
+          float: left;
+          margin-right: 15px;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+          .cross{
+            width: 100%;
+            position: relative;
+            height: 1px;
+            .item1, .item2{
+              width: 111.8%;
+              height: 1px;
+              background: green;
+              position: absolute;
+              left: 0;
+              top: 0;
+            }
+            .item1{
+              transform:rotate(20deg);
+            }
+            .item2{
+              transform:rotate(-20deg);
+            }
+          }
+        }
+      }
+    }
+
+    p {
+      width: 300px;
+      margin: 0 auto 16px;
+      .newVip {
+        font-family: PingFangSC-Regular;
+        width: 52px;
+        text-align: right;
+        vertical-align: top;
+        height: 20px;
+        line-height: 20px;
+        display: inline-block;
+        color: #666666;
+        img {
+          margin-right: 4px;
+        }
+      }
+      .modifyVip {
+        margin-left: 16px;
+      }
+      input {
+        width: 240px;
+        height: 24px;
+        margin-left: 8px;
+      }
+      textarea {
+        width: 240px;
+        height: 184px;
+        margin-left: 8px;
+        border:1px solid #cccccc;
+        border-radius:2px;
+      }
+    }
+    .single-line {
+      //overflow: hidden;
+      width: 300px;
+      margin: 0 auto;
+      color: #666666;
+      tr {
+        margin-bottom: 16px;
+        display: inline-block;
+      }
+      label {
+        font-family: PingFangSC-Regular;
+        font-size:14px;
+        font-weight: normal;
+        color:#666666;
+        text-align:right;
+        margin-bottom: 0;
+      }
+      .select1 {
+        margin-left: 8px;
+      }
+      .gender {
+        label {
+          width: 52px;
+        }
+        float: left;
+        .gender-select {
+          width: 73px;
+          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
+          background-position: 60px;
+          font-family: PingFangSC-Regular;
+          span {
+            width: 120%
+          }
+        }
+      }
+      .identification {
+        label {
+          width: 52px;
+          float: left;
+          display: inline-block;
+        }
+        .idcard-select {
+          font-family: PingFangSC-Regular;
+          width: 70px;
+          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 57px no-repeat;
+          display: inline-block;
+          float: left;
+          border-radius: 0px;
+          border-right: none;
+        }
+        span {
+          width: 100%;
+          padding-right: 15px;
+        }
+        input {
+          width: 170px;
+          float: right;
+          display: inline-block;
+          height: 24px;
+          line-height: 24px;
+          border: solid 1px #cccccc;
+        }
+      }
+      .birthday {
+        float: left;
+        label {
+          width: 52px;
+        }
+        input {
+          width: 110px;
+          margin-left: 8px;
+        }
+      }
+    }
+    input, textarea {
+      padding: 0 8px;
+    }
+  }
+  .dialog-foot {
+    margin: 0 0 20px 80px;
+    button {
+      width: 50px;
+      height: 24px;
+      line-height: 20px;
+      font-family:PingFangSC-Regular;
+      font-size:14px;
+      text-align:center;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      margin-right: 20px;
+      &:hover {
+        background: #178ce6;
+        color: #ffffff;
+      }
+    }
+    .vip-confirm {
+      background: #178ce6;
+      color: #ffffff;
+    }
+    .vip-cancel {
+      background: #fff;
+      color: #178ce6;
+    }
+  }
+}
+#removeVipModal {
+  .modal-dialog {
+    width: 300px;
+  }
+  .modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    .top-fixed {
+      width: 100%;
+      overflow-x: hidden;
+      .dialog-close {
+        width: 20px;
+        text-align: center !important;
+        font-size: 20px !important;
+        color: #999999 !important;
+        cursor: pointer;
+        float: right;
+        position: relative;
+        top: 0;
+        margin-left: 16px;
+      }
+      .dialog-close:hover {
+        color: #666666 !important;
+      }
+    }
+    .remove-container {
+      width: 224px;
+      height: 44px;
+      font-family:PingFangSC-Medium;
+      font-size:16px;
+      color:#666666;
+      text-align:left;
+      margin: 8px auto 21px;
+    }
+  }
+  .foot-remove {
+    margin: 0 0 20px 125px;
+    button {
+      width: 50px;
+      height: 24px;
+      font-family:PingFangSC-Regular;
+      font-size:14px;
+      text-align:center;
+      border: 1px solid #178ce6;
+      border-radius: 2px;
+      margin-right: 20px;
+      &:hover {
+        background: #178ce6;
+        color: #ffffff;
+      }
+    }
+    .remove-confirm {
+      background: #178ce6;
+      color: #ffffff;
+    }
+    .remove-cancel {
+      background: #fff;
+      color: #178ce6;
+    }
+  }
+}
+.select1 {
+  @include select1();
+  float: right;
+  height: 24px;
+  //position: relative;
+}
+.pagination-container {
+  overflow: hidden;
+  margin-top: 10px;
+  .ng-pagination {
+    float: right;
+  }
+}
+.idType {
+  width: 16px;
+  height: 20px;
+  display: inline-block;
+  background: #bfbfbf;
+  border-radius: 2px;
+  margin-left: 2px;
+  text-align: center;
+}
+.tip-name {
+  position: absolute;
+  left: 80px;
+  top: 112px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-phone {
+  position: absolute;
+  left: 80px;
+  top: 152px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-email {
+  position: absolute;
+  left: 80px;
+  top: 312px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.tip-email-modify {
+  position: absolute;
+  left: 80px;
+  top: 304px;
+  font-family:PingFangSC-Regular;
+  font-size:12px;
+  color:#f24949;
+}
+.selected-area {
+  background:#edeef4 !important;
+}
