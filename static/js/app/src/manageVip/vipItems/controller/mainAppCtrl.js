@@ -32,7 +32,7 @@ var itemsCtrl = function(app){
             };
             rootScope.modifyVip = function(item){
                 $("#newVipModal").modal("show");
-                rootScope.item = item;
+                rootScope.item = Object.assign({}, item);
                 rootScope.modify = true;
             };
             rootScope.removeVipModal = function(item){
@@ -49,17 +49,22 @@ var itemsCtrl = function(app){
                         }
                     });
             };
-            rootScope.pageSize = 20;
-            scope.filterSearch = function (ev) {
+            rootScope.pageSize = 15;
+            scope.filterSearch = function(ev) {
                 if (ev.keyCode === 13) {
                     getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
                 }
+            };
+            scope.getIdCardIcon = function(num) {
+                return rootScope.idCardList[num].label.substring(0 ,1);
             };
             scope.onPageChange = function () {
                 getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
             };
             getItemsService.getVipUserCount(rootScope);
-            scope.pageCount = !!scope.vipUserCount && Math.ceil(scope.vipUserCount / rootScope.pageSize);
+            scope.getPageCount = function() {
+                return !!scope.vipUserCount && Math.ceil(scope.vipUserCount / rootScope.pageSize);
+            };
             getItemsService.getVipItems(1, rootScope.pageSize, scope.searchPattern, rootScope);
         }
     ]);

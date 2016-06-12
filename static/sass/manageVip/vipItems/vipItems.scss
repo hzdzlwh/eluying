@@ -90,7 +90,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       width: 100%;
       table-layout: fixed;
       border-top: 2px solid #178ce6;
-      font-family:PingFangSC-Medium;
       background:#ffffff;
       box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
       border-radius:2px;
@@ -108,7 +107,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       tbody>tr {
         height: 46px;
         max-height: 46px;
-        font-family:PingFangSC-Regular;
         color:#666666;
         text-align:left;
         border-bottom: 1px solid #ededed;
@@ -172,7 +170,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     }
     .add-container{
       margin-bottom: 22px;
-      font-family:PingFangSC-Medium;
       .dialog-mainTitle{
         font-size:16px;
         color:#178ce6;
@@ -195,7 +192,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       width: 300px;
       height: 24px;
       margin: 0 auto 16px;
-      font-family: PingFangSC-Regular;
       color: #666666;
       .slabel{
         width: 52px;
@@ -319,7 +315,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       width: 300px;
       margin: 0 auto 16px;
       .newVip {
-        font-family: PingFangSC-Regular;
         width: 52px;
         text-align: right;
         vertical-align: top;
@@ -357,7 +352,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         display: inline-block;
       }
       label {
-        font-family: PingFangSC-Regular;
         font-size:14px;
         font-weight: normal;
         color:#666666;
@@ -370,13 +364,14 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       .gender {
         label {
           width: 52px;
+          line-height: 24px;
+          height: 24px;
         }
         float: left;
         .gender-select {
           width: 73px;
           background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
           background-position: 60px;
-          font-family: PingFangSC-Regular;
           span {
             width: 120%
           }
@@ -389,7 +384,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           display: inline-block;
         }
         .idcard-select {
-          font-family: PingFangSC-Regular;
           width: 70px;
           background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 57px no-repeat;
           display: inline-block;
@@ -431,7 +425,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       width: 50px;
       height: 24px;
       line-height: 20px;
-      font-family:PingFangSC-Regular;
       font-size:14px;
       text-align:center;
       border: 1px solid #178ce6;
@@ -486,7 +479,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     .remove-container {
       width: 224px;
       height: 44px;
-      font-family:PingFangSC-Medium;
       font-size:16px;
       color:#666666;
       text-align:left;
@@ -498,7 +490,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
     button {
       width: 50px;
       height: 24px;
-      font-family:PingFangSC-Regular;
       font-size:14px;
       text-align:center;
       border: 1px solid #178ce6;
@@ -534,45 +525,50 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
 }
 .idType {
   width: 16px;
-  height: 20px;
+  height: 16px;
   display: inline-block;
   background: #bfbfbf;
   border-radius: 2px;
   margin-left: 2px;
   text-align: center;
+  line-height: 16px;
+  color: #fff;
+  font-size: 12px;
 }
 .tip-name {
   position: absolute;
   left: 80px;
-  top: 112px;
-  font-family:PingFangSC-Regular;
+  top: 107px;
   font-size:12px;
   color:#f24949;
 }
 .tip-phone {
   position: absolute;
   left: 80px;
-  top: 152px;
-  font-family:PingFangSC-Regular;
+  top: 147px;
   font-size:12px;
   color:#f24949;
 }
 .tip-email {
   position: absolute;
   left: 80px;
-  top: 312px;
-  font-family:PingFangSC-Regular;
+  top: 307px;
   font-size:12px;
   color:#f24949;
 }
 .tip-email-modify {
   position: absolute;
   left: 80px;
-  top: 304px;
-  font-family:PingFangSC-Regular;
+  top: 299px;
   font-size:12px;
   color:#f24949;
 }
 .selected-area {
   background:#edeef4 !important;
+}
+.ng-datepicker-input {
+  border:1px solid #cccccc;
+  border-radius:2px;
+  width:71px;
+  height:24px;
 }

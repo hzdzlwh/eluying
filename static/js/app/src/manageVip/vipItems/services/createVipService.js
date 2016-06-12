@@ -11,18 +11,26 @@ var createVipService = function(app){
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
-                        getVipItems(1, 20, '', rootScope);
+                        getVipItems(1, 15, '', rootScope);
                         getVipUserCount(rootScope);
                     }
                 }
             )
         };
-        this.editVip = function(item) {
+        this.editVip = function(item, rootScope) {
             AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', item,
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
+                        var index;
+                        angular.forEach(rootScope.dataItems, function(element, i){
+                            if (element.vipId === item.vipId) {
+                                index = i;
+                            }
+                        });
+                        rootScope.dataItems[index] = item;
                     }
+                    rootScope.$apply();
                 }
             )
         }

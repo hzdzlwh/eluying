@@ -15,7 +15,7 @@ angular.module("ng-pagination", [])
     }).directive("pager", ['ngPaginationConfig', function (ngPaginationConfig) {
     return {
         link: function (scope, element, attrs) {
-            var visiblePageCount = angular.isDefined(attrs.visiblePageCount) ? attrs.visiblePageCount : ngPaginationConfig.visiblePageCount;
+            scope.visiblePageCount = angular.isDefined(attrs.visiblePageCount) ? attrs.visiblePageCount : ngPaginationConfig.visiblePageCount;
             scope.firstText = angular.isDefined(attrs.firstText) ? attrs.firstText : ngPaginationConfig.firstText;
             scope.lastText = angular.isDefined(attrs.lastText) ? attrs.lastText : ngPaginationConfig.lastText;
             scope.prevText = angular.isDefined(attrs.prevText) ? attrs.prevText : ngPaginationConfig.prevText;
@@ -72,16 +72,16 @@ angular.module("ng-pagination", [])
                     scope.currentPage = 1;
                 }
 
-                if (scope.pageCount <= visiblePageCount) {
+                if (scope.pageCount <= scope.visiblePageCount) {
                     low = 1;
                     high = scope.pageCount;
                 } else {
-                    m = parseInt(visiblePageCount / 2);
+                    m = parseInt(scope.visiblePageCount / 2);
                     low = Math.max(scope.currentPage - m, 1);
-                    high = Math.min(low + visiblePageCount - 1, scope.pageCount);
+                    high = Math.min(low + scope.visiblePageCount - 1, scope.pageCount);
 
                     if (scope.pageCount - high < m) {
-                        low = high - visiblePageCount + 1;
+                        low = high - scope.visiblePageCount + 1;
                     }
                 }
 
@@ -114,9 +114,9 @@ angular.module("ng-pagination", [])
         template: '<div class="ng-pagination"><ul ng-if="pageCount>1 || showIfOnePage">' +
         '<li class="ng-pagination-first-last" ng-click="pageChange(1)" ng-if="showFirstLastText && currentPage !== 1">{{firstText}}</li>' +
         '<li ng-if="currentPage !== 1" ng-click="pageChange(currentPage-1>0?currentPage-1:1)">{{prevText}}</li>' +
-        '<li class="ng-pagination-ellipsis" ng-if="(currentPage - parseInt(visiblePageCount / 2)) !== 1">...</li>' +
+        '<li class="ng-pagination-ellipsis" ng-if="(currentPage - (visiblePageCount / 2)) > 1">...</li>' +
         '<li ng-repeat="pagenum in pagenums track by pagenum" ng-click="pageChange(pagenum)" ng-class="{active:currentPage===pagenum}">{{pagenum}}</li>' +
-        '<li class="ng-pagination-ellipsis" ng-if="(currentPage + parseInt(visiblePageCount / 2)) !== pageCount">...</li>' +
+        '<li class="ng-pagination-ellipsis" ng-if="(currentPage + (visiblePageCount / 2)) < pageCount">...</li>' +
         '<li ng-if="currentPage !== pageCount" ng-click="pageChange(currentPage+1<=pageCount?currentPage+1:pageCount)">{{nextText}}</li>' +
         '<li class="ng-pagination-first-last" ng-click="pageChange(pageCount)" ng-if="showFirstLastText && currentPage !== pageCount">{{lastText}}</li></ul>' +
         '<lable ng-if="showGoto">{{gotoText}}<input type="text" ng-keyup="keyupHanlder($event)"></label></div>'

@@ -194,6 +194,16 @@ var util = {
         }
     },
 
+    checkAuth: function(id){
+        var bottom = localStorage.getItem("bottom");
+        bottom = JSON.parse(bottom);
+        for(var i = 0; i < bottom.length; i++){
+            if(bottom[i].type === id && bottom[i].status === 0){
+                window.location.href = '/view/tips/noauth.html';
+            }
+        }
+    },
+
     checkAuth: function(){
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
