@@ -6,7 +6,7 @@ var header = require("header");
 var util = require("util");
 var modal = require("modal");
 require("angular");
-
+util.checkAuth(11);
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
