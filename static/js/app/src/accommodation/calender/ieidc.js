@@ -83,6 +83,7 @@ idcObj.read = function(timeout, type, scope){
             scope.orderNew.idVal = num;
             scope.selectedId = 0;
             scope.selectedIdLabel = '身份证';
+            scope.$apply();
             $("#newOrderModal .readBtn").html('开始读卡');
             // scope.$apply();
             // $("input[name=orderNewCustomerName]").val(name);
@@ -92,6 +93,7 @@ idcObj.read = function(timeout, type, scope){
             scope.orderEdit.idVal = num;
             scope.orderEdit.selectedId = 0;
             scope.orderEdit.selectedIdLabel = '身份证';
+            scope.$apply();
             $("#orderEditModal .readBtn").html('开始读卡');
             // scope.$apply();
         }
