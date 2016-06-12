@@ -33,9 +33,11 @@ $(function(){
     header.showHeader();
     //高亮"前台录入"
     $(".settingsEntry").removeClass("selected");
+    $(".manageVipEntry").removeClass("selected");
     $(".accomodationEntry").addClass("selected");
     topMenu.showTopMenu();
     modal.modalInit();
+    modal.centerModals();
 
     $(".entryList")[0].oncontextmenu = function(){
         return false;
@@ -52,21 +54,16 @@ $(function(){
             var scrollHeight = selection[0].scrollHeight;
             var height = selection.height();
             var top = selection.scrollTop();
-            // var body = angular.element(document.body);
-            // var rootScope = body.scope().$root;
-            // rootScope.entryRowsMin += top / 48;
-            // rootScope.entryRowsMax += (top + height) / 48;
-            // rootScope.$apply();
             clearTimeout(timer);
             timer = setTimeout(function () {
                 var height = $(window).height() - $(".calendor-container").offset().top;
                 var top = $(".calendor-container").scrollTop();
                 var body = angular.element(document.body);
                 var rootScope = body.scope().$root;
-                rootScope.entryRowsMin = parseInt(top / 48);
-                rootScope.entryRowsMax = parseInt((top + height) / 48);
+                rootScope.entryRowsMin = parseInt(top / 48)-5;
+                rootScope.entryRowsMax = parseInt((top + height) / 48)+5;
                 rootScope.$apply();
-            }, 150);
+            }, 100);
 
             var scrollLeft = selection.scrollLeft();
             var scrollTop = selection.scrollTop();
@@ -185,6 +182,29 @@ $(function(){
         },
         "click body .search": function(ev){
             ev.stopPropagation();
+        },
+        "shown.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focus();
+            $("#payWithAlipayModal input").focusout(function(){
+                $("#payWithAlipayModal input").focus();
+            });
+        },
+        "hidden.bs.modal #payWithAlipayModal": function(ev){
+            $("#payWithAlipayModal input").focusout(function(){});
+            $("#payWithAlipayModal input").focusout();
+        },
+        'keypress body input.moneyInput': function(ev){
+            if(!((ev.charCode >= 48 && ev.charCode <= 57) || ev.charCode == 46)){
+                return false;
+            }
+        },
+        'keypress body .numberInput': function(ev){
+            if(!(ev.charCode >= 48 && ev.charCode <= 57)){
+                return false;
+            }
+        },
+        'keyup body .numberInput': function(ev){
+
         }
     };
 

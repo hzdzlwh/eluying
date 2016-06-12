@@ -8,7 +8,7 @@ var checkoutService = require("../services/checkinService");
 var checkoutAdService = require("../services/checkinService");
 var checkinService = require("../services/checkinService");
 var getMoneyService = require("../services/getMoneyService");
-
+var idcObj = require("../ieidc");
 
 var orderDetailCtrl = function(app){
     orderService(app);

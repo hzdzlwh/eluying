@@ -43,6 +43,9 @@ var checkinCtrl = function(app){
                 var items = [];
                 var oldItems = checkin.foodItems.concat(checkin.playItems).concat(checkin.goodsItems);
                 oldItems.forEach(function(d){
+                    if(d.amount === 0){
+                        return false;
+                    }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
@@ -105,7 +108,7 @@ var checkinCtrl = function(app){
                         modal.somethingAlert(result3.msg);
                     }
                 });
-            }
+            };
         }]);
 };
 

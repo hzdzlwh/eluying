@@ -12,6 +12,9 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   width:100%;
   height:4px;
 }
+object{
+  visibility: hidden;
+}
 .msgModal{
   .modal-dialog {
     width: 300px;
@@ -440,6 +443,11 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
               text-align:left;
               word-break: break-all;
             }
+          }
+          .item:not(.remark){
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           .item.remark{
             width: 100%;
@@ -886,6 +894,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           height:102px;
           margin-left: 52px;
           padding: 2px 8px;
+          resize: none;
         }
       }
     }
@@ -1082,6 +1091,22 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       }
       .guest-info{
         margin: 8px 0 8px;
+        .readBtn{
+          display: inline-block;
+          @include btn1_normal();
+          width: 90px;
+          margin-left: 10px;
+        }
+        .readBtn:hover{
+          @include btn1_hover;
+        }
+        .readBtn:active{
+          @include btn1_click();
+        }
+        .readBtn.ing{
+          border:1px solid $color6;
+          color: $color6;
+        }
         table {
           margin: 8px 16px 12px;
           td {
@@ -1399,6 +1424,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           height:102px;
           margin-left: 52px;
           padding: 2px 8px;
+          resize: none;
         }
       }
     }
@@ -1480,6 +1506,10 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       .subtype.food, .subtype.fun, .subtype.goods{
         td:first-child{
           width: 110px;
+          .select1{
+            width: 110px;
+            background-position: 93px;
+          }
         }
         td:nth-child(2){
           width: 115px;
@@ -2150,6 +2180,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           height:102px;
           margin-left: 52px;
           padding: 2px 8px;
+          resize: none;
         }
       }
     }

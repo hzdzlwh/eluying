@@ -218,9 +218,11 @@ var util = {
         camps = JSON.parse(camps);
         bottom = JSON.parse(bottom);
         // $(".header .accomodationEntry").hide();
+        var aflag = false;
         for(var i = 0; i < bottom.length; i++){
             if(bottom[i].type === 2 && bottom[i].status === 1){
-                $(".header .accomodationEntry").show();
+                // $(".header .accomodationEntry").show();
+                aflag = true;
             }
         }
         var authFlag = false;
@@ -257,10 +259,16 @@ var util = {
                 }
                 return false;
             }
-            if(isInTipsPage){
-                window.location.href = '/view/business/category/room.html';
+            if(!aflag && href.indexOf("/view/accommodation/calender/calender.html") > -1) {
+                window.location.href = '/view/tips/noauthfora.html';
             }
-        }else{ //无权限
+            if(aflag && href.indexOf("/view/tips/noauthfora.html") > -1){
+                window.location.href = '/view/accommodation/calender/calender.html';
+            }
+            if(isInTipsPage){
+                window.location.href = '/view/accommodation/calender/calender.html';
+            }
+        }else{
             if(href.indexOf("/view/tips/noauth.html") > 0){
 
             }else{

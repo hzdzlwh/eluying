@@ -2,10 +2,11 @@ var util = require("util");
 require("angular");
 
 var constService = require("../services/constService");
+var idcObj = require("../ieidc");
 
 var orderNewService = function(app){
     constService(app);
-    app.service("orderNewService", ['constService', function(constService){
+    app.service("orderNewService", ['$rootScope', 'constService', function(rootScope, constService){
         this.resetOrderNew = function(type, rooms, channel, channelId){
             var title = (function(){
                 for(var i = 0; i < constService.statusStr.length; i++){

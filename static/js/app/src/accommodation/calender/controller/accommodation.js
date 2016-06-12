@@ -134,6 +134,9 @@ var accommodationCtrl = function(app){
                 var items = [];
                 var oldItems = order.foodItems.concat(order.playItems).concat(order.goodsItems);
                 oldItems.forEach(function(d){
+                    if(d.amount === 0){
+                        return false;
+                    }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
@@ -219,7 +222,7 @@ var accommodationCtrl = function(app){
                     }
                 }
             };
-
+            
             getDataService.getChannel(function(result){
                 rootScope.channels = result.channels;
             });

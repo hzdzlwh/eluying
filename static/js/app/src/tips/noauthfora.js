@@ -7,5 +7,7 @@ $(function(){
     util.checkExplorer();
     header.showHeader();
     util.checkAuth();
-    // $(".header .accomodationEntry").hide();
+    $(".settingsEntry").removeClass("selected");
+    $(".manageVipEntry").removeClass("selected");
+    $(".accomodationEntry").addClass("selected");
 });

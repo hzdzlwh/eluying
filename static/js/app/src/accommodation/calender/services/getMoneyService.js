@@ -24,6 +24,9 @@ var getMoneyService = function(app){
             var left = orderService.itemPrice(getMoney);
             left -= parseFloat(getMoney.roomsRefund || 0);
             left = left - getMoney.discounts;
+            if(left < 0){
+                left = 0;
+            }
             left += parseFloat(getMoney.penaltyAd || 0);
             var payments = getMoney.payments;
             if(payments){
@@ -35,7 +38,7 @@ var getMoneyService = function(app){
                     }
                 }
             }
-            return left;
+            return left.toFixed(2);
         };
         this.calLeft = calLeft;
         this.resetGetMoney = function(order, orderId, type, asyncObj, isLast){
@@ -76,7 +79,7 @@ var getMoneyService = function(app){
             } else{
 
             }
-            getMoney.payRemark = '';
+            // getMoney.payRemark = '';
             return getMoney;
         };
         /*
@@ -151,7 +154,7 @@ var getMoneyService = function(app){
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                     payments: JSON.stringify(payments_new),
-                    remark: getMoney.payRemark,
+                    remark: getMoney.remark,
                     orderId: getMoney.orderId
                 }, function(result){
                     if(result.code === 1){

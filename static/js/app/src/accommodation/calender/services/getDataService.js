@@ -146,12 +146,18 @@ var getDataService = function(app){
                     for(var i = 0; i < pRooms.length; i++){
                         var pRoom = pRooms[i];
                         if(!pRoomList[pRoom.pId]){
+                            var selected;
+                            if(scope.isSelected[pRoom.pId] === undefined){
+                                scope.isSelected[pRoom.pId] = true;
+                                selected = true;
+                            }else{
+                                selected = scope.isSelected[pRoom.pId];
+                            }
                             pRoomList[pRoom.pId] = {
                                 id: pRoom.pId,
                                 name: pRoom.pName,
-                                selected: true
+                                selected: selected
                             };
-                            scope.isSelected[pRoom.pId] = true;
                         }
                         if(!cRoomStore[pRoom.cId]){
                             if(!cRoomList[pRoom.cId] || cRoomList[pRoom.cId].length === 0){
@@ -204,8 +210,8 @@ var getDataService = function(app){
                             seeStart = false;
                         }
                         var checkOutDate = new Date(order.checkOutDate);
-                        if(checkOutDate > util.diffDate(checkInDate, 29)){
-                            checkOutDate = util.diffDate(checkInDate, 29);
+                        if(checkOutDate > util.diffDate(startDate, 29)){
+                            checkOutDate = util.diffDate(startDate, 29);
                         }
                         var diff = util.DateDiff(checkInDate, checkOutDate);
                         if(diff === 0){
@@ -244,6 +250,7 @@ var getDataService = function(app){
                     scope.glyphs = glyphs;
                     scope.occupyList = occupyList;
                     accommodationService.updateDateInventory(scope);
+                    accommodationService.updateGlyphsPos(scope);
                     scope.$apply();
                     util.leftHeaderAdjustLineHeight();
                 });

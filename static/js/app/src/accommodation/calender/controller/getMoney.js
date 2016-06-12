@@ -23,13 +23,16 @@ var getMoneyCtrl = function(app){
                  getDataService, accommodationService, validateService){
             scope.calPrice = function(getMoney){
                 var price = orderService.calPrice(getMoney);
-                if(getMoney.penaltyAd){
-                    price += parseFloat(getMoney.penaltyAd);
-                }
                 if(getMoney.roomsRefund){
                     price -= parseFloat(getMoney.roomsRefund);
                 }
-                return price;
+                if(price < 0){
+                    price = 0;
+                }
+                if(getMoney.penaltyAd){
+                    price += parseFloat(getMoney.penaltyAd);
+                }
+                return price.toFixed(2);
             };
             scope.calLeft = getMoneyService.calLeft;
             scope.totalPrice = orderService.totalPrice;
@@ -41,13 +44,13 @@ var getMoneyCtrl = function(app){
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
                 //直接提交
-                if(!validateService.checkRemark(getMoney.payRemark)){
+                if(!validateService.checkRemark(getMoney.remark)){
                     return false;
                 }
                 var left = getMoneyService.calLeft(getMoney);
                 var deposit = orderService.calDepositLeft(getMoney);
                 //如果是最后一项了而且还没有付清所有款项
-                if(getMoney.isLast && (left !== 0 || deposit !== 0)){
+                if(getMoney.isLast && (left != 0 || deposit != 0)){
                     $("#arrearsModal").modal('show');
                     rootScope.arrearLeft = left;
                     rootScope.arrearDeposit = deposit;
@@ -55,6 +58,13 @@ var getMoneyCtrl = function(app){
                 }
                 getMoneyService.pay(rootScope);
             };
+            scope.moneyChange = function(payment){
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(payment.fee))){
+                    payment.fee = payment.fee.toString();
+                    payment.fee = payment.fee.substr(0, payment.fee.length - 1);
+                }
+            }
         }]);
 };
 

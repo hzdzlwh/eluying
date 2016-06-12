@@ -172,7 +172,7 @@ var orderService = function(app){
                     if(type === 2 && order.playsAmount && order.playsAmount[item.date]){
                         temp.inventory += order.playsAmount[item.date];
                     }
-                    temp.calendar = calendarService.createCalendar(temp.date);
+                    temp.calendar = calendarService.createItemCalendar(temp.date);
                     var sday = util.dateFormat(temp.calendar[0][0].date);
                     var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
                     AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -242,7 +242,7 @@ var orderService = function(app){
                     dateStr2: util.dateFormatWithoutYear(new Date(order.itemStartDate)),
                     inventory: result.data.inventory
                 };
-                temp.calendar = calendarService.createCalendar(temp.date);
+                temp.calendar = calendarService.createItemCalendar(temp.date);
                 var sday = util.dateFormat(temp.calendar[0][0].date);
                 var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
                 AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -288,7 +288,7 @@ var orderService = function(app){
                 item.dateStr2 = util.dateFormatWithoutYear(date);
                 item.inventory = result.data.inventory;
                 item.amount = 1;
-                item.calendar = calendarService.createCalendar(item.date);
+                item.calendar = calendarService.createItemCalendar(item.date);
                 var sday = util.dateFormat(item.calendar[0][0].date);
                 var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);
                 AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -327,6 +327,9 @@ var orderService = function(app){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
             price = price - order.discounts;
+            if(price < 0){
+                price = 0;
+            }
             price = price.toFixed(2)*100/100;
             return price;
         };
@@ -359,7 +362,7 @@ var orderService = function(app){
                     }
                 }
             }
-            return left.toFixed(2);
+            return parseFloat(left.toFixed(2));
         };
         //计算已收押金
         this.calDeposit = function(order){
@@ -400,7 +403,7 @@ var orderService = function(app){
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
-            return price;
+            return parseFloat(price.toFixed(2));
         };
         //判断订单中有无项目(数量为0的项目表示已经删除的)
         this.itemsExist = function(items){
@@ -432,10 +435,6 @@ var orderService = function(app){
             var newDate = new Date(date);
             newDate.setMonth(newDate.getMonth() + monthDiff);
             newDate.setDate(1);
-            var today = new Date();
-            if(newDate < today){
-                newDate = today;
-            }
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(newDate),
                 id: item.categoryId
@@ -443,7 +442,7 @@ var orderService = function(app){
                 item.date = newDate;
                 item.dateStr = util.dateFormat(newDate);
                 item.dateStr2 = util.dateFormatWithoutYear(newDate);
-                item.calendar = calendarService.createCalendar(item.date);
+                item.calendar = calendarService.createItemCalendar(item.date);
                 item.inventory = result.data.inventory;
                 if(item.type === 1 && order.foodsAmount && order.foodsAmount[item.date]){
                     item.inventory += order.foodsAmount[item.date];
@@ -451,8 +450,31 @@ var orderService = function(app){
                 if(item.type === 2 && order.playsAmount && order.playsAmount[item.date]){
                     item.inventory += order.playsAmount[item.date];
                 }
+                var sday = util.dateFormat(item.calendar[0][0].date);
+                var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);
+                AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
+                    startDate: sday,
+                    endDate: eday,
+                    categoryId: item.categoryId,
+                }, function(result1){
+                    if(result1.code === 1){
+                        var inventoryList = result1.data.list;
+                        inventoryList.forEach(function(d, i){
+                            if(d.remain === 0){
+                                if(item.calendar[Math.floor(i/7)][i%7].sclass.indexOf('invalid') === -1){
+                                    item.calendar[Math.floor(i/7)][i%7].sclass += ' invalid';
+                                }
+                            }
+                        });
+                        rootScope.$apply();
+                    }
+                });
                 rootScope.$apply();
             });
+        };
+        this.moneyInputChange = function(money){
+            money = parseFloat(money) || 0;
+            money = parseFloat(money.toFixed(2));
         };
     }]);
 };

@@ -44,6 +44,13 @@ var orderCancelCtrl = function(app){
                     }
                 });
             };
+            scope.moneyChange = function(payment){
+                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test(parseFloat(payment.fee))){
+                    payment.fee = payment.fee.toString();
+                    payment.fee = payment.fee.substr(0, payment.fee.length - 1);
+                }
+            }
         }]);
 };
 

@@ -68,12 +68,6 @@ var getMoneyWithGunCtrl = function(app){
                     }
                 });
             };
-            // scope.inputOnChange = function(){
-            //     var getMoneyWithGun = rootScope.getMoneyWithGun;
-            //     if(getMoneyWithGun.userCode.length === 18){
-            //         scope.submitPayWithAlipay();
-            //     }
-            // }
             scope.inputOnKeyUp = function(ev){
                 if(ev.which === 13){
                     scope.submitPayWithAlipay();

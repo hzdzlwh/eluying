@@ -6,6 +6,7 @@ require("angular");
 var orderService = require("../services/orderService");
 var validateService = require("../services/validateService");
 var getDataService = require("../services/validateService");
+var idcObj = require("../ieidc");
 
 var orderEditCtrl = function(app){
     orderService(app);
@@ -44,36 +45,47 @@ var orderEditCtrl = function(app){
                 phoneEmpty: false,
                 id: false
             };
-            scope.submitOrder = function(){
+            scope.beginReadId = function(){
+                // var mode = $("#orderEditModal .readBtn").html();
+                // if(mode === '开始读卡'){
+                //     $("#orderEditModal .readBtn").html('停止读卡');
+                //     idcObj.init();
+                //     idcObj.read(5, 1, rootScope);
+                // }else{
+                //     $("#orderEditModal .readBtn").html('开始读卡');
+                //     idcObj.init();
+                //     idcObj.idc && idcObj.idc.ReadClose();
+                // }
+                var mode = $("#orderEditModal .readBtn").html();
+                if(mode === '开始读卡'){
+                    $("#orderEditModal .readBtn").html('正在读卡...');
+                    setTimeout(function(){
+                        idcObj.init();
+                        idcObj.read(3, 0, rootScope);
+                    }, 500)
+                }else{
+                    // $("#orderEditModal .readBtn").html('开始读卡');
+                    // $("#idcWarningModal").modal("hide");
+                    // idcObj.init();
+                    // idcObj.idc && idcObj.idc.ReadClose();
+                }
+            };
+            scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;
                 var flag = false;
-                if(orderEdit.customerName.length === 0){
-                    scope.errorTips.nameEmpty = true;
-                    scope.errorTips.name = false;
-                    flag = true;
-                } else if(!validateService.checkName(orderEdit.customerName)){
-                    //modal.somethingAlert("请输入2~16位用户名!");
-                    scope.errorTips.nameEmpty = false;
-                    scope.errorTips.name = true;
+                var orderEditCustomerName = orderEditForm.orderEditCustomerName;
+                var orderEditCustomerPhone = orderEditForm.orderEditCustomerPhone;
+                var orderEditId = orderEditForm.orderEditId;
+                if(orderEditCustomerName.$invalid){
                     flag = true;
                 }
-                if(orderEdit.customerPhone.length === 0){
-                    scope.errorTips.phone = false;
-                    scope.errorTips.phoneEmpty = true;
+                if(orderEditCustomerPhone.$invalid){
                     flag = true;
-                } else if(!validateService.checkPhone(orderEdit.customerPhone)){
-                    //modal.somethingAlert("请输入正确的11位手机号!");
-                    scope.errorTips.phoneEmpty = false;
-                    scope.errorTips.phone = true;
+                }
+                if(orderEditId.$invalid){
                     flag = true;
                 }
                 if(!validateService.checkRemark(orderEdit.remark)){
-                    //modal.somethingAlert("备注最多输入140个字!");
-                    flag = true;
-                }
-                if(orderEdit.idVal && !validateService.checkRemark(orderEdit.idVal)){
-                    //modal.somethingAlert("请填入16位身份证号!");
-                    scope.errorTips.id = true;
                     flag = true;
                 }
                 if(flag){
@@ -95,7 +107,9 @@ var orderEditCtrl = function(app){
                 var items = [];
                 var oldItems = orderEdit.foodItems.concat(orderEdit.playItems).concat(orderEdit.goodsItems);
                 oldItems.forEach(function(d){
-                    console.log(d);
+                    if(d.amount === 0){
+                        return false;
+                    }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
@@ -144,6 +158,25 @@ var orderEditCtrl = function(app){
                     }
                 });
             };
+            scope.hideModal = function(orderEditForm){
+                orderEditForm.$setPristine();
+                $("#orderEditmodal").modal("hide");
+            };
+            scope.$watch("orderEdit.discounts", function(){
+                if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){
+                    return false;
+                }
+                var itemPrice = orderService.itemPrice(rootScope.orderEdit);
+                if(rootScope.orderEdit.discounts > itemPrice){
+                    rootScope.orderEdit.discounts = itemPrice;
+                }
+                var reg = /^\d+(\.(\d{0,2}))?$/;
+                // var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test((rootScope.orderEdit.discounts))){
+                    rootScope.orderEdit.discounts =
+                        rootScope.orderEdit.discounts.substr(0, rootScope.orderEdit.discounts.length - 1);
+                }
+            })
     }]);
 };
 
