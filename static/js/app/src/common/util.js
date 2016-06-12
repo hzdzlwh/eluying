@@ -249,7 +249,7 @@ var util = {
                 window.location.href = '/view/accommodation/calender/calender.html';
             }
             if(isInTipsPage){
-                window.location.href = '/view/business/category/room.html';
+                window.location.href = '/view/accommodation/calender/calender.html';
             }
         }else{
             if(href.indexOf("/view/tips/noauth.html") > 0){

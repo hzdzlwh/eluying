@@ -46,15 +46,28 @@ var orderEditCtrl = function(app){
                 id: false
             };
             scope.beginReadId = function(){
+                // var mode = $("#orderEditModal .readBtn").html();
+                // if(mode === '开始读卡'){
+                //     $("#orderEditModal .readBtn").html('停止读卡');
+                //     idcObj.init();
+                //     idcObj.read(5, 1, rootScope);
+                // }else{
+                //     $("#orderEditModal .readBtn").html('开始读卡');
+                //     idcObj.init();
+                //     idcObj.idc && idcObj.idc.ReadClose();
+                // }
                 var mode = $("#orderEditModal .readBtn").html();
                 if(mode === '开始读卡'){
-                    $("#orderEditModal .readBtn").html('停止读卡');
-                    idcObj.init();
-                    idcObj.read(5, 1, rootScope);
+                    $("#orderEditModal .readBtn").html('正在读卡...');
+                    setTimeout(function(){
+                        idcObj.init();
+                        idcObj.read(3, 0, rootScope);
+                    }, 500)
                 }else{
-                    $("#orderEditModal .readBtn").html('开始读卡');
-                    idcObj.init();
-                    idcObj.idc && idcObj.idc.ReadClose();
+                    // $("#orderEditModal .readBtn").html('开始读卡');
+                    // $("#idcWarningModal").modal("hide");
+                    // idcObj.init();
+                    // idcObj.idc && idcObj.idc.ReadClose();
                 }
             };
             scope.submitOrder = function(orderEditForm){
@@ -144,6 +157,10 @@ var orderEditCtrl = function(app){
                         modal.somethingAlert(result3.msg);
                     }
                 });
+            };
+            scope.hideModal = function(orderEditForm){
+                orderEditForm.$setPristine();
+                $("#orderEditmodal").modal("hide");
             };
             scope.$watch("orderEdit.discounts", function(){
                 if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){

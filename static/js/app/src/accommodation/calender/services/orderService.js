@@ -362,7 +362,7 @@ var orderService = function(app){
                     }
                 }
             }
-            return left.toFixed(2);
+            return parseFloat(left.toFixed(2));
         };
         //计算已收押金
         this.calDeposit = function(order){
@@ -474,7 +474,7 @@ var orderService = function(app){
         };
         this.moneyInputChange = function(money){
             money = parseFloat(money) || 0;
-            money = money.toFixed(2);
+            money = parseFloat(money.toFixed(2));
         };
     }]);
 };

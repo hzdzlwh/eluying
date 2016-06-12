@@ -23,6 +23,17 @@
            clsid="{63CAB467-5BB8-4CB2-8C87-C8F3B66040C0}"
     >
 </OBJECT>
+<div class="msgModal modal fade" role="dialog" id="idcWarningModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stext">读卡中...10秒后自动取消读卡</div>
+            <div class="btns">
+                <div class="sbtn cancel btn-cancel">取消</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div class="msgModal modal fade" role="dialog" id="ingWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -585,7 +596,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>{{orderNew.title}}</span>
-                        <span class="modal-close">&times;</span>
+                        <span class="modal-close" ng-click="hideModal(orderNewForm);">&times;</span>
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -900,7 +911,7 @@
                         <div class="snum">¥{{calPrice(orderNew)}}</div>
                     </div>
                     <div class="sbtn confirm" ng-click="submitOrder(orderNewForm)">完成{{orderNew.title}}</div>
-                    <div class="sbtn cancel btn-cancel">取消</div>
+                    <div class="sbtn cancel btn-cancel" ng-click="hideModal(orderNewForm);">取消</div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
@@ -914,7 +925,7 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>编辑订单</span>
-                        <span class="modal-close">&times;</span>
+                        <span class="modal-close" ng-click="hideModal(orderEditForm);">&times;</span>
                         <div class="eluyun_book_outer spriteImg" ng-if="orderEdit.orderState === 2">
                             <div class="eluyun_book"></div>
                         </div>
@@ -1311,7 +1322,7 @@
                         <div class="snum">¥{{calDeposit(orderEdit)}}</div>
                     </div>
                     <div class="sbtn confirm" ng-click="submitOrder(orderEditForm)">保存</div>
-                    <div class="sbtn cancel btn-cancel">取消</div>
+                    <div class="sbtn cancel btn-cancel" ng-click="hideModal(orderEditForm);">取消</div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
