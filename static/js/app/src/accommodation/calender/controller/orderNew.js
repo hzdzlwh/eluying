@@ -191,8 +191,9 @@ var orderNewCtrl = function(app){
             if(rootScope.orderNew.discounts > itemPrice){
                 rootScope.orderNew.discounts = itemPrice;
             }
-            var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
-            if(!reg.test(parseFloat(rootScope.orderNew.discounts))){
+            var reg = /^\d+(\.(\d{0,2}))?$/;
+            // var reg = /^(?!0+(?:\.0+)?$)(?:[0-9]\d*|0)(?:\.\d{1,2})?$/;
+            if(!reg.test((rootScope.orderNew.discounts))){
                 rootScope.orderNew.discounts =
                     rootScope.orderNew.discounts.substr(0, rootScope.orderNew.discounts.length - 1);
             }

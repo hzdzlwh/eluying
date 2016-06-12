@@ -33,6 +33,7 @@ $(function(){
     header.showHeader();
     //高亮"前台录入"
     $(".settingsEntry").removeClass("selected");
+    $(".manageVipEntry").removeClass("selected");
     $(".accomodationEntry").addClass("selected");
     topMenu.showTopMenu();
     modal.modalInit();

@@ -210,8 +210,8 @@ var getDataService = function(app){
                             seeStart = false;
                         }
                         var checkOutDate = new Date(order.checkOutDate);
-                        if(checkOutDate > util.diffDate(checkInDate, 29)){
-                            checkOutDate = util.diffDate(checkInDate, 29);
+                        if(checkOutDate > util.diffDate(startDate, 29)){
+                            checkOutDate = util.diffDate(startDate, 29);
                         }
                         var diff = util.DateDiff(checkInDate, checkOutDate);
                         if(diff === 0){

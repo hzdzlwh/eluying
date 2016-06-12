@@ -403,7 +403,7 @@ var orderService = function(app){
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
             }
-            return price;
+            return parseFloat(price.toFixed(2));
         };
         //判断订单中有无项目(数量为0的项目表示已经删除的)
         this.itemsExist = function(items){
