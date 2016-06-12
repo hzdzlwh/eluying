@@ -44,11 +44,15 @@
                         <td ng-bind="item.vipName"></td>
                         <td ng-bind="item.phone"></td>
                         <td>{{item.idCardNum}}<span class="idType" ng-if="item.idCardNum && (item.idCardType || item.idCardType ===0) ">{{getIdCardIcon(item.idCardType)}}</span></td>
-                        <td ng-bind="item.email"></td>
+                        <td>
+                            <p class="tow-line-ellipsis" ng-bind="item.email"></p>
+                        </td>
                         <td><span ng-if="item.gender === 0">男</span><span ng-if="item.gender === 1">女</span></td>
-                        <td ng-bind="item.birthday"></td>
-                        <td ng-bind="item.province + item.city + item.county"></td>
-                        <td ng-bind="item.remark"></td>
+                        <td style="text-align: center;padding-left: 0" ng-bind="item.birthday"></td>
+                        <td>
+                            <p class="tow-line-ellipsis" ng-bind="item.province + item.city + item.county"></p>
+                        </td>
+                        <td><p class="tow-line-ellipsis" ng-bind="item.remark"></p></td>
                         <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
                     </tr>
                 </tbody>
@@ -62,7 +66,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="top-fixed">
-                    <span class="dialog-close">&times;</span>
+                    <span class="dialog-close" ng-click="close()">&times;</span>
                 </div>
                 <div class="add-container">
                     <div class="vip-info">
@@ -71,12 +75,12 @@
                         <p class="dialog-subTitle">基本信息</p>
                         <div class="vipInfo">
                             <p><span class="newVip"><img ng-if="!modify" src="http://static.dingdandao.com/start.png">姓名</span><input ng-model="newVip.name" ng-if="!modify" type="text" maxlength="16" ><span class="modifyVip" ng-bind="item.vipName" ng-if="modify"></span></p>
-                            <span ng-if="!modify && newVip.name.length === 0" class="tip-name">必填字段</span>
-                            <span ng-if="!modify && newVip.name.length === 1" class="tip-name">格式错误</span>
+                            <span ng-if="!modify && hasSubmit && newVip.name.length === 0" class="tip-name">必填字段</span>
+                            <span ng-if="!modify && hasSubmit && newVip.name.length === 1" class="tip-name">格式错误</span>
                             <p><span class="newVip"><img ng-if="!modify" src="http://static.dingdandao.com/start.png">手机号</span><input ng-model="newVip.phone" ng-if="!modify" type="text" maxlength="11" ><span class="modifyVip" ng-bind="item.phone" ng-if="modify"></span></p>
                             <!--<p><span class="newVip">证件号</span><input ng-model="newVip.idCardNum" ng-if="!modify" type="text" minlength="2"  ><input ng-model="item.idCardNum" ng-if="modify" type="text" minlength="2" >-->
-                            <span ng-if="!modify && newVip.phone.length === 0" class="tip-phone">必填字段</span>
-                            <span ng-if="!modify && newVip.phone.length > 0 && newVip.phone.length !== 11" class="tip-phone">格式错误</span>
+                            <span ng-if="!modify && hasSubmit && newVip.phone.length === 0" class="tip-phone">必填字段</span>
+                            <span ng-if="!modify && hasSubmit && newVip.phone.length > 0 && newVip.phone.length !== 11" class="tip-phone">格式错误</span>
                             <table class="single-line">
                                 <tr>
                                     <td class="identification">
@@ -120,24 +124,34 @@
                                 <div class="slabel">地区</div>
                                 <div class="scontent">
                                     <div class="selectBox small">
-                                        <div class="item selected" style="border-right: none;">
-                                            {{ provinceItems[selectedProvince] }}
+                                        <div ng-style="!item.province ? {color:'#ccc'}: ''" class="item selected" style="border-right: none;" ng-if="modify">
+                                            {{ item.province || '-省'}}
+                                        </div>
+                                        <div ng-style="!newVip.province ? {color:'#ccc'}: ''" class="item selected" style="border-right: none;" ng-if="!modify">
+                                            {{ newVip.province || '-省'}}
                                         </div>
                                         <div class="toselect-container toselect-first">
                                             <div class="item toselect" ng-click="selectProvince($index)" ng-repeat="n in provinceItems">{{n}}</div>
                                         </div>
                                     </div>
                                     <div class="selectBox small">
-                                        <div class="item selected" style="border-right: none; border-left: none;">
-                                            {{ cityItems[selectedCity] }}
+                                        <div ng-style="!item.city ? {color:'#ccc'}: ''" class="item selected" style="border-right: none; border-left: none;" ng-if="modify">
+                                            {{ item.city || '市'}}
+                                        </div>
+                                        <div ng-style="!newVip.city ? {color:'#ccc'}: ''" class="item selected" style="border-right: none; border-left: none;" ng-if="!modify">
+                                            {{ newVip.city || '市'}}
                                         </div>
                                         <div class="toselect-container">
                                             <div class="item toselect" ng-click="selectCity($index)" ng-repeat="n in cityItems">{{n}}</div>
                                         </div>
                                     </div>
                                     <div class="selectBox small">
-                                        <div class="item selected" style="border-left: none;">
-                                            {{ districtItems[selectedDistrict] }}
+                                        <div ng-style="!item.county ? {color:'#ccc'}: ''" class="item selected" style="border-left: none;" ng-if="modify">
+                                            {{ item.county || '区-'}}
+                                            <span class="triangle"></span>
+                                        </div>
+                                        <div ng-style="!newVip.county ? {color:'#ccc'}: ''" class="item selected" style="border-left: none;" ng-if="!modify">
+                                            {{ newVip.county || '区-'}}
                                             <span class="triangle"></span>
                                         </div>
                                         <div class="toselect-container toselect-last">
@@ -150,16 +164,16 @@
 
                             <p><span class="newVip">邮箱</span><input ng-if="!modify" ng-model="newVip.email" type="text" minlength="2" maxlength="50" ><input ng-model="item.email" ng-if="modify" type="text" minlength="2" maxlength="50">
                             </p>
-                            <span ng-if="!mailFilter.test(newVip.email) && !modify" class="tip-email">邮箱格式错误</span>
-                            <span ng-if="!mailFilter.test(item.email) && modify" class="tip-email-modify">邮箱格式错误</span>
+                            <span ng-if="newVip.email && !mailFilter.test(newVip.email) && hasSubmit && !modify" class="tip-email">邮箱格式错误</span>
+                            <span ng-if="item.email && !mailFilter.test(item.email) && hasSubmit && modify" class="tip-email-modify">邮箱格式错误</span>
                             <p><span class="newVip">备注</span><textarea ng-if="!modify" ng-model="newVip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea><textarea ng-model="item.remark" ng-if="modify" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea></p>
                         </div>
                     </div>
                 </div>
                 <div class="dialog-foot">
-                    <button ng-if="!modify" class="vip-confirm" ng-click="createVip()" ng-disabled = "newVip.name.length < 2 || newVip.phone.length !== 11 || (newVip.email && !mailFilter.test(newVip.email))">确定</button>
+                    <button ng-if="!modify" class="vip-confirm" ng-click="createVip()">确定</button>
                     <button ng-if="modify" class="vip-confirm" ng-click="editVip()">确定</button>
-                    <button class="vip-cancel btn-cancel">取消</button>
+                    <button class="vip-cancel btn-cancel" ng-click="close()">取消</button>
                 </div>
             </div>
         </div>

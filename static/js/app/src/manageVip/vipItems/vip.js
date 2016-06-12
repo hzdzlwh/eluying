@@ -6,7 +6,7 @@ var header = require("header");
 var util = require("util");
 var modal = require("modal");
 require("angular");
-util.checkAuth(11);
+util.checkModuleAuth(11);
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
@@ -24,7 +24,7 @@ $(function() {
     $(".accomodationEntry").removeClass("selected");
     $(".manageVipEntry").addClass("selected");
     modal.modalInit();
-
+    modal.centerModals();
     events = {
         /*"click .outPut-excel": function(ev){
             ev.stopPropagation();
@@ -35,13 +35,14 @@ $(function() {
             $(this).parents(".modal").modal("hide");
         },
         "click body .toselect-last": function(){
+            console.log('hi');
             $(".selectBox .toselect-container").hide();
         },
         "click body .toselect-container>.toselect": function(){
             $(this).siblings(".toselect").removeClass("selected-area");
             $(this).addClass("selected-area");
         },
-        "click .item.selected": function(ev){
+        "click .scontent": function(ev){
             ev.stopPropagation();
             $(".selectBox .toselect-container").show();
             // $(this).siblings(".toselect-container").show();
@@ -53,7 +54,11 @@ $(function() {
         }
     };
     util.bindDomAction(events);
-
+    document.querySelector('.toselect-last').addEventListener('click', function(e){
+        console.log('hi');
+        e.stopPropagation();
+        $(".selectBox .toselect-container").hide();
+    });
 
     var app = angular.module('vipApp', ['ng-pagination', 'ng-datepicker']);
     itemsCtrl(app);

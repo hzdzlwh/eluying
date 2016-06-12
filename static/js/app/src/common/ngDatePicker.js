@@ -74,7 +74,7 @@ function datePickerDirective() {
             scope.setScrollHeight = function(year) {
                 $('#ng-datepicker-yearOptions').scrollTop((year - 1900) * 17);
             };
-            scope.currentDate = new Date();
+            scope.currentDate = new Date('1980-1-1');
             scope.yearList = getYearList();
             scope.monthList = getMonthList();
             scope.dateArray = getDateArray(scope.currentDate);

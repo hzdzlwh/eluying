@@ -46,7 +46,7 @@ var createVipCtrl = function(app) {
                 scope.newVip.county = scope.districtItems[scope.selectedDistrict];
                 if(rootScope.item){
                     rootScope.item.county = scope.districtItems[scope.selectedDistrict];
-                };
+                }
             };
             scope.provinceItems = dsy.Items[scope.selectedProvince];
             scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
@@ -73,12 +73,26 @@ var createVipCtrl = function(app) {
                 }
                 $(".select1_options").hide();
             };
+            scope.hasSubmit = false;
             rootScope.createVip = function() {
+                scope.hasSubmit = true;
+                if (scope.newVip.name.length < 2 || scope.newVip.phone.length !== 11 || (scope.newVip.email && !scope.mailFilter.test(scope.newVip.email))) {
+                    return
+                }
                 createVipService.createVip(scope.newVip, rootScope);
             };
             scope.editVip = function(){
+                scope.hasSubmit = true;
+                if ((rootScope.item.email && !scope.mailFilter.test(rootScope.item.email))) {
+                    return
+                }
                 createVipService.editVip(rootScope.item, rootScope);
             };
+            scope.close = function() {
+                scope.hasSubmit = false;
+                scope.newVip = {name: '', phone: '', idCardType: 0};
+                rootScope.item = {};
+            }
         }]);
 };
 

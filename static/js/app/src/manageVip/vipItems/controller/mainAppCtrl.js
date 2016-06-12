@@ -63,6 +63,7 @@ var itemsCtrl = function(app){
             };
             scope.search = function() {
                 scope.searchPattern = scope.searchText;
+                scope.currentPage = 1;
                 getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
                 getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };

@@ -194,13 +194,20 @@ var util = {
         }
     },
 
-    checkAuth: function(id){
+    checkModuleAuth: function(id){
         var bottom = localStorage.getItem("bottom");
         bottom = JSON.parse(bottom);
+        var flag = true;
         for(var i = 0; i < bottom.length; i++){
+            if (bottom[i].type === id) {
+                flag = false;
+            }
             if(bottom[i].type === id && bottom[i].status === 0){
                 window.location.href = '/view/tips/noauth.html';
             }
+        }
+        if (flag) {
+            window.location.href = '/view/tips/noauth.html';
         }
     },
 
