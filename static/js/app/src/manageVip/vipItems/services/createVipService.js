@@ -3,6 +3,7 @@
  */
 var AJAXService = require("AJAXService");
 var getItemsService = require('./getItemsService');
+var modal = require('modal');
 require('angular');
 var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function() {
@@ -13,6 +14,8 @@ var createVipService = function(app){
                         $("#newVipModal").modal("hide");
                         getVipItems(1, 15, '', rootScope);
                         getVipUserCount(rootScope);
+                    } else {
+                        modal.somethingAlert(result.msg);
                     }
                 }
             )
@@ -29,6 +32,8 @@ var createVipService = function(app){
                             }
                         });
                         rootScope.dataItems[index] = item;
+                    } else {
+                        modal.somethingAlert(result.msg);
                     }
                     rootScope.$apply();
                 }
@@ -46,8 +51,8 @@ var getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
         rootScope.$apply();
     });
 };
-var getVipUserCount = function(rootScope) {
-    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {},
+var getVipUserCount = function(rootScope, searchPattern) {
+    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: searchPattern},
         function(result) {
             if (result.code === 1) {
                 rootScope.vipUserCount = result.data;
