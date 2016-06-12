@@ -29,7 +29,8 @@
   },
   "scripts": {
     "start": "gulp start",
-    "build": "gulp build && gulp rev && gulp zip",
+    "build:prod": "gulp build:prod && gulp rev && gulp zip",
+    "build:dev": "gulp build:dev && gulp rev && gulp zip",
     "build-and-update": "gulp build && gulp rev && gulp zip && scp ./eluyun.war root@120.26.83.168:/opt/apache-tomcat-7.0.59/webapps/"
   },
   "author": "lcx,hjj",
