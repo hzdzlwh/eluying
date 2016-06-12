@@ -52,7 +52,7 @@ var itemsCtrl = function(app){
             rootScope.pageSize = 15;
             scope.filterSearch = function(ev) {
                 if (ev.keyCode === 13) {
-                    getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                    scope.search();
                 }
             };
             scope.getIdCardIcon = function(num) {
@@ -60,6 +60,12 @@ var itemsCtrl = function(app){
             };
             scope.onPageChange = function () {
                 getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+            };
+            scope.search = function() {
+                scope.searchPattern = scope.searchText;
+                scope.currentPage = 1;
+                getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };
             getItemsService.getVipUserCount(rootScope);
             scope.getPageCount = function() {

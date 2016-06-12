@@ -17,8 +17,8 @@ var getItemsService = function(app){
                 rootScope.$apply();
             });
         };
-        this.getVipUserCount = function(rootScope) {
-            AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {},
+        this.getVipUserCount = function(rootScope, searchPattern) {
+            AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: searchPattern},
             function(result) {
                 if (result.code === 1) {
                     rootScope.vipUserCount = result.data;

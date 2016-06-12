@@ -240,8 +240,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           }
           .toselect-container{
             display: none;
-            height: 300px;
-            max-height: 300px;
+            height: 120px;
             overflow-y: auto;
             position: relative;
             z-index: 2;
@@ -265,6 +264,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
           }
         }
         .selectBox.small{
+          font-size: 14px!important;
           width: 80px;
           float: left;
         }
@@ -571,4 +571,13 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   border-radius:2px;
   width:71px;
   height:24px;
+}
+.tow-line-ellipsis {
+  position: relative;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
