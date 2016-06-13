@@ -230,7 +230,7 @@
                         <div class="sub-title">餐饮项目</div>
                         <table ng-if="orderDetail.foodItems">
                             <tr ng-repeat="f in orderDetail.foodItems">
-                                <td>{{f.name}}</td>
+                                <td><div>{{f.name}}</div></td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
@@ -246,7 +246,7 @@
                         <div class="sub-title">娱乐项目</div>
                         <table ng-if="orderDetail.playItems">
                             <tr ng-repeat="p in orderDetail.playItems">
-                                <td>{{p.name}}</td>
+                                <td><div>{{p.name}}</div></td>
                                 <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
@@ -262,7 +262,7 @@
                         <!--<div class="sub-title">商超项目</div>-->
                         <!--<table ng-if="orderDetail.goodsItems">-->
                             <!--<tr ng-repeat="p in orderDetail.goodsItems">-->
-                                <!--<td>{{p.name}}</td>-->
+                                <!--<td><div>{{p.name}}</div></td>-->
                                 <!--<td></td>-->
                                 <!--<td>-->
                                     <!--<span class="light">数量</span>-->
@@ -1144,7 +1144,7 @@
                     </div>
                     <table>
                         <tr ng-repeat="food in orderEdit.foodItems">
-                            <td ng-if="!food.isNew">{{food.name}}</td>
+                            <td ng-if="!food.isNew">{{food.name}}{{food.name}}{{food.name}}</td>
                             <td ng-if="food.isNew">
                                 <div class="select1">
                                     <span>{{food.name}}</span>
@@ -1189,7 +1189,8 @@
                                     <input type="number" class="numberInput" ng-change="changeItemNum(food, food.amount)" ng-model="food.amount">
                                     <div class="plus" ng-click="changeItemNum(food, food.amount + 1)">+</div>
                                 </div>
-                                &nbsp;<span ng-if="food.usedAmount">(已使用{{food.usedAmount}})</span>
+                                <!--&nbsp;<span ng-if="food.usedAmount">(已使用{{food.usedAmount}})</span>-->
+                                &nbsp;<span ng-if="true">(已使用{{food.usedAmount}})</span>
                                 <div class="tips">剩余库存{{food.inventory}}</div>
                             </td>
                             <td>¥{{food.amount * food.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.foodItems, $index)"></div></td>

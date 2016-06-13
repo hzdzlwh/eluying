@@ -306,7 +306,6 @@ object{
           }
           td:nth-child(2){
             width: 230px;
-
           }
           td:nth-child(3){
             width: 75px;
@@ -316,6 +315,12 @@ object{
         .subtype.food, .subtype.fun, .subtype.goods{
           td:first-child{
             width: 132px;
+            div{
+              width: 132px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
           }
           td:nth-child(2){
             width: 105px;
@@ -1332,32 +1337,32 @@ object{
           }
         }
         td:first-child{
-          width: 84px;
+          width: 114px;
           text-overflow: ellipsis;
           .select1{
             @include select1();
-            width: 74px;
-            background-position: 60px;
+            width: 114px;
+            background-position: 100px;
           }
           .sname{
-            width: 84px;
+            width: 114px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
           }
         }
         td:nth-child(2){
-          width: 93px;
+          width: 98px;
           text-align: right;
           position: relative;
         }
         td:nth-child(3){
           padding-left: 18px;
-          width: 224px;
+          width: 209px;
           text-align: left;
         }
         td:nth-child(4){
-          width: 59px;
+          width: 39px;
           text-align: right;
         }
       }
