@@ -8,10 +8,11 @@ require('angular');
 var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function() {
         this.createVip = function(newVip,rootScope) {
-            AJAXService.ajaxWithToken('POST', '/vipUser/addVipUser', newVip,
+            AJAXService.ajaxWithToken('POST', '/vipUser/addVipUser', Object.assign({}, newVip),
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
+                        newVip = {name: '', phone: '', idCardType: 0};
                         getVipItems(1, 15, '', rootScope);
                         getVipUserCount(rootScope);
                     } else {
@@ -21,7 +22,7 @@ var createVipService = function(app){
             )
         };
         this.editVip = function(item, rootScope) {
-            AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', item,
+            AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', Object.assign({}, item),
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
@@ -31,7 +32,6 @@ var createVipService = function(app){
                                 index = i;
                             }
                         });
-                        delete item.sign;
                         rootScope.dataItems[index] = item;
                     } else {
                         modal.somethingAlert(result.msg);
