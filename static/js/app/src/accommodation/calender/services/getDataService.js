@@ -174,7 +174,11 @@ var getDataService = function(app){
                         }
                     }
                     cRoomArray.sort(function(a, b){
-                       return a.pId - b.pId;
+                        if(a.pId > b.pId || (a.pId === b.pId && a.name > b.name)){
+                            return 1;
+                        }else{
+                            return -1;
+                        }
                     });
                     //保存房间列表
                     var roomIndexHash = {};
