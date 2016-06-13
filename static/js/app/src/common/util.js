@@ -1,3 +1,4 @@
+var md5 = require("md5");
 var util = {
     mainContainer: function(){
         var width = document.body.clientWidth - 220;
@@ -210,7 +211,27 @@ var util = {
             window.location.href = '/view/tips/noauth.html';
         }
     },
-
+    getSign: function(){
+        var data = {};
+        data.timestamp = (new Date()).valueOf();
+        // data.version = (new Date()).valueOf();
+        data.campId = localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        //data.campId = 56;
+        //data.uid = 85;
+        // data.kick = true;
+        data.terminal = 1;
+        data.version = data.version || 4;
+        // data.token = localStorage.getItem("token");
+        var array = [];
+        for(var key in data){
+            array.push(data[key]);
+        }
+        array.push(localStorage.getItem("token"));
+        array.sort();
+        var str = array.join("");
+        return md5(str);
+    },
     checkAuth: function(){
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");

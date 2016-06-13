@@ -22,7 +22,7 @@ var itemsCtrl = function(app){
                 var campId = localStorage.getItem("campId");
                 var uid = localStorage.getItem("uid");
                 var host = AJAXService.getUrl2('/vipUser/vipUserListToExcel');
-                var url = host + '?' + 'campId='+ campId + '&uid='+ uid;
+                var url = host + '?' + 'campId='+ campId + '&uid='+ uid + '&terminal=1&version=4&timestamp=' + (new Date()).valueOf() + '&sign=' + util.getSign();
                 return url;
                 // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
