@@ -31,6 +31,7 @@ var createVipService = function(app){
                                 index = i;
                             }
                         });
+                        delete item.sign;
                         rootScope.dataItems[index] = item;
                     } else {
                         modal.somethingAlert(result.msg);
