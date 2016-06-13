@@ -212,12 +212,10 @@ var util = {
         }
     },
     getSign: function(){
-        var data;
+        var data = {};
         data.timestamp = (new Date()).valueOf();
         // data.version = (new Date()).valueOf();
-        if(path !== '/homepage/changeCamp'){
-            data.campId = localStorage.getItem("campId");
-        }
+        data.campId = localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");
         //data.campId = 56;
         //data.uid = 85;
