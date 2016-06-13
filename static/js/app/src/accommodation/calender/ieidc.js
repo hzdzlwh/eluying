@@ -21,8 +21,9 @@ idcObj.init = function(){
     this.data = this.idc.IDCard;
     
     //- 网站授权，此属性必须在属性Verify和RarelyWord设置之前设置。License请与phototake@qq.com联系获取。
-    this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
-    
+    //this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
+    this.idc.License = "G95dPDwfAAsvk1IzmDT1CZr8I777NZ8mj3XO+d7Ak2yXn80EfIDgQ4MSrls/Eewbb16nRTnjvvY18VW8uPWKbPUAe4Hfo6OxicY4q4ZlGTMeW6DIfAAGI3Psuu8a9tpkl4bF1t4s3d";
+
     //- 停止自动读卡间隔时间（秒），默认600秒
     this.idc.AutoStopTime = 300;
     
