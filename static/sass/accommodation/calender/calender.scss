@@ -1506,6 +1506,10 @@ object{
       .subtype.food, .subtype.fun, .subtype.goods{
         td:first-child{
           width: 110px;
+          .select1{
+            width: 110px;
+            background-position: 93px;
+          }
         }
         td:nth-child(2){
           width: 115px;

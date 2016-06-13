@@ -3,6 +3,7 @@
  */
 var AJAXService = require("AJAXService");
 var getItemsService = require('./getItemsService');
+var modal = require('modal');
 require('angular');
 var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function() {
@@ -11,18 +12,30 @@ var createVipService = function(app){
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
-                        getVipItems(1, 20, '', rootScope);
+                        getVipItems(1, 15, '', rootScope);
                         getVipUserCount(rootScope);
+                    } else {
+                        modal.somethingAlert(result.msg);
                     }
                 }
             )
         };
-        this.editVip = function(item) {
+        this.editVip = function(item, rootScope) {
             AJAXService.ajaxWithToken('POST', '/vipUser/editVipUserDetailInfo', item,
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
+                        var index;
+                        angular.forEach(rootScope.dataItems, function(element, i){
+                            if (element.vipId === item.vipId) {
+                                index = i;
+                            }
+                        });
+                        rootScope.dataItems[index] = item;
+                    } else {
+                        modal.somethingAlert(result.msg);
                     }
+                    rootScope.$apply();
                 }
             )
         }
@@ -38,8 +51,8 @@ var getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
         rootScope.$apply();
     });
 };
-var getVipUserCount = function(rootScope) {
-    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {},
+var getVipUserCount = function(rootScope, searchPattern) {
+    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: searchPattern},
         function(result) {
             if (result.code === 1) {
                 rootScope.vipUserCount = result.data;

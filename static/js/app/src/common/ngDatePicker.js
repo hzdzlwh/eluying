@@ -16,7 +16,7 @@ function datePickerDirective() {
                         '<div id="ng-datepicker-yearOptions" class="select1_options ng-datepicker-yearOptions">' +
                             '<div class="oitem" ng-class="{\'ng-datepicker-selectedYearMonth\': year === currentDate.getFullYear()}"' +
                                 'ng-click="setYear(year);$event.stopPropagation();"' +
-                                'ng-repeat="year in yearList">{{year + \'年\'}}' +
+                                'ng-repeat="year in yearList">{{year}}' +
                             '</div>' +
                         '</div>'+
                     '</div>' +
@@ -72,12 +72,9 @@ function datePickerDirective() {
                 scope.$apply();
             }
             scope.setScrollHeight = function(year) {
-                console.log(year);
-                console.log($('#ng-datepicker-yearOptions'));
                 $('#ng-datepicker-yearOptions').scrollTop((year - 1900) * 17);
-                console.log($('#ng-datepicker-yearOptions').scrollTop());
             };
-            scope.currentDate = new Date();
+            scope.currentDate = new Date('1980-1-1');
             scope.yearList = getYearList();
             scope.monthList = getMonthList();
             scope.dateArray = getDateArray(scope.currentDate);

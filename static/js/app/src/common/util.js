@@ -194,6 +194,23 @@ var util = {
         }
     },
 
+    checkModuleAuth: function(id){
+        var bottom = localStorage.getItem("bottom");
+        bottom = JSON.parse(bottom);
+        var flag = true;
+        for(var i = 0; i < bottom.length; i++){
+            if (bottom[i].type === id) {
+                flag = false;
+            }
+            if(bottom[i].type === id && bottom[i].status === 0){
+                window.location.href = '/view/tips/noauth.html';
+            }
+        }
+        if (flag) {
+            window.location.href = '/view/tips/noauth.html';
+        }
+    },
+
     checkAuth: function(){
         var campId = localStorage.getItem("campId");
         var camps = localStorage.getItem("camps");
@@ -204,7 +221,7 @@ var util = {
         var aflag = false;
         for(var i = 0; i < bottom.length; i++){
             if(bottom[i].type === 2 && bottom[i].status === 1){
-                $(".header .accomodationEntry").show();
+                // $(".header .accomodationEntry").show();
                 aflag = true;
             }
         }

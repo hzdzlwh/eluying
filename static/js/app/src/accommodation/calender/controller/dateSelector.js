@@ -44,6 +44,7 @@ var dateSelectorCtrl = function(app){
                 startDate.setMonth(month + monthDiff);
                 startDate.setDate(1);
                 update();
+                $(".calendor-container").scrollLeft(0);
             };
             scope.changeMainDate = function(date){
                 rootScope.startDate = date;
@@ -51,6 +52,7 @@ var dateSelectorCtrl = function(app){
                 rootScope.glyphs = null;
                 rootScope.occupyList = null;
                 getDataService.getRoomsAndStatus(rootScope);
+                $(".calendor-container").scrollLeft(0);
             };
             update();
     }]);
