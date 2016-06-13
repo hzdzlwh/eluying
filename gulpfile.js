@@ -30,7 +30,7 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
-gulp.task('build', ['styles', 'webpack-prod', 'clean'], function () {
+function revHash() {
     gulp.src('static/css/**/*.css')
         .pipe(rev())
         .pipe(gulp.dest('build/static/css'))
@@ -56,7 +56,11 @@ gulp.task('build', ['styles', 'webpack-prod', 'clean'], function () {
         .pipe(gulp.dest('build/static/image'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('rev/image'));
-});
+}
+
+gulp.task('build:prod', ['styles', 'webpack-prod', 'clean'], revHash);
+
+gulp.task('build:dev', ['styles', 'webpack-dev', 'clean'], revHash);
 
 //压缩成.war
 gulp.task('zip', function () {
