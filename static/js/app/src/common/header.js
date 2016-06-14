@@ -73,7 +73,7 @@ var header = {
                     }
                 })
             });
-            util.checkAuth();
+            //util.checkAuth();
         });
     },
     events: {
