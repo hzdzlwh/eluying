@@ -2595,7 +2595,7 @@
                     <div class="item">日</div>
                 </div>
                 <div class="date-row" ng-repeat="row in mainCalendar">
-                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeMainDate(day.date);$event.stopPropagation();">
+                    <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeMainDate(day.date);">
                         {{(day.text || day.date.getDate())}}
                     </div>
                 </div>
@@ -2689,7 +2689,7 @@
                      ng-if="calShowIndex($index) >= entryRowsMax && pRoomList[r.pi].selected">
 
                 </div>
-                <div class="glyph {{statusStr2[g.roomState].classStr}}"
+                <div data="{{g.orderId}}" class="glyph {{statusStr2[g.roomState].classStr}}"
                      ng-repeat="g in glyphs" ng-class="{seeStart: g.seeStart}"
                      ng-if="pRoomList[cRoomStore[g.id].pId].selected"
                      ng-click="showOrderDetail(g.orderId);"

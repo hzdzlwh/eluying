@@ -1,0 +1,277 @@
+$spriteUrl: url('../image/login2/sprite.png');
+.spriteImg{
+  display: inline-block;
+  vertical-align: middle;
+}
+.login2_qr_code_outer {
+  height: 125px;
+  width: 125px;
+  overflow: hidden;
+}
+.login2_qr_code {
+  background: $spriteUrl -0px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_speration_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_speration {
+  background: $spriteUrl -125px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 125px;
+  _margin-left: -125px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_order_management_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_order_management_pro {
+  background: $spriteUrl -125px -56px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 125px;
+  _margin-left: -125px;
+  _padding-top: 56px;
+  _margin-top: -56px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_order_management_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_order_management {
+  background: $spriteUrl -174px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 174px;
+  _margin-left: -174px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_pay_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_pay_pro {
+  background: $spriteUrl -174px -56px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 174px;
+  _margin-left: -174px;
+  _padding-top: 56px;
+  _margin-top: -56px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_pay_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_pay {
+  background: $spriteUrl -0px -125px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 125px;
+  _margin-top: -125px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_order_box_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_order_box_pro {
+  background: $spriteUrl -49px -125px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 49px;
+  _margin-left: -49px;
+  _padding-top: 125px;
+  _margin-top: -125px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_speration_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_speration_pro {
+  background: $spriteUrl -98px -125px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 98px;
+  _margin-left: -98px;
+  _padding-top: 125px;
+  _margin-top: -125px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_order_box_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_order_box {
+  background: $spriteUrl -147px -125px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 147px;
+  _margin-left: -147px;
+  _padding-top: 125px;
+  _margin-top: -125px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_statistic_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_statistic_pro {
+  background: $spriteUrl -223px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 223px;
+  _margin-left: -223px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_statistic_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_statistic {
+  background: $spriteUrl -223px -56px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 223px;
+  _margin-left: -223px;
+  _padding-top: 56px;
+  _margin-top: -56px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_storage_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_storage_pro {
+  background: $spriteUrl -223px -112px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 223px;
+  _margin-left: -223px;
+  _padding-top: 112px;
+  _margin-top: -112px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_storage_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_storage {
+  background: $spriteUrl -0px -181px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 181px;
+  _margin-top: -181px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_vip_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_vip_pro {
+  background: $spriteUrl -49px -181px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 49px;
+  _margin-left: -49px;
+  _padding-top: 181px;
+  _margin-top: -181px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_vip_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_vip {
+  background: $spriteUrl -98px -181px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 98px;
+  _margin-left: -98px;
+  _padding-top: 181px;
+  _margin-top: -181px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_website_pro_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_website_pro {
+  background: $spriteUrl -147px -181px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 147px;
+  _margin-left: -147px;
+  _padding-top: 181px;
+  _margin-top: -181px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}
+.login2_website_outer {
+  height: 56px;
+  width: 49px;
+  overflow: hidden;
+}
+.login2_website {
+  background: $spriteUrl -196px -181px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 196px;
+  _margin-left: -196px;
+  _padding-top: 181px;
+  _margin-top: -181px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src="http://gopng/static/images/sprite.png");
+}

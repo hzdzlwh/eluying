@@ -2864,7 +2864,8 @@ object{
               margin-top: 24px;
               padding-left: 8px;
               padding-right: 8px;
-              height: 20px;
+              height: 40px;
+              line-height: 20px;
               .start span, .end span{
                 color: #666666;
                 margin-right: 4px;
@@ -2879,7 +2880,7 @@ object{
                 float: left;
               }
               .from{
-                float: right;
+                clear: both;
               }
             }
             .bhr{
@@ -2960,7 +2961,7 @@ object{
               top: -8px;
             }
             .stext{
-              max-width: 70%;
+              max-width: 53%;
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
