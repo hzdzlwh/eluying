@@ -9,6 +9,8 @@ var shopCategory = require('./shopCategory');
 var createShop = require('./createShop');
 var editShop = require('./editShop');
 
+var auth = require('../../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 
 $(function() {
     //初始化界面

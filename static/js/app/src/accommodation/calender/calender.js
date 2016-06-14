@@ -7,6 +7,8 @@ var leftMenu = require("leftMenu");
 var topMenu = require("../../common/topMenu");
 var util = require("util");
 var modal = require("modal");
+var auth = require('../../common/auth');
+auth.checkAuth(auth.ACCOMMODATION_ID, auth.NO_AUTH_FOR_A_URL);
 require("angular");
 
 require("jqueryui");

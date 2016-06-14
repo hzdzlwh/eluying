@@ -6,6 +6,9 @@ var modal = require("modal");
 require("fileupload");
 require("angular");
 var dsy = require("dsy");
+var auth = require('../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
+
 
 require("bootstrap");
 require("validation");

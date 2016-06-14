@@ -7,6 +7,8 @@ var modal = require("modal");
 var foodETPriceList = require("foodETPriceList");
 require("validate");
 require("validation");
+var auth = require('../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 
 
 $(function(){
