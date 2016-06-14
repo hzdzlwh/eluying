@@ -28,6 +28,7 @@ var webpackConf =  {
         'setting/method': './static/js/app/src/setting/method/method.js',
         'tips/noauth': './static/js/app/src/tips/noauth.js',
         'tips/noauthfora': './static/js/app/src/tips/noauthfora.js',
+        'tips/noauthforvip': './static/js/app/src/tips/noauthforvip.js',
         'tips/upgrade': './static/js/app/src/tips/upgrade.js',
         'tips/expired': './static/js/app/src/tips/expired.js',
         'accommodation/calender': './static/js/app/src/accommodation/calender/calender.js',

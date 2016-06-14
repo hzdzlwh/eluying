@@ -6,7 +6,6 @@ var header = require("header");
 var util = require("util");
 var modal = require("modal");
 require("angular");
-util.checkModuleAuth(11);
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
@@ -15,6 +14,8 @@ require('../../common/ngDatePicker');
 require('../../common/ngPagination');
 var itemsCtrl = require('./controller/mainAppCtrl');
 var createVipCtrl = require('./controller/createVipCtrl');
+var auth = require('../../common/auth');
+auth.checkAuth(auth.VIP_ID, auth.NO_AUTH_FOR_VIP_URL);
 
 $(function() {
     //初始化界面

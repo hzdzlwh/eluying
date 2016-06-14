@@ -7,6 +7,8 @@ var foodCategoryList = require("./foodCategoryList");
 var addFood = require("./addfood");
 var editFoodBasic = require("./editFoodBasic");
 var showInfo = require("./showInfo");
+var auth = require('../../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 
 require("bootstrap");
 require("validation");

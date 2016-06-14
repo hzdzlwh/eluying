@@ -9,6 +9,8 @@ var editRoomBasic = require("./editRoomBasic");
 var showInfo = require("./showInfo");
 var subclassManage = require("./subclassManage");
 var subRoom = require("./subRoom");
+var auth = require('../../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
 

@@ -10,7 +10,8 @@ var ETCategoryList = require("./ETCategoryList");
 var addET = require("./addET");
 var editETBasic = require("./editETBasic");
 var showInfo = require("./showInfo");
-
+var auth = require('../../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
 

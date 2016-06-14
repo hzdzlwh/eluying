@@ -10,6 +10,8 @@ require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
 var modal = require("modal");
+var auth = require('../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 
 var IVENTORY = {
     data: null,
