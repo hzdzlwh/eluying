@@ -228,7 +228,7 @@ object{
         }
         .spriteImg{
           position: relative;
-          top: 4px;
+          //top: 4px;
           left: 4px;
         }
       }
@@ -300,8 +300,8 @@ object{
           td:first-child{
             width: 190px;
             .spriteImg{
-              position: relative;
-              top: 3px;
+              //position: relative;
+              //top: 3px;
             }
           }
           td:nth-child(2){
@@ -533,7 +533,6 @@ object{
     .spriteImg{
       cursor: pointer;
       position: relative;
-      top: 2px;
       left: 2px;
     }
     .hr {
@@ -561,7 +560,7 @@ object{
         }
         .spriteImg{
           position: relative;
-          top: 4px;
+          //top: 4px;
           left: 4px;
         }
       }
@@ -617,7 +616,7 @@ object{
         overflow-y: hidden;
         .spriteImg{
           position: relative;
-          top: -2px;
+          //top: -2px;
         }
         .subtype{
           margin: 8px 0;
@@ -641,7 +640,7 @@ object{
             width: 190px;
             .spriteImg{
               position: relative;
-              top: 3px;
+              //top: 3px;
             }
           }
           td:nth-child(2){
@@ -983,7 +982,7 @@ object{
         color:$color1;
         .spriteImg{
           position: relative;
-          top: -2px;
+          //top: -2px;
           cursor: pointer;
         }
         .previous{
@@ -1048,7 +1047,7 @@ object{
     .spriteImg{
       cursor: pointer;
       position: relative;
-      top: 2px;
+      //top: 2px;
     }
     .hr {
       @include modalHeader();
@@ -1075,7 +1074,7 @@ object{
         }
         .spriteImg{
           position: relative;
-          top: 4px;
+          //top: 4px;
           left: 4px;
         }
       }
@@ -1298,7 +1297,7 @@ object{
           width: 165px;
           .spriteImg{
             position: relative;
-            top: 3px;
+            //top: 3px;
           }
         }
         td:nth-child(2){
@@ -1775,7 +1774,7 @@ object{
         color:$color1;
         .spriteImg{
           position: relative;
-          top: -2px;
+          //top: -2px;
           cursor: pointer;
         }
         .previous{
@@ -1839,8 +1838,6 @@ object{
     }
     .spriteImg{
       cursor: pointer;
-      position: relative;
-      top: 2px;
     }
     .hr {
       @include modalHeader();
@@ -1867,7 +1864,7 @@ object{
         }
         .spriteImg{
           position: relative;
-          top: 4px;
+          //top: 4px;
           left: 4px;
         }
       }
@@ -2063,7 +2060,7 @@ object{
             }
             .spriteImg{
               position: relative;
-              top: 3px;
+              //top: 3px;
             }
           }
           td:nth-child(2){
@@ -2094,31 +2091,30 @@ object{
             }
           }
           td:first-child{
-            width: 84px;
+            width: 114px;
             text-overflow: ellipsis;
             .sname{
-              width: 84px;
+              width: 114px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
             }
             .select1{
-              width: 84px;
-              background-position: 70px 8px;
+              width: 114px;
+              background-position: 100px;
             }
           }
           td:nth-child(2){
-            padding-left: 8px;
-            width: 101px;
+            width: 98px;
             text-align: right;
           }
           td:nth-child(3){
             padding-left: 18px;
-            width: 216px;
+            width: 209px;
             text-align: left;
           }
           td:nth-child(4){
-            width: 59px;
+            width: 39px;
             text-align: right;
           }
         }
@@ -2279,7 +2275,7 @@ object{
     .search-btn{
       cursor: pointer;
       position: relative;
-      top: 2px;
+      //top: 2px;
     }
     input{
       display: block;
@@ -2457,8 +2453,6 @@ object{
         cursor: pointer;
         .spriteImg{
           margin-left: 8px;
-          position: relative;
-          top: 2px;
         }
       }
       .date-table{
@@ -2491,7 +2485,7 @@ object{
           color:$color1;
           .spriteImg{
             position: relative;
-            top: -2px;
+            //top: -2px;
             cursor: pointer;
           }
           .previous{

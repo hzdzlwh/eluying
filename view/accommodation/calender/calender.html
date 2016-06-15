@@ -638,17 +638,15 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderNewId" ng-pattern="/^[0-9xX]{18}$/"
+                                <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderNewId" max-length="18"
                                            ng-model="orderNew.idVal">
-                                    <div class="tips warning" ng-if="orderNewForm.orderNewId.$invalid
-                                && orderNewForm.orderNewId.$dirty">{{orderNew.selectedIdLabel}}格式错误</div>
                                 </td>
                                 <td>渠道</td>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderNew.origin}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels"
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
                                                  ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
                                         </div>
                                     </div>
@@ -746,7 +744,7 @@
                                 <div class="select1">
                                     <span>{{food.name}}</span>
                                     <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in foodList"
+                                        <div class="oitem" ng-repeat="f in foodList" title="{{f.name}}"
                                              ng-click="changeItem(orderNew, orderNew.foodItems, food, f);">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -809,7 +807,7 @@
                                 <div class="select1">
                                     <span>{{play.name}}</span>
                                     <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in funList"
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
                                              ng-click="changeItem(orderNew, orderNew.playItems, play, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -976,17 +974,15 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderEditId" ng-pattern="/^[0-9xX]{18}$/"
+                                <td><input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderEditId" max-length="18"
                                            ng-model="orderEdit.idVal">
-                                    <div class="tips warning" ng-if="orderEditForm.orderEditId.$invalid
-                                && orderEditForm.orderEditId.$dirty">{{orderEdit.selectedIdLabel}}格式错误</div>
                                 </td>
                                 <td>渠道</td>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderEdit.origin}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels"
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
                                                  ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
                                         </div>
                                     </div>
@@ -1032,7 +1028,7 @@
                                 <!--<div class="select1">-->
                                     <!--<span>{{orderEdit.origin}}</span>-->
                                     <!--<div class="select1_options">-->
-                                        <!--<div class="oitem" ng-repeat="c in channels"-->
+                                        <!--<div class="oitem" ng-repeat="c in channels"  title="{{c.name}}"-->
                                              <!--ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>-->
                                     <!--</div>-->
                                 <!--</div>-->
@@ -1149,7 +1145,7 @@
                                 <div class="select1">
                                     <span>{{food.name}}</span>
                                     <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in foodList"
+                                        <div class="oitem" ng-repeat="f in foodList" title="{{f.name}}"
                                              ng-click="changeItem(orderEdit, orderEdit.foodItems, food, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -1215,7 +1211,7 @@
                                 <div class="select1">
                                     <span>{{play.name}}</span>
                                     <div class="select1_options">
-                                        <div class="oitem" ng-repeat="f in funList"
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
                                              ng-click="changeItem(orderEdit, orderEdit.playItems, play, f)">{{f.name}}</div>
                                     </div>
                                 </div>
@@ -1410,7 +1406,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList" title="{{f.name}}"
                                                  ng-click="changeItem(checkout, checkout.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1478,7 +1474,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
                                                  ng-click="changeItem(checkout, checkout.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1645,7 +1641,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList" title="{{f.name}}"
                                                  ng-click="changeItem(checkoutAd, checkoutAd.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1713,7 +1709,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
                                                  ng-click="changeItem(checkoutAd, checkoutAd.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1922,7 +1918,7 @@
                                     <div class="select1">
                                         <span>{{food.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in foodList"
+                                            <div class="oitem" ng-repeat="f in foodList" title="{{f.name}}"
                                                  ng-click="changeItem(checkin, checkin.foodItems, food, f)">{{f.name}}</div>
                                         </div>
                                     </div>
@@ -1990,7 +1986,7 @@
                                     <div class="select1">
                                         <span>{{play.name}}</span>
                                         <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList"
+                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
                                                  ng-click="changeItem(checkin, checkin.playItems, play, f)">{{f.name}}</div>
                                         </div>
                                     </div>

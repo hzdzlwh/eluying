@@ -59,10 +59,10 @@ var getDataService = function(app){
         this.getIDs = function(callback){
             var idList = [
                 {key: '0', label: '身份证'},
-                // {key: '1', label: '军官证'},
-                // {key: '2', label: '通行证'},
-                // {key: '3', label: '护照'},
-                // {key: '4', label: '其他'},
+                 {key: '1', label: '军官证'},
+                 {key: '2', label: '通行证'},
+                 {key: '3', label: '护照'},
+                 {key: '4', label: '其他'},
             ];
             callback({
                 idList: idList
