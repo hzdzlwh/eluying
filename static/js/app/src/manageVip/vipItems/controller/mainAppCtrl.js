@@ -44,12 +44,14 @@ var itemsCtrl = function(app){
                     function(result){
                         if (result.code === 1) {
                             $("#removeVipModal").modal("hide");
-                            getItemsService.getVipItems(1, rootScope.pageSize, '', rootScope);
+                            getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, '', rootScope);
                             getItemsService.getVipUserCount(rootScope);
                         }
                     });
             };
             rootScope.pageSize = 15;
+            rootScope.searchText = '';
+            rootScope.currentPage = 1;
             scope.filterSearch = function(ev) {
                 if (ev.keyCode === 13) {
                     scope.search();
@@ -59,19 +61,20 @@ var itemsCtrl = function(app){
                 return rootScope.idCardList[num].label.substring(0 ,1);
             };
             scope.onPageChange = function () {
-                getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                scope.searchPattern = rootScope.searchText;
+                getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
             };
             scope.search = function() {
-                scope.searchPattern = scope.searchText;
-                scope.currentPage = 1;
-                getItemsService.getVipItems(scope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                scope.searchPattern = rootScope.searchText;
+                rootScope.currentPage = 1;
+                getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
                 getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };
             getItemsService.getVipUserCount(rootScope);
             scope.getPageCount = function() {
                 return !!scope.vipUserCount && Math.ceil(scope.vipUserCount / rootScope.pageSize);
             };
-            getItemsService.getVipItems(1, rootScope.pageSize, scope.searchPattern, rootScope);
+            getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, rootScope.searchText, rootScope);
         }
     ]);
 };

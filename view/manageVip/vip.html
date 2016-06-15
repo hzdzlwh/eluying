@@ -17,7 +17,7 @@
         <div class="vip-top">
             <img class="filter-img" ng-click="search()" src="http://static.dingdandao.com/vipSearch.png">
             <span class="vip-left">共<span ng-bind="vipUserCount"></span>个会员</span>
-            <input type="text" class="vip-right search" ng-model="searchText" ng-keyup="filterSearch($event)" placeholder="搜索客户姓名/手机号/证件号">
+            <input type="text" class="vip-right search" ng-model="$root.searchText" ng-keyup="filterSearch($event)" placeholder="搜索客户姓名/手机号/证件号">
             <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="http://static.dingdandao.com/vipAdditional.png">新增会员</span>
             <span class="vip-right outPut-excel"><a ng-href="{{outPutExcel()}}"><img src="http://static.dingdandao.com/vipOutput.png">导出</a></span>
         </div>
@@ -52,14 +52,14 @@
                         <td>
                             <p class="tow-line-ellipsis" ng-bind="item.province + item.city + item.county"></p>
                         </td>
-                        <td><p class="tow-line-ellipsis" ng-bind="item.remark"></p></td>
+                        <td class="remark"><p class="tow-line-ellipsis" ng-bind="item.remark"></p><div ng-if="item.remark!==''" ng-bind="item.remark"></div></td>
                         <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="pagination-container">
-            <pager page-count="getPageCount()" current-page="currentPage" on-page-change="onPageChange()"></pager>
+            <pager page-count="getPageCount()" current-page="$root.currentPage" on-page-change="onPageChange()"></pager>
         </div>
     </div>
     <div id="newVipModal" class="modal fade" role="dialog" ng-controller="createVipCtrl">
