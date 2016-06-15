@@ -136,7 +136,7 @@ var AJAXService = {
             dataFilter: function(data){
                 if(data.code == 5){
                     window.localStorage.clear();
-                    window.location.href = "/login2.html";
+                    window.location.href = "/login.html";
                 }
                 return data;
             },
@@ -159,7 +159,7 @@ var AJAXService = {
     sessionValidate: function(data){
         data = JSON.parse(data);
         //if (data.code == 11002) {
-        //    location.href = "/login2.html";
+        //    location.href = "/login.html";
         //}
         return JSON.stringify(data);
 }

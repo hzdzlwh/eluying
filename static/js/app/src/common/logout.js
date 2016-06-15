@@ -9,7 +9,7 @@ var logout = {
 				document.cookie = keys[i] + "=;expires=Mon, 26 Jul 1997 05:00:00 GMT; path=/; "
 			}
 		}
-		location.href = "/login2.html";
+		location.href = "/login.html";
     }
 };
 module.exports = logout;
