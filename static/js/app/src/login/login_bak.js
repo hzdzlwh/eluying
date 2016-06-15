@@ -109,10 +109,10 @@ function registerVCOnClick(){
 
 $(document).ready(function(){
     util.checkExplorer();
-    util.centroidDiv("#loginModal .bg", '#loginModal');
+    util.centroidDiv("#loginBox .bg", '#loginBox');
     util.centroidDiv(".loginPic img", '.loginPic');
     $(window).on("resize", function(){
-        util.centroidDiv("#loginModal .bg", '#loginModal');
+        util.centroidDiv("#loginBox .bg", '#loginBox');
         util.centroidDiv(".loginPic img", '.loginPic');
     });
 
@@ -120,29 +120,30 @@ $(document).ready(function(){
         GetLastUser();
     }
 
-    modal.modalInit();
-    modal.centerModals();
+    $(".modal").modal({
+        show: false
+    });
 
     //手机网站适配
     if($(window).width() <= 1200){
         //修改viewport
         var scale = $(window).width() / 1200;
         $("meta[name=viewport]").attr("content", 'width=device-width, initial-scale=' + scale);
-        $("#loginModal").css({
+        $("#loginBox").css({
             "overflow-x": "hidden"
         });
     }else{
-        $("#loginModal").css({
+        $("#loginBox").css({
             "overflow-x": "visible"
         });
     }
     $(window).on("resize", function(){
         if($(window).width() <= 1200){
-            $("#loginModal").css({
+            $("#loginBox").css({
                 "overflow-x": "hidden"
             });
         }else{
-            $("#loginModal").css({
+            $("#loginBox").css({
                 "overflow-x": "visible"
             });
         }
@@ -152,7 +153,7 @@ $(document).ready(function(){
     $("body").on("keyup", function(ev){
 
         if(ev.which == 13){
-            $("#loginModal .log button").click();
+            $("#loginBox .log button").click();
         }//如果是回车
     });
 
@@ -163,15 +164,6 @@ $(document).ready(function(){
      忘记密码点击发送验证码
      */
     $("#loginForgetPwd .get_code").on("click", forgetVCOnClick);
-
-    $("#loginModal .log .forget").on("click", function(){
-        $("#loginModal").modal("hide");
-        $("#loginForgetPwd").modal("show");
-    });
-    $("#loginModal .log .reg").on("click", function(){
-        $("#loginModal").modal("hide");
-        $("#loginRegister").modal("show");
-    });
 
     /*
      忘记密码点击确认
@@ -296,14 +288,14 @@ $(document).ready(function(){
     /*
      登录按钮响应
      */
-    $("#loginModal .log button").on("click", function(){
-        var loginName = $("#loginModal .log .loginName").val();
-        var password = $("#loginModal .log .password").val();
+    $("#loginBox .log button").on("click", function(){
+        var loginName = $("#loginBox .log .loginName").val();
+        var password = $("#loginBox .log .password").val();
         // var result = loginValidate.phoneValidate(loginName);
         var result = true;
         /*if(result == true) {
-         result = loginValidate.passwordValidate(password);
-         }*/
+            result = loginValidate.passwordValidate(password);
+        }*/
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
@@ -313,7 +305,6 @@ $(document).ready(function(){
             }, function(data){
                 if(data.code == 1){
                     SetPwdAndChk(); //记住密码和账号
-                    $('#loginModal').modal('hide');
                     if (data.data.camps.length === 0) {
                         $('#createOrJoinNetwork').modal('show');
                     } else {
@@ -336,14 +327,17 @@ $(document).ready(function(){
                     //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();
                 }else{
-                    $("#loginModal .log .errorTips").html(data.msg);
-                    $("#loginModal .log .errorTips").show();
+                    $("#loginBox .log .errorTips").html(data.msg);
+                    $("#loginBox .log .errorTips").show();
+                    $("#loginBox .log .text").css("margin-top", "30px");
                 }
             });
-            $("#loginModal .log .errorTips").hide();
+            $("#loginBox .log .errorTips").hide();
+            $("#loginBox .log .text").css("margin-top", "44px");
         }else{
-            $("#loginModal .log .errorTips").html(result);
-            $("#loginModal .log .errorTips").show();
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }
     });
 
@@ -364,24 +358,26 @@ $(document).ready(function(){
     /*
      登录表单验证
      */
-    $("#loginModal .log .loginName").on("change", function(){
+    $("#loginBox .log .loginName").on("change", function(){
         var loginName = $(this).val();
         var result = loginValidate.phoneValidate(loginName);
         if(result != true){
-            $("#loginModal .log .errorTips").html(result);
-            $("#loginModal .log .errorTips").show();
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }else {
-            $("#loginModal .log .errorTips").hide();
+            $("#loginBox .log .errorTips").hide();
         }
     });
-    $("#loginModal .log .password").on("change", function(){
+    $("#loginBox .log .password").on("change", function(){
         var password = $(this).val();
         var result = loginValidate.passwordValidate(password);
         if(result != true){
-            $("#loginModal .log .errorTips").html(result);
-            $("#loginModal .log .errorTips").show();
+            $("#loginBox .log .errorTips").html(result);
+            $("#loginBox .log .errorTips").show();
+            $("#loginBox .log .text").css("margin-top", "30px");
         }else {
-            $("#loginModal .log .errorTips").hide();
+            $("#loginBox .log .errorTips").hide();
         }
     });
 
@@ -559,9 +555,9 @@ function GetLastUser() {
     var id = "49BAC005-7D5B-4231-8CEA-16939BEACD67";//GUID标识符
     var usr = GetCookie(id);
     if (usr != null) {
-        $("#loginModal .loginName").val(usr);
+        $("#loginBox .loginName").val(usr);
     } else {
-        $("#loginModal .loginName").val('');
+        $("#loginBox .loginName").val('');
     }
     GetPwdAndChk();
 }
@@ -569,13 +565,13 @@ function GetLastUser() {
 
 function SetPwdAndChk() {
     //取用户名
-    var usr = $("#loginModal .loginName").val();;
+    var usr = $("#loginBox .loginName").val();;
     //将最后一个用户信息写入到Cookie
     SetLastUser(usr);
     //如果记住密码选项被选中
     if (document.getElementById('loginSave').checked == true) {
         //取密码值
-        var pwd = $("#loginModal .password").val();
+        var pwd = $("#loginBox .password").val();
         var expdate = new Date();
         expdate.setTime(expdate.getTime() + 14 * (24 * 60 * 60 * 1000));
         //将用户名和密码写入到Cookie
@@ -599,14 +595,14 @@ function SetLastUser(usr) {
 //用户名失去焦点时调用该方法
 
 function GetPwdAndChk() {
-    var usr = $("#loginModal .loginName").val();
+    var usr = $("#loginBox .loginName").val();
     var pwd = GetCookie(usr);
     if (pwd != null) {
         document.getElementById('loginSave').checked = true;
-        $("#loginModal .password").val(pwd);
+        $("#loginBox .password").val(pwd);
     } else {
         document.getElementById('loginSave').checked = false;
-        $("#loginModal .password").val('');
+        $("#loginBox .password").val('');
     }
 }
 //取Cookie的值
@@ -645,7 +641,7 @@ function SetCookie(name, value, expires) {
 }
 
 function ResetCookie() {
-    var usr = $("#loginModal .loginName").val();;
+    var usr = $("#loginBox .loginName").val();;
     var expdate = new Date();
     SetCookie(usr, null, expdate);
 }

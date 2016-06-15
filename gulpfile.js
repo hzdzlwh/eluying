@@ -20,7 +20,7 @@ gulp.task('browser-sync', function () {
     browserSync.init({
         server: {
             baseDir: './',
-            index: 'login2.html'
+            index: 'login.html'
         }
     });
 });

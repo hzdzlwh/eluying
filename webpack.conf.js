@@ -13,7 +13,6 @@ var webpackConf =  {
     ],
     entry: {
         'login/login': './static/js/app/src/login/login.js',
-        'login/login2': './static/js/app/src/login/login2.js',
         'price/roomEntry': './static/js/app/src/business/price/roomEntry.js',
         'price/foodETEntry': './static/js/app/src/business/price/foodETEntry.js',
         'inventory/room': './static/js/app/src/business/inventory/room.js',
