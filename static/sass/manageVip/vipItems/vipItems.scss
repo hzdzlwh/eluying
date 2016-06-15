@@ -116,10 +116,36 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             position: absolute;
             background: #fafafa;
             box-shadow: 0 2px 4px 0;
-            width: 100%;
+            border-radius: 2px;
+            left: -121px;
+            width: 237px;
             padding: 8px;
             display: none;
             z-index: 2;
+            span{
+              position: absolute;
+              bottom: -10px;
+              right: 30px;
+            }
+          }
+        }
+        .remark-first{
+          position: relative;
+          div{
+            position: absolute;
+            background: #fafafa;
+            box-shadow: 0 -2px 4px 0;
+            border-radius: 2px;
+            left: -121px;
+            width: 237px;
+            padding: 8px;
+            display: none;
+            z-index: 2;
+            span{
+              position: absolute;
+              top: -10px;
+              right: 30px;
+            }
           }
         }
         td:last-child{

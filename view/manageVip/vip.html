@@ -52,7 +52,14 @@
                         <td>
                             <p class="tow-line-ellipsis" ng-bind="item.province + item.city + item.county"></p>
                         </td>
-                        <td class="remark"><p class="tow-line-ellipsis" ng-bind="item.remark"></p><div ng-if="item.remark!==''" ng-bind="item.remark"></div></td>
+                        <td ng-class="{'remark': $index !== 0, 'remark-first': $index === 0}"><p class="tow-line-ellipsis" ng-bind="item.remark"></p>
+                            <div ng-if="item.remark!=='' && $index !== 0">{{item.remark}}
+                                <span><img src="http://static.dingdandao.com/vip_arrow_down.jpg" alt=""></span>
+                            </div>
+                            <div ng-if="item.remark!=='' && $index === 0">{{item.remark}}
+                                <span><img src="http://static.dingdandao.com/vip_arrow_up.jpg" alt=""></span>
+                            </div>
+                        </td>
                         <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
                     </tr>
                 </tbody>

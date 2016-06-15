@@ -45,9 +45,31 @@ $(function() {
         },
         "mouseover body .remark": function(ev){
             ev.stopPropagation();
-            $(this).children("div").show();
+            var remark_full = $(this).children("div");
+            if (remark_full.length > 0){
+                var height_td = $(this).css("height");
+                var height_p = $(this).children("p").css("height");
+                var height_dis = Math.ceil((parseInt(height_td)-parseInt(height_p)) / 2);
+                var height = parseInt(remark_full.css("height")) - height_dis + 6;
+                remark_full.css("top",'-' + height + 'px').show();
+            }
         },
         "mouseout body .remark": function(ev){
+            ev.stopPropagation();
+            $(this).children("div").hide();
+        },
+        "mouseover body .remark-first": function(ev){
+            ev.stopPropagation();
+            var remark_full = $(this).children("div");
+            if (remark_full.length > 0){
+                var height_td = $(this).css("height");
+                var height_p = $(this).children("p").css("height");
+                var height_dis = Math.ceil((parseInt(height_td)-parseInt(height_p)) / 2);
+                var height = parseInt(height_td) - height_dis + 6;
+                remark_full.css("top", height + 'px').show();
+            }
+        },
+        "mouseout body .remark-first": function(ev){
             ev.stopPropagation();
             $(this).children("div").hide();
         },
