@@ -11,10 +11,10 @@
   cursor: pointer;
 }
 @mixin btn1_hover(){
-
+  opacity: 0.8;
 }
 @mixin btn1_click(){
-
+  opacity: 0.9;
 }
 @mixin btn2_normal(){
   background: $color1;
@@ -47,10 +47,10 @@
   cursor: pointer;
 }
 @mixin btn3_hover(){
-
+  opacity: 0.8;
 }
 @mixin btn3_click(){
-
+  opacity: 0.9;
 }
 @mixin btn4_normal(){
   background: $color1;
@@ -146,7 +146,6 @@
     width: 100%;
     height: 630px;
     margin-top: 70px;
-    background: black;
     position: relative;
     img{
       width: 100%;
@@ -163,7 +162,7 @@
       font-size: 60px;
       text-align: center;
       color: white;
-      text-shadow: 2px 2px 2px #000000;
+      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
     }
     .btns{
       width: 100%;
@@ -974,7 +973,27 @@
     left: 0;
   }
 }
-
+#videoModal{
+  .modal-dialog {
+    width: 1000px;
+  }
+  .modal-content {
+    width: 1000px;
+    height: 550px;
+    border-radius: 0;
+    padding: 0;
+  }
+  .my_close {
+    cursor: pointer;
+    position: absolute;
+    right: -45px;
+    top: 0;
+  }
+  .videoWrapper{
+    width: 800px;
+    margin: auto;
+  }
+}
 #loginApplySuccess{
   .label1{
     margin-top: 40px;

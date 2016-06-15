@@ -172,6 +172,14 @@ $(document).ready(function(){
         $("#loginModal").modal("hide");
         $("#loginRegister").modal("show");
     });
+    $(".sbtn.video").on("click", function(){
+        $("#videoModal").modal("show");
+        $("#videoModal video")[0].currentTime = 0;
+        $("#videoModal video").trigger('play');
+    });
+    $("#videoModal .my_close").on("click", function(){
+        $("#videoModal video").trigger('pause');
+    });
 
     /*
      忘记密码点击确认
