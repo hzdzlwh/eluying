@@ -24,8 +24,8 @@ validate.phoneValidate = function(str){
 };
 
 validate.verifyCodeValidate = function(str){
-    var reg = /^\d{4}$/;
-    return reg.test(str) || '请填写您收到的4位验证码';
+    var reg = /^\d{6}$/;
+    return reg.test(str) || '请填写您收到的6位验证码';
 };
 
 validate.nameValidate = function(str){

@@ -55,10 +55,10 @@ function forgetVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            url: baseUrl + '/user/sendVerifyCode',
+            url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
                 phone: phone,
-                origin: 1
+                origin: 2
             },
             success: function(data){
                 if (data.code !== 1) {
@@ -85,8 +85,9 @@ function registerVCOnClick(){
         $(this).unbind("click");
         $.ajax({
             type: "GET",
-            url: AJAXService.getUrl('/user/sendVerifyCode'),
+            url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
+                origin: 1,
                 phone: phone
             },
             success: function(data){
@@ -202,14 +203,14 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: 'GET',
-                url: baseUrl + '/user/resetPassword',
+                url: AJAXService.getUrl2('/user/modifyPassword'),
                 data: {
-                    password: pwd,
+                    newPassword: pwd,
                     phone: phone,
+                    terminal: 1,
                     verifyCode: verifyCode
                 },
                 success: function(data){
-
                     if(data.code == 1){
                         $("#loginForgetPwd .errorTips").hide();
                         $("#loginForgetPwd").modal('hide');
@@ -267,7 +268,7 @@ $(document).ready(function(){
                 .html('注册中。。。');
             $.ajax({
                 type: 'POST',
-                url: AJAXService.getUrl('/user/register'),
+                url: AJAXService.getUrl2('/user/register'),
                 data: {
                     realName: realName,
                     password: pwd,

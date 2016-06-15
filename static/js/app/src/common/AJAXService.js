@@ -48,7 +48,7 @@ var AJAXService = {
         modifyExtraInventoryUrl: '/inventory/modifyExtraInventory',
         getCategoryInventoriesUrl: '/inventory/getCategoryInventories',
         modifyExtraServiceInventoryBatchUrl: '/inventory/modifyExtraServiceInventoryBatch',
-        sendVerifyCodeUrl: '/user/sendVerifyCode',
+        sendVerifyUrl: '/user/sendVerify',
         resetPasswordUrl: '/user/resetPassword',
         registerUrl: '/user/register',
         verifyUserNameUrl: '/user/verifyUserName',
