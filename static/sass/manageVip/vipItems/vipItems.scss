@@ -20,6 +20,12 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   margin: 0 auto;
   position: relative;
   top: 68px;
+  .select1 {
+    @include select1();
+    float: right;
+    height: 24px;
+    //position: relative;
+  }
   .vip-top {
     width: 1149px;
     float: left;
@@ -138,6 +144,12 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   }
 }
 #newVipModal {
+  .select1 {
+    @include select1();
+    float: right;
+    height: 24px;
+    //position: relative;
+  }
   .modal-dialog {
     width: 340px;
   }
@@ -446,6 +458,12 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
   }
 }
 #removeVipModal {
+  .select1 {
+    @include select1();
+    float: right;
+    height: 24px;
+    //position: relative;
+  }
   .modal-dialog {
     width: 300px;
   }
@@ -509,12 +527,6 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
       color: #178ce6;
     }
   }
-}
-.select1 {
-  @include select1();
-  float: right;
-  height: 24px;
-  //position: relative;
 }
 .pagination-container {
   overflow: hidden;

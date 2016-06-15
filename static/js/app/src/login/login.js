@@ -147,8 +147,18 @@ $(document).ready(function(){
                 "overflow-x": "visible"
             });
         }
+        $(".bg-img").each(function(i, img) {
+            $(img).css({
+                left: ($(img).parent().width() - $(img).width()) / 2
+            });
+        });
     });
 
+    $(".bg-img").each(function(i, img) {
+        $(img).css({
+            left: ($(img).parent().width() - $(img).width()) / 2
+        });
+    });
 
     $("body").on("keyup", function(ev){
 
