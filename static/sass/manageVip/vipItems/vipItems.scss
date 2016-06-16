@@ -116,6 +116,44 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         color:#666666;
         text-align:left;
         border-bottom: 1px solid #ededed;
+        .remark{
+          position: relative;
+          div{
+            position: absolute;
+            background: #fafafa;
+            box-shadow: 0 2px 4px 0;
+            border-radius: 2px;
+            left: -121px;
+            width: 237px;
+            padding: 8px;
+            display: none;
+            z-index: 2;
+            span{
+              position: absolute;
+              bottom: -10px;
+              right: 30px;
+            }
+          }
+        }
+        .remark-first{
+          position: relative;
+          div{
+            position: absolute;
+            background: #fafafa;
+            box-shadow: 0 -2px 4px 0;
+            border-radius: 2px;
+            left: -121px;
+            width: 237px;
+            padding: 8px;
+            display: none;
+            z-index: 2;
+            span{
+              position: absolute;
+              top: -10px;
+              right: 30px;
+            }
+          }
+        }
         td:last-child{
           padding-right: 16px;
           color: #178ce6;
@@ -260,16 +298,20 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
             border-bottom: 1px solid #cccccc;
             background: #ffffff;
           }
-          .toselect-container.toselect-first {
-            border-left:1px solid #cccccc;
-          }
-          .toselect-container.toselect-last {
-            border-right:1px solid #cccccc;
-          }
           .item.toselect{
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            margin-left: 2px;
+          }
+          .toselect-container.toselect-first {
+            border-left:1px solid #cccccc;
+            .toselect {
+              margin-left: 0;
+            }
+          }
+          .toselect-container.toselect-last {
+            border-right:1px solid #cccccc;
           }
           .item.toselect:hover{
             background:#edeef4;

@@ -31,21 +31,53 @@ $(function() {
             ev.stopPropagation();
             AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
         }*/
+        "click body": function(){
+            $(".selectBox .toselect-container").hide();
+            $(".select1_options").hide();
+        },
         "click body .btn-cancel": function(){$(this).parents(".modal").modal("hide");},
         "click body .dialog-close": function(){
             $(this).parents(".modal").modal("hide");
         },
-        "click body .toselect-last": function(){
-            console.log('hi');
-            $(".selectBox .toselect-container").hide();
-        },
-        "click body .toselect-container>.toselect": function(){
+        "click .scontent .toselect-container>.toselect": function(ev){
+            ev.stopPropagation();
             $(this).siblings(".toselect").removeClass("selected-area");
             $(this).addClass("selected-area");
+        },
+        "mouseover body .remark": function(ev){
+            ev.stopPropagation();
+            var remark_full = $(this).children("div");
+            if (remark_full.length > 0){
+                var height_td = $(this).css("height");
+                var height_p = $(this).children("p").css("height");
+                var height_dis = Math.ceil((parseInt(height_td)-parseInt(height_p)) / 2);
+                var height = parseInt(remark_full.css("height")) - height_dis + 6;
+                remark_full.css("top",'-' + height + 'px').show();
+            }
+        },
+        "mouseout body .remark": function(ev){
+            ev.stopPropagation();
+            $(this).children("div").hide();
+        },
+        "mouseover body .remark-first": function(ev){
+            ev.stopPropagation();
+            var remark_full = $(this).children("div");
+            if (remark_full.length > 0){
+                var height_td = $(this).css("height");
+                var height_p = $(this).children("p").css("height");
+                var height_dis = Math.ceil((parseInt(height_td)-parseInt(height_p)) / 2);
+                var height = parseInt(height_td) - height_dis + 6;
+                remark_full.css("top", height + 'px').show();
+            }
+        },
+        "mouseout body .remark-first": function(ev){
+            ev.stopPropagation();
+            $(this).children("div").hide();
         },
         "click .scontent": function(ev){
             ev.stopPropagation();
             $(".selectBox .toselect-container").show();
+            $(".toselect").removeClass("selected-area");
             // $(this).siblings(".toselect-container").show();
         },
         "click body .select1>span": function(ev){
@@ -56,7 +88,6 @@ $(function() {
     };
     util.bindDomAction(events);
     document.querySelector('.toselect-last').addEventListener('click', function(e){
-        console.log('hi');
         e.stopPropagation();
         $(".selectBox .toselect-container").hide();
     });

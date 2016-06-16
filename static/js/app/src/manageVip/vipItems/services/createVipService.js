@@ -13,7 +13,7 @@ var createVipService = function(app){
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
                         newVip = {name: '', phone: '', idCardType: 0};
-                        getVipItems(1, 15, '', rootScope);
+                        getVipItems(rootScope.currentPage, rootScope.pageSize, rootScope.searchText, rootScope);
                         getVipUserCount(rootScope);
                     } else {
                         modal.somethingAlert(result.msg);
@@ -52,8 +52,8 @@ var getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
         rootScope.$apply();
     });
 };
-var getVipUserCount = function(rootScope, searchPattern) {
-    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: searchPattern},
+var getVipUserCount = function(rootScope) {
+    AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: rootScope.searchText},
         function(result) {
             if (result.code === 1) {
                 rootScope.vipUserCount = result.data;
