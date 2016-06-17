@@ -230,7 +230,7 @@
                         <div class="sub-title">餐饮项目</div>
                         <table ng-if="orderDetail.foodItems">
                             <tr ng-repeat="f in orderDetail.foodItems">
-                                <td><div>{{f.name}}</div></td>
+                                <td><div class="sname">{{f.name}}</div></td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
@@ -246,7 +246,7 @@
                         <div class="sub-title">娱乐项目</div>
                         <table ng-if="orderDetail.playItems">
                             <tr ng-repeat="p in orderDetail.playItems">
-                                <td><div>{{p.name}}</div></td>
+                                <td><div class="sname">{{p.name}}</div></td>
                                 <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
@@ -262,7 +262,7 @@
                         <!--<div class="sub-title">商超项目</div>-->
                         <!--<table ng-if="orderDetail.goodsItems">-->
                             <!--<tr ng-repeat="p in orderDetail.goodsItems">-->
-                                <!--<td><div>{{p.name}}</div></td>-->
+                                <!--<td><div class="sname">{{p.name}}</div></td>-->
                                 <!--<td></td>-->
                                 <!--<td>-->
                                     <!--<span class="light">数量</span>-->
@@ -1140,7 +1140,7 @@
                     </div>
                     <table>
                         <tr ng-repeat="food in orderEdit.foodItems">
-                            <td ng-if="!food.isNew">{{food.name}}{{food.name}}{{food.name}}</td>
+                            <td ng-if="!food.isNew"><span>{{food.name}}</span></td>
                             <td ng-if="food.isNew">
                                 <div class="select1">
                                     <span>{{food.name}}</span>
@@ -1206,7 +1206,7 @@
                     </div>
                     <table>
                         <tr ng-repeat="play in orderEdit.playItems">
-                            <td ng-if="!play.isNew">{{play.name}}</td>
+                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -1271,7 +1271,7 @@
                     <!--</div>-->
                     <!--<table>-->
                         <!--<tr ng-repeat="goods in orderEdit.goodsItems">-->
-                            <!--<td ng-if="!goods.isNew">{{goods.name}}</td>-->
+                            <!--<td ng-if="!goods.isNew"><span>{{goods.name}}</span></td>-->
                             <!--<td ng-if="goods.isNew">-->
                                 <!--<div class="select1">-->
                                     <!--<span>{{goods.name}}</span>-->

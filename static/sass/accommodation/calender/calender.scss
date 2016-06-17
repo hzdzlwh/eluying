@@ -341,7 +341,7 @@ object{
             position: relative;
             display: inline-block;
             left: 10px;
-            top: 2px;
+            //top: 2px;
             .desc-box{
               display: none;
               background:#fafafa;
@@ -359,14 +359,14 @@ object{
               padding-bottom: 4px;
               .subt{
                 font-size:14px;
-                color:#666666;
                 text-align:left;
+                color:#b3b3b3;
                 margin-left: 8px;
                 margin-top: 4px;
               }
               .sitem{
                 font-size:14px;
-                color:#b3b3b3;
+                color:#666666;
                 height: 20px;
                 margin: 4px 8px 0;
                 line-height: 20px;
@@ -374,7 +374,7 @@ object{
                 position: relative;
                 .sl{
                   float: left;
-                  max-width: 120px;
+                  max-width: 130px;
                   text-overflow: ellipsis;
                   white-space: nowrap;
                   overflow: hidden;
@@ -408,7 +408,7 @@ object{
                 background:#d4d4d4;
                 width:192px;
                 height:1px;
-                margin: 4px auto;
+                margin: 8px auto;
               }
             }
           }
@@ -753,23 +753,20 @@ object{
               width:208px;
               max-height: 300px;
               overflow-y: auto;
-              //height:298px;
-              //margin-left: -213px;
-              //margin-top: -14px;
               position: fixed;
               z-index: 999;
               padding-top: 4px;
               padding-bottom: 4px;
               .subt{
                 font-size:14px;
-                color:#666666;
+                color:#b3b3b3;
                 text-align:left;
                 margin-left: 8px;
                 margin-top: 4px;
               }
               .sitem{
                 font-size:14px;
-                color:#b3b3b3;
+                color:#666666;
                 height: 20px;
                 margin: 4px 8px 0;
                 line-height: 20px;
@@ -811,7 +808,7 @@ object{
                 background:#d4d4d4;
                 width:192px;
                 height:1px;
-                margin: 4px auto;
+                margin: 8px auto;
               }
             }
           }
@@ -1337,7 +1334,6 @@ object{
         }
         td:first-child{
           width: 114px;
-          text-overflow: ellipsis;
           .select1{
             @include select1();
             width: 114px;
@@ -2092,7 +2088,6 @@ object{
           }
           td:first-child{
             width: 114px;
-            text-overflow: ellipsis;
             .sname{
               width: 114px;
               text-overflow: ellipsis;
@@ -2748,7 +2743,7 @@ object{
           }
           .isHoliday{
             position: relative;
-            top: 2px;
+            //top: 2px;
             left: 2px;
             display: inline-block;
           }
