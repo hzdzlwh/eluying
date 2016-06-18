@@ -8,11 +8,11 @@ var leftMenu = {
         var templ = dot.template(leftMenuHtml);
         var data = {
             room:'住宿',
-            food:'餐饮',
+            food:'餐厅',
             shop:'商超',
             entertainment:'娱乐',
             roomPath:'/view/business/category/room.html',
-            foodPath:'/view/business/category/food.html',
+            foodPath:'/view/business/restaurant/restaurant.html',
             entertainmentPath:'/view/business/category/entertainment.html',
             shopPath:'/view/business/category/shop.html',
             business: '业务设置',

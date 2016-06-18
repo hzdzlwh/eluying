@@ -1,0 +1,100 @@
+.restaurant-container {
+  margin-left: 40px;
+  margin-top: 20px;
+}
+.restaurant-head {
+  font-size:16px;
+  width: 464px;
+  color:#178ce6;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+.restaurant-box {
+  width: 464px;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+  .hr {
+    width: 100%;
+    background: #178CE6;
+    height: 4px;
+  }
+}
+.create-restaurant {
+  cursor: pointer;
+  font-weight: normal;
+  width: 78px;
+  font-size: 14px;
+  float: right;
+  text-align: right;
+  background: url(http://static.dingdandao.com/vipAdditional.png) no-repeat 5px;
+}
+.restaurant-table {
+  border-radius:2px;
+  th {
+    width: 116px;
+    text-align: center;
+    font-weight: bolder;
+  }
+  tr {
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid #ededed;
+  }
+  thead {
+    background:#fafafa;
+    height:48px;
+  }
+  tbody {
+    td:nth-child(1) {
+      padding-left: 16px;
+    }
+    td:nth-child(2), td:nth-child(3) {
+      padding-left: 44px;
+      color:#178ce6;
+    }
+    td:nth-child(4) {
+      padding-left: 27px;
+      color:#178ce6;
+      span {
+        cursor: pointer;
+      }
+    }
+  }
+}
+.rest-title {
+  font-size: 16px;
+}
+#restaurantName {
+  margin-left: 4px;
+  border:1px solid #cccccc;
+  border-radius:2px;
+  width:174px;
+  height:22px;
+}
+.v-modal {
+  background:#fafafa;
+  box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+  border-radius: 2px;
+  border-top: 4px solid #178ce6;
+  padding: 16px 30px 10px 30px;
+}
+#restaurantDialog {
+  .rest-title {
+    margin-bottom: 18px;
+  }
+  .v-btn-group {
+    margin-left: 64px;
+    margin-top: 9px;
+    .v-btn:nth-child(1) {
+      margin-right: 8px;
+    }
+  }
+}
+.rest-tips {
+  font-size:12px;
+  color:#f24949;
+  height: 17px;
+  line-height: 17px;
+  margin-left: 67px;
+}
