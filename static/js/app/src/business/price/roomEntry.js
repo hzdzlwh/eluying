@@ -12,7 +12,8 @@ var modal = require("modal");
 require("validate");
 require("validation");
 var trToggle = require("trToggle");
-
+var auth = require('../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
 
 $(function(){
     //初始化界面

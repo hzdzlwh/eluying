@@ -1,3 +1,4 @@
+var md5 = require("md5");
 var util = {
     mainContainer: function(){
         var width = document.body.clientWidth - 220;
@@ -194,71 +195,100 @@ var util = {
         }
     },
 
-    checkAuth: function(){
-        var campId = localStorage.getItem("campId");
-        var camps = localStorage.getItem("camps");
+    checkModuleAuth: function(id){
         var bottom = localStorage.getItem("bottom");
-        camps = JSON.parse(camps);
         bottom = JSON.parse(bottom);
-        // $(".header .accomodationEntry").hide();
-        var aflag = false;
+        var flag = true;
         for(var i = 0; i < bottom.length; i++){
-            if(bottom[i].type === 2 && bottom[i].status === 1){
-                $(".header .accomodationEntry").show();
-                aflag = true;
+            if (bottom[i].type === id) {
+                flag = false;
             }
-        }
-        var authFlag = false;
-        var expiredFlag = false;
-        var upgradeFlag = false;
-        //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
-        for(var i = 0; i < camps.length; i++){
-            var camp = camps[i];
-            if(campId == camp.campId){
-                if(camp.userType === 1 || camp.userType === 3){
-                    authFlag = true;
-                }
-                if(camp.type === 0 && camp.days <= 0){
-                    upgradeFlag = true;
-                }else if(camp.type === 1 && camp.days <= 0){
-                    expiredFlag = true;
-                }
-            }
-        }
-        var href = window.location.href;
-        var isInTipsPage = href.indexOf("/view/tips/expired.html") > 0
-            || href.indexOf("/view/tips/upgrade.html") > 0
-            || href.indexOf("/view/tips/noauth.html") > 0;
-        if(authFlag){
-            if(expiredFlag){
-                if(href.indexOf("/view/tips/expired.html") < 0){
-                    window.location.href = '/view/tips/expired.html';
-                }
-                return false;
-            }
-            if(upgradeFlag){
-                if(href.indexOf("/view/tips/upgrade.html") < 0){
-                    window.location.href = '/view/tips/upgrade.html';
-                }
-                return false;
-            }
-            if(!aflag && href.indexOf("/view/accommodation/calender/calender.html") > -1) {
-                window.location.href = '/view/tips/noauthfora.html';
-            }
-            if(aflag && href.indexOf("/view/tips/noauthfora.html") > -1){
-                window.location.href = '/view/accommodation/calender/calender.html';
-            }
-            if(isInTipsPage){
-                window.location.href = '/view/accommodation/calender/calender.html';
-            }
-        }else{
-            if(href.indexOf("/view/tips/noauth.html") > 0){
-
-            }else{
+            if(bottom[i].type === id && bottom[i].status === 0){
                 window.location.href = '/view/tips/noauth.html';
             }
         }
+        if (flag) {
+            window.location.href = '/view/tips/noauth.html';
+        }
     },
+    getSign: function(){
+        var data = {};
+        data.timestamp = (new Date()).valueOf();
+        // data.version = (new Date()).valueOf();
+        data.campId = localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        //data.campId = 56;
+        //data.uid = 85;
+        // data.kick = true;
+        data.terminal = 1;
+        data.version = data.version || 4;
+        // data.token = localStorage.getItem("token");
+        var array = [];
+        for(var key in data){
+            array.push(data[key]);
+        }
+        array.push(localStorage.getItem("token"));
+        array.sort();
+        var str = array.join("");
+        return md5(str);
+    },
+    //checkAuth: function(){
+    //    var href = window.location.href;
+    //    //如果在提示页，不判断
+    //    if(href.indexOf("/view/tips") > 0){
+    //        return false;
+    //    }
+    //
+    //    var expiredFlag = false; //是否过期
+    //    var upgradeFlag = false; //是否需要续费
+    //    var authFlag = false; //是否有管理员权限
+    //    var aflag = false; //是否有前台录入权限
+    //    var vflag = false; //是否有会员管理权限
+    //
+    //    var isInBussiness = href.indexOf("/view/bussiness") > 0; //是否在网络设置页面
+    //    var isInAcc = href.indexOf("/view/accommodation") > 0; //是否在前台录入页面
+    //    var isInVip = href.indexOf("/view/manageVip") > 0; //是否在会员管理页面
+    //
+    //    var campId = localStorage.getItem("campId");
+    //    var camps = localStorage.getItem("camps");
+    //    var bottom = localStorage.getItem("bottom");
+    //    camps = JSON.parse(camps);
+    //    bottom = JSON.parse(bottom);
+    //    for(var i = 0; i < bottom.length; i++){
+    //        if(bottom[i].type === 2 && bottom[i].status === 1){
+    //            // $(".header .accomodationEntry").show();
+    //            aflag = true;
+    //        }
+    //    }
+    //    //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
+    //    for(var i = 0; i < camps.length; i++){
+    //        var camp = camps[i];
+    //        if(campId == camp.campId){
+    //            if(camp.userType === 1 || camp.userType === 3){
+    //                authFlag = true;
+    //            }
+    //            if(camp.type === 0 && camp.days <= 0){
+    //                upgradeFlag = true;
+    //            }else if(camp.type === 1 && camp.days <= 0){
+    //                expiredFlag = true;
+    //            }
+    //        }
+    //    }
+    //
+    //    if(!expiredFlag){
+    //        window.location.href = '/view/tips/expired.html';
+    //    }else if(!upgradeFlag){
+    //        window.location.href = '/view/tips/upgrade.html';
+    //    }else{
+    //        if(!authFlag && isInBussiness){
+    //            window.location.href = '/view/tips/noauth.html';
+    //        }else if(!aflag && isInAcc){
+    //            window.location.href = '/view/tips/noauthfora.html';
+    //        }else if(!vflag && isInVip){
+    //            //TODO 跳转到前台录入提示页
+    //        }
+    //    }
+    //},
     
     objLen: function(obj){
         var num = 0;

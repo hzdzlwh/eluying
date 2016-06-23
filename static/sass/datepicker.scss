@@ -1,0 +1,86 @@
+.ng-datepicker {
+  position: relative;
+  display: inline-block;
+  width: 115px;
+}
+.ng-datepicker-calendar {
+  position: absolute;
+  font-size: 14px;
+  width: 240px;
+  background: #fafafa;
+  box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+  border-radius:2px;
+  padding: 8px 11.5px;
+  z-index: 3;
+}
+.ng-datepicker-week {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 22px;
+  color: #666;
+  text-align: center;
+  margin: 6px 3.5px;
+}
+.ng-datepicker-day {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  color: #666;
+  text-align: center;
+  margin: 6px 3.5px;
+  cursor: pointer;
+  &:hover {
+    background:#ededed;
+    border-radius:2px;
+  }
+}
+.ng-datepicker-otherday {
+  color: #ccc;
+}
+.ng-datepicker-selected {
+  border:1px solid #178ce6;
+  border-radius:2px;
+}
+.ng-datepicker-date-row {
+  height: 36px;
+}
+.ng-datepicker-selectRow {
+  height: 28px;
+  padding: 0 22.5px;
+}
+.ng-datepicker-select {
+  width: 60px!important;
+  float: left!important;
+  border: 0!important;
+  background: #fafafa url(http://static.dingdandao.com/4EDF1585-6AD8-4B26-B4F6-D4B8E39252B1@1x.png) 47px 7px no-repeat!important;
+  margin: 0 13px;
+  span {
+    padding-left: 0!important;
+    padding-right: 0!important;
+    color: #178ce6;
+    cursor: pointer!important;
+  }
+  .select1_options {
+    max-height: 204px!important;
+  }
+  .oitem {
+    height: 17px!important;
+    padding-left: 3px!important;
+    font-size: 12px!important;
+    color: #7d7d7d!important;
+    opacity: 0.5;
+  }
+  .ng-datepicker-selectedYearMonth {
+    color: #178ce6!important;
+  }
+}
+.ng-datepicker-monthSelect {
+  span {
+    padding-left: 12px!important;
+  }
+  .oitem {
+    padding-left: 12px!important;
+  }
+}

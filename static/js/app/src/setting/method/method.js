@@ -3,6 +3,9 @@ var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
+var auth = require('../../common/auth');
+auth.checkModule(auth.BUSINESS_ID);
+
 require("angular");
 
 require("bootstrap");

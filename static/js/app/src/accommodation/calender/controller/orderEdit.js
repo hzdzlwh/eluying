@@ -170,8 +170,9 @@ var orderEditCtrl = function(app){
                 if(rootScope.orderEdit.discounts > itemPrice){
                     rootScope.orderEdit.discounts = itemPrice;
                 }
-                var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
-                if(!reg.test(parseFloat(rootScope.orderEdit.discounts))){
+                var reg = /^\d+(\.(\d{0,2}))?$/;
+                // var reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
+                if(!reg.test((rootScope.orderEdit.discounts))){
                     rootScope.orderEdit.discounts =
                         rootScope.orderEdit.discounts.substr(0, rootScope.orderEdit.discounts.length - 1);
                 }

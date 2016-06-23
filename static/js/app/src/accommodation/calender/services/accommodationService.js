@@ -41,9 +41,9 @@ var accommodationService = function(app){
             var roomIndexHash = {};
             var tnum = 0;
             var pRoomList = rootScope.pRoomList;
-            var cRoomStore = rootScope.cRoomStore;
-            for(var c in cRoomStore){
-                var tempCRoom = cRoomStore[c];
+            var cRoomArray = rootScope.cRoomArray;
+            for(var i = 0; i < cRoomArray.length; i++){
+                var tempCRoom = cRoomArray[i];
                 if(!pRoomList[tempCRoom.pId].selected){
                     continue;
                 }

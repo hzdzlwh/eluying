@@ -37,7 +37,6 @@ var getDataService = function(app){
                     }
                 });
                 AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
-                    console.log(result1);
                     var goods = [];
                     result1.data.list.forEach(function(d){
                         d.gList.forEach(function(dd){
@@ -60,10 +59,10 @@ var getDataService = function(app){
         this.getIDs = function(callback){
             var idList = [
                 {key: '0', label: '身份证'},
-                // {key: '1', label: '军官证'},
-                // {key: '2', label: '通行证'},
-                // {key: '3', label: '护照'},
-                // {key: '4', label: '其他'},
+                 {key: '1', label: '军官证'},
+                 {key: '2', label: '通行证'},
+                 {key: '3', label: '护照'},
+                 {key: '4', label: '其他'},
             ];
             callback({
                 idList: idList
@@ -175,7 +174,11 @@ var getDataService = function(app){
                         }
                     }
                     cRoomArray.sort(function(a, b){
-                       return a.pId - b.pId;
+                        if(a.pId > b.pId || (a.pId === b.pId && a.name > b.name)){
+                            return 1;
+                        }else{
+                            return -1;
+                        }
                     });
                     //保存房间列表
                     var roomIndexHash = {};
@@ -211,8 +214,8 @@ var getDataService = function(app){
                             seeStart = false;
                         }
                         var checkOutDate = new Date(order.checkOutDate);
-                        if(checkOutDate > util.diffDate(checkInDate, 29)){
-                            checkOutDate = util.diffDate(checkInDate, 29);
+                        if(checkOutDate > util.diffDate(startDate, 29)){
+                            checkOutDate = util.diffDate(startDate, 29);
                         }
                         var diff = util.DateDiff(checkInDate, checkOutDate);
                         if(diff === 0){
@@ -235,7 +238,7 @@ var getDataService = function(app){
                         if(util.isSameDay(checkInDate, checkOutDate)){
                             occupyList[glyph.checkInDateShort + order.accommodationId] = true;
                         }else{
-                            while(tempDate < checkOutDate){
+                            while(tempDate < checkOutDate && !util.isSameDay(tempDate, checkOutDate)){
                                 occupyList[util.dateFormatWithoutYear(tempDate) + order.accommodationId] = true;
                                 tempDate = util.diffDate(tempDate, 1);
                             }
@@ -243,6 +246,8 @@ var getDataService = function(app){
                         glyph.classStr = constService.statusStr2[glyph.roomState].classStr;
                         glyphs.push(glyph);
                     });
+                    console.log(occupyList);
+                    console.log(cRoomStore);
                     scope.holidays = holidayHash;
                     scope.pRoomList = pRoomList;
                     scope.cRoomArray = cRoomArray;
