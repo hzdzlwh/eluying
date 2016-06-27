@@ -22,6 +22,13 @@
     width: 392px;
 }
 
+.modal-w300 {
+    width: 300px;
+}
+
+.modal-w345 {
+    width: 345px;
+}
 .modal-dialog {
     margin-left: auto;
     margin-right: auto;
@@ -458,4 +465,26 @@ input[type=number]::-webkit-outer-spin-button {
     -moz-appearance: none;
     appearance: none;
     margin: 0;
+}
+
+.v-btn {
+    border-radius: 2px;
+    border: 0;
+    background-color: #fff;
+    padding: 1.5px 11px;
+    line-height: 19px;
+}
+.v-blue-btn {
+    background-color: #178ce6;
+    border: 1px solid #178ce6;
+    color: #fff;
+}
+.v-white-btn {
+    color: #178ce6;
+    border: 1px solid #178ce6;
+}
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

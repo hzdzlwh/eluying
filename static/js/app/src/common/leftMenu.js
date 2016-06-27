@@ -12,7 +12,7 @@ var leftMenu = {
             // shop:'商超',
             entertainment:'娱乐',
             roomPath:'/view/business/category/room.html',
-            foodPath:'/view/business/category/food.html',
+            foodPath:'/view/business/restaurant/restaurant.html',
             entertainmentPath:'/view/business/category/entertainment.html',
             // shopPath:'/view/business/category/shop.html',
             business: '业务设置',

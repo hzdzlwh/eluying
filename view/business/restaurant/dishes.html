@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——餐厅管理</title>
+    <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/restaurant/dishes.js"></script>
+</head>
+<body>
+    <div class="mainContainer clearfloat">
+        <div class="restaurant-container">
+            <div class="restaurant-head clearfloat" style="width: 725px">
+                <p class="restaurant-head-restName">{{restName}}</p>
+                <ul class="restaurant-head-nav">
+                    <li class="restaurant-head-nav-selected"><a href="/view/business/restaurant/dishes.html?restId={{restId}}">品类管理</a></li>
+                    <li><a href="/view/business/price/food.html?restId={{restId}}">价格维护</a></li>
+                </ul>
+                <span class="create-restaurant" @click="openCreatePackageDialog">新增套餐</span>
+            </div>
+            <div class="dishes-box overflow-default">
+                <div class="hr"></div>
+                <table class="dishes-table package-table">
+                    <thead>
+                    <tr>
+                        <th>套餐</th>
+                        <th>简称</th>
+                        <th>适用人数</th>
+                        <th>单价</th>
+                        <th>描述</th>
+                        <th>直销网站</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="packageModel in packages" @click="selectPackage(packageModel)" track-by="categoryId" v-bind:class="{'mainActive': packageSelected && packageModel.categoryId === packageSelected.categoryId}">
+                        <td class="ellipsis">{{packageModel.name}}</td>
+                        <td class="ellipsis">{{packageModel.shortName}}</td>
+                        <td>{{packageModel.fitNum}}</td>
+                        <td>{{packageModel.unitPrice}}</td>
+                        <td class="ellipsis">{{packageModel.description}}</td>
+                        <td>{{packageModel.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
+                        <input type="hidden" class="id" :value="packageModel.categoryId">
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+                <div class="clearfloat" style="width: 725px;margin: 20px 0 20px 0">
+                    <span class="create-restaurant" @click="openCreateDishesDialog" style="color: #178ce6;">新增菜品</span>
+                </div>
+                <div class="dishes-box overflow-default">
+                    <div class="hr"></div>
+                    <table class="restaurant-table dishes-table">
+                        <thead>
+                        <tr>
+                            <th>菜品</th>
+                            <th>简称</th>
+                            <th>单价</th>
+                            <th>菜品分类</th>
+                            <th>适用人数</th>
+                            <th>单价</th>
+                            <th>描述</th>
+                            <th>直销网站</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="dishes in dishesList" track-by="categoryId" @click="selectDishes(dishes)" v-bind:class="{'mainActive': dishesSelected && dishes.categoryId === dishesSelected.categoryId}">
+                            <td class="ellipsis">{{dishes.name}}</td>
+                            <td class="ellipsis">{{dishes.shortName}}</td>
+                            <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
+                            <td style="padding-left: 18px" class="ellipsis">{{dishes.dishesClassify}}</td>
+                            <td style="padding-left: 18px">{{dishes.fitNum}}</td>
+                            <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
+                            <td style="padding-left: 18px" class="ellipsis">{{dishes.description}}</td>
+                            <td style="padding-left: 18px">{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
+                            <input type="hidden" class="id" :value="dishes.categoryId">
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            <!-- 操作台 -->
+            <div class="rest-operation">
+                <div class="rest-operation-1 clearfloat">
+                    <div class="rest-operation-item" @click="openDishesClassifyDialog">
+                        <img src="/static/image/icon_zileiguanli.png" alt="">
+                        <p>菜品分类管理</p>
+                    </div>
+                    <div v-if="dishesSelected || packageSelected" class="rest-operation-item" @click="openEditDialog">
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑基本信息</p>
+                    </div>
+                    <div v-if="dishesSelected || packageSelected" class="rest-operation-item" @click="openDeleteDialog">
+                        <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
+                        <p>删除</p>
+                    </div>
+                </div>
+                <div class="clearfloat rest-operation-2">
+                    <div id="editFoodShowInfoButton" v-if="dishesSelected || packageSelected" class="rest-operation-item" data-toggle="modal" data-target="#editDisplayInfo">
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                        <p>编辑展示信息</p>
+                    </div>
+                    <div v-if="(dishesSelected && dishesSelected.onDirectSaleState == 0) || (packageSelected && packageSelected.onDirectSaleState == 0)" class="rest-operation-item" @click="modifyState">
+                        <img src="/static/image/icon_shangjia.png" alt="">
+                        <p>上架到直销网站</p>
+                    </div>
+                    <div v-if="(dishesSelected && dishesSelected.onDirectSaleState == 1) || (packageSelected && packageSelected.onDirectSaleState == 1)" class="rest-operation-item" @click="modifyState">
+                        <img src="/static/image/icon_xiajia.png" alt="">
+                        <p>下架</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- 菜品弹窗开始 -->
+<div class="modal fade" role="dialog" id="dishesDialog">
+    <div class="modal-dialog modal-w345">
+        <div class="modal-content clearfloat v-modal" style="padding: 20px 20px 20px 20px">
+            <p class="board-title" style="color: #178ce6;margin-bottom: 9px;">
+                {{!dishes.categoryId ? '新增菜品' : '编辑菜品'}}
+            </p>
+            <h6 style="font-size: 12px;margin-bottom: 18px;color: #178ce6">基本信息</h6>
+            <label for="">菜品分类</label>
+            <select name="" id="" v-model="dishes.dishesClassifyId">
+                <option v-for="dishesClassify in dishesClassifyList" v-bind:value="dishesClassify.dishesClassifyId">
+                    {{dishesClassify.dishesClassifyName}}
+                </option>
+            </select>
+            <p class="rest-tips">
+            </p>
+            <label for="">菜品名称</label>
+            <input type="text" placeholder="用于展示给客户" v-model="dishes.name">
+            <p class="rest-tips">
+            </p>
+            <label for="">简称</label>
+            <input type="text" placeholder="用于自己管理" v-model="dishes.shortName">
+            <p class="rest-tips">
+            </p>
+            <label for="">单位</label>
+            <input type="text" placeholder="请填写单位" v-model="dishes.unit">
+            <p class="rest-tips">
+            </p>
+            <label for="">适用人数</label>
+            <input type="text" placeholder="请填写纯数字" v-model="dishes.fitNum" style="width: 176px">
+            <span>（选填）</span>
+            <p class="rest-tips">
+            </p>
+            <label for="">单价</label>
+            <input type="text" placeholder="请填写纯数字" v-model="dishes.unitPrice">
+            <p class="rest-tips">
+            </p>
+            <label for="" style="vertical-align: top">描述</label>
+            <textarea name="" cols="30" rows="10" v-model="dishes.description" placeholder="请填写描述"></textarea>
+            <div class="v-btn-group">
+                <label></label>
+                <button class="v-btn v-blue-btn" @click="changeDishes" style="margin-right: 20px">确定</button>
+                <button class="v-btn v-white-btn" @click="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 菜品弹窗结束 -->
+<!-- 套餐弹窗开始 -->
+<div class="modal fade" role="dialog" id="packageDialog">
+    <div class="modal-dialog modal-w345">
+        <div class="modal-content clearfloat v-modal" style="padding: 24px 20px">
+            <p style="font-size: 16px;color: #178ce6;margin-bottom: 9px">{{packageModel.categoryId ? '编辑套餐' : '新增套餐'}}</p>
+            <p style="color: #178ce6;margin-bottom: 19px">基本信息</p>
+            <label for="">套餐名称</label>
+            <input type="text" placeholder="用于展示给客户" v-model="packageModel.packageName">
+            <p class="rest-tips">
+            </p>
+            <label for="">简称</label>
+            <input type="text" placeholder="用于自己管理" v-model="packageModel.shortName">
+            <p class="rest-tips">
+            </p>
+            <label for="">适用人数</label>
+            <input type="text" v-model="packageModel.fitNum" placeholder="请填写纯数字">
+            <p class="rest-tips">
+            </p>
+            <label for="">单价</label>
+            <input type="text" v-model="packageModel.unitPrice" placeholder="请填写纯数字">
+            <p class="rest-tips">
+            </p>
+            <label for="">包含菜品</label>
+            <input class="dishes-num" type="text" disabled :value="getDishesNum()">
+            <button class="editDishesInPackage" @click="openPackageSelectDialog">编辑菜品</button>
+            <p class="rest-tips">
+            </p>
+            <label for="">描述</label>
+            <textarea name="" cols="30" rows="10" v-model="packageModel.description" placeholder="请填写描述"></textarea>
+            <div class="v-btn-group" style="margin-top: 84px">
+                <label></label>
+                <button class="v-btn v-blue-btn" style="margin-right: 20px" @click="changePackage">确定</button>
+                <button class="v-btn v-white-btn" @click="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 套餐弹窗结束 -->
+<div class="modal fade" role="dialog" id="packageSelectDialog">
+    <div class="modal-dialog" style="width: 690px;min-height: 402px">
+        <div class="modal-content clearfloat v-modal" style="padding: 0;min-height: 402px;background: #fff">
+            <div class="clearfloat">
+                <div class="dishes-classify-box">
+                    <ul class="dishes-classify-box-classify clearfloat">
+                        <li><div v-if="classifyOffset > 0" @click="decreaseClassifyOffset">&lt;</div></li>
+                        <li v-for="dishesClassify in dishesClassifyList | limitBy 4 classifyOffset" v-bind:class="{'current-classify': currentClassifyId === dishesClassify.dishesClassifyId}" @click="changeClassify(dishesClassify.dishesClassifyId)">
+                            {{dishesClassify.dishesClassifyName}}
+                        </li>
+                        <li style="border-right: 0"><div v-if="dishesClassifyList.length > 4 && classifyOffset < dishesClassifyList.length - 4" @click="increaseClassifyOffset">&gt;</div></li>
+                    </ul>
+                    <div class="dishes-classify-box-dishes">
+                        <ul>
+                            <li class="ellipsis" v-for="dishes in dishesInClassify" track-by="categoryId" @click="selectDishes(dishes)" v-bind:class="{'dishes-in-package': isSelected(dishes.categoryId)}">{{dishes.categoryName}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="dishes-selected-box">
+                    <table class="dishes-selected-box-table">
+                        <thead>
+                        <tr style="border-bottom: 1px solid #ededed">
+                            <th>名称</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="dishes in dishesInPackageList" track-by="categoryId">
+                            <td class="ellipsis">{{dishes.categoryName}}</td>
+                            <td>￥{{dishes.unitPrice}}</td>
+                            <td>
+                                <span class="dishes-num-decrease" @click="decreaseDishesNum(dishes)">-</span><input type="text" v-model="dishes.amount" number><span class="dishes-num-increase" @click="increaseDishesNum(dishes)">+</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="v-btn-group">
+                    <button class="v-btn v-blue-btn" @click="changePackageDishes" style="margin-right: 22px">确定</button>
+                    <button class="v-btn v-white-btn" @click="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 菜品分类弹窗开始 -->
+<div class="modal fade" role="dialog" id="dishesClassifyDialog">
+    <div class="modal-dialog" style="width: 596px">
+        <div class="modal-content clearfloat v-modal" style="background: #fff">
+            <p style="color:#178ce6;margin-bottom: 21px">
+                <span style="font-size: 16px;margin-right: 128px">菜品分类管理</span>
+                <span @click="openDishesClassifyCreateDialog" style="cursor: pointer">
+                    <img src="http://static.dingdandao.com/vipAdditional.png" alt="" style="margin-right: 4px">新增分类</span>
+            </p>
+            <table class="dishes-classify-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>排序值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="dishesClassify in dishesClassifyList" @click="select(dishesClassify)" v-bind:class="{'classify-selected':dishesClassify == dishesClassifySelected}">
+                        <td class="ellipsis">{{dishesClassify.dishesClassifyName}}</td>
+                        <td>{{dishesClassify.sequence}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="classify-operation clearfloat">
+                <div v-if="dishesClassifySelected" class="classify-operation-item" @click="openDishesClassifyEditDialog">
+                    <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                    <p>编辑信息</p>
+                </div>
+                <div v-if="dishesClassifySelected" class="classify-operation-item" @click="openDeleteDialog">
+                    <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
+                    <p>删除</p>
+                </div>
+            </div>
+            <div class="v-btn-group" style="margin-top: 22px;margin-left: 172px">
+                <button class="v-btn v-blue-btn" style="margin-right: 20px">确定</button>
+                <button class="v-btn v-white-btn" @click="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 菜品分类弹窗结束 -->
+<!-- 分类新建编辑弹窗开始 -->
+<div class="modal fade" role="dialog" id="dishesClassifyEditDialog">
+    <div class="modal-dialog modal-w300">
+        <div class="modal-content clearfloat v-modal" style="padding: 30px 45px 20px">
+            <p style="font-size: 16px;margin-bottom: 18px">{{dishesClassify.dishesClassifyId ? '编辑分类' : '新建分类'}}</p>
+            <label for="">分类名称</label>
+            <input type="text" v-model="dishesClassify.name">
+            <p class="rest-tips">
+            </p>
+            <label for="">排序值</label>
+            <input type="text" v-model="dishesClassify.sequence">
+            <p class="rest-tips">
+            </p>
+            <div class="v-btn-group">
+                <label for=""></label>
+                <button class="v-btn v-blue-btn" @click="changeDishesClassify">确定</button>
+                <button class="v-btn v-white-btn" @click="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 分类新建编辑弹窗结束 -->
+    <!-- 展示信息开始 -->
+    <div class="modal fade" role="dialog" id="editDisplayInfo">
+        <div class="modal-dialog modal-w626">
+            <div class="modal-content clearfloat">
+                <div class="editDisplayInfo clearfloat">
+                    <h1>编辑展示信息-烧烤</h1>
+                    <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+                    <div class="clearfloat">
+                        <div class="photo">
+                            <h2>图片管理</h2>
+                            <div class="cover">
+                                <div class="title clearfloat">
+                                    <span>封面</span>
+                                    <div class="create">
+                                        <img src="/static/image/icon_xinjian.png" alt="新增">
+                                        <span>上传图片</span>
+                                    </div>
+                                    <input id="cover" type="file" name="file" accept="image/*"/>
+                                </div>
+                                <div class="photoContainer photoCon1"></div>
+                                <p class="coverError hide">请上传封面<p>
+                            </div>
+                            <div class="detail">
+                                <div class="title clearfloat">
+                                    <span>详细图片</span>
+                                    <div class="create">
+                                        <img src="/static/image/icon_xinjian.png" alt="新增">
+                                        <span>上传图片</span>
+                                    </div>
+                                    <input id="detail" type="file" name="file" accept="image/*" />
+                                </div>
+                                <div class="photoContainer"></div>
+                                <p class="detailError hide">请上传详细图片<p>
+                            </div>
+                        </div>
+                        <div class="operate">
+                            <div class="first">
+                                <div class="operateItem hide">
+                                    <div id="replaceCover" class="clickDiv">
+                                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                        <p>替换图片</p>
+                                    </div>
+                                </div>
+                                <div class="operateItem hide">
+                                    <div id="deleteCover" class="clickDiv">
+                                        <img src="/static/image/icon_shanchu.png" alt="">
+                                        <p>删除</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="second">
+                                <div class="operateItem hide">
+                                    <div id="replaceDetail" class="clickDiv">
+                                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                                        <p>替换图片</p>
+                                    </div>
+                                    <input type="file" accept="image/*" name="file" id="replaceDetailImg" />
+                                </div>
+                                <div class="operateItem hide">
+                                    <div id="deleteDetail" class="clickDiv">
+                                        <img src="/static/image/icon_shanchu.png" alt="">
+                                        <p>删除</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <button class="btn-cancel">取消</button>
+                        <button class="btn-ok" id="editFoodShowOk">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

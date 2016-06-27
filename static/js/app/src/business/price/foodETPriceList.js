@@ -18,7 +18,8 @@ var foodETPriceList = {
             }
         })*/
         var url = (path == "food") ? "getFoodCategoryPriceList" : "getPlayCategoryPriceList";
-        AJAXService.ajaxWithToken("GET",url,{},function(result){
+        var restId = location.search.split('=')[1];
+        AJAXService.ajaxWithToken("GET", url, {restId: restId}, function(result){
             foodETPriceList.render(result)
         })
     },
