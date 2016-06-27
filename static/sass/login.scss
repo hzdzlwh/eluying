@@ -840,6 +840,18 @@
     font-size: 12px;
     line-height: 20px;
   }
+  .picture_container {
+    display: none;
+  }
+  .get_picture {
+    line-height: 43px;
+    padding: 0;
+    img {
+      width: 87px;
+      height: 29px;
+      cursor: pointer;
+    }
+  }
   .my_close {
     cursor: pointer;
     position: absolute;
