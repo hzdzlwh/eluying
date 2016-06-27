@@ -17,11 +17,16 @@ auth.checkAuth(auth.BUSINESS_ID);
 $(function(){
     header.showHeader();
     leftMenu.showLeftMenu();
+    util.mainContainer();
     modal.centerModals();
+    events = {
 
-    $('.create-restaurant').on('click', function() {
-        $('#createRestaurantDialog').modal('show');
-    });
+        "resize window": util.mainContainer
+
+    };
+
+    util.bindDomAction(events);
+    
     var table = new Vue({
         el: '.restaurant-container',
         data: {
@@ -29,7 +34,6 @@ $(function(){
             restIdWillDeleted: undefined
         },
         created: function() {
-            this.$on('create', this.getRestaurants);
             this.getRestaurants();
         },
         methods: {
@@ -95,6 +99,8 @@ $(function(){
                             table.getRestaurants();
                             this.restaurantName = '';
                             this.submitted = false;
+                        } else {
+                            modal.somethingAlert(result.msg);
                         }
                     }.bind(this));
             },

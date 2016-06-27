@@ -8,6 +8,7 @@ var foodETPriceList = require("foodETPriceList");
 require("validate");
 require("validation");
 var auth = require('../../common/auth');
+var restaurantMenu = require('../restaurant/restaurantMenu');
 auth.checkAuth(auth.BUSINESS_ID);
 
 
@@ -15,14 +16,22 @@ $(function(){
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
-    topMenu.showTopMenu();
+    var location = window.location.pathname.split("/")[4].split(".")[0];
+
+    if (location === 'food') {
+        restaurantMenu.render({ menuActive: 'dishes' });
+        topMenu.showTopMenu({showInventory: false});
+    } else {
+        topMenu.showTopMenu();
+    }
     util.mainContainer();
     modal.modalInit();
     $(".campName").html(localStorage.getItem("campName"));
 
 
+
 //拉今天的价格去
-    foodETPriceList.getFoodETPriceList(window.location.pathname.split("/")[4].split(".")[0]);
+    foodETPriceList.getFoodETPriceList(location);
 
 
     events = {

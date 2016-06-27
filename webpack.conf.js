@@ -34,7 +34,8 @@ var webpackConf =  {
         'accommodation/calender': './static/js/app/src/accommodation/calender/calender.js',
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
-        'restaurant/table': './static/js/app/src/business/restaurant/table'
+        'restaurant/table': './static/js/app/src/business/restaurant/table',
+        'restaurant/dishes': './static/js/app/src/business/restaurant/dishes'
     },
     output: {
         filename: '[name].js',

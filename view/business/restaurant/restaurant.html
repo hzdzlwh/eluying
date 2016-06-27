@@ -11,10 +11,10 @@
     <script src="/static/js/app/dist/restaurant/restaurant.js"></script>
 </head>
 <body>
-    <div class="mainContainer clearfloat" style="width: 1000px; left: 204px;">
+    <div class="mainContainer clearfloat">
         <div class="restaurant-container">
             <div class="restaurant-head clearfloat">
-                <span>餐厅列表</span>
+                <span>餐厅列表</span><span style="font-size: 12px">（点击菜品和桌子相关数字可以查看详情）</span>
                 <span class="create-restaurant" v-on:click="openCreateDialog">新增餐厅</span>
             </div>
             <div class="restaurant-box">
@@ -31,7 +31,7 @@
                     <tbody>
                     <tr v-for="restaurant in restaurants" track-by="restId">
                         <td>{{restaurant.restName}}</td>
-                        <td>{{restaurant.dishesSum}}</td>
+                        <td><a href="/view/business/restaurant/dishes.html?restId={{restaurant.restId}}">{{restaurant.dishesSum}}</a></td>
                         <td><a href="/view/business/restaurant/table.html?restId={{restaurant.restId}}">{{restaurant.boardSum}}</a></td>
                         <td>
                             <span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>

@@ -11,6 +11,74 @@
     <script src="/static/js/app/dist/restaurant/table.js"></script>
 </head>
 <body>
-
+    <div class="mainContainer clearfloat">
+        <div class="restaurant-container">
+            <div class="restaurant-head clearfloat">
+                <p class="restaurant-head-restName">{{restName}}</p>
+                <span class="restaurant-head-list">桌子列表</span>
+                <span class="create-restaurant" v-on:click="openCreateDialog">新增桌子</span>
+            </div>
+            <div class="restaurant-box">
+                <div class="hr"></div>
+                <table class="board-table">
+                    <thead>
+                    <tr>
+                        <th>桌子名称</th>
+                        <th>可容纳人数</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="board in boards" track-by="boardId">
+                        <td>{{board.boardName}}</td>
+                        <td>{{board.seatNum}}</td>
+                        <td>
+                            <span v-on:click="openEditDialog(board)">修改</span>/<span v-on:click="openDeleteDialog(board.boardId)">删除</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="boardDialog">
+        <div class="modal-dialog modal-w300">
+            <div class="modal-content clearfloat v-modal">
+                <p class="board-title">
+                    {{status === 'create' ? '新增桌子' : '修改桌子'}}
+                </p>
+                <h6 style="font-size: 12px;margin-bottom: 18px;">桌子名称和桌号至少填一项</h6>
+                <label for="boardName">桌子/包厢名称</label>
+                <input type="text" id="boardName" v-model="boardName">
+                <p class="rest-tips">
+                </p>
+                <div v-if="status === 'create'" style="position: relative">
+                    <label style="position: absolute;top: 0;">桌号</label>
+                    <ul class="board-num-container">
+                        <li class="board-num" v-for="num in nameList">
+                            <span class="board-num-close" @click="closeBoardNum($index)"></span>{{num}}
+                            <input class="board-num-edit" type="text" v-model="num">
+                        </li>
+                        <li class="board-num" @click="addBoardNum">+</li>
+                    </ul>
+                </div>
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label><span v-if="submitted && this.boardName === '' && !this.nameList.length">桌子名称和桌号至少填一项</span>
+                </p>
+                <label for="boardName">客座数</label>
+                <input type="text" id="seatNum" v-model="seatNum">
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label>
+                    <span v-if="submitted && seatNum === ''">↑ 必填字段</span>
+                </p>
+                <div class="v-btn-group">
+                    <label></label>
+                    <button class="v-btn v-blue-btn" v-if="status === 'create'" @click="createBoard">确定</button>
+                    <button class="v-btn v-blue-btn" v-if="status === 'edit'" @click="editBoard">确定</button>
+                    <button class="v-btn v-white-btn" v-on:click="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
