@@ -305,21 +305,23 @@ object{
             }
           }
           td:nth-child(2){
-            width: 230px;
+            width: 229px;
           }
           td:nth-child(3){
-            width: 75px;
+            width: 48px;
             text-align: right;
           }
         }
         .subtype.food, .subtype.fun, .subtype.goods{
           td:first-child{
             width: 132px;
-            div{
-              width: 132px;
+            .sname{
+              width: 84px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
+              position: relative;
+              float: left;
             }
           }
           td:nth-child(2){
@@ -331,6 +333,187 @@ object{
           td:nth-child(4){
             width: 54px;
             text-align: right;
+          }
+        }
+        .subtype.food{
+          td:nth-child(1){
+            overflow: hidden;
+            .sstate{
+              border-radius:2px;
+              width:16px;
+              height:16px;
+              font-size: 10px;
+              text-align: center;
+              line-height: 16px;
+              color: white;
+              float: left;
+              margin-left: 4px;
+              margin-top: 2px;
+            }
+            .sstate.ing{
+              background:#ffba75;
+            }
+            .sstate.book{
+              background:#82beff;
+            }
+            .sstate.finish{
+              background: #bfbfbf;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+          }
+          td:nth-child(3){
+            width: 133px;
+            .sname{
+              width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+          td:nth-child(5){
+            width: 38px;
+            text-align: right;
+            .spriteImg{
+              position: relative;
+              top: -1px;
+            }
+            .detail-box{
+              display: none;
+              background:#fafafa;
+              box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+              width:228px;
+              max-height: 400px;
+              overflow-y: auto;
+              position: fixed;
+              margin-left: 40px;
+              margin-top: -16px;
+              z-index: 10;
+              overflow-x: hidden;
+              padding-bottom: 8px;
+              .stitle{
+                font-size:14px;
+                color:#666666;
+                line-height: 20px;
+                height: 20px;
+                width: 100%;
+                text-align: center;
+                margin-top: 8px;
+                padding: 0 8px;
+              }
+              .stable{
+                font-size:14px;
+                color:#666666;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+              .speople, .stime{
+                opacity:0.5;
+                font-size:12px;
+                color:#7d7d7d;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+              .sitem, .sitem2{
+                font-size:14px;
+                color:#666666;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                padding: 0 8px;
+                margin-top: 8px;
+                .col{
+                  float: left;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  text-align: right;
+                }
+                .col1{
+                  width: 84px;
+                  text-align: left;
+                }
+                .col2{
+                  width: 48px;
+                  margin-left: 27px;
+                }
+                .col3{
+                  width: 30px;
+                  float: right;
+                }
+              }
+              .sitem2{
+                color:#b3b3b3;
+                .col1{
+                  text-align: right;
+                }
+              }
+              .hr3{
+                background:#d4d4d4;
+                width:212px;
+                height:1px;
+                margin: 4px auto 0;
+              }
+              .item{
+                margin-top: 4px;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                padding: 0 8px;
+                .slabel{
+                  float: left;
+                  color: #b3b3b3;
+                }
+                .val{
+                  float: right;
+                }
+              }
+              .topay{
+                .slabel{
+                  color: #666666;
+                }
+                .sval{
+                  color: #f24949;
+                }
+              }
+              .refund{
+                .slabel{
+                  color: #666666;
+                }
+                .sval{
+                  color: #00af10;
+                }
+              }
+              .remark, .booktime, .operator{
+                opacity:0.5;
+                font-size:12px;
+                color:#7d7d7d;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+            }
+            .sdetail:hover{
+              .detail-box{
+                display: block;
+              }
+            }
           }
         }
       }
@@ -3071,6 +3254,8 @@ object{
               border: solid thin $color1;
               .spriteImg{
                 display: inline-block;
+                top: -2px;
+                position: relative;
               }
             }
           }
