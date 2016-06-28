@@ -49,24 +49,36 @@ function time(o) {
 
 function forgetVCOnClick(){
     var phone = $("#loginForgetPwd .phone").val();
+    var picture = $("#loginForgetPwd .picture").val();
     var result = loginValidate.phoneValidate(phone);
     if(result == true){
         $("#loginForgetPwd .errorTips").hide();
+        if (phone !== currentPhone) {
+            currentPhone = phone;
+            $("#loginForgetPwd .picture_container").css('display', 'block');
+            $("#loginForgetPwd .get_picture img").attr('src', AJAXService.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            return false;
+        }
+        if (!picture) {
+            return false
+        }
         $(this).unbind("click");
         $.ajax({
             type: "GET",
             url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
                 phone: phone,
-                origin: 2
+                origin: 2,
+                captcha: picture
             },
-            success: function(data){
+            success: function (data) {
                 if (data.code !== 1) {
                     $("#loginForgetPwd .errorTips").html(data.msg);
                     $("#loginForgetPwd .errorTips").show();
+                    wait = 0;
                 }
             },
-            error: function(data){
+            error: function (data) {
 
             }
         });
@@ -76,19 +88,31 @@ function forgetVCOnClick(){
         $("#loginForgetPwd .errorTips").show();
     }
 }
-
+var currentPhone;
+var captchaTime = 0;
 function registerVCOnClick(){
     var phone = $("#loginRegister .phone").val();
+    var picture = $("#loginRegister .picture").val();
     var result = loginValidate.phoneValidate(phone);
     if(result == true){
         $("#loginRegister .errorTips").hide();
+        if (phone !== currentPhone) {
+           currentPhone = phone;
+            $("#loginRegister .picture_container").css('display', 'block');
+            $("#loginRegister .get_picture img").attr('src', AJAXService.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            return false;
+        }
+        if (!picture) {
+            return false
+        }
         $(this).unbind("click");
         $.ajax({
             type: "GET",
             url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
                 origin: 1,
-                phone: phone
+                phone: phone,
+                captcha: picture
             },
             success: function(data){
                 if(data.code !== 1){
@@ -174,6 +198,11 @@ $(document).ready(function(){
      忘记密码点击发送验证码
      */
     $("#loginForgetPwd .get_code").on("click", forgetVCOnClick);
+    $("#loginForgetPwd .get_picture img").on("click", function(){
+        var phone = $("#loginForgetPwd .phone").val();
+        captchaTime ++;
+        $("#loginForgetPwd .get_picture img").attr('src', AJAXService.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+    });
 
     $("#loginModal .log .forget").on("click", function(){
         $("#loginModal").modal("hide");
@@ -245,6 +274,11 @@ $(document).ready(function(){
      注册点击发送验证码
      */
     $("#loginRegister .get_code").on("click", registerVCOnClick);
+    $("#loginRegister .get_picture img").on("click", function(){
+        var phone = $("#loginRegister .phone").val();
+        captchaTime ++;
+        $("#loginRegister .get_picture img").attr('src', AJAXService.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+    });
 
     /*
      注册

@@ -72,21 +72,26 @@ function ajaxWaiting(message){
 }
 
 //确认弹出框
-function confirmDialog(dialogConfig,confirmCallback,cancelCallback){
-    dialogConfig= dialogConfig||{title:"提醒", message:"您确定要这么做吗？"};
+function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
+    var title = dialogConfig.title || '提醒';
+    var message = dialogConfig.message || '您确定要这么做吗';
+    var okText = dialogConfig.okText || '确认';
+    var cancelText = dialogConfig.cancelText || '取消';
+    var showTitle = typeof (dialogConfig.showTitle) === 'undefined' ? true : dialogConfig.showTitle;
+    var header = showTitle ? "<div class='modal-header'>" +
+    "<p>" + title + "</p>" +
+    "</div>" : '';
     $("body").prepend(
         "<div class='modal fade' role='dialog' id='confirmDialog'>" +
         "<div class='modal-dialog modal-w392'>" +
         "<div class='modal-content clearfloat'>" +
-        "<div class='modal-header'>" +
-        "<p>" + dialogConfig.title + "</p>" +
-        "</div>" +
+        header +
         "<div class='modal-body'>" +
-        "<p>" +dialogConfig.message + "</p>" +
+        "<p>" + message + "</p>" +
         "</div>" +
         "<div class='footer clearfloat'>" +
-        "<button class='btn-cancel' id='confirmDialogCancel'>取消</button>" +
-        "<button class='btn-ok' id='confirmDialogOk'>确认</button>" +
+        "<button class='btn-cancel' id='confirmDialogCancel'>" + cancelText + "</button>" +
+        "<button class='btn-ok' id='confirmDialogOk'>" + okText + "</button>" +
         "</div>" +
         "</div>" +
         "</div>" +

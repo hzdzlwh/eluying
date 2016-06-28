@@ -328,16 +328,19 @@
                 }
             }
             .menu{
-              width: 309px;
               height: 42px;
               border: 1px solid $color1;
               border-right: none;
               border-radius: 2px;
               margin-bottom: 30px;
+              display: inline-block;
+              ul {
+                overflow: hidden;
+              }
               li {
                 border-right: 1px solid $color1;
                 float: left;
-                width: 33.3333333%;
+                width: 102px;
                 line-height: 40px;
                 height: 40px;
                 font-size: 14px;
@@ -370,14 +373,39 @@
 }
 
 .leftMenu {
-    width: 88px;
-    background-color: #f7f7f7;
-    height: 100%;
+  width: 88px;
+  background-color: #fff;
+  height: 100%;
     position: fixed;
     top: 68px;
     left: 116px;
     z-index: 10;
     box-shadow: 2px 0px 2px 0px #dadada;
+  a {
+    //font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #999999;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+  }
+  a.active{
+    color: $color1;
+    border-right: #178CE6 solid medium;
+  }
+  a:hover{
+    color: $color1;
+  }
+    .leftMenu-back {
+      margin-top: -15px;
+      padding-top: 12px;
+      background: #f4f4f4;
+      width: 88px;
+      height: 68px;
+      text-align: center;
+    }
     ul {
         margin-top: 15px;
         li {
@@ -385,22 +413,6 @@
             height: 42px;
             width: 100%;
             margin-bottom: 4px;
-            a {
-              //font-family: PingFangSC-Regular;
-              font-size: 14px;
-              color: #999999;
-              text-decoration: none;
-              display: inline-block;
-              width: 100%;
-              text-align: center;
-            }
-            a.active{
-              color: $color1;
-              border-right: #178CE6 solid medium;
-            }
-            a:hover{
-              color: $color1;
-            }
         }
     }
 }
@@ -441,4 +453,8 @@
         }
       }
     }
+}
+
+label {
+  font-weight: normal;
 }
