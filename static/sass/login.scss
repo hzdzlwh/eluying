@@ -1139,3 +1139,47 @@
     }
   }
 }
+
+#createOrJoinNetwork {
+  .modal-dialog {
+    width: 763px;
+    position: relative;
+  }
+  .title {
+    font-size: 24px;
+    color: #4A90E2;
+    margin-bottom: 19px;
+    margin-top: 40px;
+  }
+  .text {
+    font-size: 18px;
+    color: #a0a0a0;
+  }
+  .sub-title {
+    font-size: 24px;
+    color: #404040;
+    margin-bottom: 17px;
+  }
+  .item {
+    margin: 40px;
+    padding: 40px;
+    border: 1px solid #a0a0a0;
+    border-radius: 3px;
+    cursor: pointer;
+    p {
+      cursor: pointer;
+    }
+    img {
+      float: left;
+    }
+    .sub-item {
+      float: left;
+      margin-left: 40px;
+    }
+  }
+  .line {
+    margin: 40px;
+    height: 0;
+    border-bottom: 1px solid #a0a0a0;
+  }
+}
