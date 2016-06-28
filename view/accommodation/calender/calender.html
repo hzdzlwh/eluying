@@ -252,18 +252,23 @@
                                     <div class="sstate book" ng-if="f.state === 0">预</div>
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
-                                <td><div class="sname">[大圆桌2]十人套餐dddd</div></td>
+                                <td>
+                                    <div class="sname">
+                                        <span ng-if="f.boardList.length > 0">[{{f.boardList.join('、')}}]</span>
+                                        {{f.dishesList.join("、")}}
+                                    </div>
+                                </td>
                                 <td>{{f.foodPrice}}</td>
                                 <td>
-                                    <div class="sdetail">
+                                    <div class="sdetail" ng-mousemove="getFoodDetail(f);">
                                         <div class="eluyun_detail_outer spriteImg">
                                             <div class="eluyun_detail"></div>
                                         </div>
                                         <div class="detail-box">
-                                            <div class="stitle">默认餐厅</div>
-                                            <div class="stable">#大圆桌1</div>
-                                            <div class="speople">人数：8</div>
-                                            <div class="stime">就餐时间：2016-03-03 15:30</div>
+                                            <div class="stitle">{{f.detail.restName}}</div>
+                                            <div class="stable">#{{f.detail.tables}}</div>
+                                            <div class="speople">人数：{{f.detail.peopleNum}}</div>
+                                            <div class="stime">就餐时间：{{f.detail.operatorDate}}</div>
                                             <div class="sitem">
                                                 <div class="col col1">面包诱惑大份</div>
                                                 <div class="col col2">¥10000</div>

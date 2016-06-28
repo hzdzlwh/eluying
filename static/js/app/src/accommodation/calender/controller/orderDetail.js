@@ -1,3 +1,4 @@
+var AJAXService = require("AJAXService");
 var util = require("util");
 require("angular");
 
@@ -73,6 +74,25 @@ var orderDetailCtrl = function(app){
                 }
                 return price;
             };
+            scope.getFoodDetail = function(food){
+                if(food.detail){
+                    return false;
+                }
+                AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {
+                    caterOrderId: food.foodOrderId,
+                    version: 7
+                }, function(result){
+                    if(result.code === 1){
+                        food.detail = result.data;
+                        var tables = [];
+                        food.detail.boardDetailResps.forEach(function(d){
+                            tables.push(d.boardName);
+                        });
+                        food.detail.tables = tables.join('、');
+                        rootScope.apply();
+                    }
+                });
+            }
     }]);
 };
 
