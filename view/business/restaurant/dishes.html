@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-validate="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="mainContainer clearfloat">
-        <div class="restaurant-container">
+        <div class="restaurant-container clearfloat">
             <div class="restaurant-head clearfloat" style="width: 725px">
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <ul class="restaurant-head-nav">
@@ -21,32 +21,33 @@
                 </ul>
                 <span class="create-restaurant" @click="openCreatePackageDialog">新增套餐</span>
             </div>
-            <div class="dishes-box overflow-default">
-                <div class="hr"></div>
-                <table class="dishes-table package-table">
-                    <thead>
-                    <tr>
-                        <th>套餐</th>
-                        <th>简称</th>
-                        <th>适用人数</th>
-                        <th>单价</th>
-                        <th>描述</th>
-                        <th>直销网站</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="packageModel in packages" @click="selectPackage(packageModel)" track-by="categoryId" v-bind:class="{'mainActive': packageSelected && packageModel.categoryId === packageSelected.categoryId}">
-                        <td class="ellipsis">{{packageModel.name}}</td>
-                        <td class="ellipsis">{{packageModel.shortName}}</td>
-                        <td>{{packageModel.fitNum}}</td>
-                        <td>{{packageModel.unitPrice}}</td>
-                        <td class="ellipsis">{{packageModel.description}}</td>
-                        <td>{{packageModel.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
-                        <input type="hidden" class="id" :value="packageModel.categoryId">
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div style="float: left">
+                <div class="dishes-box overflow-default">
+                    <div class="hr"></div>
+                    <table class="dishes-table package-table">
+                        <thead>
+                        <tr>
+                            <th>套餐</th>
+                            <th>简称</th>
+                            <th>适用人数</th>
+                            <th>单价</th>
+                            <th>描述</th>
+                            <th>直销网站</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="packageModel in packages" @click="selectPackage(packageModel)" track-by="categoryId" v-bind:class="{'mainActive': packageSelected && packageModel.categoryId === packageSelected.categoryId}">
+                            <td class="ellipsis">{{packageModel.name}}</td>
+                            <td class="ellipsis">{{packageModel.shortName}}</td>
+                            <td>{{packageModel.fitNum}}</td>
+                            <td>{{packageModel.unitPrice}}</td>
+                            <td class="ellipsis">{{packageModel.description}}</td>
+                            <td>{{packageModel.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
+                            <input type="hidden" class="id" :value="packageModel.categoryId">
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="clearfloat" style="width: 725px;margin: 20px 0 20px 0">
                     <span class="create-restaurant" @click="openCreateDishesDialog" style="color: #178ce6;">新增菜品</span>
                 </div>
@@ -57,7 +58,7 @@
                         <tr>
                             <th>菜品</th>
                             <th>简称</th>
-                            <th>单价</th>
+                            <th>单位</th>
                             <th>菜品分类</th>
                             <th>适用人数</th>
                             <th>单价</th>
@@ -69,7 +70,7 @@
                         <tr v-for="dishes in dishesList" track-by="categoryId" @click="selectDishes(dishes)" v-bind:class="{'mainActive': dishesSelected && dishes.categoryId === dishesSelected.categoryId}">
                             <td class="ellipsis">{{dishes.name}}</td>
                             <td class="ellipsis">{{dishes.shortName}}</td>
-                            <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
+                            <td style="padding-left: 18px">{{dishes.unit}}</td>
                             <td style="padding-left: 18px" class="ellipsis">{{dishes.dishesClassify}}</td>
                             <td style="padding-left: 18px">{{dishes.fitNum}}</td>
                             <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
@@ -80,6 +81,8 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+
 
 
             <!-- 操作台 -->
@@ -131,18 +134,22 @@
                 </option>
             </select>
             <p class="rest-tips">
+                <span v-if="$isNull(dishes.dishesClassifyId) && submitted">↑必填字段</span>
             </p>
             <label for="">菜品名称</label>
             <input type="text" placeholder="用于展示给客户" v-model="dishes.name">
             <p class="rest-tips">
+                <span v-if="$isNull(dishes.name) && submitted">↑必填字段</span>
             </p>
             <label for="">简称</label>
             <input type="text" placeholder="用于自己管理" v-model="dishes.shortName">
             <p class="rest-tips">
+                <span v-if="$isNull(dishes.shortName) && submitted">↑必填字段</span>
             </p>
             <label for="">单位</label>
             <input type="text" placeholder="请填写单位" v-model="dishes.unit">
             <p class="rest-tips">
+                <span v-if="$isNull(dishes.unit) && submitted">↑必填字段</span>
             </p>
             <label for="">适用人数</label>
             <input type="text" placeholder="请填写纯数字" v-model="dishes.fitNum" style="width: 176px">
@@ -152,6 +159,7 @@
             <label for="">单价</label>
             <input type="text" placeholder="请填写纯数字" v-model="dishes.unitPrice">
             <p class="rest-tips">
+                <span v-if="$isNull(dishes.unitPrice) && submitted">↑必填字段</span>
             </p>
             <label for="" style="vertical-align: top">描述</label>
             <textarea name="" cols="30" rows="10" v-model="dishes.description" placeholder="请填写描述"></textarea>
@@ -160,6 +168,7 @@
                 <button class="v-btn v-blue-btn" @click="changeDishes" style="margin-right: 20px">确定</button>
                 <button class="v-btn v-white-btn" @click="cancel">取消</button>
             </div>
+
         </div>
     </div>
 </div>
@@ -173,23 +182,38 @@
             <label for="">套餐名称</label>
             <input type="text" placeholder="用于展示给客户" v-model="packageModel.packageName">
             <p class="rest-tips">
+                <span v-if="$isNull(packageModel.packageName) && submitted">
+                    ↑必填字段
+                </span>
             </p>
             <label for="">简称</label>
             <input type="text" placeholder="用于自己管理" v-model="packageModel.shortName">
             <p class="rest-tips">
+                <span v-if="$isNull(packageModel.shortName) && submitted">
+                    ↑必填字段
+                </span>
             </p>
             <label for="">适用人数</label>
             <input type="text" v-model="packageModel.fitNum" placeholder="请填写纯数字">
             <p class="rest-tips">
+                <span v-if="$isNull(packageModel.fitNum) && submitted">
+                    ↑必填字段
+                </span>
             </p>
             <label for="">单价</label>
             <input type="text" v-model="packageModel.unitPrice" placeholder="请填写纯数字">
             <p class="rest-tips">
+                <span v-if="$isNull(packageModel.unitPrice) && submitted">
+                    ↑必填字段
+                </span>
             </p>
             <label for="">包含菜品</label>
             <input class="dishes-num" type="text" disabled :value="getDishesNum()">
             <button class="editDishesInPackage" @click="openPackageSelectDialog">编辑菜品</button>
             <p class="rest-tips">
+                <span v-if="$isNull(getDishesNum()) && submitted">
+                    ↑请选择菜品
+                </span>
             </p>
             <label for="">描述</label>
             <textarea name="" cols="30" rows="10" v-model="packageModel.description" placeholder="请填写描述"></textarea>
@@ -230,11 +254,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="dishes in dishesInPackageList" track-by="categoryId">
+                        <tr v-for="dishes in dishesTempList" track-by="categoryId">
                             <td class="ellipsis">{{dishes.categoryName}}</td>
                             <td>￥{{dishes.unitPrice}}</td>
                             <td>
-                                <span class="dishes-num-decrease" @click="decreaseDishesNum(dishes)">-</span><input type="text" v-model="dishes.amount" number><span class="dishes-num-increase" @click="increaseDishesNum(dishes)">+</span>
+                                <span class="dishes-num-decrease" @click="decreaseDishesNum(dishes)">-</span><input type="text" v-model="dishes.amount" number @change="changeAmount(dishes)"><span class="dishes-num-increase" @click="increaseDishesNum(dishes)">+</span>
                             </td>
                         </tr>
                         </tbody>
@@ -252,6 +276,9 @@
 <div class="modal fade" role="dialog" id="dishesClassifyDialog">
     <div class="modal-dialog" style="width: 596px">
         <div class="modal-content clearfloat v-modal" style="background: #fff">
+            <div class="clearfloat">
+                <span class="dialog-close" style="float: right;cursor: pointer;font-size: 20px;color:#999;margin-top: -17px;margin-right: -27px;" @click="cancel">×</span>
+            </div>
             <p style="color:#178ce6;margin-bottom: 21px">
                 <span style="font-size: 16px;margin-right: 128px">菜品分类管理</span>
                 <span @click="openDishesClassifyCreateDialog" style="cursor: pointer">
@@ -281,10 +308,6 @@
                     <p>删除</p>
                 </div>
             </div>
-            <div class="v-btn-group" style="margin-top: 22px;margin-left: 172px">
-                <button class="v-btn v-blue-btn" style="margin-right: 20px">确定</button>
-                <button class="v-btn v-white-btn" @click="cancel">取消</button>
-            </div>
         </div>
     </div>
 </div>
@@ -295,12 +318,18 @@
         <div class="modal-content clearfloat v-modal" style="padding: 30px 45px 20px">
             <p style="font-size: 16px;margin-bottom: 18px">{{dishesClassify.dishesClassifyId ? '编辑分类' : '新建分类'}}</p>
             <label for="">分类名称</label>
-            <input type="text" v-model="dishesClassify.name">
+            <input type="text" v-model="dishesClassify.name" maxlength="6">
             <p class="rest-tips">
+                <span v-if="$isNull(dishesClassify.name) && submitted">
+                    ↑必填字段
+                </span>
             </p>
             <label for="">排序值</label>
             <input type="text" v-model="dishesClassify.sequence">
             <p class="rest-tips">
+                <span v-if="(parseInt(dishesClassify.sequence)!==dishesClassify.sequence*1 || parseInt(dishesClassify.sequence) < 1 || parseInt(dishesClassify.sequence) > 255 )&& submitted">
+                    请输入1~255的整数
+                </span>
             </p>
             <div class="v-btn-group">
                 <label for=""></label>
