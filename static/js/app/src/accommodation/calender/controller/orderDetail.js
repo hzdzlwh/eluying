@@ -78,6 +78,7 @@ var orderDetailCtrl = function(app){
                 if(food.detail){
                     return false;
                 }
+                food.detail = {};
                 AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {
                     caterOrderId: food.foodOrderId,
                     version: 7
@@ -88,8 +89,15 @@ var orderDetailCtrl = function(app){
                         food.detail.boardDetailResps.forEach(function(d){
                             tables.push(d.boardName);
                         });
+                        var discount = 0;
+                        food.detail.paymentResps.forEach(function(d){
+                            if(d.type === 5){
+                                discount = d.fee;
+                            }
+                        });
+                        food.detail.discount = discount;
                         food.detail.tables = tables.join('、');
-                        rootScope.apply();
+                        rootScope.$apply();
                     }
                 });
             }

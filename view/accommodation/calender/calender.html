@@ -266,41 +266,28 @@
                                         </div>
                                         <div class="detail-box">
                                             <div class="stitle">{{f.detail.restName}}</div>
-                                            <div class="stable">#{{f.detail.tables}}</div>
+                                            <div class="stable" ng-if="f.detail.boardDetailResps.length > 0">#{{f.detail.tables}}</div>
                                             <div class="speople">人数：{{f.detail.peopleNum}}</div>
-                                            <div class="stime">就餐时间：{{f.detail.operatorDate}}</div>
-                                            <div class="sitem">
-                                                <div class="col col1">面包诱惑大份</div>
-                                                <div class="col col2">¥10000</div>
-                                                <div class="col col3">20</div>
+                                            <div class="stime">就餐时间：{{f.detail.orderTime}}</div>
+                                            <div ng-repeat="item in (f.detail && f.detail.itemsMap)">
+                                                <div ng-class="{sitem: dish.dishId === null || dish.dishId === 0, sitem2: dish.dishId !== null && dish.dishId !== 0}" ng-repeat="dish in item.dishItemResp">
+                                                    <div class="col col1">{{dish.categoryName}}</div>
+                                                    <div class="col col2">¥{{dish.price}}</div>
+                                                    <div class="col col3">{{dish.bookNum}}</div>
+                                                </div>
+                                                <div class="hr3"></div>
                                             </div>
-                                            <div class="sitem">
-                                                <div class="col col1">十人套餐</div>
-                                                <div class="col col2">¥10000</div>
-                                                <div class="col col3">20</div>
-                                            </div>
-                                            <div class="sitem2">
-                                                <div class="col col1">套餐菜品1</div>
-                                                <div class="col col2">¥100</div>
-                                                <div class="col col3">20</div>
-                                            </div>
-                                            <div class="sitem2">
-                                                <div class="col col1">套餐菜品2</div>
-                                                <div class="col col2">¥100</div>
-                                                <div class="col col3">20</div>
-                                            </div>
-                                            <div class="hr3"></div>
                                             <div class="item total">
                                                 <div class="slabel">订单总价：</div>
-                                                <div class="sval">¥10000</div>
+                                                <div class="sval">¥{{f.detail.totalPrice}}</div>
                                             </div>
-                                            <div class="item discount">
+                                            <div class="item discount" ng-if="f.detail.discount > 0">
                                                 <div class="slabel">优惠：</div>
-                                                <div class="sval">-¥100</div>
+                                                <div class="sval">-¥{{f.detail.discount}}</div>
                                             </div>
-                                            <div class="item payment">
-                                                <div class="slabel">客户已付（现金）：</div>
-                                                <div class="sval">-¥100</div>
+                                            <div class="item payment" ng-repeat="payment in (f.detail && f.detail.paymentResps)" ng-if="payment.type === 0">
+                                                <div class="slabel">客户已付（{{payment.payChannel}}）：</div>
+                                                <div class="sval">-¥{{payment.fee}}</div>
                                             </div>
                                             <div class="item topay">
                                                 <div class="slabel">客户需补：</div>
@@ -311,9 +298,9 @@
                                                 <div class="sval">¥10000</div>
                                             </div>
                                             <div class="hr3"></div>
-                                            <div class="remark">备注：不要辣</div>
-                                            <div class="booktime">预定时间：2016-03-03 15:30</div>
-                                            <div class="operator">操作员：小树</div>
+                                            <div class="remark" ng-if="f.detail.remark">备注：{{f.detail.remark}}</div>
+                                            <div class="booktime">预定时间：{{f.detail.creationTime}}</div>
+                                            <div class="operator">操作员：{{f.detail.reserveName}}</div>
                                         </div>
                                     </div>
                                 </td>
