@@ -103,7 +103,7 @@ $(function(){
         methods: {
             createBoard: function() {
                 this.submitted = true;
-                if ((this.boardName === '' && !this.nameList.length) || seatNum === '') {
+                if ((this.boardName === '' && !this.nameList.length) || this.seatNum === '') {
                     return;
                 }
                 var nameList;
@@ -131,9 +131,14 @@ $(function(){
                         }
                     }.bind(this));
             },
+            boardNumCheck: function(index) {
+                if (typeof (this.nameList[index]) !== 'number') {
+                    this.nameList.$set(index, this.nameList[index].replace(/\D/g,''));
+                }
+            },
             editBoard: function() {
                 this.submitted = true;
-                if (this.boardName === '' || seatNum === '') {
+                if (this.boardName === '' || this.seatNum === '') {
                     return;
                 }
                 AJAXService.ajaxWithToken('POST',

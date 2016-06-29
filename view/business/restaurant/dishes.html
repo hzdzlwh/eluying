@@ -194,11 +194,9 @@
                 </span>
             </p>
             <label for="">适用人数</label>
-            <input type="text" v-model="packageModel.fitNum" placeholder="请填写纯数字">
+            <input type="text" v-model="packageModel.fitNum" placeholder="请填写纯数字" style="width: 176px">
+            <span>（选填）</span>
             <p class="rest-tips">
-                <span v-if="$isNull(packageModel.fitNum) && submitted">
-                    ↑必填字段
-                </span>
             </p>
             <label for="">单价</label>
             <input type="text" v-model="packageModel.unitPrice" placeholder="请填写纯数字">
@@ -211,7 +209,7 @@
             <input class="dishes-num" type="text" disabled :value="getDishesNum()">
             <button class="editDishesInPackage" @click="openPackageSelectDialog">编辑菜品</button>
             <p class="rest-tips">
-                <span v-if="$isNull(getDishesNum()) && submitted">
+                <span v-if="getDishesNum()===0 && submitted">
                     ↑请选择菜品
                 </span>
             </p>
@@ -284,20 +282,22 @@
                 <span @click="openDishesClassifyCreateDialog" style="cursor: pointer">
                     <img src="http://static.dingdandao.com/vipAdditional.png" alt="" style="margin-right: 4px">新增分类</span>
             </p>
-            <table class="dishes-classify-table">
-                <thead>
+            <div class="dishes-classify-container" style="height: 363px;width:317px;overflow: auto;display: inline-block">
+                <table class="dishes-classify-table">
+                    <thead>
                     <tr>
                         <th>名称</th>
                         <th>排序值</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr v-for="dishesClassify in dishesClassifyList" @click="select(dishesClassify)" v-bind:class="{'classify-selected':dishesClassify == dishesClassifySelected}">
                         <td class="ellipsis">{{dishesClassify.dishesClassifyName}}</td>
                         <td>{{dishesClassify.sequence}}</td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
             <div class="classify-operation clearfloat">
                 <div v-if="dishesClassifySelected" class="classify-operation-item" @click="openDishesClassifyEditDialog">
                     <img src="/static/image/icon_bianjijibenxinxi.png" alt="">

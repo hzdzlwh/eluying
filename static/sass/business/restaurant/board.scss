@@ -60,7 +60,7 @@
   border-radius: 2px;
   width: 28px;
   height: 24px;
-  display: inline-block;
+  float: left;
   margin-right: 4px;
   margin-bottom: 6px;
   position: relative;
@@ -72,6 +72,7 @@
   margin-right: 0;
 }
 .board-num-close {
+  z-index: 10;
   position: absolute;
   cursor: pointer;
   width: 8px;

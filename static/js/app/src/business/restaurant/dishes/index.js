@@ -119,17 +119,22 @@ $(function() {
                 var params = {
                     restId: restId
                 };
+                var url;
                 if (this.packageSelected) {
                     params.packageId = this.packageSelected.categoryId;
+                    url = '/catering/deletePackages';
                 }
                 if (this.dishesSelected) {
                     params.categoryId = this.dishesSelected.categoryId;
+                    url = '/catering/deleteDishesForRestaurant';
                 }
-                AJAXService.ajaxWithToken('POST', '/catering/deleteDishesForRestaurant',
+                AJAXService.ajaxWithToken('POST', url,
                     params,
                     function(res) {
                         if (res.code === 1) {
                             this.getPackagesAndDishesFromRestaurant();
+                            this.packageSelected = undefined;
+                            this.dishesSelected = undefined;
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -257,6 +262,7 @@ $(function() {
                 })
             },
             cancel: function() {
+                this.dishesClassifySelected = undefined;
                 $('#dishesClassifyDialog').modal('hide');
             }
         }
@@ -280,6 +286,9 @@ $(function() {
                     function(res) {
                         if (res.code === 1) {
                             this.dishesInPackageList = res.data.dishesInPackageList;
+                            packageVM.packageModel.dishesReq = this.dishesInPackageList.map(function(el) {
+                                return Object.assign({}, el);
+                            });
                             this.dishesTempList = this.dishesInPackageList.map(function(el) {
                                 return Object.assign({}, el);
                             });
@@ -407,9 +416,8 @@ $(function() {
                 this.submitted = true;
                 if (this.$isNull(this.packageModel.packageName) ||
                     this.$isNull(this.packageModel.shortName) ||
-                    this.$isNull(this.packageModel.unit) ||
                     this.$isNull(this.packageModel.unitPrice) ||
-                    this.$isNull(this.getDishesNum())) {
+                    this.getDishesNum() === 0) {
                     return null;
                 }
                 var url = this.packageModel.categoryId ? '/catering/modifyPackages' : '/catering/addPackages';
@@ -418,6 +426,7 @@ $(function() {
                 AJAXService.ajaxWithToken('POST', url, param, function(res) {
                     if (res.code === 1) {
                         $('#packageDialog').modal('hide');
+                        packageSelect.dishesListGroupByClassify = {};
                         main.getPackagesAndDishesFromRestaurant();
                         this.packageModel = {};
                         this.submitted = false;
@@ -429,6 +438,7 @@ $(function() {
             cancel: function() {
                 this.submitted = false;
                 packageSelect.dishesListGroupByClassify = {};
+                packageSelect.dishesInClassify = [];
                 $('#packageDialog').modal('hide');
                 this.packageModel = { dishesNum: undefined };
             }

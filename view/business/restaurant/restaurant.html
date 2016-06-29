@@ -49,7 +49,7 @@
                     {{status === 'create' ? '新增餐厅' : '修改餐厅信息'}}
                 </p>
                 <label for="restaurantName">餐厅名称</label>
-                <input type="text" id="restaurantName" v-model="restaurantName">
+                <input type="text" id="restaurantName" v-model="restaurantName" maxlength="20">
                 <p class="rest-tips">
                     <span v-if="submitted && restaurantName === ''">↑ 必填字段</span>
                 </p>
