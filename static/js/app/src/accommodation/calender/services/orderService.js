@@ -340,7 +340,7 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
-                price += order.foodItems[i].amount * order.foodItems[i].price;
+                price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
@@ -362,6 +362,7 @@ var orderService = function(app){
                     }
                 }
             }
+            console.log(left);
             return parseFloat(left.toFixed(2));
         };
         //计算已收押金

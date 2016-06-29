@@ -201,7 +201,7 @@
                 <div class="hr2"></div>
                 <div class="consume-info">
                     <div class="sub-title">消费信息</div>
-                    <div class="subtype room">
+                    <div class="subtype room" ng-if="orderDetail.rooms.length > 0">
                         <div class="sub-title">房间信息</div>
                         <table ng-if="orderDetail.rooms">
                             <tr ng-repeat="r in orderDetail.rooms">
@@ -289,13 +289,13 @@
                                                 <div class="slabel">客户已付（{{payment.payChannel}}）：</div>
                                                 <div class="sval">-¥{{payment.fee}}</div>
                                             </div>
-                                            <div class="item topay">
+                                            <div class="item topay" ng-if="f.detail.feeAll >= 0">
                                                 <div class="slabel">客户需补：</div>
-                                                <div class="sval">¥10000</div>
+                                                <div class="sval">¥{{f.detail.feeAll}}</div>
                                             </div>
-                                            <div class="item refund">
+                                            <div class="item refund" ng-if="f.detail.feeAll < 0">
                                                 <div class="slabel">客户需退：</div>
-                                                <div class="sval">¥10000</div>
+                                                <div class="sval">¥{{f.detail.feeAll}}</div>
                                             </div>
                                             <div class="hr3"></div>
                                             <div class="remark" ng-if="f.detail.remark">备注：{{f.detail.remark}}</div>

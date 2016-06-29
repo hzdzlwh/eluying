@@ -96,6 +96,14 @@ var orderDetailCtrl = function(app){
                             }
                         });
                         food.detail.discount = discount;
+                        var feeAll = food.detail.totalPrice - discount;
+                        feeAll < 0 && (feeAll = 0);
+                        food.detail.paymentResps.forEach(function(d){
+                            if(d.type === 0){
+                                feeAll -= d.fee;
+                            }
+                        });
+                        food.detail.feeAll = feeAll;
                         food.detail.tables = tables.join('、');
                         rootScope.$apply();
                     }
