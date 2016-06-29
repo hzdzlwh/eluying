@@ -850,6 +850,54 @@ object{
             text-align: right;
           }
         }
+        .subtype.food{
+          td:nth-child(1){
+            width: 150px;
+            .sname{
+              width: 120px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            }
+            .sstate{
+              border-radius:2px;
+              width:16px;
+              height:16px;
+              font-size: 10px;
+              text-align: center;
+              line-height: 16px;
+              color: white;
+              float: left;
+              margin-left: 4px;
+              margin-top: 2px;
+            }
+            .sstate.ing{
+              background:#ffba75;
+            }
+            .sstate.book{
+              background:#82beff;
+            }
+            .sstate.finish{
+              background: #bfbfbf;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+          }
+          td:nth-child(3){
+            width: 133px;
+            .sname{
+              width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+        }
         .sub-title{
           margin-bottom: 8px;
           cursor: pointer;
@@ -1542,6 +1590,73 @@ object{
         td:nth-child(4){
           width: 39px;
           text-align: right;
+        }
+      }
+      .subtype.food{
+        td:nth-child(1){
+          width: 132px;
+          overflow: hidden;
+          .sname{
+            width: 84px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+          .sstate{
+            border-radius:2px;
+            width:16px;
+            height:16px;
+            font-size: 10px;
+            text-align: center;
+            line-height: 16px;
+            color: white;
+            float: left;
+            margin-left: 4px;
+            margin-top: 2px;
+          }
+          .sstate.ing{
+            background:#ffba75;
+          }
+          .sstate.book{
+            background:#82beff;
+          }
+          .sstate.finish{
+            background: #bfbfbf;
+          }
+        }
+        td:nth-child(2){
+          width: 147px;
+          text-align: left
+        }
+        td:nth-child(3){
+          width: 133px;
+          text-align: left;
+          padding: 0;
+          .sname{
+            width: 116px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        td:nth-child(4){
+          width: 54px;
+          text-align: right;
+        }
+        td:nth-child(5){
+          width: 38px;
+          text-align: right;
+          .sdelete{
+            width: 14px;
+            height: 14px;
+            background: $trash_grey;
+            display: inline-block;
+            cursor: pointer;
+          }
+          .sdelete:hover{
+            background: $trash_blue;
+            background-size: 14px 14px;
+          }
         }
       }
       .discount{
@@ -2296,6 +2411,73 @@ object{
             text-align: right;
           }
         }
+        .subtype.food{
+          td:nth-child(1){
+            width: 132px;
+            overflow: hidden;
+            .sname{
+              width: 84px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            }
+            .sstate{
+              border-radius:2px;
+              width:16px;
+              height:16px;
+              font-size: 10px;
+              text-align: center;
+              line-height: 16px;
+              color: white;
+              float: left;
+              margin-left: 4px;
+              margin-top: 2px;
+            }
+            .sstate.ing{
+              background:#ffba75;
+            }
+            .sstate.book{
+              background:#82beff;
+            }
+            .sstate.finish{
+              background: #bfbfbf;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+            text-align: left
+          }
+          td:nth-child(3){
+            width: 133px;
+            text-align: left;
+            padding: 0;
+            .sname{
+              width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+          td:nth-child(5){
+            width: 38px;
+            text-align: right;
+            .sdelete{
+              width: 14px;
+              height: 14px;
+              background: $trash_grey;
+              display: inline-block;
+              cursor: pointer;
+            }
+            .sdelete:hover{
+              background: $trash_blue;
+              background-size: 14px 14px;
+            }
+          }
+        }
       }
       .inadvanced{
         font-size:14px;
@@ -2450,7 +2632,7 @@ object{
     .wrapper{
       display: none;
     }
-    .search-btn{
+    .search-btn, .search-switch{
       cursor: pointer;
       position: relative;
       //top: 2px;

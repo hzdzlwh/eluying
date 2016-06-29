@@ -27,21 +27,21 @@ var checkoutAdService = function(app){
                     checkoutAd.discounts = d.fee;
                 }
             });
-            checkoutAd.foodItems.forEach(function(d){
-                AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                    date: d.date,
-                    id: d.categoryId
-                }, function(result){
-                    d.dateStr = d.date;
-                    d.dateStr2 = d.date.substr(5, 5);
-                    d.date = new Date(d.date);
-                    d.inventory = result.data.inventory;
-                    if(checkoutAd.foodsAmount && checkoutAd.foodsAmount[d.dateStr]){
-                        d.inventory += checkoutAd.foodsAmount[d.dateStr];
-                    }
-                    scope.$apply();
-                });
-            });
+            //checkoutAd.foodItems.forEach(function(d){
+            //    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+            //        date: d.date,
+            //        id: d.categoryId
+            //    }, function(result){
+            //        d.dateStr = d.date;
+            //        d.dateStr2 = d.date.substr(5, 5);
+            //        d.date = new Date(d.date);
+            //        d.inventory = result.data.inventory;
+            //        if(checkoutAd.foodsAmount && checkoutAd.foodsAmount[d.dateStr]){
+            //            d.inventory += checkoutAd.foodsAmount[d.dateStr];
+            //        }
+            //        scope.$apply();
+            //    });
+            //});
             checkoutAd.playItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: d.date,

@@ -132,7 +132,7 @@ var accommodationCtrl = function(app){
                     rooms.push(room);
                 });
                 var items = [];
-                var oldItems = order.foodItems.concat(order.playItems).concat(order.goodsItems);
+                var oldItems = order.playItems.concat(order.goodsItems);
                 oldItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;
