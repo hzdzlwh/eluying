@@ -33,7 +33,10 @@ function modalInit(){
 }
 
 function somethingAlert(message){
-    $("body").prepend(
+    if ($('.error-alert-container').length === 0) {
+        $("body").prepend('<div class="error-alert-container"></div>');
+    }
+    $(".error-alert-container").html(
         "<div class='modal fade' role='dialog' id='errorAlert'>" +
         "<div class='modal-dialog modal-w392'>" +
         "<div class='modal-content clearfloat'>" +
@@ -81,7 +84,10 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
     var header = showTitle ? "<div class='modal-header'>" +
     "<p>" + title + "</p>" +
     "</div>" : '';
-    $("body").prepend(
+    if ($('.confirm-dialog-container').length === 0) {
+        $("body").prepend('<div class="confirm-dialog-container"></div>');
+    }
+    $('.confirm-dialog-container').html(
         "<div class='modal fade' role='dialog' id='confirmDialog'>" +
         "<div class='modal-dialog modal-w392'>" +
         "<div class='modal-content clearfloat'>" +
@@ -101,14 +107,14 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
     $('#confirmDialogOk').on("click", function(){
         confirmCallback&&confirmCallback();
         $("#confirmDialog").modal("hide");
-        $(".modal-backdrop").remove();
-        $("#confirmDialog").remove();
+        // $(".modal-backdrop").remove();
+        //$("#confirmDialog").remove();
     });
     $('#confirmDialogCancel').on("click", function(){
         cancelCallback&&cancelCallback();
         $("#confirmDialog").modal("hide");
-        $(".modal-backdrop").remove();
-        $("#confirmDialog").remove();
+        // $(".modal-backdrop").remove();
+        //$("#confirmDialog").remove();
     });
 }
 

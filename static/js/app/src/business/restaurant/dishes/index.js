@@ -15,6 +15,10 @@ require("validation");
 
 var auth = require('../../../common/auth');
 auth.checkAuth(auth.BUSINESS_ID);
+Vue.prototype.$isNull = function(text) {
+    var result = typeof (text) === 'undefined' || text === '';
+    return result;
+};
 
 $(function() {
     header.showHeader();
@@ -22,6 +26,8 @@ $(function() {
     restaurantMenu.render();
     util.mainContainer();
     modal.centerModals();
+    modal.modalInit();
+
     window.addEventListener('resize', util.mainContainer);
 
     events = {
@@ -158,7 +164,8 @@ $(function() {
         el: '#dishesDialog',
         data: {
             dishes: {},
-            dishesClassifyList: []
+            dishesClassifyList: [],
+            submitted: false
         },
         created: function() {
             this.getDishesClassify();
@@ -174,12 +181,21 @@ $(function() {
                 }.bind(this));
             },
             changeDishes: function() {
+                this.submitted = true;
+                if (this.$isNull(this.dishes.dishesClassifyId) ||
+                    this.$isNull(this.dishes.shortName) ||
+                    this.$isNull(this.dishes.unit)||
+                    this.$isNull(this.dishes.unitPrice)) {
+                    return null;
+                }
                 var params = Object.assign({}, this.dishes);
                 params.restId = restId;
                 var url = this.dishes.categoryId ? '/catering/modifyDishesForRestaurant' : '/catering/addDishesForRestaurant';
                 AJAXService.ajaxWithToken('POST', url, params, function(result) {
                     if (result.code === 1) {
                         main.getPackagesAndDishesFromRestaurant();
+                        this.dishes = {};
+                        this.submitted = false;
                         $('#dishesDialog').modal('hide');
                     } else {
                         modal.somethingAlert(result.msg);
@@ -188,6 +204,7 @@ $(function() {
             },
             cancel: function() {
                 this.dishes = {};
+                this.submitted = false;
                 $('#dishesDialog').modal('hide');
             }
         }
@@ -253,29 +270,35 @@ $(function() {
             dishesInClassify: [],
             dishesInPackageList: [],
             currentClassifyId: undefined,
-            classifyOffset: 0
+            classifyOffset: 0,
+            dishesTempList: []
         },
         methods: {
             getAllDishesFromRest: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getAllDishesFromRest', { restId: restId, packageId: packageVM.packageModel.categoryId }, function(res) {
-                    if (res.code === 1) {
-                        this.dishesInPackageList = res.data.dishesInPackageList;
-                        res.data.dishesNumAndTypeList.map(function(el) {
-                            if (!this.dishesListGroupByClassify[el.dishesClassify]) {
-                                this.dishesListGroupByClassify[el.dishesClassifyId] = [];
-                            }
-                            this.dishesListGroupByClassify[el.dishesClassifyId].push(el);
-                        }.bind(this));
-                        AJAXService.ajaxWithToken('GET', '/catering/getDishesClassify', { restId: restId }, function(result) {
-                            if (result.code === 1) {
-                                this.dishesClassifyList = result.data.list;
-                                this.currentClassifyId = this.dishesClassifyList[0].dishesClassifyId;
-                                this.dishesInClassify = this.dishesListGroupByClassify[this.dishesClassifyList[0].dishesClassifyId];
-                            } else {
-                                modal.somethingAlert(result.msg);
-                            }
-                        }.bind(this));
-                    }
+                AJAXService.ajaxWithToken('GET', '/catering/getAllDishesFromRest',
+                    { restId: restId, packageId: packageVM.packageModel.categoryId },
+                    function(res) {
+                        if (res.code === 1) {
+                            this.dishesInPackageList = res.data.dishesInPackageList;
+                            this.dishesTempList = this.dishesInPackageList.map(function(el) {
+                                return Object.assign({}, el);
+                            });
+                            res.data.dishesNumAndTypeList.map(function(el) {
+                                if (!this.dishesListGroupByClassify[el.dishesClassifyId]) {
+                                    this.dishesListGroupByClassify[el.dishesClassifyId] = [];
+                                }
+                                this.dishesListGroupByClassify[el.dishesClassifyId].push(el);
+                            }.bind(this));
+                            AJAXService.ajaxWithToken('GET', '/catering/getDishesClassify', { restId: restId }, function(result) {
+                                if (result.code === 1) {
+                                    this.dishesClassifyList = result.data.list;
+                                    this.currentClassifyId = this.dishesClassifyList[0].dishesClassifyId;
+                                    this.dishesInClassify = this.dishesListGroupByClassify[this.dishesClassifyList[0].dishesClassifyId];
+                                } else {
+                                    modal.somethingAlert(result.msg);
+                                }
+                            }.bind(this));
+                        }
                 }.bind(this));
             },
             changeClassify: function(id) {
@@ -283,32 +306,42 @@ $(function() {
                 this.currentClassifyId = id;
             },
             isSelected: function(id) {
-                var list = this.dishesInPackageList.filter(function(el) {
+                var list = this.dishesTempList.filter(function(el) {
                     return el.categoryId === id;
                 });
                 if (list.length) {
                     return true;                    
                 }
             },
+
+            /**
+             * 选择或反选菜品
+             * @param dishes
+             */
             selectDishes: function(dishes) {
                 if (this.isSelected(dishes.categoryId)) {
                     dishes.amount = 1;
-                    this.dishesInPackageList.map(function(el, index) {
+                    this.dishesTempList.map(function(el, index) {
                         if (el.categoryId === dishes.categoryId) {
-                            this.dishesInPackageList.splice(index, 1);
+                            this.dishesTempList.splice(index, 1);
                         }
                     }.bind(this));
                 } else {
-                    this.dishesInPackageList.push(Object.assign({}, dishes, {amount: 1}));
+                    this.dishesTempList.push(Object.assign({}, dishes, {amount: 1}));
                 }
             },
             changePackageDishes: function() {
-                packageVM.packageModel.dishesReq = this.dishesInPackageList;
+                this.dishesInPackageList = this.dishesTempList.map(function(el) {
+                    return Object.assign({}, el);
+                });
+                packageVM.packageModel.dishesReq = this.dishesInPackageList.map(function(el) {
+                    return Object.assign({}, el);
+                });
                 $('#packageSelectDialog').modal('hide');
             },
             decreaseDishesNum: function(dishes) {
-                if (dishes.amount <= 0) {
-                    dishes.amount = 0;
+                if (dishes.amount <= 1) {
+                    dishes.amount = 1;
                 } else {
                     dishes.amount = dishes.amount - 1;
                 }
@@ -320,7 +353,17 @@ $(function() {
                     dishes.amount = dishes.amount + 1;
                 }
             },
+            changeAmount: function(dishes) {
+                if (dishes.amount >= 999) {
+                    dishes.amount = 999;
+                } else if ((dishes.amount <= 1)) {
+                    dishes.amount = 1;
+                }
+            },
             cancel: function() {
+                this.dishesTempList = this.dishesInPackageList.map(function(el) {
+                    return Object.assign({}, el);
+                });
                 $('#packageSelectDialog').modal('hide');
             },
             decreaseClassifyOffset: function() {
@@ -346,7 +389,8 @@ $(function() {
             packageModel: {
                 dishesNum: undefined,
                 dishesReq: []
-            }
+            },
+            submitted: false
         },
         methods: {
             openPackageSelectDialog: function() {
@@ -360,19 +404,31 @@ $(function() {
                 return num;
             },
             changePackage: function() {
+                this.submitted = true;
+                if (this.$isNull(this.packageModel.packageName) ||
+                    this.$isNull(this.packageModel.shortName) ||
+                    this.$isNull(this.packageModel.unit) ||
+                    this.$isNull(this.packageModel.unitPrice) ||
+                    this.$isNull(this.getDishesNum())) {
+                    return null;
+                }
                 var url = this.packageModel.categoryId ? '/catering/modifyPackages' : '/catering/addPackages';
-                var param = Object.assign({}, this.packageModel, { restId: restId, packageId: this.packageModel.categoryId, dishesReq: JSON.stringify(this.packageModel.dishesReq) });
+                var param = Object.assign({}, this.packageModel,
+                    { restId: restId, packageId: this.packageModel.categoryId, dishesReq: JSON.stringify(this.packageModel.dishesReq) });
                 AJAXService.ajaxWithToken('POST', url, param, function(res) {
                     if (res.code === 1) {
                         $('#packageDialog').modal('hide');
                         main.getPackagesAndDishesFromRestaurant();
                         this.packageModel = {};
+                        this.submitted = false;
                     } else {
                         modal.somethingAlert(res.msg);
                     }
                 }.bind(this));
             },
             cancel: function() {
+                this.submitted = false;
+                packageSelect.dishesListGroupByClassify = {};
                 $('#packageDialog').modal('hide');
                 this.packageModel = { dishesNum: undefined };
             }
@@ -382,14 +438,20 @@ $(function() {
     var dishesClassifyEdit = new Vue({
         el: '#dishesClassifyEditDialog',
         data: {
-            dishesClassify: {}
+            dishesClassify: {},
+            submitted: false
         },
         methods: {
             changeDishesClassify: function() {
+                this.submitted = true;
+                if (this.$isNull(this.dishesClassify.name) || (parseInt(this.dishesClassify.sequence) !== Number(this.dishesClassify.sequence) || parseInt(this.dishesClassify.sequence) < 1 || parseInt(this.dishesClassify.sequence) > 255 )) {
+                    return
+                }
                 AJAXService.ajaxWithToken('POST', '/catering/changeDishesClassify', Object.assign({}, this.dishesClassify, { restId: restId }), function(res) {
                     if (res.code === 1) {
                         dishesClassify.getDishesClassify();
                         this.dishesClassify = {};
+                        this.submitted = false;
                         $('#dishesClassifyEditDialog').modal('hide');
                     } else {
                         modal.somethingAlert(res.msg);
@@ -398,6 +460,7 @@ $(function() {
             },
             cancel: function() {
                 this.dishesClassify = {};
+                this.submitted = false;
                 $('#dishesClassifyEditDialog').modal('hide');
             }
         }
