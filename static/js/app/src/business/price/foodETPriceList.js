@@ -19,25 +19,45 @@ var foodETPriceList = {
         })*/
         var url = (path == "food") ? "getFoodCategoryPriceList" : "getPlayCategoryPriceList";
         var restId = location.search.split('=')[1];
-        AJAXService.ajaxWithToken("GET", url, {restId: restId}, function(result){
+        var params = { restId: restId };
+        if (path === 'food') {
+            params.version = 7;
+        }
+        AJAXService.ajaxWithToken("GET", url, params, function(result){
             foodETPriceList.render(result)
         })
     },
     render: function(result){
-        var tbody = "<tbody>";
-        for (var name in result.data) {
-            for (var subName in result.data[name]) {
+        var dishesTbody = "<tbody>";
+        var dishesList = result.data.list[1];
+        for (var name in dishesList) {
+            for (var subName in dishesList[name]) {
                 if (subName == 0) {
-                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + result.data[name][subName].salePrice + "</td></tr>"
+                    dishesTbody += "<tr class='mainClass'><td>" + dishesList[name][subName].name + (dishesList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + dishesList[name][subName].id + "'>" + dishesList[name][subName].salePrice + "</td></tr>"
                 } else {
-                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
-                        "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
-                        + result.data[name][subName].netPrice + "</p></div></td></tr>"
+                    dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                        "<td class='subPriceTd' category-id='" + dishesList[name][subName].id + "' channel-id='" + dishesList[name][subName].channelId + "' ><div><p>"
+                        + dishesList[name][subName].netPrice + "</p></div></td></tr>"
                 }
             }
         }
-        tbody += "</tbody>";
-        $("table").append(tbody);
+        var packageList = result.data.list[0];
+        var packageTbody = "<tbody>";
+        for (var name in packageList) {
+            for (var subName in packageList[name]) {
+                if (subName == 0) {
+                    packageTbody += "<tr class='mainClass'><td>" + packageList[name][subName].name + (packageList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + packageList[name][subName].id + "'>" + packageList[name][subName].salePrice + "</td></tr>"
+                } else {
+                    packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                        "<td class='subPriceTd' category-id='" + packageList[name][subName].id + "' channel-id='" + packageList[name][subName].channelId + "' ><div><p>"
+                        + packageList[name][subName].netPrice + "</p></div></td></tr>"
+                }
+            }
+        }
+        dishesTbody += "</tbody>";
+        packageTbody += "</tbody>";
+        $("#packageTable").append(dishesTbody);
+        $("#dishesTable").append(packageTbody);
         this.eventBind();
     },
     editSalePrice: function(that){
