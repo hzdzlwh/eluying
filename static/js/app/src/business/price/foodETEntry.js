@@ -10,23 +10,30 @@ require("validation");
 var auth = require('../../common/auth');
 var restaurantMenu = require('../restaurant/restaurantMenu');
 auth.checkAuth(auth.BUSINESS_ID);
-
+var AJAXService = require('../../common/AJAXService');
 
 $(function(){
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
     var location = window.location.pathname.split("/")[4].split(".")[0];
-
+    var restId = window.location.search.split('=')[1];
     if (location === 'food') {
         restaurantMenu.render({ menuActive: 'dishes' });
         topMenu.showTopMenu({showInventory: false});
+        AJAXService.ajaxWithToken('GET', '/catering/getRestaurantList', {}, function(result) {
+            var restName = result.data.list.filter(function(el) {
+                return el.restId == restId;
+            })[0].restName;
+            $(".campName").html(restName);
+        }.bind(this));
     } else {
         topMenu.showTopMenu();
+        $(".campName").html(localStorage.getItem("campName"));
     }
     util.mainContainer();
     modal.modalInit();
-    $(".campName").html(localStorage.getItem("campName"));
+    // $(".campName").html(localStorage.getItem("campName"));
 
 
 
