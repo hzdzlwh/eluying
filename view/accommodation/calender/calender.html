@@ -198,8 +198,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="hr2"></div>
-                <div class="consume-info">
+                <div class="hr2" ng-if="orderDetail.rooms.length > 0
+                || orderDetail.foodItems.length > 0 || orderDetail.playItems.length > 0 || orderDetail.goodsItems.length > 0"></div>
+                <div class="consume-info" ng-if="orderDetail.rooms.length > 0
+                || orderDetail.foodItems.length > 0 || orderDetail.playItems.length > 0 || orderDetail.goodsItems.length > 0">
                     <div class="sub-title">消费信息</div>
                     <div class="subtype room" ng-if="orderDetail.rooms.length > 0">
                         <div class="sub-title">房间信息</div>
