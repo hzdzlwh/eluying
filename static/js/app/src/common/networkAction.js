@@ -195,9 +195,16 @@ var network = {
 					})*/
 					AJAXService.ajaxWithToken("POST","/homepage/changeCamp",{campId: campId},function (data) {
 						if(data.code == 1){
-							window.location.href = "/view/business/category/room.html";
 							localStorage.setItem("campId", campId);
 							localStorage.setItem("campName", campName);
+							localStorage.setItem("camps", JSON.stringify(data.data.camps));
+							localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
+							localStorage.setItem("avatar", data.data.user.avatar);
+							localStorage.setItem("userName", data.data.user.realName);
+							localStorage.setItem("userType", data.data.user.userType);
+							localStorage.setItem("uid", data.data.user.uid);
+							localStorage.setItem("token", data.data.user.token);
+							window.location.href = "/view/accommodation/calender/calender.html";
 						}
 					})
 				})

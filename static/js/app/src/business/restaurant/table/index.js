@@ -132,9 +132,7 @@ $(function(){
                     }.bind(this));
             },
             boardNumCheck: function(index) {
-                if (typeof (this.nameList[index]) !== 'number') {
-                    this.nameList.$set(index, this.nameList[index].replace(/\D/g,''));
-                }
+                this.nameList.$set(index, this.nameList[index].replace(/\D/g,''));
             },
             editBoard: function() {
                 this.submitted = true;

@@ -47,23 +47,24 @@
                 <p class="board-title">
                     {{status === 'create' ? '新增桌子' : '修改桌子'}}
                 </p>
-                <h6 style="font-size: 12px;margin-bottom: 18px;">桌子名称和桌号至少填一项</h6>
+                <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6>
                 <label for="boardName">桌子/包厢名称</label>
                 <input type="text" id="boardName" v-model="boardName" maxlength="6">
-                <p class="rest-tips">
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label><span v-if="status === 'edit' && submitted && this.boardName === ''">↑ 必填字段</span>
                 </p>
                 <div v-if="status === 'create'" style="position: relative">
                     <label style="position: absolute;top: 0;">桌号</label>
                     <ul class="board-num-container clearfloat">
                         <li class="board-num" v-for="num in nameList" track-by="$index">
                             <span class="board-num-close" @click="closeBoardNum($index)"></span>
-                            <input class="board-num-edit" type="text" v-model="num" maxlength="3" number @keyup="boardNumCheck($index)">
+                            <input class="board-num-edit" type="text" v-model="num" maxlength="3" @keyup="boardNumCheck($index)">
                         </li>
                         <li class="board-num" @click="addBoardNum">+</li>
                     </ul>
                 </div>
-                <p class="rest-tips" style="margin-left: 0">
-                    <label></label><span v-if="submitted && this.boardName === '' && !this.nameList.length">桌子名称和桌号至少填一项</span>
+                <p class="rest-tips" style="margin-left: 0" v-if="status === 'create'">
+                    <label></label><span v-if="status === 'create' && submitted && this.boardName === '' && !this.nameList.length">桌子名称和桌号至少填一项</span>
                 </p>
                 <label for="boardName">客座数</label>
                 <input type="text" id="seatNum" v-model="seatNum">
