@@ -6,15 +6,15 @@ var getItemsService = require('./getItemsService');
 var modal = require('modal');
 require('angular');
 var createVipService = function(app){
-    app.service('createVipService', ['getItemsService', function() {
+    app.service('createVipService', ['getItemsService', function(getItemsService) {
         this.createVip = function(newVip,rootScope) {
-            AJAXService.ajaxWithToken('POST', '/vipUser/addVipUser', Object.assign({}, newVip),
+            AJAXService.ajaxWithToken('POST', '/vipUser/addVipUser', newVip,
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
                         newVip = {name: '', phone: '', idCardType: 0};
-                        getVipItems(rootScope.currentPage, rootScope.pageSize, rootScope.searchText, rootScope);
-                        getVipUserCount(rootScope);
+                        getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, rootScope.searchText, rootScope);
+                        getItemsService.getVipUserCount(rootScope);
                     } else {
                         modal.somethingAlert(result.msg);
                     }
@@ -42,7 +42,7 @@ var createVipService = function(app){
         }
     }]);
 };
-var getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
+/*var getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
     AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
         pageNo: pageNo,
         pageSize: pageSize,
@@ -60,5 +60,5 @@ var getVipUserCount = function(rootScope) {
                 rootScope.$apply();
             }
         })
-};
+};*/
 module.exports = createVipService;
