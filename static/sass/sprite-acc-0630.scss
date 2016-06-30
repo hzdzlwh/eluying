@@ -1,0 +1,167 @@
+$spriteUrl: url('../image/sprite_acc.png');
+
+.spriteImg{
+  display: inline-block;
+}
+
+.eluyun_book2_outer {
+  height: 22px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.eluyun_book2 {
+  background: $spriteUrl -0px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_finish2_outer {
+  height: 22px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.eluyun_finish2 {
+  background: $spriteUrl -0px -22px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 22px;
+  _margin-top: -22px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_finish2-1_outer {
+  height: 22px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.eluyun_finish2-1 {
+  background: $spriteUrl -50px -0px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 50px;
+  _margin-left: -50px;
+  _padding-top: 0px;
+  _margin-top: -0px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_ing2_outer {
+  height: 22px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.eluyun_ing2 {
+  background: $spriteUrl -50px -22px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 50px;
+  _margin-left: -50px;
+  _padding-top: 22px;
+  _margin-top: -22px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_book2-small_outer {
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.eluyun_book2-small {
+  background: $spriteUrl -0px -44px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 0px;
+  _margin-left: -0px;
+  _padding-top: 44px;
+  _margin-top: -44px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_finish2-1-small_outer {
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.eluyun_finish2-1-small {
+  background: $spriteUrl -16px -44px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 16px;
+  _margin-left: -16px;
+  _padding-top: 44px;
+  _margin-top: -44px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_finish2-small_outer {
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.eluyun_finish2-small {
+  background: $spriteUrl -32px -44px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 32px;
+  _margin-left: -32px;
+  _padding-top: 44px;
+  _margin-top: -44px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_ing2-food_outer {
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.eluyun_ing2-food {
+  background: $spriteUrl -48px -44px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 48px;
+  _margin-left: -48px;
+  _padding-top: 44px;
+  _margin-top: -44px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}
+
+.eluyun_ing2-room_outer {
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.eluyun_ing2-room {
+  background: $spriteUrl -64px -44px no-repeat;
+  width: 100%;
+  height: 100%;
+  _background: none;
+  _padding-left: 64px;
+  _margin-left: -64px;
+  _padding-top: 44px;
+  _margin-top: -44px;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop, src="http://gopng/static/images/sprite.png");
+}

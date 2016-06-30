@@ -158,14 +158,14 @@
                 <div class="sheader">
                     <div class="stitle">
                         <span>订单详情</span>
-                        <div class="eluyun_book_outer spriteImg" ng-if="orderDetail.orderState === 2">
-                            <div class="eluyun_book"></div>
+                        <div class="eluyun_book2_outer spriteImg" ng-if="orderDetail.orderState === 2">
+                            <div class="eluyun_book2"></div>
                         </div>
-                        <div class="eluyun_ing_outer spriteImg" ng-if="orderDetail.orderState === 3">
-                            <div class="eluyun_ing"></div>
+                        <div class="eluyun_ing2_outer spriteImg" ng-if="orderDetail.orderState === 3">
+                            <div class="eluyun_ing2"></div>
                         </div>
-                        <div class="eluyun_finish_outer spriteImg" ng-if="orderDetail.orderState === 5">
-                            <div class="eluyun_finish"></div>
+                        <div class="eluyun_finish2_outer spriteImg" ng-if="orderDetail.orderState === 5">
+                            <div class="eluyun_finish2"></div>
                         </div>
                         <span class="modal-close">&times;</span>
                         <div class="btns">
@@ -208,14 +208,14 @@
                         <table ng-if="orderDetail.rooms">
                             <tr ng-repeat="r in orderDetail.rooms">
                                 <td><span>{{r.serialNum}}</span>&nbsp;({{r.name}})
-                                    <div class="eluyun_book-small_outer spriteImg" ng-if="r.state === 0">
-                                        <div class="eluyun_book-small"></div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="r.state === 0">
+                                        <div class="eluyun_book2-small"></div>
                                     </div>
-                                    <div class="eluyun_ing-small_outer spriteImg" ng-if="r.state === 1">
-                                        <div class="eluyun_ing-small"></div>
+                                    <div class="eluyun_ing2-room_outer spriteImg" ng-if="r.state === 1">
+                                        <div class="eluyun_ing2-room"></div>
                                     </div>
-                                    <div class="eluyun_finish-small_outer spriteImg" ng-if="r.state === 2">
-                                        <div class="eluyun_finish-small"></div>
+                                    <div class="eluyun_finish2-small_outer spriteImg" ng-if="r.state === 2">
+                                        <div class="eluyun_finish2-small"></div>
                                     </div>
                                 </td>
                                 <td>
@@ -234,9 +234,18 @@
                             <tr ng-repeat="f in orderDetail.foodItems" ng-if="f.foodState !== 3">
                                 <td>
                                     <div class="sname">{{f.restName}}</div>
-                                    <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                    <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                    <div class="sstate book" ng-if="f.state === 0">预</div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                        <div class="eluyun_book2-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                        <div class="eluyun_ing2-food"></div>
+                                    </div>
+                                    <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                        <div class="eluyun_finish2-1-small"></div>
+                                    </div>
+                                    <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                    <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                    <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                 <td>
@@ -449,7 +458,6 @@
                     <div class="stitle">
                         <span>取消订单</span>
                         <span class="modal-close">&times;</span>
-                        <!--<div class="status book"><div class="triangle"></div>已预订</div>-->
                     </div>
                 </div>
                 <div class="hr2"></div>
@@ -511,9 +519,18 @@
                             <tr ng-repeat="f in orderCancel.foodItems">
                                 <td>
                                     <div class="sname">{{f.restName}}</div>
-                                    <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                    <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                    <div class="sstate book" ng-if="f.state === 0">预</div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                        <div class="eluyun_book2-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                        <div class="eluyun_ing2-food"></div>
+                                    </div>
+                                    <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                        <div class="eluyun_finish2-1-small"></div>
+                                    </div>
+                                    <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                    <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                    <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                 <td>
@@ -1090,9 +1107,18 @@
                         <tr ng-repeat="f in orderEdit.foodItems">
                             <td>
                                 <div class="sname">{{f.restName}}</div>
-                                <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                <div class="sstate book" ng-if="f.state === 0">预</div>
+                                <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                    <div class="eluyun_book2-small"></div>
+                                </div>
+                                <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                    <div class="eluyun_ing2-food"></div>
+                                </div>
+                                <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                    <div class="eluyun_finish2-1-small"></div>
+                                </div>
+                                <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                             </td>
                             <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                             <td>
@@ -1313,9 +1339,18 @@
                                 <tr ng-repeat="f in checkout.foodItems">
                                     <td>
                                         <div class="sname">{{f.restName}}</div>
-                                        <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                        <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                        <div class="sstate book" ng-if="f.state === 0">预</div>
+                                        <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                            <div class="eluyun_book2-small"></div>
+                                        </div>
+                                        <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                            <div class="eluyun_ing2-food"></div>
+                                        </div>
+                                        <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                            <div class="eluyun_finish2-1-small"></div>
+                                        </div>
+                                        <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                        <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                        <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                     </td>
                                     <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                     <td>
@@ -1508,9 +1543,18 @@
                             <tr ng-repeat="f in checkoutAd.foodItems">
                                 <td>
                                     <div class="sname">{{f.restName}}</div>
-                                    <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                    <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                    <div class="sstate book" ng-if="f.state === 0">预</div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                        <div class="eluyun_book2-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                        <div class="eluyun_ing2-food"></div>
+                                    </div>
+                                    <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                        <div class="eluyun_finish2-1-small"></div>
+                                    </div>
+                                    <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                    <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                    <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                 <td>
@@ -1744,9 +1788,18 @@
                             <tr ng-repeat="f in checkin.foodItems">
                                 <td>
                                     <div class="sname">{{f.restName}}</div>
-                                    <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                    <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                    <div class="sstate book" ng-if="f.state === 0">预</div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                        <div class="eluyun_book2-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                        <div class="eluyun_ing2-food"></div>
+                                    </div>
+                                    <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                        <div class="eluyun_finish2-1-small"></div>
+                                    </div>
+                                    <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                    <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                    <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                 <td>
@@ -1966,9 +2019,18 @@
                             <tr ng-repeat="f in getMoney.foodItems">
                                 <td>
                                     <div class="sname">{{f.restName}}</div>
-                                    <div class="sstate finish" ng-if="f.state === 2">完</div>
-                                    <div class="sstate ing" ng-if="f.state === 1">餐</div>
-                                    <div class="sstate book" ng-if="f.state === 0">预</div>
+                                    <div class="eluyun_book2-small_outer spriteImg" ng-if="f.foodState === 0">
+                                        <div class="eluyun_book2-small"></div>
+                                    </div>
+                                    <div class="eluyun_ing2-food_outer spriteImg" ng-if="f.foodState === 1">
+                                        <div class="eluyun_ing2-food"></div>
+                                    </div>
+                                    <div class="eluyun_finish2-1-small_outer spriteImg" ng-if="f.foodState === 2">
+                                        <div class="eluyun_finish2-1-small"></div>
+                                    </div>
+                                    <!--<div class="sstate finish" ng-if="f.foodState === 2">完</div>-->
+                                    <!--<div class="sstate ing" ng-if="f.foodState === 1">餐</div>-->
+                                    <!--<div class="sstate book" ng-if="f.foodState === 0">预</div>-->
                                 </td>
                                 <td><span class="light">时间</span>&nbsp;{{f.date.slice(5)}}</td>
                                 <td>
@@ -2512,15 +2574,14 @@
                         <div class="arrow-up"></div>
                         <div class="arrow-down"></div>
                         <div class="susername">{{g.customerName}}（{{g.phone}})</div>
-                        <!--<div class="sstatus {{g.classStr}}">{{g.stateStr}}</div>-->
-                        <div class="eluyun_book-small_outer spriteImg" ng-if="g.roomState === 0">
-                            <div class="eluyun_book-small"></div>
+                        <div class="eluyun_book2-small_outer spriteImg" ng-if="g.roomState === 0">
+                            <div class="eluyun_book2-small"></div>
                         </div>
-                        <div class="eluyun_ing-small_outer spriteImg" ng-if="g.roomState === 1">
-                            <div class="eluyun_ing-small"></div>
+                        <div class="eluyun_ing2-room_outer spriteImg" ng-if="g.roomState === 1">
+                            <div class="eluyun_ing2-room"></div>
                         </div>
-                        <div class="eluyun_finish-small_outer spriteImg" ng-if="g.roomState === 2">
-                            <div class="eluyun_finish-small"></div>
+                        <div class="eluyun_finish2-small_outer spriteImg" ng-if="g.roomState === 2">
+                            <div class="eluyun_finish2-small"></div>
                         </div>
                         <div class="booktime">
                             <div class="start"><span>{{g.checkInDateShort}}</span>入住</div>

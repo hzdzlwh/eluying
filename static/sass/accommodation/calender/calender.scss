@@ -316,12 +316,13 @@ object{
           td:first-child{
             width: 132px;
             .sname{
-              width: 84px;
+              max-width: 84px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
               position: relative;
               float: left;
+              margin-right: 8px;
             }
           }
           td:nth-child(2){
@@ -338,26 +339,8 @@ object{
         .subtype.food{
           td:nth-child(1){
             overflow: hidden;
-            .sstate{
-              border-radius:2px;
-              width:16px;
-              height:16px;
-              font-size: 10px;
-              text-align: center;
-              line-height: 16px;
-              color: white;
-              float: left;
-              margin-left: 4px;
-              margin-top: 2px;
-            }
-            .sstate.ing{
-              background:#ffba75;
-            }
-            .sstate.book{
-              background:#82beff;
-            }
-            .sstate.finish{
-              background: #bfbfbf;
+            .sname{
+              margin-right: 8px;
             }
           }
           td:nth-child(2){
@@ -366,7 +349,7 @@ object{
           td:nth-child(3){
             width: 133px;
             .sname{
-              width: 116px;
+              max-width: 116px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -854,10 +837,11 @@ object{
           td:nth-child(1){
             width: 150px;
             .sname{
-              width: 120px;
+              max-width: 120px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              margin-right: 8px;
             }
             .sstate{
               border-radius:2px;
@@ -1571,7 +1555,7 @@ object{
             background-position: 100px;
           }
           .sname{
-            width: 114px;
+            max-width: 114px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -1597,10 +1581,11 @@ object{
           width: 132px;
           overflow: hidden;
           .sname{
-            width: 84px;
+            max-width: 84px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            margin-right: 8px;
           }
           .sstate{
             border-radius:2px;
@@ -1633,7 +1618,7 @@ object{
           text-align: left;
           padding: 0;
           .sname{
-            width: 116px;
+            max-width: 116px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -2387,10 +2372,11 @@ object{
           td:first-child{
             width: 114px;
             .sname{
-              width: 114px;
+              max-width: 114px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              margin-right: 8px;
             }
             .select1{
               width: 114px;
@@ -2416,10 +2402,11 @@ object{
             width: 132px;
             overflow: hidden;
             .sname{
-              width: 84px;
+              max-width: 84px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              margin-right: 8px;
             }
             .sstate{
               border-radius:2px;
@@ -2452,7 +2439,7 @@ object{
             text-align: left;
             padding: 0;
             .sname{
-              width: 116px;
+              max-width: 116px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
