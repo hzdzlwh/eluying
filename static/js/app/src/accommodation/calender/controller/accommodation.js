@@ -227,7 +227,7 @@ var accommodationCtrl = function(app){
                 rootScope.channels = result.channels;
             });
             getDataService.getItems(function(result){
-                rootScope.foodList = result.foodList;
+                //rootScope.foodList = result.foodList;
                 rootScope.funList = result.funList;
                 rootScope.goodsList = result.goodsList;
             });
