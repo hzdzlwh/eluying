@@ -27,13 +27,13 @@ var itemsCtrl = function(app){
                 // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
             rootScope.addNewVip = function(){
-                $("#newVipModal").modal("show");
                 rootScope.modify = false;
+                $("#newVipModal").modal("show");
             };
             rootScope.modifyVip = function(item){
+                rootScope.modify = true;
                 $("#newVipModal").modal("show");
                 rootScope.item = Object.assign({}, item);
-                rootScope.modify = true;
             };
             rootScope.removeVipModal = function(item){
                 $("#removeVipModal").modal("show");
@@ -52,10 +52,15 @@ var itemsCtrl = function(app){
             rootScope.pageSize = 15;
             rootScope.searchText = '';
             rootScope.currentPage = 1;
-            scope.filterSearch = function(ev) {
-                if (ev.keyCode === 13) {
+            var flag;
+            scope.filterSearch = function() {
+                /*if (ev.keyCode === 13) {
                     scope.search();
-                }
+                }*/
+                clearTimeout(flag);
+                flag = setTimeout(function(){
+                    scope.search();
+                }, 1000);
             };
             scope.getIdCardIcon = function(num) {
                 return rootScope.idCardList[num].label.substring(0 ,1);

@@ -80,6 +80,8 @@ var createVipCtrl = function(app) {
                     return
                 }
                 createVipService.createVip(scope.newVip, rootScope);
+                scope.hasSubmit = false;
+                scope.newVip = {name: '', phone: '', idCardType: 0};
             };
             scope.editVip = function(){
                 scope.hasSubmit = true;
