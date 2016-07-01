@@ -23,11 +23,15 @@ var foodETPriceList = {
         if (path === 'food') {
             params.version = 7;
         }
-        AJAXService.ajaxWithToken("GET", url, params, function(result){
-            foodETPriceList.render(result)
+        AJAXService.ajaxWithToken("GET", url, params, function(result) {
+            if (path == "food") {
+                foodETPriceList.renderFood(result);
+            } else {
+                foodETPriceList.renderET(result);
+            }
         })
     },
-    render: function(result){
+    renderFood: function(result){
         var dishesTbody = "<tbody>";
         var dishesList = result.data.list[1];
         for (var name in dishesList) {
@@ -58,6 +62,23 @@ var foodETPriceList = {
         packageTbody += "</tbody>";
         $("#packageTable").append(dishesTbody);
         $("#dishesTable").append(packageTbody);
+        this.eventBind();
+    },
+    renderET: function(result) {
+        var tbody = "<tbody>";
+        for (var name in result.data) {
+            for (var subName in result.data[name]) {
+                if (subName == 0) {
+                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + result.data[name][subName].salePrice + "</td></tr>"
+                } else {
+                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                        "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
+                        + result.data[name][subName].netPrice + "</p></div></td></tr>"
+                }
+            }
+        }
+        tbody += "</tbody>";
+        $("table").append(tbody);
         this.eventBind();
     },
     editSalePrice: function(that){
@@ -129,7 +150,7 @@ var foodETPriceList = {
         })
     },
     eventBind: function(){
-        events= {
+        var events = {
             "click .priceGrid .price": function(event){
                 $(".price").removeClass("selected");
                 $(".subPriceTd").removeClass("selected");
