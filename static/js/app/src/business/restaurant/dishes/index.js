@@ -30,7 +30,7 @@ $(function() {
 
     window.addEventListener('resize', util.mainContainer);
 
-    events = {
+    var events = {
 
         "show.bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);}

@@ -49,7 +49,7 @@ $(function(){
     };
 
     var timer;
-    events = {
+    var events = {
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
             var selection = $(this);

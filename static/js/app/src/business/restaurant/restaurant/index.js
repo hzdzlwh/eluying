@@ -19,7 +19,7 @@ $(function(){
     leftMenu.showLeftMenu();
     util.mainContainer();
     modal.centerModals();
-    events = {
+    var events = {
 
         "resize window": util.mainContainer
 

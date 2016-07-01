@@ -29,7 +29,7 @@ $(function(){
     ETCategoryList.loadETCategoryList();
 
 
-    events = {
+    var events = {
 
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,

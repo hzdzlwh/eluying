@@ -21,7 +21,7 @@ $(function(){
     restaurantMenu.render();
     util.mainContainer();
     modal.centerModals();
-    events = {
+    var events = {
 
         "resize window": util.mainContainer
         

@@ -388,7 +388,9 @@ var showInfo = {
 
 
 //防呆
-        "change #editDisplayInfo input": this.setChanged,
+        "change #editDisplayInfo input": function() {
+            showInfo.setChanged();
+        },
 
         "click #editDisplayInfoCancel": function () {
             var that = this;

@@ -26,7 +26,7 @@ $(function() {
     $(".manageVipEntry").addClass("selected");
     modal.modalInit();
     modal.centerModals();
-    events = {
+    var events = {
         /*"click .outPut-excel": function(ev){
             ev.stopPropagation();
             AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
