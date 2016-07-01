@@ -62,18 +62,20 @@ var orderDetailService = function(app){
             orderDetail.itemStartDate = itemStartDate;
             if(orderDetail.orderState !== 2){
                 orderDetail.cancelable = false;
+            }else{
+                orderDetail.editable = true;
             }
-            var foods = orderDetail.foodItems;
-            var foodsAmounts = {};
-            foods.forEach(function(d){
-                if(!foodsAmounts[d.date]){
-                    foodsAmounts[d.date] = parseFloat(d.amount);
-                }
-                else{
-                    foodsAmounts[d.date] += parseFloat(d.amount);
-                }
-            });
-            orderDetail.foodsAmount = foodsAmounts;
+            //var foods = orderDetail.foodItems;
+            //var foodsAmounts = {};
+            //foods.forEach(function(d){
+            //    if(!foodsAmounts[d.date]){
+            //        foodsAmounts[d.date] = parseFloat(d.amount);
+            //    }
+            //    else{
+            //        foodsAmounts[d.date] += parseFloat(d.amount);
+            //    }
+            //});
+            //orderDetail.foodsAmount = foodsAmounts;
             var plays = orderDetail.playItems;
             var playsAmounts = {};
             plays.forEach(function(d){
@@ -85,7 +87,6 @@ var orderDetailService = function(app){
                 }
             });
             orderDetail.playsAmount = playsAmounts;
-            console.log(orderDetail);
             return orderDetail;
         };
     }]);

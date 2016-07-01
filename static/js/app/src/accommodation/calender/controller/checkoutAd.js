@@ -23,6 +23,7 @@ var checkoutAdCtrl = function(app){
             scope.calRoomRefund = checkoutAdService.calRoomRefund;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
+            scope.deleteFood = orderService.deleteFood;
             scope.submitCheckoutAd = function(){
                 var checkoutAd = rootScope.checkoutAd;
                 if(checkoutAd.consumedRooms.length === 0){
@@ -40,7 +41,7 @@ var checkoutAdCtrl = function(app){
                 });
                 //如果有项目没用完
                 if(!flag){
-                    var items = checkoutAd.foodItems.concat(checkoutAd.playItems);
+                    var items = checkoutAd.playItems;
                     items.forEach(function(d){
                         if(d.amount !== d.usedAmount){
                             flag2 = true;
@@ -74,7 +75,7 @@ var checkoutAdCtrl = function(app){
                     }
                 }
                 return left.toFixed(2);
-            }
+            };
             scope.$watch("checkoutAd.penaltyAd", function(){
                 if(!rootScope.checkoutAd || !rootScope.checkoutAd.penaltyAd){
                     return false;

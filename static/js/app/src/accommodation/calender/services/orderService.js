@@ -149,9 +149,10 @@ var orderService = function(app){
             if(!item){
                 return false;
             }
+            var getInventoryDate = order.itemStartDate ? new Date(order.itemStartDate) : new Date();
             if(type === 1 || type === 2){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                    date: util.dateFormat(new Date(order.itemStartDate)),
+                    date: util.dateFormat(getInventoryDate),
                     id: item.itemId
                 }, function(result){
                     var temp = {
@@ -161,9 +162,9 @@ var orderService = function(app){
                         name: item.name,
                         price: item.price,
                         amount: (result.data.inventory < 1) ? 0 : 1,
-                        date: new Date(order.itemStartDate),
-                        dateStr: util.dateFormat(new Date(order.itemStartDate)),
-                        dateStr2: util.dateFormatWithoutYear(new Date(order.itemStartDate)),
+                        date: getInventoryDate,
+                        dateStr: util.dateFormat(getInventoryDate),
+                        dateStr2: util.dateFormatWithoutYear(getInventoryDate),
                         inventory: result.data.inventory
                     };
                     if(type === 1 && order.foodsAmount && order.foodsAmount[item.date]){
@@ -190,7 +191,7 @@ var orderService = function(app){
                                 }
                             });
                             if(type === 1){
-                                order.foodItems.push(temp);
+                                //order.foodItems.push(temp);
                             }else if(type === 2){
                                 order.playItems.push(temp);
                             }
@@ -226,8 +227,9 @@ var orderService = function(app){
                 $(".select1_options").hide();
                 return false;
             }
+            var getInventoryDate = order.itemStartDate ? new Date(order.itemStartDate) : new Date();
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                date: util.dateFormat(new Date()),
+                date: util.dateFormat(getInventoryDate),
                 id: ITEM.itemId
             }, function(result){
                 var temp = {
@@ -237,9 +239,9 @@ var orderService = function(app){
                     name: ITEM.name,
                     price: ITEM.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
-                    date: new Date(order.itemStartDate),
-                    dateStr: util.dateFormat(new Date(order.itemStartDate)),
-                    dateStr2: util.dateFormatWithoutYear(new Date(order.itemStartDate)),
+                    date: getInventoryDate,
+                    dateStr: util.dateFormat(getInventoryDate),
+                    dateStr2: util.dateFormatWithoutYear(getInventoryDate),
                     inventory: result.data.inventory
                 };
                 temp.calendar = calendarService.createItemCalendar(temp.date);
@@ -308,7 +310,6 @@ var orderService = function(app){
                         rootScope.$apply();
                     }
                 });
-
             });
         };
         //计算订单中客户应付多少钱
@@ -318,7 +319,7 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
-                price += order.foodItems[i].amount * order.foodItems[i].price;
+                price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
@@ -340,7 +341,7 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
-                price += order.foodItems[i].amount * order.foodItems[i].price;
+                price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
@@ -395,7 +396,7 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
-                price += order.foodItems[i].amount * order.foodItems[i].price;
+                price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price;
@@ -476,6 +477,23 @@ var orderService = function(app){
             money = parseFloat(money) || 0;
             money = parseFloat(money.toFixed(2));
         };
+        this.deleteFood = function(order, food){
+            var index = order.foodItems.indexOf(food);
+            console.log(food);
+            AJAXService.ajaxWithToken('GET', 'cateringCancelOrderUrl', {
+                caterOrderId: food.foodOrderId,
+                payments: '[]',
+                version: 7,
+                restId: food.restId,
+                remark: ''
+            }, function(result1){
+                if(result1.code === 1){
+                    console.log(result1);
+                    order.foodItems.splice(index, 1);
+                    rootScope.$apply();
+                }
+            });
+        }
     }]);
 };
 
