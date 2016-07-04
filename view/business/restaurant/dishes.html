@@ -230,11 +230,19 @@
             <div class="clearfloat">
                 <div class="dishes-classify-box">
                     <ul class="dishes-classify-box-classify clearfloat">
-                        <li><div v-if="classifyOffset > 0" @click="decreaseClassifyOffset">&lt;</div></li>
+                        <li>
+                            <div v-if="classifyOffset > 0" @click="decreaseClassifyOffset">
+                                <img src="http://static.dingdandao.com/eluyun/image/D020C482-1230-4842-A204-943A7B3A0C08@1x.png" alt="">
+                            </div>
+                        </li>
                         <li v-for="dishesClassify in dishesClassifyList | limitBy 4 classifyOffset" v-bind:class="{'current-classify': currentClassifyId === dishesClassify.dishesClassifyId}" @click="changeClassify(dishesClassify.dishesClassifyId)">
                             {{dishesClassify.dishesClassifyName}}
                         </li>
-                        <li style="border-right: 0"><div v-if="dishesClassifyList.length > 4 && classifyOffset < dishesClassifyList.length - 4" @click="increaseClassifyOffset">&gt;</div></li>
+                        <li style="border-right: 0">
+                            <div v-if="dishesClassifyList.length > 4 && classifyOffset < dishesClassifyList.length - 4" @click="increaseClassifyOffset">
+                                <img src="http://static.dingdandao.com/eluyun/image/B6C893C5-A019-45D7-8C2D-A75A8566D721@1x.png" alt="">
+                            </div>
+                        </li>
                     </ul>
                     <div class="dishes-classify-box-dishes">
                         <ul>
