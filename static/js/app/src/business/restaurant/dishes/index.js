@@ -256,6 +256,7 @@ $(function() {
                     function(res) {
                         if (res.code === 1) {
                             dishesClassify.getDishesClassify();
+                            dishes.getDishesClassify();
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -463,6 +464,7 @@ $(function() {
                         this.dishesClassify = {};
                         this.submitted = false;
                         $('#dishesClassifyEditDialog').modal('hide');
+                        dishes.getDishesClassify();
                     } else {
                         modal.somethingAlert(res.msg);
                     }
