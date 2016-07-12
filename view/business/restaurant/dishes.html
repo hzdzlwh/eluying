@@ -41,7 +41,7 @@
                             <td class="ellipsis">{{packageModel.shortName}}</td>
                             <td>{{packageModel.fitNum}}</td>
                             <td>{{packageModel.unitPrice}}</td>
-                            <td class="ellipsis">{{packageModel.description}}</td>
+                            <td class="ellipsis"><p class="ellipsis" style="width: 90.625px;">{{packageModel.description}}</p></td>
                             <td>{{packageModel.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
                             <input type="hidden" class="id" :value="packageModel.categoryId">
                         </tr>
@@ -74,7 +74,7 @@
                             <td style="padding-left: 18px" class="ellipsis">{{dishes.dishesClassify}}</td>
                             <td style="padding-left: 18px">{{dishes.fitNum}}</td>
                             <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
-                            <td style="padding-left: 18px" class="ellipsis">{{dishes.description}}</td>
+                            <td style="padding-left: 18px"><p class="ellipsis" style="width: 90.625px;">{{dishes.description}}</p></td>
                             <td style="padding-left: 18px">{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
                             <input type="hidden" class="id" :value="dishes.categoryId">
                         </tr>

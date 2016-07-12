@@ -142,20 +142,16 @@ $(function() {
             },
 
             modifyState: function() {
-                var id;
-                var state;
-                if (this.dishesSelected) {
-                    id = this.dishesSelected.categoryId;
-                    state = this.dishesSelected.onDirectSaleState === 0 ? 1 : 0;
-                } else if (this.packageSelected) {
-                    id = this.packageSelected.categoryId;
-                    state = this.packageSelected.onDirectSaleState === 0 ? 1 : 0;
-                }
+                var selected = this.dishesSelected || this.packageSelected;
+                var id = selected.categoryId;
+                var state = 1 - selected.onDirectSaleState;
+
                 AJAXService.ajaxWithToken('POST', '/category/modifyStatePC',
                     { id: id, state: state, channelId: 5 },
                     function(res) {
                         if (res.code === 1) {
                             this.getPackagesAndDishesFromRestaurant();
+                            selected.onDirectSaleState = state;
                         } else {
                             modal.somethingAlert(res.msg);
                         }
