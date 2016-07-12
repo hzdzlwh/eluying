@@ -35,7 +35,10 @@ var webpackConf =  {
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
         'restaurant/table': './static/js/app/src/business/restaurant/table',
-        'restaurant/dishes': './static/js/app/src/business/restaurant/dishes'
+        'restaurant/dishes': './static/js/app/src/business/restaurant/dishes',
+        'codesite/operation': './static/js/app/src/codesite/operation/operation.js',
+        'linesite/operation': './static/js/app/src/linesite/operation/operation.js',
+        
     },
     output: {
         filename: '[name].js',
