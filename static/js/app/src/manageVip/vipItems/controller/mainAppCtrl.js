@@ -44,8 +44,7 @@ var itemsCtrl = function(app){
                     function(result){
                         if (result.code === 1) {
                             $("#removeVipModal").modal("hide");
-                            getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, '', rootScope);
-                            getItemsService.getVipUserCount(rootScope);
+                            scope.search();
                         }
                     });
             };
