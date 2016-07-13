@@ -319,6 +319,9 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
+                if(order.foodItems[i].foodState === 3){
+                    continue;
+                }
                 price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
@@ -341,6 +344,9 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
+                if(order.foodItems[i].foodState === 3){
+                    continue;
+                }
                 price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
@@ -396,6 +402,9 @@ var orderService = function(app){
                 price += order.rooms[i].fee;
             }
             for(var i = 0; i < order.foodItems.length; i++){
+                if(order.foodItems[i].foodState === 3){
+                    continue;
+                }
                 price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
