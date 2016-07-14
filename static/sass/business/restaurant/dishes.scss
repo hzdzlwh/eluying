@@ -133,8 +133,10 @@
   td:nth-child(2) {
     padding-left: 62px;
   }
-  td {
-    cursor: pointer;
+  tbody {
+    tr {
+      cursor: pointer;
+    }
   }
 }
 .classify-operation {

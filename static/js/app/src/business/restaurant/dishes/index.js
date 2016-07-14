@@ -231,6 +231,9 @@ $(function() {
                 $('#dishesClassifyEditDialog').modal('show');
             },
             select: function(dishesClassify) {
+                if (dishesClassify.dishesClassifyName === '其他') {
+                    return null;
+                }
                 this.dishesClassifySelected = dishesClassify;
             },
             openDishesClassifyEditDialog: function() {
