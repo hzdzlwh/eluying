@@ -322,7 +322,9 @@ object{
               text-overflow: ellipsis;
               position: relative;
               float: left;
-              margin-right: 8px;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
           }
           td:nth-child(2){
@@ -340,7 +342,9 @@ object{
           td:nth-child(1){
             overflow: hidden;
             .sname{
-              margin-right: 8px;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
           }
           td:nth-child(2){
@@ -841,7 +845,9 @@ object{
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              margin-right: 8px;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
             .sstate{
               border-radius:2px;
@@ -1562,13 +1568,13 @@ object{
           }
         }
         td:nth-child(2){
-          width: 98px;
+          width: 68px;
           text-align: right;
           position: relative;
         }
         td:nth-child(3){
           padding-left: 18px;
-          width: 209px;
+          width: 239px;
           text-align: left;
         }
         td:nth-child(4){
@@ -1585,7 +1591,9 @@ object{
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-            margin-right: 8px;
+            //margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
           }
           .sstate{
             border-radius:2px;
@@ -2376,7 +2384,9 @@ object{
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              margin-right: 8px;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
             .select1{
               width: 114px;
@@ -2384,12 +2394,12 @@ object{
             }
           }
           td:nth-child(2){
-            width: 98px;
+            width: 68px;
             text-align: right;
           }
           td:nth-child(3){
             padding-left: 18px;
-            width: 209px;
+            width: 239px;
             text-align: left;
           }
           td:nth-child(4){
@@ -2406,7 +2416,9 @@ object{
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              margin-right: 8px;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
             .sstate{
               border-radius:2px;

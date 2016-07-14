@@ -72,6 +72,12 @@ var orderEditCtrl = function(app){
             };
             scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;
+                if(scope.foodToDelete.length > 0){
+                    //TODO
+                    scope.foodToDelete.forEach(function(d){
+                        orderService.deleteFood(orderEdit, d);
+                    });
+                }
                 var flag = false;
                 var orderEditCustomerName = orderEditForm.orderEditCustomerName;
                 var orderEditCustomerPhone = orderEditForm.orderEditCustomerPhone;
@@ -160,7 +166,8 @@ var orderEditCtrl = function(app){
             };
             scope.hideModal = function(orderEditForm){
                 orderEditForm.$setPristine();
-                $("#orderEditmodal").modal("hide");
+                scope.foodToDelete = [];
+                $("#orderEditModal").modal("hide");
             };
             scope.$watch("orderEdit.discounts", function(){
                 if(!rootScope.orderEdit || !rootScope.orderEdit.discounts){
@@ -177,7 +184,10 @@ var orderEditCtrl = function(app){
                         rootScope.orderEdit.discounts.substr(0, rootScope.orderEdit.discounts.length - 1);
                 }
             });
-            scope.deleteFood = orderService.deleteFood;
+            scope.foodToDelete = [];
+            scope.deleteFood = function(food){
+                scope.foodToDelete.push(food);
+            };
     }]);
 };
 
