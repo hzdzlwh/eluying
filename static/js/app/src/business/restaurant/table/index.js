@@ -83,7 +83,7 @@ $(function(){
                             modal.somethingAlert('删除成功');
                             this.getBoards();
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.confirmDialog({okText: '我知道了', message: result.msg, hasCancel: false});
                         }
                     }.bind(this));
             }

@@ -235,11 +235,11 @@
                                 <img src="http://static.dingdandao.com/eluyun/image/D020C482-1230-4842-A204-943A7B3A0C08@1x.png" alt="">
                             </div>
                         </li>
-                        <li v-for="dishesClassify in dishesClassifyList | limitBy 4 classifyOffset" v-bind:class="{'current-classify': currentClassifyId === dishesClassify.dishesClassifyId}" @click="changeClassify(dishesClassify.dishesClassifyId)">
+                        <li class="ellipsis" v-for="dishesClassify in dishesClassifyList | limitBy 3 classifyOffset" v-bind:class="{'current-classify': currentClassifyId === dishesClassify.dishesClassifyId}" @click="changeClassify(dishesClassify.dishesClassifyId)">
                             {{dishesClassify.dishesClassifyName}}
                         </li>
                         <li style="border-right: 0">
-                            <div v-if="dishesClassifyList.length > 4 && classifyOffset < dishesClassifyList.length - 4" @click="increaseClassifyOffset">
+                            <div v-if="dishesClassifyList.length > 3 && classifyOffset < dishesClassifyList.length - 3" @click="increaseClassifyOffset">
                                 <img src="http://static.dingdandao.com/eluyun/image/B6C893C5-A019-45D7-8C2D-A75A8566D721@1x.png" alt="">
                             </div>
                         </li>
@@ -253,7 +253,7 @@
                 <div class="dishes-selected-box">
                     <table class="dishes-selected-box-table">
                         <thead>
-                        <tr style="border-bottom: 1px solid #ededed">
+                        <tr style="border-bottom: 1px solid #d4d4d4">
                             <th>名称</th>
                             <th>单价</th>
                             <th>数量</th>
@@ -270,9 +270,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="v-btn-group">
-                    <button class="v-btn v-blue-btn" @click="changePackageDishes" style="margin-right: 22px">确定</button>
-                    <button class="v-btn v-white-btn" @click="cancel">取消</button>
+                <div class="dishes-bottom">
+                    <div class="v-btn-group">
+                        <button class="v-btn v-blue-btn" @click="changePackageDishes" style="margin-right: 22px">确定</button>
+                        <button class="v-btn v-white-btn" @click="cancel">取消</button>
+                    </div>
                 </div>
             </div>
         </div>

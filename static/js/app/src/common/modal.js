@@ -81,9 +81,13 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
     var okText = dialogConfig.okText || '确认';
     var cancelText = dialogConfig.cancelText || '取消';
     var showTitle = typeof (dialogConfig.showTitle) === 'undefined' ? true : dialogConfig.showTitle;
+    var hasOk = dialogConfig.hasOk;
+    var hasCancel = dialogConfig.hasCancel;
     var header = showTitle ? "<div class='modal-header'>" +
     "<p>" + title + "</p>" +
     "</div>" : '';
+    var okButton = hasOk === false ? '' : '<button class="btn-ok" id="confirmDialogOk">' + okText + '</button>';
+    var cancelButton = hasCancel === false ? '' : '<button class="btn-cancel" id="confirmDialogCancel">' + cancelText + '</button>';
     if ($('.confirm-dialog-container').length === 0) {
         $("body").prepend('<div class="confirm-dialog-container"></div>');
     }
@@ -96,23 +100,24 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
         "<p>" + message + "</p>" +
         "</div>" +
         "<div class='footer clearfloat'>" +
-        "<button class='btn-cancel' id='confirmDialogCancel'>" + cancelText + "</button>" +
-        "<button class='btn-ok' id='confirmDialogOk'>" + okText + "</button>" +
+        cancelButton +
+        okButton +
         "</div>" +
         "</div>" +
         "</div>" +
         "</div>");
     $("#confirmDialog").modal("show");
     centerModals();
-    $('#confirmDialogOk').on("click", function(){
-        confirmCallback&&confirmCallback();
+    hasOk !== false && $('#confirmDialogOk').on("click", function(){
         $("#confirmDialog").modal("hide");
+        // bootstrap 去遮罩要再fade动画完成后执行，时间是300ms
+        confirmCallback && setTimeout(confirmCallback, 301);
         // $(".modal-backdrop").remove();
         //$("#confirmDialog").remove();
     });
-    $('#confirmDialogCancel').on("click", function(){
-        cancelCallback&&cancelCallback();
+    hasCancel !== false && $('#confirmDialogCancel').on("click", function(){
         $("#confirmDialog").modal("hide");
+        cancelCallback && setTimeout(cancelCallback, 301);
         // $(".modal-backdrop").remove();
         //$("#confirmDialog").remove();
     });

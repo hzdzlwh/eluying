@@ -212,33 +212,36 @@
 }
 .dishes-classify-box {
   float: left;
-  border-right: 1px solid #ededed;
-  width: 379px;
+  width: 380px;
   height: 402px;
 }
 .dishes-selected-box {
-  width: 309px;
+  width: 308px;
   float: left;
-  height: 344px;
+  height: 358px;
   overflow: auto;
+  border-left: 1px solid #ccc;
+  background: #fafafa;
 }
 .dishes-classify-box-classify {
+  background-color: #ededed;
+  border-bottom: 1px solid #d4d4d4;
+  height: 43px;
   li {
     float: left;
-    width: 64px;
+    width: 77px;
     line-height: 43px;
     text-align: center;
     height: 43px;
     border: 1px solid #d4d4d4;
-    background-color: #fafafa;
     margin-left: -1px;
     cursor: pointer;
   }
 }
 .dishes-classify-box-dishes {
   overflow-y: auto;
-  height: 359px;
-  padding: 11px 6px;
+  height: 315px;
+  padding: 8px 10px;
   li {
     display: inline-block;
     border: 1px solid #cccccc;
@@ -247,7 +250,7 @@
     height: 26px;
     line-height: 24px;
     text-align: center;
-    margin: 8px;
+    margin: 8px 10px;
     cursor: pointer;
   }
 }
@@ -332,8 +335,16 @@
   .v-btn-group {
     position: absolute;
     right: 25px;
-    bottom: 20px;
+    top: 10px;
   }
+}
+.dishes-bottom {
+  position: absolute;
+  bottom: 0;
+  height: 44px;
+  background: #fafafa;
+  box-shadow: 0px -2px 4px 0px rgba(0,0,0,0.15);
+  width:688px;
 }
 .package-table {
   td {

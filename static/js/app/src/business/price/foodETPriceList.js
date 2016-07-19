@@ -33,7 +33,7 @@ var foodETPriceList = {
     },
     renderFood: function(result){
         var dishesTbody = "<tbody>";
-        var dishesList = result.data.list[1];
+        var dishesList = result.data.list[0];
         for (var name in dishesList) {
             for (var subName in dishesList[name]) {
                 if (subName == 0) {
@@ -45,7 +45,7 @@ var foodETPriceList = {
                 }
             }
         }
-        var packageList = result.data.list[0];
+        var packageList = result.data.list[1];
         var packageTbody = "<tbody>";
         for (var name in packageList) {
             for (var subName in packageList[name]) {

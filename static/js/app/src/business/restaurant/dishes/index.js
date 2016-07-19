@@ -255,6 +255,7 @@ $(function() {
                     function(res) {
                         if (res.code === 1) {
                             dishesClassify.getDishesClassify();
+                            main.getPackagesAndDishesFromRestaurant();
                             dishes.getDishesClassify();
                         } else {
                             modal.somethingAlert(res.msg);
@@ -379,14 +380,14 @@ $(function() {
                 if (this.classifyOffset <= 0) {
                     this.classifyOffset = 0;
                 } else {
-                    this.classifyOffset --;
+                    this.classifyOffset = this.classifyOffset -3;
                 }
             },
             increaseClassifyOffset: function() {
-                if (this.classifyOffset >= this.dishesClassifyList.length - 4) {
-                    this.classifyOffset = this.dishesClassifyList.length - 4;
+                if (this.classifyOffset >= this.dishesClassifyList.length - 3) {
+                    this.classifyOffset = this.dishesClassifyList.length - 3;
                 } else {
-                    this.classifyOffset ++;
+                    this.classifyOffset = this.classifyOffset + 3;
                 }
             }
         }
