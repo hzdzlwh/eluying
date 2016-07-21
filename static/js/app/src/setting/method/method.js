@@ -1,3 +1,4 @@
+/*
 var AJAXService = require("AJAXService");
 var header = require("header");
 var leftMenu = require("leftMenu");
@@ -196,3 +197,211 @@ $(function(){
 
 });
 
+*/
+var Vue = require('vue');
+var header = require('header');
+var leftMenu = require('leftMenu');
+var util = require('util');
+var modal = require('modal');
+var AJAXService= require('AJAXService');
+var auth = require('../../common/auth');
+auth.checkAuth(auth.BUSINESS_ID);
+
+require("bootstrap");
+require("validation");
+
+$(function(){
+    header.showHeader();
+    leftMenu.showLeftMenu();
+    util.mainContainer();
+    modal.modalInit();
+    var events = {
+
+        "resize window": util.mainContainer,
+        "show.bs.modal .modal": modal.centerModals,
+        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click .head-img-close": function(){var that = this; modal.clearModal(that);},
+    };
+
+    util.bindDomAction(events);
+    var mainContainer = new Vue({
+        el: '.mainContainer',
+        data: {
+            codeStatus: 'open',
+            walletStatus: 'open',
+            companyStatus: 'close',
+            w_webPayStatus: 'open',
+            w_facePayStatus: 'open',
+            w_immediaPayStatus: 'open',
+            c_webPayStatus: 'open',
+            c_facePayStatus: 'open',
+            c_immediaPayStatus: 'open'
+        },
+        methods: {
+            toggleStatus: function(str){
+                switch(str){
+                    case 'code':
+                        this.codeStatus = (this.codeStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'wallet':
+                        this.walletStatus = (this.walletStatus === 'open') ? 'close' : (function(){
+                            if (this.companyStatus === 'open'){
+                                this.companyStatus = 'close';
+                            }
+                            return 'open'
+                        }).bind(this)();
+                        break;
+                    case 'company':
+                        this.companyStatus = (this.companyStatus === 'open') ? 'close' : (function(){
+                            if (this.walletStatus === 'open'){
+                                this.walletStatus = 'close';
+                            }
+                            return 'open'
+                        }).bind(this)();
+                        break;
+                    case 'web-w':
+                        this.w_webPayStatus = (this.w_webPayStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'face-w':
+                        this.w_facePayStatus = (this.w_facePayStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'immedia-w':
+                        this.w_immediaPayStatus = (this.w_immediaPayStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'web-c':
+                        this.c_webPayStatus = (this.c_webPayStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'face-c':
+                        this.c_facePayStatus = (this.c_facePayStatus === 'open') ? 'close' : 'open';
+                        break;
+                    case 'immedia-c':
+                        this.c_immediaPayStatus = (this.c_immediaPayStatus === 'open') ? 'close' : 'open';
+                        break;
+                }
+            }
+        },
+        computed: {
+            walletShow: function(){
+                return this.walletStatus === 'open'
+            },
+            companyShow: function(){
+                return this.companyStatus === 'open'
+            }
+        }
+    });
+
+    var companyAli = new Vue({
+        el: '#company-aliPay',
+        data: {
+            valid: 'invalid',
+            pid: '',
+            pidTips: true
+        },
+        methods: {
+            reset: function(){
+                this.valid = 'invalid';
+                this.pid = '';
+            },
+            copyText: function(){
+                var ele = document.querySelector('#commonKey');
+                util.copyText(ele);
+                $(".copy-success").css('display', 'inline-block');
+                setTimeout(function () {
+                    $(".copy-success").css('display', 'none');
+                }, 3000);
+            },
+            checkValid: function(){
+                this.valid = (this.pid === '') ? 'invalid' : 'valid';
+                this.pidTips = (this.pid === '');
+            },
+            submitAble: function(){
+                if (this.valid === 'invalid'){
+                    return false
+                } else {
+                    console.log('I have send a request!');
+                    $("#company-aliPay").modal("hide");
+                    setTimeout(this.reset, 1000);
+                }
+            }
+        }
+    });
+
+    var aliImmedia = new Vue({
+        el: '#ali-immediaPay',
+        data: {
+            valid: 'invalid',
+            pid: '',
+            pidTips: true
+        },
+        methods: {
+            reset: function(){
+                this.valid = 'invalid';
+                this.pid = '';
+            },
+            copyText: function(){
+                var ele = document.querySelector('#commonKey');
+                util.copyText(ele);
+                $(".copy-success").css('display', 'inline-block');
+                setTimeout(function () {
+                    $(".copy-success").css('display', 'none');
+                }, 3000);
+            },
+            checkValid: function(){
+                this.valid = (this.pid === '') ? 'invalid' : 'valid';
+                this.pidTips = (this.pid === '');
+            },
+            submitAble: function(){
+                if (this.valid === 'invalid'){
+                    return false
+                } else {
+                    console.log('I have send a request!');
+                    $("#company-aliPay").modal("hide");
+                    setTimeout(this.reset, 1000);
+                }
+            }
+        }
+    });
+
+
+    var aliFace = new Vue({
+        el: "#ali-facePay",
+        data: {
+            valid: 'invalid',
+            pid: '',
+            appId: '',
+            pidTips: true,
+            appIdTips: true
+        },
+        methods: {
+            reset: function(){
+                this.valid = 'invalid';
+                this.pid = '';
+                this.appId = '';
+                this.pidTips = true;
+                this.appIdTips = true;
+            },
+            copyText: function(){
+                var ele = document.querySelector('#common-key');
+                util.copyText(ele);
+                $('.copy-success').css('display', 'inline-block');
+                setTimeout(function(){
+                    $('.copy-success').css('display', 'none');
+                }, 3000);
+            },
+            checkValid: function(){
+                this.valid = (this.pid === '' || this.appId === '') ? 'invalid' : 'valid';
+                this.pidTips = (this.pid === '');
+                this.appIdTips = (this.appId === '');
+            },
+            submitAble: function(){
+                if (this.valid === 'invalid'){
+                    return false
+                } else {
+                    console.log('I have send a request!');
+                    $("#ali-facePay").modal("hide");
+                    setTimeout(this.reset, 1000);
+                }
+            }
+        }
+    });
+});

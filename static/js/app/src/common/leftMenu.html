@@ -1,34 +1,16 @@
 <div class= 'leftParentMenu'>
     <ul>
-        <li><a id='businessParentMenu' href={{=it.businessPath}}>{{=it.business}}</a></li>
-        <li><a id='salesiteParentMenu' href={{=it.salesitePath}}>{{=it.salesite}}</a></li>
-        <li><a id="codesiteParentMenu" href={{=it.codesitePath}}>{{=it.codesite}}</a></li>
-        <li><a id='settingParentMenu' href={{=it.settingPath}}>{{=it.setting}}</a></li>
-        <li><a id='guestParentMenu' href={{=it.guestPath}}>{{=it.guest}}</a></li>
-        <li><a id="linesiteParentMenu" href={{=it.linesitePath}}>{{=it.linesite}}</a></li>
+        {{~it.arrayParent :item}}
+        <li><a id={{=item.menuName+'ParentMenu'}} href={{=item.pathUrl}}>{{=item.name}}</a></li>
+        {{~}}
     </ul>
 </div>
 <div class= 'leftMenu'>
-    <ul id="businessMenu">
-        <li><a id='roomMenu' href={{=it.roomPath}}>{{=it.room}}</a></li>
-        <li><a id='restaurantMenu' href={{=it.foodPath}}>{{=it.food}}</a></li>
-        <li><a id='entertainmentMenu' href={{=it.entertainmentPath}}>{{=it.entertainment}}</a></li>
-        <li><a id='shopMenu' href={{=it.shopPath}}>{{=it.shop}}</a></li>
+    {{~it.arraySub :item}}
+    <ul id={{=item.subMenuName+'Menu'}}>
+        {{~item.subArray :value}}
+        <li><a id={{=value.menuName+'Menu'}} href={{=value.pathUrl}}>{{=value.name}}</a></li>
+        {{~}}
     </ul>
-    <ul id="salesiteMenu" style="display: none;">
-        <li><a id='operationMenu' href={{=it.operationPath}}>{{=it.operation}}</a></li>
-        <li><a id='infoMenu' href={{=it.infoPath}}>{{=it.info}}</a></li>
-    </ul>
-    <ul id="codesiteMenu" style="display: none;">
-        <li><a id='codeOperationMenu' href={{=it.codeOperationPath}}>{{=it.codeOperation}}</a></li>
-    </ul>
-    <ul id="settingMenu" style="display: none;">
-        <li><a id='methodMenu' href={{=it.methodPath}}>{{=it.method}}</a></li>
-    </ul>
-    <ul id="guestMenu" style="display: none;">
-        <li><a id='sourceMenu' href={{=it.sourcePath}}>{{=it.source}}</a></li>
-    </ul>
-    <ul id="linesiteMenu" style="display: none;">
-        <li><a id="lineOperationMenu" href={{=it.lineOperationPath}}>{{=it.lineOperation}}</a></li>
-    </ul>
+    {{~}}
 </div>
