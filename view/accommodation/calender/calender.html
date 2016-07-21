@@ -2356,9 +2356,13 @@
                 款项未结清
             </div>
             <div class="scontent">
-                <div class="srow sgive">
-                    <div class="slabel">客户需补订单：</div>
+                <div class="srow sgive" ng-if="arrearLeft >= 0">
+                    <div class="slabel">客户需补</div>
                     <div class="snum">￥{{arrearLeft}}</div>
+                </div>
+                <div class="srow srefund" ng-if="arrearLeft < 0">
+                    <div class="slabel">商家需退</div>
+                    <div class="snum">￥{{-arrearLeft}}</div>
                 </div>
                 <div class="srow srefund">
                     <div class="slabel">需退押金：</div>
