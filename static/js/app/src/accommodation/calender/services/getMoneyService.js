@@ -69,7 +69,7 @@ var getMoneyService = function(app){
             var feeLeft = calLeft(getMoney);
             getMoney.feeLeft = feeLeft;
             getMoney.depositTotal = orderService.calDepositLeft(getMoney);
-            if(feeLeft < 0){
+            if(feeLeft <= 0){
                 feeMode = 1;
             }
             getMoney.depositMode = depositMode;
