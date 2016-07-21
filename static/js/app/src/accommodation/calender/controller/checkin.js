@@ -23,6 +23,7 @@ var checkinCtrl = function(app){
             scope.changeItemNum = orderService.changeItemNum;
             scope.calDeposit = orderService.calDeposit;
             scope.calLeft = orderService.calLeft;
+            scope.deleteFood = orderService.deleteFood;
             scope.submitCheckin = function(){
                 var checkin = rootScope.checkin;
                 var rooms = checkin.rooms;
@@ -41,7 +42,7 @@ var checkinCtrl = function(app){
                     return false;
                 }
                 var items = [];
-                var oldItems = checkin.foodItems.concat(checkin.playItems).concat(checkin.goodsItems);
+                var oldItems = checkin.playItems.concat(checkin.goodsItems);
                 oldItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;

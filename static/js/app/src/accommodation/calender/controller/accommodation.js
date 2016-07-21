@@ -132,7 +132,7 @@ var accommodationCtrl = function(app){
                     rooms.push(room);
                 });
                 var items = [];
-                var oldItems = order.foodItems.concat(order.playItems).concat(order.goodsItems);
+                var oldItems = order.playItems.concat(order.goodsItems);
                 oldItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;
@@ -227,7 +227,7 @@ var accommodationCtrl = function(app){
                 rootScope.channels = result.channels;
             });
             getDataService.getItems(function(result){
-                rootScope.foodList = result.foodList;
+                //rootScope.foodList = result.foodList;
                 rootScope.funList = result.funList;
                 rootScope.goodsList = result.goodsList;
             });

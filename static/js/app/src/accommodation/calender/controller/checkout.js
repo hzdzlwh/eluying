@@ -55,7 +55,7 @@ var checkoutCtrl = function(app){
                 });
                 //如果有项目没用完
                 if(!flag){
-                    var items = checkout.foodItems.concat(checkout.playItems);
+                    var items = checkout.playItems;
                     items.forEach(function(d){
                         if(d.amount !== d.useAmount){
                             flag2 = true;

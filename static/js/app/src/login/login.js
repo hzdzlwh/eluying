@@ -695,9 +695,9 @@ function getCookieVal(offset) {
 //写入到Cookie
 
 function SetCookie(name, value, expires) {
-    var argv = SetCookie.arguments;
+    var argv = arguments;
     //本例中length = 3
-    var argc = SetCookie.arguments.length;
+    var argc = arguments.length;
     var expires = (argc > 2) ? argv[2] : null;
     var path = (argc > 3) ? argv[3] : null;
     var domain = (argc > 4) ? argv[4] : null;

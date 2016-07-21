@@ -18,7 +18,7 @@ $(function(){
     util.mainContainer();
     modal.modalInit();
 
-    events = {
+    var events = {
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
         "click .btn-cancel": function(){var that = this; modal.clearModal(that);},

@@ -97,7 +97,8 @@ var getDataService = function(app){
         };
         this.getOrderDetail = function(orderId, scope){
             AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
-                orderId: orderId
+                orderId: orderId,
+                version: 7
             }, function(result){
                 if(result.code === 1){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);

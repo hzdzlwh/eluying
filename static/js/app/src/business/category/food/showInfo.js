@@ -82,7 +82,7 @@ var showInfo = {
         var item = {
             coverUrl: $(".coverImg").attr("src"),
             detailImgUrl: JSON.stringify(detailImgUrl),
-            id: $(".categoryGrid").find(".mainActive").find(".id").val()
+            id: $(".mainActive").find(".id").val()
         };
         showInfo.sendFoodShowInfo(item, that);
     },
@@ -130,7 +130,7 @@ var showInfo = {
             showInfo.selectPhoto(that)
         },
         //编辑展示信息
-        "click #editFoodShowInfoButton": function () {
+        "click body #editFoodShowInfoButton": function () {
             $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0)").html());
             $(".detail .photoContainer").html("");
             $(".cover .photoContainer").html("");

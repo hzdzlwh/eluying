@@ -305,21 +305,26 @@ object{
             }
           }
           td:nth-child(2){
-            width: 230px;
+            width: 229px;
           }
           td:nth-child(3){
-            width: 75px;
+            width: 48px;
             text-align: right;
           }
         }
         .subtype.food, .subtype.fun, .subtype.goods{
           td:first-child{
             width: 132px;
-            div{
-              width: 132px;
+            .sname{
+              max-width: 84px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
+              position: relative;
+              float: left;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
           }
           td:nth-child(2){
@@ -331,6 +336,171 @@ object{
           td:nth-child(4){
             width: 54px;
             text-align: right;
+          }
+        }
+        .subtype.food{
+          td:nth-child(1){
+            overflow: hidden;
+            .sname{
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+          }
+          td:nth-child(3){
+            width: 133px;
+            .sname{
+              max-width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+          td:nth-child(5){
+            width: 38px;
+            text-align: right;
+            .spriteImg{
+              position: relative;
+              top: -1px;
+            }
+            .detail-box{
+              display: none;
+              background:#fafafa;
+              box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+              width:228px;
+              max-height: 400px;
+              overflow-y: auto;
+              position: fixed;
+              margin-left: 40px;
+              margin-top: -16px;
+              z-index: 10;
+              overflow-x: hidden;
+              padding-bottom: 8px;
+              .stitle{
+                font-size:14px;
+                color:#666666;
+                line-height: 20px;
+                height: 20px;
+                width: 100%;
+                text-align: center;
+                margin-top: 8px;
+                padding: 0 8px;
+              }
+              .stable{
+                font-size:14px;
+                color:#666666;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+              .speople, .stime{
+                opacity:0.5;
+                font-size:12px;
+                color:#7d7d7d;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+              .sitem, .sitem2{
+                font-size:14px;
+                color:#666666;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                padding: 0 8px;
+                margin-top: 8px;
+                .col{
+                  float: left;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  text-align: right;
+                }
+                .col1{
+                  width: 84px;
+                  text-align: left;
+                }
+                .col2{
+                  width: 48px;
+                  margin-left: 27px;
+                }
+                .col3{
+                  width: 30px;
+                  float: right;
+                }
+              }
+              .sitem2{
+                color:#b3b3b3;
+                .col1{
+                  text-align: right;
+                }
+              }
+              .hr3{
+                background:#d4d4d4;
+                width:212px;
+                height:1px;
+                margin: 4px auto 0;
+              }
+              .item{
+                margin-top: 4px;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                padding: 0 8px;
+                .slabel{
+                  float: left;
+                  color: #b3b3b3;
+                }
+                .val{
+                  float: right;
+                }
+              }
+              .topay{
+                .slabel{
+                  color: #666666;
+                }
+                .sval{
+                  color: #f24949;
+                }
+              }
+              .refund{
+                .slabel{
+                  color: #666666;
+                }
+                .sval{
+                  color: #00af10;
+                }
+              }
+              .remark, .booktime, .operator{
+                opacity:0.5;
+                font-size:12px;
+                color:#7d7d7d;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                text-align:left;
+                margin-top: 4px;
+                padding: 0 8px;
+              }
+            }
+            .sdetail:hover{
+              .detail-box{
+                display: block;
+              }
+            }
           }
         }
       }
@@ -661,6 +831,57 @@ object{
           }
           td:nth-child(3){
             width: 203px;
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+        }
+        .subtype.food{
+          td:nth-child(1){
+            width: 150px;
+            .sname{
+              max-width: 120px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+            .sstate{
+              border-radius:2px;
+              width:16px;
+              height:16px;
+              font-size: 10px;
+              text-align: center;
+              line-height: 16px;
+              color: white;
+              float: left;
+              margin-left: 4px;
+              margin-top: 2px;
+            }
+            .sstate.ing{
+              background:#ffba75;
+            }
+            .sstate.book{
+              background:#82beff;
+            }
+            .sstate.finish{
+              background: #bfbfbf;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+          }
+          td:nth-child(3){
+            width: 133px;
+            .sname{
+              width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
           }
           td:nth-child(4){
             width: 54px;
@@ -1340,25 +1561,95 @@ object{
             background-position: 100px;
           }
           .sname{
-            width: 114px;
+            max-width: 114px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
           }
         }
         td:nth-child(2){
-          width: 98px;
+          width: 68px;
           text-align: right;
           position: relative;
         }
         td:nth-child(3){
           padding-left: 18px;
-          width: 209px;
+          width: 239px;
           text-align: left;
         }
         td:nth-child(4){
           width: 39px;
           text-align: right;
+        }
+      }
+      .subtype.food{
+        td:nth-child(1){
+          width: 132px;
+          overflow: hidden;
+          .sname{
+            max-width: 84px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            //margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          .sstate{
+            border-radius:2px;
+            width:16px;
+            height:16px;
+            font-size: 10px;
+            text-align: center;
+            line-height: 16px;
+            color: white;
+            float: left;
+            margin-left: 4px;
+            margin-top: 2px;
+          }
+          .sstate.ing{
+            background:#ffba75;
+          }
+          .sstate.book{
+            background:#82beff;
+          }
+          .sstate.finish{
+            background: #bfbfbf;
+          }
+        }
+        td:nth-child(2){
+          width: 147px;
+          text-align: left
+        }
+        td:nth-child(3){
+          width: 133px;
+          text-align: left;
+          padding: 0;
+          .sname{
+            max-width: 116px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        td:nth-child(4){
+          width: 54px;
+          text-align: right;
+        }
+        td:nth-child(5){
+          width: 38px;
+          text-align: right;
+          .sdelete{
+            width: 14px;
+            height: 14px;
+            background: $trash_grey;
+            display: inline-block;
+            cursor: pointer;
+          }
+          .sdelete:hover{
+            background: $trash_blue;
+            background-size: 14px 14px;
+          }
         }
       }
       .discount{
@@ -2089,10 +2380,13 @@ object{
           td:first-child{
             width: 114px;
             .sname{
-              width: 114px;
+              max-width: 114px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
             }
             .select1{
               width: 114px;
@@ -2100,17 +2394,87 @@ object{
             }
           }
           td:nth-child(2){
-            width: 98px;
+            width: 68px;
             text-align: right;
           }
           td:nth-child(3){
             padding-left: 18px;
-            width: 209px;
+            width: 239px;
             text-align: left;
           }
           td:nth-child(4){
             width: 39px;
             text-align: right;
+          }
+        }
+        .subtype.food{
+          td:nth-child(1){
+            width: 132px;
+            overflow: hidden;
+            .sname{
+              max-width: 84px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+            .sstate{
+              border-radius:2px;
+              width:16px;
+              height:16px;
+              font-size: 10px;
+              text-align: center;
+              line-height: 16px;
+              color: white;
+              float: left;
+              margin-left: 4px;
+              margin-top: 2px;
+            }
+            .sstate.ing{
+              background:#ffba75;
+            }
+            .sstate.book{
+              background:#82beff;
+            }
+            .sstate.finish{
+              background: #bfbfbf;
+            }
+          }
+          td:nth-child(2){
+            width: 147px;
+            text-align: left
+          }
+          td:nth-child(3){
+            width: 133px;
+            text-align: left;
+            padding: 0;
+            .sname{
+              max-width: 116px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          td:nth-child(4){
+            width: 54px;
+            text-align: right;
+          }
+          td:nth-child(5){
+            width: 38px;
+            text-align: right;
+            .sdelete{
+              width: 14px;
+              height: 14px;
+              background: $trash_grey;
+              display: inline-block;
+              cursor: pointer;
+            }
+            .sdelete:hover{
+              background: $trash_blue;
+              background-size: 14px 14px;
+            }
           }
         }
       }
@@ -2267,7 +2631,7 @@ object{
     .wrapper{
       display: none;
     }
-    .search-btn{
+    .search-btn, .search-switch{
       cursor: pointer;
       position: relative;
       //top: 2px;
@@ -2398,7 +2762,7 @@ object{
             left: -11px;
           }
         }
-        .status.book{
+        .status.ing{
           background: #82beff;
           .triangle{
             border-top: solid transparent 11px;
@@ -2406,7 +2770,7 @@ object{
             border-right: solid #82beff 11px;
           }
         }
-        .status.ing{
+        .status.book{
           background: #ffba75;
           .triangle{
             border-top: solid transparent 11px;
@@ -2958,10 +3322,10 @@ object{
             }
           }
         }
-        .glyph.book{
+        .glyph.ing{
           background: #82beff;
         }
-        .glyph.book.seeStart{
+        .glyph.ing.seeStart{
           border-left: solid 6px $color1;
         }
         .glyph.finish{
@@ -2970,10 +3334,10 @@ object{
         .glyph.finish.seeStart{
           border-left: solid 6px #8c8c8c;
         }
-        .glyph.ing{
+        .glyph.book{
           background: #ffba75;
         }
-        .glyph.ing.seeStart{
+        .glyph.book.seeStart{
           border-left: solid 6px #f27c05;
         }
         .srow{
@@ -3071,6 +3435,8 @@ object{
               border: solid thin $color1;
               .spriteImg{
                 display: inline-block;
+                top: -2px;
+                position: relative;
               }
             }
           }
@@ -3175,22 +3541,22 @@ object{
         .sbtn.addition:active{
           background: $color6Click;
         }
-        .sbtn.book{
+        .sbtn.buy{
           background: $color1;
         }
-        .sbtn.book:hover{
+        .sbtn.buy:hover{
           background: $color1Hover;
         }
-        .sbtn.book:active{
+        .sbtn.buy:active{
           background: $color1Click;
         }
-        .sbtn.buy{
+        .sbtn.book{
           background: $color5;
         }
-        .sbtn.buy:hover{
+        .sbtn.book:hover{
           background: $color5Hover;
         }
-        .sbtn.buy:active{
+        .sbtn.book:active{
           background: $color5Click;
         }
       }

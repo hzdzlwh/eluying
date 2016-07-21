@@ -7,7 +7,7 @@ var floatInfo = {
             y = e.pageY;
         }
         document.addEventListener('mousemove', getPos);
-        moreInfoT = setTimeout(function(){
+        window.moreInfoT = setTimeout(function(){
             $("body").append("<div class='moreInfo'></div>");
             $(".moreInfo").html($(that).html().replace(/\n|\r|(\r\n)|(\u0085)|(\u2028)|(\u2029)/g, "<br>")).css("top", y + 10).css("left", x + 10);
             document.removeEventListener('mousemove', getPos);
@@ -15,7 +15,7 @@ var floatInfo = {
     },
 
     hideMoreInfo: function(){
-        clearTimeout(moreInfoT);
+        clearTimeout(window.moreInfoT);
         $(".moreInfo").remove();
     }
 };

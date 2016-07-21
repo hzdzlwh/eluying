@@ -49,7 +49,7 @@ $(function(){
     };
 
     var timer;
-    events = {
+    var events = {
         "show.bs.modal .modal": modal.centerModals,
         "scroll .calendor-container": function(){
             var selection = $(this);
@@ -126,7 +126,7 @@ $(function(){
             var clientY = ev.clientY;
             var infos = $(this).find(".infos");
             var height = infos.height();
-            if(height + 180 > clientY){
+            if(height + 200 > clientY){
                 infos.removeClass("up");
                 infos.addClass("down");
             }else{

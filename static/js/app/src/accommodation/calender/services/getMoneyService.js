@@ -69,7 +69,7 @@ var getMoneyService = function(app){
             var feeLeft = calLeft(getMoney);
             getMoney.feeLeft = feeLeft;
             getMoney.depositTotal = orderService.calDepositLeft(getMoney);
-            if(feeLeft < 0){
+            if(feeLeft <= 0){
                 feeMode = 1;
             }
             getMoney.depositMode = depositMode;
@@ -170,6 +170,29 @@ var getMoneyService = function(app){
                     }
                 });
             }else{
+                //还有钱没有付完
+                if(getMoney.isLast && scope.arrearLeft && scope.arrearLeft !== 0){
+                    AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
+                        payments: JSON.stringify(payments_new),
+                        remark: getMoney.remark,
+                        orderId: getMoney.orderId
+                    }, function(result){
+                        if(result.code === 1){
+                            $("#getMoneyModal").modal("hide");
+                            getDataService.getRoomsAndStatus(scope);
+                            accommodationService.emptySelectedEntries(scope);
+                            setTimeout(function(){
+                                getDataService.getOrderDetail(getMoney.orderId, scope);
+                                setTimeout(function(){
+                                    modal.somethingAlert("订单款项未结清,房间操作失败!");
+                                }, 500);
+                            }, 500);
+                        }else{
+                            modal.somethingAlert(result.msg);
+                        }
+                    });
+                    return false;
+                }
                 AJAXService.ajaxWithToken('GET', 'checkInOrCheckoutUrl', {
                     payments: JSON.stringify(payments_new),
                     orderId: getMoney.orderId,

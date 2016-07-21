@@ -77,7 +77,7 @@ var orderNewCtrl = function(app){
                 return false;
             }
             var inventory = {};
-            var itemList = orderNew.foodItems.concat(orderNew.playItems).concat(orderNew.goodsItems);
+            var itemList = orderNew.playItems.concat(orderNew.goodsItems);
             for(var i = 0; i < itemList.length; i++){
                 var item = itemList[i];
                 var inv = inventory[item.categoryId + item.dateStr];

@@ -38,22 +38,22 @@ var orderEditService = function(app){
                 }
             });
             //准备好餐饮数据
-            orderEdit.foodItems.forEach(function(d){
-                AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                    date: d.date,
-                    id: d.categoryId
-                }, function(result){
-                    d.dateStr = d.date;
-                    d.dateStr2 = d.date.substr(5, 5);
-                    d.date = new Date(d.date);
-                    d.inventory = parseInt(result.data.inventory);
-                    if(orderEdit.foodsAmount && orderEdit.foodsAmount[d.dateStr]){
-                        d.inventory += orderEdit.foodsAmount[d.dateStr];
-                    }
-                    d.calendar = calendarService.createItemCalendar(d.date);
-                    scope.$apply();
-                });
-            });
+            //orderEdit.foodItems.forEach(function(d){
+            //    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+            //        date: d.date,
+            //        id: d.categoryId
+            //    }, function(result){
+            //        d.dateStr = d.date;
+            //        d.dateStr2 = d.date.substr(5, 5);
+            //        d.date = new Date(d.date);
+            //        d.inventory = parseInt(result.data.inventory);
+            //        if(orderEdit.foodsAmount && orderEdit.foodsAmount[d.dateStr]){
+            //            d.inventory += orderEdit.foodsAmount[d.dateStr];
+            //        }
+            //        d.calendar = calendarService.createItemCalendar(d.date);
+            //        scope.$apply();
+            //    });
+            //});
             //准备好娱乐数据
             orderEdit.playItems.forEach(function(d){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {

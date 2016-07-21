@@ -36,7 +36,7 @@ $(function(){
     accommodationPriceList.getAccommodationPriceList(new Date());
 
     trToggle();
-    events = {
+    var events = {
         "click .prevWeek": function(){
             $(".editSalePrice").addClass("hide");
             $(".editNetPrice").addClass("hide");

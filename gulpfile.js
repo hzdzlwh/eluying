@@ -112,13 +112,13 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-        webpackConf, {devtool: 'sourcemap'},
+        webpackConf, {devtool: 'inline-source-map'},
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
                     ENV: JSON.stringify('development'),
                     NODE_ENV: JSON.stringify('development')
-        }
+            }
     })));
     return gulp.src('static/js/app/src/entry.js')
         .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
@@ -137,7 +137,7 @@ gulp.task('watch', function () {
     gulp.watch('**/*.html').on('change', reload);
 });
 
-gulp.task('default', ['watch'], function () {
+gulp.task('default', function () {
     gulp.start('browser-sync');
     gulp.start('styles');
     gulp.start('webpack-dev');
