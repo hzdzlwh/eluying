@@ -136,14 +136,14 @@ var AJAXService = {
             async: asy,
             data: data,
             dataFilter: function(data){
-                if(data.code == 5){
+                if(JSON.parse(data).code == 5){
                     window.localStorage.clear();
                     window.location.href = "/login.html";
                 }
                 return data;
             },
             success: callback,
-            error: errorCallback,
+            error: errorCallback
         });
     },
     ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
