@@ -4,7 +4,7 @@ var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkModule(auth.BUSINESS_ID);
+auth.checkAuth(auth.BUSINESS_ID);
 
 require("angular");
 
