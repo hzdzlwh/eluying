@@ -9,7 +9,6 @@ require("bootstrap");
 $(function(){
     util.checkExplorer();
     header.showHeader();
-    util.checkAuth();
     $(".settingsEntry").removeClass("selected");
     $(".manageVipEntry").addClass("selected");
     $(".accomodationEntry").removeClass("selected");

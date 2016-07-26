@@ -20,14 +20,15 @@ var campId = localStorage.getItem("campId");
 /**
  * 检测版本信息并跳转页面
  */
-function checkVersionAndJump(){
+function checkVersion(){
     for (var i = 0; i < camps.length; i++) {
         var camp = camps[i];
         if (campId == camp.campId) {
+            console.log(camp);
             if (camp.type === 0 && camp.days <= 0) {
-                window.location.href = '/view/tips/upgrade.html';
+                return { update: true };
             } else if(camp.type === 1 && camp.days <= 0){
-                window.location.href = '/view/tips/expired.html';
+                return { expired: true };
             }
         }
     }
@@ -59,15 +60,18 @@ function checkModule(moduleId){
 
 function checkAuth(moduleId, url){
     url = url || '/view/tips/noauth.html';
-    checkVersionAndJump();
-    if (!checkModule(moduleId)) {
-        window.location.href = url;
+    var version = checkVersion();
+    var moduleAuth = checkModule(moduleId);
+    if (version && version.update) {
+        location.href = UPGRADE_URL;
+    } else if (version && version.expired) {
+        location.href = EXPIRED_URL;
+    } else if (!moduleAuth) {
+        location.href = url;
     }
 }
 
 exports.checkAuth = checkAuth;
-exports.checkModule = checkModule;
-exports.checkVersionAndJump = checkVersionAndJump;
 exports.ACCOMMODATION_ID = ACCOMMODATION_ID;
 exports.VIP_ID = VIP_ID;
 exports.BUSINESS_ID = BUSINESS_ID;
