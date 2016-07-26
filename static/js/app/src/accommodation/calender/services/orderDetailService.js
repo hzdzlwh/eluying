@@ -8,7 +8,7 @@ var orderDetailService = function(app){
             for(var key in order){
                 orderDetail[key] = order[key];
             }
-            if(orderDetail['customerIdCardArr']){
+            if(orderDetail['customerIdCardArr'] && orderDetail['customerIdCardArr'][0]){
                 orderDetail.selectedId = orderDetail['customerIdCardArr'][0].idCardType;
                 rootScope.idList.forEach(function(d){
                     if(d.key == orderDetail.selectedId) {
