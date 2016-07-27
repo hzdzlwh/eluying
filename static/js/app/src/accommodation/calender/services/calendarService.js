@@ -61,7 +61,7 @@ var calendarService = function(app){
             }
             return days;
         };
-        this.createItemCalendar = function(startDate){
+        this.createItemCalendar = function(startDate, roomEndTime){
             var calenderTable = this.buildCalendarTable(startDate);
             var iter = [];
             var days = [];
@@ -75,6 +75,9 @@ var calendarService = function(app){
                 }
                 if(util.isSameDay(calenderTable[i], startDate)){
                     sclass += ' selected';
+                }
+                if(roomEndTime && (calenderTable[i] > roomEndTime || util.isSameDay(calenderTable[i], roomEndTime))){
+                    sclass += ' invalid';
                 }
                 iter.push({
                     text: text,

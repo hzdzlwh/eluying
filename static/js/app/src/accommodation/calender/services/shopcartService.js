@@ -28,9 +28,9 @@ var shopcartService = function(app){
                     }else if(date < today){
                         p = true;
                     }
-                    if(!roomHash[item.cRoomName + item.sn]){
-                        selectedRooms.push(item.cRoomName + item.sn);
-                        roomHash[item.cRoomName + item.sn] = true;
+                    if(!roomHash[item.cRoomName + '-' + item.sn]){
+                        selectedRooms.push(item.cRoomName + '-' + item.sn);
+                        roomHash[item.cRoomName + '-' + item.sn] = true;
                     }
                 }
                 scope.t = t;
