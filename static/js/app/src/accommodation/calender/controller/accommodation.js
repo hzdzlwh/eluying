@@ -39,6 +39,10 @@ var accommodationCtrl = function(app){
                 getDataService.getOrderDetail(orderId, rootScope);
             };
             rootScope.closeRoom = function(open, rid, dateItem){
+                if(rootScope.selectedEntries[rid + dateItem.date]){
+                    delete rootScope.selectedEntries[rid + dateItem.date];
+                    shopcartService.showShopCart(rootScope);
+                }
                 AJAXService.ajaxWithToken('GET', 'modifyRoomStatusUrl', {
                     isAll: false,
                     dateList: JSON.stringify([dateItem.date2]),
@@ -53,6 +57,8 @@ var accommodationCtrl = function(app){
                         }
                         accommodationService.updateDateInventory(rootScope);
                         rootScope.$apply();
+                    }else{
+                        modal.somethingAlert(result.msg);
                     }
                 });
             };
