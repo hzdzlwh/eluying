@@ -6,5 +6,4 @@ require("bootstrap");
 $(function(){
     util.checkExplorer();
     header.showHeader();
-    $(".header .accomodationEntry").hide();
 });
