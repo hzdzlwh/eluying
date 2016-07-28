@@ -173,7 +173,7 @@ var orderService = function(app){
                     if(type === 2 && order.playsAmount && order.playsAmount[item.date]){
                         temp.inventory += order.playsAmount[item.date];
                     }
-                    temp.calendar = calendarService.createItemCalendar(temp.date);
+                    temp.calendar = calendarService.createItemCalendar(temp.date, order.roomEndDate);
                     var sday = util.dateFormat(temp.calendar[0][0].date);
                     var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
                     AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -244,7 +244,7 @@ var orderService = function(app){
                     dateStr2: util.dateFormatWithoutYear(getInventoryDate),
                     inventory: result.data.inventory
                 };
-                temp.calendar = calendarService.createItemCalendar(temp.date);
+                temp.calendar = calendarService.createItemCalendar(temp.date, order.roomEndDate);
                 var sday = util.dateFormat(temp.calendar[0][0].date);
                 var eday = util.dateFormat(temp.calendar[temp.calendar.length-1][6].date);
                 AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -277,7 +277,7 @@ var orderService = function(app){
                 item.amount = item.inventory;
             }
         };
-        this.changeItemTime = function(item, date, sclass){
+        this.changeItemTime = function(item, date, sclass, order){
             if(sclass.indexOf('invalid') !== -1){
                 return false;
             }
@@ -290,7 +290,7 @@ var orderService = function(app){
                 item.dateStr2 = util.dateFormatWithoutYear(date);
                 item.inventory = result.data.inventory;
                 item.amount = 1;
-                item.calendar = calendarService.createItemCalendar(item.date);
+                item.calendar = calendarService.createItemCalendar(item.date, order && order.roomEndDate);
                 var sday = util.dateFormat(item.calendar[0][0].date);
                 var eday = util.dateFormat(item.calendar[item.calendar.length-1][6].date);
                 AJAXService.ajaxWithToken('GET', 'getCategoryInventoriesUrl', {
@@ -452,7 +452,7 @@ var orderService = function(app){
                 item.date = newDate;
                 item.dateStr = util.dateFormat(newDate);
                 item.dateStr2 = util.dateFormatWithoutYear(newDate);
-                item.calendar = calendarService.createItemCalendar(item.date);
+                item.calendar = calendarService.createItemCalendar(item.date, order.roomEndDate);
                 item.inventory = result.data.inventory;
                 if(item.type === 1 && order.foodsAmount && order.foodsAmount[item.date]){
                     item.inventory += order.foodsAmount[item.date];

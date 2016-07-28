@@ -17,9 +17,13 @@ var orderNewService = function(app){
                 return null;
             })();
             var itemStartDate;
+            var roomEndDate;
             rooms.forEach(function(d){
                 if(!itemStartDate || new Date(d.startDate) < itemStartDate){
-                    itemStartDate = d.startDate;
+                    itemStartDate = new Date(d.startDate);
+                }
+                if(!roomEndDate || new Date(d.endDate) > roomEndDate){
+                    roomEndDate = new Date(d.endDate);
                 }
             });
             return {
@@ -39,7 +43,8 @@ var orderNewService = function(app){
                 remark: '',
                 payments: [],
                 discounts: null,
-                itemStartDate: itemStartDate
+                itemStartDate: itemStartDate,
+                roomEndDate: roomEndDate
             }
         };
     }]);
