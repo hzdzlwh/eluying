@@ -112,11 +112,7 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-<<<<<<< HEAD
         webpackConf, {devtool: 'inline-source-map'},
-=======
-        webpackConf, {devtool: 'cheap-module-eval-source-map'},
->>>>>>> acc-food
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
