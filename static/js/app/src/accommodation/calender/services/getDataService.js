@@ -247,8 +247,6 @@ var getDataService = function(app){
                         glyph.classStr = constService.statusStr2[glyph.roomState].classStr;
                         glyphs.push(glyph);
                     });
-                    console.log(occupyList);
-                    console.log(cRoomStore);
                     scope.holidays = holidayHash;
                     scope.pRoomList = pRoomList;
                     scope.cRoomArray = cRoomArray;

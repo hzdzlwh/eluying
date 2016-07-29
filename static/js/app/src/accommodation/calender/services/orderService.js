@@ -33,6 +33,7 @@ var orderService = function(app){
             order.selectedId = method;
             order.selectedIdLabel = methodLabel;
             order.idVal = null;
+            order.readable = (methodLabel === '身份证');
             $(".select1_options").hide();
         };
         this.changeChannel = function(cid, cname, order){
@@ -488,7 +489,6 @@ var orderService = function(app){
         };
         this.deleteFood = function(order, food){
             var index = order.foodItems.indexOf(food);
-            console.log(food);
             AJAXService.ajaxWithToken('GET', 'cateringCancelOrderUrl', {
                 caterOrderId: food.foodOrderId,
                 payments: '[]',
@@ -497,7 +497,6 @@ var orderService = function(app){
                 remark: ''
             }, function(result1){
                 if(result1.code === 1){
-                    console.log(result1);
                     order.foodItems.splice(index, 1);
                     rootScope.$apply();
                 }

@@ -44,7 +44,8 @@ var orderNewService = function(app){
                 payments: [],
                 discounts: null,
                 itemStartDate: itemStartDate,
-                roomEndDate: roomEndDate
+                roomEndDate: roomEndDate,
+                readable: true,
             }
         };
     }]);

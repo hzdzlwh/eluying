@@ -15,6 +15,7 @@ var orderEditService = function(app){
             for(var key in orderDetail){
                 orderEdit[key] = orderDetail[key];
             }
+            orderEdit.readable = true;
             if(!orderEdit.selectedId){
                 orderEdit.selectedId = 0;
             }
