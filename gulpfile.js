@@ -112,7 +112,7 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-        webpackConf, {devtool: 'cheap-source-map'},
+        webpackConf, {devtool: 'cheap-module-eval-source-map'},
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {

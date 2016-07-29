@@ -689,7 +689,7 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div></div>
                     <form action="" name="orderNewForm" id="orderNewForm">
                         <table>
                             <tr>
@@ -961,7 +961,7 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div></div>
                     <form action="" name="orderEditForm" id="orderEditForm">
                         <table>
                             <tr>

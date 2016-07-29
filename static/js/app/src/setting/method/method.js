@@ -89,7 +89,7 @@ $(function(){
                 type: method
             }, function(result){
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    console.log(result.data.map);
+                    // console.log(result.data.map);
                     scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();
