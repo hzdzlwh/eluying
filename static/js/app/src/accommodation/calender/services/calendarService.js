@@ -76,7 +76,7 @@ var calendarService = function(app){
                 if(util.isSameDay(calenderTable[i], startDate)){
                     sclass += ' selected';
                 }
-                if(roomEndTime && (calenderTable[i] > roomEndTime || util.isSameDay(calenderTable[i], roomEndTime))){
+                if(roomEndTime && (calenderTable[i] > roomEndTime)){
                     sclass += ' invalid';
                 }
                 iter.push({

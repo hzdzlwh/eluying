@@ -146,7 +146,7 @@ $(function(){
         }, function(result){
             scope.status.isOnlinePay.status = result.data.isOnlinePay;
             scope.status.campBasicInfo.status = result.data.campBasicInfo;
-            console.log(scope.status);
+            // console.log(scope.status);
             scope.$apply();
         });
         AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
