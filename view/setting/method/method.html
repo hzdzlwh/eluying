@@ -275,7 +275,7 @@
             </div>
             <div class="btns clearfloat">
                 <div class="btn-cancel sbtn sbtn-cancel">取消</div>
-                <div class="sbtn sbtn-ok"  data-toggle="modal" data-target="#method-submitFail" ng-click="submitWechat()">提交审核</div>
+                <div class="sbtn sbtn-ok" @click="confirm">提交审核</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -289,59 +289,14 @@
             <div class="maintext">
                 <div class="slabel">收款方式名称</div>
                 <div class="scontent"><input type="text" id="newMethod-input" required="required"/></div>
-                <div class="errorTips">
-                    {{errorTips}}
-                </div>
+                <div class="errorTips" v-text="errorTips"></div>
             </div>
             <div class="btns clearfloat">
-                <div class="sbtn sbtn-ok" ng-click="addMethod()">确定</div>
+                <div class="sbtn sbtn-ok" @click="addMethod">确定</div>
                 <div class="btn-cancel sbtn sbtn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
-</div>
-<div class="modal fade" role="dialog" id="method-submitSuccess">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="content-row">
-                <span><img src="http://static.dingdandao.com/success-submit.png" alt=""></span>
-                <div class="tips-box">
-                    <p class="text-title">提交成功</p>
-                    <p class="text-sub">请耐心等待审核</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" role="dialog" id="method-submitFail">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="content-row">
-                <span><img src="http://static.dingdandao.com/fail-submit.png" alt=""></span>
-                <div class="tips-box">
-                    <p class="text-title">提交失败</p>
-                    <p class="text-sub">失败原因XXXXXX</p>
-                </div>
-            </div>
-            <div class="content-btn btn-cancel">我知道了</div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" role="dialog" id="method-confirmSubmit">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="tips-box">
-                <p class="content-title">确认提交审核吗</p>
-                <div class="tips-content">
-                    <p>提交审核新的支付宝当面付申请会自动:</p>
-                    <p>1.解绑原来的支付宝当面付账号</p>
-                    <p>2.暂停APP扫码支付和PC条码支付</p>
-                </div>
-                <div class="btn-cancel submit-cancel">不提交</div>
-                <div class="submit-confirm">确认提交审核</div>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="modal fade" role="dialog" id="ali-facePay">
     <div class="modal-dialog">
@@ -364,7 +319,7 @@
                         <span class="item-index">2</span>
                         <div class="second-container">
                             <p class="item-title">复制商户应用公钥并粘贴到支付宝后台</p>
-                            <textarea cols="30" rows="3" id="common-key"></textarea>
+                            <textarea cols="30" rows="3" id="common-key" :value="publicKey" readonly="readonly"></textarea>
                             <div class="copy-text" @click="copyText">复制公钥</div><div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                         </div>
                     </div>
@@ -408,7 +363,7 @@
                         <span class="item-index">2</span>
                         <div class="second-container">
                             <p class="item-title">复制商户应用公钥并粘贴到支付宝后台</p>
-                            <textarea cols="30" rows="3" id="common_key"></textarea>
+                            <textarea cols="30" rows="3" id="common_key" :value="publicKey" readonly="readonly"></textarea>
                             <div class="copy-text" @click="copyText">复制公钥</div><div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                         </div>
                     </div>
@@ -450,7 +405,7 @@
                         <span class="item-index">2</span>
                         <div class="second-container">
                             <p class="item-title">复制商户应用公钥并粘贴到支付宝后台</p>
-                            <textarea cols="30" rows="3" id="commonKey"></textarea>
+                            <textarea cols="30" rows="3" id="commonKey" :value="publicKey" readonly="readonly"></textarea>
                             <div class="copy-text" @click="copyText">复制公钥</div><div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                         </div>
                     </div>
@@ -471,6 +426,49 @@
         </div>
     </div>
 </div>
+<div class="modal fade" role="dialog" id="method-confirmSubmit">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="tips-box">
+                <p class="content-title">确认提交审核吗</p>
+                <div class="tips-content">
+                    <p>{{ tipHead }}</p>
+                    <p>{{ tipFirst }}</p>
+                    <p>{{ tipSecond }}</p>
+                </div>
+                <div class="btn-cancel submit-cancel">不提交</div>
+                <div class="submit-confirm" @click="confirm">确认提交审核</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" role="dialog" id="method-submitFail">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="content-row">
+                <span><img src="http://static.dingdandao.com/fail-submit.png" alt=""></span>
+                <div class="tips-box">
+                    <p class="text-title">提交失败</p>
+                    <p class="text-sub">失败原因{{ failMessage }}</p>
+                </div>
+            </div>
+            <div class="content-btn btn-cancel">我知道了</div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" role="dialog" id="method-submitSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="content-row">
+                <span><img src="http://static.dingdandao.com/success-submit.png" alt=""></span>
+                <div class="tips-box">
+                    <p class="text-title">提交成功</p>
+                    <p class="text-sub">请耐心等待审核</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" role="dialog" id="method-deleteMethod">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -480,7 +478,7 @@
                 您确定要删除吗？
             </div>
             <div class="btns clearfloat">
-                <div class="sbtn sbtn-ok" ng-click="deleteMethod()">删除</div>
+                <div class="sbtn sbtn-ok" @click="deleteMethod()">删除</div>
                 <div class="btn-cancel sbtn sbtn-cancel">取消</div>
             </div>
         </div><!-- /.modal-content -->
@@ -497,7 +495,7 @@
                 <p class="c-text">订单钱包<span class="c-text-inner">(订单来了代收,用于直销网站、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
                 <span class="m-btn-wallet right back-{{ walletStatus }}" @click="toggleStatus('wallet')"></span>
             </div>
-            <div class="s-m-box" v-show="walletShow">
+            <div class="s-m-box" v-show="walletShow" transition="show">
                 <div class="hr"></div>
                 <div class="table-box-wallet">
                     <table>
@@ -532,7 +530,7 @@
                 <p class="c-text">企业账户<span class="c-text-inner">(用于直销网站、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
                 <span class="m-btn-company right back-{{ companyStatus }}" @click="toggleStatus('company')"></span>
             </div>
-            <div class="s-m-box" v-show="companyShow">
+            <div class="s-m-box" v-show="companyShow" transition="fade">
                 <div class="hr"></div>
                 <div class="table-box-company">
                     <table>
@@ -547,32 +545,32 @@
                         <tbody>
                             <tr class="tr-origin">
                                 <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于直销网站、一码通在线充值</span></div></td>
-                                <td class="col-not-first"><div class="dot-grey dot"></div><span>未开通</span></td>
+                                <td class="col-not-first"><div class="dot-{{ c_webObj.typeStyle }} dot"></div><span v-text="c_webObj.typeStr"></span></td>
                                 <td class="col-not-first"><div class="hr2"></div></td>
                                 <td class="col-not-first"><span class="site-btn back-{{ c_webPayStatus }}" @click="toggleStatus('web-c')"></span></td>
                             </tr>
                             <tr class="tr-special">
                                 <td class="col-first">企业支付宝</td>
-                                <td class="col-not-first"><div class="dot-grey dot"></div><span>未开通</span></td>
-                                <td class="col-not-first"><span class="company-alipay" data-toggle="modal" data-target="#company-aliPay">绑定账号</span></td>
+                                <td class="col-not-first"><div class="dot-{{ c_aliObj.typeStyle }} dot"></div><span v-text="c_aliObj.typeStr"></span></td>
+                                <td class="col-not-first"><span class="company-alipay" data-toggle="modal" data-target="#company-aliPay" v-text="c_aliObj.operationStr" v-if="c_aliObj.typeId !== 0"></span><div class="hr2" v-if="c_aliObj.typeId === 0"></div></td>
                                 <td class="col-not-first"><div class="hr2"></div></td>
                             </tr>
                             <tr class="tr-special">
                                 <td class="col-first">企业微信支付</td>
-                                <td class="col-not-first"><div class="dot-grey dot"></div><span>未开通</span></td>
-                                <td class="col-not-first"><span class="company-wechat" data-toggle="modal" data-target="#method-wechatMethod">绑定账号</span></td>
+                                <td class="col-not-first"><div class="dot-{{ c_weChatObj.typeStyle }} dot"></div><span v-text="c_weChatObj.typeStr"></span></td>
+                                <td class="col-not-first"><span class="company-wechat" data-toggle="modal" data-target="#method-wechatMethod" v-text="c_weChatObj.operationStr" v-if="c_weChatObj.typeId !== 0"></span><div class="hr2" v-if="c_weChatObj.typeId === 0"></div></td>
                                 <td class="col-not-first"><div class="hr2"></div></td>
                             </tr>
                             <tr class="tr-origin">
                                 <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝当面付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-not-first"><span class="face-pay-account" data-toggle="modal" data-target="#ali-facePay">更换账号</span></td>
+                                <td class="col-not-first"><div class="dot dot-{{ c_faceObj.typeStyle }}"></div><span v-text="c_faceObj.typeStr"></span></td>
+                                <td class="col-not-first"><span class="face-pay-account" data-toggle="modal" data-target="#ali-facePay" v-text="c_faceObj.operationStr" v-if="c_faceObj.typeId !==0"></span><div class="hr2" v-if="c_faceObj.typeId ===0 "></div></td>
                                 <td class="col-not-first"><span class="alipay-btn back-{{ c_facePayStatus }}" @click="toggleStatus('face-c')"></span></td>
                             </tr>
                             <tr class="tr-origin">
                                 <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝即时到账</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-not-first"><span class="immedia-pay-account" data-toggle="modal" data-target="#ali-immediaPay">更换账号</span></td>
+                                <td class="col-not-first"><div class="dot dot-{{ c_immediaObj.typeStyle }}"></div><span v-text="c_immediaObj.typeStr"></span></td>
+                                <td class="col-not-first"><span class="immedia-pay-account" data-toggle="modal" data-target="#ali-immediaPay" v-text="c_immediaObj.operationStr" v-if="c_immediaObj.typeId !==0"></span><div class="hr2" v-if="c_immediaObj.typeId ===0 "></div></td>
                                 <td class="col-not-first"><span class="immedia-btn back-{{ c_immediaPayStatus }}" @click="toggleStatus('immedia-c')"></span></td>
                             </tr>
                         </tbody>
@@ -596,9 +594,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="col-first">现金</td>
-                                <td class="col-not-first"><span class="del-method" data-toggle="modal" data-target="#method-deleteMethod">删除</span></td>
+                            <tr v-for="item in payList">
+                                <td class="col-first" v-text="item.name"></td>
+                                <td class="col-not-first"><span class="del-method" data-toggle="modal" data-target="#method-deleteMethod" @click="setDeleteItem(item)">删除</span></td>
                             </tr>
                         </tbody>
                     </table>

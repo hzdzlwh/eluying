@@ -35,6 +35,17 @@
 .left {
   float: left;
 }
+.show-transition {
+  transition: all 0.6s linear;
+  height: 211px;
+}
+.fade-transition {
+  transition: all 0.6s linear;
+  height: 263px;
+}
+.show-leave, .show-enter, .fade-leave, .fade-enter{
+  height: 0;
+}
 .m-btn-code, .m-btn-wallet, .site-btn, .alipay-btn, .immedia-btn, .m-btn-company {
   cursor: pointer;
 }
@@ -318,7 +329,6 @@
   }
   .modal-content {
     width: 300px;
-    height: 150px;
     background: #fafafa;
     border-radius: 4px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
@@ -404,7 +414,6 @@
   }
   .modal-content {
     width: 300px;
-    height: 200px;
     background: #fafafa;
     border-radius: 4px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
@@ -436,6 +445,7 @@
     border-radius: 2px;
     cursor: pointer;
     margin-left: 6px;
+    margin-bottom: 20px;
   }
   .submit-confirm {
     display: inline-block;
@@ -569,7 +579,9 @@
     textarea {
       width: 296px;
       padding: 8px;
+      font-size: 12px;
       display: block;
+      color: #7d7d7d;
     }
   }
   .content-foot {
@@ -722,7 +734,9 @@
     textarea {
       width: 296px;
       padding: 8px;
+      font-size: 12px;
       display: block;
+      color: #7d7d7d;
     }
   }
   .content-foot {
@@ -781,7 +795,7 @@
   }
   .content-head {
     margin: 20px auto;
-    width: 350px;
+    width: 364px;
     .head-title-container {
       line-height: 21px;
     }
@@ -875,7 +889,9 @@
     textarea {
       width: 296px;
       padding: 8px;
+      font-size: 12px;
       display: block;
+      color: #7d7d7d;
     }
   }
   .content-foot {
