@@ -1,6 +1,9 @@
 /**
  * Created by lingchenxuan on 16/6/14.
  */
+
+var $ajax = require('./AJAXService');
+
 var ACCOMMODATION_ID = 2;
 var VIP_ID = 11;
 var BUSINESS_ID = 0;
@@ -24,7 +27,6 @@ function checkVersion(){
     for (var i = 0; i < camps.length; i++) {
         var camp = camps[i];
         if (campId == camp.campId) {
-            console.log(camp);
             if (camp.type === 0 && camp.days <= 0) {
                 return { update: true };
             } else if(camp.type === 1 && camp.days <= 0){
@@ -58,7 +60,33 @@ function checkModule(moduleId){
     return false;
 }
 
+function showMaintenance(announcement) {
+    var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:11;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
+    var html = '<div class="maintenance" ' + style + '>' + announcement
+        + '<span class="maintenance-close" style="position: absolute;right: 16px;font-size: 18px;cursor: pointer">X</span>'
+        + '</div>';
+    $(function(){
+        var body = $('body');
+        body.prepend(html);
+        body.on('click', '.maintenance-close', function() {
+            $('.maintenance').remove();
+        });
+    })
+}
+
+function checkMaintenance() {
+    var host =  process.env.NODE_ENV === 'production' ? "http://114.215.183.122:10086/mt" : "http://114.215.183.122:10010/mt";
+    $.get(host + '/maintain/getMaintainInfo')
+        .done(function(res) {
+            if (res.data.open === 1 && res.data.type === 0) {
+                showMaintenance(res.data.announcement);
+            }
+        });
+    // showMaintenance('为了提供更快速、便捷的服务，订单来了将于2016-06-03（周一）14:00~16:00进行系统升级，届时网站与APP将无法访问，请您提前安排好工作。因此给您造成的不便，敬请谅解！');
+}
+
 function checkAuth(moduleId, url){
+    checkMaintenance();
     url = url || '/view/tips/noauth.html';
     var version = checkVersion();
     var moduleAuth = checkModule(moduleId);

@@ -106,7 +106,7 @@ var AJAXService = {
         var url = this.urls.host2 + (this.urls[path] || path);
         return url;
     },
-    ajaxWithToken: function(method, path, data, callback, errorCallback,asy){
+    ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
         if(path !== 'loginUrl'){
             data.timestamp = (new Date()).valueOf();
             // data.version = (new Date()).valueOf();
@@ -132,7 +132,7 @@ var AJAXService = {
         }
         $.ajax({
             type: method,
-            url: AJAXService.getUrl2(path),
+            url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
             async: asy,
             data: data,
             dataFilter: function(data){
