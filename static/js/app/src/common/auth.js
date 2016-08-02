@@ -63,19 +63,20 @@ function checkModule(moduleId){
 function showMaintenance(announcement) {
     var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:11;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
     var html = '<div class="maintenance" ' + style + '>' + announcement
-        + '<span class="maintenance-close" style="position: absolute;right: 16px;font-size: 18px;cursor: pointer">X</span>'
+        + '<img class="maintenance-close" style="position: absolute;right: 16px;top:2px;cursor: pointer" src="http://static.dingdandao.com/99003D43-530F-428A-BC34-6EF8608636D9@1x.png">'
         + '</div>';
     $(function(){
         var body = $('body');
         body.prepend(html);
         body.on('click', '.maintenance-close', function() {
             $('.maintenance').remove();
+            window.localStorage.setItem('maintenanceClosed', true);
         });
     })
 }
 
 function checkMaintenance() {
-    var host =  process.env.NODE_ENV === 'production' ? "http://114.215.183.122:10086/mt" : "http://114.215.183.122:10010/mt";
+    var host =  process.env.NODE_ENV === 'production' ? "http://114.215.183.122:10086/mt" : "http://114.215.183.122:20010/mt";
     $.get(host + '/maintain/getMaintainInfo')
         .done(function(res) {
             if (res.data.open === 1 && res.data.type === 0) {
@@ -86,7 +87,8 @@ function checkMaintenance() {
 }
 
 function checkAuth(moduleId, url){
-    checkMaintenance();
+    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
+    !maintenanceClosed && checkMaintenance();
     url = url || '/view/tips/noauth.html';
     var version = checkVersion();
     var moduleAuth = checkModule(moduleId);

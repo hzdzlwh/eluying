@@ -326,6 +326,7 @@ $(document).ready(function(){
                         localStorage.setItem("uid", data.data.user.uid);
                         localStorage.setItem("avatar", data.data.user.avatar);
                         localStorage.setItem("token", data.data.user.token);
+                        localStorage.removeItem('maintenanceClosed');
                         //$.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         $("#loginRegister").modal('hide');
                         $("#createOrJoinNetwork").modal('show');
@@ -386,6 +387,7 @@ $(document).ready(function(){
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);
                     localStorage.setItem("token", data.data.user.token);
+                    localStorage.removeItem('maintenanceClosed');
                     //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();
                 }else{
