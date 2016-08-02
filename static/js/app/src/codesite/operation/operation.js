@@ -34,13 +34,60 @@ $(function(){
     };
 
     util.bindDomAction(events);
+
     var codesite = new Vue({
         el: '.mainContainer',
-        data: {},
+        data: {
+            onepassQrCode: '',
+            onepassUrl: '',
+            selfRecharge: false,
+            wapPayStatus: false,
+            selfRechargeTypeStyle: '',
+            selfRechargeTypeStr: '',
+            wapPayTypeStr: ''
+            
+        },
+        ready: function(){
+            AJAXService.ajaxWithToken('GET', '/onePass/getOnePassSettingPC', {}, function(result){
+                this.onepassQrCode = result.data.onepassQrCode;
+                this.onepassUrl = result.data.onepassUrl;
+                this.selfRecharge = (result.data.selfRecharge === 0);
+                this.wapPayStatus = (result.data.wapPayStatus === 0);
+                this.selfRechargeTypeStyle = this.selfRecharge ? 'grey' : 'blue';
+                this.selfRechargeTypeStr = this.selfRecharge ? '未启用' : '已启用';
+                this.wapPayTypeStr = this.selfRecharge ? '启用' : '关闭';
+            }.bind(this));
+        },
         methods: {
             copyText: function(){
                 var ele = document.querySelector('#campUrl');
                 util.copyText(ele);
+                $(".copy-success").css('display', 'inline-block');
+                setTimeout(function () {
+                    $(".copy-success").css('display', 'none');
+                }, 3000);
+            },
+            
+            tipsShow: function(){
+                $(".tips").show();
+                $(".tips-arrow").show();
+            },
+            
+            tipsHide: function(){
+                $(".tips").hide();
+                $(".tips-arrow").hide();
+            },
+            
+            modifySelfChargeStatus: function(){
+                AJAXService.ajaxWithToken('GET', '/onePass/openCloseSelfCharge', { status: this.selfRecharge ? 1 : 0 }, function(result){
+                    if(result.code === 1){
+                        this.selfRechargeTypeStyle = (this.selfRechargeTypeStyle === 'grey') ? 'blue' : 'grey';
+                        this.selfRechargeTypeStr = (this.selfRechargeTypeStr === '未启用') ? '已启用' : '未启用';
+                        this.wapPayTypeStr = (this.wapPayTypeStr === '启用') ? '关闭' : '启用';
+                    }else{
+                        modal.somethingAlert(result.msg);
+                    }
+                }.bind(this));
             }
         }
     });

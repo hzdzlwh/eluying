@@ -99,7 +99,7 @@
                         <div class="cross" ng-if="cover===null">
 
                         </div>
-                        <img src="{{cover}}" ng-if="cover!==null"/>
+                        <img ng-src="{{cover}}" ng-if="cover!==null"/>
                     </div>
                     <input type="file" name="file" id="coverUpload" style="display: none"/>
                     <div class="sbtn upload">{{cover ? '更换封面' : '上传封面'}}</div>

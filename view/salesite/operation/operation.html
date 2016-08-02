@@ -12,15 +12,6 @@
     <script src="/static/js/app/dist/salesite/operation.js"></script>
 </head>
 <body ng-controller="operationCtrl">
-<div class="modal fade" role="dialog" id="copySuccess">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="hr"></div>
-            <div class="label1">复制成功!</div>
-            <!--<div class="label2">正在进入系统</div>-->
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 <div class="modal fade" role="dialog" id="announcement">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -61,8 +52,8 @@
                     <div class="item" ng-repeat="s in status">
                         <div class="itemBox" ng-class="{'active': s.status}" ng-click="onWebsite(s)">
                             <img class="yesTips" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="s.status"/>
-                            <img class="logo" src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
-                            <img class="logo" src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
+                            <img class="logo" ng-src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
+                            <img class="logo" ng-src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
                             <div class="stext active" ng-if="s.status">{{s.yesText}}</div>
                             <div class="stext" ng-if="!s.status"><a href="{{s.href}}">{{s.noText}}</a></div>
                         </div>
@@ -88,12 +79,13 @@
                     <div class="slabel">网站：</div>
                     <div class="stext"><span id="campUrl">{{campUrl}}</span></div>
                     <div class="sbtn" ng-click="copySite()">复制网址</div>
+                    <div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                 </div>
                 <div class="hr2" ng-if="campUrl != ''"></div>
                 <div class="formrow erweima" ng-if="campQrCode != ''">
                     <div class="slabel">二维码:</div>
-                    <img class="erweimapic" src="{{campQrCode}}" alt="营地二维码"/>
-                    <!--<div class="sbtn">下载</div>-->
+                    <img class="erweimapic" ng-src="{{campQrCode}}" alt="营地二维码"/>
+                    <div class="sbtn"><a ng-href="{{campQrCode}}" download>下载二维码</a></div>
                 </div>
             </div>
         </div>

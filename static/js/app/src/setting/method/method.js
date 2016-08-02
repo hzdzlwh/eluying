@@ -321,6 +321,11 @@ $(function(){
                                     }
                                     return 'open'
                                 }).bind(this)();
+                                if (this.walletStatus === 'close'){
+                                    this.w_webPayStatus = 'close';
+                                    this.w_facePayStatus = 'close';
+                                    this.w_immediaPayStatus = 'close';
+                                }
                             }else{
                                 modal.somethingAlert(result.msg);
                             }
@@ -335,6 +340,11 @@ $(function(){
                                     }
                                     return 'open'
                                 }).bind(this)();
+                                if (this.companyStatus === 'close'){
+                                    this.c_webPayStatus = 'close';
+                                    this.c_facePayStatus = 'close';
+                                    this.c_immediaPayStatus = 'close';
+                                }
                             }else{
                                 modal.somethingAlert(result.msg);
                             }

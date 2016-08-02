@@ -34,6 +34,7 @@
       top: 13px;
     }
     .ctext{
+      height: 33px;
       vertical-align: top;
       width: 420px;
       margin-left: 65px;
@@ -55,6 +56,19 @@
     top: 10px;
     right: 16px;
     cursor: pointer;
+  }
+  .copy-success {
+    position: absolute;
+    top: 6px;
+    right: 126px;
+    width: 102px;
+    height: 32px;
+    line-height: 32px;
+    background: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    display: none;
+    text-align: center;
   }
   .cbtn:hover{
     background: $color1Hover;
@@ -86,6 +100,10 @@
       font-size: 14px;
       color: white;
       cursor: pointer;
+      a{
+        text-decoration: none;
+        color: white;
+      }
     }
     .c-btn:hover{
       background: $color1Hover;

@@ -18,13 +18,14 @@
                 <div class="hr"></div>
                 <div class="formrow website">
                     <div class="clabel">网址：</div>
-                    <div class="ctext"><a id="campUrl">http://www.dingdandao.com:81/view/salesite/operation/operation.html</a></div>
+                    <div class="ctext"><a id="campUrl" :href="onepassUrl" v-text="onepassUrl"></a></div>
                     <div class="cbtn" @click="copyText">复制网址</div>
+                    <div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                 </div>
                 <div class="formrow erweima">
                     <div class="clabel">二维码:</div>
-                    <img class="erweimapic" alt="营地二维码"/>
-                    <div class="c-btn">下载二维码</div>
+                    <img class="erweimapic" alt="营地二维码" :src="onepassQrCode"/>
+                    <div class="c-btn"><a :href="onepassQrCode" download>下载二维码</a></div>
                 </div>
             </div>
         </div>
@@ -35,12 +36,11 @@
                     <table>
                         <tr>
                             <td style="width: 184px;"><div class="c-text">自助充值功能</div></td>
-                            <td><div class="dot" style="display: none;"></div><div class="dot-grey dot"></div><div class="c-status">未启用</div></td>
+                            <td><div class="dot-{{ selfRechargeTypeStyle }} dot"></div><div class="c-status" v-text="selfRechargeTypeStr"></div></td>
                             <td style="width: 350px; text-align: right;">
-                                <div class="c-btn" style="display: none;">启用</div>
-                                <div class="c-btn" style="display: none;">关闭</div>
-                                <div class="cbtn-grey">启用
-                                    <div class="tips">请先<a href="/view/setting/method/method.html">开通手机网站支付</a></div>
+                                <div class="c-btn" v-if="!wapPayStatus" v-text="wapPayTypeStr" @click="modifySelfChargeStatus"></div>
+                                <div class="cbtn-grey" v-if="wapPayStatus" @mouseenter="tipsShow" @mouseleave="tipsHide">启用
+                                    <div class="tips">请先<a href="/view/setting/method/method.html">开启手机网站支付</a></div>
                                     <span class="tips-arrow"><img src="http://static.dingdandao.com/csite-arrow.jpg" alt=""></span>
                                 </div>
                             </td>

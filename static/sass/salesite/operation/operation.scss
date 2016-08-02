@@ -242,6 +242,19 @@
     right: 16px;
     cursor: pointer;
   }
+  .copy-success{
+    position: absolute;
+    top: 6px;
+    right: 126px;
+    width: 102px;
+    height: 32px;
+    line-height: 32px;
+    background: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    display: none;
+    text-align: center;
+  }
   .sbtn:hover{
     background: $color1Hover;
   }
@@ -262,7 +275,11 @@
       }
     }
     .sbtn{
-      top: 44px;
+      top: 8px;
+      a{
+        text-decoration: none;
+        color: #ffffff;
+      }
     }
   }
 }

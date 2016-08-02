@@ -11,8 +11,8 @@ var leftMenu = {
                          {menuName: 'salesite', pathUrl: '/view/salesite/operation/operation.html', name: '直销网站设置'},
                          {menuName: 'codesite', pathUrl: '/view/codesite/operation/codeOperation.html', name: '一码通网站设置'},
                          {menuName: 'setting', pathUrl: '/view/setting/method/method.html', name: '收款设置'},
-                         {menuName: 'guest', pathUrl: '/view/guest/source/source.html', name: '客源设置'},
-                         {menuName: 'linesite', pathUrl: '/view/linesite/operation/lineOperation.html', name: '排队网站设置'},
+                         {menuName: 'guest', pathUrl: '/view/guest/source/source.html', name: '客源设置'}
+                         // {menuName: 'linesite', pathUrl: '/view/linesite/operation/lineOperation.html', name: '排队网站设置'}
                         ],
             arraySub:[{subMenuName: 'business', subArray: [{menuName: 'room', pathUrl: '/view/business/category/room.html', name: '住宿'},
                                                            {menuName: 'restaurant', pathUrl: '/view/business/restaurant/restaurant.html', name: '餐饮'},
@@ -33,10 +33,10 @@ var leftMenu = {
                       },
 
                       {subMenuName: 'guest', subArray: [{menuName: 'source', pathUrl: '/view/guest/source/source.html', name: '客源列表'}]
-                      },
-
-                      {subMenuName: 'linesite', subArray: [{menuName: 'lineOperation', pathUrl: '/view/linesite/operation/lineOperation.html', name: '网站运营'}]
                       }
+
+                      // {subMenuName: 'linesite', subArray: [{menuName: 'lineOperation', pathUrl: '/view/linesite/operation/lineOperation.html', name: '网站运营'}]
+                      // }
                      ]
         };
         $('.header').after(templ(data));
