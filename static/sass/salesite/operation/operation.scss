@@ -64,7 +64,7 @@
     height:234px;
     border-radius: $BorderRadius;
     .hr{
-      background:#3d83e1;
+      background:#178ce6;
       width:100%;
       height:6px;
     }
@@ -101,7 +101,7 @@
           }
         }
         .itemBox.active{
-          border:1px solid #4a90e2;
+          border:1px solid #178ce6;
         }
         img.logo{
           width: 64px;
@@ -242,6 +242,19 @@
     right: 16px;
     cursor: pointer;
   }
+  .copy-success{
+    position: absolute;
+    top: 6px;
+    right: 126px;
+    width: 102px;
+    height: 32px;
+    line-height: 32px;
+    background: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    display: none;
+    text-align: center;
+  }
   .sbtn:hover{
     background: $color1Hover;
   }
@@ -252,8 +265,8 @@
     padding-bottom: 10px;
     .erweimapic{
       display: inline-block;
-      width: 128px;
-      height: 128px;
+      width: 150px;
+      height: 210px;
       margin-left: 75px;
       margin-top: 10px;
       img{
@@ -262,7 +275,11 @@
       }
     }
     .sbtn{
-      top: 44px;
+      top: 8px;
+      a{
+        text-decoration: none;
+        color: #ffffff;
+      }
     }
   }
 }

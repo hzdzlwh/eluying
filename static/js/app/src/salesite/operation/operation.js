@@ -48,9 +48,9 @@ $(function(){
                 status: false,
                 href: '/view/setting/method/method.html',
                 yesUrl: pics['pay-yes'],
-                yesText: '选择线上收款方式',
+                yesText: '开通手机网站支付',
                 noUrl: pics['pay-no'],
-                noText: '点我去选择线上收款方式'
+                noText: '点我去开通手机网站支付'
             },
             campBasicInfo: {
                 status: false,
@@ -128,18 +128,12 @@ $(function(){
             }
         };
         scope.copySite = function(){
-            if(window.clipboardData && window.clipboardData.setData){
-                window.clipboardData.setData('Text', scope.campUrl);
-                modal.somethingAlert("复制成功!");
-                // $("#copySuccess").modal("show");
-                // setTimeout(function(){
-                //     window.location.href = scope.campUrl;
-                // }, 1000);
-            }else{
-                // modal.somethingAlert("复制成功!");
-                modal.somethingAlert("您的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。");
-                $("#campUrl").select();
-            }
+            var ele = document.querySelector('#campUrl');
+            util.copyText(ele);
+            $(".copy-success").css('display', 'inline-block');
+            setTimeout(function () {
+                $(".copy-success").css('display', 'none');
+            }, 3000);
         };
         AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
             version: 5

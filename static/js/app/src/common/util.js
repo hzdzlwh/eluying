@@ -345,6 +345,27 @@ var util = {
             nums += this.countTags(node.childNodes[i]);
         }
         return nums;
+    },
+    copyText: function(ele){
+        function otherEle(element){
+            if (document.selection) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(element);
+                range.select();
+            }else{
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(element);
+                window.getSelection().addRange(range);
+            }
+        }
+        if(ele.select){
+            ele.select();
+        }else{
+            otherEle(ele);
+        }
+        document.execCommand('Copy');
+        window.getSelection().removeAllRanges();
     }
 };
 module.exports = util;
