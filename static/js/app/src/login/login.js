@@ -63,26 +63,30 @@ function forgetVCOnClick(){
             return false
         }
         $(this).unbind("click");
+        var that = this;
         $.ajax({
             type: "GET",
             url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
                 phone: phone,
                 origin: 2,
-                captcha: picture
+                captcha: picture,
+                version: 5,
+                terminal: 1
             },
             success: function (data) {
                 if (data.code !== 1) {
                     $("#loginForgetPwd .errorTips").html(data.msg);
                     $("#loginForgetPwd .errorTips").show();
                     wait = 0;
+                } else {
+                    time(that);
                 }
             },
             error: function (data) {
 
             }
         });
-        time(this);
     }else{
         $("#loginForgetPwd .errorTips").html(result);
         $("#loginForgetPwd .errorTips").show();
@@ -106,26 +110,30 @@ function registerVCOnClick(){
             return false
         }
         $(this).unbind("click");
+        var that = this;
         $.ajax({
             type: "GET",
             url: AJAXService.getUrl2('/user/sendVerify'),
             data: {
                 origin: 1,
                 phone: phone,
-                captcha: picture
+                captcha: picture,
+                version: 5,
+                terminal: 1
             },
             success: function(data){
                 if(data.code !== 1){
                     $("#loginRegister .errorTips").html(data.msg);
                     $("#loginRegister .errorTips").show();
                     wait = 0;
+                } else {
+                    time(that);
                 }
             },
             error: function(data){
 
             }
         });
-        time(this);
     }else{
         $("#loginRegister .errorTips").html(result);
         $("#loginRegister .errorTips").show();
