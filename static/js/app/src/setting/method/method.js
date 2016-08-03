@@ -4,7 +4,7 @@ var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkModule(auth.BUSINESS_ID);
+auth.checkAuth(auth.BUSINESS_ID);
 
 require("angular");
 
@@ -89,7 +89,7 @@ $(function(){
                 type: method
             }, function(result){
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
-                    console.log(result.data.map);
+                    // console.log(result.data.map);
                     scope.onlinePay = result.data.map;
                     scope.payChannelCustomList = result.data.payChannelCustomList;
                     scope.$apply();

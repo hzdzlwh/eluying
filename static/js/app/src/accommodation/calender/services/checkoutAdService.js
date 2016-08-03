@@ -4,61 +4,6 @@ require("angular");
 
 var checkoutAdService = function(app){
     app.service("checkoutAdService", ['$rootScope', function(rootScope){
-        this.resetCheckoutAd = function(scope){
-            var orderDetail = scope.orderDetail;
-            var checkoutAd = {};
-            for(var key in orderDetail){
-                checkoutAd[key] = orderDetail[key];
-            }
-            checkoutAd.roomsRefund = 0;
-            checkoutAd.penaltyAd = 0;
-            checkoutAd.consumedRooms = [];
-            var today = new Date();
-            checkoutAd.rooms.forEach(function(r){
-                var endDate = new Date(r.endDate);
-                if(r.state === 1 && endDate > today){
-                    r.selectable = true;
-                }else{
-                    r.selectable = false;
-                }
-            });
-            checkoutAd.payments.forEach(function(d){
-                if(d.type === 5){
-                    checkoutAd.discounts = d.fee;
-                }
-            });
-            //checkoutAd.foodItems.forEach(function(d){
-            //    AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-            //        date: d.date,
-            //        id: d.categoryId
-            //    }, function(result){
-            //        d.dateStr = d.date;
-            //        d.dateStr2 = d.date.substr(5, 5);
-            //        d.date = new Date(d.date);
-            //        d.inventory = result.data.inventory;
-            //        if(checkoutAd.foodsAmount && checkoutAd.foodsAmount[d.dateStr]){
-            //            d.inventory += checkoutAd.foodsAmount[d.dateStr];
-            //        }
-            //        scope.$apply();
-            //    });
-            //});
-            checkoutAd.playItems.forEach(function(d){
-                AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
-                    date: d.date,
-                    id: d.categoryId
-                }, function(result){
-                    d.dateStr = d.date;
-                    d.dateStr2 = d.date.substr(5, 5);
-                    d.date = new Date(d.date);
-                    d.inventory = result.data.inventory;
-                    if(checkoutAd.foodsAmount && checkoutAd.foodsAmount[d.dateStr]){
-                        d.inventory += checkoutAd.foodsAmount[d.dateStr];
-                    }
-                    scope.$apply();
-                });
-            });
-            return checkoutAd;
-        };
         var calRoomRefund = function(checkoutAd){
             var rooms = checkoutAd.rooms;
             var consumedRooms = checkoutAd.consumedRooms;
@@ -72,7 +17,7 @@ var checkoutAdService = function(app){
             });
             checkoutAd.roomsRefund = fee;
         };
-        this.selectCheckoutAdRoom = function(room, checkoutAd){
+        var selectCheckoutAdRoom = function(room, checkoutAd){
             room.selected = !room.selected;
             //获取入住部分房价
             var rooms = checkoutAd.rooms;
@@ -96,7 +41,64 @@ var checkoutAdService = function(app){
                 rootScope.$apply();
             });
         };
+        this.resetCheckoutAd = function(scope){
+            var orderDetail = scope.orderDetail;
+            var checkoutAd = {};
+            for(var key in orderDetail){
+                checkoutAd[key] = orderDetail[key];
+            }
+            checkoutAd.roomsRefund = 0;
+            checkoutAd.penaltyAd = 0;
+            checkoutAd.consumedRooms = [];
+            var today = new Date();
+            var selectedRoom = [];
+            checkoutAd.rooms.forEach(function(r){
+                var endDate = new Date(r.endDate);
+                if(r.state === 1 && endDate > today){
+                    r.selectable = true;
+                    r.selected = true;
+                    selectedRoom.push({
+                        startDate: r.startDate,
+                        endDate: r.endDate,
+                        roomId: r.roomId,
+                    });
+                }else{
+                    r.selectable = false;
+                }
+            });
+            var getRoomFee = {
+                orderId: checkoutAd.orderId,
+                rooms: JSON.stringify(selectedRoom)
+            };
+            AJAXService.ajaxWithToken('GET', 'getRoomFeeUrl', getRoomFee, function(result){
+                checkoutAd.consumedRooms = result.data.list;
+                calRoomRefund(checkoutAd);
+                rootScope.$apply();
+            });
+            checkoutAd.payments.forEach(function(d){
+                if(d.type === 5){
+                    checkoutAd.discounts = d.fee;
+                }
+            });
+            checkoutAd.playItems.forEach(function(d){
+                AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
+                    date: d.date,
+                    id: d.categoryId
+                }, function(result){
+                    d.dateStr = d.date;
+                    d.dateStr2 = d.date.substr(5, 5);
+                    d.date = new Date(d.date);
+                    d.inventory = result.data.inventory;
+                    if(checkoutAd.foodsAmount && checkoutAd.foodsAmount[d.dateStr]){
+                        d.inventory += checkoutAd.foodsAmount[d.dateStr];
+                    }
+                    scope.$apply();
+                });
+            });
+            return checkoutAd;
+        };
         this.calRoomRefund = calRoomRefund;
+        this.selectCheckoutAdRoom = selectCheckoutAdRoom;
     }]);
 };
 

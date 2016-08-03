@@ -26,7 +26,6 @@ var pRoomFilterCtrl = function(app){
         };
         rootScope.selectPRoom = function(id){
             rootScope.isSelected[id] = !rootScope.isSelected[id];
-            console.log(rootScope);
         };
         rootScope.resetFilter = function(){
             for(var key in rootScope.pRoomList){

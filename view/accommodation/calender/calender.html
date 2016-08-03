@@ -689,7 +689,7 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div></div>
                     <form action="" name="orderNewForm" id="orderNewForm">
                         <table>
                             <tr>
@@ -856,7 +856,7 @@
                                         <div class="item">日</div>
                                     </div>
                                     <div class="date-row" ng-repeat="row in play.calendar">
-                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass, orderNew);">
                                             {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
@@ -902,7 +902,7 @@
                                 数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(goods, goods.amount-1);">-</div>
-                                    <input type="number" class="numberInput" ng-model="goods.amount">
+                                    <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);">
                                     <div class="plus" ng-click="changeItemNum(goods, goods.amount+1);">+</div>
                                 </div>
                                 <!--<div class="tips">剩余库存{{goods.inventory}}</div>-->
@@ -961,7 +961,7 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div></div>
                     <form action="" name="orderEditForm" id="orderEditForm">
                         <table>
                             <tr>
@@ -1230,7 +1230,7 @@
                             <td ng-if="goods.isNew">数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                    <input type="number" class="numberInput" ng-model="goods.amount">
+                                    <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);>
                                     <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
                                 </div>
                                 <!--<div class="tips">剩余库存{{play.inventory}}</div>-->
@@ -1683,7 +1683,7 @@
                                 <td ng-if="goods.isNew">数量&nbsp;
                                     <div class="snumber">
                                         <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                        <input type="number" class="numberInput" ng-model="goods.amount">
+                                        <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);>
                                         <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
                                     </div>
                                 </td>
@@ -1936,7 +1936,7 @@
                                 <td ng-if="goods.isNew">数量&nbsp;
                                     <div class="snumber">
                                         <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                        <input type="number" class="numberInput" ng-model="goods.amount">
+                                        <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);>
                                         <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
                                     </div>
                                 </td>

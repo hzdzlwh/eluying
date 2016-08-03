@@ -38,7 +38,7 @@ var orderDetailService = function(app){
             var itemStartDate;
             rooms.forEach(function(d){
                 if(!itemStartDate || new Date(d.startDate) < itemStartDate){
-                    itemStartDate = d.startDate;
+                    itemStartDate = new Date(d.startDate);
                 }
                 if(d.state === 0){
                     orderDetail.editable = true;

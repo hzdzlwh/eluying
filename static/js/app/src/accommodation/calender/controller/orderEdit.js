@@ -46,26 +46,16 @@ var orderEditCtrl = function(app){
                 id: false
             };
             scope.beginReadId = function(){
-                // var mode = $("#orderEditModal .readBtn").html();
-                // if(mode === '开始读卡'){
-                //     $("#orderEditModal .readBtn").html('停止读卡');
-                //     idcObj.init();
-                //     idcObj.read(5, 1, rootScope);
-                // }else{
-                //     $("#orderEditModal .readBtn").html('开始读卡');
-                //     idcObj.init();
-                //     idcObj.idc && idcObj.idc.ReadClose();
-                // }
-                var mode = $("#orderEditModal .readBtn").html();
+                var mode = $("#orderEditModel .readBtn").html();
                 if(mode === '开始读卡'){
-                    $("#orderEditModal .readBtn").html('正在读卡...');
+                    $("#orderEditModel .readBtn").html('正在读卡...');
+                    $("#orderEditModel .readBtn").addClass('ing');
                     setTimeout(function(){
                         idcObj.init();
                         idcObj.read(3, 0, rootScope);
                     }, 500)
                 }else{
-                    // $("#orderEditModal .readBtn").html('开始读卡');
-                    // $("#idcWarningModal").modal("hide");
+                    // $("#newOrderModal .readBtn").html('开始读卡');
                     // idcObj.init();
                     // idcObj.idc && idcObj.idc.ReadClose();
                 }

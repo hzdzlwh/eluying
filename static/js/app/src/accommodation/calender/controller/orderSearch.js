@@ -20,7 +20,6 @@ var orderSearch = function(app){
         scope.enterKeyPress = function(ev){
             if(ev.which === 13 && scope.searchKeyword !== ''){
                 scope.search(true);
-                console.log(rootScope);
             }
         };
         scope.search = function(flag){
@@ -37,7 +36,6 @@ var orderSearch = function(app){
                     $(".search .results").show();
                     scope.showResults = true;
                     scope.searchResults = result.data.orderList;
-                    console.log(result.data.orderList);
                     scope.searchResults.forEach(function(d){
                         d.classStr = rootScope.orderStatusStr[d.orderState].classStr;
                         d.html = rootScope.orderStatusStr[d.orderState].long;

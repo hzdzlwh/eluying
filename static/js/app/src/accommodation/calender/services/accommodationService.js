@@ -76,9 +76,9 @@ var accommodationService = function(app){
                     if(util.isSameDay(date, today) || date > today){
                         continue;
                     }
-                    if(!roomHash[item.cRoomName + item.sn]){
-                        selectedRooms.push(item.cRoomName + item.sn);
-                        roomHash[item.cRoomName + item.sn] = true;
+                    if(!roomHash[item.cRoomName + '-' + item.sn]){
+                        selectedRooms.push(item.cRoomName + '-' + item.sn);
+                        roomHash[item.cRoomName + '-' + item.sn] = true;
                     }
                     selectedEntries_new[key] = item;
                 }
@@ -89,9 +89,9 @@ var accommodationService = function(app){
                     if(!util.isSameDay(date, today) && date < today){
                         continue;
                     }
-                    if(!roomHash[item.cRoomName + item.sn]){
-                        selectedRooms.push(item.cRoomName + item.sn);
-                        roomHash[item.cRoomName + item.sn] = true;
+                    if(!roomHash[item.cRoomName + '-' + item.sn]){
+                        selectedRooms.push(item.cRoomName + '-' + item.sn);
+                        roomHash[item.cRoomName + '-' + item.sn] = true;
                     }
                     selectedEntries_new[key] = item;
                 }
@@ -102,9 +102,9 @@ var accommodationService = function(app){
                     if(!util.isSameDay(date, today) && date < today){
                         continue;
                     }
-                    if(!roomHash[item.cRoomName + item.sn]){
-                        selectedRooms.push(item.cRoomName + item.sn);
-                        roomHash[item.cRoomName + item.sn] = true;
+                    if(!roomHash[item.cRoomName + '-' + item.sn]){
+                        selectedRooms.push(item.cRoomName + '-' + item.sn);
+                        roomHash[item.cRoomName + '-' + item.sn] = true;
                     }
                     selectedEntries_new[key] = item;
                 }
