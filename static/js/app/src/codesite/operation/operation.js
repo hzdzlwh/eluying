@@ -67,17 +67,6 @@ $(function(){
                     $(".copy-success").css('display', 'none');
                 }, 3000);
             },
-            
-            tipsShow: function(){
-                $(".tips").show();
-                $(".tips-arrow").show();
-            },
-            
-            tipsHide: function(){
-                $(".tips").hide();
-                $(".tips-arrow").hide();
-            },
-            
             modifySelfChargeStatus: function(){
                 AJAXService.ajaxWithToken('GET', '/onePass/openCloseSelfCharge', { status: this.selfRecharge ? 1 : 0 }, function(result){
                     if(result.code === 1){

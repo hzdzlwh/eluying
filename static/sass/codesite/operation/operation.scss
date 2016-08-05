@@ -186,17 +186,9 @@
         font-size: 14px;
         color: white;
         cursor: pointer;
-        .empty-move {
-          position: absolute;
-          width: 100px;
-          height: 10px;
-          left: 0;
-          top: 24px;
-        }
       }
       .tips {
         position: absolute;
-        display: none;
         color: #666666;
         width: 156px;
         height: 38px;
@@ -213,7 +205,6 @@
       }
       .tips-arrow {
         position: absolute;
-        display: none;
         width: 12px;
         height: 6px;
         top:19px;
