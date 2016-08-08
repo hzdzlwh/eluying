@@ -189,7 +189,6 @@
       }
       .tips {
         position: absolute;
-        display: none;
         color: #666666;
         width: 156px;
         height: 38px;
@@ -206,11 +205,11 @@
       }
       .tips-arrow {
         position: absolute;
-        display: none;
         width: 12px;
         height: 6px;
         top:19px;
         left: 23px;
+        cursor: pointer;
       }
     }
   }
