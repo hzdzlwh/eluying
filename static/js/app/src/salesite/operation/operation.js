@@ -48,9 +48,9 @@ $(function(){
                 status: false,
                 href: '/view/setting/method/method.html',
                 yesUrl: pics['pay-yes'],
-                yesText: '开通手机网站支付',
+                yesText: '启用手机网站支付',
                 noUrl: pics['pay-no'],
-                noText: '点我去开通手机网站支付'
+                noText: '点我去启用手机网站支付'
             },
             campBasicInfo: {
                 status: false,

@@ -29,7 +29,7 @@ var leftMenu = {
                       {subMenuName: 'codesite', subArray: [{menuName: 'codeOperation', pathUrl: '/view/codesite/operation/codeOperation.html', name: '网站运营'}]
                       },
 
-                      {subMenuName: 'setting', subArray: [{menuName: 'method', pathUrl: '/view/setting/method/method.html', name: '支付方式'}]
+                      {subMenuName: 'setting', subArray: [{menuName: 'method', pathUrl: '/view/setting/method/method.html', name: '收款方式'}]
                       },
 
                       {subMenuName: 'guest', subArray: [{menuName: 'source', pathUrl: '/view/guest/source/source.html', name: '客源列表'}]
