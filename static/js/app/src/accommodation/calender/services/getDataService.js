@@ -74,7 +74,8 @@ var getDataService = function(app){
                 var map = result.data;
                 var walletOpenAndUseStateList = map.walletOpenAndUseStateList;
                 for (var key in walletOpenAndUseStateList) {
-                   if (walletOpenAndUseStateList[key].onlineType === 2 
+                   if (map.onlineCollectionMethod === 1 &&
+                       walletOpenAndUseStateList[key].onlineType === 2
                        && walletOpenAndUseStateList[key].openState === 1 
                        && walletOpenAndUseStateList[key].useState === 1) {
                         payChannels.push({
@@ -83,6 +84,19 @@ var getDataService = function(app){
                         });
                         break;
                    } 
+                }
+                var enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
+                for (var key in enterpriseOpenAndUseStateList) {
+                    if (map.onlineCollectionMethod === 2 &&
+                        enterpriseOpenAndUseStateList[key].onlineType === 2
+                        && enterpriseOpenAndUseStateList[key].openState === 1
+                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -6,
+                            name: '企业支付宝'
+                        });
+                        break;
+                    }
                 }
                 payChannels.push({
                     channelId: -1,
