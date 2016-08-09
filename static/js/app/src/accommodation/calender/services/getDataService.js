@@ -71,17 +71,18 @@ var getDataService = function(app){
         this.getPayChannels = function(callback){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
-                var map = result.data.map;
-                if(map.alipaySelected){
-                   // payChannels.push({
-                   //     channelId: -6,
-                   //     name: '支付宝'
-                   // });
-                }else if(map.walletPaySelected){
-                   payChannels.push({
-                       channelId: -8,
-                       name: '订单钱包'
-                   });
+                var map = result.data;
+                var walletOpenAndUseStateList = map.walletOpenAndUseStateList;
+                for (var key in walletOpenAndUseStateList) {
+                   if (walletOpenAndUseStateList[key].onlineType === 2 
+                       && walletOpenAndUseStateList[key].openState === 1 
+                       && walletOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -8,
+                            name: '订单钱包'
+                        });
+                        break;
+                   } 
                 }
                 payChannels.push({
                     channelId: -1,
