@@ -26,7 +26,7 @@ $(function(){
     $(".campName").html(localStorage.getItem("campName"));
 
 
-    ETCategoryList.loadETCategoryList();
+    // ETCategoryList.loadETCategoryList();
 
 
     var events = {
