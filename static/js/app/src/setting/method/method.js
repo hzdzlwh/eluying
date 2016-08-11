@@ -500,6 +500,7 @@ $(function(){
                         $("#method-wechatMethod").modal("hide");
                         mainContainer.c_weChatObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
                         mainContainer.c_webObj = { typeId: -1, typeStr: '未开通', typeStyle: 'grey', operationStr: '绑定账号' };
+                        mainContainer.c_webPayStatus = 'close';
                     }
                 });
             }
