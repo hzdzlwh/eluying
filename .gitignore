@@ -12,3 +12,4 @@
 npm-debug.log
 gulp-ruby-sass-0
 .DS_Store
+/.happypack/*

@@ -100,26 +100,158 @@
     </div>
   </div>
 </div>
-<div class="mainContainer">
-  <div class="content">
-    <div class="title topMenu">
-      <span class="campName"></span>
-
-      <div class="create" data-toggle="modal" data-target="#createEnt">
-        <img src="/static/image/icon_xinjian.png" alt="新增">
-        <span>新增娱乐</span>
+<!-- 编辑娱乐 -->
+<div class="modal fade" role="dialog" id="editETDialog">
+  <div class="modal-dialog" style="width: 444px">
+    <div class="modal-content clearfloat v-modal" style="padding-left: 20px;padding-right: 20px;">
+      <div>
+        <p>编辑娱乐项目</p>
+        <p>基本信息</p>
+      </div>
+      <div>
+        <label for="">娱乐项目名称</label>
+        <input type="text" placeholder="用于首页命名">
+      </div>
+      <div class="input-row">
+        <label for="">图标</label>
+        <img src="http://static.dingdandao.com/eluyun/image/Group%203.png" alt="">
+      </div>
+      <div class="v-btn-group" style="margin-top: 18px">
+        <label for=""></label>
+        <button class="v-btn v-blue-btn" style="margin-right: 36px">确认</button>
+        <button class="v-btn v-white-btn">取消</button>
       </div>
     </div>
-    <div class="categoryGrid">
-      <table>
+  </div>
+</div>
+<!-- 新增娱乐 -->
+<div class="modal fade" role="dialog" id="createETDialog">
+  <div class="modal-dialog" style="width: 444px">
+    <div class="modal-content clearfloat v-modal" style="padding-left: 20px;padding-right: 20px;">
+      <img @click="closeCreateETDialog" class="et-close" src="http://static.dingdandao.com/eluyun/image/E78E98A1-12FC-4886-BA29-F3F438C7F2E6@1x.png" alt="">
+      <div class="createET-head">
+        <p>{{['新增娱乐项目', '新增娱乐规格', '编辑娱乐规格'][status]}}</p>
+        <p>基本信息</p>
+      </div>
+      <div>
+        <div class="input-row" v-if="status == 0">
+          <label for="">娱乐项目名称</label>
+          <input v-model="ETType.entertainmentName" type="text" placeholder="用于首页命名">
+        </div>
+        <div class="input-row" v-if="status == 0">
+          <label for="">图标</label>
+          <img class="et-icon" @click="openIconDialog" :src="entertainmentImgUrl" alt="">
+        </div>
+        <div class="input-row">
+          <label for="">规格名称</label>
+          <input v-model="ETType.entertainmentCategoryName" type="text" placeholder="用于展示给客户">
+        </div>
+        <div class="input-row">
+          <label for="">简称</label>
+          <input v-model="ETType.entertainmentCategoryShort" type="text" placeholder="用于自己管理">
+        </div>
+        <div class="input-row">
+          <label for="">单位</label>
+          <input v-model="ETType.unit" type="text" placeholder="请填写收费单位。如：人、辆、艘">
+        </div>
+        <div class="input-row">
+          <label for="">适用人数</label>
+          <input v-model="ETType.fitNum" type="text" placeholder="请填写纯数字">
+          <span class="et-optional">（选填）</span>
+        </div>
+        <div class="input-row">
+          <label for="">服务数量上限</label>
+          <input v-model="ETType.inventory" type="text" placeholder="请填写纯数字">
+          <span class="et-optional">（选填）</span>
+        </div>
+        <div class="input-row">
+          <label v-if="status !=2 || ETType.chargeMode == 0" for="">计费方式</label>
+          <template v-if="status !=2 || ETType.chargeMode == 0">
+              <input v-model="ETType.chargeMode" value="0" type="radio" name="charge" v-if="status != 2"><span>按次计费&nbsp;</span>
+              <input v-model="perPay" type="text" style="width: 52px"><span>元</span>
+          </template>
+          <div style="margin-top: 8px" v-if="status !=2 || ETType.chargeMode == 1">
+            <label for="">{{status != 2 ? '' : '计费方式'}}</label>
+            <input v-model="ETType.chargeMode" value="1" type="radio" name="charge" v-if="status != 2"><span>按时计费&nbsp;</span>
+            <input v-model="timePay" type="text" style="width: 52px"><span>元&nbsp;/</span>
+            <input v-model="ETType.chargeUnitTime" type="text" style="width: 25px">
+            <select v-model="ETType.chargeUnit">
+              <option value="1">小时</option>
+              <option value="0">分钟</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-row">
+          <label for="">是否需要押金结算</label>
+          <input v-model="ETType.needDeposit" type="radio" name="deposit" value="1"><span>是</span>
+          <div style="margin-top: 13px">
+            <label for=""></label>
+            <input v-model="ETType.needDeposit" type="radio" name="deposit" value="0"><span>否</span>
+          </div>
+        </div>
+        <div v-if="ETType.needDeposit == 1" class="input-row">
+          <label for="">额外收费</label>
+          <textarea v-model="ETType.extraFeeItems" type="text"></textarea>
+          <span class="et-optional">（选填）</span>          
+        </div>
+        <div class="input-row">
+          <label for="">描述</label>
+          <textarea v-model="ETType.description" name="" id="" cols="30" rows="10" placeholder="请填写描述"></textarea>
+          <span class="et-optional">（选填）</span>
+        </div>
+      </div>
+      <div class="v-btn-group" style="margin-top: 18px">
+        <label for=""></label>
+        <button class="v-btn v-blue-btn" @click="onConfirm" style="margin-right: 36px">确认</button>
+        <button class="v-btn v-white-btn" @click="closeCreateETDialog">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 图标库 -->
+<div class="modal fade" role="dialog" id="iconDialog">
+  <div class="modal-dialog" style="width: 364px">
+    <div class="modal-content clearfloat v-modal" style="padding-left: 20px;padding-right: 20px;">
+      <div>
+      <img @click="closeIconDialog" class="et-icon-close" src="http://static.dingdandao.com/eluyun/image/E78E98A1-12FC-4886-BA29-F3F438C7F2E6@1x.png" alt="">        
+        <p style="font-size:16px;color:#178ce6;margin-bottom:24px">娱乐图标库</p>
+        <ul v-for="list in icons" class="et-icon-list clearfloat">
+          <span class="et-icon-type">{{$key}}</span>
+          <li v-for="icon in list" @click="selectIcon(icon)">
+            <div>
+              <img :src="icon.entertainmentImgUrl" alt="">
+            </div>
+            <span class="et-icon-name" :class="{'icon-selected': icon === iconSelected}">{{icon.name}}</span>
+          </li>
+        </ul>
+        <div class="v-btn-group" style="margin-top: 18px">
+          <label for=""></label>
+          <button class="v-btn v-blue-btn" @click="setIcon" style="margin-right: 36px">确认</button>
+          <button class="v-btn v-white-btn" @click="closeIconDialog">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mainContainer">
+  <div class="content">
+    <div class="et-title">
+      <ul class="restaurant-head-nav">
+        <li class="restaurant-head-nav-selected"><a href="/view/business/category/entertainment.html">品类管理</a></li>
+        <li><a href="/view/business/price/entertainment.html">价格维护</a></li>
+      </ul>
+      <span class="create-restaurant" @click="openCreateETDialog">新增娱乐</span>
+    </div>
+    <div class="et-table-container">
+      <table class="et-table">
         <thead>
         <tr class="head">
-          <th>娱乐名称</th>
+          <th class="et-table-name">娱乐名称</th>
           <th>规格名称</th>
           <th>简称</th>
           <th>单位</th>
           <th>默认价格</th>
-          <th>服务上线</th>
+          <th>服务上限</th>
           <th>押金</th>
           <th>人数</th>
           <th>描述</th>
@@ -127,85 +259,63 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td rowspan="2">默认娱乐</td>
-          <td>皮划艇</td>
-          <td>皮划艇</td>
-          <td>匹</td>
-          <td>999元/60分钟</td>
-          <td>999999</td>
-          <td>是</td>
-          <td>——</td>
-          <td>皮划艇皮划艇</td>
-          <td>已上架</td>
-        </tr>
-        <tr>
-          <td>皮划艇</td>
-          <td>皮划艇</td>
-          <td>匹</td>
-          <td>2元/次</td>
-          <td>--</td>
-          <td>是</td>
-          <td>1</td>
-          <td></td>
-          <td>未上架</td>
+        <tr v-for="type in ETTypeList" @click="selectETType(type)"  :class="{'ET-type-selected': selectedETType === type}" track-by="entertainmentCategoryId">
+          <td v-if="type.entertainmentId"
+              :rowspan="type.amount"
+              class="et-table-name"
+              @click.stop="selectET(type.entertainmentId)"
+              :class="{'ET-selected': selectedETId === type.entertainmentId}"
+              style="">
+             <div class="et-name-container">
+                  <img :src=type.entertainmentImgUrl alt="">                
+             </div>
+            <p>{{type.entertainmentName}}</p>
+          </td>
+          <td>{{type.entertainmentCategoryName}}</td>
+          <td>{{type.entertainmentCategoryShort}}</td>
+          <td>{{type.unit}}</td>
+          <td>{{type.chargeMode ? type.price + '元/'+ (type.chargeUnitTime==1?'':type.chargeUnitTime) + ['分钟','小时'][type.chargeUnit] : type.price + '元/' + type.unit}}</td>
+          <td>{{type.inventory || '——'}}</td>
+          <td>{{['否','是'][type.needDeposit]}}</td>
+          <td>{{type.fitNum || '——'}}</td>
+          <td class="ellipsis">{{type.description}}</td>
+          <td>{{['未上架','已上架'][type.directNetState]}}</td>
         </tr>
         </tbody>
       </table>
     </div>
-    <div class="mainOperate operate">
-      <div class="first clearfloat">
-        <div class="operateItem">
-          <div class="clickDiv" id="editETButton" data-toggle="modal" data-target="#editET">
-            <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
-            <p>编辑基本信息</p>
-          </div>
+    <div v-if="selectedETType" class="et-operation clearfloat">
+        <div class="et-operation-item" @click="openEditCategoryDialog">
+          <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+          <p>编辑基本信息</p>
         </div>
-        <div class="operateItem">
-          <div class="clickDiv" id="deleteETButton">
-            <img src="/static/image/icon_shanchu.png" alt="">
-            <p>删除</p>
-          </div>
+        <div class="et-operation-item">
+          <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
+          <p>删除</p>
         </div>
-      </div>
-      <div class="second clearfloat">
-        <div class="operateItem">
-          <div class="clickDiv" id="editETShowInfoButton" data-toggle="modal" data-target="#editDisplayInfo">
+        <div class="et-operation-item">
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
             <p>编辑展示信息</p>
-          </div>
         </div>
-        <div class="operateItem shangjia">
-          <div class="clickDiv modifyStateButton">
+        <div class="et-operation-item">
             <img src="/static/image/icon_shangjia.png" alt="">
             <p>上架到直销网站</p>
-          </div>
         </div>
-      </div>
     </div>
-    <div class="mainOperate operate">
-      <div class="first clearfloat">
-        <div class="operateItem">
-          <div class="clickDiv" data-toggle="modal" data-target="#editET">
+    <div v-if="selectedETId" class="et-operation">
+        <div class="et-operation-item"  @click="openCreateCategoryDialog">
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
             <p>新增娱乐规格</p>
-          </div>
         </div>
-        <div class="operateItem">
-          <div class="clickDiv" data-toggle="modal" data-target="#editET">
+        <div class="et-operation-item">
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
             <p>编辑基本信息</p>
-          </div>
         </div>
-        <div class="operateItem">
-          <div class="clickDiv">
-            <img src="/static/image/icon_shanchu.png" alt="">
+        <div class="et-operation-item">
+            <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
             <p>删除</p>
-          </div>
         </div>
-
-      </div>
-
+    </div>
     </div>
   </div>
 </div>

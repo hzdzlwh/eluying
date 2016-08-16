@@ -2,14 +2,16 @@
  * Created by lingchenxuan on 16/6/12.
  */
 var webpack = require('webpack'),
-    path = require('path');
+    path = require('path'),
+    HappyPack = require('happypack');
 var webpackConf =  {
     plugins: [
         new webpack.ProvidePlugin({
             '$': 'jquery',
             'jQuery': 'jquery'
         }),
-        new webpack.optimize.CommonsChunkPlugin('common.js')
+        new webpack.optimize.CommonsChunkPlugin('common.js'),
+        new HappyPack({ id: 'js', threads: 4 })
     ],
     entry: {
         'login/login': './static/js/app/src/login/login.js',
@@ -46,7 +48,7 @@ var webpackConf =  {
     },
     module: {
         loaders: [
-            { test: /\.js$/, loader: 'babel', include: path.join(__dirname, './static/js/app/src') },
+            { test: /\.js$/, loader: 'babel', include: path.join(__dirname, './static/js/app/src'), happy: { id: 'js' } },
             {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] }
         ]
     },
