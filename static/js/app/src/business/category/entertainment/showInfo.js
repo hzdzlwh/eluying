@@ -131,10 +131,11 @@ var showInfo = {
         },
         //编辑展示信息
         "click #editETShowInfoButton": function () {
-            $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0)").html());
+            console.log('hh')
+            $("#editDisplayInfo h1").html("编辑展示信息-" + $(".ET-type-selected .et-category-name").html());
             $(".detail .photoContainer").html("");
             $(".cover .photoContainer").html("");
-            var id = $(".mainActive .id").val();
+            var id = $(".ET-type-selected .id").val();
             showInfo.pullETShowInfo(id);
         },
 

@@ -14,6 +14,12 @@
 .et-table {
   border-radius: 2px;
   width: 100%;
+  th:not(:first-of-type) {
+    width: 68.7px
+  }
+  .et-fixed-td {
+    width: 56.7px;
+  }
   //border-collapse: separate;
   tr {
     height: 48px;
@@ -184,6 +190,9 @@
   button {
     width: 100px;
   }
+  .rest-tips {
+      margin-left: 108px !important;
+  }
 }
 .et-optional {
   opacity: 0.5;
@@ -201,6 +210,7 @@
     border-top: 1px solid #178ce6;
     border-bottom: 1px solid #178ce6;
   }
+  
   td:last-child {
     border-right: 1px solid #178ce6;
   }

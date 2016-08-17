@@ -68,12 +68,16 @@ var foodETPriceList = {
         var tbody = "<tbody>";
         for (var name in result.data) {
             for (var subName in result.data[name]) {
+                var price = subName === 0 ? result.data[name][subName].salePrice : result.data[name][subName].netPrice;
+                var priceHtml = result.data[name][subName].chargeMode
+                    ? price + '元/'+ (result.data[name][subName].chargeUnitTime==1?'':result.data[name][subName].chargeUnitTime) + ['分钟','小时'][result.data[name][subName].chargeUnit]
+                    : price + '元/' + result.data[name][subName].unit;                
                 if (subName == 0) {
-                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + result.data[name][subName].salePrice + "</td></tr>"
+                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + priceHtml + "</td></tr>"
                 } else {
                     tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
-                        + result.data[name][subName].netPrice + "</p></div></td></tr>"
+                        + priceHtml + "</p></div></td></tr>"
                 }
             }
         }
@@ -168,11 +172,16 @@ var foodETPriceList = {
                 $(".second").removeClass("hide");
             },
             "click #editSalePriceButton": function(){
-                $("#retailPrice").val($("td.selected").html());
+                var array = $("td.selected").html().split('元')
+                $("#retailPrice").val(array[0])
+                .next('.unit').html('元' + array[1]);
+                
             },
             "click #editNetPriceButton": function(){
-                $("#netPrice").val($("td.selected").find("p:eq(0)").html());
-                $("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
+                var array = $("td.selected").find("p:eq(0)").html().split('元');
+                $("#netPrice").val(array[0])
+                .next('.unit').html('元' + array[1]);                
+                //$("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
             },
             "click #editSalePriceOk": function(){
                 var that = this
