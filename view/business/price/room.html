@@ -27,6 +27,7 @@
           <h1>旺季</h1>
 
           <div>从
+            <!-- 我怎么会写这么蠢的东西 -->
             <select class="monthSelect" id="busyStartMonth" name="busyStartMonth">
               <option value="01">01</option>
               <option value="02">02</option>
@@ -225,10 +226,10 @@
           </div>
         </div>
 
-        <div class="seasonOperate operate">
+        <div class="seasonOperate operate busy-operate">
           <div class="first">
             <div class="operateItem hide">
-              <div class="clickDiv" id="editSeasonSalePriceButton" data-toggle="modal"
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
                    data-target="#editSeasonSalePrice">
                 <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
 
@@ -236,7 +237,28 @@
               </div>
             </div>
             <div class="operateItem hide">
-              <div class="clickDiv" id="editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="seasonOperate operate slack-operate" style="position:absolute;top: 633px;right: 0px;">
+          <div class="first">
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
+                   data-target="#editSeasonSalePrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
                 <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
 
                 <p>修改价格</p>
