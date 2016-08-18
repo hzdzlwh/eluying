@@ -134,7 +134,8 @@ var orderEditCtrl = function(app){
                         { fee: orderEdit.discounts, payChannel: "优惠", payChannelId: -1, type: 5 }
                     ]),
                     rooms: JSON.stringify(rooms),
-                    items: JSON.stringify(items)
+                    items: JSON.stringify(items),
+                    foodItems: [],
                 };
                 if(orderEdit.idVal){
                     order.customerIdCardArr = JSON.stringify([
