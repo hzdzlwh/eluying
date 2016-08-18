@@ -86,7 +86,7 @@ var checkinCtrl = function(app){
                     payments: JSON.stringify([]),
                     rooms: JSON.stringify(postRooms),
                     items: JSON.stringify(items),
-                    foodItems: [],
+                    foodItems: JSON.stringify([]),
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){

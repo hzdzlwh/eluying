@@ -165,7 +165,7 @@ var accommodationCtrl = function(app){
                     payments: JSON.stringify([]),
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
-                    foodItems: [],
+                    foodItems: JSON.stringify([])
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', orderItem, function(result3){
                     if(result3.code === 1){

@@ -135,7 +135,7 @@ var orderEditCtrl = function(app){
                     ]),
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
-                    foodItems: [],
+                    foodItems: JSON.stringify([]),
                 };
                 if(orderEdit.idVal){
                     order.customerIdCardArr = JSON.stringify([
