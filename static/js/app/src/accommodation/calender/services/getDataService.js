@@ -71,17 +71,32 @@ var getDataService = function(app){
         this.getPayChannels = function(callback){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
-                var map = result.data.map;
-                if(map.alipaySelected){
-                   // payChannels.push({
-                   //     channelId: -6,
-                   //     name: '支付宝'
-                   // });
-                }else if(map.walletPaySelected){
-                   payChannels.push({
-                       channelId: -8,
-                       name: '订单钱包'
-                   });
+                var map = result.data;
+                var walletOpenAndUseStateList = map.walletOpenAndUseStateList;
+                for (var key in walletOpenAndUseStateList) {
+                   if (map.onlineCollectionMethod === 1 &&
+                       walletOpenAndUseStateList[key].onlineType === 2
+                       && walletOpenAndUseStateList[key].openState === 1 
+                       && walletOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -8,
+                            name: '订单钱包'
+                        });
+                        break;
+                   } 
+                }
+                var enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
+                for (var key in enterpriseOpenAndUseStateList) {
+                    if (map.onlineCollectionMethod === 2 &&
+                        enterpriseOpenAndUseStateList[key].onlineType === 2
+                        && enterpriseOpenAndUseStateList[key].openState === 1
+                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -6,
+                            name: '企业支付宝'
+                        });
+                        break;
+                    }
                 }
                 payChannels.push({
                     channelId: -1,

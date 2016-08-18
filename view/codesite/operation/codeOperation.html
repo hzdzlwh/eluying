@@ -39,7 +39,7 @@
                             <td><div class="dot-{{ selfRechargeTypeStyle }} dot"></div><div class="c-status" v-text="selfRechargeTypeStr"></div></td>
                             <td style="width: 350px; text-align: right;">
                                 <div class="c-btn" v-if="!wapPayStatus" v-text="wapPayTypeStr" @click="modifySelfChargeStatus"></div>
-                                <div class="cbtn-grey" v-if="wapPayStatus" @mouseenter="tipsShow" @mouseleave="tipsHide">启用
+                                <div class="cbtn-grey" v-if="wapPayStatus">启用
                                     <div class="tips">请先<a href="/view/setting/method/method.html">开启手机网站支付</a></div>
                                     <span class="tips-arrow"><img src="http://static.dingdandao.com/csite-arrow.jpg" alt=""></span>
                                 </div>

@@ -113,42 +113,84 @@ $(function(){
                         }.bind(this));
                         break;
                     case 'wallet':
-                        AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', { status: (this.walletStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code === 1){
-                                this.walletStatus = (this.walletStatus === 'open') ? 'close' : (function(){
-                                    if (this.companyStatus === 'open'){
-                                        this.companyStatus = 'close';
-                                    }
-                                    return 'open'
-                                }).bind(this)();
-                                if (this.walletStatus === 'close'){
-                                    this.w_webPayStatus = 'close';
-                                    this.w_facePayStatus = 'close';
-                                    this.w_immediaPayStatus = 'close';
-                                }
-                            }else{
-                                modal.somethingAlert(result.msg);
-                            }
-                        }.bind(this));
-                        break;
-                    case 'company':
-                        AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: (this.companyStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code === 1){
-                                this.companyStatus = (this.companyStatus === 'open') ? 'close' : (function(){
-                                    if (this.walletStatus === 'open'){
-                                        this.walletStatus = 'close';
-                                    }
-                                    return 'open'
-                                }).bind(this)();
-                                if (this.companyStatus === 'close'){
+                        if (this.companyStatus === 'open'){
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: 0 }, function(result){
+                                if(result.code === 1){
+                                    this.companyStatus = 'close';
                                     this.c_webPayStatus = 'close';
                                     this.c_facePayStatus = 'close';
                                     this.c_immediaPayStatus = 'close';
+                                    AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', {status: (this.walletStatus === 'close' ? 1 : 0)}, function (result) {
+                                        if (result.code === 1) {
+                                            this.walletStatus = (this.walletStatus === 'close') ? 'open' : (function () {
+                                                this.w_webPayStatus = 'close';
+                                                this.w_facePayStatus = 'close';
+                                                this.w_immediaPayStatus = 'close';
+                                                return 'close'
+                                            }).bind(this)()
+                                        } else {
+                                            modal.somethingAlert(result.msg);
+                                        }
+                                    }.bind(this));
+                                }else{
+                                    modal.somethingAlert(result.msg);
                                 }
-                            }else{
-                                modal.somethingAlert(result.msg);
-                            }
-                        }.bind(this));
+                            }.bind(this));
+                        }
+                        if (this.companyStatus === 'close') {
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', {status: (this.walletStatus === 'close' ? 1 : 0)}, function (result) {
+                                if (result.code === 1) {
+                                    this.walletStatus = (this.walletStatus === 'close') ? 'open' : (function () {
+                                        this.w_webPayStatus = 'close';
+                                        this.w_facePayStatus = 'close';
+                                        this.w_immediaPayStatus = 'close';
+                                        return 'close'
+                                    }).bind(this)()
+                                } else {
+                                    modal.somethingAlert(result.msg);
+                                }
+                            }.bind(this));
+                        }
+                        break;
+                    case 'company':
+                        if (this.walletStatus === 'open'){
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', { status: 0 }, function(result){
+                                if(result.code === 1){
+                                    this.walletStatus = 'close';
+                                    this.w_webPayStatus = 'close';
+                                    this.w_facePayStatus = 'close';
+                                    this.w_immediaPayStatus = 'close';
+                                    AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: (this.companyStatus === 'close'  ? 1 : 0) }, function(result){
+                                        if(result.code === 1){
+                                            this.companyStatus = (this.companyStatus === 'close') ? 'open' : (function () {
+                                                this.c_webPayStatus = 'close';
+                                                this.c_facePayStatus = 'close';
+                                                this.c_immediaPayStatus = 'close';
+                                                return 'close'
+                                            }).bind(this)()
+                                        }else{
+                                            modal.somethingAlert(result.msg);
+                                        }
+                                    }.bind(this));
+                                }else{
+                                    modal.somethingAlert(result.msg);
+                                }
+                            }.bind(this));
+                        }
+                        if (this.walletStatus === 'close') {
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', {status: (this.companyStatus === 'close' ? 1 : 0)}, function (result) {
+                                if (result.code === 1) {
+                                    this.companyStatus = (this.companyStatus === 'close') ? 'open' : (function () {
+                                        this.c_webPayStatus = 'close';
+                                        this.c_facePayStatus = 'close';
+                                        this.c_immediaPayStatus = 'close';
+                                        return 'close'
+                                    }).bind(this)()
+                                } else {
+                                    modal.somethingAlert(result.msg);
+                                }
+                            }.bind(this));
+                        }
                         break;
                     case 'web-w':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 1, status: (this.w_webPayStatus === 'close'  ? 1 : 0) }, function(result){
@@ -390,9 +432,10 @@ $(function(){
                             $('#method-confirmSubmit').modal('hide');
                             $('#ali-immediaPay').modal('hide');
                             mainContainer.c_immediaObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
-                                setTimeout(function(){
+                            mainContainer.c_immediaPayStatus = 'close';
+                            setTimeout(function(){
                                 $('#method-submitSuccess').modal('hide');
-                            },2000)
+                            },2000);
                         }else{
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
@@ -406,7 +449,8 @@ $(function(){
                             $('#method-confirmSubmit').modal('hide');
                             $('#ali-facePay').modal('hide');
                             mainContainer.c_faceObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
-                                setTimeout(function(){
+                            mainContainer.c_facePayStatus = 'close';
+                            setTimeout(function(){
                                 $('#method-submitSuccess').modal('hide');
                             },2000)
                         }else{
@@ -423,7 +467,8 @@ $(function(){
                             $('#company-aliPay').modal('hide');
                             mainContainer.c_aliObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
                             mainContainer.c_webObj = { typeId: -1, typeStr: '未开通', typeStyle: 'grey', operationStr: '绑定账号' };
-                                setTimeout(function(){
+                            mainContainer.c_webPayStatus = 'close';
+                            setTimeout(function(){
                                 $('#method-submitSuccess').modal('hide');
                             },2000)
                         }else{
@@ -455,6 +500,7 @@ $(function(){
                         $("#method-wechatMethod").modal("hide");
                         mainContainer.c_weChatObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
                         mainContainer.c_webObj = { typeId: -1, typeStr: '未开通', typeStyle: 'grey', operationStr: '绑定账号' };
+                        mainContainer.c_webPayStatus = 'close';
                     }
                 });
             }
