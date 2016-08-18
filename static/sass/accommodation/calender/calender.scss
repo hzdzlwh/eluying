@@ -2407,6 +2407,17 @@ object{
             text-align: right;
           }
         }
+        .subtype.fun, .subtype.goods{
+          td:nth-child(2){
+            width: 108px;
+            text-align: right;
+          }
+          td:nth-child(3){
+            padding-left: 18px;
+            width: 199px;
+            text-align: left;
+          }
+        }
         .subtype.food{
           td:nth-child(1){
             width: 132px;
