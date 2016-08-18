@@ -92,6 +92,7 @@ $(function(){
             },
             openCreateCategoryDialog() {
                 ETTypeDialog.status = 1;
+                ETTypeDialog.entertainmentId = this.selectedETId;
                 $('#createETDialog').modal('show');  
             },
             /**
@@ -230,6 +231,7 @@ $(function(){
                 })
             },
             addOrEditEntertainmentCategory() {
+                this.ETType.price = this.ETType.chargeMode == 0 ? this.perPay : this.timePay;                
                  if (this.$isNull(this.ETType.entertainmentCategoryName)
                     || this.$isNull(this.ETType.entertainmentCategoryShort)
                     || this.$isNull(this.ETType.unit)
@@ -238,7 +240,8 @@ $(function(){
                     || this.$isNull(this.ETType.price)) {
                     return
                 }
-                AJAXService.ajaxWithToken('post', '/entertainment/addOrEditEntertainmentCategory', this.ETType, res => {
+                const data = Object.assign({}, this.ETType, {entertainmentId: this.ETType.deleteId || this.entertainmentId});
+                AJAXService.ajaxWithToken('post', '/entertainment/addOrEditEntertainmentCategory', data, res => {
                     if (res.code === 1) {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
