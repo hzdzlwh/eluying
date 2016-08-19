@@ -48,9 +48,9 @@ var orderDetailCtrl = function(app){
                 $("#orderDetailModal").modal("hide");
                 $("#checkoutAdModal").modal("show");
             };
-            scope.showGetMoney = function(){
+            scope.showGetMoney = function(isOrderDetail){
                 var orderDetail = rootScope.orderDetail;
-                rootScope.getMoney = getMoneyService.resetGetMoney(orderDetail, orderDetail.orderId, 1);
+                rootScope.getMoney = getMoneyService.resetGetMoney(orderDetail, orderDetail.orderId, 1, undefined, undefined, isOrderDetail);
                 $("#orderDetailModal").modal("hide");
                 $("#getMoneyModal").modal("show");
             };
