@@ -54,6 +54,9 @@ var orderDetailCtrl = function(app){
                 $("#orderDetailModal").modal("hide");
                 $("#getMoneyModal").modal("show");
             };
+            
+            scope.showRoomPeopleModal = orderService.showRoomPeopleModal;
+
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
             scope.itemsExist = orderService.itemsExist;

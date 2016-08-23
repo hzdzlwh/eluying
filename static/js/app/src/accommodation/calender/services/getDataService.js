@@ -5,6 +5,7 @@ require("angular");
 var constService = require("./constService");
 var accommodationService = require("./accommodationService");
 var orderDetailService = require("./orderDetailService");
+var idcObj = require("../ieidc");
 
 var getDataService = function(app){
     constService(app);
@@ -111,7 +112,7 @@ var getDataService = function(app){
             });
         };
         this.getOrderDetail = function(orderId, scope){
-            AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+            return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
                 orderId: orderId,
                 version: 7
             }, function(result){

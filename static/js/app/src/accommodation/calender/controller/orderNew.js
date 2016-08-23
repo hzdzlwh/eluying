@@ -66,9 +66,9 @@ var orderNewCtrl = function(app){
             if(orderNewCustomerPhone.$invalid){
                 flag = true;
             }
-            if(orderNewId.$invalid){
-                flag = true;
-            }
+            // if(orderNewId.$invalid){
+            //     flag = true;
+            // }
             if(!validateService.checkRemark(orderNew.remark)){
                 flag = true;
             }
