@@ -70,8 +70,8 @@ var foodETPriceList = {
             for (var subName in result.data[name]) {
                 var price = subName === 0 ? result.data[name][subName].salePrice : result.data[name][subName].netPrice;
                 var priceHtml = result.data[name][subName].chargeMode
-                    ? price + '元/'+ (result.data[name][subName].chargeUnitTime==1?'':result.data[name][subName].chargeUnitTime) + ['分钟','小时'][result.data[name][subName].chargeUnit]
-                    : price + '元/' + result.data[name][subName].unit;                
+                    ? '<span class="j-price">' + price + '</span>' + '<span class="j-unit">' + '元/'+ (result.data[name][subName].chargeUnitTime==1?'':result.data[name][subName].chargeUnitTime) + ['分钟','小时'][result.data[name][subName].chargeUnit] + '</span>'
+                    : '<span class="j-price">' + price + '</span>' + '<span class="j-unit">' + '元/' + result.data[name][subName].unit + '</span>';                
                 if (subName == 0) {
                     tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + priceHtml + "</td></tr>"
                 } else {
@@ -113,7 +113,7 @@ var foodETPriceList = {
             channelId: 0
         },function(result){
             if (util.errorHandler(result)) {
-                $("td.selected").html($("#retailPrice").val());
+                $("td.selected").find('.j-price').html($("#retailPrice").val());
                 modal.clearModal(that);
             }
         });
@@ -147,8 +147,7 @@ var foodETPriceList = {
             channelId: $("td.selected").attr("channel-id")
         },function(result){
             if (util.errorHandler(result)) {
-                $("td.selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $("td.selected").find("p:eq(0)").html($("#netPrice").val());
+                $("td.selected").find('.j-price').html($("#netPrice").val());
                 modal.clearModal(that);
             }
         })
@@ -173,14 +172,13 @@ var foodETPriceList = {
             },
             "click #editSalePriceButton": function(){
                 var array = $("td.selected").html().split('元')
-                $("#retailPrice").val(array[0])
-                .next('.unit').html('元' + array[1]);
-                
+                $("#retailPrice").val($("td.selected").find('.j-price').html())
+                .next('.unit').html($("td.selected").find('.j-unit').html());  
             },
             "click #editNetPriceButton": function(){
                 var array = $("td.selected").find("p:eq(0)").html().split('元');
-                $("#netPrice").val(array[0])
-                .next('.unit').html('元' + array[1]);                
+                $("#netPrice").val($("td.selected").find('.j-price').html())
+                .next('.unit').html($("td.selected").find('.j-unit').html());                
                 //$("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
             },
             "click #editSalePriceOk": function(){
