@@ -41,7 +41,7 @@ var getMoneyService = function(app){
             return left.toFixed(2);
         };
         this.calLeft = calLeft;
-        this.resetGetMoney = function(order, orderId, type, asyncObj, isLast){
+        this.resetGetMoney = function(order, orderId, type, asyncObj, isLast, isOrderDetail){
             var getMoney = {};
             for(var key in order){
                 getMoney[key] = order[key];
@@ -54,6 +54,7 @@ var getMoneyService = function(app){
                     type: 4, fee: asyncObj.penaltyAd
                 });
             }
+            getMoney.isOrderDetail = isOrderDetail; //订单详情中进入收银不能收押金
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
             getMoney.isLast = isLast; //

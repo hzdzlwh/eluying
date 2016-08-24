@@ -41,6 +41,9 @@ var getMoneyCtrl = function(app){
             scope.addPayment = getMoneyService.addPayment;
             scope.deletePayment = getMoneyService.deletePayment;
             scope.changePayChannel = getMoneyService.changePayChannel;
+            scope.isOrderDetail = function() {
+                return rootScope.getMoney && rootScope.getMoney.isOrderDetail;
+            }
             scope.finishPay = function(){
                 var getMoney = rootScope.getMoney;
                 //直接提交

@@ -130,7 +130,7 @@ var AJAXService = {
             var strMD5 = md5(str);
             data.sign = strMD5;
         }
-        $.ajax({
+        return $.ajax({
             type: method,
             url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
             async: asy,

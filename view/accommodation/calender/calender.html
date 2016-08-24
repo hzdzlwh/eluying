@@ -150,6 +150,53 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<!-- 入住人窗口开始 -->
+<div class="modal fade" role="dialog" id="roomPeopleModal" ng-controller="roomPeopleCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="top-fixed">
+                <div class="hr"></div>
+                <div class="sheader">
+                    <div class="stitle">
+                        {{roomName}}
+                    </div>
+                    <span class="modal-close">&times;</span>
+                    <div class="hr2"></div>
+                </div>
+                <div class="main-container">
+                    <div class="room-people-titlejj">
+                        <span style="font-size:12px">入住人信息</span>
+                        <div class="room-people-readCard readBtn" ng-click="beginReadId()">读卡添加</div>
+                        <div class="room-people-hand" ng-click="addPerson()">手动添加</div>
+                    </div>
+                    <div ng-repeat="person in idCardList">
+                        <div class="room-one-person">
+                            <label for="">姓名</label>
+                            <input type="text" placeholder="姓名" ng-model="person.name" ng-disabled="person.read">
+                            <div class="select1">
+                                <span ng-click="person.read&&$event.stopPropagation()">{{person.selectedIdLabel || '身份证'}}</span>
+                                <div class="select1_options">
+                                    <div class="oitem"
+                                            ng-click="changeIds(id.key, id.label, person);$event.stopPropagation();"
+                                            ng-repeat="id in idList">{{id.label}}</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="证件号码" ng-model="person.idCardNum" ng-disabled="person.read">
+                            <i ng-click="deletePerson($index)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-fixed">
+                    <div class="btns">
+                        <div class="cancel-button" ng-click="closeRoomPeopleDialog()">取消</div>
+                        <div class="confirm-button" ng-click="submit()">确认</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 入住人窗口结束 -->
 <div class="modal fade" role="dialog" id="orderDetailModal" ng-controller="orderDetailCtrl">
     <div class="modal-dialog">
         <div class="modal-content" ng-if="orderDetail">
@@ -188,10 +235,6 @@
                                 <td>{{orderDetail.customerName}}</td>
                                 <td>手机号</td>
                                 <td>{{orderDetail.customerPhone}}</td>
-                            </tr>
-                            <tr>
-                                <td ng-if="orderDetail.selectedId!==undefined">{{orderDetail.selectedIdLabel}}</td>
-                                <td ng-if="orderDetail.selectedId!==undefined">{{orderDetail.idVal}}</td>
                                 <td>渠道</td>
                                 <td>{{orderDetail.origin}}</td>
                             </tr>
@@ -216,6 +259,16 @@
                                     </div>
                                     <div class="eluyun_finish2-small_outer spriteImg" ng-if="r.state === 2">
                                         <div class="eluyun_finish2-small"></div>
+                                    </div>
+                                    <div class="room-people-actived spriteImg"
+                                        ng-if="r.state === 0 || r.state === 1"
+                                        ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
+                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
+                                    </div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
+                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
                                 <td>
@@ -440,7 +493,7 @@
                          ng-click="showCheckout()">办理退房</div>
                     <div class="sbtn" ng-if="orderDetail.checkinable"
                          ng-click="showCheckin()">办理入住</div>
-                    <div class="sbtn" ng-click="showGetMoney();"
+                    <div class="sbtn" ng-click="showGetMoney(orderDetail.checkoutable);"
                          ng-if="orderDetail.getMoneyable">收银</div>
                 </div>
             </div>
@@ -689,7 +742,9 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;
+                        <!--<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div>-->
+                    </div>
                     <form action="" name="orderNewForm" id="orderNewForm">
                         <table>
                             <tr>
@@ -712,8 +767,18 @@
                                     <div class="tips warning" ng-if="orderNewForm.orderNewCustomerPhone.$dirty
                                 && orderNewForm.orderNewCustomerPhone.$error.required">必填字段</div>
                                 </td>
+                                <td>渠道</td>
+                                <td>
+                                    <div class="select1">
+                                        <span>{{orderNew.origin}}</span>
+                                        <div class="select1_options">
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
+                                                 ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderNew.selectedIdLabel}}</span>
@@ -727,17 +792,7 @@
                                 <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderNewId" max-length="18"
                                            ng-model="orderNew.idVal">
                                 </td>
-                                <td>渠道</td>
-                                <td>
-                                    <div class="select1">
-                                        <span>{{orderNew.origin}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
-                                                 ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>-->
                         </table>
                     </form>
                     <div class="hr2"></div>
@@ -961,7 +1016,9 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;
+                        <!--<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div>-->
+                    </div>
                     <form action="" name="orderEditForm" id="orderEditForm">
                         <table>
                             <tr>
@@ -984,8 +1041,18 @@
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerPhone.$dirty
                                 && orderEditForm.orderEditCustomerPhone.$error.required">必填字段</div>
                                 </td>
+                                <td>渠道</td>
+                                <td>
+                                    <div class="select1">
+                                        <span>{{orderEdit.origin}}</span>
+                                        <div class="select1_options">
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
+                                                 ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderEdit.selectedIdLabel || '身份证'}}</span>
@@ -999,23 +1066,20 @@
                                 <td><input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderEditId" max-length="18"
                                            ng-model="orderEdit.idVal">
                                 </td>
-                                <td>渠道</td>
-                                <td>
-                                    <div class="select1">
-                                        <span>{{orderEdit.origin}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
-                                                 ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>-->
                         </table>
                     </form>
                 </div>
                 <div class="hr2" ng-if="orderEdit.rooms.length > 0"></div>
                 <div class="subtype room" ng-if="orderEdit.rooms.length > 0">
-                    <div class="sub-title">房间信息</div>
+                    <div class="sub-title">房间信息
+                        <div class="sadd" ng-click="addItem(2, funList, orderEdit)">
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
+                            </div>
+                            添加房间
+                        </div>
+                    </div>
                     <table>
                         <tr ng-repeat="r in orderEdit.rooms">
                             <td>
@@ -1796,6 +1860,16 @@
                                     <div class="eluyun_finish2-small_outer spriteImg" ng-if="r.state === 2">
                                         <div class="eluyun_finish2-small"></div>
                                     </div>
+                                    <div class="room-people-actived spriteImg"
+                                        ng-if="r.state === 0 || r.state === 1"
+                                        ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
+                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
+                                    </div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
+                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="light">入住</span>
@@ -2263,7 +2337,7 @@
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 0">
+                    <div class="item item_small" ng-if="getMoney.depositMode === 0 && !isOrderDetail()">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_add_outer spriteImg">
