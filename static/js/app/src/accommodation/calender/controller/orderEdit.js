@@ -78,9 +78,9 @@ var orderEditCtrl = function(app){
                 if(orderEditCustomerPhone.$invalid){
                     flag = true;
                 }
-                if(orderEditId.$invalid){
-                    flag = true;
-                }
+                // if(orderEditId.$invalid){
+                //     flag = true;
+                // }
                 if(!validateService.checkRemark(orderEdit.remark)){
                     flag = true;
                 }

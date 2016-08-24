@@ -29,6 +29,10 @@ var orderService = function(app){
                 duration: 1
             }
         };
+        this.showRoomPeopleModal = function(idCardList, serviceId, orderId, roomName) {
+            rootScope.$broadcast('showRoomPeopleModal', idCardList, serviceId, orderId, roomName);
+            $('#roomPeopleModal').modal('show');
+        };
         this.changeIds = function(method, methodLabel, order){
             order.selectedId = method;
             order.selectedIdLabel = methodLabel;

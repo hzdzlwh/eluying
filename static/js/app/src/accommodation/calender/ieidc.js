@@ -81,6 +81,7 @@ idcObj.read = function(timeout, type, scope){
         //- 阅读数据写入input
         var name = this.data.IDname;
         var num = this.data.IDCardNo;
+        scope.$broadcast('read', name, num);
         if(type === 0){
             scope.orderNew.customerName = name;
             scope.orderNew.idVal = num;

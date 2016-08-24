@@ -36,7 +36,7 @@ var accommodationCtrl = function(app){
             rootScope.entryRowsMax = constService.entryRowsMax;
             rootScope.update = function(){};
             rootScope.showOrderDetail = function(orderId){
-                getDataService.getOrderDetail(orderId, rootScope);
+                return getDataService.getOrderDetail(orderId, rootScope);
             };
             rootScope.closeRoom = function(open, rid, dateItem){
                 if(rootScope.selectedEntries[rid + dateItem.date]){

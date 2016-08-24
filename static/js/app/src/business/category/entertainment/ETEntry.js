@@ -51,7 +51,7 @@ $(function(){
         el: '.mainContainer',
         data: {
             selectedETId: undefined,
-            selectedETType: undefined,
+            selectedETCategoryId: undefined,
             ETTypeList: [],
             originData: []
         },
@@ -65,10 +65,10 @@ $(function(){
             },
             selectET: function(id) {
                 this.selectedETId = id;
-                this.selectedETType = undefined;
+                this.selectedETCategoryId = undefined;
             },
-            selectETType: function(type) {
-                this.selectedETType = type;
+            selectETCategory: function(id) {
+                this.selectedETCategoryId = id;
                 this.selectedETId = undefined;
             },
             openEditTypeDialog() {
@@ -82,7 +82,8 @@ $(function(){
             },
             openEditCategoryDialog() {
                 ETTypeDialog.status = 2;
-                ETTypeDialog.ETType = Object.assign({}, this.selectedETType);
+                var type = this.ETTypeList.filter(el => el.entertainmentCategoryId === this.selectedETCategoryId)[0];
+                ETTypeDialog.ETType = Object.assign({}, type);
                 if (ETTypeDialog.ETType.chargeMode == 0) {
                     ETTypeDialog.perPay = ETTypeDialog.ETType.price;
                 } else {
@@ -185,12 +186,14 @@ $(function(){
             },
             perPay: '',
             timePay: '',
-            status: '', //0-创建娱乐规格；1-新增娱乐项目；2-编辑娱乐项目；3-编辑娱乐规格
+            status: '', //0-创建娱乐项目；1-新增娱乐规格；2-编辑娱乐规格;3-编辑娱乐项目
             submitted: false
         },
         watch: {
             'ETType.chargeMode'(v) {
-                this.$set('ETType.extraFeeItems', v == 0 ? '设备损坏，设备丢失' : '设备损坏，设备丢失，超时');
+                if (this.status !== 2) {
+                    this.$set('ETType.extraFeeItems', v == 0 ? '设备损坏，设备丢失' : '设备损坏，设备丢失，超时');
+                }
             }
         },
         computed: {
@@ -224,7 +227,8 @@ $(function(){
                     if (res.code === 1) {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
-                        this.rest();
+                        setTimeout(this.rest, 300);
+                        // this.rest();
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -245,7 +249,7 @@ $(function(){
                     if (res.code === 1) {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
-                        this.rest();
+                        setTimeout(this.rest, 300);
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -253,7 +257,7 @@ $(function(){
             },
             closeCreateETDialog() {
                 $('#createETDialog').modal('hide');
-                this.rest();
+                setTimeout(this.rest, 300);
             },
             openIconDialog() {
                 $('#iconDialog').modal('show');
@@ -278,7 +282,7 @@ $(function(){
                     if (res.code === 1) {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
-                        this.rest();
+                        setTimeout(this.rest, 300);
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -325,8 +329,14 @@ $(function(){
                 this.iconSelected = icon;
             },
             setIcon() {
+                if (!this.iconSelected.entertainmentIconId) {
+                    modal.somethingAlert('请选择图标');
+                    return false;
+                }
+                
                 ETTypeDialog.$set('ETType.entertainmentIconId', this.iconSelected.entertainmentIconId);
                 ETTypeDialog.$set('ETType.entertainmentImgUrl', this.iconSelected.entertainmentImgUrl);
+
                 $('#iconDialog').modal('hide');                
             }
         }

@@ -24,6 +24,7 @@ var checkinCtrl = function(app){
             scope.calDeposit = orderService.calDeposit;
             scope.calLeft = orderService.calLeft;
             scope.deleteFood = orderService.deleteFood;
+            scope.showRoomPeopleModal = orderService.showRoomPeopleModal;
             scope.submitCheckin = function(){
                 var checkin = rootScope.checkin;
                 var rooms = checkin.rooms;

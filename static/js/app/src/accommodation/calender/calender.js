@@ -29,7 +29,7 @@ var checkoutCtrl = require('./controller/checkout');
 var checkoutAdCtrl = require('./controller/checkoutAd');
 var checkinCtrl = require('./controller/checkin');
 var getMoneyWithGunCtrl = require('./controller/getMoneyWithGun');
-
+var roomPeopleCtrl = require('./controller/roomPeople')
 $(function(){
     //初始化界面
     header.showHeader();
@@ -225,4 +225,5 @@ $(function(){
     checkoutAdCtrl(app);
     checkinCtrl(app);
     getMoneyWithGunCtrl(app);
+    roomPeopleCtrl(app);
 });
