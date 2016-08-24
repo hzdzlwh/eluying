@@ -26,6 +26,26 @@ $(function(){
 
     util.bindDomAction(events);
     var linesite = new Vue({
-
+        el: '.mainContainer',
+        data: {
+            linesiteQrCode: '',
+            linesiteUrl: ''
+        },
+        ready: function(){
+            AJAXService.ajaxWithToken('GET', '/entertainment/getEnterQueueSetting', {}, function(result){
+                this.linesiteQrCode = result.data.enterQueueQrCode;
+                this.linesiteUrl = result.data.enterQueueUrl;
+            }.bind(this));
+        },
+        methods: {
+            copyText: function(){
+                var ele = document.querySelector('#campUrl');
+                util.copyText(ele);
+                $(".copy-success").css('display', 'inline-block');
+                setTimeout(function () {
+                    $(".copy-success").css('display', 'none');
+                }, 3000);
+            }
+        }
     });
 });
