@@ -315,7 +315,23 @@ object{
             text-align: right;
           }
         }
-        .subtype.food, .subtype.fun, .subtype.goods{
+        .subtype.fun {
+          td:first-child{
+            width: 132px;
+            .sname{
+              max-width: 132px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              position: relative;
+              float: left;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+        }
+        .subtype.food, .subtype.goods{
           td:first-child{
             width: 132px;
             .sname{
@@ -1421,7 +1437,7 @@ object{
           position: relative;
           .tips{
             position: absolute;
-            left: 59px;
+            left: 40px;
             top: 32px;
             height: 17px;
             line-height: 17px;
@@ -1429,6 +1445,7 @@ object{
             text-align:left;
             opacity:0.5;
             color:#7d7d7d;
+            min-width: 133px;
           }
           .tips.warning{
             color:#f24949;
@@ -1441,7 +1458,7 @@ object{
             left: 108px;
           }
         }
-        td:nth-child(3), td:nth-child(4){
+        td:nth-child(3), td:nth-child(4), td:nth-child(5){
           .sdelete{
             position: absolute;
             width: 14px;
@@ -1545,7 +1562,57 @@ object{
           text-align: right;
         }
       }
-      .subtype.food, .subtype.fun, .subtype.goods{
+      .subtype.fun {
+        td:first-child{
+            width: 110px;
+            .select1{
+              width: 110px;
+              background-position: 93px;
+            }
+          }
+          td:nth-child(2){
+            width: 115px;
+            text-align: right;
+          }
+          td:nth-child(3){
+            padding-left: 16px;
+            width: 170px;
+            &>div {
+              line-height: 32px;
+            }
+            .minus, .plus {
+              display: inline-block;
+              width: 15px;
+              height: 22px;
+              line-height: 20px;
+              text-align: center;
+              background: #fff;
+              cursor: pointer;
+              border:1px solid #cccccc;
+              border-radius:2px;
+            }
+            .time {
+              width: 33px;
+              text-align: center;
+              display:  inline-block;
+              height: 22px;
+              line-height: 20px;
+            }
+          }
+          td:nth-child(4){
+            padding-left: 0;
+            width: 128px;
+            text-align: right;
+            input{
+              left: -15px;
+            }
+          }
+          td:nth-child(5) {
+            width: 39px;
+            text-align: right;
+          }
+      }
+      .subtype.food, .subtype.goods{
         .date-table{
           left: -30px;
         }
@@ -1799,7 +1866,57 @@ object{
 #newOrderModal{
   .modal-content {
     .main-container{
-      .subtype.food, .subtype.fun, .subtype.goods{
+      .subtype.fun {
+         td:first-child{
+            width: 110px;
+            .select1{
+              width: 110px;
+              background-position: 93px;
+            }
+          }
+          td:nth-child(2){
+            width: 115px;
+            text-align: right;
+          }
+          td:nth-child(3){
+            padding-left: 16px;
+            width: 170px;
+            &>div {
+              line-height: 32px;
+            }
+            .minus, .plus {
+              display: inline-block;
+              width: 15px;
+              height: 22px;
+              line-height: 20px;
+              text-align: center;
+              background: #fff;
+              cursor: pointer;
+              border:1px solid #cccccc;
+              border-radius:2px;
+            }
+            .time {
+              width: 33px;
+              text-align: center;
+              display:  inline-block;
+              height: 22px;
+              line-height: 20px;
+            }
+          }
+          td:nth-child(4){
+            padding-left: 0;
+            width: 128px;
+            text-align: right;
+            input{
+              left: -15px;
+            }
+          }
+          td:nth-child(5) {
+            width: 39px;
+            text-align: right;
+          }
+      }
+      .subtype.food, .subtype.goods{
         td:first-child{
           width: 110px;
           .select1{
@@ -3699,6 +3816,23 @@ object{
   .main-container {
     padding: 12px 16px;
     min-height: 100px;
+    .tips {
+      position: absolute;
+      color: #f24949;
+      font-size: 12px;
+      
+      &:nth-child(1) {
+        left: 31px;
+      }
+      &:nth-child(2) {
+        left: 240px;
+      }
+    }
+  }
+  .tips-row {
+    position: relative;
+    height: 14px;
+    margin-top: -12px;
   }
   .room-one-person {
     margin: 8px 0;
@@ -3760,11 +3894,11 @@ object{
   }
 }
 .sub-title{
-          position: relative;
-          .sadd{
-            position: absolute;
-            right: 16px;
-            top: 0;
-            cursor: pointer;
-          }
-        }
+  position: relative;
+  .sadd{
+    position: absolute;
+    right: 16px;
+    top: 0;
+    cursor: pointer;
+  }
+}

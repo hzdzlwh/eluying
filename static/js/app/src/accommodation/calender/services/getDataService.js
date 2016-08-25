@@ -25,20 +25,40 @@ var getDataService = function(app){
                 })
             });
         };
+        
+        /**
+         * 获取餐饮娱乐商超品类
+         * @param  {} callback
+         */
         this.getItems = function(callback){
-            AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
+            var plays = [];
+            var foods = [];
+            var goods = [];
+
+            var getPlays =  AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
+                .then(res => {
+                    if (res.code === 1) {
+                        res.data.list.map(el => {
+                            el.itemId = el.categoryId;
+                            el.type = 2;
+                            plays.push(el)
+                        });
+                    }
+                });
+
+            var getFoods =  AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
                 var items = result.data.list;
-                var foods = [];
-                var plays = [];
+                // var plays = [];
                 items.forEach(function(d){
                     if(d.type == 1){
                         foods.push(d);
                     }else if(d.type == 2){
-                        plays.push(d);
+                        // plays.push(d);
                     }
                 });
-                AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
-                    var goods = [];
+            });
+
+            var getGoods = AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
                     result1.data.list.forEach(function(d){
                         d.gList.forEach(function(dd){
                             goods.push({
@@ -49,13 +69,17 @@ var getDataService = function(app){
                             });
                         });
                     });
+            });
+
+            Promise.all([getPlays, getFoods, getGoods])
+                .then(() => {
                     callback({
                         foodList: foods,
                         funList: plays,
                         goodsList: goods,
                     });
                 });
-            });
+
         };
         this.getIDs = function(callback){
             var idList = [
@@ -114,7 +138,6 @@ var getDataService = function(app){
         this.getOrderDetail = function(orderId, scope){
             return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
                 orderId: orderId,
-                version: 7
             }, function(result){
                 if(result.code === 1){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);

@@ -69,6 +69,9 @@ var roomPeopleCtrl = function(app) {
             };
 
             scope.submit = function() {
+                if (roomPeopleForm.$invalid) {
+                    return
+                }
                 var idCardList = scope.idCardList.map(function(el) {
                     return {
                         name: el.name,
@@ -85,7 +88,6 @@ var roomPeopleCtrl = function(app) {
                         $('#roomPeopleModal').modal('hide');
                         rootScope.showOrderDetail(scope.orderId)
                             .then(function() {
-                                console.log('hi')
                                 rootScope.checkin = checkinService.resetCheckin(rootScope);
                                 rootScope.$apply();
                             });
