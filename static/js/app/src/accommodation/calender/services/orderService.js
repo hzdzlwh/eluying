@@ -8,6 +8,7 @@ require("angular");
 var constService = require("../services/constService");
 var calendarService = require("../services/calendarService");
 
+
 var orderService = function(app){
     constService(app);
     calendarService(app);
@@ -218,6 +219,14 @@ var orderService = function(app){
             }
 
         };
+        
+        this.addET = function(order) {
+            AJAXService.ajaxWithToken('get', '/entertainment/getCategoryList', {})
+                .then(res => {
+                    console.log(res);
+                });
+        };
+
         this.changeItem = function(order, items, item, ITEM, isGoods){
             var index = (items.indexOf(item));
             if(isGoods){
@@ -241,6 +250,10 @@ var orderService = function(app){
                     isNew: item.isNew,
                     type: 1,
                     categoryId: ITEM.itemId,
+                    chargeMode: ITEM.chargeMode, //收费模式 0-按次，1-按时间
+                    timeUnit: ITEM.timeUnit, // 时间单位，分钟、小时等
+                    unitTime: ITEM.unitTime, // 计时收费最小时间
+                    timeAmount: ITEM.unitTime,
                     name: ITEM.name,
                     price: ITEM.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
@@ -278,8 +291,32 @@ var orderService = function(app){
             if(num < 0){
                 item.amount = 0;
             }
-            if(item.inventory !== undefined && num > item.inventory){
-                item.amount = item.inventory;
+            if (item.processAmount !== undefined && num < item.processAmount) {
+                item.amount = item.processAmount;
+            }
+            var max = item.inventory > 999 ? 999 : item.inventory 
+            if(item.inventory !== undefined && num > max){
+                item.amount = max;
+            }
+        };
+        
+        /**
+         * 减少娱乐时长
+         * @param  {} item 娱乐
+         */
+        this.decreaseTimeAmount = function(item) {
+            if (item.timeAmount - item.unitTime >= item.unitTime) {
+                item.timeAmount = item.timeAmount - item.unitTime;
+            }
+        };
+        
+        /**
+         * 增加娱乐时长
+         * @param  {} item 娱乐
+         */
+        this.increaseTimeAmount = function(item) {
+            if (item.timeAmount + item.unitTime <= 999) {
+                item.timeAmount = item.timeAmount + item.unitTime;
             }
         };
         this.changeItemTime = function(item, date, sclass, order){
@@ -355,7 +392,9 @@ var orderService = function(app){
                 price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
-                price += order.playItems[i].amount * order.playItems[i].price;
+                price += order.playItems[i].amount 
+                    * order.playItems[i].price 
+                    * (order.playItems[i].chargeMode == 1 ? (order.playItems[i].timeAmount / order.playItems[i].unitTime) : 1);
             }
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
@@ -496,7 +535,6 @@ var orderService = function(app){
             AJAXService.ajaxWithToken('GET', 'cateringCancelOrderUrl', {
                 caterOrderId: food.foodOrderId,
                 payments: '[]',
-                version: 7,
                 restId: food.restId,
                 remark: ''
             }, function(result1){

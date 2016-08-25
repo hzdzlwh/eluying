@@ -50,6 +50,11 @@ var orderNewCtrl = function(app){
                 orderNew.discounts = itemPrice;
             }
         };
+
+        scope.decreaseTimeAmount = orderService.decreaseTimeAmount;
+
+        scope.increaseTimeAmount = orderService.increaseTimeAmount;
+
         scope.submitOrder = function(orderNewForm){
             orderNewForm.orderNewCustomerPhone.$setDirty();
             orderNewForm.orderNewCustomerName.$setDirty();

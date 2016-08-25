@@ -77,6 +77,10 @@ var orderDetailService = function(app){
             //});
             //orderDetail.foodsAmount = foodsAmounts;
             var plays = orderDetail.playItems;
+            plays.map(el => {
+                el.timeUnit = el.chargeUnit;
+                el.unitTime = el.chargeUnitTime;
+            })
             var playsAmounts = {};
             plays.forEach(function(d){
                 if(!playsAmounts[d.date]){

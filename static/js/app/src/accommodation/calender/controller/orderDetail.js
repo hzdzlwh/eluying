@@ -84,7 +84,6 @@ var orderDetailCtrl = function(app){
                 food.detail = {};
                 AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {
                     caterOrderId: food.foodOrderId,
-                    version: 7
                 }, function(result){
                     if(result.code === 1){
                         food.detail = result.data;

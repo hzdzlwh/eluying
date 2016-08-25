@@ -6,14 +6,15 @@ require("angular");
 var orderService = require("../services/orderService");
 var validateService = require("../services/validateService");
 var getDataService = require("../services/validateService");
+var calendarService = require('../services/calendarService');
 var idcObj = require("../ieidc");
 
 var orderEditCtrl = function(app){
     orderService(app);
     validateService(app);
     getDataService(app);
-    app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService',
-        function(rootScope, scope, orderService, validateService, getDataService){
+    app.controller("orderEditCtrl", ['$rootScope', '$scope', 'orderService', 'validateService', 'getDataService', 'calendarService',
+        function(rootScope, scope, orderService, validateService, getDataService, calendarService){
             // scope.checkPhone = validateService.checkPhone;
             scope.changeIds = orderService.changeIds;
             scope.changeChannel = orderService.changeChannel;
@@ -31,6 +32,22 @@ var orderEditCtrl = function(app){
             scope.calPrice = orderService.calPrice;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
+
+            scope.roomList = [];
+
+            scope.roomCategoryList = [];
+
+            AJAXService.ajaxWithToken('get', '/room/getRoomCategories', {}, function(res) {
+                    scope.roomCategoryList = res.data.list.map(el => ({
+                        categoryId: el.cId,
+                        categoryName: el.cName,
+                    }));
+                });
+
+            scope.decreaseTimeAmount = orderService.decreaseTimeAmount;
+
+            scope.increaseTimeAmount = orderService.increaseTimeAmount;
+
             scope.discountsChange = function(){
                 var orderEdit = rootScope.orderEdit;
                 var itemPrice = orderService.itemPrice(orderEdit);
@@ -88,21 +105,39 @@ var orderEditCtrl = function(app){
                     modal.somethingAlert("信息填写有误!");
                     return false;
                 }
+
                 var rooms = [];
                 orderEdit.rooms.forEach(function(d){
                     var room = {
                         endDate: d.endDate,
                         fee: d.fee,
-                        id: d.typeId,
+                        id: d.typeId || d.categoryId,
                         roomId: d.roomId,
                         startDate: d.startDate,
                         sub: d.sub,
                     };
                     rooms.push(room);
                 });
+
+                var playItems = [];
+                orderEdit.playItems.map(function(el) {
+                    if(el.amount === 0){
+                        return false;
+                    }
+                    var playItem = {
+                        amount: el.amount,
+                        date: el.dateStr,
+                        categoryId: el.isNew ? el.categoryId : 0,
+                        categoryName: el.name,
+                        price: el.price,
+                        timeAmount: el.timeAmount,
+                        playOrderId: el.playOrderId
+                    };
+                    playItems.push(playItem);
+                });
+
                 var items = [];
-                var oldItems = orderEdit.playItems.concat(orderEdit.goodsItems);
-                oldItems.forEach(function(d){
+                orderEdit.goodsItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;
                     }
@@ -136,6 +171,7 @@ var orderEditCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
                     foodItems: JSON.stringify([]),
+                    playItems: JSON.stringify(playItems),
                 };
                 if(orderEdit.idVal){
                     order.customerIdCardArr = JSON.stringify([
@@ -155,6 +191,130 @@ var orderEditCtrl = function(app){
                     }
                 });
             };
+
+            
+            /**
+             * 修改房型
+             * @param  {} roomCategory 欲修改的房型
+             * @param  {} room 房间
+             */
+            scope.changeRoomCategory = function(roomCategory, room) {
+                AJAXService.ajaxWithToken('get', '/room/getAvailRoomsAndPrice',
+                    {startDate: room.startDate, endDate: room.endDate, id: roomCategory.categoryId, sub: true})
+                    .then(res => {
+                        scope.roomList = res.data.list;
+                        
+                        room.roomId = res.data.list[0].roomId;
+                        room.serialNum = res.data.list[0].serialNum;
+                        room.fee = res.data.price;
+                        room.categoryName = roomCategory.categoryName;
+
+                        scope.$apply();                
+                    });
+            };
+            
+            /**
+             * 修改房间
+             * @param  {} newRoom
+             * @param  {} currentRoom
+             */
+            scope.changeRoom = function(newRoom, currentRoom) {
+                newRoom = Object.assign(currentRoom, newRoom);
+            }
+
+            scope.$watch('', function() {
+
+            });
+
+            /**
+             * 新增房间
+             */
+            scope.addRoom = function() {
+                var orderEdit = rootScope.orderEdit;
+
+                var startDate = orderEdit.rooms[0].startDate;
+
+                // 进行中的订单开始时间为今天，其他状态订单开始时间为订单开始时间,持续一晚
+                if (orderEdit.orderState === 3) {
+                    startDate = util.dateFormat(new Date());
+                } else {
+                    orderEdit.rooms.map(el => {
+                        if (util.compareDates(startDate, el.startDate)) {
+                            startDate = el.startDate;
+                        }
+                    });
+                }
+                              
+                var endDate = util.dateFormat(util.tomorrow(new Date(startDate)));
+               
+                var room = {
+                    startDate: startDate,
+                    endDate: endDate,
+                    isNew: true,
+                    state: 0,
+                    duration: 1,
+                    sub: true,
+                };
+
+                orderEdit.rooms.push(room);
+
+                // 时间变化后校验房间
+                function onDateChange() {
+                    if (!room.categoryId) {
+                        room.categoryId = scope.roomCategoryList[0].categoryId;
+                        room.categoryName = scope.roomCategoryList[0].categoryName;
+                    }
+
+                    AJAXService.ajaxWithToken('get', '/room/getAvailRoomsAndPrice',
+                        {
+                            startDate: room.startDate,
+                            endDate: room.endDate,
+                            id: room.categoryId,
+                            sub: true,
+                        })
+
+                        .then(res => {
+                            scope.roomList = res.data.list;
+
+                            var hasCurrentRoom = scope.roomList.some(el => el.roomId === room.roomId);
+
+                            // 判断是否有房间可用
+                            if (scope.roomList.length > 0) {
+                                // 如果没有房间ID或可用房间中没有当前选择的房间
+                                if (!room.roomId || !hasCurrentRoom) {
+                                    room.roomId = scope.roomList[0].roomId;
+                                    room.serialNum = scope.roomList[0].serialNum;
+
+                                    room.ostartDate = room.startDate;
+                                    room.oendDate = room.endDate;
+                                    room.sstartDate = room.startDate.substr(5, 5);
+                                    room.scanlerdarDate = room.startDate;
+                                    room.sendDate = room.endDate.substr(5, 5);
+                                    room.ecanlerdarDate = room.endDate;
+                                    
+                                    calendarService.createRoomStartDateCalendar(room);
+                                    calendarService.createRoomEndDateCalendar(room);
+                                }
+
+                                room.fee = res.data.price;
+
+                            } else {
+                                room.roomId = undefined;
+                                room.serialNum = '无可用房间';
+                                
+                            }
+                        });
+                }
+
+                scope.$watch(function () {
+                        return room.endDate;
+                    }, onDateChange);
+
+                scope.$watch(function () {
+                        return room.startDate;
+                    }, onDateChange);
+            };
+
             scope.hideModal = function(orderEditForm){
                 orderEditForm.$setPristine();
                 scope.foodToDelete = [];
