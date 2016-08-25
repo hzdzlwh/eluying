@@ -55,6 +55,11 @@ $(function(){
             ETTypeList: [],
             originData: []
         },
+        computed: {
+            selectedETCategory() {
+                return this.ETTypeList.filter(el => el.entertainmentCategoryId === this.selectedETCategoryId)[0];
+            }
+        },
         ready: function() {
             this.loadETList();
         },
@@ -82,8 +87,7 @@ $(function(){
             },
             openEditCategoryDialog() {
                 ETTypeDialog.status = 2;
-                var type = this.ETTypeList.filter(el => el.entertainmentCategoryId === this.selectedETCategoryId)[0];
-                ETTypeDialog.ETType = Object.assign({}, type);
+                ETTypeDialog.ETType = Object.assign({}, this.selectedETCategory);
                 if (ETTypeDialog.ETType.chargeMode == 0) {
                     ETTypeDialog.perPay = ETTypeDialog.ETType.price;
                 } else {

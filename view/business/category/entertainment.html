@@ -330,11 +330,11 @@
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
             <p>编辑展示信息</p>
         </div>
-        <div v-if="selectedETType && selectedETType.directNetState === 0" class="et-operation-item" @click="modifyState">
+        <div v-if="selectedETCategory && selectedETCategory.directNetState === 0" class="et-operation-item" @click="modifyState">
             <img src="/static/image/icon_shangjia.png" alt="">
             <p>上架到直销网站</p>
         </div>
-         <div v-if="selectedETType && selectedETType.directNetState === 1" class="rest-operation-item" @click="modifyState">
+         <div v-if="selectedETCategory && selectedETCategory.directNetState === 1" class="rest-operation-item" @click="modifyState">
             <img src="/static/image/icon_xiajia.png" alt="">
             <p>下架</p>
         </div>
