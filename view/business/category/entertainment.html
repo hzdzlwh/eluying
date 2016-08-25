@@ -299,20 +299,20 @@
              </div>
             <p>{{type.entertainmentName}}</p>
           </td>
-          <td class="et-category-name et-fixed-td"><p class="ellipsis et-fixed-td">{{type.entertainmentCategoryName}}</p></td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{type.entertainmentCategoryShort}}</p></td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{type.unit}}</p></td>
-          <td class="et-fixed-td">
+          <td class="et-category-name et-fixed-td" :title="type.entertainmentCategoryName"><p class="ellipsis et-fixed-td">{{type.entertainmentCategoryName}}</p></td>
+          <td class="et-fixed-td" :title="type.entertainmentCategoryShort"><p class="ellipsis et-fixed-td">{{type.entertainmentCategoryShort}}</p></td>
+          <td class="et-fixed-td" :title="type.unit"><p class="ellipsis et-fixed-td">{{type.unit}}</p></td>
+          <td class="et-fixed-td" :title="type.chargeMode ? type.price + '元/'+ (type.chargeUnitTime==1?'':type.chargeUnitTime) + ['分钟','小时'][type.chargeUnit] : type.price + '元/' + type.unit">
             <p class="ellipsis et-fixed-td">
               {{type.chargeMode ? type.price + '元/'+ (type.chargeUnitTime==1?'':type.chargeUnitTime) + ['分钟','小时'][type.chargeUnit] : type.price + '元/' + type.unit}}
             </p>
           </td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{type.inventory === 99999999 ? '——' : '99999999'}}</p></td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{['否','是'][type.needDeposit]}}</p></td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{type.fitNum || '——'}}</p></td>
-          <td class="et-fixed-td"><p class="ellipsis et-fixed-td">{{type.description}}</p></td>
+          <td class="et-fixed-td" :title="type.inventory === 99999999 ? '——' : '99999999'"><p class="ellipsis et-fixed-td">{{type.inventory === 99999999 ? '——' : '99999999'}}</p></td>
+          <td class="et-fixed-td" :title="['否','是'][type.needDeposit]"><p class="ellipsis et-fixed-td">{{['否','是'][type.needDeposit]}}</p></td>
+          <td class="et-fixed-td" :title="type.fitNum || '——'"><p class="ellipsis et-fixed-td">{{type.fitNum || '——'}}</p></td>
+          <td class="et-fixed-td" :title="type.description"><p class="ellipsis et-fixed-td">{{type.description}}</p></td>
           <input type="hidden" class="id" :value="type.entertainmentCategoryId">
-          <td class="et-fixed-td">{{['未上架','已上架'][type.directNetState]}}</td>
+          <td class="et-fixed-td" :title="['未上架','已上架'][type.directNetState]">{{['未上架','已上架'][type.directNetState]}}</td>
         </tr>
         </tbody>
       </table>
