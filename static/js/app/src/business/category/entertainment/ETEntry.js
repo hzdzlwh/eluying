@@ -123,8 +123,8 @@ $(function(){
              */
             openDeleteETCategory() {
                 let length = 0;
-                if (this.selectedETType.entertainmentId) {
-                    length = this.originData.filter(el => el.entertainmentId === this.selectedETType.entertainmentId)[0].entertainmentCategoryList.length;
+                if (this.selectedETCategory.entertainmentId) {
+                    length = this.originData.filter(el => el.entertainmentId === this.selectedETCategory.entertainmentId)[0].entertainmentCategoryList.length;
                 }
                 const message = length === 1 ? '删除最后一个娱乐规格，将把娱乐项目一起删除，确认要删除吗？' : '删除娱乐规格后，不可找回，确认要删除吗？'
                 modal.confirmDialog({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
@@ -132,10 +132,11 @@ $(function(){
             deleteETCategory() {
                 AJAXService.ajaxWithToken('post',
                     '/category/deleteOtherCategory',
-                    { id: this.selectedETType.entertainmentCategoryId,
-                      entertainmentId: this.selectedETType.deleteId },
+                    { id: this.selectedETCategory.entertainmentCategoryId,
+                      entertainmentId: this.selectedETCategory.deleteId },
                     res => {
                         if (res.code === 1) {
+                            this.selectedETCategoryId = undefined;
                             this.loadETList();
                         } else {
                             modal.somethingAlert(res.msg);
@@ -144,8 +145,8 @@ $(function(){
             },
             modifyState() {
                 const data = {
-                    id: this.selectedETType.entertainmentCategoryId,
-                    state: 1 - this.selectedETType.directNetState,
+                    id: this.selectedETCategory.entertainmentCategoryId,
+                    state: 1 - this.selectedETCategory.directNetState,
                     channelId: 5
                 }
                 AJAXService.ajaxWithToken('post','/category/modifyStatePC', data, res => {
