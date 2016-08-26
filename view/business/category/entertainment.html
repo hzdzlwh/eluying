@@ -307,7 +307,7 @@
               {{type.chargeMode ? type.price + '元/'+ (type.chargeUnitTime==1?'':type.chargeUnitTime) + ['分钟','小时'][type.chargeUnit] : type.price + '元/' + type.unit}}
             </p>
           </td>
-          <td class="et-fixed-td" :title="type.inventory === 99999999 ? '——' : '99999999'"><p class="ellipsis et-fixed-td">{{type.inventory === 99999999 ? '——' : '99999999'}}</p></td>
+          <td class="et-fixed-td" :title="type.inventory === 99999999 ? '——' : type.inventory"><p class="ellipsis et-fixed-td">{{type.inventory === 99999999 ? '——' : type.inventory}}</p></td>
           <td class="et-fixed-td" :title="['否','是'][type.needDeposit]"><p class="ellipsis et-fixed-td">{{['否','是'][type.needDeposit]}}</p></td>
           <td class="et-fixed-td" :title="type.fitNum || '——'"><p class="ellipsis et-fixed-td">{{type.fitNum || '——'}}</p></td>
           <td class="et-fixed-td" :title="type.description"><p class="ellipsis et-fixed-td">{{type.description}}</p></td>
