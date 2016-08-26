@@ -114,31 +114,36 @@ var orderNewCtrl = function(app){
             });
             var items = [];
             var entertainmentItems = [];
-            itemList.forEach(function(d, i){
+            orderNew.goodsItems.forEach(function(d, i){
                 if(d.amount === 0){
                     return false;
                 }
-                if (d.type != 1) {
-                    items.push({
-                        amount: d.amount,
-                        date: d.dateStr,
-                        id: d.categoryId,
-                        name: d.name,
-                        price: d.price,
-                        priceId: 0,
-                        type: d.type
-                    });    
-                } else {
-                    entertainmentItems.push({
-                        amount: d.amount,
-                        categoryId: d.categoryId,
-                        categoryName: d.name,
-                        date: d.dateStr,
-                        price: d.price,
-                        timeAmount: d.timeAmount,
-                    })
-                }
+                
+                items.push({
+                    amount: d.amount,
+                    date: d.dateStr,
+                    id: d.categoryId,
+                    name: d.name,
+                    price: d.price,
+                    priceId: 0,
+                    type: d.type
+                }); 
+                  
             });
+
+            orderNew.playItems.forEach(el => {
+                if(el.amount === 0){
+                    return false;
+                }
+                entertainmentItems.push({
+                    amount: el.amount,
+                    categoryId: el.categoryId,
+                    categoryName: el.name,
+                    date: el.dateStr,
+                    price: el.price,
+                    timeAmount: el.timeAmount,
+                });
+            })
             
 
             var type = 0;
