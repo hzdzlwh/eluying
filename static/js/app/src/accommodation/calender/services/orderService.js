@@ -367,7 +367,9 @@ var orderService = function(app){
                 price += order.foodItems[i].foodPrice;
             }
             for(var i = 0; i < order.playItems.length; i++){
-                price += order.playItems[i].amount * order.playItems[i].price;
+                price += order.playItems[i].amount
+                    * order.playItems[i].price
+                    * (order.playItems[i].chargeMode == 1 ? (order.playItems[i].timeAmount / order.playItems[i].unitTime) : 1);
             }
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
