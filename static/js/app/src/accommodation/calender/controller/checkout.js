@@ -22,6 +22,9 @@ var checkoutCtrl = function(app){
             scope.changeItemNum = orderService.changeItemNum;
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
+            scope.decreaseTimeAmount = orderService.decreaseTimeAmount;
+
+            scope.increaseTimeAmount = orderService.increaseTimeAmount;
             scope.errorTips = {
                 name: false,
                 phone: false,
