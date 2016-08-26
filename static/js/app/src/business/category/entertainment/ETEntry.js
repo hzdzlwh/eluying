@@ -107,6 +107,7 @@ $(function(){
             deleteET() {
                 AJAXService.ajaxWithToken('post', '/entertainment/deleteEntertainment', { entertainmentId: this.selectedETId }, res => {
                     if (res.code === 1) {
+                        this.selectedETId = undefined;
                         this.loadETList();
                     } else {
                         modal.somethingAlert(res.msg);
@@ -319,6 +320,7 @@ $(function(){
                 })
             },
             closeIconDialog() {
+                this.iconSelected = {};
                 $('#iconDialog').modal('hide');
             },
             selectIcon(icon) {
@@ -327,7 +329,7 @@ $(function(){
             setIcon() {
                 ETTypeDialog.$set('ETType.entertainmentIconId', this.iconSelected.entertainmentIconId);
                 ETTypeDialog.$set('ETType.entertainmentImgUrl', this.iconSelected.entertainmentImgUrl);
-                $('#iconDialog').modal('hide');                
+                this.closeIconDialog();          
             }
         }
     })
