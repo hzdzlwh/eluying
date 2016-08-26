@@ -951,9 +951,9 @@
                                     <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount);" ng-model="play.amount">
                                     <div class="plus" ng-click="changeItemNum(play, play.amount+1);">+</div>
                                 </div>
-                                <div class="tips">剩余库存{{play.inventory}}</div>
+                                <div class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>

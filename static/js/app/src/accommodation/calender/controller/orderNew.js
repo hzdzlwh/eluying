@@ -113,20 +113,34 @@ var orderNewCtrl = function(app){
                 rooms.push(room);
             });
             var items = [];
+            var entertainmentItems = [];
             itemList.forEach(function(d, i){
                 if(d.amount === 0){
                     return false;
                 }
-                items.push({
-                    amount: d.amount,
-                    date: d.dateStr,
-                    id: d.categoryId,
-                    name: d.name,
-                    price: d.price,
-                    priceId: 0,
-                    type: d.type
-                });
+                if (d.type != 1) {
+                    items.push({
+                        amount: d.amount,
+                        date: d.dateStr,
+                        id: d.categoryId,
+                        name: d.name,
+                        price: d.price,
+                        priceId: 0,
+                        type: d.type
+                    });    
+                } else {
+                    entertainmentItems.push({
+                        amount: d.amount,
+                        categoryId: d.categoryId,
+                        categoryName: d.name,
+                        date: d.dateStr,
+                        price: d.price,
+                        timeAmount: d.timeAmount,
+                    })
+                }
             });
+            
+
             var type = 0;
             if(orderNew.type === 'book'){
                 type = 2;
@@ -145,7 +159,8 @@ var orderNewCtrl = function(app){
                     fee: orderNew.discounts || 0,
                     type: 5
                 }]),
-                rooms: JSON.stringify(rooms)
+                rooms: JSON.stringify(rooms),
+                entertainmentItems: JSON.stringify(entertainmentItems),
             };
             if(orderNew.idVal){
                 orderItem.customerIdCardArr = JSON.stringify([
