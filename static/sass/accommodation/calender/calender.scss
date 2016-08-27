@@ -2626,6 +2626,24 @@ object{
     }
   }
 }
+#checkoutAdModal {
+  .modal-content {
+    .main-container {
+      .consume-info {
+        .subtype.fun, .subtype.goods{
+          td:nth-child(2){
+            width: 68px;
+          }
+          td:nth-child(3){
+            padding-left: 18px;
+            width: 239px;
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}
 .accommodation-mainContainer{
   position: absolute;
   top: 68px;
