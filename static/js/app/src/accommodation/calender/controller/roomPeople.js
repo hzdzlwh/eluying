@@ -60,12 +60,10 @@ var roomPeopleCtrl = function(app) {
                     $("#roomPeopleModal .readBtn").addClass('ing');
                     setTimeout(function(){
                         idcObj.init();
-                        idcObj.read(3, 0, rootScope);
+                        idcObj.read(3, rootScope);
                     }, 500)
                 }else{
-                    // $("#newOrderModal .readBtn").html('开始读卡');
-                    // idcObj.init();
-                    // idcObj.idc && idcObj.idc.ReadClose();
+                    
                 }
             };
 

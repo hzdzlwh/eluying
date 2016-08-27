@@ -62,21 +62,6 @@ var orderEditCtrl = function(app){
                 phoneEmpty: false,
                 id: false
             };
-            scope.beginReadId = function(){
-                var mode = $("#orderEditModel .readBtn").html();
-                if(mode === '开始读卡'){
-                    $("#orderEditModel .readBtn").html('正在读卡...');
-                    $("#orderEditModel .readBtn").addClass('ing');
-                    setTimeout(function(){
-                        idcObj.init();
-                        idcObj.read(3, 0, rootScope);
-                    }, 500)
-                }else{
-                    // $("#newOrderModal .readBtn").html('开始读卡');
-                    // idcObj.init();
-                    // idcObj.idc && idcObj.idc.ReadClose();
-                }
-            };
             scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;
                 if(scope.foodToDelete.length > 0){
