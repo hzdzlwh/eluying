@@ -50,8 +50,8 @@ var getMoneyService = function(app){
                 for(var key in asyncObj){
                     getMoney[key] = asyncObj[key];
                 }
-                getMoney.payments.push({
-                    type: 4, fee: asyncObj.penaltyAd
+                asyncObj.penaltyAd && getMoney.payments.push({
+                    type: 4, fee: parseFloat(asyncObj.penaltyAd), isNew: true, payChannel: '违约金', payChannelId: -5,
                 });
             }
             getMoney.isOrderDetail = isOrderDetail; //订单详情中进入收银不能收押金

@@ -1262,7 +1262,7 @@
                         </div>
                     </div>
                     <table>
-                        <tr ng-repeat="play in orderEdit.playItems">
+                        <tr ng-repeat="play in orderEdit.playItems" ng-if="!(!play.isNew && play.amount == 0)">
                             <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
@@ -1350,7 +1350,7 @@
                             <td ng-if="goods.isNew">数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(goods, goods.amount - 1);">-</div>
-                                    <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);>
+                                    <input type="number" class="numberInput" ng-model="goods.amount" ng-change="changeItemNum(goods, goods.amount);">
                                     <div class="plus" ng-click="changeItemNum(goods, goods.amount + 1);">+</div>
                                 </div>
                                 <!--<div class="tips">剩余库存{{play.inventory}}</div>-->

@@ -311,7 +311,7 @@ object{
             width: 229px;
           }
           td:nth-child(3){
-            width: 48px;
+            width: 76px;
             text-align: right;
           }
         }
@@ -2793,6 +2793,24 @@ object{
         }
         .sbtn.confirm:active{
           @include btn2_click();
+        }
+      }
+    }
+  }
+}
+#checkoutAdModal {
+  .modal-content {
+    .main-container {
+      .consume-info {
+        .subtype.fun, .subtype.goods{
+          td:nth-child(2){
+            width: 68px;
+          }
+          td:nth-child(3){
+            padding-left: 18px;
+            width: 239px;
+            text-align: left;
+          }
         }
       }
     }
