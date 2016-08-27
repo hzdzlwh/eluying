@@ -308,7 +308,7 @@ object{
             width: 229px;
           }
           td:nth-child(3){
-            width: 48px;
+            width: 76px;
             text-align: right;
           }
         }
@@ -1792,36 +1792,36 @@ object{
   }
 }
 #newOrderModal{
-  .modal-content {
-    .main-container{
-      .subtype.food, .subtype.fun, .subtype.goods{
-        td:first-child{
-          width: 110px;
-          .select1{
-            width: 110px;
-            background-position: 93px;
-          }
-        }
-        td:nth-child(2){
-          width: 115px;
-          text-align: right;
-        }
-        td:nth-child(3){
-          padding-left: 0;
-          width: 146px;
-          text-align: right;
-          input{
-            left: -15px;
-          }
-        }
-        td:nth-child(4){
-          width: 83px;
-          text-align: right;
-        }
-      }
-    }
-  }
-}
+   .modal-content {
+     .main-container{
+       .subtype.food, .subtype.fun, .subtype.goods{
+         td:first-child{
+           width: 110px;
+           .select1{
+             width: 110px;
+             background-position: 93px;
+           }
+         }
+         td:nth-child(2){
+           width: 115px;
+           text-align: right;
+         }
+         td:nth-child(3){
+           padding-left: 0;
+           width: 146px;
+           text-align: right;
+           input{
+             left: -15px;
+           }
+         }
+         td:nth-child(4){
+           width: 83px;
+           text-align: right;
+         }
+       }
+     }
+   }
+ }
 #payWithAlipayModal{
   .modal-dialog {
     width: 400px;

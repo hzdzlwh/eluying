@@ -103,9 +103,9 @@ var orderEditCtrl = function(app){
                 var items = [];
                 var oldItems = orderEdit.playItems.concat(orderEdit.goodsItems);
                 oldItems.forEach(function(d){
-                    if(d.amount === 0){
-                        return false;
-                    }
+                    // if(d.amount === 0){
+                    //     return false;
+                    // }
                     var item = {
                         amount: d.amount,
                         date: d.dateStr,
