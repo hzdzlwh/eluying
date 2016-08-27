@@ -5,8 +5,8 @@ var util = require("util");
 var idcObj = require("../ieidc");
 
 var roomPeopleCtrl = function(app) {
-    app.controller('roomPeopleCtrl', ['$rootScope', '$scope', 'checkinService',
-        function(rootScope, scope, checkinService) {
+    app.controller('roomPeopleCtrl', ['$rootScope', '$scope', 'checkinService', 'getDataService',
+        function(rootScope, scope, checkinService, getDataService) {
             scope.idCardList = [];
             scope.serviceId = '';
             scope.roomName = '房间';
@@ -69,6 +69,16 @@ var roomPeopleCtrl = function(app) {
                 }
             };
 
+            scope.checkDuplication = function(num, index) {
+                return scope.idCardList.some((el, id) => {
+                    if (index === id) {
+                        return false;
+                    } else {
+                        return el.idCardNum === num;
+                    }
+                });
+            }
+
             scope.submit = function() {
                 if (scope.roomPeopleForm.$invalid) {
                     scope.submitted = true;
@@ -89,11 +99,14 @@ var roomPeopleCtrl = function(app) {
                     if (res.code === 1) {
                         $('#roomPeopleModal').modal('hide');
                         scope.submitted = false;
-                        rootScope.showOrderDetail(scope.orderId)
-                            .then(function() {
-                                rootScope.checkin = checkinService.resetCheckin(rootScope);
-                                rootScope.$apply();
-                            });
+                        getDataService.getOrderDetailAndRest(scope.orderId, rootScope)
+                        var room = rootScope.checkin.rooms.find(el => el.serviceId === scope.serviceId);
+                        room.idCardList = scope.idCardList;
+                        rootScope.$apply();
+                            //  .then(function() {
+                            //      rootScope.checkin = checkinService.resetCheckin(rootScope);
+                            //      rootScope.$apply();
+                            //  });
                     } else {
                         modal.somethingAlert(res.msg);
                     }

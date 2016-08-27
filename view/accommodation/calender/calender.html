@@ -198,10 +198,14 @@
                                 <i ng-click="deletePerson($index)"></i>
                             </div>
                             <div class="tips-row">
-                                <div class="tips warning" ng-show="(roomPeopleForm[$index+'name'].$dirty || submitted)
-                                && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
-                                <div class="tips warning" ng-show="(roomPeopleForm[$index+'idCard'].$dirty || submitted)
-                                && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'name'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'idCard'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="person.idCardNum && checkDuplication(person.idCardNum, $index)">↑证件号重复</div>
                             </div>
                         </div>
                     </form>
@@ -283,11 +287,11 @@
                                     <div class="room-people-actived spriteImg"
                                         ng-if="r.state === 0 || r.state === 1"
                                         ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
                                     </div>
                                     <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
@@ -1923,13 +1927,13 @@
                                         <div class="eluyun_finish2-small"></div>
                                     </div>
                                     <div class="room-people-actived spriteImg"
-                                        ng-if="r.state === 0 || r.state === 1"
+                                        ng-if="r.state === 0 && r.selected"
                                         ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
                                     </div>
-                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2 || r.state === 1 || (r.state === 0 && !r.selected)">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
@@ -2138,8 +2142,6 @@
                             <td>{{getMoney.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.selectedIdLabel}}</td>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.idVal}}</td>
                             <td>渠道</td>
                             <td>{{getMoney.origin}}</td>
                         </tr>
