@@ -266,6 +266,8 @@ $(function(){
                 setTimeout(this.rest, 300);
             },
             openIconDialog() {
+                icons.$set('iconSelected.entertainmentIconId', this.ETType.entertainmentIconId);
+                icons.$set('iconSelected.entertainmentImgUrl', this.ETType.entertainmentImgUrl);
                 $('#iconDialog').modal('show');
             },
             /**
