@@ -351,6 +351,10 @@
                                         <div class="sval">- ¥{{orderDetail.discounts || 0}}</div>
                                         <!--<div class="clearline"></div>-->
                                     </div>
+                                    <div class="sitem" ng-if="orderDetail.penaltyAd > 0">
+                                        <div class="sl">违约金：</div>
+                                        <div class="sval">¥{{orderDetail.penaltyAd}}</div>
+                                    </div>
                                     <div class="sitem">
                                         <div class="sl">客户应付：</div>
                                         <div class="sval">¥{{calPrice(orderDetail)}}</div>
