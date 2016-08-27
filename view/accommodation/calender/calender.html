@@ -193,14 +193,19 @@
                                     placeholder="证件号码"
                                     ng-model="person.idCardNum" 
                                     ng-disabled="person.read"
+                                    maxlength="18"
                                     required>
                                 <i ng-click="deletePerson($index)"></i>
                             </div>
                             <div class="tips-row">
-                                <div class="tips warning" ng-show="roomPeopleForm[$index+'name'].$dirty
-                                && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
-                                <div class="tips warning" ng-show="roomPeopleForm[$index+'idCard'].$dirty
-                                && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'name'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'idCard'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="person.idCardNum && checkDuplication(person.idCardNum, $index)">↑证件号重复</div>
                             </div>
                         </div>
                     </form>
@@ -282,11 +287,11 @@
                                     <div class="room-people-actived spriteImg"
                                         ng-if="r.state === 0 || r.state === 1"
                                         ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
                                     </div>
                                     <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
@@ -385,7 +390,7 @@
                                     &nbsp;{{p.amount}} &nbsp;
                                     (剩余{{p.amount - p.usedAmount}})
                                 </td>
-                                <td>¥{{p.price * p.amount}}</td>
+                                <td>&nbsp;&nbsp;&nbsp;¥{{p.price * p.amount}}</td>
                             </tr>
                         </table>
                     </div>
@@ -1505,61 +1510,66 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkout.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkout, checkout.playItems, play, f)">{{f.name}}</div>
+                        <tr ng-repeat="play in checkout.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkout, checkout.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkout);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkout);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkout);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkout);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;(已使用{{play.usedAmount}})
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
+                                    <span class="time">{{play.timeAmount}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2"></div>
 
@@ -1715,61 +1725,66 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkoutAd.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkoutAd, checkoutAd.playItems, play, f)">{{f.name}}</div>
+                        <tr ng-repeat="play in checkoutAd.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkoutAd, checkoutAd.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkoutAd);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkoutAd);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkoutAd);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkoutAd);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;(已使用{{play.usedAmount}})
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkoutAd.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
+                                    <span class="time">{{play.timeAmount}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2"></div>
                     <div class="subtype goods">
@@ -1912,13 +1927,13 @@
                                         <div class="eluyun_finish2-small"></div>
                                     </div>
                                     <div class="room-people-actived spriteImg"
-                                        ng-if="r.state === 0 || r.state === 1"
+                                        ng-if="r.state === 0 && r.selected"
                                         ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
                                     </div>
-                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
-                                        <div class="room-people-num">{{r.peopleNum}}</div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2 || r.state === 1 || (r.state === 0 && !r.selected)">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
                                         <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
@@ -1976,63 +1991,67 @@
                                 添加娱乐项目
                             </div>
                         </div>
-                        <table>
-                            <tr ng-repeat="play in checkin.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkin, checkin.playItems, play, f)">{{f.name}}</div>
+                         <table>
+                        <tr ng-repeat="play in checkin.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkin, checkin.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkin);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkin);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <!--<td><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>-->
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkin);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkin);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;<span ng-if="play.usedAmount">(已使用{{play.usedAmount}})</span>
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
+                                    <span class="time">{{play.timeAmount}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2" ng-if="funList.length > 0 || checkin.playItems.length > 0"></div>
                     <div class="subtype goods" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0">
@@ -2123,8 +2142,6 @@
                             <td>{{getMoney.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.selectedIdLabel}}</td>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.idVal}}</td>
                             <td>渠道</td>
                             <td>{{getMoney.origin}}</td>
                         </tr>

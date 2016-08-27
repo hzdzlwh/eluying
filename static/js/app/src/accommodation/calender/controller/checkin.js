@@ -25,6 +25,9 @@ var checkinCtrl = function(app){
             scope.calLeft = orderService.calLeft;
             scope.deleteFood = orderService.deleteFood;
             scope.showRoomPeopleModal = orderService.showRoomPeopleModal;
+            scope.decreaseTimeAmount = orderService.decreaseTimeAmount;
+
+            scope.increaseTimeAmount = orderService.increaseTimeAmount;
             scope.submitCheckin = function(){
                 var checkin = rootScope.checkin;
                 var rooms = checkin.rooms;
@@ -35,6 +38,7 @@ var checkinCtrl = function(app){
                             startDate: d.startDate,
                             endDate: d.endDate,
                             roomId: d.roomId,
+                            idCardList: JSON.stringify(d.idCardList),
                         });
                     }
                 });
@@ -42,9 +46,24 @@ var checkinCtrl = function(app){
                     modal.somethingAlert("请选择入住房间!");
                     return false;
                 }
+                var playItems = [];
+                checkin.playItems.map(function(el) {
+                    if(el.amount === 0){
+                        return false;
+                    }
+                    var playItem = {
+                        amount: el.amount,
+                        date: el.dateStr,
+                        categoryId: el.isNew ? el.categoryId : 0,
+                        categoryName: el.name,
+                        price: el.price,
+                        timeAmount: el.timeAmount,
+                        playOrderId: el.playOrderId
+                    };
+                    playItems.push(playItem);
+                });
                 var items = [];
-                var oldItems = checkin.playItems.concat(checkin.goodsItems);
-                oldItems.forEach(function(d){
+                checkin.goodsItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;
                     }
@@ -74,6 +93,7 @@ var checkinCtrl = function(app){
                         roomId: d.roomId,
                         startDate: d.startDate,
                         sub: d.sub,
+                        idCardList: JSON.stringify(d.idCardList),
                     };
                     postRooms.push(room);
                 });
@@ -88,6 +108,7 @@ var checkinCtrl = function(app){
                     rooms: JSON.stringify(postRooms),
                     items: JSON.stringify(items),
                     foodItems: JSON.stringify([]),
+                    playItems: JSON.stringify(playItems),
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', order, function(result3){
                     if(result3.code === 1){

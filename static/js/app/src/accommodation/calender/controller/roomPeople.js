@@ -5,8 +5,8 @@ var util = require("util");
 var idcObj = require("../ieidc");
 
 var roomPeopleCtrl = function(app) {
-    app.controller('roomPeopleCtrl', ['$rootScope', '$scope', 'checkinService',
-        function(rootScope, scope, checkinService) {
+    app.controller('roomPeopleCtrl', ['$rootScope', '$scope', 'checkinService', 'getDataService',
+        function(rootScope, scope, checkinService, getDataService) {
             scope.idCardList = [];
             scope.serviceId = '';
             scope.roomName = '房间';
@@ -15,10 +15,10 @@ var roomPeopleCtrl = function(app) {
                 scope.roomName = roomName;
                 scope.serviceId = serviceId;
                 idCardList = idCardList || [];
-                idCardList.map(function(el) {
+                ev.currentScope.idCardList = idCardList.map(function(el) {
                     el.selectedIdLabel = ['身份证', '军官证', '通行证', '护照', '其他'][el.idCardType];
+                    return Object.assign({}, el);
                 });
-                ev.currentScope.idCardList = idCardList;
             });
 
             scope.$on('read', function(ev, name, num) {
@@ -50,6 +50,7 @@ var roomPeopleCtrl = function(app) {
 
             scope.closeRoomPeopleDialog = function() {
                 $('#roomPeopleModal').modal('hide');
+                scope.submitted = false;
             };
 
             scope.beginReadId = function(){
@@ -59,17 +60,26 @@ var roomPeopleCtrl = function(app) {
                     $("#roomPeopleModal .readBtn").addClass('ing');
                     setTimeout(function(){
                         idcObj.init();
-                        idcObj.read(3, 0, rootScope);
+                        idcObj.read(3, rootScope);
                     }, 500)
                 }else{
-                    // $("#newOrderModal .readBtn").html('开始读卡');
-                    // idcObj.init();
-                    // idcObj.idc && idcObj.idc.ReadClose();
+                    
                 }
             };
 
+            scope.checkDuplication = function(num, index) {
+                return scope.idCardList.some((el, id) => {
+                    if (index === id) {
+                        return false;
+                    } else {
+                        return el.idCardNum === num;
+                    }
+                });
+            }
+
             scope.submit = function() {
-                if (roomPeopleForm.$invalid) {
+                if (scope.roomPeopleForm.$invalid) {
+                    scope.submitted = true;
                     return
                 }
                 var idCardList = scope.idCardList.map(function(el) {
@@ -86,11 +96,15 @@ var roomPeopleCtrl = function(app) {
                 AJAXService.ajaxWithToken('post', '/room/updateCheckInUsers', data, function(res) {
                     if (res.code === 1) {
                         $('#roomPeopleModal').modal('hide');
-                        rootScope.showOrderDetail(scope.orderId)
-                            .then(function() {
-                                rootScope.checkin = checkinService.resetCheckin(rootScope);
-                                rootScope.$apply();
-                            });
+                        scope.submitted = false;
+                        getDataService.getOrderDetailAndRest(scope.orderId, rootScope)
+                        var room = rootScope.checkin.rooms.find(el => el.serviceId === scope.serviceId);
+                        room.idCardList = scope.idCardList;
+                        rootScope.$apply();
+                            //  .then(function() {
+                            //      rootScope.checkin = checkinService.resetCheckin(rootScope);
+                            //      rootScope.$apply();
+                            //  });
                     } else {
                         modal.somethingAlert(res.msg);
                     }

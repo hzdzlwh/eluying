@@ -146,6 +146,16 @@ var getDataService = function(app){
                 }
             });
         };
+        this.getOrderDetailAndRest = function(orderId, scope){
+            return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                orderId: orderId,
+            }, function(result){
+                if(result.code === 1){
+                    scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
+                    scope.$apply();
+                }
+            });
+        };
         this.getRoomsAndStatus = function(scope){
             var startDate = scope.startDate;
             AJAXService.ajaxWithToken('GET', 'getRoomCategoriesUrl', {}, function(result){

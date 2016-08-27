@@ -267,7 +267,7 @@ object{
             width: 152px;
           }
           td:nth-child(3){
-            width: 46px;
+            width: 50px;
             color: #b3b3b3;
           }
           td:nth-child(4){
@@ -2145,12 +2145,12 @@ object{
 }
 #checkoutModal, #checkinModal, #checkoutAdModal{
   .modal-dialog {
-    width: 530px;
+    width: 660px;
   }
   .modal-content {
     background: #fafafa;
     border-radius: $BorderRadius;
-    width: 530px;
+    width: 660px;
     padding: 0;
     overflow-x: hidden;
     .date-table{
@@ -2252,7 +2252,7 @@ object{
       @include modalHeader();
     }
     .hr2{
-      width: 514px;
+      width: 644px;
       height: 1px;
       background: #d4d4d4;
       margin: auto;
@@ -2489,7 +2489,57 @@ object{
             }
           }
         }
-        .subtype.food, .subtype.fun, .subtype.goods{
+        .subtype.fun {
+          td:first-child{
+              width: 110px;
+              .select1{
+                width: 110px;
+                background-position: 93px;
+              }
+            }
+            td:nth-child(2){
+              width: 115px;
+              text-align: right;
+            }
+            td:nth-child(3){
+              padding-left: 16px;
+              width: 170px;
+              &>div {
+                line-height: 32px;
+              }
+              .minus, .plus {
+                display: inline-block;
+                width: 15px;
+                height: 22px;
+                line-height: 20px;
+                text-align: center;
+                background: #fff;
+                cursor: pointer;
+                border:1px solid #cccccc;
+                border-radius:2px;
+              }
+              .time {
+                width: 33px;
+                text-align: center;
+                display:  inline-block;
+                height: 22px;
+                line-height: 20px;
+              }
+            }
+            td:nth-child(4){
+              padding-left: 0;
+              width: 128px;
+              text-align: right;
+              input{
+                left: -15px;
+              }
+            }
+            td:nth-child(5) {
+              width: 39px;
+              text-align: right;
+            }
+        }
+        .subtype.food, .subtype.goods{
           .sub-title{
             position: relative;
             .sadd{
@@ -2682,7 +2732,7 @@ object{
       height: 44px;
       .accounts{
         background:#f4f4f4;
-        width:530px;
+        width:660px;
         height:44px;
         font-size:14px;
         .sgive{
@@ -3759,7 +3809,7 @@ object{
 #roomPeopleModal {
   z-index: 1051;
   .modal-dialog {
-    width: 478px;
+    width: 485px;
   }
   .sheader {
     position: relative;
@@ -3777,7 +3827,7 @@ object{
   .modal-content {
     background: #fafafa;
     border-radius: $BorderRadius;
-    width: 478px;
+    width: 485px;
     padding: 0px;
     overflow-x: hidden;
     .hr {
@@ -3816,6 +3866,8 @@ object{
   .main-container {
     padding: 12px 16px;
     min-height: 100px;
+    max-height: 307px;
+    overflow: auto;
     .tips {
       position: absolute;
       color: #f24949;
@@ -3825,6 +3877,9 @@ object{
         left: 31px;
       }
       &:nth-child(2) {
+        left: 240px;
+      }
+      &:nth-child(3) {
         left: 240px;
       }
     }
