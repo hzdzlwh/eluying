@@ -193,13 +193,14 @@
                                     placeholder="证件号码"
                                     ng-model="person.idCardNum" 
                                     ng-disabled="person.read"
+                                    maxlength="18"
                                     required>
                                 <i ng-click="deletePerson($index)"></i>
                             </div>
                             <div class="tips-row">
-                                <div class="tips warning" ng-show="roomPeopleForm[$index+'name'].$dirty
+                                <div class="tips warning" ng-show="(roomPeopleForm[$index+'name'].$dirty || submitted)
                                 && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
-                                <div class="tips warning" ng-show="roomPeopleForm[$index+'idCard'].$dirty
+                                <div class="tips warning" ng-show="(roomPeopleForm[$index+'idCard'].$dirty || submitted)
                                 && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
                             </div>
                         </div>

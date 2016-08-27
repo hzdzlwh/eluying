@@ -15,10 +15,10 @@ var roomPeopleCtrl = function(app) {
                 scope.roomName = roomName;
                 scope.serviceId = serviceId;
                 idCardList = idCardList || [];
-                idCardList.map(function(el) {
+                ev.currentScope.idCardList = idCardList.map(function(el) {
                     el.selectedIdLabel = ['身份证', '军官证', '通行证', '护照', '其他'][el.idCardType];
+                    return Object.assign({}, el);
                 });
-                ev.currentScope.idCardList = idCardList;
             });
 
             scope.$on('read', function(ev, name, num) {
@@ -50,6 +50,7 @@ var roomPeopleCtrl = function(app) {
 
             scope.closeRoomPeopleDialog = function() {
                 $('#roomPeopleModal').modal('hide');
+                scope.submitted = false;
             };
 
             scope.beginReadId = function(){
@@ -69,7 +70,8 @@ var roomPeopleCtrl = function(app) {
             };
 
             scope.submit = function() {
-                if (roomPeopleForm.$invalid) {
+                if (scope.roomPeopleForm.$invalid) {
+                    scope.submitted = true;
                     return
                 }
                 var idCardList = scope.idCardList.map(function(el) {
@@ -86,6 +88,7 @@ var roomPeopleCtrl = function(app) {
                 AJAXService.ajaxWithToken('post', '/room/updateCheckInUsers', data, function(res) {
                     if (res.code === 1) {
                         $('#roomPeopleModal').modal('hide');
+                        scope.submitted = false;
                         rootScope.showOrderDetail(scope.orderId)
                             .then(function() {
                                 rootScope.checkin = checkinService.resetCheckin(rootScope);
