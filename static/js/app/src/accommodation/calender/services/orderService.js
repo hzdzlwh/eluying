@@ -155,7 +155,7 @@ var orderService = function(app){
             if(!item){
                 return false;
             }
-            var getInventoryDate = order.itemStartDate ? new Date(order.itemStartDate) : new Date();
+            var getInventoryDate = new Date();
             if(type === 1 || type === 2){
                 AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                     date: util.dateFormat(getInventoryDate),

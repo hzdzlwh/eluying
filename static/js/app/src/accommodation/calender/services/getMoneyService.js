@@ -41,7 +41,7 @@ var getMoneyService = function(app){
             return left.toFixed(2);
         };
         this.calLeft = calLeft;
-        this.resetGetMoney = function(order, orderId, type, asyncObj, isLast, isOrderDetail){
+        this.resetGetMoney = function(order, orderId, type, asyncObj, isLast){
             var getMoney = {};
             for(var key in order){
                 getMoney[key] = order[key];
@@ -54,7 +54,6 @@ var getMoneyService = function(app){
                     type: 4, fee: parseFloat(asyncObj.penaltyAd), isNew: true, payChannel: '违约金', payChannelId: -5,
                 });
             }
-            getMoney.isOrderDetail = isOrderDetail; //订单详情中进入收银不能收押金
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
             getMoney.isLast = isLast; //
@@ -88,6 +87,10 @@ var getMoneyService = function(app){
         type: 0-支付，1-押金，2-退款，3-已退押金，4-违约金,5-优惠
          */
         this.addPayment = function(getMoney, payChannels, type){
+            if (payChannels.length === 0) {
+                modal.somethingAlert('没有可用收款方式');
+                return;
+            }
             var left = 0;
             if(type === 0){
                 left = calLeft(getMoney);
@@ -100,18 +103,23 @@ var getMoneyService = function(app){
                 left = 0;
             }
             var payChannel, payChannelId;
-            if(type === 2 || type === 3 || type === 1){
-                for(var i = 0; i < payChannels.length; i++){
-                    if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
-                        payChannel = payChannels[i].name;
-                        payChannelId = payChannels[i].channelId;
-                        break;
+            if (payChannels.length > 0) {
+                if(type === 2 || type === 3 || type === 1){
+                    for(var i = 0; i < payChannels.length; i++){
+                        if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
+                            payChannel = payChannels[i].name;
+                            payChannelId = payChannels[i].channelId;
+                            break;
+                        }
                     }
+                }else{
+                    payChannel = payChannels[0].name;
+                    payChannelId = payChannels[0].channelId;
                 }
-            }else{
-                payChannel = payChannels[0].name;
-                payChannelId = payChannels[0].channelId;
+            } else {
+                payChannel = '请添加收银方式';
             }
+            
             var payment = {
                 isNew: true,
                 fee: left,

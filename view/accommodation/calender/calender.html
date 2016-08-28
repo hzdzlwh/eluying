@@ -383,7 +383,7 @@
                         <div class="sub-title">娱乐项目</div>
                         <table ng-if="orderDetail.playItems">
                             <tr ng-repeat="p in orderDetail.playItems">
-                                <td><div class="sname">{{p.name}}<span ng-if="p.chargeMode == 1">({{p.timeAmount * p.chargeUnitTime}}{{p.chargeUnit}})</span></div></td>
+                                <td><div class="sname">{{p.shortName}}<span ng-if="p.chargeMode == 1">({{p.timeAmount * p.chargeUnitTime}}{{p.chargeUnit}})</span></div></td>
                                 <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
@@ -717,6 +717,7 @@
                             <div class="select1_options" ng-if="payChannels">
                                 <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
+                                     title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -737,6 +738,7 @@
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
+                                     title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -1120,14 +1122,14 @@
                         <tr ng-repeat="r in orderEdit.rooms">
                             <td ng-if="r.isNew" style="width:278px">
                                 <div class="select1" style="display: inline-block">
-                                    <span>{{r.categoryName}}</span>
+                                    <span title="{{r.categoryName}}">{{r.categoryName}}</span>
                                     <div class="select1_options">
                                         <div class="oitem" ng-repeat="roomCategory in roomCategoryList" title="{{roomCategory.categoryName}}"
                                              ng-click="changeRoomCategory(roomCategory, r)">{{roomCategory.categoryName}}</div>
                                     </div>
                                 </div>
                                 <div class="select1" style="width:88px;display: inline-block;background-position-x: 74px;">
-                                    <span>{{r.serialNum}}</span>
+                                    <span title="{{r.serialNum}}">{{r.serialNum}}</span>
                                     <div class="select1_options">
                                         <div class="oitem" ng-repeat="room in roomList" title="{{room.serialNum}}"
                                              ng-click="changeRoom(room,r)">{{room.serialNum}}</div>
@@ -1156,7 +1158,7 @@
                             </td>
                             <td ng-if="r.state === 0">
                                 <span class="light">入住</span>
-                                &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
+                                &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true" ng-disabled="roomList.length===0">
                                 <div class="date-table start">
                                     <div class="month-selector">
                                         <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
@@ -1183,7 +1185,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
+                                &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true" ng-disabled="roomList.length===0">
                                 <div class="date-table end">
                                     <div class="month-selector">
                                         <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
@@ -1267,7 +1269,7 @@
                     </div>
                     <table>
                         <tr ng-repeat="play in orderEdit.playItems" ng-if="!(!play.isNew && play.amount == 0)">
-                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -1515,7 +1517,7 @@
                         </div>
                         <table>
                         <tr ng-repeat="play in checkout.playItems">
-                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -1730,7 +1732,7 @@
                         </div>
                         <table>
                         <tr ng-repeat="play in checkoutAd.playItems">
-                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -1997,7 +1999,7 @@
                         </div>
                          <table>
                         <tr ng-repeat="play in checkin.playItems">
-                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -2372,9 +2374,10 @@
                          ng-if="getMoney.feeMode === 0 && p.type === 0 && p.isNew">
                         <input class="moneyInput" type="text" ng-model="p.fee" ng-change="moneyChange(p);">
                         <div class="select1">
-                            <span>{{p.payChannel}}</span>
+                            <span title="{{p.payChannel}}">{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment);"
+                                    title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -2402,6 +2405,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment);"
+                                title="{{payment.name}}"
                                 ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
@@ -2409,7 +2413,7 @@
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 0 && !isOrderDetail()">
+                    <div class="item item_small" ng-if="getMoney.depositMode === 0 && !isOrderDetail">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_add_outer spriteImg">
@@ -2425,6 +2429,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
+                                title="{{payment.name}}"
                                 ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
@@ -2455,6 +2460,7 @@
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
                                      ng-repeat="payment in payChannels"
+                                     title="{{payment.name}}"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>

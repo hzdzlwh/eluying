@@ -192,6 +192,8 @@ var orderEditCtrl = function(app){
                         room.roomId = res.data.list[0].roomId;
                         room.serialNum = res.data.list[0].serialNum;
                         room.fee = res.data.price;
+
+                        room.categoryId = roomCategory.categoryId;
                         room.categoryName = roomCategory.categoryName;
 
                         scope.$apply();                
@@ -228,6 +230,11 @@ var orderEditCtrl = function(app){
                             startDate = el.startDate;
                         }
                     });
+
+                    // 如果时间是过去，设为今天
+                    if (util.compareDates(new Date(), startDate)) {
+                        startDate = util.dateFormat(new Date());
+                    }
                 }
                               
                 var endDate = util.dateFormat(util.tomorrow(new Date(startDate)));

@@ -69,6 +69,9 @@ var orderDetailService = function(app){
             }else{
                 orderDetail.editable = true;
             }
+            if (orderDetail.orderState === 5) {
+                orderDetail.getMoneyable = true;
+            }
             //var foods = orderDetail.foodItems;
             //var foodsAmounts = {};
             //foods.forEach(function(d){

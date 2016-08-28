@@ -108,7 +108,7 @@ var util = {
             date1 = this.stringToDate(date1);
         }
         if (typeof date2 === 'string') {
-            date1 = this.stringToDate(date2);
+            date2 = this.stringToDate(date2);
         }
         //return date1.getFullYear() > date2.getFullYear() || (date1.getFullYear() == date2.getFullYear()
         //    && date1.getMonth() > date2.getMonth()) || (date1.getFullYear() == date2.getFullYear()
