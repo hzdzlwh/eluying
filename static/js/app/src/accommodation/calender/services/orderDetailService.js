@@ -18,9 +18,13 @@ var orderDetailService = function(app){
                 orderDetail.idVal = orderDetail['customerIdCardArr'][0].idCardNum;
             }
             orderDetail.discounts = 0;
+            orderDetail.penaltyAd = 0;
             orderDetail.payments.forEach(function(d){
                 if(d.type === 5){
                     orderDetail.discounts = d.fee;
+                }
+                if(d.type === 4){
+                    orderDetail.penaltyAd += d.fee;
                 }
                 if(d.type === 0 || d.type === 2){
                     orderDetail.isPaid = true;
