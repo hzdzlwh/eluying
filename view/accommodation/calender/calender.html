@@ -390,7 +390,7 @@
                                     &nbsp;{{p.amount}} &nbsp;
                                     (剩余{{p.amount - p.usedAmount}})
                                 </td>
-                                <td>&nbsp;&nbsp;&nbsp;¥{{p.price * p.amount}}</td>
+                                <td>&nbsp;&nbsp;&nbsp;¥{{p.amount * p.price * (p.chargeMode == 1 ? (p.timeAmount / p.unitTime) : 1)}}</td>
                             </tr>
                         </table>
                     </div>
