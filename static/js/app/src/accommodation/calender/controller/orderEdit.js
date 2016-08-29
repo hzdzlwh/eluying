@@ -272,7 +272,7 @@ var orderEditCtrl = function(app){
 
                             // 判断是否有房间可用
                             if (scope.roomList.length > 0) {
-                                // 如果没有房间ID或可用房间中没有当前选择的房间
+                                // 如果没有房间ID或可用房间中没有当前选择的房间,就选择列表中的第一个房间
                                 if (!room.roomId || !hasCurrentRoom) {
                                     room.roomId = scope.roomList[0].roomId;
                                     room.serialNum = scope.roomList[0].serialNum;
