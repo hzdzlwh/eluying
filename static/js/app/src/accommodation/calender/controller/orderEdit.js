@@ -187,16 +187,40 @@ var orderEditCtrl = function(app){
                 AJAXService.ajaxWithToken('get', '/room/getAvailRoomsAndPrice',
                     {startDate: room.startDate, endDate: room.endDate, id: roomCategory.categoryId, sub: true})
                     .then(res => {
-                        scope.roomList = res.data.list;
+                        if (res.data.list.length > 0) {
+                            scope.roomList = res.data.list;
                         
-                        room.roomId = res.data.list[0].roomId;
-                        room.serialNum = res.data.list[0].serialNum;
-                        room.fee = res.data.price;
+                            room.roomId = res.data.list[0].roomId;
+                            room.serialNum = res.data.list[0].serialNum;
+                            room.fee = res.data.price;
 
-                        room.categoryId = roomCategory.categoryId;
-                        room.categoryName = roomCategory.categoryName;
+                            room.categoryId = roomCategory.categoryId;
+                            room.categoryName = roomCategory.categoryName;
 
-                        scope.$apply();                
+                            scope.$apply();  
+                        } else {
+                             
+                            room.roomId = undefined;
+                            room.serialNum = '无可用房间';
+
+                            room.ostartDate = room.startDate;
+                            room.oendDate = room.endDate;
+                            room.sstartDate = room.startDate.substr(5, 5);
+                            room.scanlerdarDate = room.startDate;
+                            room.sendDate = room.endDate.substr(5, 5);
+                            room.ecanlerdarDate = room.endDate;
+
+                            room.categoryId = roomCategory.categoryId;
+                            room.categoryName = roomCategory.categoryName;
+
+                            room.fee = null;
+
+                            calendarService.createRoomStartDateCalendar(room);
+                            calendarService.createRoomEndDateCalendar(room);
+                            
+                            scope.$apply(); 
+                        }
+                                      
                     });
             };
             
