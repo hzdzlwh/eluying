@@ -200,6 +200,9 @@ var orderService = function(app){
                                 //order.foodItems.push(temp);
                             }else if(type === 2){
                                 temp.timeAmount = 1;
+                                temp.chargeMode = item.chargeMode;
+                                temp.unitTime = item.unitTime;
+                                temp.timeUnit = item.timeUnit;
                                 order.playItems.push(temp);
                             }
                             rootScope.$apply();

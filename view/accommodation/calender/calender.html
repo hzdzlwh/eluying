@@ -2233,7 +2233,7 @@
                                 <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;
                                     (剩余{{f.amount - (f.usedAmount || 0)}})
                                 </td>
-                                <td>¥{{f.price * f.amount}}</td>
+                                <td>¥{{f.price * f.amount * f.timeAmount}}</td>
                             </tr>
                         </table>
                     </div>
