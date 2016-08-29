@@ -98,6 +98,8 @@ var orderDetailService = function(app){
                 }
             });
             orderDetail.playsAmount = playsAmounts;
+
+            orderDetail.goodsItems = order.pcGoodsItems;
             return orderDetail;
         };
     }]);

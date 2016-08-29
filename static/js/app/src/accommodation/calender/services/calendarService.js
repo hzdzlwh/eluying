@@ -105,6 +105,9 @@ var calendarService = function(app){
                 for(var i = 0; i < calenderTable.length; i++) {
                     var sclass = '';
                     var text = null;
+                    if(calenderTable[i] < today && !util.isSameDay(calenderTable[i], today)){
+                        sclass += ' invalid';
+                    }
                     if(util.isSameDay(calenderTable[i], today)){
                         sclass += ' today';
                         text = '今';
@@ -208,6 +211,9 @@ var calendarService = function(app){
                 for(var i = 0; i < calenderTable.length; i++) {
                     var sclass = '';
                     var text = null;
+                    if(calenderTable[i] <= startDate){
+                        sclass = 'invalid';
+                    }
                     if(util.isSameDay(calenderTable[i], today)){
                         sclass += ' today';
                         text = '今';
