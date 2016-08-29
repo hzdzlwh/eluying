@@ -105,7 +105,7 @@ var getDataService = function(app){
                        && walletOpenAndUseStateList[key].useState === 1) {
                         payChannels.push({
                             channelId: -8,
-                            name: '订单钱包'
+                            name: '支付宝（订单钱包）'
                         });
                         break;
                    } 
@@ -118,15 +118,11 @@ var getDataService = function(app){
                         && enterpriseOpenAndUseStateList[key].useState === 1) {
                         payChannels.push({
                             channelId: -6,
-                            name: '企业支付宝'
+                            name: '支付宝'
                         });
                         break;
                     }
                 }
-                payChannels.push({
-                    channelId: -1,
-                    name: '现金'
-                });
                 payChannels.sort(function(a, b){
                     return a.channelId - b.channelId;
                 });
@@ -143,6 +139,16 @@ var getDataService = function(app){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
                     scope.$apply();
                     $("#orderDetailModal").modal("show");
+                }
+            });
+        };
+        this.getOrderDetailAndRest = function(orderId, scope){
+            return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                orderId: orderId,
+            }, function(result){
+                if(result.code === 1){
+                    scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
+                    scope.$apply();
                 }
             });
         };

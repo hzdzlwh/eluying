@@ -18,9 +18,13 @@ var orderDetailService = function(app){
                 orderDetail.idVal = orderDetail['customerIdCardArr'][0].idCardNum;
             }
             orderDetail.discounts = 0;
+            orderDetail.penaltyAd = 0;
             orderDetail.payments.forEach(function(d){
                 if(d.type === 5){
                     orderDetail.discounts = d.fee;
+                }
+                if(d.type === 4){
+                    orderDetail.penaltyAd += d.fee;
                 }
                 if(d.type === 0 || d.type === 2){
                     orderDetail.isPaid = true;
@@ -65,6 +69,9 @@ var orderDetailService = function(app){
             }else{
                 orderDetail.editable = true;
             }
+            if (orderDetail.orderState === 5) {
+                orderDetail.getMoneyable = true;
+            }
             //var foods = orderDetail.foodItems;
             //var foodsAmounts = {};
             //foods.forEach(function(d){
@@ -91,6 +98,8 @@ var orderDetailService = function(app){
                 }
             });
             orderDetail.playsAmount = playsAmounts;
+
+            orderDetail.goodsItems = order.pcGoodsItems;
             return orderDetail;
         };
     }]);

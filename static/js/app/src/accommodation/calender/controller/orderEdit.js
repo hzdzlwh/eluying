@@ -62,21 +62,6 @@ var orderEditCtrl = function(app){
                 phoneEmpty: false,
                 id: false
             };
-            scope.beginReadId = function(){
-                var mode = $("#orderEditModel .readBtn").html();
-                if(mode === '开始读卡'){
-                    $("#orderEditModel .readBtn").html('正在读卡...');
-                    $("#orderEditModel .readBtn").addClass('ing');
-                    setTimeout(function(){
-                        idcObj.init();
-                        idcObj.read(3, 0, rootScope);
-                    }, 500)
-                }else{
-                    // $("#newOrderModal .readBtn").html('开始读卡');
-                    // idcObj.init();
-                    // idcObj.idc && idcObj.idc.ReadClose();
-                }
-            };
             scope.submitOrder = function(orderEditForm){
                 var orderEdit = rootScope.orderEdit;
                 if(scope.foodToDelete.length > 0){
@@ -202,14 +187,40 @@ var orderEditCtrl = function(app){
                 AJAXService.ajaxWithToken('get', '/room/getAvailRoomsAndPrice',
                     {startDate: room.startDate, endDate: room.endDate, id: roomCategory.categoryId, sub: true})
                     .then(res => {
-                        scope.roomList = res.data.list;
+                        if (res.data.list.length > 0) {
+                            scope.roomList = res.data.list;
                         
-                        room.roomId = res.data.list[0].roomId;
-                        room.serialNum = res.data.list[0].serialNum;
-                        room.fee = res.data.price;
-                        room.categoryName = roomCategory.categoryName;
+                            room.roomId = res.data.list[0].roomId;
+                            room.serialNum = res.data.list[0].serialNum;
+                            room.fee = res.data.price;
 
-                        scope.$apply();                
+                            room.categoryId = roomCategory.categoryId;
+                            room.categoryName = roomCategory.categoryName;
+
+                            scope.$apply();  
+                        } else {
+                             
+                            room.roomId = undefined;
+                            room.serialNum = '无可用房间';
+
+                            room.ostartDate = room.startDate;
+                            room.oendDate = room.endDate;
+                            room.sstartDate = room.startDate.substr(5, 5);
+                            room.scanlerdarDate = room.startDate;
+                            room.sendDate = room.endDate.substr(5, 5);
+                            room.ecanlerdarDate = room.endDate;
+
+                            room.categoryId = roomCategory.categoryId;
+                            room.categoryName = roomCategory.categoryName;
+
+                            room.fee = null;
+
+                            calendarService.createRoomStartDateCalendar(room);
+                            calendarService.createRoomEndDateCalendar(room);
+                            
+                            scope.$apply(); 
+                        }
+                                      
                     });
             };
             
@@ -243,6 +254,11 @@ var orderEditCtrl = function(app){
                             startDate = el.startDate;
                         }
                     });
+
+                    // 如果时间是过去，设为今天
+                    if (util.compareDates(new Date(), startDate)) {
+                        startDate = util.dateFormat(new Date());
+                    }
                 }
                               
                 var endDate = util.dateFormat(util.tomorrow(new Date(startDate)));
@@ -280,7 +296,7 @@ var orderEditCtrl = function(app){
 
                             // 判断是否有房间可用
                             if (scope.roomList.length > 0) {
-                                // 如果没有房间ID或可用房间中没有当前选择的房间
+                                // 如果没有房间ID或可用房间中没有当前选择的房间,就选择列表中的第一个房间
                                 if (!room.roomId || !hasCurrentRoom) {
                                     room.roomId = scope.roomList[0].roomId;
                                     room.serialNum = scope.roomList[0].serialNum;
@@ -301,6 +317,18 @@ var orderEditCtrl = function(app){
                             } else {
                                 room.roomId = undefined;
                                 room.serialNum = '无可用房间';
+
+                                room.ostartDate = room.startDate;
+                                room.oendDate = room.endDate;
+                                room.sstartDate = room.startDate.substr(5, 5);
+                                room.scanlerdarDate = room.startDate;
+                                room.sendDate = room.endDate.substr(5, 5);
+                                room.ecanlerdarDate = room.endDate;
+
+                                room.fee = null;
+
+                                calendarService.createRoomStartDateCalendar(room);
+                                calendarService.createRoomEndDateCalendar(room);
                                 
                             }
                         });
