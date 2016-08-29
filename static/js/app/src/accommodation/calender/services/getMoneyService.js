@@ -80,6 +80,13 @@ var getMoneyService = function(app){
 
             }
             // getMoney.payRemark = '';
+
+            getMoney.playItems.map(el => {
+                if (el.date instanceof Date) {
+                    el.date = util.dateFormat(el.date);
+                }
+            })
+
             return getMoney;
         };
         /*
