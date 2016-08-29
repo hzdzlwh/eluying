@@ -293,6 +293,18 @@ var orderEditCtrl = function(app){
                             } else {
                                 room.roomId = undefined;
                                 room.serialNum = '无可用房间';
+
+                                room.ostartDate = room.startDate;
+                                room.oendDate = room.endDate;
+                                room.sstartDate = room.startDate.substr(5, 5);
+                                room.scanlerdarDate = room.startDate;
+                                room.sendDate = room.endDate.substr(5, 5);
+                                room.ecanlerdarDate = room.endDate;
+
+                                room.fee = null;
+
+                                calendarService.createRoomStartDateCalendar(room);
+                                calendarService.createRoomEndDateCalendar(room);
                                 
                             }
                         });
