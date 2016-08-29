@@ -390,7 +390,7 @@
                                     &nbsp;{{p.amount}} &nbsp;
                                     (剩余{{p.amount - p.usedAmount}})
                                 </td>
-                                <td>&nbsp;&nbsp;&nbsp;¥{{p.amount * p.price * (p.chargeMode == 1 ? (p.timeAmount / p.unitTime) : 1)}}</td>
+                                <td>&nbsp;&nbsp;&nbsp;¥{{p.amount * p.price * (p.chargeMode == 1 ? p.timeAmount : 1)}}</td>
                             </tr>
                         </table>
                     </div>
@@ -950,9 +950,9 @@
                             <td>
                                 <div ng-if="play.chargeMode == 1">
                                     {{'时长(' + play.timeUnit + ')'}}&nbsp;
-                                    <div class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
-                                    <span class="time">{{play.timeAmount}}</span>
-                                    <div class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                    <div class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
                                 </div>
                             </td>
                             <td>
@@ -964,7 +964,7 @@
                                 </div>
                                 <div class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1311,9 +1311,9 @@
                             <td>
                                 <div ng-if="play.chargeMode == 1">
                                     {{'时长(' + play.timeUnit + ')'}}&nbsp;
-                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
-                                    <span class="time">{{play.timeAmount}}</span>
-                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
                                 </div>
                             </td>
                             <td>数量&nbsp;
@@ -1325,7 +1325,7 @@
                                 <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
                                 <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(orderEdit.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(orderEdit.playItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1559,9 +1559,9 @@
                             <td>
                                 <div ng-if="play.chargeMode == 1">
                                     {{'时长(' + play.timeUnit + ')'}}&nbsp;
-                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
-                                    <span class="time">{{play.timeAmount}}</span>
-                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
                                 </div>
                             </td>
                             <td>数量&nbsp;
@@ -1573,7 +1573,7 @@
                                 <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
                                 <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
                         </tr>
                     </table>
                     </div>
@@ -1774,9 +1774,9 @@
                             <td>
                                 <div ng-if="play.chargeMode == 1">
                                     {{'时长(' + play.timeUnit + ')'}}&nbsp;
-                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
-                                    <span class="time">{{play.timeAmount}}</span>
-                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
                                 </div>
                             </td>
                             <td>数量&nbsp;
@@ -1788,7 +1788,7 @@
                                 <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
                                 <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
                         </tr>
                     </table>
                     </div>
@@ -2041,9 +2041,9 @@
                             <td>
                                 <div ng-if="play.chargeMode == 1">
                                     {{'时长(' + play.timeUnit + ')'}}&nbsp;
-                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.amount-1);">-</div>
-                                    <span class="time">{{play.timeAmount}}</span>
-                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.amount+1);">+</div>                                    
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
                                 </div>
                             </td>
                             <td>数量&nbsp;
@@ -2055,7 +2055,7 @@
                                 <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
                                 <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? (play.timeAmount / play.unitTime) : 1)}}<div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div></td>
                         </tr>
                     </table>
                     </div>

@@ -199,6 +199,7 @@ var orderService = function(app){
                             if(type === 1){
                                 //order.foodItems.push(temp);
                             }else if(type === 2){
+                                temp.timeAmount = 1;
                                 order.playItems.push(temp);
                             }
                             rootScope.$apply();
@@ -220,12 +221,6 @@ var orderService = function(app){
 
         };
         
-        this.addET = function(order) {
-            AJAXService.ajaxWithToken('get', '/entertainment/getCategoryList', {})
-                .then(res => {
-                    console.log(res);
-                });
-        };
 
         this.changeItem = function(order, items, item, ITEM, isGoods){
             var index = (items.indexOf(item));
@@ -253,13 +248,13 @@ var orderService = function(app){
                     chargeMode: ITEM.chargeMode, //收费模式 0-按次，1-按时间
                     timeUnit: ITEM.timeUnit, // 时间单位，分钟、小时等
                     unitTime: ITEM.unitTime, // 计时收费最小时间
-                    timeAmount: ITEM.unitTime,
+                    timeAmount: 1,
                     name: ITEM.name,
                     price: ITEM.price,
                     amount: (result.data.inventory < 1) ? 0 : 1,
-                    date: getInventoryDate,
-                    dateStr: util.dateFormat(getInventoryDate),
-                    dateStr2: util.dateFormatWithoutYear(getInventoryDate),
+                    date: new Date(),
+                    dateStr: util.dateFormat(new Date()),
+                    dateStr2: util.dateFormatWithoutYear(new Date()),
                     inventory: result.data.inventory
                 };
                 temp.calendar = calendarService.createItemCalendar(temp.date, order.roomEndDate);
@@ -305,8 +300,10 @@ var orderService = function(app){
          * @param  {} item 娱乐
          */
         this.decreaseTimeAmount = function(item) {
-            if (item.timeAmount - item.unitTime >= item.unitTime) {
-                item.timeAmount = item.timeAmount - item.unitTime;
+            if (item.timeAmount <= 1) {
+                item.timeAmount = 1;
+            } else {
+                item.timeAmount --;
             }
         };
         
@@ -315,8 +312,8 @@ var orderService = function(app){
          * @param  {} item 娱乐
          */
         this.increaseTimeAmount = function(item) {
-            if (item.timeAmount + item.unitTime <= 999) {
-                item.timeAmount = item.timeAmount + item.unitTime;
+            if ((item.timeAmount + 1) * item.unitTime <= 999) {
+                item.timeAmount ++;
             }
         };
         this.changeItemTime = function(item, date, sclass, order){
@@ -369,7 +366,7 @@ var orderService = function(app){
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount
                     * order.playItems[i].price
-                    * (order.playItems[i].chargeMode == 1 ? (order.playItems[i].timeAmount / order.playItems[i].unitTime) : 1);
+                    * (order.playItems[i].chargeMode == 1 ? order.playItems[i].timeAmount : 1);
             }
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
@@ -396,7 +393,7 @@ var orderService = function(app){
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount 
                     * order.playItems[i].price 
-                    * (order.playItems[i].chargeMode == 1 ? (order.playItems[i].timeAmount / order.playItems[i].unitTime) : 1);
+                    * (order.playItems[i].chargeMode == 1 ? order.playItems[i].timeAmount : 1);
             }
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
@@ -456,7 +453,7 @@ var orderService = function(app){
             for(var i = 0; i < order.playItems.length; i++){
                 price += order.playItems[i].amount * order.playItems[i].price
                     * (order.playItems[i].chargeMode == 1 
-                    ? (order.playItems[i].timeAmount / order.playItems[i].unitTime) : 1);
+                    ? order.playItems[i].timeAmount : 1);
             }
             for(var i = 0; i < order.goodsItems.length; i++){
                 price += order.goodsItems[i].amount * order.goodsItems[i].price;
