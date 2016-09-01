@@ -239,7 +239,7 @@ var orderService = function(app){
                 $(".select1_options").hide();
                 return false;
             }
-            var getInventoryDate = order.itemStartDate ? new Date(order.itemStartDate) : new Date();
+            var getInventoryDate = new Date();
             AJAXService.ajaxWithToken('GET', 'getInventoryUrl', {
                 date: util.dateFormat(getInventoryDate),
                 id: ITEM.itemId
