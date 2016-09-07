@@ -14,7 +14,8 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     rev = require('gulp-rev'),
     revCollector = require('gulp-rev-collector'),
-    webpackConf = require('./webpack.conf');
+    webpackConf = require('./webpack.conf'),
+    fileInclude = require('gulp-file-include');
 
 gulp.task('browser-sync', function () {
     browserSync.init({
@@ -23,6 +24,12 @@ gulp.task('browser-sync', function () {
             index: 'login.html'
         }
     });
+});
+
+gulp.task('file-include', function() {
+    gulp.src(['./static/tpl/feature.html'])
+        .pipe(fileInclude())
+        .pipe(gulp.dest('./view/home'));
 });
 
 gulp.task('clean', function () {
@@ -58,9 +65,9 @@ function revHash() {
         .pipe(gulp.dest('rev/image'));
 }
 
-gulp.task('build:prod', ['styles', 'webpack-prod', 'clean'], revHash);
+gulp.task('build:prod', ['file-include', 'styles', 'webpack-prod', 'clean'], revHash);
 
-gulp.task('build:dev', ['styles', 'webpack-dev', 'clean'], revHash);
+gulp.task('build:dev', ['file-include', 'styles', 'webpack-dev', 'clean'], revHash);
 
 //压缩成.war
 gulp.task('zip', function () {
@@ -135,10 +142,12 @@ gulp.task('watch', function () {
     gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
     gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
+    gulp.watch('./static/tpl/*.html', ['file-include']);
 });
 
 gulp.task('default', function () {
     gulp.start('browser-sync');
+    gulp.start('file-include');
     gulp.start('styles');
     gulp.start('webpack-dev');
     gulp.start('watch');
