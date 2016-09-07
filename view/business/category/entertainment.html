@@ -218,7 +218,8 @@
         <div v-if="ETType.needDeposit == 1" class="input-row">
           <label for="">额外收费</label>
           <textarea maxlength="140" v-model="ETType.extraFeeItems" type="text"></textarea>
-          <span class="et-optional">（选填）</span>          
+          <span class="et-optional">（选填）</span>
+          <div class="et-optional"><label></label>请使用中文逗号（，）分隔收费项目</div>         
         </div>
         <div class="input-row">
           <label for="">描述</label>
