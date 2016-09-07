@@ -243,15 +243,17 @@
       <div>
       <img @click="closeIconDialog" class="et-icon-close" src="http://static.dingdandao.com/eluyun/image/E78E98A1-12FC-4886-BA29-F3F438C7F2E6@1x.png" alt="">        
         <p style="font-size:16px;color:#178ce6;margin-bottom:24px">娱乐图标库</p>
-        <ul v-for="list in icons" class="et-icon-list clearfloat">
-          <span class="et-icon-type">{{list[0].typeName}}</span>
-          <li v-for="icon in list" @click="selectIcon(icon)">
-            <div>
-              <img :src="icon.entertainmentImgUrl" alt="">
-            </div>
-            <span class="et-icon-name" :class="{'icon-selected': iconSelected && icon.entertainmentIconId === iconSelected.entertainmentIconId}">{{icon.name}}</span>
-          </li>
-        </ul>
+        <div style="max-height: 600px;overflow-y: auto;padding-top: 8px;">
+          <ul v-for="list in icons" class="et-icon-list clearfloat">
+            <span class="et-icon-type">{{list[0].typeName}}</span>
+            <li v-for="icon in list" @click="selectIcon(icon)">
+              <div>
+                <img :src="icon.entertainmentImgUrl" alt="">
+              </div>
+              <span class="et-icon-name" :class="{'icon-selected': iconSelected && icon.entertainmentIconId === iconSelected.entertainmentIconId}">{{icon.name}}</span>
+            </li>
+          </ul>
+        </div>
         <div class="v-btn-group" style="margin-top: 18px">
           <label for=""></label>
           <button class="v-btn v-blue-btn" @click="setIcon" style="margin-right: 36px">确认</button>
