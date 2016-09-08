@@ -63,6 +63,7 @@ $(function(){
         methods: {
             openCreateETDialog: function() {
                 ETTypeDialog.status = 0;
+                ETTypeDialog.$set('ETType.chargeUnit', '1');
                 $('#createETDialog').modal('show');
             },
             selectET: function(id) {
@@ -95,6 +96,7 @@ $(function(){
             openCreateCategoryDialog() {
                 ETTypeDialog.status = 1;
                 ETTypeDialog.entertainmentId = this.selectedETId;
+                ETTypeDialog.$set('ETType.chargeUnit', '1');
                 $('#createETDialog').modal('show');  
             },
             /**
