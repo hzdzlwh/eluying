@@ -122,6 +122,14 @@ p {
     font-size: 20px;
     color: #333333;
 }
+.feature-content-4 {
+    background: url(http://static.dingdandao.com/hpbg4.png) no-repeat;
+    background-size: 1920px 1230px;
+    background-position: center;
+    margin-top: 120px;
+    padding-bottom: 1px;
+    margin-bottom: 80px;
+}
 .feat-container-4 {
     text-align: center;
     margin-top: 80px;
@@ -154,35 +162,33 @@ p {
     color: #fff
 }
 .feat-compare-left {
-    width: 697px;
+    width: 600px;
     height: 452px;
     color: #178ce6;
-    background: url(http://static.dingdandao.com/3AE3B346-C71D-4BDF-8415-55B414556C33@1x.png) no-repeat;
 }
 .feat-compare-right {
-    width: 697px;
+    width: 600px;
     height: 452px;
     color: #bfbfbf;
-    background: url(http://static.dingdandao.com/AD09CBF3-ADE9-4725-B060-4A66D706375A@1x.png) no-repeat;
 }
 .feat-compare-left-photo {
     position: relative;
     top: 1px;
     left: 85px;
-    width: 697px;
+    width: 600px;
     height: 298px;
-    background: url(http://static.dingdandao.com/18D0902E-4968-439A-860D-06EF6FA02955@1x%20%281%29.png) no-repeat;
 }
 .feat-compare-right-photo {
     position: relative;
     top: 1px;
     left: 73px;
-    width: 697px;
+    width: 600px;
     height: 298px;
-    background: url(http://static.dingdandao.com/0F6B028A-6722-460B-9519-EA3015EDE405@1x%20%281%29.png) no-repeat;
 }
 .feat-container-4 {
     font-size: 17px;
+    width: 1200px;
+    margin: 0 auto;
 }
 .feat-container-4 .feat-line-blue{
     margin: 15px auto 29px;
