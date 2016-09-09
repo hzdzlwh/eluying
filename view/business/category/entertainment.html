@@ -190,7 +190,7 @@
             <label for="">{{status != 2 ? '' : '计费方式'}}</label>
             <input v-model="ETType.chargeMode" value="1" type="radio" name="charge" v-if="status != 2"><span>按时计费&nbsp;</span>
             <input v-model="timePay" type="text" style="width: 52px" maxlength="8"><span>元&nbsp;/</span>
-            <input v-model="ETType.chargeUnitTime" type="text" style="width: 25px" maxlength="3">
+            <input v-model="ETType.chargeUnitTime" type="text" style="width: 25px;padding-left:0" maxlength="3">
             <select v-model="ETType.chargeUnit">
               <option value="1">小时</option>
               <option value="0">分钟</option>
