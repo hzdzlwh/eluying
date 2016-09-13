@@ -8,7 +8,7 @@ var leftMenu = {
         var templ = dot.template(leftMenuHtml);
         var data = {
             arrayParent:[{menuName: 'business', pathUrl: '/view/business/category/room.html', name: '业务设置'},
-                         {menuName: 'salesite', pathUrl: '/view/salesite/operation/operation.html', name: '直销网站设置'},
+                         {menuName: 'salesite', pathUrl: '/view/salesite/operation/operation.html', name: '微官网设置'},
                          {menuName: 'codesite', pathUrl: '/view/codesite/operation/codeOperation.html', name: '一码通网站设置'},
                          {menuName: 'setting', pathUrl: '/view/setting/method/method.html', name: '收款设置'},
                          {menuName: 'guest', pathUrl: '/view/guest/source/source.html', name: '客源设置'},

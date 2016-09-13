@@ -297,7 +297,7 @@ $(function(){
                     $("#method-confirmSubmit").modal("show");
                     confirmSubmit.tipHead = '提交审核新的企业支付宝申请将会自动:';
                     confirmSubmit.tipFirst = '1、解绑原来的企业支付宝账号';
-                    confirmSubmit.tipSecond = '2、下架直销官网';
+                    confirmSubmit.tipSecond = '2、下架微官网';
                 }
             }
         }

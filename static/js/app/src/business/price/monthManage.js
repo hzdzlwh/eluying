@@ -154,7 +154,7 @@ var monthManage = {
                 var count = 0;
                 $.each(data[name], function(index, element){
                     if (count % 7 === 0){
-                        tbody += "<tr><td><p>直销价</p></td>"
+                        tbody += "<tr><td><p>微官网价</p></td>"
                     }
                     //定位首个价格在表格中的位置
                     if (index === 0) {

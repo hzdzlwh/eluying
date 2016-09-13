@@ -19,7 +19,7 @@
       <div class="editDisplayInfo clearfloat">
         <h1>编辑展示信息-</h1>
 
-        <p class="tip">这些信息会出现在直销网站以及直销APP上，更详细的信息会帮助你吸引来更多客人哦</p>
+        <p class="tip">这些信息会出现在微官网上，更详细的信息会帮助你吸引来更多客人哦</p>
 
         <div class="clearfloat">
           <div class="photo">
@@ -286,7 +286,7 @@
           <th>押金</th>
           <th>人数</th>
           <th>描述</th>
-          <th>直销网站</th>
+          <th>微官网</th>
         </tr>
         </thead>
         <tbody>
@@ -335,7 +335,7 @@
         </div>
         <div v-if="selectedETCategory && selectedETCategory.directNetState === 0" class="et-operation-item" @click="modifyState">
             <img src="/static/image/icon_shangjia.png" alt="">
-            <p>上架到直销网站</p>
+            <p>上架到微官网</p>
         </div>
          <div v-if="selectedETCategory && selectedETCategory.directNetState === 1" class="rest-operation-item" @click="modifyState">
             <img src="/static/image/icon_xiajia.png" alt="">

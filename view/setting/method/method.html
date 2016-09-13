@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>订单来了——直销网站设置</title>
+    <title>订单来了——微官网设置</title>
     <link rel="Shortcut Icon" href="/static/image/favicon.ico">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
@@ -243,7 +243,7 @@
         </div>
         <div class="method-container">
             <div class="stitle">
-                <p class="c-text">订单钱包<span class="c-text-inner">(订单来了代收,用于直销网站、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
+                <p class="c-text">订单钱包<span class="c-text-inner">(订单来了代收,用于微官网、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
                 <span class="m-btn-wallet right back-{{ walletStatus }}" @click="toggleStatus('wallet')"></span>
             </div>
             <div class="s-m-box" v-show="walletShow" transition="show">
@@ -259,7 +259,7 @@
                         </thead>
                         <tbody>
                             <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于直销网站、一码通在线充值</span></div></td>
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于微官网、一码通在线充值</span></div></td>
                                 <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
                                 <td class="col-last"><span class="site-btn back-{{ w_webPayStatus }}" @click="toggleStatus('web-w')"></span></td>
                             </tr>
@@ -278,7 +278,7 @@
                 </div>
             </div>
             <div class="stitle company-top">
-                <p class="c-text">企业账户<span class="c-text-inner">(用于直销网站、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
+                <p class="c-text">企业账户<span class="c-text-inner">(用于微官网、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
                 <span class="m-btn-company right back-{{ companyStatus }}" @click="toggleStatus('company')"></span>
             </div>
             <div class="s-m-box" v-show="companyShow" transition="fade">
@@ -295,7 +295,7 @@
                         </thead>
                         <tbody>
                             <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于直销网站、一码通在线充值</span></div></td>
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于微官网、一码通在线充值</span></div></td>
                                 <td class="col-not-first"><div class="dot-{{ c_webObj.typeStyle }} dot"></div><span v-text="c_webObj.typeStr"></span></td>
                                 <td class="col-not-first"><div class="hr2"></div></td>
                                 <td class="col-not-first"><span class="site-btn back-{{ c_webPayStatus }}" @click="toggleStatus('web-c')"></span></td>

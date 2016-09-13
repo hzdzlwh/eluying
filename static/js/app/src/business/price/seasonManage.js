@@ -198,7 +198,7 @@ var seasonManage = {
                 tbody += "<tbody>" +
                     "<tr>" +
                     "<td>" +
-                    "<p>直销价</p>" +
+                    "<p>微官网价</p>" +
                     "</td>";
                 for (var i = 1; i < 7; i++) {
                     tbody += "<td class='netPrice' channel-id='" + data[name][i].channelId + "' week='" + (i + 1) + "'>" + "<p>" + data[name][i].netPrice + "</p></td>";

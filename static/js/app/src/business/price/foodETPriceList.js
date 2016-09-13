@@ -39,7 +39,7 @@ var foodETPriceList = {
                 if (subName == 0) {
                     dishesTbody += "<tr class='mainClass'><td>" + dishesList[name][subName].name + (dishesList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + dishesList[name][subName].id + "'>" + dishesList[name][subName].salePrice + "</td></tr>"
                 } else {
-                    dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + dishesList[name][subName].id + "' channel-id='" + dishesList[name][subName].channelId + "' ><div><p>"
                         + dishesList[name][subName].netPrice + "</p></div></td></tr>"
                 }
@@ -52,7 +52,7 @@ var foodETPriceList = {
                 if (subName == 0) {
                     packageTbody += "<tr class='mainClass'><td>" + packageList[name][subName].name + (packageList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + packageList[name][subName].id + "'>" + packageList[name][subName].salePrice + "</td></tr>"
                 } else {
-                    packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + packageList[name][subName].id + "' channel-id='" + packageList[name][subName].channelId + "' ><div><p>"
                         + packageList[name][subName].netPrice + "</p></div></td></tr>"
                 }
@@ -75,7 +75,7 @@ var foodETPriceList = {
                 if (subName == 0) {
                     tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + priceHtml + "</td></tr>"
                 } else {
-                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
                         + priceHtml + "</p></div></td></tr>"
                 }
