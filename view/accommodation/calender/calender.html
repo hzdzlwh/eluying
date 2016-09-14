@@ -447,6 +447,10 @@
                                         <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                         <div class="sval1">¥{{p.fee}}</div>
                                     </div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 4">
+                                        <div class="sl">{{p.payChannel}}：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
                                     <div class="hr3" ng-if="orderDetail.isDepositPaid"></div>
                                     <div class="subt" ng-if="orderDetail.isDepositPaid">押金收支明细</div>
                                     <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 1">
@@ -677,6 +681,10 @@
                                 </div>
                                 <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 2 && orderCancel.payments">
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 4 && orderCancel.payments">
+                                    <div class="sl">{{p.payChannel}}：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
                                 <div class="hr3" ng-if="orderCancel.isDepositPaid"></div>
@@ -2333,6 +2341,10 @@
                                 </div>
                                 <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 2 && !p.isNew">
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 4 && !p.isNew">
+                                    <div class="sl">{{p.payChannel}}：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
                                 <div class="hr3" ng-if="getMoney.isDepositPaid"></div>

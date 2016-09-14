@@ -286,8 +286,9 @@ var orderService = function(app){
         };
         this.changeItemNum = function(item, num){
             item.amount = num;
-            if(num < 0){
-                item.amount = 0;
+            var min = item.usedAmount ? item.usedAmount : 0;
+            if(num < min){
+                item.amount = min;
             }
             if (item.processAmount !== undefined && num < item.processAmount) {
                 item.amount = item.processAmount;
