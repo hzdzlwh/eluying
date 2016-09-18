@@ -432,6 +432,10 @@
                                         <div class="sl">违约金：</div>
                                         <div class="sval">¥{{orderDetail.penaltyAd}}</div>
                                     </div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 4">
+                                        <div class="sl">{{p.payChannel}}：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
+                                    </div>
                                     <div class="sitem">
                                         <div class="sl">客户应付：</div>
                                         <div class="sval">¥{{calPrice(orderDetail)}}</div>
@@ -447,10 +451,7 @@
                                         <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                         <div class="sval1">¥{{p.fee}}</div>
                                     </div>
-                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 4">
-                                        <div class="sl">{{p.payChannel}}：</div>
-                                        <div class="sval1">¥{{p.fee}}</div>
-                                    </div>
+                                    
                                     <div class="hr3" ng-if="orderDetail.isDepositPaid"></div>
                                     <div class="subt" ng-if="orderDetail.isDepositPaid">押金收支明细</div>
                                     <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 1">
@@ -668,6 +669,10 @@
                                     <div class="sval">- ¥{{orderCancel.discounts || 0}}</div>
                                     <div class="clearline"></div>
                                 </div>
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 4 && orderCancel.payments">
+                                    <div class="sl">{{p.payChannel}}：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
                                     <div class="sval">¥{{calPrice(orderCancel)}}</div>
@@ -683,10 +688,7 @@
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 4 && orderCancel.payments">
-                                    <div class="sl">{{p.payChannel}}：</div>
-                                    <div class="sval1">¥{{p.fee}}</div>
-                                </div>
+                                
                                 <div class="hr3" ng-if="orderCancel.isDepositPaid"></div>
                                 <div class="subt" ng-if="orderCancel.isDepositPaid">押金收支明细</div>
                                 <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 1 && orderCancel.payments">
@@ -1071,7 +1073,7 @@
                                 <td>姓名</td>
                                 <td>
                                     <input placeholder="姓名" type="text" name="orderEditCustomerName" ng-pattern="/^[0-9A-Za-z\u4E00-\u9FA5\s]{2,30}$/"
-                                           ng-model="orderEdit.customerName" minlength="1" maxlength="16" class="long" required>
+                                           ng-model="orderEdit.customerName" minlength="1" maxlength="16" class="long" required ng-disabled="orderEdit.onePass">
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerName.$invalid
                                 && !orderEditForm.orderEditCustomerName.$error.required
                                 && orderEditForm.orderEditCustomerName.$dirty">姓名格式错误</div>
@@ -1080,7 +1082,7 @@
                                 </td>
                                 <td>手机号</td>
                                 <td><input placeholder="手机号" type="text" name="orderEditCustomerPhone" ng-pattern="/^[0-9]{11}$/"
-                                           ng-model="orderEdit.customerPhone" maxlength="11" class="short" required>
+                                           ng-model="orderEdit.customerPhone" maxlength="11" class="short" required ng-disabled="orderEdit.onePass">
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerPhone.$invalid
                                 && !orderEditForm.orderEditCustomerPhone.$error.required
                                 && orderEditForm.orderEditCustomerPhone.$dirty">手机格式错误</div>
@@ -2328,6 +2330,10 @@
                                     <div class="sval">¥{{getMoney.penaltyAd}}</div>
                                     <!--<div class="clearline"></div>-->
                                 </div>
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 4 && !p.isNew">
+                                    <div class="sl">{{p.payChannel}}：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
                                     <div class="sval">¥{{calPrice(getMoney)}}</div>
@@ -2343,10 +2349,7 @@
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
-                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 4 && !p.isNew">
-                                    <div class="sl">{{p.payChannel}}：</div>
-                                    <div class="sval1">¥{{p.fee}}</div>
-                                </div>
+                                
                                 <div class="hr3" ng-if="getMoney.isDepositPaid"></div>
                                 <div class="subt" ng-if="getMoney.isDepositPaid">押金收支明细</div>
                                 <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1 && !p.isNew">

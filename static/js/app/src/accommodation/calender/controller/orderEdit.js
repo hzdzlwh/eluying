@@ -171,6 +171,7 @@ var orderEditCtrl = function(app){
                         //提示编辑订单成功
                         $("#orderEditModel").modal("hide");
                         getDataService.getOrderDetail(orderEdit.orderId, rootScope);
+                        getDataService.getRoomsAndStatus(rootScope);
                     }else{
                         modal.somethingAlert(result3.msg);
                     }
