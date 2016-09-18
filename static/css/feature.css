@@ -5,9 +5,6 @@ body {
 p {
     margin: 0;
 }
-.clearfix {
-    overflow: hidden;
-}
 .feature-content-1 {
     height: 934px;
     position: relative;
@@ -41,6 +38,15 @@ p {
     float: left;
     font-size: 20px;
     margin: 0 44.5px;
+}
+.feat-box img {
+    transition: all 0.3s ease-in-out;
+    opacity: 0.9;
+    cursor: pointer;
+}
+.feat-box img:hover {
+    transform: scale(1.05);
+    opacity: 1 !important;
 }
 .feature-content-2 {
     height: 843px;
@@ -135,6 +141,7 @@ p {
     margin-top: 80px;
 }
 .feat-tab {
+    position: relative;
     border-radius: 14px;
     height: 47px;
     border: 2px solid #178ce6;
@@ -143,22 +150,20 @@ p {
     line-height: 47px;
     display: inline-block;    
 }
-.feat-tab div {
+.feat-tab-item {
     display: inline-block;
     width: 146px;
     position: relative;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
-.feat-tab div:first-child {
+.feat-tab-item:first-of-type {
     left: -2px;
 }
-.feat-tab div:last-child {
+.feat-tab-item:last-of-type {
     left: 2px;
 }
 .feat-tab-selected {
-    border-radius: 14px;
-    background:#178ce6;
-    box-shadow: 0px 0px 10px 0px #178ce6;
     color: #fff
 }
 .feat-compare-left {
@@ -222,4 +227,20 @@ p {
     line-height: 150px;
     margin: 0 5px;
     font-size: 36px;
+}
+.feat-tab-bg {
+    position: absolute;
+    border-radius: 14px;
+    background: #178ce6;
+    box-shadow: 0px 0px 10px 0px #178ce6;
+    height: 47px;
+    width: 146px;
+    left: 155px;
+    transition: all 0.3s ease-in-out;
+}
+.feat-tab-bg.left {
+    left: -2px;
+}
+.feat-tab-bg.right {
+    left: 155px;
 }

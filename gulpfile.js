@@ -30,6 +30,9 @@ gulp.task('file-include', function() {
     gulp.src(['./static/tpl/feature.html'])
         .pipe(fileInclude())
         .pipe(gulp.dest('./view/home'));
+    gulp.src(['./static/tpl/login.html'])
+        .pipe(fileInclude())
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('clean', function () {
@@ -154,4 +157,3 @@ gulp.task('default', function () {
 });
 
 gulp.task('start', ['default']);
-

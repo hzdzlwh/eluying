@@ -91,10 +91,10 @@
     top: 0;
     z-index: 100;
     .logo{
+      line-height: 70px;
       position: absolute;
       width: auto;
       height: 100%;
-      line-height: 70px;
       left: 30px;
       top: 0;
     }
@@ -110,12 +110,18 @@
         vertical-align: middle;
       }
       .navitem{
-        color: #999999;
         margin-right: 40px;
         cursor: pointer;
-      }
-      .navitem:hover{
-        color: #666666;
+        a {
+          color: #999;
+          text-decoration: none;
+          &:hover {
+            color: #666;
+          }
+          &.active {
+            color: #178ce6;
+          }
+        }
       }
       .sbtn{
         @include btn_small();

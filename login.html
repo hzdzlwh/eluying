@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="robots" content="index">
     <meta name="description" content="订单来了，旅游目的地营销管理系统。降低运营成本，发现更多合作伙伴，管理更高效。 0571-86906982">
     <meta name="keywords" content="订单来了,露营地管理软件,露营地,露营地营销管理,酒店管理,餐饮管理,酒店管理系统,餐饮管理系统,房车,一卡通,旅游管理">
@@ -72,7 +72,6 @@
     </script>
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/login/login.js"></script>
-
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -85,21 +84,23 @@
 </head>
 <body id="login2-body">
     <div class="login2-top">
-        <div class="logo">
-            <!--<div class="login2_vip_outer spriteImg">-->
-                <!--<div class="login2_vip"></div>-->
-            <!--</div>-->
-            <img src="static/image/logo_login2.png" alt="erweima">
-        </div>
-        <div class="navbar">
-            <div class="item navitem"><a href="/login.html">首页</a></div>
-            <!--<div class="item navitem">价格</div>-->
-            <div class="item navitem"><a href="/view/home/feature.html">功能</a></div>
-            <!--<div class="item navitem">下载</div>-->
-            <div class="item sbtn log" data-toggle="modal" data-target="#loginRegister">注册</div>
-            <div class="item sbtn reg" data-toggle="modal" data-target="#loginModal">登录</div>
-        </div>
+    <div class="logo">
+        <a href="/">
+            <img src="/static/image/logo_login2.png" alt="erweima">
+        </a>
+        <!--<div class="login2_vip_outer spriteImg">-->
+            <!--<div class="login2_vip"></div>-->
+        <!--</div>-->
     </div>
+    <div class="navbar">
+        <div class="item navitem"><a href="/" id="js-navbar-home">首页</a></div>
+        <!--<div class="item navitem">价格</div>-->
+        <div class="item navitem"><a href="/view/home/feature.html" id="js-navbar-feat">功能</a></div>
+        <!--<div class="item navitem">下载</div>-->
+        <div class="item sbtn log" data-toggle="modal" data-target="#loginRegister">注册</div>
+        <div class="item sbtn reg" data-toggle="modal" data-target="#loginModal">登录</div>
+    </div>
+</div>
     <div class="login2-banner">
         <img src="http://static.dingdandao.com//login2/background_1.jpg" class="bg-img" alt="background1">
         <div class="title">新一代旅游目的地营销管理软件</div>
@@ -273,21 +274,21 @@
             <!--<a href="http://www.dingdandao.com/app.html"><div class="sbtn video">APP下载</div></a>-->
         </div>
     </div>
-    <div class="login2-contact">
-        <div class="wrapper">
-            <!--<div class="login2_qr_code_outer spriteImg erweima">-->
-                <!--<div class="login2_qr_code"></div>-->
-            <!--</div>-->
-            <img src="static/image/erweima_login2.jpg" class="erweima" alt="">
-            <div class="erweima-text">微信公众号</div>
-            <div class="phone-text">联系我们</div>
-            <div class="phone">400-600-9394</div>
-            <div class="email-text">意见反馈</div>
-            <div class="email">suggestion@dingdandao.com</div>
-            <div class="vr"></div>
-            <div class="copyright">© Copyright 2014-2016 杭州旅居星球网络科技有限公司 浙ICP备14029301号</div>
-        </div>
+<div class="login2-contact">
+    <div class="wrapper">
+        <!--<div class="login2_qr_code_outer spriteImg erweima">-->
+            <!--<div class="login2_qr_code"></div>-->
+        <!--</div>-->
+        <img src="/static/image/erweima_login2.jpg" class="erweima" alt="">
+        <div class="erweima-text">微信公众号</div>
+        <div class="phone-text">联系我们</div>
+        <div class="phone">400-600-9394</div>
+        <div class="email-text">意见反馈</div>
+        <div class="email">suggestion@dingdandao.com</div>
+        <div class="vr"></div>
+        <div class="copyright">© Copyright 2014-2016 杭州旅居星球网络科技有限公司 浙ICP备14029301号</div>
     </div>
+</div>
 </body>
 <div class="modal fade out" id="loginRegister" style="display: none!important;">
     <div class="modal-dialog">
@@ -463,7 +464,7 @@
             <p class="text" style="text-align: center">现在您可以</p>
             <div class="line"></div>
             <div class="item clearfloat" id="createNewNetwork">
-                <img src="static/image/ic_create_net_big.png" alt="加入网络">
+                <img src="/static/image/ic_create_net_big.png" alt="加入网络">
                 <div class="sub-item">
                     <p class="sub-title">创建新网络</p>
                     <p class="text">如果您是营地、景区、农庄、度假村</p>
@@ -471,7 +472,7 @@
                 </div>
             </div>
             <div class="item clearfloat" id="joinNetwork">
-                <img src="static/image/ic_join_net_big.png" alt="加入网络">
+                <img src="/static/image/ic_join_net_big.png" alt="加入网络">
                 <div class="sub-item">
                     <p class="sub-title">加入现有网络</p>
                     <p class="text">如果您的老板或者同事</p>

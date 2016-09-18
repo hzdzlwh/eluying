@@ -149,6 +149,17 @@ $(document).ready(function(){
         util.centroidDiv(".loginPic img", '.loginPic');
     });
 
+    switch(window.location.pathname) {
+        case '/', 'login.html':
+            $('#js-navbar-home').addClass('active');
+            break;
+        case '/view/home/feature.html':
+            $('#js-navbar-feat').addClass('active');
+            break;
+        default:
+            $('#js-navbar-home').addClass('active');
+    }
+
     if (isPostBack == "False") {
         GetLastUser();
     }
