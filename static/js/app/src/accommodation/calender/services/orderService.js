@@ -426,6 +426,9 @@ var orderService = function(app){
                 if(payments[i].type === 1){
                     deposit += parseFloat(payments[i].fee);
                 }
+                if(payments[i].type === 3){
+                    deposit -= parseFloat(payments[i].fee);
+                }
             }
             return deposit;
         };
