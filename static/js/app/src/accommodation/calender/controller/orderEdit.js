@@ -198,6 +198,9 @@ var orderEditCtrl = function(app){
                             room.categoryId = roomCategory.categoryId;
                             room.categoryName = roomCategory.categoryName;
 
+                            calendarService.createRoomStartDateCalendar(room);
+                            calendarService.createRoomEndDateCalendar(room);
+
                             scope.$apply();  
                         } else {
                              
