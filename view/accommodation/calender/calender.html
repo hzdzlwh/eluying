@@ -428,10 +428,6 @@
                                         <div class="sval">- ¥{{orderDetail.discounts || 0}}</div>
                                         <!--<div class="clearline"></div>-->
                                     </div>
-                                    <div class="sitem" ng-if="orderDetail.penaltyAd > 0">
-                                        <div class="sl">违约金：</div>
-                                        <div class="sval">¥{{orderDetail.penaltyAd}}</div>
-                                    </div>
                                     <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 4">
                                         <div class="sl">{{p.payChannel}}：</div>
                                         <div class="sval1">¥{{p.fee}}</div>
@@ -2323,11 +2319,6 @@
                                 <div class="sitem">
                                     <div class="sl">优惠：</div>
                                     <div class="sval">- ¥{{getMoney.discounts || 0}}</div>
-                                    <!--<div class="clearline"></div>-->
-                                </div>
-                                <div class="sitem" ng-if="getMoney.penaltyAd !== undefined">
-                                    <div class="sl">提前退房违约金：</div>
-                                    <div class="sval">¥{{getMoney.penaltyAd}}</div>
                                     <!--<div class="clearline"></div>-->
                                 </div>
                                 <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 4 && !p.isNew">

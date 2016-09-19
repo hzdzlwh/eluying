@@ -379,9 +379,6 @@ var orderService = function(app){
             if(price < 0){
                 price = 0;
             }
-            for(var i=0; i < order.payments.length; i++) {
-                order.payments[i].type === 4 && (price += order.payments[i].fee)
-            }
             price = price.toFixed(2)*100/100;
             return price;
         };
