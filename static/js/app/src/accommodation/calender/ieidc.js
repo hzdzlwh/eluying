@@ -74,20 +74,9 @@ idcObj.read = function(timeout, scope){
      idVerify				MD5校验码，由用户指定数据组合生成的MD5编码，用于在服务端校验上传的数据是否完整，防止被篡改
      SAMID				阅读器的设备ID
      *******************************************************************************************************************/
-    if(cid==""){
-        $(".readBtn").html('读卡添加');
-        $(".readBtn").removeClass('ing');
-    }else{
-        //- 阅读数据写入input
-        var name = this.data.IDname;
-        var num = this.data.IDCardNo;
-        scope.$broadcast('read', name, num);
-        $("#newOrderModal .readBtn").html('读卡添加');
-        $(".readBtn").removeClass('ing');
-        // scope.$apply();
-        // $("input[name=orderNewCustomerName]").val(name);
-        // $("input[name=orderNewId]").val(num);
-    }
+    var name = this.data.IDname;
+    var num = this.data.IDCardNo;
+    scope.$broadcast('read', name, num);
 };
 
 module.exports = idcObj;

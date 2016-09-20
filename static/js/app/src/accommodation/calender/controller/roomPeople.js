@@ -22,16 +22,21 @@ var roomPeopleCtrl = function(app) {
             });
 
             scope.$on('read', function(ev, name, num) {
-                var person = {
-                    name: name,
-                    idCardNum: num,
-                    selectedIdLabel: '身份证',
-                    selectedId: 0,
-                    read: true,
-                }
-                scope.idCardList.push(person);
-                $("#showRoomPeopleModal .readBtn").html('读卡添加');
+                $(".readBtn").html('读卡添加');
                 $(".readBtn").removeClass('ing');
+                
+                if (name && num) {
+                    var person = {
+                        name: name,
+                        idCardNum: num,
+                        selectedIdLabel: '身份证',
+                        selectedId: 0,
+                        read: true,
+                    }
+                    scope.idCardList.push(person);
+
+                    scope.$apply();
+                }
             });
 
             scope.changeIds = function(method, methodLabel, person){
@@ -98,8 +103,10 @@ var roomPeopleCtrl = function(app) {
                         $('#roomPeopleModal').modal('hide');
                         scope.submitted = false;
                         getDataService.getOrderDetailAndRest(scope.orderId, rootScope)
-                        var room = rootScope.checkin.rooms.find(el => el.serviceId === scope.serviceId);
-                        room.idCardList = scope.idCardList;
+                        if (rootScope.checkin) {
+                            var room = rootScope.checkin.rooms.find(el => el.serviceId === scope.serviceId);
+                            room.idCardList = scope.idCardList;
+                        }
                         rootScope.$apply();
                             //  .then(function() {
                             //      rootScope.checkin = checkinService.resetCheckin(rootScope);
