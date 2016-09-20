@@ -1195,7 +1195,7 @@ function onMessage(msg) {
                             </td>
                             <td ng-if="r.state === 0">
                                 <span class="light">入住</span>
-                                &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true" ng-disabled="roomList.length===0">
+                                &nbsp;<input type="text" class="datePicker" ng-model="r.sstartDate" readonly="true">
                                 <div class="date-table start">
                                     <div class="month-selector">
                                         <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomStartDateMonth(r, -1);$event.stopPropagation();">
@@ -1222,7 +1222,7 @@ function onMessage(msg) {
                                         </div>
                                     </div>
                                 </div>
-                                &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true" ng-disabled="roomList.length===0">
+                                &nbsp;~&nbsp;<input type="text" class="datePicker" ng-model="r.sendDate" readonly="true">
                                 <div class="date-table end">
                                     <div class="month-selector">
                                         <div class="eluyun_left_outer spriteImg previous" ng-click="changeRoomEndDateMonth(r, -1);$event.stopPropagation();">
