@@ -50,6 +50,11 @@ var orderNewCtrl = function(app){
                 orderNew.discounts = itemPrice;
             }
         };
+
+        scope.decreaseTimeAmount = orderService.decreaseTimeAmount;
+
+        scope.increaseTimeAmount = orderService.increaseTimeAmount;
+
         scope.submitOrder = function(orderNewForm){
             orderNewForm.orderNewCustomerPhone.$setDirty();
             orderNewForm.orderNewCustomerName.$setDirty();
@@ -66,9 +71,9 @@ var orderNewCtrl = function(app){
             if(orderNewCustomerPhone.$invalid){
                 flag = true;
             }
-            if(orderNewId.$invalid){
-                flag = true;
-            }
+            // if(orderNewId.$invalid){
+            //     flag = true;
+            // }
             if(!validateService.checkRemark(orderNew.remark)){
                 flag = true;
             }
@@ -108,10 +113,12 @@ var orderNewCtrl = function(app){
                 rooms.push(room);
             });
             var items = [];
-            itemList.forEach(function(d, i){
+            var entertainmentItems = [];
+            orderNew.goodsItems.forEach(function(d, i){
                 if(d.amount === 0){
                     return false;
                 }
+                
                 items.push({
                     amount: d.amount,
                     date: d.dateStr,
@@ -120,8 +127,25 @@ var orderNewCtrl = function(app){
                     price: d.price,
                     priceId: 0,
                     type: d.type
-                });
+                }); 
+                  
             });
+
+            orderNew.playItems.forEach(el => {
+                if(el.amount === 0){
+                    return false;
+                }
+                entertainmentItems.push({
+                    amount: el.amount,
+                    categoryId: el.categoryId,
+                    categoryName: el.name,
+                    date: el.dateStr,
+                    price: el.price,
+                    timeAmount: el.timeAmount,
+                });
+            })
+            
+
             var type = 0;
             if(orderNew.type === 'book'){
                 type = 2;
@@ -140,7 +164,8 @@ var orderNewCtrl = function(app){
                     fee: orderNew.discounts || 0,
                     type: 5
                 }]),
-                rooms: JSON.stringify(rooms)
+                rooms: JSON.stringify(rooms),
+                entertainmentItems: JSON.stringify(entertainmentItems),
             };
             if(orderNew.idVal){
                 orderItem.customerIdCardArr = JSON.stringify([
@@ -163,21 +188,6 @@ var orderNewCtrl = function(app){
                     modal.somethingAlert(result3.msg);
                 }
             });
-        };
-        scope.beginReadId = function(){
-            var mode = $("#newOrderModal .readBtn").html();
-            if(mode === '开始读卡'){
-                $("#newOrderModal .readBtn").html('正在读卡...');
-                $("#newOrderModal .readBtn").addClass('ing');
-                setTimeout(function(){
-                    idcObj.init();
-                    idcObj.read(3, 0, rootScope);
-                }, 500)
-            }else{
-                // $("#newOrderModal .readBtn").html('开始读卡');
-                // idcObj.init();
-                // idcObj.idc && idcObj.idc.ReadClose();
-            }
         };
         scope.hideModal = function(orderNewForm){
             orderNewForm.$setPristine();

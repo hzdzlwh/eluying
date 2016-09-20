@@ -5,6 +5,7 @@ require("angular");
 var constService = require("./constService");
 var accommodationService = require("./accommodationService");
 var orderDetailService = require("./orderDetailService");
+var idcObj = require("../ieidc");
 
 var getDataService = function(app){
     constService(app);
@@ -24,20 +25,40 @@ var getDataService = function(app){
                 })
             });
         };
+        
+        /**
+         * 获取餐饮娱乐商超品类
+         * @param  {} callback
+         */
         this.getItems = function(callback){
-            AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
+            var plays = [];
+            var foods = [];
+            var goods = [];
+
+            var getPlays =  AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
+                .then(res => {
+                    if (res.code === 1) {
+                        res.data.list.map(el => {
+                            el.itemId = el.categoryId;
+                            el.type = 2;
+                            plays.push(el)
+                        });
+                    }
+                });
+
+            var getFoods =  AJAXService.ajaxWithToken('GET', 'getItemsUrl', {}, function(result){
                 var items = result.data.list;
-                var foods = [];
-                var plays = [];
+                // var plays = [];
                 items.forEach(function(d){
                     if(d.type == 1){
                         foods.push(d);
                     }else if(d.type == 2){
-                        plays.push(d);
+                        // plays.push(d);
                     }
                 });
-                AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
-                    var goods = [];
+            });
+
+            var getGoods = AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, function(result1){
                     result1.data.list.forEach(function(d){
                         d.gList.forEach(function(dd){
                             goods.push({
@@ -48,13 +69,17 @@ var getDataService = function(app){
                             });
                         });
                     });
+            });
+
+            Promise.all([getPlays, getFoods, getGoods])
+                .then(() => {
                     callback({
                         foodList: foods,
                         funList: plays,
                         goodsList: goods,
                     });
                 });
-            });
+
         };
         this.getIDs = function(callback){
             var idList = [
@@ -71,22 +96,33 @@ var getDataService = function(app){
         this.getPayChannels = function(callback){
             AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result){
                 var payChannels = result.data.payChannelCustomList;
-                var map = result.data.map;
-                if(map.alipaySelected){
-                   // payChannels.push({
-                   //     channelId: -6,
-                   //     name: '支付宝'
-                   // });
-                }else if(map.walletPaySelected){
-                   payChannels.push({
-                       channelId: -8,
-                       name: '订单钱包'
-                   });
+                var map = result.data;
+                var walletOpenAndUseStateList = map.walletOpenAndUseStateList;
+                for (var key in walletOpenAndUseStateList) {
+                   if (map.onlineCollectionMethod === 1 &&
+                       walletOpenAndUseStateList[key].onlineType === 2
+                       && walletOpenAndUseStateList[key].openState === 1 
+                       && walletOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -8,
+                            name: '支付宝（订单钱包）'
+                        });
+                        break;
+                   } 
                 }
-                payChannels.push({
-                    channelId: -1,
-                    name: '现金'
-                });
+                var enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
+                for (var key in enterpriseOpenAndUseStateList) {
+                    if (map.onlineCollectionMethod === 2 &&
+                        enterpriseOpenAndUseStateList[key].onlineType === 2
+                        && enterpriseOpenAndUseStateList[key].openState === 1
+                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -6,
+                            name: '支付宝'
+                        });
+                        break;
+                    }
+                }
                 payChannels.sort(function(a, b){
                     return a.channelId - b.channelId;
                 });
@@ -96,14 +132,23 @@ var getDataService = function(app){
             });
         };
         this.getOrderDetail = function(orderId, scope){
-            AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+            return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
                 orderId: orderId,
-                version: 7
             }, function(result){
                 if(result.code === 1){
                     scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
                     scope.$apply();
                     $("#orderDetailModal").modal("show");
+                }
+            });
+        };
+        this.getOrderDetailAndRest = function(orderId, scope){
+            return AJAXService.ajaxWithToken('GET', 'getOrderDetailUrl', {
+                orderId: orderId,
+            }, function(result){
+                if(result.code === 1){
+                    scope.orderDetail = orderDetailService.resetOrderDetail(result.data);
+                    scope.$apply();
                 }
             });
         };

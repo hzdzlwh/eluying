@@ -1,0 +1,246 @@
+body {
+    margin: 0;
+    line-height: 1.4;
+}
+p {
+    margin: 0;
+}
+.feature-content-1 {
+    height: 934px;
+    position: relative;
+    background: url(http://static.dingdandao.com/Group_72.png) no-repeat;
+    background-size: 1920px 934px;
+    background-position: center;
+    text-align: center;
+    color: #fff;
+}
+.feat-h1 {
+    font-size: 48px;
+}
+.feat-h2 {
+    font-size: 24px;
+}
+.feat-line {
+    background: #fff;
+    width: 34px;
+    height: 4px;
+    display: block;
+    margin: 16px auto;
+}
+.feat-line-blue {
+    background: #178ce6;
+    width: 34px;
+    height: 4px;
+    display: block;
+    margin-top: 16px;
+}
+.feat-box {
+    float: left;
+    font-size: 20px;
+    margin: 0 44.5px;
+}
+.feat-box img {
+    transition: all 0.3s ease-in-out;
+    opacity: 0.9;
+    cursor: pointer;
+}
+.feat-box img:hover {
+    transform: scale(1.05);
+    opacity: 1 !important;
+}
+.feature-content-2 {
+    height: 843px;
+    position: relative;
+}
+.feat-help-box {
+    border: 4px solid #178ce6;
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 112px;
+    display: table-cell;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.feat-help-box-selected{
+    background: #178ce6;
+    border: 4px solid #178ce6;
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 112px;
+    display: table-cell;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.feat-container-2 {
+    position: relative;
+    width: 1000px;
+    margin: 120px auto 0;
+}
+.feat-container-4 .feat-h1,.feat-container-2 .feat-h1 {
+    color: #364254
+}
+.feat-container-4 .feat-h2, .feat-container-2 .feat-h2 {
+    color: #808080
+}
+.feat-phone {
+    position: absolute;
+    top: -255px;
+    right: 0;
+}
+.feat-phone-content {
+    position: absolute;
+    top: -255px;
+    right: 0;
+}
+.feature-content-3 {
+    height: 780px;
+    background: url(http://static.dingdandao.com/man-person-jumping-desert.png) no-repeat;
+    background-size: 1920px 780px;
+    background-position: center;
+    color: #fff;
+    font-size: 17px;
+}
+.feat-vs-box {
+    float: left;
+    display: block;
+    text-align: center;
+}
+.feat-vs {
+    float: left;
+    font-size: 100px;
+    margin-top: 118px;
+}
+.pull-right {
+    float: right;
+}
+.pull-left {
+    float: left;
+}
+.feat-help-h1 {
+    font-size: 30px;
+    color: #178ce6;
+}
+.feat-help-h2 {
+    font-size: 20px;
+    color: #333333;
+}
+.feature-content-4 {
+    background: url(http://static.dingdandao.com/hpbg4.png) no-repeat;
+    background-size: 1920px 1230px;
+    background-position: center;
+    margin-top: 120px;
+    padding-bottom: 1px;
+    margin-bottom: 80px;
+}
+.feat-container-4 {
+    text-align: center;
+    margin-top: 80px;
+}
+.feat-tab {
+    position: relative;
+    border-radius: 14px;
+    height: 47px;
+    border: 2px solid #178ce6;
+    font-size: 24px;
+    color:#9297a3;
+    line-height: 47px;
+    display: inline-block;    
+}
+.feat-tab-item {
+    display: inline-block;
+    width: 146px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.feat-tab-item:first-of-type {
+    left: -2px;
+}
+.feat-tab-item:last-of-type {
+    left: 2px;
+}
+.feat-tab-selected {
+    color: #fff
+}
+.feat-compare-left {
+    width: 600px;
+    height: 452px;
+    color: #178ce6;
+}
+.feat-compare-right {
+    width: 600px;
+    height: 452px;
+    color: #bfbfbf;
+}
+.feat-compare-left-photo {
+    position: relative;
+    top: 1px;
+    left: 85px;
+    width: 600px;
+    height: 298px;
+}
+.feat-compare-right-photo {
+    position: relative;
+    top: 1px;
+    left: 73px;
+    width: 600px;
+    height: 298px;
+}
+.feat-container-4 {
+    font-size: 17px;
+    width: 1200px;
+    margin: 0 auto;
+}
+.feat-container-4 .feat-line-blue{
+    margin: 15px auto 29px;
+}
+.feat-fea {
+    font-size: 72px;
+}
+.feat-img-container {
+    width: 130px;
+    height: 130px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.feat-value {
+    display: none;
+}
+.feat-dashed-line {
+    border-top: 1px dashed;
+    width: 279px;
+    height: 2px;
+    margin-bottom: 13px;
+}
+.feat-compare-left .feat-dashed-line {
+    border-color: #178ce6;
+}
+.feat-compare-right .feat-dashed-line {
+    border-color: #9297a3;
+}
+.feat-plus {
+    height: 150px;
+    line-height: 150px;
+    margin: 0 5px;
+    font-size: 36px;
+}
+.feat-tab-bg {
+    position: absolute;
+    border-radius: 14px;
+    background: #178ce6;
+    box-shadow: 0px 0px 10px 0px #178ce6;
+    height: 47px;
+    width: 146px;
+    left: 155px;
+    transition: all 0.3s ease-in-out;
+}
+.feat-tab-bg.left {
+    left: -2px;
+}
+.feat-tab-bg.right {
+    left: 155px;
+}

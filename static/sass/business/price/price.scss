@@ -16,14 +16,14 @@
         td {
             font-size: 12px;
             text-align: center;
-            height: 75px;
+            height: 45px;
             border: 1px #D8D8D8 solid;
         }
         td.price {
             cursor: pointer;
         }
         .mainClass .selected {
-            border: 2px #4A90E2 solid;
+            outline: 1px #4A90E2 solid;
         }
         td:nth-child(even) {
             background-color: #F9F9F9;
@@ -60,7 +60,7 @@
             }
             .selected div {
                 margin: 2px;
-                border: 2px #fff solid;
+                outline: 1px #fff solid;
             }
         }
     }

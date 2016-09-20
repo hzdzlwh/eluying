@@ -106,7 +106,7 @@ var AJAXService = {
         var url = this.urls.host2 + (this.urls[path] || path);
         return url;
     },
-    ajaxWithToken: function(method, path, data, callback, errorCallback,asy){
+    ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
         if(path !== 'loginUrl'){
             data.timestamp = (new Date()).valueOf();
             // data.version = (new Date()).valueOf();
@@ -118,7 +118,7 @@ var AJAXService = {
             //data.uid = 85;
             // data.kick = true;
             data.terminal = 1;
-            data.version = data.version || 4;
+            data.version = data.version || 8;
             // data.token = localStorage.getItem("token");
             var array = [];
             for(var key in data){
@@ -130,9 +130,9 @@ var AJAXService = {
             var strMD5 = md5(str);
             data.sign = strMD5;
         }
-        $.ajax({
+        return $.ajax({
             type: method,
-            url: AJAXService.getUrl2(path),
+            url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
             async: asy,
             data: data,
             dataFilter: function(data){

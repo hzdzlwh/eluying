@@ -39,7 +39,7 @@ var foodETPriceList = {
                 if (subName == 0) {
                     dishesTbody += "<tr class='mainClass'><td>" + dishesList[name][subName].name + (dishesList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + dishesList[name][subName].id + "'>" + dishesList[name][subName].salePrice + "</td></tr>"
                 } else {
-                    dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + dishesList[name][subName].id + "' channel-id='" + dishesList[name][subName].channelId + "' ><div><p>"
                         + dishesList[name][subName].netPrice + "</p></div></td></tr>"
                 }
@@ -52,7 +52,7 @@ var foodETPriceList = {
                 if (subName == 0) {
                     packageTbody += "<tr class='mainClass'><td>" + packageList[name][subName].name + (packageList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + packageList[name][subName].id + "'>" + packageList[name][subName].salePrice + "</td></tr>"
                 } else {
-                    packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + packageList[name][subName].id + "' channel-id='" + packageList[name][subName].channelId + "' ><div><p>"
                         + packageList[name][subName].netPrice + "</p></div></td></tr>"
                 }
@@ -68,12 +68,16 @@ var foodETPriceList = {
         var tbody = "<tbody>";
         for (var name in result.data) {
             for (var subName in result.data[name]) {
+                var price = subName === 0 ? result.data[name][subName].salePrice : result.data[name][subName].netPrice;
+                var priceHtml = result.data[name][subName].chargeMode
+                    ? '<span class="j-price">' + price + '</span>' + '<span class="j-unit">' + '元/'+ (result.data[name][subName].chargeUnitTime==1?'':result.data[name][subName].chargeUnitTime) + ['分钟','小时'][result.data[name][subName].chargeUnit] + '</span>'
+                    : '<span class="j-price">' + price + '</span>' + '<span class="j-unit">' + '元/' + result.data[name][subName].unit + '</span>';                
                 if (subName == 0) {
-                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + result.data[name][subName].salePrice + "</td></tr>"
+                    tbody += "<tr class='mainClass'><td>" + result.data[name][subName].name + (result.data[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + result.data[name][subName].id + "'>" + priceHtml + "</td></tr>"
                 } else {
-                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>直销价</p></div></td>" +
+                    tbody += "<tr class='subPrice hide'><td><div>" + result.data[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + result.data[name][subName].id + "' channel-id='" + result.data[name][subName].channelId + "' ><div><p>"
-                        + result.data[name][subName].netPrice + "</p></div></td></tr>"
+                        + priceHtml + "</p></div></td></tr>"
                 }
             }
         }
@@ -109,7 +113,7 @@ var foodETPriceList = {
             channelId: 0
         },function(result){
             if (util.errorHandler(result)) {
-                $("td.selected").html($("#retailPrice").val());
+                $("td.selected").find('.j-price').html($("#retailPrice").val());
                 modal.clearModal(that);
             }
         });
@@ -143,8 +147,7 @@ var foodETPriceList = {
             channelId: $("td.selected").attr("channel-id")
         },function(result){
             if (util.errorHandler(result)) {
-                $("td.selected").find("p:eq(0)").html($("#commissionPrice").val());
-                $("td.selected").find("p:eq(0)").html($("#netPrice").val());
+                $("td.selected").find('.j-price').html($("#netPrice").val());
                 modal.clearModal(that);
             }
         })
@@ -168,11 +171,15 @@ var foodETPriceList = {
                 $(".second").removeClass("hide");
             },
             "click #editSalePriceButton": function(){
-                $("#retailPrice").val($("td.selected").html());
+                var array = $("td.selected").html().split('元')
+                $("#retailPrice").val($("td.selected").find('.j-price').html())
+                .next('.unit').html($("td.selected").find('.j-unit').html());  
             },
             "click #editNetPriceButton": function(){
-                $("#netPrice").val($("td.selected").find("p:eq(0)").html());
-                $("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
+                var array = $("td.selected").find("p:eq(0)").html().split('元');
+                $("#netPrice").val($("td.selected").find('.j-price').html())
+                .next('.unit').html($("td.selected").find('.j-unit').html());                
+                //$("#commissionPrice").val($("td.selected").find("p:eq(0)").html());
             },
             "click #editSalePriceOk": function(){
                 var that = this

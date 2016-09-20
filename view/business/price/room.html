@@ -27,6 +27,7 @@
           <h1>旺季</h1>
 
           <div>从
+            <!-- 我怎么会写这么蠢的东西 -->
             <select class="monthSelect" id="busyStartMonth" name="busyStartMonth">
               <option value="01">01</option>
               <option value="02">02</option>
@@ -225,10 +226,10 @@
           </div>
         </div>
 
-        <div class="seasonOperate operate">
+        <div class="seasonOperate operate busy-operate">
           <div class="first">
             <div class="operateItem hide">
-              <div class="clickDiv" id="editSeasonSalePriceButton" data-toggle="modal"
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
                    data-target="#editSeasonSalePrice">
                 <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
 
@@ -236,7 +237,28 @@
               </div>
             </div>
             <div class="operateItem hide">
-              <div class="clickDiv" id="editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="seasonOperate operate slack-operate" style="position:absolute;top: 633px;right: 0px;">
+          <div class="first">
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
+                   data-target="#editSeasonSalePrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
                 <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
 
                 <p>修改价格</p>
@@ -328,7 +350,7 @@
     <div class="modal-content clearfloat">
       <div class="editPrice clearfloat">
         <form class="inputFiled">
-          <h1>修改直销价</h1>
+          <h1>修改微官网价</h1>
           <ul>
             <!--<li>
               <label for="seasonCommissionPrice">协议价</label>
@@ -336,7 +358,7 @@
                      id="monthCommissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
             </li>-->
             <li>
-              <label for="seasonNetPrice">直销价</label>
+              <label for="seasonNetPrice">微官网价</label>
               <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
                      id="monthNetPrice" name="netPrice"/>
             </li>
@@ -356,7 +378,7 @@
     <div class="modal-content clearfloat">
       <div class="editPrice clearfloat">
         <form class="inputFiled">
-          <h1>修改直销价</h1>
+          <h1>修改微官网价</h1>
           <ul>
             <!--<li>
               <label for="seasonCommissionPrice">协议价</label>
@@ -364,7 +386,7 @@
                      id="seasonCommissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
             </li>-->
             <li>
-              <label for="seasonNetPrice">直销价</label>
+              <label for="seasonNetPrice">微官网价</label>
               <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
                      id="seasonNetPrice" name="netPrice"/>
             </li>
@@ -431,7 +453,7 @@
     <div class="modal-content clearfloat">
       <div class="editPrice clearfloat">
         <form class="inputFiled">
-          <h1>修改直销价</h1>
+          <h1>修改微官网价</h1>
           <ul>
             <!--<li>
               <label for="commissionPrice">协议价</label>
@@ -439,7 +461,7 @@
                      id="commissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
             </li>-->
             <li>
-              <label for="netPrice">直销价</label>
+              <label for="netPrice">微官网价</label>
               <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice"
                      name="netPrice"/>
             </li>
@@ -484,7 +506,7 @@
           <div class="clickDiv" id="editNetPriceButton" data-toggle="modal" data-target="#editNetPrice">
             <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
 
-            <p>修改直销价</p>
+            <p>修改微官网价</p>
           </div>
         </div>
       </div>

@@ -19,10 +19,41 @@
 >
     <embed id="myIdc"
            TYPE="application/x-itst-activex"
-           WIDTH="0" HEIGHT="0"  style="float:left;width:0px; height:0px; padding:0px; margin:0px"
+           style="float:left;width:20px; height:20px; visibility: hidden"
            clsid="{63CAB467-5BB8-4CB2-8C87-C8F3B66040C0}"
+           event_OnStatus="onStatus"
+		   event_OnMessage="onMessage"
     >
 </OBJECT>
+<script>
+    
+//- 状态事件
+function onStatus(state,msg) {
+	/*****************************************************************************
+	state	msg
+	0		关闭
+	1		启动
+	2		找到阅读器：……
+	3		未找到卡（证），已查找了n秒时间。
+	4		选择卡（证）失败
+	5		读取基本信息失败。……
+	6		读取追加数据失败。……
+	7		照片解码错误。……
+	8		软件未授权。
+	9		读卡成功。
+	10		读卡时系统出现错误。……
+	11		未找到USB读卡设备(连接USB端口失败)
+	*****************************************************************************/
+    console.log('state:', state, 'msg:', msg);
+}
+
+//- 消息事件，主要是读卡错误时引发
+function onMessage(msg) {
+    console.log('msg:', msg);
+}
+
+
+</script>
 <div class="msgModal modal fade" role="dialog" id="idcWarningModal">
     <div class="modal-dialog">
         <div class="modal-content" >
@@ -150,6 +181,77 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<!-- 入住人窗口开始 -->
+<div class="modal fade" role="dialog" id="roomPeopleModal" ng-controller="roomPeopleCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <class="top-fixed">
+                <div class="hr"></div>
+                <div class="sheader">
+                    <div class="stitle">
+                        {{roomName}}
+                    </div>
+                    <span class="modal-close">&times;</span>
+                    <div class="hr2"></div>
+                </div>
+                <div class="main-container">
+                    <div class="room-people-titlejj">
+                        <span style="font-size:12px">入住人信息</span>
+                        <div class="room-people-readCard readBtn" ng-click="beginReadId()">读卡添加</div>
+                        <div class="room-people-hand" ng-click="addPerson()">手动添加</div>
+                    </div>
+                    <form action="" name="roomPeopleForm">
+                        <div ng-repeat="person in idCardList">
+                            <div class="room-one-person">
+                                <label for="">姓名</label>
+                                <input type="text"
+                                    name={{$index+'name'}}
+                                    placeholder="姓名"
+                                    ng-model="person.name" 
+                                    ng-disabled="person.read"
+                                    maxlength="16"
+                                    required>
+                                <div class="select1">
+                                    <span ng-click="person.read&&$event.stopPropagation()">{{person.selectedIdLabel || '身份证'}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem"
+                                                ng-click="changeIds(id.key, id.label, person);$event.stopPropagation();"
+                                                ng-repeat="id in idList">{{id.label}}</div>
+                                    </div>
+                                </div>
+                                <input type="text"
+                                    name={{$index+'idCard'}}
+                                    placeholder="证件号码"
+                                    ng-model="person.idCardNum" 
+                                    ng-disabled="person.read"
+                                    maxlength="18"
+                                    required>
+                                <i ng-click="deletePerson($index)"></i>
+                            </div>
+                            <div class="tips-row">
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'name'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'name'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="(roomPeopleForm[$index+'idCard'].$dirty || submitted)
+                                    && roomPeopleForm[$index+'idCard'].$error.required">↑必填字段</div>
+                                <div class="tips warning" 
+                                    ng-show="person.idCardNum && checkDuplication(person.idCardNum, $index)">↑证件号重复</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="bottom-fixed">
+                    <div class="btns">
+                        <div class="cancel-button" ng-click="closeRoomPeopleDialog()">取消</div>
+                        <div class="confirm-button" ng-click="submit()">确认</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 入住人窗口结束 -->
 <div class="modal fade" role="dialog" id="orderDetailModal" ng-controller="orderDetailCtrl">
     <div class="modal-dialog">
         <div class="modal-content" ng-if="orderDetail">
@@ -188,10 +290,6 @@
                                 <td>{{orderDetail.customerName}}</td>
                                 <td>手机号</td>
                                 <td>{{orderDetail.customerPhone}}</td>
-                            </tr>
-                            <tr>
-                                <td ng-if="orderDetail.selectedId!==undefined">{{orderDetail.selectedIdLabel}}</td>
-                                <td ng-if="orderDetail.selectedId!==undefined">{{orderDetail.idVal}}</td>
                                 <td>渠道</td>
                                 <td>{{orderDetail.origin}}</td>
                             </tr>
@@ -216,6 +314,16 @@
                                     </div>
                                     <div class="eluyun_finish2-small_outer spriteImg" ng-if="r.state === 2">
                                         <div class="eluyun_finish2-small"></div>
+                                    </div>
+                                    <div class="room-people-actived spriteImg"
+                                        ng-if="r.state === 0 || r.state === 1"
+                                        ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
+                                        <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
+                                    </div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
+                                        <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
                                     </div>
                                 </td>
                                 <td>
@@ -306,14 +414,14 @@
                         <div class="sub-title">娱乐项目</div>
                         <table ng-if="orderDetail.playItems">
                             <tr ng-repeat="p in orderDetail.playItems">
-                                <td><div class="sname">{{p.name}}</div></td>
+                                <td><div class="sname">{{p.shortName}}<span ng-if="p.chargeMode == 1">({{p.timeAmount * p.chargeUnitTime}}{{p.chargeUnit}})</span></div></td>
                                 <td><span class="light">时间</span>&nbsp;{{p.date.substr(5, 5)}}</td>
                                 <td>
                                     <span class="light">数量</span>
                                     &nbsp;{{p.amount}} &nbsp;
                                     (剩余{{p.amount - p.usedAmount}})
                                 </td>
-                                <td>¥{{p.price * p.amount}}</td>
+                                <td>&nbsp;&nbsp;&nbsp;¥{{p.amount * p.price * (p.chargeMode == 1 ? p.timeAmount : 1)}}</td>
                             </tr>
                         </table>
                     </div>
@@ -351,9 +459,9 @@
                                         <div class="sval">- ¥{{orderDetail.discounts || 0}}</div>
                                         <!--<div class="clearline"></div>-->
                                     </div>
-                                    <div class="sitem" ng-if="orderDetail.penaltyAd > 0">
-                                        <div class="sl">违约金：</div>
-                                        <div class="sval">¥{{orderDetail.penaltyAd}}</div>
+                                    <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 4">
+                                        <div class="sl">{{p.payChannel}}：</div>
+                                        <div class="sval1">¥{{p.fee}}</div>
                                     </div>
                                     <div class="sitem">
                                         <div class="sl">客户应付：</div>
@@ -370,6 +478,7 @@
                                         <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                         <div class="sval1">¥{{p.fee}}</div>
                                     </div>
+                                    
                                     <div class="hr3" ng-if="orderDetail.isDepositPaid"></div>
                                     <div class="subt" ng-if="orderDetail.isDepositPaid">押金收支明细</div>
                                     <div class="sitem" ng-repeat="p in orderDetail.payments" ng-if="p.type === 1">
@@ -444,7 +553,7 @@
                          ng-click="showCheckout()">办理退房</div>
                     <div class="sbtn" ng-if="orderDetail.checkinable"
                          ng-click="showCheckin()">办理入住</div>
-                    <div class="sbtn" ng-click="showGetMoney();"
+                    <div class="sbtn" ng-click="showGetMoney(orderDetail.checkoutable);"
                          ng-if="orderDetail.getMoneyable">收银</div>
                 </div>
             </div>
@@ -587,6 +696,10 @@
                                     <div class="sval">- ¥{{orderCancel.discounts || 0}}</div>
                                     <div class="clearline"></div>
                                 </div>
+                                <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 4 && orderCancel.payments">
+                                    <div class="sl">{{p.payChannel}}：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
+                                </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
                                     <div class="sval">¥{{calPrice(orderCancel)}}</div>
@@ -602,6 +715,7 @@
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
+                                
                                 <div class="hr3" ng-if="orderCancel.isDepositPaid"></div>
                                 <div class="subt" ng-if="orderCancel.isDepositPaid">押金收支明细</div>
                                 <div class="sitem" ng-repeat="p in orderCancel.payments" ng-if="p.type === 1 && orderCancel.payments">
@@ -640,6 +754,7 @@
                             <div class="select1_options" ng-if="payChannels">
                                 <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
+                                     title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -660,6 +775,7 @@
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment, orderCancel);"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6"
+                                     title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -693,7 +809,9 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;
+                        <!--<div class="readBtn" ng-click="beginReadId()" ng-if="orderNew.readable">开始读卡</div>-->
+                    </div>
                     <form action="" name="orderNewForm" id="orderNewForm">
                         <table>
                             <tr>
@@ -716,8 +834,18 @@
                                     <div class="tips warning" ng-if="orderNewForm.orderNewCustomerPhone.$dirty
                                 && orderNewForm.orderNewCustomerPhone.$error.required">必填字段</div>
                                 </td>
+                                <td>渠道</td>
+                                <td>
+                                    <div class="select1">
+                                        <span>{{orderNew.origin}}</span>
+                                        <div class="select1_options">
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
+                                                 ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderNew.selectedIdLabel}}</span>
@@ -731,17 +859,7 @@
                                 <td><input placeholder="{{orderNew.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderNewId" max-length="18"
                                            ng-model="orderNew.idVal">
                                 </td>
-                                <td>渠道</td>
-                                <td>
-                                    <div class="select1">
-                                        <span>{{orderNew.origin}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
-                                                 ng-click="changeChannel(c.id, c.name, orderNew);$event.stopPropagation();">{{c.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>-->
                         </table>
                     </form>
                     <div class="hr2"></div>
@@ -820,7 +938,7 @@
                 <div class="subtype fun" ng-if="funList.length > 0">
                     <div class="sub-title">
                         娱乐项目
-                        <div class="sadd" ng-click="addItem(2, funList, orderNew);">
+                        <div class="sadd" ng-click="addItem(2, funList, orderNew)">
                             <div class="eluyun_add_outer spriteImg">
                                 <div class="eluyun_add"></div>
                             </div>
@@ -867,15 +985,23 @@
                                 </div>
                             </td>
                             <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>
                                 数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(play, play.amount-1);">-</div>
                                     <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount);" ng-model="play.amount">
                                     <div class="plus" ng-click="changeItemNum(play, play.amount+1);">+</div>
                                 </div>
-                                <div class="tips">剩余库存{{play.inventory}}</div>
+                                <div class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(orderNew.playItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -965,14 +1091,16 @@
             </div>
             <div class="main-container">
                 <div class="guest-info">
-                    <div class="sub-title">客户信息&nbsp;&nbsp;<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div></div>
+                    <div class="sub-title">客户信息&nbsp;&nbsp;
+                        <!--<div class="readBtn" ng-click="beginReadId()" ng-if="orderEdit.readable">开始读卡</div>-->
+                    </div>
                     <form action="" name="orderEditForm" id="orderEditForm">
                         <table>
                             <tr>
                                 <td>姓名</td>
                                 <td>
                                     <input placeholder="姓名" type="text" name="orderEditCustomerName" ng-pattern="/^[0-9A-Za-z\u4E00-\u9FA5\s]{2,30}$/"
-                                           ng-model="orderEdit.customerName" minlength="1" maxlength="16" class="long" required>
+                                           ng-model="orderEdit.customerName" minlength="1" maxlength="16" class="long" required ng-disabled="orderEdit.onePass">
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerName.$invalid
                                 && !orderEditForm.orderEditCustomerName.$error.required
                                 && orderEditForm.orderEditCustomerName.$dirty">姓名格式错误</div>
@@ -981,15 +1109,25 @@
                                 </td>
                                 <td>手机号</td>
                                 <td><input placeholder="手机号" type="text" name="orderEditCustomerPhone" ng-pattern="/^[0-9]{11}$/"
-                                           ng-model="orderEdit.customerPhone" maxlength="11" class="short" required>
+                                           ng-model="orderEdit.customerPhone" maxlength="11" class="short" required ng-disabled="orderEdit.onePass">
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerPhone.$invalid
                                 && !orderEditForm.orderEditCustomerPhone.$error.required
                                 && orderEditForm.orderEditCustomerPhone.$dirty">手机格式错误</div>
                                     <div class="tips warning" ng-if="orderEditForm.orderEditCustomerPhone.$dirty
                                 && orderEditForm.orderEditCustomerPhone.$error.required">必填字段</div>
                                 </td>
+                                <td>渠道</td>
+                                <td>
+                                    <div class="select1">
+                                        <span>{{orderEdit.origin}}</span>
+                                        <div class="select1_options">
+                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
+                                                 ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>
                                     <div class="select1">
                                         <span>{{orderEdit.selectedIdLabel || '身份证'}}</span>
@@ -1003,26 +1141,39 @@
                                 <td><input placeholder="{{orderEdit.selectedIdLabel}}" type="text" class="long" maxlength="18" name="orderEditId" max-length="18"
                                            ng-model="orderEdit.idVal">
                                 </td>
-                                <td>渠道</td>
-                                <td>
-                                    <div class="select1">
-                                        <span>{{orderEdit.origin}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="c in channels" title="{{c.name}}"
-                                                 ng-click="changeChannel(c.id, c.name, orderEdit);$event.stopPropagation();">{{c.name}}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>-->
                         </table>
                     </form>
                 </div>
                 <div class="hr2" ng-if="orderEdit.rooms.length > 0"></div>
                 <div class="subtype room" ng-if="orderEdit.rooms.length > 0">
-                    <div class="sub-title">房间信息</div>
+                    <div class="sub-title">房间信息
+                        <div class="sadd" ng-click="addRoom()">
+                            <div class="eluyun_add_outer spriteImg">
+                                <div class="eluyun_add"></div>
+                            </div>
+                            添加房间
+                        </div>
+                    </div>
                     <table>
                         <tr ng-repeat="r in orderEdit.rooms">
-                            <td>
+                            <td ng-if="r.isNew" style="width:278px">
+                                <div class="select1" style="display: inline-block">
+                                    <span title="{{r.categoryName}}">{{r.categoryName}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="roomCategory in roomCategoryList" title="{{roomCategory.categoryName}}"
+                                             ng-click="changeRoomCategory(roomCategory, r)">{{roomCategory.categoryName}}</div>
+                                    </div>
+                                </div>
+                                <div class="select1" style="width:88px;display: inline-block;background-position-x: 74px;">
+                                    <span title="{{r.serialNum}}">{{r.serialNum}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="room in roomList" title="{{room.serialNum}}"
+                                             ng-click="changeRoom(room,r)">{{room.serialNum}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!r.isNew" style="width:278px">
                                 <span>{{r.serialNum}}</span>&nbsp;({{r.name}})
                                 <div class="eluyun_book2-small_outer spriteImg" ng-if="r.state === 0">
                                     <div class="eluyun_book2-small"></div>
@@ -1039,7 +1190,7 @@
                                 &nbsp;
                                 <div class="sstart">{{r.startDate.substr(5, 5)}}</div>
                                 &nbsp;~&nbsp;
-                                <div class="send">{{r.startDate.substr(5, 5)}}</div>
+                                <div class="send">{{r.endDate.substr(5, 5)}}</div>
                                 &nbsp;共{{r.duration}}晚
                             </td>
                             <td ng-if="r.state === 0">
@@ -1155,7 +1306,7 @@
                     </div>
                     <table>
                         <tr ng-repeat="play in orderEdit.playItems" ng-if="!(!play.isNew && play.amount == 0)">
-                            <td ng-if="!play.isNew"><span>{{play.name}}</span></td>
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
                             <td ng-if="play.isNew">
                                 <div class="select1">
                                     <span>{{play.name}}</span>
@@ -1165,8 +1316,8 @@
                                     </div>
                                 </div>
                             </td>
-                            <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                            <td ng-if="play.isNew">时间&nbsp;
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
                                 <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
                                 <div class="date-table">
                                     <div class="month-selector">
@@ -1194,16 +1345,24 @@
                                     </div>
                                 </div>
                             </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
+                                </div>
+                            </td>
                             <td>数量&nbsp;
                                 <div class="snumber">
                                     <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
                                     <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
                                     <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
                                 </div>
-                                <span ng-if="!play.isNew">&nbsp;(已使用{{play.usedAmount}})</span>
-                                <div class="tips">剩余库存{{play.inventory}}</div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
                             </td>
-                            <td>¥{{play.amount * play.price}}<div class="sdelete" ng-click="deleteItem(orderEdit.playItems, $index)"></div></td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(orderEdit.playItems, $index)"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -1394,61 +1553,66 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkout.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkout, checkout.playItems, play, f)">{{f.name}}</div>
+                        <tr ng-repeat="play in checkout.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkout, checkout.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkout);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkout);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkout);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkout);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;(已使用{{play.usedAmount}})
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2"></div>
 
@@ -1604,61 +1768,66 @@
                             </div>
                         </div>
                         <table>
-                            <tr ng-repeat="play in checkoutAd.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkoutAd, checkoutAd.playItems, play, f)">{{f.name}}</div>
+                        <tr ng-repeat="play in checkoutAd.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkoutAd, checkoutAd.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkoutAd);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkoutAd);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkoutAd);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkoutAd);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;(已使用{{play.usedAmount}})
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkoutAd.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkout.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2"></div>
                     <div class="subtype goods">
@@ -1800,6 +1969,16 @@
                                     <div class="eluyun_finish2-small_outer spriteImg" ng-if="r.state === 2">
                                         <div class="eluyun_finish2-small"></div>
                                     </div>
+                                    <div class="room-people-actived spriteImg"
+                                        ng-if="r.state === 0 && r.selected"
+                                        ng-click="showRoomPeopleModal(r.idCardList, r.serviceId, orderDetail.orderId, r.serialNum + ' (' + r.name +')')">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
+                                        <img src="http://static.dingdandao.com/ABAD0605-8B77-4FF2-893D-0B5BDDCF01E8@1x.png" alt="">
+                                    </div>
+                                    <div class="room-people-disabled spriteImg" ng-if="r.state === 2 || r.state === 1 || (r.state === 0 && !r.selected)">
+                                        <div class="room-people-num">{{r.idCardList.length > 99 ? '...' : r.idCardList.length}}</div>
+                                        <img src="http://static.dingdandao.com/245F7543-6EEE-45F1-B67E-8130D48A36E2@1x.png" alt="">
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="light">入住</span>
@@ -1855,63 +2034,67 @@
                                 添加娱乐项目
                             </div>
                         </div>
-                        <table>
-                            <tr ng-repeat="play in checkin.playItems">
-                                <td ng-if="!play.isNew"><div class="sname">{{play.name}}</div></td>
-                                <td ng-if="play.isNew">
-                                    <div class="select1">
-                                        <span>{{play.name}}</span>
-                                        <div class="select1_options">
-                                            <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
-                                                 ng-click="changeItem(checkin, checkin.playItems, play, f)">{{f.name}}</div>
+                         <table>
+                        <tr ng-repeat="play in checkin.playItems">
+                            <td ng-if="!play.isNew"><span>{{play.shortName}}</span></td>
+                            <td ng-if="play.isNew">
+                                <div class="select1">
+                                    <span>{{play.name}}</span>
+                                    <div class="select1_options">
+                                        <div class="oitem" ng-repeat="f in funList" title="{{f.name}}"
+                                             ng-click="changeItem(checkin, checkin.playItems, play, f)">{{f.name}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="!play.isNew && play.state != 0"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
+                            <td ng-if="play.isNew || play.state == 0">时间&nbsp;
+                                <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
+                                <div class="date-table">
+                                    <div class="month-selector">
+                                        <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkin);$event.stopPropagation();">
+                                            <div class="eluyun_left"></div>
+                                        </div>
+                                        {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
+                                        <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkin);$event.stopPropagation();">
+                                            <div class="eluyun_right"></div>
                                         </div>
                                     </div>
-                                </td>
-                                <!--<td><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>-->
-                                <td ng-if="!play.isNew"><span class="light">时间</span>&nbsp;{{play.dateStr2}}</td>
-                                <td ng-if="play.isNew">时间&nbsp;
-                                    <input type="text" class="datePicker" ng-model="play.dateStr2" readonly="true">
-                                    <div class="date-table">
-                                        <div class="month-selector">
-                                            <div class="eluyun_left_outer spriteImg previous" ng-click="changeItemMonth(play, -1, checkin);$event.stopPropagation();">
-                                                <div class="eluyun_left"></div>
-                                            </div>
-                                            {{play.date.getFullYear()}}年{{play.date.getMonth()+1}}月
-                                            <div class="eluyun_right_outer spriteImg next" ng-click="changeItemMonth(play, 1, checkin);$event.stopPropagation();">
-                                                <div class="eluyun_right"></div>
-                                            </div>
-                                        </div>
-                                        <div class="week-header">
-                                            <div class="item">一</div>
-                                            <div class="item">二</div>
-                                            <div class="item">三</div>
-                                            <div class="item">四</div>
-                                            <div class="item">五</div>
-                                            <div class="item">六</div>
-                                            <div class="item">日</div>
-                                        </div>
-                                        <div class="date-row" ng-repeat="row in play.calendar">
-                                            <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
-                                                {{day.text || day.date.getDate()}}
-                                            </div>
+                                    <div class="week-header">
+                                        <div class="item">一</div>
+                                        <div class="item">二</div>
+                                        <div class="item">三</div>
+                                        <div class="item">四</div>
+                                        <div class="item">五</div>
+                                        <div class="item">六</div>
+                                        <div class="item">日</div>
+                                    </div>
+                                    <div class="date-row" ng-repeat="row in play.calendar">
+                                        <div class="item {{day.sclass}}" ng-repeat="day in row" ng-click="changeItemTime(play, day.date, day.sclass);">
+                                            {{day.text || day.date.getDate()}}
                                         </div>
                                     </div>
-                                </td>
-                                <td><span class="light">数量</span>&nbsp;
-                                    <div class="snumber">
-                                        <div class="minus" ng-click="changeItemNum(play, play.amount - 1)">-</div>
-                                        <input type="text" class="numberInput" ng-change="changeItemNum(play, play.amount)" value="1" ng-model="play.amount">
-                                        <div class="plus" ng-click="changeItemNum(play, play.amount + 1)">+</div>
-                                    </div>
-                                    &nbsp;<span ng-if="play.usedAmount">(已使用{{play.usedAmount}})</span>
-                                    <div class="tips">剩余库存{{play.inventory}}</div>
-                                </td>
-                                <td>
-                                    ¥{{play.amount * play.price}}
-                                    <div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div>
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="play.chargeMode == 1">
+                                    {{'时长(' + play.timeUnit + ')'}}&nbsp;
+                                    <div ng-if="play.isNew || play.state == 0" class="minus" ng-click="decreaseTimeAmount(play, play.timeAmount-1);">-</div>
+                                    <span class="time">{{play.timeAmount * play.unitTime}}</span>
+                                    <div ng-if="play.isNew || play.state == 0" class="plus" ng-click="increaseTimeAmount(play, play.timeAmount+1);">+</div>                                    
+                                </div>
+                            </td>
+                            <td>数量&nbsp;
+                                <div class="snumber">
+                                    <div class="minus" ng-click="changeItemNum(play, play.amount - 1);">-</div>
+                                    <input type="number" class="numberInput" ng-change="changeItemNum(play, play.amount)" ng-model="play.amount">
+                                    <div class="plus" ng-click="changeItemNum(play, play.amount + 1);">+</div>
+                                </div>
+                                <div ng-if="!play.isNew" class="tips">↑已使用{{play.usedAmount}}</div>
+                                <div ng-if="play.isNew" class="tips">↑服务上限剩余{{play.inventory}}</div>
+                            </td>
+                            <td>¥{{play.amount * play.price * (play.chargeMode == 1 ? play.timeAmount : 1)}}<div class="sdelete" ng-click="deleteItem(checkin.playItems, $index)"></div></td>
+                        </tr>
+                    </table>
                     </div>
                     <div class="hr2" ng-if="funList.length > 0 || checkin.playItems.length > 0"></div>
                     <div class="subtype goods" ng-if="goodsList.length > 0 || checkin.goodsItems.length > 0">
@@ -2002,8 +2185,6 @@
                             <td>{{getMoney.customerPhone}}</td>
                         </tr>
                         <tr>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.selectedIdLabel}}</td>
-                            <td ng-if="getMoney.selectedId!==undefined">{{getMoney.idVal}}</td>
                             <td>渠道</td>
                             <td>{{getMoney.origin}}</td>
                         </tr>
@@ -2089,7 +2270,7 @@
                                 <td><span class="light">数量</span>&nbsp;{{f.amount}} &nbsp;
                                     (剩余{{f.amount - (f.usedAmount || 0)}})
                                 </td>
-                                <td>¥{{f.price * f.amount}}</td>
+                                <td>¥{{f.price * f.amount * f.timeAmount}}</td>
                             </tr>
                         </table>
                     </div>
@@ -2171,10 +2352,9 @@
                                     <div class="sval">- ¥{{getMoney.discounts || 0}}</div>
                                     <!--<div class="clearline"></div>-->
                                 </div>
-                                <div class="sitem" ng-if="getMoney.penaltyAd !== undefined">
-                                    <div class="sl">提前退房违约金：</div>
-                                    <div class="sval">¥{{getMoney.penaltyAd}}</div>
-                                    <!--<div class="clearline"></div>-->
+                                <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 4 && !p.isNew">
+                                    <div class="sl">{{p.payChannel}}：</div>
+                                    <div class="sval1">¥{{p.fee}}</div>
                                 </div>
                                 <div class="sitem">
                                     <div class="sl">客户应付：</div>
@@ -2191,6 +2371,7 @@
                                     <div class="sl">商家已退（{{p.payChannel}}）：</div>
                                     <div class="sval1">¥{{p.fee}}</div>
                                 </div>
+                                
                                 <div class="hr3" ng-if="getMoney.isDepositPaid"></div>
                                 <div class="subt" ng-if="getMoney.isDepositPaid">押金收支明细</div>
                                 <div class="sitem" ng-repeat="p in getMoney.payments" ng-if="p.type === 1 && !p.isNew">
@@ -2230,9 +2411,10 @@
                          ng-if="getMoney.feeMode === 0 && p.type === 0 && p.isNew">
                         <input class="moneyInput" type="text" ng-model="p.fee" ng-change="moneyChange(p);">
                         <div class="select1">
-                            <span>{{p.payChannel}}</span>
+                            <span title="{{p.payChannel}}">{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment);"
+                                    title="{{payment.name}}"
                                      ng-repeat="payment in payChannels">{{payment.name}}</div>
                             </div>
                         </div>
@@ -2260,6 +2442,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment);"
+                                title="{{payment.name}}"
                                 ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
@@ -2267,7 +2450,7 @@
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 0">
+                    <div class="item item_small" ng-if="getMoney.depositMode === 0 && !isOrderDetail">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_add_outer spriteImg">
@@ -2283,6 +2466,7 @@
                             <span>{{p.payChannel}}</span>
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
+                                title="{{payment.name}}"
                                 ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>
@@ -2313,6 +2497,7 @@
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
                                      ng-repeat="payment in payChannels"
+                                     title="{{payment.name}}"
                                      ng-if="payment.channelId != -8 && payment.channelId != -6">
                                     {{payment.name}}
                                 </div>

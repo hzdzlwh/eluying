@@ -1,0 +1,242 @@
+.et-table-container {
+  border-top: 4px solid #178ce6;
+  border-radius: 2px;
+  width: 724px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+  float: left;
+}
+.et-title {
+  margin-top: -20px;
+  margin-bottom: 20px;
+  width: 724px;
+  color: #178ce6;
+}
+.et-table {
+  border-radius: 2px;
+  width: 100%;
+  th:not(:first-of-type) {
+    width: 68.7px
+  }
+  .et-fixed-td {
+    width: 56.7px;
+  }
+  //border-collapse: separate;
+  tr {
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid #ededed;
+  }
+  td, th {
+    padding-left: 10px;
+    position: relative;
+  }
+  th {
+    font-weight: bold;
+  }
+  td {
+    cursor: pointer;
+  }
+  .et-table-name {
+    padding-left: 0;
+    width: 104px;
+    text-align: center;
+    border-right: 1px solid #ededed; 
+    p {
+      line-height: 1
+    }
+  }
+  .et-name-container {
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 2px; 
+    img {
+      height: 24px;
+    }
+  }
+  thead {
+    background: #fafafa;
+    height: 48px;
+  }
+}
+.et-icon-list {
+  border-top: 1px #e6e6e6 solid;
+  position: relative;
+  padding-top: 15px;
+  padding-bottom: 14px;
+  .et-icon-type {
+    position: absolute;
+    padding-right: 10px;
+    top: -11px;
+    font-weight: bold;
+    left: 0;
+    background: #fafafa;
+  }
+  li {
+    cursor: pointer;
+    width: 48px;
+    float: left;
+    margin-bottom: 10px;
+    text-align: center;
+    img {
+      height: 36px;
+      width: 36px;
+    }
+    &:not(:nth-of-type(4n+4)) {
+      margin-right: 36px;
+    }
+  }
+  .et-icon-name {
+    opacity: 0.5;
+    font-size: 12px;
+    color: #333;
+  }
+}
+.et-operation {
+  background: #fafafa;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+  border-radius: 2px;
+  width: 184px;
+  border-top: 4px solid #178ce6;
+  font-size: 12px;
+  color: #178ce6;
+  text-align: center;
+  position: fixed;
+  margin-left: 775px;
+  float: right;
+}
+.et-operation-item {
+  float: left;
+  width: 92px;
+  margin: 8px 0 8px 0;
+  cursor: pointer;
+  img {
+    margin-bottom: 4px;
+    width: 24px;
+  }
+  p {
+    cursor: pointer;
+  }
+}
+.createET-head {
+  color: #178ce6;
+  border-bottom: 1px solid #d4d4d4;
+  width: 100%;
+  p:first-child {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  p:last-child {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+}
+.et-icon-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+#createETDialog {
+  color: #666;
+  .et-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+  .et-icon {
+    cursor: pointer;
+  }
+  label {
+    width: 97px;
+    text-align: right;
+    vertical-align: top;
+    font-size: 12px;
+    font-weight: bold;
+    height: 24px;
+    line-height: 24px;
+    margin: 0;
+    margin-right: 9px;
+  }
+  input[type=text] {
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    width: 240px;
+    height: 24px;
+    padding-left: 8px;
+  }
+  textarea {
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    width: 240px;
+    height: 80px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .input-row {
+    margin-top: 18px;
+  }
+  select {
+    height: 24px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
+  input[type=radio] {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-top: 0;
+  }
+  button {
+    width: 100px;
+  }
+  .rest-tips {
+      margin-left: 108px !important;
+  }
+}
+.et-optional {
+  opacity: 0.5;
+  font-size: 12px;
+  color: #333;
+  text-align: left;
+  vertical-align: top;
+  line-height: 24px;
+}
+.ET-selected {
+  outline:1px solid #178ce6;
+}
+.ET-type-selected {
+  td {
+    border-top: 1px solid #178ce6;
+    border-bottom: 1px solid #178ce6;
+  }
+  
+  td:last-child {
+    border-right: 1px solid #178ce6;
+  }
+  td:first-child:not(.et-table-name):before, .et-table-name + td:before {
+    content: '';
+    height: calc(100% + 2px);
+    width: 1px;
+    left: 0;
+    top: -1px;
+    position: absolute;
+    border-left: 1px solid #178ce6;
+  }
+  .et-table-name {
+    border-top: 0;
+    border-bottom: 0;
+  }
+}
+#iconDialog {
+  button {
+    &:first-of-type {
+      margin-left: 78px;
+    }
+    width: 100px;
+  }
+}
+.icon-selected {
+  color: #178ce6 !important;
+  opacity: 1 !important;
+}

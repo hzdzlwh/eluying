@@ -69,6 +69,9 @@ var orderDetailService = function(app){
             }else{
                 orderDetail.editable = true;
             }
+            if (orderDetail.orderState === 5) {
+                orderDetail.getMoneyable = true;
+            }
             //var foods = orderDetail.foodItems;
             //var foodsAmounts = {};
             //foods.forEach(function(d){
@@ -81,6 +84,10 @@ var orderDetailService = function(app){
             //});
             //orderDetail.foodsAmount = foodsAmounts;
             var plays = orderDetail.playItems;
+            plays.map(el => {
+                el.timeUnit = el.chargeUnit;
+                el.unitTime = el.chargeUnitTime;
+            })
             var playsAmounts = {};
             plays.forEach(function(d){
                 if(!playsAmounts[d.date]){
@@ -91,6 +98,8 @@ var orderDetailService = function(app){
                 }
             });
             orderDetail.playsAmount = playsAmounts;
+
+            orderDetail.goodsItems = order.pcGoodsItems;
             return orderDetail;
         };
     }]);

@@ -260,18 +260,21 @@ object{
             padding: 0 0 0 4px;
           }
           td:nth-child(1){
-            width: 68px;
+            width: 32px;
             color: #b3b3b3;
           }
           td:nth-child(2){
-            width: 256px;
+            width: 152px;
           }
           td:nth-child(3){
-            width: 46px;
+            width: 50px;
             color: #b3b3b3;
           }
           td:nth-child(4){
-            width: 100px;
+            width: 146px;
+          }
+          td:nth-child(5) {
+            color: #b3b3b3;
           }
         }
       }
@@ -312,7 +315,23 @@ object{
             text-align: right;
           }
         }
-        .subtype.food, .subtype.fun, .subtype.goods{
+        .subtype.fun {
+          td:first-child{
+            width: 132px;
+            .sname{
+              max-width: 132px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              position: relative;
+              float: left;
+              //margin-right: 8px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+        }
+        .subtype.food, .subtype.goods{
           td:first-child{
             width: 132px;
             .sname{
@@ -770,7 +789,7 @@ object{
             width: 256px;
           }
           td:nth-child(3){
-            width: 46px;
+            width: 50px;
             color: #b3b3b3;
           }
           td:nth-child(4){
@@ -1161,12 +1180,12 @@ object{
 }
 #orderEditModel, #newOrderModal{
   .modal-dialog {
-    width: 530px;
+    width: 660px;
   }
   .modal-content {
     background: #fafafa;
     border-radius: $BorderRadius;
-    width: 530px;
+    width: 660px;
     padding: 0;
     overflow-x: hidden;
     position: relative;
@@ -1271,7 +1290,7 @@ object{
       @include modalHeader();
     }
     .hr2{
-      width: 514px;
+      width: 644px;
       height: 1px;
       background: #d4d4d4;
       margin: auto;
@@ -1357,7 +1376,7 @@ object{
             }
           }
           td:first-child{
-            width: 78px;
+            width: 40px;
             .select1{
               @include select1();
               width: 74px;
@@ -1365,13 +1384,15 @@ object{
             }
           }
           td:nth-child(2){
-            width: 220px;
+            width: 160px;
           }
           td:nth-child(3){
             width: 50px!important;
           }
           td:nth-child(4){
-            max-width: 150px;
+            width: 150px;
+          }
+          td:nth-child(6) {
             .select1{
               @include select1();
               width: 100%;
@@ -1380,12 +1401,12 @@ object{
           }
           input.short{
             display: block;
-            width: 100%;
+            width: 116px;
             height: 24px;
           }
           input.long{
             display: block;
-            width: 200px;
+            width: 116px;
             height: 24px;
           }
           select.long{
@@ -1416,7 +1437,7 @@ object{
           position: relative;
           .tips{
             position: absolute;
-            left: 59px;
+            left: 40px;
             top: 32px;
             height: 17px;
             line-height: 17px;
@@ -1424,6 +1445,7 @@ object{
             text-align:left;
             opacity:0.5;
             color:#7d7d7d;
+            min-width: 133px;
           }
           .tips.warning{
             color:#f24949;
@@ -1436,7 +1458,7 @@ object{
             left: 108px;
           }
         }
-        td:nth-child(3), td:nth-child(4){
+        td:nth-child(3), td:nth-child(4), td:nth-child(5){
           .sdelete{
             position: absolute;
             width: 14px;
@@ -1540,7 +1562,57 @@ object{
           text-align: right;
         }
       }
-      .subtype.food, .subtype.fun, .subtype.goods{
+      .subtype.fun {
+        td:first-child{
+            width: 110px;
+            .select1{
+              width: 110px;
+              background-position: 93px;
+            }
+          }
+          td:nth-child(2){
+            width: 115px;
+            text-align: right;
+          }
+          td:nth-child(3){
+            padding-left: 16px;
+            width: 170px;
+            &>div {
+              line-height: 32px;
+            }
+            .minus, .plus {
+              display: inline-block;
+              width: 15px;
+              height: 22px;
+              line-height: 20px;
+              text-align: center;
+              background: #fff;
+              cursor: pointer;
+              border:1px solid #cccccc;
+              border-radius:2px;
+            }
+            .time {
+              width: 33px;
+              text-align: center;
+              display:  inline-block;
+              height: 22px;
+              line-height: 20px;
+            }
+          }
+          td:nth-child(4){
+            padding-left: 0;
+            width: 128px;
+            text-align: right;
+            input{
+              left: -15px;
+            }
+          }
+          td:nth-child(5) {
+            width: 39px;
+            text-align: right;
+          }
+      }
+      .subtype.food, .subtype.goods{
         .date-table{
           left: -30px;
         }
@@ -1711,7 +1783,7 @@ object{
           background:#ffffff;
           border:1px solid #cccccc;
           border-radius:$BorderRadius;
-          width:460px;
+          width:592px;
           height:102px;
           margin-left: 52px;
           padding: 2px 8px;
@@ -1792,36 +1864,86 @@ object{
   }
 }
 #newOrderModal{
-   .modal-content {
-     .main-container{
-       .subtype.food, .subtype.fun, .subtype.goods{
+  .modal-content {
+    .main-container{
+      .subtype.fun {
          td:first-child{
-           width: 110px;
-           .select1{
-             width: 110px;
-             background-position: 93px;
-           }
-         }
-         td:nth-child(2){
-           width: 115px;
-           text-align: right;
-         }
-         td:nth-child(3){
-           padding-left: 0;
-           width: 146px;
-           text-align: right;
-           input{
-             left: -15px;
-           }
-         }
-         td:nth-child(4){
-           width: 83px;
-           text-align: right;
-         }
-       }
-     }
-   }
- }
+            width: 110px;
+            .select1{
+              width: 110px;
+              background-position: 93px;
+            }
+          }
+          td:nth-child(2){
+            width: 115px;
+            text-align: right;
+          }
+          td:nth-child(3){
+            padding-left: 16px;
+            width: 170px;
+            &>div {
+              line-height: 32px;
+            }
+            .minus, .plus {
+              display: inline-block;
+              width: 15px;
+              height: 22px;
+              line-height: 20px;
+              text-align: center;
+              background: #fff;
+              cursor: pointer;
+              border:1px solid #cccccc;
+              border-radius:2px;
+            }
+            .time {
+              width: 33px;
+              text-align: center;
+              display:  inline-block;
+              height: 22px;
+              line-height: 20px;
+            }
+          }
+          td:nth-child(4){
+            padding-left: 0;
+            width: 128px;
+            text-align: right;
+            input{
+              left: -15px;
+            }
+          }
+          td:nth-child(5) {
+            width: 39px;
+            text-align: right;
+          }
+      }
+      .subtype.food, .subtype.goods{
+        td:first-child{
+          width: 110px;
+          .select1{
+            width: 110px;
+            background-position: 93px;
+          }
+        }
+        td:nth-child(2){
+          width: 115px;
+          text-align: right;
+        }
+        td:nth-child(3){
+          padding-left: 0;
+          width: 146px;
+          text-align: right;
+          input{
+            left: -15px;
+          }
+        }
+        td:nth-child(4){
+          width: 83px;
+          text-align: right;
+        }
+      }
+    }
+  }
+}
 #payWithAlipayModal{
   .modal-dialog {
     width: 400px;
@@ -2023,12 +2145,12 @@ object{
 }
 #checkoutModal, #checkinModal, #checkoutAdModal{
   .modal-dialog {
-    width: 530px;
+    width: 660px;
   }
   .modal-content {
     background: #fafafa;
     border-radius: $BorderRadius;
-    width: 530px;
+    width: 660px;
     padding: 0;
     overflow-x: hidden;
     .date-table{
@@ -2130,7 +2252,7 @@ object{
       @include modalHeader();
     }
     .hr2{
-      width: 514px;
+      width: 644px;
       height: 1px;
       background: #d4d4d4;
       margin: auto;
@@ -2190,7 +2312,7 @@ object{
             width: 256px;
           }
           td:nth-child(3){
-            width: 46px;
+            width: 50px;
             color: #b3b3b3;
           }
           td:nth-child(4){
@@ -2367,7 +2489,57 @@ object{
             }
           }
         }
-        .subtype.food, .subtype.fun, .subtype.goods{
+        .subtype.fun {
+          td:first-child{
+              width: 110px;
+              .select1{
+                width: 110px;
+                background-position: 93px;
+              }
+            }
+            td:nth-child(2){
+              width: 115px;
+              text-align: right;
+            }
+            td:nth-child(3){
+              padding-left: 16px;
+              width: 170px;
+              &>div {
+                line-height: 32px;
+              }
+              .minus, .plus {
+                display: inline-block;
+                width: 15px;
+                height: 22px;
+                line-height: 20px;
+                text-align: center;
+                background: #fff;
+                cursor: pointer;
+                border:1px solid #cccccc;
+                border-radius:2px;
+              }
+              .time {
+                width: 33px;
+                text-align: center;
+                display:  inline-block;
+                height: 22px;
+                line-height: 20px;
+              }
+            }
+            td:nth-child(4){
+              padding-left: 0;
+              width: 128px;
+              text-align: right;
+              input{
+                left: -15px;
+              }
+            }
+            td:nth-child(5) {
+              width: 39px;
+              text-align: right;
+            }
+        }
+        .subtype.food, .subtype.goods{
           .sub-title{
             position: relative;
             .sadd{
@@ -2560,7 +2732,7 @@ object{
       height: 44px;
       .accounts{
         background:#f4f4f4;
-        width:530px;
+        width:660px;
         height:44px;
         font-size:14px;
         .sgive{
@@ -3610,4 +3782,196 @@ object{
 }
 .modal-close:hover{
   color: #666666!important;
+}
+@mixin room-people-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  border-width: 1px;
+  border-style: solid;
+  position: relative;
+  img {
+    margin-left: 3.5px;
+    margin-bottom: 4px;
+  }
+  .room-people-num {
+    content: '';
+    font-size: 12px;
+    display: block;
+    position: absolute;
+    top: -7px;
+    left: 10px;
+    width: 17px;
+    height: 11px;
+    text-align: center;
+    line-height: 12px;
+    color: #fff;
+    border-radius: 2px;
+  }
+}
+.room-people-actived {
+  @include room-people-icon();
+  border-color: $color1;
+  cursor: pointer;
+  .room-people-num {
+    background: #f24949;    
+  }
+}
+.room-people-disabled {
+  @include room-people-icon();
+  border-color: #bfbfbf;
+  .room-people-num {
+    background: #bfbfbf;
+  }
+}
+#roomPeopleModal {
+  z-index: 1051;
+  .modal-dialog {
+    width: 485px;
+  }
+  .sheader {
+    position: relative;
+  }
+  .stitle {
+    padding: 14px 16px 8px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+    }
+  .modal-content {
+    background: #fafafa;
+    border-radius: $BorderRadius;
+    width: 485px;
+    padding: 0px;
+    overflow-x: hidden;
+    .hr {
+      @include modalHeader();
+    }
+    .hr2{
+      width: 462px;
+      height: 1px;
+      background: #d4d4d4;
+      margin: auto;
+      clear: both;
+    }
+  }
+  @mixin room-input-button {
+    display: inline-block;
+    height: 19px;
+    color: #178ce6;
+    width:83px;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    cursor: pointer;
+    vertical-align: bottom;
+  }
+  .room-people-readCard {
+    @include room-input-button();
+    padding-left: 27px;
+    margin-left: 164px;
+    background-image: url(http://static.dingdandao.com/B401FC11-4ADF-434B-8D18-C81D7AF43129@1x.png);
+  }
+  .room-people-hand {
+    @include room-input-button();    
+    padding-left: 19px;
+    margin-left: 14px;
+    background-image: url(http://static.dingdandao.com/85397197-D670-4B3D-9C2B-A3865871AD34@1x.png);    
+  }
+  .main-container {
+    padding: 12px 16px;
+    min-height: 100px;
+    max-height: 307px;
+    overflow: auto;
+    .tips {
+      position: absolute;
+      color: #f24949;
+      font-size: 12px;
+      
+      &:nth-child(1) {
+        left: 31px;
+      }
+      &:nth-child(2) {
+        left: 240px;
+      }
+      &:nth-child(3) {
+        left: 240px;
+      }
+    }
+  }
+  .tips-row {
+    position: relative;
+    height: 14px;
+    margin-top: -12px;
+  }
+  .room-one-person {
+    margin: 8px 0;
+    input {
+      height: 24px;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      padding-left: 8px;
+      &:nth-of-type(1) {
+        width: 116px;
+        margin-right: 12px;
+      }
+      &:nth-of-type(2) {
+        margin-left: 0;
+        margin-right: 12px;
+        width: 162px;
+      }
+    }
+    .select1 {
+      vertical-align: top;
+      @include select1();
+      background-position-x: 60px; 
+      display: inline-block;
+      height: 24px;
+      line-height: 22px;
+      width: 74px;
+      position: relative;
+      .select1_options{
+        width: 72px;
+        position: fixed;
+      }
+    }
+    i {
+      cursor: pointer;
+      display: inline-block;
+      background: url(http://static.dingdandao.com/3C429575-BB57-40DA-A07B-3A8B2232BDFA@1x.png) no-repeat center;
+      height: 16px;
+      width: 16px;
+      vertical-align: middle;
+    }
+  }
+  .bottom-fixed {
+    background: #f4f4f4;
+    padding: 10px 56px;
+  }
+  .btns {
+    text-align: right;
+    div {
+      display: inline-block;
+      width: 100px;
+    }
+  }
+  .confirm-button {
+    @include btn2_normal();
+  }
+  .cancel-button {
+    margin-right: 16px;
+    @include btn1_normal();
+  }
+}
+.sub-title{
+  position: relative;
+  .sadd{
+    position: absolute;
+    right: 16px;
+    top: 0;
+    cursor: pointer;
+  }
 }

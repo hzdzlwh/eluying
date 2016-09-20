@@ -104,6 +104,12 @@ var util = {
     },
 
     compareDates: function(date1, date2){
+        if (typeof date1 === 'string') {
+            date1 = this.stringToDate(date1);
+        }
+        if (typeof date2 === 'string') {
+            date2 = this.stringToDate(date2);
+        }
         //return date1.getFullYear() > date2.getFullYear() || (date1.getFullYear() == date2.getFullYear()
         //    && date1.getMonth() > date2.getMonth()) || (date1.getFullYear() == date2.getFullYear()
         //    && date1.getMonth() == date2.getMonth() && date1.getDate() >= date2.getDate())
@@ -345,6 +351,27 @@ var util = {
             nums += this.countTags(node.childNodes[i]);
         }
         return nums;
+    },
+    copyText: function(ele){
+        function otherEle(element){
+            if (document.selection) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(element);
+                range.select();
+            }else{
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(element);
+                window.getSelection().addRange(range);
+            }
+        }
+        if(ele.select){
+            ele.select();
+        }else{
+            otherEle(ele);
+        }
+        document.execCommand('Copy');
+        window.getSelection().removeAllRanges();
     }
 };
 module.exports = util;

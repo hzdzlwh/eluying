@@ -13,7 +13,7 @@ idcObj.init = function(){
     }else if(typeof(ff.idcard)!='undefined') {
         this.idc = ff;
     }else{
-        $(".readBtn").html('开始读卡');
+        $(".readBtn").html('读卡添加');
         $(".readBtn").removeClass('ing');
         modal.somethingAlert("请使用IE或IE内核、火狐、Opera、Chrome（低于44版）、WEBKIT内核等浏览器并安装IDCardWeb控件!");
         return;
@@ -40,7 +40,7 @@ idcObj.init = function(){
     this.idc.PicFormat = "jpg";
 };
 
-idcObj.read = function(timeout, type, scope){
+idcObj.read = function(timeout, scope){
     //- timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
     if(!this.idc){
         return false;
@@ -74,35 +74,9 @@ idcObj.read = function(timeout, type, scope){
      idVerify				MD5校验码，由用户指定数据组合生成的MD5编码，用于在服务端校验上传的数据是否完整，防止被篡改
      SAMID				阅读器的设备ID
      *******************************************************************************************************************/
-    if(cid==""){
-        $(".readBtn").html('开始读卡');
-        $(".readBtn").removeClass('ing');
-    }else{
-        //- 阅读数据写入input
-        var name = this.data.IDname;
-        var num = this.data.IDCardNo;
-        if(type === 0){
-            scope.orderNew.customerName = name;
-            scope.orderNew.idVal = num;
-            scope.selectedId = 0;
-            scope.selectedIdLabel = '身份证';
-            scope.$apply();
-            $("#newOrderModal .readBtn").html('开始读卡');
-            $(".readBtn").removeClass('ing');
-            // scope.$apply();
-            // $("input[name=orderNewCustomerName]").val(name);
-            // $("input[name=orderNewId]").val(num);
-        }else if(type === 1){
-            scope.orderEdit.customerName = name;
-            scope.orderEdit.idVal = num;
-            scope.orderEdit.selectedId = 0;
-            scope.orderEdit.selectedIdLabel = '身份证';
-            scope.$apply();
-            $("#orderEditModal .readBtn").html('开始读卡');
-            $(".readBtn").removeClass('ing');
-            // scope.$apply();
-        }
-    }
+    var name = this.data.IDname;
+    var num = this.data.IDCardNo;
+    scope.$broadcast('read', name, num);
 };
 
 module.exports = idcObj;

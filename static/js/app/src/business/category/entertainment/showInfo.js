@@ -82,7 +82,7 @@ var showInfo = {
         var item = {
             coverUrl: $(".coverImg").attr("src"),
             detailImgUrl: JSON.stringify(detailImgUrl),
-            id: $(".categoryGrid").find(".mainActive").find(".id").val()
+            id: $(".et-table").find(".ET-type-selected").find(".id").val()
         };
         showInfo.sendETShowInfo(item, that);
     },
@@ -131,10 +131,10 @@ var showInfo = {
         },
         //编辑展示信息
         "click #editETShowInfoButton": function () {
-            $("#editDisplayInfo h1").html("编辑展示信息-" + $(".mainActive td:eq(0)").html());
+            $("#editDisplayInfo h1").html("编辑展示信息-" + $(".ET-type-selected .et-category-name").html());
             $(".detail .photoContainer").html("");
             $(".cover .photoContainer").html("");
-            var id = $(".mainActive .id").val();
+            var id = $(".ET-type-selected .id").val();
             showInfo.pullETShowInfo(id);
         },
 

@@ -198,7 +198,7 @@ var seasonManage = {
                 tbody += "<tbody>" +
                     "<tr>" +
                     "<td>" +
-                    "<p>直销价</p>" +
+                    "<p>微官网价</p>" +
                     "</td>";
                 for (var i = 1; i < 7; i++) {
                     tbody += "<td class='netPrice' channel-id='" + data[name][i].channelId + "' week='" + (i + 1) + "'>" + "<p>" + data[name][i].netPrice + "</p></td>";
@@ -311,20 +311,30 @@ var seasonManage = {
             $(".salePrice").removeClass("selected");
             $(".netPrice").removeClass("selected");
             $(this).addClass("selected");
-            $("#editSeasonNetPriceButton").parent().addClass("hide");
-            $("#editSeasonSalePriceButton").parent().removeClass("hide");
+            $(".editSeasonNetPriceButton").parent().addClass("hide");
+            $(".editSeasonSalePriceButton").parent().addClass("hide");
+            if ($(this).parents('table').hasClass('busyGrid')) {
+                $(".busy-operate .editSeasonSalePriceButton").parent().removeClass("hide");
+            } else {
+                $(".slack-operate .editSeasonSalePriceButton").parent().removeClass("hide");
+            }
         },
         "click #editSeason .netPrice": function(){
             $(".netPrice").removeClass("selected");
             $(".salePrice").removeClass("selected");
             $(this).addClass("selected");
-            $("#editSeasonSalePriceButton").parent().addClass("hide");
-            $("#editSeasonNetPriceButton").parent().removeClass("hide");
+            $(".editSeasonSalePriceButton").parent().addClass("hide");
+            $(".editSeasonNetPriceButton").parent().addClass("hide");
+            if ($(this).parents('table').hasClass('busyGrid')) {
+                $(".busy-operate .editSeasonNetPriceButton").parent().removeClass("hide");
+            } else {
+                $(".slack-operate .editSeasonNetPriceButton").parent().removeClass("hide");
+            }
         },
-        "click #editSeasonSalePriceButton": function(){
+        "click .editSeasonSalePriceButton": function(){
             $("#seasonRetailPrice").val($(".salePrice.selected").find("p").html());
         },
-        "click #editSeasonNetPriceButton": function(){
+        "click .editSeasonNetPriceButton": function(){
             /*$("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());*/
             $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(0)").html());
         },

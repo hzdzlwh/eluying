@@ -50,10 +50,14 @@ var orderDetailCtrl = function(app){
             };
             scope.showGetMoney = function(){
                 var orderDetail = rootScope.orderDetail;
+                rootScope.$broadcast('openGetMoneyFromOrderDetail');
                 rootScope.getMoney = getMoneyService.resetGetMoney(orderDetail, orderDetail.orderId, 1);
                 $("#orderDetailModal").modal("hide");
                 $("#getMoneyModal").modal("show");
             };
+            
+            scope.showRoomPeopleModal = orderService.showRoomPeopleModal;
+
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
             scope.itemsExist = orderService.itemsExist;
@@ -81,7 +85,6 @@ var orderDetailCtrl = function(app){
                 food.detail = {};
                 AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {
                     caterOrderId: food.foodOrderId,
-                    version: 7
                 }, function(result){
                     if(result.code === 1){
                         food.detail = result.data;

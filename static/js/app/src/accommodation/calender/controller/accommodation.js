@@ -36,7 +36,7 @@ var accommodationCtrl = function(app){
             rootScope.entryRowsMax = constService.entryRowsMax;
             rootScope.update = function(){};
             rootScope.showOrderDetail = function(orderId){
-                getDataService.getOrderDetail(orderId, rootScope);
+                return getDataService.getOrderDetail(orderId, rootScope);
             };
             rootScope.closeRoom = function(open, rid, dateItem){
                 if(rootScope.selectedEntries[rid + dateItem.date]){
@@ -137,9 +137,24 @@ var accommodationCtrl = function(app){
                     };
                     rooms.push(room);
                 });
+                var playItems = [];
+                order.playItems.map(function(el) {
+                    if(el.amount === 0){
+                        return false;
+                    }
+                    var playItem = {
+                        amount: el.amount,
+                        date: el.dateStr,
+                        categoryId: el.isNew ? el.categoryId : 0,
+                        categoryName: el.name,
+                        price: el.price,
+                        timeAmount: el.timeAmount,
+                        playOrderId: el.playOrderId
+                    };
+                    playItems.push(playItem);
+                });
                 var items = [];
-                var oldItems = order.playItems.concat(order.goodsItems);
-                oldItems.forEach(function(d){
+                order.goodsItems.forEach(function(d){
                     if(d.amount === 0){
                         return false;
                     }
@@ -166,6 +181,7 @@ var accommodationCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
                     foodItems: JSON.stringify([]),
+                    playItems: JSON.stringify(playItems),
                 };
                 AJAXService.ajaxWithToken('GET', 'orderModifyUrl', orderItem, function(result3){
                     if(result3.code === 1){

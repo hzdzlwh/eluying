@@ -2,10 +2,13 @@ require("bootstrap");
 require("validate");
 function centerModals(){
     $('.modal').each(function(){
-        var $clone = $(this).clone().css('display', 'block').appendTo('body');
-        var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2) - 52;
+        var hasShown = $(this).css('display') === 'block';
+        $(this).css('display', 'block');
+        var top = ($(this).height() - $(this).find('.modal-dialog').height()) / 2;
         top = top > 0 ? top : 0;
-        $clone.remove();
+        if (!hasShown) {
+            $(this).css('display', 'none');
+        }
         $(this).find('.modal-content').css("margin-top", top);
     });
 }

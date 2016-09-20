@@ -28,8 +28,8 @@ $(function(){
             $(".campName").html(restName);
         }.bind(this));
     } else {
-        topMenu.showTopMenu();
-        $(".campName").html(localStorage.getItem("campName"));
+        // topMenu.showTopMenu();
+        // $(".campName").html(localStorage.getItem("campName"));
     }
     util.mainContainer();
     modal.modalInit();
