@@ -21,6 +21,7 @@ $(function() {
     //初始化界面
     header.showHeader();
     //高亮"会员管理"
+    $(".ordersManageEntry").removeClass("selected");
     $(".settingsEntry").removeClass("selected");
     $(".accomodationEntry").removeClass("selected");
     $(".manageVipEntry").addClass("selected");
