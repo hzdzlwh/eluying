@@ -9,10 +9,54 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
     <link rel="stylesheet" href="/static/css/main.min.css">
+    <link rel="stylesheet" href="/static/css/orders.min.css">
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/ordersManage/orders.js"></script>
 </head>
 <body>
-
+    <div class="ordersManage-mainContainer">
+        <div class="topFilters-container"></div>
+        <div class="middleTable-container">
+            <table class="dd-table">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>订单业态</th>
+                        <th>订单金额¥</th>
+                        <th>客户已付¥</th>
+                        <th>已收押金¥</th>
+                        <th>客户姓名</th>
+                        <th>手机号码</th>
+                        <th>使用时间</th>
+                        <th>订单状态</th>
+                        <th>收银员</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="noOrders-tr" v-show="orderItems.length === 0">
+                        <td colspan="10">
+                            <div class="noOrders-container">
+                                <img src="http://static.dingdandao.com/ordersManage_noOrders.png" alt="">
+                                <p>没有订单信息</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="orders-tr" v-for="item in orderItems" v-show="orderItems.length > 0">
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                        <td>hello,everyone!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="footer-container"></div>
+    </div>
 </body>
 </html>

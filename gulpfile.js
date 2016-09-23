@@ -94,7 +94,7 @@ gulp.task('rev', function () {
 
 
 gulp.task('styles', function () {
-    return sass('static/sass/main.scss', {style: 'compressed'})
+    return sass(['static/sass/main.scss', 'static/sass/ordersManage/orders/orders.scss'], {style: 'compressed'})
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('static/css'))

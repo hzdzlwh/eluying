@@ -23,9 +23,20 @@ $(function(){
     $(".ordersManageEntry").addClass("selected");
     var events = {
 
-        "resize window": util.mainContainer
+        "resize window": util.mainContainer,
+        "click .orders-tr": function(){
+            $(".orders-tr").removeClass("dd-tr-selected");
+            $(this).addClass("dd-tr-selected");
+        }
 
     };
+    
+    let orderManage = new Vue({
+        el: ".ordersManage-mainContainer",
+        data: {
+            orderItems:[1, 2, 3, 4, 5, 6, 7, 8]
+        }
+    });
 
     util.bindDomAction(events);
 });

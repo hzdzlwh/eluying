@@ -5,6 +5,7 @@
   "main": "gulpfile.js",
   "dependencies": {
     "angular": "^1.5.3",
+    "dd-common-css": "0.0.2",
     "dot": "^1.0.3",
     "md5": "^2.1.0",
     "vue": "^1.0.24"
