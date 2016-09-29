@@ -37,11 +37,11 @@ var foodETPriceList = {
         for (var name in dishesList) {
             for (var subName in dishesList[name]) {
                 if (subName == 0) {
-                    dishesTbody += "<tr class='mainClass'><td>" + dishesList[name][subName].name + (dishesList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + dishesList[name][subName].id + "'>" + dishesList[name][subName].salePrice + "</td></tr>"
+                    dishesTbody += "<tr class='mainClass'><td>" + dishesList[name][subName].name + (dishesList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + dishesList[name][subName].id + "'>" + '<span class="j-price">' + dishesList[name][subName].salePrice + "</span></td></tr>"
                 } else {
                     dishesTbody += "<tr class='subPrice hide'><td><div>" + dishesList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + dishesList[name][subName].id + "' channel-id='" + dishesList[name][subName].channelId + "' ><div><p>"
-                        + dishesList[name][subName].netPrice + "</p></div></td></tr>"
+                        + '<span class="j-price">' + dishesList[name][subName].netPrice + "</span></p></div></td></tr>"
                 }
             }
         }
@@ -50,11 +50,11 @@ var foodETPriceList = {
         for (var name in packageList) {
             for (var subName in packageList[name]) {
                 if (subName == 0) {
-                    packageTbody += "<tr class='mainClass'><td>" + packageList[name][subName].name + (packageList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + packageList[name][subName].id + "'>" + packageList[name][subName].salePrice + "</td></tr>"
+                    packageTbody += "<tr class='mainClass'><td>" + packageList[name][subName].name + (packageList[name].hasOwnProperty("1") ? "<img src='/static/image/rotate.png' />" : "") + "</td><td>零售价</td><td class='price' category-id='" + packageList[name][subName].id + "'>" + '<span class="j-price">' + packageList[name][subName].salePrice + "</span></td></tr>"
                 } else {
                     packageTbody += "<tr class='subPrice hide'><td><div>" + packageList[name][subName].channelName + "</div></td><td><div><p>微官网价</p></div></td>" +
                         "<td class='subPriceTd' category-id='" + packageList[name][subName].id + "' channel-id='" + packageList[name][subName].channelId + "' ><div><p>"
-                        + packageList[name][subName].netPrice + "</p></div></td></tr>"
+                        + '<span class="j-price">'+ packageList[name][subName].netPrice + "</span></p></div></td></tr>"
                 }
             }
         }
