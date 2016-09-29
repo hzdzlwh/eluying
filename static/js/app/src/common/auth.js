@@ -76,7 +76,7 @@ function showMaintenance(announcement) {
 }
 
 function checkMaintenance() {
-    var host =  process.env.NODE_ENV === 'production' ? "http://114.215.183.122:10086/mt" : "http://114.215.183.122:20010/mt";
+    var host =  process.env.NODE_ENV === 'production' ? "http://120.26.83.168:8081/mt" : "http://114.215.183.122:20010/mt";
     $.get(host + '/maintain/getMaintainInfo')
         .done(function(res) {
             if (res.data.open === 1 && res.data.type === 0) {
