@@ -31,7 +31,7 @@ $(function(){
 
     };
     
-    let orderManage = new Vue({
+    const orderManage = new Vue({
         el: ".ordersManage-mainContainer",
         data: {
             orderItems:[1, 2, 3, 4, 5, 6, 7, 8]

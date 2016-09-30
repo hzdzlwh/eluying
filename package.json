@@ -8,7 +8,7 @@
     "dd-common-css": "0.0.2",
     "dot": "^1.0.3",
     "md5": "^2.1.0",
-    "vue": "^1.0.24"
+    "vue": "^2.0.0-rc.8"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

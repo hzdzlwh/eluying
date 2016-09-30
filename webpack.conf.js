@@ -56,6 +56,8 @@ var webpackConf =  {
     resolve: {
         extensions: ['.js', ''],
         alias: {
+            vue1: path.join(__dirname, './static/js/lib/vue.1.0.26.js'),
+            vue: 'vue/dist/vue.js',
             cookie: path.join(__dirname, './static/js/lib/jquery.cookie.js'),
             jquery: path.join(__dirname, './static/js/lib/jquery.min.js'),
             jqueryui: path.join(__dirname, './static/js/lib/jquery-ui.min.js'),
