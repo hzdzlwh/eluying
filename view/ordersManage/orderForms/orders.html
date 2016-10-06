@@ -15,9 +15,26 @@
 </head>
 <body>
     <div class="ordersManage-mainContainer">
-        <div class="topFilters-container"></div>
+        <div class="topFilters-container">
+            <div class="dd-select-ordertype">
+                <dd-select v-model="value">
+                    <dd-option v-for="option in options" :value="option.value" :label="option.label">
+                    </dd-option>
+                </dd-select>
+            </div>
+            <div class="dd-dropdown">
+                <dd-dropdown text="导出明细" trigger="click">
+                    <dd-dropdown-item><span>导出PDF</span></dd-dropdown-item>
+                    <dd-dropdown-item><span>导出Excel</span></dd-dropdown-item>
+                </dd-dropdown>
+            </div>
+            <div class="order-search-container">
+                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search" v-model="searchContent" @input="changeIcon">
+                <span class="order-search-icon"><img :src="`http://static.dingdandao.com/order_manage_search_${searchState}.png`" alt=""></span>
+            </div>
+        </div>
         <div class="middleTable-container">
-            <table class="dd-table">
+            <table class="dd-table orders-manage-table">
                 <thead>
                     <tr>
                         <th>订单号</th>
@@ -43,7 +60,12 @@
                     </tr>
                     <tr class="orders-tr" v-for="item in orderItems" v-show="orderItems.length > 0">
                         <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
+                        <td style="font-size: 0">
+                            <span class="order-state order-state-red">住</span>
+                            <span class="order-state order-state-yellow">餐</span>
+                            <span class="order-state order-state-blue">娱</span>
+                            <span class="order-state order-state-green">商</span>
+                        </td>
                         <td>hello,everyone!</td>
                         <td>hello,everyone!</td>
                         <td>hello,everyone!</td>
@@ -56,7 +78,15 @@
                 </tbody>
             </table>
         </div>
-        <div class="footer-container"></div>
+        <div class="footer-container">
+            <span class="orders-total">共计<b>350个订单</b></span>
+            <span class="orders-total">金额<b>¥10000</b></span>
+            <span class="orders-total">客户已付<b>¥10000</b></span>
+            <span class="orders-total">已收押金<b>¥10000</b></span>
+            <div class="dd-pagination-container">
+                <dd-pagination @currentchange="handleChange" :visible-pager-count="6" :show-one-page="false" :page-count="10"></dd-pagination>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -49,12 +49,15 @@ var webpackConf =  {
     },
     module: {
         loaders: [
-            { test: /\.js$/, loader: 'babel', include: path.join(__dirname, './static/js/app/src'), happy: { id: 'js' } },
-            {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] }
+            {test: /\.js$/, loader: 'babel', include: [path.join(__dirname, './static/js/app/src'), path.join(__dirname, './node_modules/dd-vue-component/src')], happy: { id: 'js' } },
+            {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] },
+            {test: /\.vue$/, loader: 'vue'},
+            {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
+            {test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'}
         ]
     },
     resolve: {
-        extensions: ['.js', ''],
+        extensions: ['.js', '.vue', ''],
         alias: {
             vue1: path.join(__dirname, './static/js/lib/vue.1.0.26.js'),
             vue: 'vue/dist/vue.js',

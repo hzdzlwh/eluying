@@ -9,10 +9,75 @@
   .topFilters-container {
     width: 100%;
     height: 40px;
+    padding-top: 16px;
+    .dd-select-ordertype {
+      width: 88px;
+      display: inline-block;
+    }
+    .dd-dropdown {
+      display: inline-block;
+      width: 100px;
+      margin-left: 20px;
+      float: right;
+    }
+    .order-search-container {
+      float: right;
+      position: relative;
+    }
+    .order-search {
+      min-width: 216px;
+      border: $border-width solid $gary;
+      height: 25px;
+      line-height: 24px;
+      background: $body-bg;
+      border-radius: $border-radius;
+      padding-left: 8px;
+      outline: none;
+      font-size: $font-size-base;
+      &::-webkit-input-placeholder{
+        color: $gary;
+      }
+      &::-moz-placeholder {
+        color: $gary;
+      }
+    }
+    .order-search-icon {
+      position: absolute;
+      top: 3px;
+      right: 6px;
+    }
   }
 
   .middleTable-container th {
     font-weight: bold;
+  }
+  
+  .order-state {
+    display: inline-block;
+    font-size: $font-size-base;
+    text-align: center;
+    height: 22px;
+    width: 22px;
+    line-height: 22px;
+    color: $body-bg;
+    border-radius: $border-radius;
+    margin-right: 4px;
+  }
+
+  .order-state-red {
+    background: #f27979;
+  }
+
+  .order-state-yellow {
+    background: #ffac59
+  }
+
+  .order-state-green {
+    background: #62d99d;
+  }
+
+  .order-state-blue {
+    background: #3dcde0;
   }
 
   .footer-container {
@@ -23,6 +88,32 @@
     box-shadow: $table-box-shadow;
     padding: 0 30px;
     margin-bottom: $spacer;
+    .orders-total {
+      display: inline-block;
+      height: 17px;
+      line-height: 17px;
+      font-size: $font-size-sm;
+      color: $gary-dark;
+      margin-right: 15px;
+      padding-right: 16px;
+      border-right: $border-width solid $gary-light;
+      b {
+        color: $gary-daker;
+        font-size: $font-size-base;
+        font-weight: normal;
+        margin-left: 4px;
+      }
+      &:last-child {
+        margin-right: 0;
+        border: none;
+      }
+    }
+  }
+  .dd-pagination-container {
+    display: inline-block;
+    line-height: initial;
+    margin-top: 10px;
+    float: right;
   }
 
   .noOrders-tr > td {
