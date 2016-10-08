@@ -1,18 +1,18 @@
 /**
  * Created by zhaoyongsheng on 16/9/22.
  */
-var Vue = require('vue');
-var header = require('header');
-var leftMenu = require('leftMenu');
-var util = require('util');
-var modal = require('modal');
-var AJAXService= require('AJAXService');
-var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import Vue from 'vue';
+import header from 'header';
+import leftMenu from 'leftMenu';
+import util from 'util';
+import modal from 'modal';
+import AJAXService from 'AJAXService';
+import auth from '../../common/auth';
+import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 
+auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
-const { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } = require('dd-vue-component');
 
 $(function(){
     //初始化界面
