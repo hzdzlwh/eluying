@@ -14,6 +14,23 @@
       width: 88px;
       display: inline-block;
     }
+    .dd-select-orderstate {
+      width: 116px;
+      display: inline-block;
+      margin-left: 16px;
+    }
+    .dd-start-date, .dd-end-date {
+      display: inline-block;
+    }
+    .dd-date-label {
+      margin-left: 16px;
+      color: $gary-dark;
+      font-size: $font-size-base;
+    }
+    .dd-date-symbol {
+      color: $gary-dark;
+      font-size: $font-size-base;
+    }
     .dd-dropdown {
       display: inline-block;
       width: 100px;
@@ -45,6 +62,9 @@
       position: absolute;
       top: 3px;
       right: 6px;
+    }
+    .dd-checkbox {
+      outline: none;
     }
   }
 

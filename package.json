@@ -7,7 +7,7 @@
     "angular": "^1.5.3",
     "css-loader": "^0.25.0",
     "dd-common-css": "0.1.0",
-    "dd-vue-component": "^0.2.4",
+    "dd-vue-component": "^0.2.5",
     "dot": "^1.0.3",
     "md5": "^2.1.0",
     "vue": "^2.0.0-rc.7"

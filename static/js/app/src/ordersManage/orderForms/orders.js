@@ -38,7 +38,7 @@ $(function(){
             orderItems:[1, 2, 3, 4, 5, 6, 7, 8],
             searchState: 'grey',
             searchContent: '',
-            options: [{
+            optionsType: [{
                 value: '-1',
                 label: '全部业态'
                 },
@@ -59,7 +59,36 @@ $(function(){
                     label: '商超'
                 }
             ],
-            value: '-1'
+            orderType: '-1',
+            orderState: '-1',
+            optionsState: [{
+                value: '-1',
+                label: '全部订单状态'
+                },
+                {
+                    value: '2',
+                    label: '已预订'
+                },
+                {
+                    value: '3',
+                    label: '进行中'
+                },
+                {
+                    value: '5',
+                    label: '已完成'
+                }
+            ],
+            startDate: '',
+            endDate: ''
+        },
+
+        created(){
+            AJAXService.ajaxWithToken('get', '/order/listPc', {}, function(result){
+
+            });
+            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
+                
+            });
         },
 
         methods: {
@@ -73,8 +102,8 @@ $(function(){
                 }
             },
 
-            handleChange(){
-                console.log('hello');
+            handleChange(msg){
+                console.log(msg);
             }
         },
         

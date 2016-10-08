@@ -17,10 +17,24 @@
     <div class="ordersManage-mainContainer">
         <div class="topFilters-container">
             <div class="dd-select-ordertype">
-                <dd-select v-model="value">
-                    <dd-option v-for="option in options" :value="option.value" :label="option.label">
+                <dd-select v-model="orderType">
+                    <dd-option v-for="option in optionsType" :value="option.value" :label="option.label">
                     </dd-option>
                 </dd-select>
+            </div>
+            <div class="dd-select-orderstate">
+                <dd-select v-model="orderState" multiple>
+                    <dd-option v-for="option in optionsState" :value="option.value" :label="option.label">
+                    </dd-option>
+                </dd-select>
+            </div>
+            <span class="dd-date-label">使用时间:</span>
+            <div class="dd-start-date">
+                <dd-datepicker placeholder="开始时间" v-model="startDate" />
+            </div>
+            <span class="dd-date-symbol">~</span>
+            <div class="dd-end-date">
+                <dd-datepicker placeholder="结束时间" v-model="endDate" />
             </div>
             <div class="dd-dropdown">
                 <dd-dropdown text="导出明细" trigger="click">
