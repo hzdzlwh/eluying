@@ -1,6 +1,10 @@
 {
   "presets": [
-    "latest",
+    ["latest",
+      {
+        "modules": true
+      }
+    ],
     "stage-0"
   ]
 }

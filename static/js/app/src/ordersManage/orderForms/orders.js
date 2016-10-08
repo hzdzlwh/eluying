@@ -35,47 +35,47 @@ $(function(){
     const orderManage = new Vue({
         el: ".ordersManage-mainContainer",
         data: {
-            orderItems:[1, 2, 3, 4, 5, 6, 7, 8],
             searchState: 'grey',
+            orderItems:[1,2,3,4,5],
             searchContent: '',
             optionsType: [{
-                value: '-1',
-                label: '全部业态'
+                id: '-1',
+                name: '全部业态'
                 },
                 {
-                    value: '3',
-                    label: '住宿'
+                    id: '3',
+                    name: '住宿'
                 },
                 {
-                    value: '0',
-                    label: '餐饮'
+                    id: '0',
+                    name: '餐饮'
                 },
                 {
-                    value: '1',
-                    label: '娱乐'
+                    id: '1',
+                    name: '娱乐'
                 },
                 {
-                    value: '2',
-                    label: '商超'
+                    id: '2',
+                    name: '商超'
                 }
             ],
             orderType: '-1',
             orderState: '-1',
             optionsState: [{
-                value: '-1',
-                label: '全部订单状态'
+                id: '-1',
+                name: '全部订单状态'
                 },
                 {
-                    value: '2',
-                    label: '已预订'
+                    id: '2',
+                    name: '已预订'
                 },
                 {
-                    value: '3',
-                    label: '进行中'
+                    id: '3',
+                    name: '进行中'
                 },
                 {
-                    value: '5',
-                    label: '已完成'
+                    id: '5',
+                    name: '已完成'
                 }
             ],
             startDate: '',
@@ -83,12 +83,15 @@ $(function(){
         },
 
         created(){
-            AJAXService.ajaxWithToken('get', '/order/listPc', {}, function(result){
-
+            AJAXService.ajaxWithToken('get', '/order/listPc', { startDate: '2016-09-05', endDate: '2016-09-08'}, function(result){
             });
             AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
                 
             });
+        },
+
+        computed: {
+
         },
 
         methods: {
@@ -102,7 +105,7 @@ $(function(){
                 }
             },
 
-            handleChange(msg){
+            handlePageChange(msg){
                 console.log(msg);
             }
         },
