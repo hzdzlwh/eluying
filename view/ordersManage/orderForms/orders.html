@@ -18,19 +18,19 @@
         <div class="topFilters-container">
             <div class="dd-select-ordertype">
                 <dd-select v-model="orderType">
-                    <dd-option v-for="option in optionsType" :value="option.id" :label="option.name">
+                    <dd-option v-for="option in optionsOrderType" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
             <div class="dd-select-orderstate">
-                <dd-select v-model="orderState">
-                    <dd-option v-for="option in optionsState" :value="option.id" :label="option.name">
+                <dd-select v-model="orderTypeItem" multiple>
+                    <dd-option v-for="option in optionsOrderTypeItems" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
             <div class="dd-select-orderstate">
-                <dd-select v-model="orderState">
-                    <dd-option v-for="option in optionsState" :value="option.id" :label="option.name">
+                <dd-select v-model="orderStatus">
+                    <dd-option v-for="option in optionsOrderState" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
@@ -49,15 +49,15 @@
                 </dd-dropdown>
             </div>
             <div class="order-search-container">
-                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search" v-model="searchContent" @input="changeIcon">
-                <span class="order-search-icon"><img :src="`http://static.dingdandao.com/order_manage_search_${searchState}.png`" alt=""></span>
+                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search" v-model="searchContent">
+                <span class="order-search-icon" @click="searchOrders"><img :src="searchIconUrl" alt=""></span>
             </div>
         </div>
         <div class="middleTable-container">
             <table class="dd-table orders-manage-table">
                 <thead>
                     <tr>
-                        <th>订单号</th>
+                        <th style="padding-left: 30px">订单号</th>
                         <th>订单业态</th>
                         <th>订单金额¥</th>
                         <th>客户已付¥</th>
@@ -70,7 +70,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="noOrders-tr" v-show="orderItems.length === 0">
+                    <tr v-show="isLoading">
+                        <td colspan="10" style="text-align: center">
+                            数据加载中...
+                        </td>
+                    </tr>
+                    <tr class="noOrders-tr" v-show="orderItems.length === 0 && !isLoading">
                         <td colspan="10">
                             <div class="noOrders-container">
                                 <img src="http://static.dingdandao.com/ordersManage_noOrders.png" alt="">
@@ -78,33 +83,37 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="orders-tr" v-for="item in orderItems" v-show="orderItems.length > 0">
-                        <td>hello,everyone!</td>
-                        <td style="font-size: 0">
-                            <span class="order-state order-state-red">住</span>
-                            <span class="order-state order-state-yellow">餐</span>
-                            <span class="order-state order-state-blue">娱</span>
-                            <span class="order-state order-state-green">商</span>
+                    <tr class="orders-tr" v-for="item in orderItems" v-show="orderItems.length > 0 && !isLoading">
+                        <td style="padding-left: 30px">
+                            <div class="dd-arrowRight-orderNum" v-if="getOrderType(item).length > 1"></div>
+                            <div class="dd-arrowDown-orderNum" v-if="false"></div>
+                            {{ item.orderNum }}
                         </td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
-                        <td>hello,everyone!</td>
+                        <td style="font-size: 0">
+                            <span class="order-state order-state-red" v-if="getOrderType(item).indexOf(3) !== -1">住</span>
+                            <span class="order-state order-state-yellow" v-if="getOrderType(item).indexOf(0) !== -1">餐</span>
+                            <span class="order-state order-state-blue" v-if="getOrderType(item).indexOf(1) !== -1">娱</span>
+                            <span class="order-state order-state-green" v-if="getOrderType(item).indexOf(2) !== -1">商</span>
+                        </td>
+                        <td v-text="item.orderTotalPrice"></td>
+                        <td v-text="item.payAmount"></td>
+                        <td v-text="item.depositAmount"></td>
+                        <td v-text="item.customerName || '--'"></td>
+                        <td v-text="item.customerPhone || '--'"></td>
+                        <td v-text="item.date"></td>
+                        <td v-text="getOrderStatusText(item.orderState)"></td>
+                        <td v-text="item.operators.join('、') || '--'"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="footer-container">
-            <span class="orders-total">共计<b>350个订单</b></span>
-            <span class="orders-total">金额<b>¥10000</b></span>
-            <span class="orders-total">客户已付<b>¥10000</b></span>
-            <span class="orders-total">已收押金<b>¥10000</b></span>
+        <div class="footer-container" v-show="!isLoading">
+            <span class="orders-total">共计<b>{{ orderNum }}个订单</b></span>
+            <span class="orders-total">金额<b>¥{{ orderTotalPrice }}</b></span>
+            <span class="orders-total">客户已付<b>¥{{ totalPay }}</b></span>
+            <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span>
             <div class="dd-pagination-container">
-                <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="10"></dd-pagination>
+                <dd-pagination @currentchange="handlePageChange" :visible-pager-count="5" :show-one-page="false" :page-count="Math.ceil(orderNum / pageSize)"></dd-pagination>
             </div>
         </div>
     </div>

@@ -3,9 +3,7 @@
  */
 import Vue from 'vue';
 import header from 'header';
-import leftMenu from 'leftMenu';
 import util from 'util';
-import modal from 'modal';
 import AJAXService from 'AJAXService';
 import auth from '../../common/auth';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
@@ -35,10 +33,13 @@ $(function(){
     const orderManage = new Vue({
         el: ".ordersManage-mainContainer",
         data: {
-            searchState: 'grey',
-            orderItems:[1,2,3,4,5],
+            isLoading: true,
+            currentPage: 1,
+            orderItems: [],
+            orderTypeItems: [],
+            optionsOrderTypeItems: [{id: -1, name: '全部业态'}],
             searchContent: '',
-            optionsType: [{
+            optionsOrderType: [{
                 id: '-1',
                 name: '全部业态'
                 },
@@ -60,8 +61,9 @@ $(function(){
                 }
             ],
             orderType: '-1',
-            orderState: '-1',
-            optionsState: [{
+            orderStatus: '-1',
+            orderTypeItem: ['-1'],
+            optionsOrderState: [{
                 id: '-1',
                 name: '全部订单状态'
                 },
@@ -79,34 +81,128 @@ $(function(){
                 }
             ],
             startDate: '',
-            endDate: ''
+            endDate: '',
+            orderNum: 0,
+            orderTotalPrice: 0,
+            totalPay: 0,
+            depositAmount: 0,
+            pageSize: 30,
         },
 
         created(){
-            AJAXService.ajaxWithToken('get', '/order/listPc', { startDate: '2016-09-05', endDate: '2016-09-08'}, function(result){
-            });
+            this.getOrdersList({});
             AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
-                
-            });
+                this.orderTypeItems = result.data;
+            }.bind(this));
         },
 
         computed: {
+            searchIconUrl() {
+                return this.searchContent === ''
+                    ? 'http://static.dingdandao.com/order_manage_search_grey.png'
+                    : 'http://static.dingdandao.com/order_manage_search_linght.png';
+            },
 
+            orderParams() {
+                if(this.orderStatus === '-1') {
+                    return { endDate: this.endDate, startDate: this.startDate }
+                }else {
+                    return { endDate: this.endDate, startDate: this.startDate, orderStatus: this.orderStatus }
+                }
+            }
         },
 
         methods: {
-            changeIcon(){
-                if (this.searchState === 'linght' && this.searchContent) {
-                    return;
-                }else if (this.searchContent === ''){
-                    this.searchState = 'grey';
-                }else if (this.searchContent){
-                    this.searchState = 'linght';
+            getOrdersList(obj) {
+                this.isLoading = true;
+                AJAXService.ajaxWithToken('get', '/order/listPc', obj,
+                    function(result){
+                        this.isLoading = false;
+                        this.orderItems = this.fixOrderType(result.data.list);
+                        this.depositAmount = result.data.depositAmount;
+                        this.orderNum = result.data.orderNum;
+                        this.orderTotalPrice = result.data.orderTotalPrice;
+                        this.totalPay = result.data.totalPay;
+                    }.bind(this));
+            },
+
+            getOrderStatusText(num){
+                switch(num){
+                    case 0:
+                        return '待处理';
+                    case 1:
+                        return '已拒绝';
+                    case 2:
+                        return '已预订';
+                    case 3:
+                        return '进行中';
+                    case 4:
+                        return '已取消';
+                    case 5:
+                        return '已完成';
                 }
             },
 
-            handlePageChange(msg){
-                console.log(msg);
+            fixOrderType(arr){
+                arr.forEach(function(ele){
+                    if(ele.orderType === -1){
+                        let typeArray = [];
+                        ele.subOrderList.forEach(function(ele){
+                            typeArray.push(ele.orderType);
+                        });
+                        ele.typeArray = typeArray;
+                    }
+                });
+                return arr;
+            },
+            
+            getOrderType(item){
+                let typeArr = [];
+                if(item.orderType !== -1) {
+                    typeArr.push(item.orderType);
+                }else{
+                    typeArr = item.typeArray;
+                }
+                return typeArr;
+            },
+
+            searchOrders(){
+                this.getOrdersList(Object.assign({}, this.orderParams, { keyword: this.searchContent }));
+            },
+
+            handlePageChange(msg) {
+                this.currentPage = msg;
+                this.getOrdersList(Object.assign({}, this.orderParams, { page: msg }));
+            }
+        },
+
+        watch: {
+            orderType: function(newVal, oldVal){
+                switch(newVal){
+                    case '-1':
+                        this.optionsOrderTypeItems = [{id: '-1', name: '全部业态'}];
+                        this.orderTypeItem = [newVal];
+                        break;
+                    case '3':
+                        this.optionsOrderTypeItems = Object.assign({}, this.orderTypeItems)['3'];
+                        this.optionsOrderTypeItems.unshift({id: '3', name: '全部房型'});
+                        this.orderTypeItem = [newVal];
+                        break;
+                    case '0':
+                        this.optionsOrderTypeItems = Object.assign({}, this.orderTypeItems)['0'];
+                        this.optionsOrderTypeItems.unshift({id: '0', name: '全部餐厅'});
+                        this.orderTypeItem = [newVal];
+                        break;
+                    case '1':
+                        this.optionsOrderTypeItems = Object.assign({}, this.orderTypeItems)['1'];
+                        this.optionsOrderTypeItems.unshift({id: '1', name: '全部娱乐'});
+                        this.orderTypeItem = [newVal];
+                        break;
+                }
+            },
+
+            orderParams: function(newVal, oldVal){
+                this.getOrdersList(Object.assign({}, newVal, { page: this.currentPage }))
             }
         },
         

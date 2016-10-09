@@ -66,10 +66,36 @@
     .dd-checkbox {
       outline: none;
     }
+    .dd-select-menu {
+      max-height: 120px;
+      overflow: scroll;
+    }
   }
 
   .middleTable-container th {
     font-weight: bold;
+  }
+
+  div.dd-arrowRight-orderNum {
+    display: inline-block;
+    height: 0;
+    width: 0;
+    vertical-align: middle;
+    border-top: 4px solid transparent;
+    border-left: 4px solid grey;
+    border-bottom: 4px solid transparent;
+    border-right: none;
+  }
+
+  div.dd-arrowDown-orderNum {
+    display: inline-block;
+    height: 0;
+    width: 0;
+    vertical-align: middle;
+    border-top: 4px solid grey;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: none;
   }
   
   .order-state {
