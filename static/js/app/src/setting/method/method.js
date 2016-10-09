@@ -1,4 +1,4 @@
-var Vue = require('vue');
+var Vue = require('vue1');
 var header = require('header');
 var leftMenu = require('leftMenu');
 var util = require('util');
@@ -50,7 +50,7 @@ $(function(){
             c_weChatObj: {},
             deleteItem: {}
         },
-        ready: function(){
+        created: function(){
             AJAXService.ajaxWithToken('get', '/collectionMethod/getPaymentMethodAndState', { }, function(result){
                 this.codeStatus = (result.data.onpassState === 1) ? 'open' : 'close';
                 this.walletStatus = (result.data.onlineCollectionMethod === 1) ? 'open' : 'close';
