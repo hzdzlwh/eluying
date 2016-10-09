@@ -4,6 +4,7 @@
 import Vue from 'vue';
 import header from 'header';
 import util from 'util';
+import modal from 'modal';
 import AJAXService from 'AJAXService';
 import auth from '../../common/auth';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
@@ -114,15 +115,20 @@ $(function(){
 
         methods: {
             getOrdersList(obj) {
+                this.orderItems = [];
                 this.isLoading = true;
                 AJAXService.ajaxWithToken('get', '/order/listPc', obj,
                     function(result){
                         this.isLoading = false;
-                        this.orderItems = this.fixOrderType(result.data.list);
-                        this.depositAmount = result.data.depositAmount;
-                        this.orderNum = result.data.orderNum;
-                        this.orderTotalPrice = result.data.orderTotalPrice;
-                        this.totalPay = result.data.totalPay;
+                        if(result.code === 1 && result.data) {
+                            this.orderItems = this.fixOrderItemData(result.data.list);
+                            this.depositAmount = result.data.depositAmount;
+                            this.orderNum = result.data.orderNum;
+                            this.orderTotalPrice = result.data.orderTotalPrice;
+                            this.totalPay = result.data.totalPay;
+                        }else if(result.code !== 1) {
+                            modal.somethingAlert(result.msg);
+                        }
                     }.bind(this));
             },
 
@@ -142,20 +148,33 @@ $(function(){
                         return '已完成';
                 }
             },
-
-            fixOrderType(arr){
+            
+            /**
+             * 为各订单项添加typeArray数组,showSub假数据
+             * @param arr
+             * @returns {*}
+             */
+            fixOrderItemData(arr){
                 arr.forEach(function(ele){
-                    if(ele.orderType === -1){
+                    if(ele.orderType === -1) {
                         let typeArray = [];
                         ele.subOrderList.forEach(function(ele){
                             typeArray.push(ele.orderType);
                         });
                         ele.typeArray = typeArray;
                     }
+                    if(ele.orderType === -1 && ele.subOrderList.length > 1) {
+                        ele.showSub = false;
+                    }
                 });
                 return arr;
             },
-            
+
+            /**
+             * 获取修改后的订单数据的业态
+             * @param item
+             * @returns {Array}
+             */
             getOrderType(item){
                 let typeArr = [];
                 if(item.orderType !== -1) {
@@ -167,7 +186,15 @@ $(function(){
             },
 
             searchOrders(){
-                this.getOrdersList(Object.assign({}, this.orderParams, { keyword: this.searchContent }));
+                if(this.searchContent !== '') {
+                    this.getOrdersList(Object.assign({}, this.orderParams, {keyword: this.searchContent}));
+                }else{
+                    return;
+                }
+            },
+            
+            handleClickTr(item){
+                item.showSub = !item.showSub;
             },
 
             handlePageChange(msg) {
@@ -202,7 +229,7 @@ $(function(){
             },
 
             orderParams: function(newVal, oldVal){
-                this.getOrdersList(Object.assign({}, newVal, { page: this.currentPage }))
+                this.getOrdersList(Object.assign({}, newVal, { page: this.currentPage, keyword: this.searchContent }))
             }
         },
         

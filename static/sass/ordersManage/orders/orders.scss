@@ -43,14 +43,6 @@
     }
     .order-search {
       min-width: 216px;
-      border: $border-width solid $gary;
-      height: 25px;
-      line-height: 24px;
-      background: $body-bg;
-      border-radius: $border-radius;
-      padding-left: 8px;
-      outline: none;
-      font-size: $font-size-base;
       &::-webkit-input-placeholder{
         color: $gary;
       }
@@ -62,6 +54,7 @@
       position: absolute;
       top: 3px;
       right: 6px;
+      cursor: pointer;
     }
     .dd-checkbox {
       outline: none;
@@ -74,6 +67,18 @@
 
   .middleTable-container th {
     font-weight: bold;
+  }
+
+  .orders-sub-tr > td {
+    border-top: 1px dotted $gary-light;
+  }
+
+  tbody > .orders-tr-odd {
+    background: transparent !important;
+  }
+
+  tbody > .orders-tr-even {
+    background: $gary-lightest !important;
   }
 
   div.dd-arrowRight-orderNum {

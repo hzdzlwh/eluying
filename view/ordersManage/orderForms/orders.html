@@ -49,7 +49,7 @@
                 </dd-dropdown>
             </div>
             <div class="order-search-container">
-                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search" v-model="searchContent">
+                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input" v-model="searchContent">
                 <span class="order-search-icon" @click="searchOrders"><img :src="searchIconUrl" alt=""></span>
             </div>
         </div>
@@ -83,27 +83,48 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="orders-tr" v-for="item in orderItems" v-show="orderItems.length > 0 && !isLoading">
-                        <td style="padding-left: 30px">
-                            <div class="dd-arrowRight-orderNum" v-if="getOrderType(item).length > 1"></div>
-                            <div class="dd-arrowDown-orderNum" v-if="false"></div>
-                            {{ item.orderNum }}
-                        </td>
-                        <td style="font-size: 0">
-                            <span class="order-state order-state-red" v-if="getOrderType(item).indexOf(3) !== -1">住</span>
-                            <span class="order-state order-state-yellow" v-if="getOrderType(item).indexOf(0) !== -1">餐</span>
-                            <span class="order-state order-state-blue" v-if="getOrderType(item).indexOf(1) !== -1">娱</span>
-                            <span class="order-state order-state-green" v-if="getOrderType(item).indexOf(2) !== -1">商</span>
-                        </td>
-                        <td v-text="item.orderTotalPrice"></td>
-                        <td v-text="item.payAmount"></td>
-                        <td v-text="item.depositAmount"></td>
-                        <td v-text="item.customerName || '--'"></td>
-                        <td v-text="item.customerPhone || '--'"></td>
-                        <td v-text="item.date"></td>
-                        <td v-text="getOrderStatusText(item.orderState)"></td>
-                        <td v-text="item.operators.join('、') || '--'"></td>
-                    </tr>
+                    <template v-for="(item, index) in orderItems" v-show="orderItems.length > 0 && !isLoading">
+                        <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item)">
+                            <td style="padding-left: 30px">
+                                <div class="dd-arrowRight-orderNum" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
+                                <div class="dd-arrowDown-orderNum" v-if="getOrderType(item).length > 1 && item.showSub"></div>
+                                {{ item.orderNum }}
+                            </td>
+                            <td style="font-size: 0">
+                                <span class="order-state order-state-red" v-if="getOrderType(item).indexOf(3) !== -1">住</span>
+                                <span class="order-state order-state-yellow" v-if="getOrderType(item).indexOf(0) !== -1">餐</span>
+                                <span class="order-state order-state-blue" v-if="getOrderType(item).indexOf(1) !== -1">娱</span>
+                                <span class="order-state order-state-green" v-if="getOrderType(item).indexOf(2) !== -1">商</span>
+                            </td>
+                            <td v-text="item.orderTotalPrice"></td>
+                            <td v-text="item.payAmount"></td>
+                            <td v-text="item.depositAmount"></td>
+                            <td v-text="item.customerName || '--'"></td>
+                            <td v-text="item.customerPhone || '--'"></td>
+                            <td v-text="item.date"></td>
+                            <td v-text="getOrderStatusText(item.orderState)"></td>
+                            <td v-text="item.operators.join('、') || '--'"></td>
+                        </tr>
+                        <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
+                            <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" v-for="option in item.subOrderList">
+                                <td v-text="option.orderNum" style="padding-left: 42px"></td>
+                                <td style="font-size: 0">
+                                    <span class="order-state order-state-red" v-if="option.orderType === 3">住</span>
+                                    <span class="order-state order-state-yellow" v-if="option.orderType === 0">餐</span>
+                                    <span class="order-state order-state-blue" v-if="option.orderType === 1">娱</span>
+                                    <span class="order-state order-state-green" v-if="option.orderType === 2">商</span>
+                                </td>
+                                <td v-text="option.orderTotalPrice"></td>
+                                <td v-text="option.payAmount"></td>
+                                <td v-text="option.depositAmount"></td>
+                                <td v-text="option.customerName || '--'"></td>
+                                <td v-text="option.customerPhone || '--'"></td>
+                                <td v-text="option.date"></td>
+                                <td v-text="getOrderStatusText(option.orderState)"></td>
+                                <td v-text="option.operators.join('、') || '--'"></td>
+                            </tr>
+                        </template>
+                    </template>
                 </tbody>
             </table>
         </div>
