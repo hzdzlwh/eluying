@@ -102,7 +102,7 @@
                             <td v-text="item.customerName || '--'"></td>
                             <td v-text="item.customerPhone || '--'"></td>
                             <td v-text="item.date"></td>
-                            <td v-text="getOrderStatusText(item.orderState)"></td>
+                            <td v-text="orderStatusText[item.orderState]"></td>
                             <td v-text="item.operators.join('、') || '--'"></td>
                         </tr>
                         <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
@@ -120,7 +120,7 @@
                                 <td v-text="option.customerName || '--'"></td>
                                 <td v-text="option.customerPhone || '--'"></td>
                                 <td v-text="option.date"></td>
-                                <td v-text="getOrderStatusText(option.orderState)"></td>
+                                <td v-text="orderStatusText[option.orderState]"></td>
                                 <td v-text="option.operators.join('、') || '--'"></td>
                             </tr>
                         </template>

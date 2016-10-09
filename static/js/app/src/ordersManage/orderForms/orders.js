@@ -45,10 +45,6 @@ $(function(){
                 name: '全部业态'
                 },
                 {
-                    id: '3',
-                    name: '住宿'
-                },
-                {
                     id: '0',
                     name: '餐饮'
                 },
@@ -59,10 +55,15 @@ $(function(){
                 {
                     id: '2',
                     name: '商超'
+                },
+                {
+                    id: '3',
+                    name: '住宿'
                 }
             ],
             orderType: '-1',
             orderStatus: '-1',
+            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已完成'],
             orderTypeItem: ['-1'],
             optionsOrderState: [{
                 id: '-1',
@@ -114,6 +115,10 @@ $(function(){
         },
 
         methods: {
+            /**
+             * 请求订单列表
+             * @param obj
+             */
             getOrdersList(obj) {
                 this.orderItems = [];
                 this.isLoading = true;
@@ -130,23 +135,6 @@ $(function(){
                             modal.somethingAlert(result.msg);
                         }
                     }.bind(this));
-            },
-
-            getOrderStatusText(num){
-                switch(num){
-                    case 0:
-                        return '待处理';
-                    case 1:
-                        return '已拒绝';
-                    case 2:
-                        return '已预订';
-                    case 3:
-                        return '进行中';
-                    case 4:
-                        return '已取消';
-                    case 5:
-                        return '已完成';
-                }
             },
             
             /**
