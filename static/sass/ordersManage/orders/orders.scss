@@ -63,6 +63,11 @@
       max-height: 120px;
       overflow: scroll;
     }
+    .dd-select-option {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .middleTable-container th {
@@ -81,11 +86,15 @@
     background: $gary-lightest !important;
   }
 
-  div.dd-arrowRight-orderNum {
-    display: inline-block;
-    height: 0;
+  .dd-orderArrow {
+    position: absolute;
     width: 0;
-    vertical-align: middle;
+    height: 0;
+  }
+
+  div.dd-arrowRight-orderNum {
+    left: 34px;
+    top: 22px;
     border-top: 4px solid transparent;
     border-left: 4px solid grey;
     border-bottom: 4px solid transparent;
@@ -93,14 +102,30 @@
   }
 
   div.dd-arrowDown-orderNum {
-    display: inline-block;
-    height: 0;
-    width: 0;
-    vertical-align: middle;
+    left: 30px;
+    top: 25px;
     border-top: 4px solid grey;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-bottom: none;
+  }
+
+  div.dd-arrowTop-useDate {
+    right: 33px;
+    top: 20px;
+    border-top: none;
+    border-bottom: 3px solid grey;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+  }
+
+  div.dd-arrowDown-useDate {
+    right: 33px;
+    top: 25px;
+    border-bottom: none;
+    border-top: 3px solid grey;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
   }
   
   .order-state {

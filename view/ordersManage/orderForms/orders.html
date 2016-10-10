@@ -18,13 +18,13 @@
         <div class="topFilters-container">
             <div class="dd-select-ordertype">
                 <dd-select v-model="orderType">
-                    <dd-option v-for="option in optionsOrderType" :value="option.id" :label="option.name">
+                    <dd-option v-for="option in optionsParentOrderType" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
             <div class="dd-select-orderstate">
                 <dd-select v-model="orderTypeItem" multiple>
-                    <dd-option v-for="option in optionsOrderTypeItems" :value="option.id" :label="option.name">
+                    <dd-option v-for="option in optionsSubOrderType[orderType]" :value="option.id" :label="option.name" :key="option.id+option.name">
                     </dd-option>
                 </dd-select>
             </div>
@@ -57,14 +57,18 @@
             <table class="dd-table orders-manage-table">
                 <thead>
                     <tr>
-                        <th style="padding-left: 30px">订单号</th>
-                        <th>订单业态</th>
+                        <th style="padding-left: 42px; width: 212px">订单号</th>
+                        <th style="width: 120px">订单业态</th>
                         <th>订单金额¥</th>
                         <th>客户已付¥</th>
                         <th>已收押金¥</th>
                         <th>客户姓名</th>
-                        <th>手机号码</th>
-                        <th>使用时间</th>
+                        <th style="width: 103px;">手机号码</th>
+                        <th style="position: relative; cursor: pointer" @click="changeListByDate">
+                            使用时间
+                            <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
+                            <div class="dd-arrowDown-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showDownArrow)"></div>
+                        </th>
                         <th>订单状态</th>
                         <th>收银员</th>
                     </tr>
@@ -85,9 +89,9 @@
                     </tr>
                     <template v-for="(item, index) in orderItems" v-show="orderItems.length > 0 && !isLoading">
                         <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item)">
-                            <td style="padding-left: 30px">
-                                <div class="dd-arrowRight-orderNum" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
-                                <div class="dd-arrowDown-orderNum" v-if="getOrderType(item).length > 1 && item.showSub"></div>
+                            <td style="padding-left: 42px; position: relative;">
+                                <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
+                                <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && item.showSub"></div>
                                 {{ item.orderNum }}
                             </td>
                             <td style="font-size: 0">
@@ -107,7 +111,7 @@
                         </tr>
                         <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
                             <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" v-for="option in item.subOrderList">
-                                <td v-text="option.orderNum" style="padding-left: 42px"></td>
+                                <td v-text="option.orderNum" style="padding-left: 62px"></td>
                                 <td style="font-size: 0">
                                     <span class="order-state order-state-red" v-if="option.orderType === 3">住</span>
                                     <span class="order-state order-state-yellow" v-if="option.orderType === 0">餐</span>
@@ -128,13 +132,19 @@
                 </tbody>
             </table>
         </div>
-        <div class="footer-container" v-show="!isLoading">
+        <div class="footer-container" v-if="!isLoading && orderItems.length > 0">
             <span class="orders-total">共计<b>{{ orderNum }}个订单</b></span>
             <span class="orders-total">金额<b>¥{{ orderTotalPrice }}</b></span>
             <span class="orders-total">客户已付<b>¥{{ totalPay }}</b></span>
             <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span>
             <div class="dd-pagination-container">
-                <dd-pagination @currentchange="handlePageChange" :visible-pager-count="5" :show-one-page="false" :page-count="Math.ceil(orderNum / pageSize)"></dd-pagination>
+                <dd-pagination @currentchange="handlePageChange"
+                               :visible-pager-count="5"
+                               :show-one-page="false"
+                               :current-page="currentPage"
+                               :page-count="Math.ceil(orderNum / pageSize)">
+
+                </dd-pagination>
             </div>
         </div>
     </div>
