@@ -212,6 +212,7 @@ var monthManage = {
         "click #editMonthButton": function(){
             var startDate = util.getFirstDay(new Date());
             monthManage.getAccommodationMonthPriceList(startDate);
+            $('#editMonth').attr('data-category-id', $('.priceGrid .selected').attr('category-id'));
         },
         "click #prevMonth": function(){
             if ($(".changed").length > 0) {
@@ -221,6 +222,7 @@ var monthManage = {
                 };
                 var confirmCallback = function(){
                     var data = monthManage.preparePrices();
+                    $("#editMonth .operateItem").addClass("hide");
                     monthManage.batchModifyAccommodationSpecialPrice(data);
                     monthManage.showPrevMonth();
                 };
@@ -240,6 +242,7 @@ var monthManage = {
                 };
                 var confirmCallback = function(){
                     var data = monthManage.preparePrices();
+                    $("#editMonth .operateItem").addClass("hide");
                     monthManage.batchModifyAccommodationSpecialPrice(data);
                     monthManage.showNextMonth();
                 };
@@ -280,6 +283,7 @@ var monthManage = {
                 var confirmCallback = function(){
                     var data = monthManage.preparePrices();
                     monthManage.batchModifyAccommodationSpecialPrice(data);
+                    $("#editMonth .operateItem").addClass("hide");
                     $(".changed").removeClass("changed");
                     $(that).tab("show");
                 };
@@ -384,7 +388,7 @@ var monthManage = {
         });
         var data = {
             items: JSON.stringify(prices),
-            categoryId: $(".priceGrid .selected").attr("category-id")
+            categoryId: $('#editMonth').attr('data-category-id')
         };
         return data;
     },
