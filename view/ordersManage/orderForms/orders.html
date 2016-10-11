@@ -24,7 +24,11 @@
             </div>
             <div class="dd-select-orderstate">
                 <dd-select v-model="orderTypeItem" multiple>
-                    <dd-option v-for="option in optionsSubOrderType[orderType]" :value="option.id" :label="option.name" :key="option.id+option.name">
+                    <dd-option v-for="option in optionsSubOrderType[orderType]"
+                               @click="changeOrderTypeItem(option)"
+                               :value="option.id"
+                               :label="option.name"
+                               :key="option.id+option.name">
                     </dd-option>
                 </dd-select>
             </div>

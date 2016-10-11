@@ -37,33 +37,33 @@ $(function(){
             isLoading: true,
             currentPage: 1,
             orderItems: [],
-            optionsSubOrderType: { '-1': [{id: '-1', name: '全部业态'}], '2': [{id: '-1', name: '全部商超' }] },
+            optionsSubOrderType: { '-1': [{id: -1, name: '全部业态'}], '2': [{id: -1, name: '全部商超' }] },
             searchContent: '',
             optionsParentOrderType: [{
-                id: '-1',
+                id: -1,
                 name: '全部业态'
                 },
                 {
-                    id: '0',
+                    id: 0,
                     name: '餐饮'
                 },
                 {
-                    id: '1',
+                    id: 1,
                     name: '娱乐'
                 },
                 {
-                    id: '2',
+                    id: 2,
                     name: '商超'
                 },
                 {
-                    id: '3',
+                    id: 3,
                     name: '住宿'
                 }
             ],
-            orderType: '-1',
+            orderType: -1,
             orderStatus: '-1',
             orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已完成'],
-            orderTypeItem: ['-1'],
+            orderTypeItem: [-1],
             optionsOrderState: [{
                 id: '-1',
                 name: '全部订单状态'
@@ -94,12 +94,15 @@ $(function(){
         },
 
         created(){
-            this.getOrdersList({});
+            this.getOrdersList({}, false);
             AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
                 this.optionsSubOrderType = Object.assign(this.optionsSubOrderType, result.data);
-                this.optionsSubOrderType['0'].unshift({id: '-1', name: '全部餐厅' });
-                this.optionsSubOrderType['1'].unshift({id: '-1', name: '全部娱乐' });
-                this.optionsSubOrderType['3'].unshift({id: '-1', name: '全部房型' });
+                this.optionsSubOrderType['0'] = this.optionsSubOrderType['0'].map(el => ({ id: el.id, name: el.name, show: true}));
+                this.optionsSubOrderType['1'] = this.optionsSubOrderType['1'].map(el => ({ id: el.id, name: el.name, show: true}));
+                this.optionsSubOrderType['3'] = this.optionsSubOrderType['3'].map(el => ({ id: el.id, name: el.name, show: true}));
+                this.optionsSubOrderType['0'].unshift({id: -1, name: '全部餐厅', show: true });
+                this.optionsSubOrderType['1'].unshift({id: -1, name: '全部娱乐', show: true });
+                this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
             }.bind(this));
         },
 
@@ -145,7 +148,25 @@ $(function(){
                         }
                     }.bind(this));
             },
-            
+            /**
+             * 延迟获取订单列表
+             * @param delayTime
+             * @param action
+             * @param args
+             */
+            delayGetOrdersList(delayTime, action, args) {
+                var clearTime;
+                clearTimeout(clearTime);
+                clearTime = setTimeout(function() {
+                    action.apply(this, args);
+                }, delayTime);
+            },
+
+            getParams(){
+                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
+                let map = { list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType};
+                return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
+            },
             /**
              * 为各订单项添加typeArray数组,showSub假数据
              * @param arr
@@ -184,8 +205,8 @@ $(function(){
 
             searchOrders(){
                 if(this.searchContent !== '') {
-                    const obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent};
-                    this.getOrdersList(Object.assign({}, this.orderParams, obj), false);
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
                 }else{
                     return;
                 }
@@ -212,28 +233,80 @@ $(function(){
             },
 
             handlePageChange(msg) {
-                const obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent, page: msg};
+                const obj = this.getParams();
                 this.currentPage = msg;
-                this.getOrdersList(Object.assign({}, this.orderParams, obj), true);
+                this.getOrdersList(Object.assign({}, obj, { page: msg }), true);
+            },
+
+            changeOrderTypeItem(item){
+                if(item.id === -1 && item.show) {
+                    this.optionsSubOrderType[this.orderType].forEach(function(el){
+                        el.show = false;
+                    });
+                    this.$nextTick(function() {
+                        this.orderTypeItem = [];
+                        const obj = this.getParams();
+                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+                    });
+                }else if(item.id === -1 && !item.show) {
+                    this.optionsSubOrderType[this.orderType].forEach(function(el){
+                        el.show = true;
+                    });
+                    this.$nextTick(function() {
+                        this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
+                        const obj = this.getParams();
+                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+                    });
+                }else if(item.id !== -1 && item.show) {
+                    this.optionsSubOrderType[this.orderType][0].show = false;
+                    this.optionsSubOrderType[this.orderType].forEach(function(el){
+                        if(el.id === item.id) {
+                            item.show = false;
+                        }
+                    });
+                    this.$nextTick(function() {
+                        if(this.orderTypeItem[0] === -1) {
+                            this.orderTypeItem.splice(0, 1);
+                        }
+                        const obj = this.getParams();
+                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+                    });
+                }else if(item.id !== -1 && !item.show) {
+                    this.optionsSubOrderType[this.orderType].forEach(function(el){
+                        if(el.id === item.id) {
+                            item.show = true;
+                        }
+                    });
+                    this.$nextTick(function() {
+                        if(this.optionsSubOrderType[this.orderType].length - this.orderTypeItem.length === 1) {
+                            this.optionsSubOrderType[this.orderType][0].show = true;
+                            this.$nextTick(function(){
+                                this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
+                                const obj = this.getParams();
+                                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+                            });
+                        }else{
+                            const obj = this.getParams();
+                            this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+                        }
+                    });
+                }
             }
         },
 
         watch: {
             orderType: function(newVal, oldVal){
                 this.orderTypeItem = [];
-                this.optionsSubOrderType[newVal].forEach(function(el){
-                    this.orderTypeItem.push(el.id);
-                }.bind(this));
-            },
-
-            orderTypeItem: function(newVal, oldVal){
-                if(newVal.indexOf('-1') === -1 && oldVal.indexOf('-1') !== -1){
-                    this.orderTypeItem = [];
-                }
+                this.orderTypeItem = this.optionsSubOrderType[newVal].map(el => el.id);
+                const obj = this.getParams();
+                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
             },
 
             orderParams: function(newVal, oldVal){
-                const obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent};
+                const obj = { endDate: this.endDate,
+                              startDate: this.startDate,
+                              keyword: this.searchContent,
+                              map: JSON.stringify({list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType})};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);
             },
 
@@ -272,8 +345,8 @@ $(function(){
         },
         function(newVal, oldVal){
             if(newVal.minusTime >= 0){
-                const obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
-                this.getOrdersList(Object.assign({}, this.orderParams, obj), false);
+                const obj = this.getParams();
+                this.getOrdersList(Object.assign({}, obj), false);
             }
         }
     );
