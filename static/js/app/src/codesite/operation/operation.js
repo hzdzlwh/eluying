@@ -2,7 +2,7 @@
  * Created by zhaoyongsheng on 16/7/7.
  */
 
-var Vue = require('vue');
+var Vue = require('vue1');
 var header = require('header');
 var leftMenu = require('leftMenu');
 var util = require('util');
@@ -47,7 +47,7 @@ $(function(){
             wapPayTypeStr: ''
             
         },
-        ready: function(){
+        created: function(){
             AJAXService.ajaxWithToken('GET', '/onePass/getOnePassSettingPC', {}, function(result){
                 this.onepassQrCode = result.data.onepassQrCode;
                 this.onepassUrl = result.data.onepassUrl;

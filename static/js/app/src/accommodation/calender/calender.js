@@ -34,6 +34,7 @@ $(function(){
     //初始化界面
     header.showHeader();
     //高亮"前台录入"
+    $(".ordersManageEntry").removeClass("selected");
     $(".settingsEntry").removeClass("selected");
     $(".manageVipEntry").removeClass("selected");
     $(".accomodationEntry").addClass("selected");
