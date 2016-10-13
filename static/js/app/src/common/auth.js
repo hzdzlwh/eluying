@@ -17,9 +17,10 @@ const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
 const EXPIRED_URL = '/view/tips/expired.html';
 const UPGRADE_URL = '/view/tips/upgrade.html';
 
-var camps = JSON.parse(localStorage.getItem("camps"));
-var bottom = JSON.parse(localStorage.getItem("bottom"));
-var campId = localStorage.getItem("campId");
+const camps = JSON.parse(localStorage.getItem('camps'));
+const bottom = JSON.parse(localStorage.getItem('bottom'));
+const top = JSON.parse(localStorage.getItem('top'));
+const campId = localStorage.getItem('campId');
 
 /**
  * 检测版本信息并跳转页面
@@ -54,6 +55,12 @@ function checkModule(moduleId){
     } else {
         for (var j = 0; j < bottom.length; j++) {
             if (bottom[j].type === moduleId && bottom[j].status === 1) {
+                return true;
+            }
+        }
+
+        for (var k = 0; k < top.length; k++) {
+            if (top[k].type === moduleId && top[k].status === 1) {
                 return true;
             }
         }
