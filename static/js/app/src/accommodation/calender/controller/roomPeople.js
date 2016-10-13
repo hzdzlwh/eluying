@@ -90,7 +90,7 @@ var roomPeopleCtrl = function(app) {
                 var idCardList = scope.idCardList.map(function(el) {
                     return {
                         name: el.name,
-                        idCardType: el.selectedId || '0',
+                        idCardType: el.selectedId || el.idCardType || '0',
                         idCardNum: el.idCardNum,
                     }
                 });

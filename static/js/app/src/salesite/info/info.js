@@ -164,7 +164,7 @@ var findIndex = function(array, str){
         return result;
     }
     array.forEach(function(d, i){
-        if(d === str){
+        if(d.indexOf(str) > -1){
             result = i;
         }
     });
