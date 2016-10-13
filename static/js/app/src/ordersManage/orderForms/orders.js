@@ -7,9 +7,9 @@ import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
 import auth from '../../common/auth';
+import NoAuth from '../../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 
-auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
 
@@ -31,9 +31,10 @@ $(function(){
 
     };
     
-    const orderManage = new Vue({
-        el: ".ordersManage-mainContainer",
+    let orderManage = new Vue({
+        el: ".orderManage-rootContainer",
         data: {
+            hasAuth: false,
             isLoading: true,
             currentPage: 1,
             orderItems: [],
@@ -93,9 +94,14 @@ $(function(){
             showDownArrow: true
         },
 
-        created(){
+        created() {
+            this.hasAuth = auth.checkAccess(auth.ORDER_ID);
+            if (!this.hasAuth) {
+                return;
+            }
+       
             this.getOrdersList({}, false);
-            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
+            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, result => {
                 this.optionsSubOrderType = Object.assign(this.optionsSubOrderType, result.data);
                 this.optionsSubOrderType['0'] = this.optionsSubOrderType['0'].map(el => ({ id: el.id, name: el.name, show: true}));
                 this.optionsSubOrderType['1'] = this.optionsSubOrderType['1'].map(el => ({ id: el.id, name: el.name, show: true}));
@@ -103,7 +109,7 @@ $(function(){
                 this.optionsSubOrderType['0'].unshift({id: -1, name: '全部餐厅', show: true });
                 this.optionsSubOrderType['1'].unshift({id: -1, name: '全部娱乐', show: true });
                 this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
-            }.bind(this));
+            });
         },
 
         computed: {
@@ -164,7 +170,8 @@ $(function(){
 
             getParams(){
                 let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
-                let map = { list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType};
+                let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
+                            orderType: this.orderType};
                 return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
             },
             /**
@@ -203,12 +210,15 @@ $(function(){
                 return typeArr;
             },
 
-            searchOrders(){
-                if(this.searchContent !== '') {
+            searchOrders(str){
+                if(this.searchContent !== '' && str === 'click') {
                     const obj = this.getParams();
                     this.getOrdersList(Object.assign({}, obj), false);
-                }else{
-                    return;
+                }else if(this.searchContent === '' && str === 'input') {
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
+                }else {
+                    return
                 }
             },
             
@@ -306,7 +316,8 @@ $(function(){
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
-                              map: JSON.stringify({list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType})};
+                              map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
+                                                    orderType: this.orderType})};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);
             },
 
@@ -333,7 +344,8 @@ $(function(){
             DdPagination,
             DdOption,
             DdSelect,
-            DdDatepicker
+            DdDatepicker,
+            NoAuth
         }
     });
 
