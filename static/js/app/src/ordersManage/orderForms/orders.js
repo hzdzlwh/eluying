@@ -24,7 +24,8 @@ $(function(){
     var events = {
 
         "resize window": util.mainContainer,
-        "click .orders-tr": function(){
+        "click .orders-tr": function(ev){
+            ev.stopPropagation();
             $(".orders-tr").removeClass("dd-tr-selected");
             $(this).addClass("dd-tr-selected");
         }
@@ -125,6 +126,18 @@ $(function(){
                 }else {
                     return { orderStatus: this.orderStatus }
                 }
+            },
+
+            outPutText(){
+                const paramsObj = this.getParams();
+                const paramsArr = Object.keys(paramsObj);
+                const campId = localStorage.getItem("campId");
+                const uid = localStorage.getItem("uid");
+                const host = AJAXService.getUrl2('/order/listOrderListToText');
+                let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=8&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}`;
+                paramsArr.map(
+                    el=> {url = `${url}&${el}=${paramsObj[el]}` });
+                return url;
             }
         },
 
@@ -141,7 +154,7 @@ $(function(){
                 this.showDownArrow =true;
                 this.isLoading = true;
                 AJAXService.ajaxWithToken('get', '/order/listPc', obj,
-                    function(result){
+                    (result) => {
                         this.isLoading = false;
                         if(result.code === 1 && result.data) {
                             this.orderItems = this.fixOrderItemData(result.data.list);
@@ -152,7 +165,7 @@ $(function(){
                         }else if(result.code !== 1) {
                             modal.somethingAlert(result.msg);
                         }
-                    }.bind(this));
+                    });
             },
             /**
              * 延迟获取订单列表
@@ -222,8 +235,13 @@ $(function(){
                 }
             },
             
-            handleClickTr(item){
+            handleClickTr(item, event){
                 item.showSub = !item.showSub;
+                $('.orders-tr').removeClass('dd-tr-selected');
+                if(event.currentTarget.nodeName.toUpperCase() === 'TR') {
+                    event.stopPropagation();
+                    $(event.currentTarget).addClass('dd-tr-selected');
+                }
             },
 
             changeListByDate() {
