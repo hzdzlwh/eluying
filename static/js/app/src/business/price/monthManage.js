@@ -37,7 +37,7 @@ var monthManage = {
         AJAXService.ajaxWithToken("GET","getAccommodationMonthPriceList",{
             startDate: startDate,
             endDate: endDate,
-            categoryId: $(".priceGrid .selected").attr("category-id")
+            categoryId: $('#editMonth').attr('data-category-id')
         },function(result){
             var channelArray = [];
             for (var name in result.data) {
@@ -211,8 +211,8 @@ var monthManage = {
     events: {
         "click #editMonthButton": function(){
             var startDate = util.getFirstDay(new Date());
-            monthManage.getAccommodationMonthPriceList(startDate);
             $('#editMonth').attr('data-category-id', $('.priceGrid .selected').attr('category-id'));
+            monthManage.getAccommodationMonthPriceList(startDate);
         },
         "click #prevMonth": function(){
             if ($(".changed").length > 0) {
