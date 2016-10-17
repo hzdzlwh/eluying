@@ -15,15 +15,23 @@
       display: inline-block;
     }
     .dd-select-orderstate {
-      width: 116px;
+      width: 136px;
       display: inline-block;
-      margin-left: 16px;
+      margin-left: 12px;
+    }
+    .orders-state {
+      width: 116px;
+    }
+    .select-overflow {
+      .dd-input {
+        text-overflow: ellipsis;
+      }
     }
     .dd-start-date, .dd-end-date {
       display: inline-block;
     }
     .dd-date-label {
-      margin-left: 16px;
+      margin-left: 12px;
       color: $gary-dark;
       font-size: $font-size-base;
     }
@@ -34,7 +42,7 @@
     .dd-dropdown {
       display: inline-block;
       width: 100px;
-      margin-left: 20px;
+      margin-left: 16px;
       float: right;
     }
     .dd-dropdown-item {
@@ -96,6 +104,9 @@
     td {
       background: rgba($blue-light, .2);
     }
+  }
+  .dd-start-date, .dd-end-date {
+    width: 153px;
   }
   .orders-sub-tr > td {
     border-top: 1px dotted $gary-light;
