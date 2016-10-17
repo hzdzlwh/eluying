@@ -3,6 +3,7 @@
 /.idea/*
 /.sass-cache/*
 /static/css/main.min.css
+/static/css/orders.min.css
 /static/css/*.map
 /static/js/app/dist/*
 /*.war
