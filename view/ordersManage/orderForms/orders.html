@@ -58,9 +58,10 @@
                 <input type="text" placeholder="搜索客户姓名/手机号/订单号"
                        class="order-search dd-input"
                        v-model="searchContent"
-                       @keyup.enter="searchOrders('click')"
-                       @input="searchOrders('input')">
-                <span class="order-search-icon" @click="searchOrders('click')"><img :src="searchIconUrl" alt=""></span>
+                       @keyup.enter="searchOrders"
+                       @blur="changeSearchIcon('blur')"
+                       @focus="changeSearchIcon('focus')">
+                <span class="order-search-icon" @click="searchOrders"><img :src="searchIconUrl" alt=""></span>
             </div>
         </div>
         <div class="middleTable-container">
