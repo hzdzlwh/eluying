@@ -14,7 +14,9 @@
     <script src="/static/js/app/dist/ordersManage/orders.js"></script>
 </head>
 <body>
-    <div class="ordersManage-mainContainer">
+<div class="orderManage-rootContainer">
+    <no-auth v-if="!hasAuth" auth-name="订单管理"></no-auth>
+    <div class="ordersManage-mainContainer" v-if="hasAuth">
         <div class="topFilters-container">
             <div class="dd-select-ordertype">
                 <dd-select v-model="orderType">
@@ -48,13 +50,17 @@
             </div>
             <div class="dd-dropdown">
                 <dd-dropdown text="导出明细" trigger="click">
-                    <dd-dropdown-item><span>导出PDF</span></dd-dropdown-item>
-                    <dd-dropdown-item><span>导出Excel</span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="`${outPutText}&type=1`" download>导出PDF</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="`${outPutText}&type=0`" download>导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
             <div class="order-search-container">
-                <input type="text" placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input" v-model="searchContent">
-                <span class="order-search-icon" @click="searchOrders"><img :src="searchIconUrl" alt=""></span>
+                <input type="text" placeholder="搜索客户姓名/手机号/订单号"
+                       class="order-search dd-input"
+                       v-model="searchContent"
+                       @keyup.enter="searchOrders('click')"
+                       @input="searchOrders('input')">
+                <span class="order-search-icon" @click="searchOrders('click')"><img :src="searchIconUrl" alt=""></span>
             </div>
         </div>
         <div class="middleTable-container">
@@ -91,8 +97,8 @@
                             </div>
                         </td>
                     </tr>
-                    <template v-for="(item, index) in orderItems" v-show="orderItems.length > 0 && !isLoading">
-                        <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item)">
+                    <template v-for="(item, index) in orderItems" v-if="orderItems.length > 0 && !isLoading">
+                        <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item, $event)">
                             <td style="padding-left: 42px; position: relative;">
                                 <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
                                 <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && item.showSub"></div>
@@ -111,10 +117,14 @@
                             <td v-text="item.customerPhone || '--'"></td>
                             <td v-text="item.date"></td>
                             <td v-text="orderStatusText[item.orderState]"></td>
-                            <td v-text="item.operators.join('、') || '--'"></td>
+                            <td v-text="item.operators.join('、') || '--'"
+                                :title="item.operators.length > 0 ? `${item.operators.join('、')}共${item.operators.length}人` : '没有收银员'">
+                            </td>
                         </tr>
                         <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
-                            <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" v-for="option in item.subOrderList">
+                            <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
+                                v-for="option in item.subOrderList"
+                                @click="handleClickTr(option, $event)">
                                 <td v-text="option.orderNum" style="padding-left: 62px"></td>
                                 <td style="font-size: 0">
                                     <span class="order-state order-state-red" v-if="option.orderType === 3">住</span>
@@ -129,7 +139,9 @@
                                 <td v-text="option.customerPhone || '--'"></td>
                                 <td v-text="option.date"></td>
                                 <td v-text="orderStatusText[option.orderState]"></td>
-                                <td v-text="option.operators.join('、') || '--'"></td>
+                                <td v-text="option.operators.join('、') || '--'"
+                                    :title="option.operators.length > 0 ? `${option.operators.join('、')}共${option.operators.length}人` : '没有收银员'">
+                                </td>
                             </tr>
                         </template>
                     </template>
@@ -151,6 +163,7 @@
                 </dd-pagination>
             </div>
         </div>
-    </div>
+    </div >
+</div>
 </body>
 </html>

@@ -10,9 +10,9 @@
 /build/*
 /projectFilesBackup/*
 /rev/*
-npm-debug.log
 gulp-ruby-sass-0
 .DS_Store
+npm-debug.log
 /.happypack/*
 /.vscode/*
 /view/home/

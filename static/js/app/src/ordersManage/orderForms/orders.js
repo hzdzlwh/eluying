@@ -7,9 +7,9 @@ import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
 import auth from '../../common/auth';
+import NoAuth from '../../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 
-auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
 
@@ -24,16 +24,18 @@ $(function(){
     var events = {
 
         "resize window": util.mainContainer,
-        "click .orders-tr": function(){
+        "click .orders-tr": function(ev){
+            ev.stopPropagation();
             $(".orders-tr").removeClass("dd-tr-selected");
             $(this).addClass("dd-tr-selected");
         }
 
     };
     
-    const orderManage = new Vue({
-        el: ".ordersManage-mainContainer",
+    let orderManage = new Vue({
+        el: ".orderManage-rootContainer",
         data: {
+            hasAuth: false,
             isLoading: true,
             currentPage: 1,
             orderItems: [],
@@ -93,9 +95,14 @@ $(function(){
             showDownArrow: true
         },
 
-        created(){
+        created() {
+            this.hasAuth = auth.checkAccess(auth.ORDER_ID);
+            if (!this.hasAuth) {
+                return;
+            }
+       
             this.getOrdersList({}, false);
-            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, function(result){
+            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, result => {
                 this.optionsSubOrderType = Object.assign(this.optionsSubOrderType, result.data);
                 this.optionsSubOrderType['0'] = this.optionsSubOrderType['0'].map(el => ({ id: el.id, name: el.name, show: true}));
                 this.optionsSubOrderType['1'] = this.optionsSubOrderType['1'].map(el => ({ id: el.id, name: el.name, show: true}));
@@ -103,7 +110,7 @@ $(function(){
                 this.optionsSubOrderType['0'].unshift({id: -1, name: '全部餐厅', show: true });
                 this.optionsSubOrderType['1'].unshift({id: -1, name: '全部娱乐', show: true });
                 this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
-            }.bind(this));
+            });
         },
 
         computed: {
@@ -119,6 +126,18 @@ $(function(){
                 }else {
                     return { orderStatus: this.orderStatus }
                 }
+            },
+
+            outPutText(){
+                const paramsObj = this.getParams();
+                const paramsArr = Object.keys(paramsObj);
+                const campId = localStorage.getItem("campId");
+                const uid = localStorage.getItem("uid");
+                const host = AJAXService.getUrl2('/order/listOrderListToText');
+                let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=8&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}`;
+                paramsArr.map(
+                    el=> {url = `${url}&${el}=${paramsObj[el]}` });
+                return url;
             }
         },
 
@@ -135,7 +154,7 @@ $(function(){
                 this.showDownArrow =true;
                 this.isLoading = true;
                 AJAXService.ajaxWithToken('get', '/order/listPc', obj,
-                    function(result){
+                    (result) => {
                         this.isLoading = false;
                         if(result.code === 1 && result.data) {
                             this.orderItems = this.fixOrderItemData(result.data.list);
@@ -146,7 +165,7 @@ $(function(){
                         }else if(result.code !== 1) {
                             modal.somethingAlert(result.msg);
                         }
-                    }.bind(this));
+                    });
             },
             /**
              * 延迟获取订单列表
@@ -164,7 +183,8 @@ $(function(){
 
             getParams(){
                 let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
-                let map = { list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType};
+                let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
+                            orderType: this.orderType};
                 return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
             },
             /**
@@ -203,17 +223,25 @@ $(function(){
                 return typeArr;
             },
 
-            searchOrders(){
-                if(this.searchContent !== '') {
+            searchOrders(str){
+                if(this.searchContent !== '' && str === 'click') {
                     const obj = this.getParams();
                     this.getOrdersList(Object.assign({}, obj), false);
-                }else{
-                    return;
+                }else if(this.searchContent === '' && str === 'input') {
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
+                }else {
+                    return
                 }
             },
             
-            handleClickTr(item){
+            handleClickTr(item, event){
                 item.showSub = !item.showSub;
+                $('.orders-tr').removeClass('dd-tr-selected');
+                if(event.currentTarget.nodeName.toUpperCase() === 'TR') {
+                    event.stopPropagation();
+                    $(event.currentTarget).addClass('dd-tr-selected');
+                }
             },
 
             changeListByDate() {
@@ -306,7 +334,8 @@ $(function(){
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
-                              map: JSON.stringify({list: this.orderType === -1 ? [] : this.orderTypeItem, orderType: this.orderType})};
+                              map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
+                                                    orderType: this.orderType})};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);
             },
 
@@ -333,7 +362,8 @@ $(function(){
             DdPagination,
             DdOption,
             DdSelect,
-            DdDatepicker
+            DdDatepicker,
+            NoAuth
         }
     });
 
