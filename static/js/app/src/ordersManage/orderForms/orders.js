@@ -92,7 +92,8 @@ $(function(){
             pageSize: 30,
             showBothArrow: true,
             showTopArrow: true,
-            showDownArrow: true
+            showDownArrow: true,
+            searchIconUrl: 'http://static.dingdandao.com/order_manage_search_grey.png'
         },
 
         created() {
@@ -114,12 +115,6 @@ $(function(){
         },
 
         computed: {
-            searchIconUrl() {
-                return this.searchContent === ''
-                    ? 'http://static.dingdandao.com/order_manage_search_grey.png'
-                    : 'http://static.dingdandao.com/order_manage_search_linght.png';
-            },
-
             orderParams() {
                 if(this.orderStatus === '-1') {
                     return {}
@@ -223,16 +218,9 @@ $(function(){
                 return typeArr;
             },
 
-            searchOrders(str){
-                if(this.searchContent !== '' && str === 'click') {
-                    const obj = this.getParams();
-                    this.getOrdersList(Object.assign({}, obj), false);
-                }else if(this.searchContent === '' && str === 'input') {
-                    const obj = this.getParams();
-                    this.getOrdersList(Object.assign({}, obj), false);
-                }else {
-                    return
-                }
+            searchOrders(){
+                const obj = this.getParams();
+                this.getOrdersList(Object.assign({}, obj), false);
             },
             
             handleClickTr(item, event){
@@ -260,6 +248,16 @@ $(function(){
                 }
             },
 
+            changeSearchIcon(str) {
+                if(str === 'blur') {
+                    this.searchIconUrl = this.searchContent === ""
+                                         ? "http://static.dingdandao.com/order_manage_search_grey.png"
+                                         : "http://static.dingdandao.com/order_manage_search_linght.png";
+                }else{
+                    this.searchIconUrl = "http://static.dingdandao.com/order_manage_search_linght.png";
+                }
+            },
+            
             handlePageChange(msg) {
                 const obj = this.getParams();
                 this.currentPage = msg;
