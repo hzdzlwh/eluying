@@ -12,11 +12,11 @@ require("bootstrap");
 require("validation");
 
 var pics = {
-    "pay-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/ABAFF64A-FBF7-4673-BDBE-FE35E1681567@1x.png',
-    "pay-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/69E97833-57EE-4CC5-982E-E4257220D538@1x.png',
-    "info-yes": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-yes.png74E426B7-1EAC-' +
+    "pay-yes": '//7xsrk6.com2.z0.glb.qiniucdn.com/ABAFF64A-FBF7-4673-BDBE-FE35E1681567@1x.png',
+    "pay-no": '//7xsrk6.com2.z0.glb.qiniucdn.com/69E97833-57EE-4CC5-982E-E4257220D538@1x.png',
+    "info-yes": '//7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-yes.png74E426B7-1EAC-' +
     '4805-808B-46E45FF261CD@1x.png',
-    "info-no": 'http://7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-no.png38DB2513-13DF-' +
+    "info-no": '//7xsrk6.com2.z0.glb.qiniucdn.com/image/png/info-no.png38DB2513-13DF-' +
     '4010-A7AF-B4954D0D96FE@1x.png',
 };
 

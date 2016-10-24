@@ -15,11 +15,11 @@
 <body ng-controller="itemsCtrl">
     <div class="container-manageVip">
         <div class="vip-top">
-            <img class="filter-img" ng-click="search()" src="http://static.dingdandao.com/vipSearch.png">
+            <img class="filter-img" ng-click="search()" src="//static.dingdandao.com/vipSearch.png">
             <span class="vip-left">共<span ng-bind="vipUserCount"></span>个会员</span>
             <input type="text" class="vip-right search" ng-model="$root.searchText" ng-keyup="filterSearch()" placeholder="搜索客户姓名/手机号/证件号">
-            <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="http://static.dingdandao.com/vipAdditional.png">新增会员</span>
-            <span class="vip-right outPut-excel"><a ng-href="{{outPutExcel()}}"><img src="http://static.dingdandao.com/vipOutput.png">导出</a></span>
+            <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="//static.dingdandao.com/vipAdditional.png">新增会员</span>
+            <span class="vip-right outPut-excel"><a ng-href="{{outPutExcel()}}"><img src="//static.dingdandao.com/vipOutput.png">导出</a></span>
         </div>
         <div class="clearboth"></div>
         <div class="table-container">
@@ -54,10 +54,10 @@
                         </td>
                         <td ng-class="{'remark': $index !== 0, 'remark-first': $index === 0}"><p class="tow-line-ellipsis" ng-bind="item.remark"></p>
                             <div ng-if="item.remark!=='' && $index !== 0">{{item.remark}}
-                                <span><img src="http://static.dingdandao.com/vip_arrow_down.jpg" alt=""></span>
+                                <span><img src="//static.dingdandao.com/vip_arrow_down.jpg" alt=""></span>
                             </div>
                             <div ng-if="item.remark!=='' && $index === 0">{{item.remark}}
-                                <span><img src="http://static.dingdandao.com/vip_arrow_up.jpg" alt=""></span>
+                                <span><img src="//static.dingdandao.com/vip_arrow_up.jpg" alt=""></span>
                             </div>
                         </td>
                         <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
@@ -81,10 +81,10 @@
                         <p class="dialog-mainTitle" ng-if="modify">修改会员信息</p>
                         <p class="dialog-subTitle">基本信息</p>
                         <div class="vipInfo">
-                            <p><span class="newVip"><img ng-if="!modify" src="http://static.dingdandao.com/start.png">姓名</span><input ng-model="newVip.name" ng-if="!modify" type="text" maxlength="16" ><span class="modifyVip" ng-bind="item.vipName" ng-if="modify"></span></p>
+                            <p><span class="newVip"><img ng-if="!modify" src="//static.dingdandao.com/start.png">姓名</span><input ng-model="newVip.name" ng-if="!modify" type="text" maxlength="16" ><span class="modifyVip" ng-bind="item.vipName" ng-if="modify"></span></p>
                             <span ng-if="!modify && hasSubmit && newVip.name.length === 0" class="tip-name">必填字段</span>
                             <span ng-if="!modify && hasSubmit && newVip.name.length === 1" class="tip-name">格式错误</span>
-                            <p><span class="newVip"><img ng-if="!modify" src="http://static.dingdandao.com/start.png">手机号</span><input ng-model="newVip.phone" ng-if="!modify" type="text" maxlength="11" ><span class="modifyVip" ng-bind="item.phone" ng-if="modify"></span></p>
+                            <p><span class="newVip"><img ng-if="!modify" src="//static.dingdandao.com/start.png">手机号</span><input ng-model="newVip.phone" ng-if="!modify" type="text" maxlength="11" ><span class="modifyVip" ng-bind="item.phone" ng-if="modify"></span></p>
                             <!--<p><span class="newVip">证件号</span><input ng-model="newVip.idCardNum" ng-if="!modify" type="text" minlength="2"  ><input ng-model="item.idCardNum" ng-if="modify" type="text" minlength="2" >-->
                             <span ng-if="!modify && hasSubmit && newVip.phone.length === 0" class="tip-phone">必填字段</span>
                             <span ng-if="!modify && hasSubmit && newVip.phone.length > 0 && newVip.phone.length !== 11" class="tip-phone">格式错误</span>

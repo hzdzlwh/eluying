@@ -203,7 +203,7 @@ $(function(){
         },
         computed: {
             entertainmentImgUrl() {
-                return this.ETType.entertainmentImgUrl || 'http://static.dingdandao.com/eluyun/image/Group%203.png';
+                return this.ETType.entertainmentImgUrl || '//static.dingdandao.com/eluyun/image/Group%203.png';
             }
         },
         methods: {
@@ -296,7 +296,7 @@ $(function(){
                 })
             },
             getIcon() {
-                return this.ETType.entertainmentImgUrl || 'http://static.dingdandao.com/eluyun/image/Group%203.png';
+                return this.ETType.entertainmentImgUrl || '//static.dingdandao.com/eluyun/image/Group%203.png';
             },
             onConfirm() {
                 this.submitted = true;
