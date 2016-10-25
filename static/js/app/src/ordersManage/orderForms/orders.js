@@ -80,7 +80,7 @@ $(function(){
                 },
                 {
                     id: '5',
-                    name: '已完成'
+                    name: '已结束'
                 }
             ],
             startDate: '',

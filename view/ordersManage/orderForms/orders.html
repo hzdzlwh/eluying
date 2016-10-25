@@ -68,13 +68,13 @@
             <table class="dd-table orders-manage-table">
                 <thead>
                     <tr>
-                        <th style="padding-left: 42px; width: 212px">订单号</th>
+                        <th style="padding-left: 42px; width: 213px">订单号</th>
                         <th style="width: 120px">订单业态</th>
                         <th>订单金额¥</th>
                         <th>客户已付¥</th>
                         <th>已收押金¥</th>
                         <th>客户姓名</th>
-                        <th style="width: 103px;">手机号码</th>
+                        <th style="width: 104px;">手机号码</th>
                         <th style="position: relative; cursor: pointer" @click="changeListByDate">
                             使用时间
                             <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
@@ -94,7 +94,7 @@
                         <td colspan="10">
                             <div class="noOrders-container">
                                 <img src="http://static.dingdandao.com/ordersManage_noOrders.png" alt="">
-                                <p>没有订单信息</p>
+                                <p v-text="searchContent !== '' ? '没有搜索到符合条件的订单...' : '没有订单信息'"></p>
                             </div>
                         </td>
                     </tr>
@@ -114,7 +114,7 @@
                             <td v-text="item.orderTotalPrice"></td>
                             <td v-text="item.payAmount"></td>
                             <td v-text="item.depositAmount"></td>
-                            <td v-text="item.customerName || '--'"></td>
+                            <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                             <td v-text="item.customerPhone || '--'"></td>
                             <td v-text="item.date"></td>
                             <td v-text="orderStatusText[item.orderState]"></td>
@@ -136,7 +136,7 @@
                                 <td v-text="option.orderTotalPrice"></td>
                                 <td v-text="option.payAmount"></td>
                                 <td v-text="option.depositAmount"></td>
-                                <td v-text="option.customerName || '--'"></td>
+                                <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                                 <td v-text="option.customerPhone || '--'"></td>
                                 <td v-text="option.date"></td>
                                 <td v-text="orderStatusText[option.orderState]"></td>
