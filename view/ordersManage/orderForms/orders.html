@@ -42,11 +42,11 @@
             </div>
             <span class="dd-date-label">使用时间:</span>
             <div class="dd-start-date">
-                <dd-datepicker placeholder="开始时间" v-model="startDate" />
+                <dd-datepicker placeholder="开始时间" v-model="startDate" :disabled-date="disableStartDate" />
             </div>
             <span class="dd-date-symbol">~</span>
             <div class="dd-end-date">
-                <dd-datepicker placeholder="结束时间" v-model="endDate" />
+                <dd-datepicker placeholder="结束时间" v-model="endDate" :disabled-date="disableEndDate"/>
             </div>
             <div class="dd-dropdown">
                 <dd-dropdown text="导出明细" trigger="click">
