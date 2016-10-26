@@ -183,21 +183,21 @@ $(function(){
                 return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
             },
             /**
-             * 为各订单项添加typeArray数组,showSub假数据
+             * 为各订单项添加showSub假数据
              * @param arr
              * @returns {*}
              */
             fixOrderItemData(arr) {
                 arr.forEach(function(ele){
-                    if (ele.orderType === -1) {
+                    /*if (ele.orderType === -1 && ele.subOrderType) {
                         let typeArray = [];
                         ele.subOrderList.forEach(function(ele) {
                             typeArray.push(ele.orderType);
                         });
                         ele.typeArray = typeArray;
-                    }
+                    }*/
                     
-                    if (ele.orderType === -1 && ele.subOrderList.length > 1) {
+                    if (ele.orderType === -1 && ele.subOrderType.length > 1) {
                         ele.showSub = false;
                     }
                 });
@@ -211,10 +211,10 @@ $(function(){
              */
             getOrderType(item) {
                 let typeArr = [];
-                if (item.orderType !== -1) {
-                    typeArr.push(item.orderType);
+                if (item.orderType === -1 && item.subOrderType) {
+                    typeArr = item.subOrderType;
                 } else {
-                    typeArr = item.typeArray;
+                    typeArr.push(item.orderType);
                 }
 
                 return typeArr;
