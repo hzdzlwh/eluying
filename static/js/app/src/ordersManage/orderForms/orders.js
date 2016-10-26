@@ -80,7 +80,7 @@ $(function(){
                 },
                 {
                     id: '5',
-                    name: '已完成'
+                    name: '已结束'
                 }
             ],
             startDate: '',
@@ -318,6 +318,24 @@ $(function(){
                             this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                         }
                     });
+                }
+            },
+
+            disableEndDate(date) {
+                if (this.startDate !== '') {
+                    const arr = this.startDate.split('-');
+                    return date && date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                } else {
+                    return false;
+                }
+            },
+
+            disableStartDate(date) {
+                if (this.endDate !== '') {
+                    const arr = this.endDate.split('-');
+                    return date && date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                } else {
+                    return false;
                 }
             }
         },
