@@ -41,6 +41,7 @@ $(function(){
             orderItems: [],
             optionsSubOrderType: { '-1': [{id: -1, name: '全部业态'}], '2': [{id: -1, name: '全部商超' }] },
             searchContent: '',
+            sort: null,
             optionsParentOrderType: [{
                 id: -1,
                 name: '全部业态'
@@ -144,9 +145,6 @@ $(function(){
             getOrdersList(obj, pageChange) {
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
-                this.showBothArrow = true;
-                this.showTopArrow = true;
-                this.showDownArrow =true;
                 this.isLoading = true;
                 AJAXService.ajaxWithToken('get', '/order/listPc', obj,
                     (result) => {
@@ -177,27 +175,19 @@ $(function(){
             },
 
             getParams() {
-                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
+                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent, sort: this.sort };
                 let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
                             orderType: this.orderType};
                 return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
             },
             /**
-             * 为各订单项添加typeArray数组,showSub假数据
+             * 为各订单项添加showSub假数据
              * @param arr
              * @returns {*}
              */
             fixOrderItemData(arr) {
                 arr.forEach(function(ele){
-                    if (ele.orderType === -1) {
-                        let typeArray = [];
-                        ele.subOrderList.forEach(function(ele) {
-                            typeArray.push(ele.orderType);
-                        });
-                        ele.typeArray = typeArray;
-                    }
-                    
-                    if (ele.orderType === -1 && ele.subOrderList.length > 1) {
+                    if (ele.orderType === -1 && ele.subOrderType.length > 1) {
                         ele.showSub = false;
                     }
                 });
@@ -211,10 +201,10 @@ $(function(){
              */
             getOrderType(item) {
                 let typeArr = [];
-                if (item.orderType !== -1) {
-                    typeArr.push(item.orderType);
+                if (item.orderType === -1 && item.subOrderType) {
+                    typeArr = item.subOrderType;
                 } else {
-                    typeArr = item.typeArray;
+                    typeArr.push(item.orderType);
                 }
 
                 return typeArr;
@@ -238,15 +228,15 @@ $(function(){
                 this.showBothArrow = false;
                 if (this.showTopArrow && this.showDownArrow) {
                     this.showTopArrow = !this.showTopArrow;
-                    this.orderItems.sort(function(pre,next){
-                        let preTime = new Date(pre.date);
-                        let nextTime = new Date(next.date);
-                        return nextTime.getTime() - preTime.getTime();
-                    });
+                    this.sort = 1;
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
                 } else {
+                    this.sort = this.sort === 1 ? 0 : 1;
                     this.showTopArrow = !this.showTopArrow;
                     this.showDownArrow = !this.showDownArrow;
-                    this.orderItems.reverse();
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
                 }
             },
 
@@ -352,6 +342,7 @@ $(function(){
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
+                              sort: this.sort,
                               map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
                                                     orderType: this.orderType})};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);

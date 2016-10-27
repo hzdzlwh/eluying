@@ -125,7 +125,7 @@
                                         : '没有收银员'">
                             </td>
                         </tr>
-                        <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
+                        <template v-if="item.orderType === -1 && item.subOrderType.length > 1 && item.showSub">
                             <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
                                 v-for="option in item.subOrderList"
                                 @click="handleClickTr(option, $event)">
