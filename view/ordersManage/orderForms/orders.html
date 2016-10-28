@@ -101,8 +101,8 @@
                     <template v-for="(item, index) in orderItems" v-if="orderItems.length > 0 && !isLoading">
                         <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item, $event)">
                             <td style="padding-left: 42px; position: relative;">
-                                <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
-                                <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && item.showSub"></div>
+                                <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="!!item.subOrderList && item.subOrderList.length > 1 && !item.showSub"></div>
+                                <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="!!item.subOrderList && item.subOrderList.length > 1 && item.showSub"></div>
                                 {{ item.orderNum }}
                             </td>
                             <td style="font-size: 0">
@@ -125,7 +125,7 @@
                                         : '没有收银员'">
                             </td>
                         </tr>
-                        <template v-if="item.orderType === -1 && item.subOrderType.length > 1 && item.showSub">
+                        <template v-if="item.orderType === -1 && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub">
                             <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
                                 v-for="option in item.subOrderList"
                                 @click="handleClickTr(option, $event)">

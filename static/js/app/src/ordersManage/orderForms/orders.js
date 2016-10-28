@@ -187,7 +187,7 @@ $(function(){
              */
             fixOrderItemData(arr) {
                 arr.forEach(function(ele){
-                    if (ele.orderType === -1 && ele.subOrderType.length > 1) {
+                    if (ele.orderType === -1 && !!ele.subOrderList && ele.subOrderList.length > 1) {
                         ele.showSub = false;
                     }
                 });
