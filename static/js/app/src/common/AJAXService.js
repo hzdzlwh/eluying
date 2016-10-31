@@ -108,27 +108,7 @@ var AJAXService = {
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
         if(path !== 'loginUrl'){
-            data.timestamp = (new Date()).valueOf();
-            // data.version = (new Date()).valueOf();
-            if(path !== '/homepage/changeCamp'){
-                data.campId = localStorage.getItem("campId");
-            }
-            data.uid = localStorage.getItem("uid");
-            //data.campId = 56;
-            //data.uid = 85;
-            // data.kick = true;
-            data.terminal = 1;
-            data.version = data.version || 8;
-            // data.token = localStorage.getItem("token");
-            var array = [];
-            for(var key in data){
-                array.push(data[key]);
-            }
-            array.push(localStorage.getItem("token"));
-            array.sort();
-            var str = array.join("");
-            var strMD5 = md5(str);
-            data.sign = strMD5;
+            data = this.getDataWithToken(data);
         }
         return $.ajax({
             type: method,
@@ -164,6 +144,42 @@ var AJAXService = {
         //    location.href = "/login.html";
         //}
         return JSON.stringify(data);
-}
+    },
+    getDataWithToken: function(data) {
+        data.timestamp = (new Date()).valueOf();
+        data.campId = data.campId || localStorage.getItem("campId");
+        data.uid = localStorage.getItem("uid");
+        data.terminal = 1;
+        data.version = data.version || 8;
+        var array = [];
+        for(var key in data){
+            array.push(data[key]);
+        }
+
+        array.push(localStorage.getItem("token"));
+        array.sort();
+        var str = array.join("");
+        var strMD5 = md5(str);
+        data.sign = strMD5;
+        return data;
+    },
+    paramsToString: function(params) {
+        const paramsArray = [];
+        for (const name in params) {
+            if (params.hasOwnProperty(name)) {
+                let str = '';
+                if (params[name] !== null) {
+                    str = JSON.stringify(params[name]);
+                }
+                if (str.substring(0, 1) === '\"' && str.substring(str.length - 1) === '\"') {
+                    str = str.substring(1, str.length - 1);
+                }
+
+                paramsArray.push(`${name}=${str}`);
+            }
+        }
+
+        return paramsArray.join('&');
+    }
 };
 module.exports = AJAXService;

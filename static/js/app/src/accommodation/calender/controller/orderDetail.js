@@ -58,6 +58,13 @@ var orderDetailCtrl = function(app){
             
             scope.showRoomPeopleModal = orderService.showRoomPeopleModal;
 
+            scope.openPrint = function(orderDetail) {
+                var params = { orderId: orderDetail.orderId };
+                params = AJAXService.getDataWithToken(params);
+                params = AJAXService.paramsToString(params);
+                window.open('/ws/orderDetail.jsp?' + params);
+            };
+
             scope.calLeft = orderService.calLeft;
             scope.calDeposit = orderService.calDeposit;
             scope.itemsExist = orderService.itemsExist;

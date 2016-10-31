@@ -18,12 +18,14 @@ var getMoneyWithGunCtrl = function(app){
                 var collectionOnlineType = getMoneyWithGun.collectionOnlineType;
                 var orderId = getMoneyWithGun.orderId;
                 var paymentType = getMoneyWithGun.paymentType;
+                var payChannelType = getMoneyWithGun.payChannelType;
                 AJAXService.ajaxWithToken('GET', 'barcodePayUrl', {
                     amount: amount,
                     authCode: authCode,
                     collectionOnlineType: collectionOnlineType,
                     orderId: orderId,
                     paymentType: paymentType,
+                    payChannelType: payChannelType,
                 }, function(result){
                     if(result.code === 1){
                         // $("#payWithAlipayModal").modal("hide");
