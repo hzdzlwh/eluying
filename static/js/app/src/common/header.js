@@ -64,6 +64,7 @@ var header = {
                         localStorage.setItem("campId", campId);
                         localStorage.setItem("campName", campName);
                         localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
+                        localStorage.setItem("top", JSON.stringify(data.data.top));
                         window.location.href = '/view/accommodation/calender/calender.html';
                     }else if(data.code == 11002){
                         modal.somethingAlert(data.msg);

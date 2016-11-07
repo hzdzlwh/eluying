@@ -31,8 +31,8 @@
                     <tbody>
                     <tr v-for="restaurant in restaurants" track-by="restId">
                         <td>{{restaurant.restName}}</td>
-                        <td><a href="/view/business/restaurant/dishes.html?restId={{restaurant.restId}}">{{restaurant.dishesSum}}</a></td>
-                        <td><a href="/view/business/restaurant/table.html?restId={{restaurant.restId}}">{{restaurant.boardSum}}</a></td>
+                        <td><a :href="`/view/business/restaurant/dishes.html?restId=${restaurant.restId}`">{{restaurant.dishesSum}}</a></td>
+                        <td><a :href="`/view/business/restaurant/table.html?restId=${restaurant.restId}`">{{restaurant.boardSum}}</a></td>
                         <td>
                             <span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
                         </td>

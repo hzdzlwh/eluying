@@ -1,7 +1,7 @@
 /**
  * Created by zhaoyongsheng on 16/7/7.
  */
-var Vue = require('vue');
+var Vue = require('vue1');
 var header = require('header');
 var leftMenu = require('leftMenu');
 var util = require('util');
@@ -31,7 +31,7 @@ $(function(){
             linesiteQrCode: '',
             linesiteUrl: ''
         },
-        ready: function(){
+        created: function(){
             AJAXService.ajaxWithToken('GET', '/entertainment/getEnterQueueSetting', {}, function(result){
                 this.linesiteQrCode = result.data.enterQueueQrCode;
                 this.linesiteUrl = result.data.enterQueueUrl;

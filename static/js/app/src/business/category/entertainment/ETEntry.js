@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/1/8.
  */
 var header = require("header");
-var Vue = require('vue');
+var Vue = require('vue1');
 var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
@@ -57,7 +57,7 @@ $(function(){
                 return this.ETTypeList.filter(el => el.entertainmentCategoryId === this.selectedETCategoryId)[0];
             }
         },
-        ready: function() {
+        created: function() {
             this.loadETList();
         },
         methods: {
@@ -312,7 +312,7 @@ $(function(){
     });
     var icons = new Vue({
         el: '#iconDialog',
-        ready() {
+        created() {
             this.loadIcons();
         },
         data: {
