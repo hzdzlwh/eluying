@@ -22,6 +22,8 @@ const bottom = JSON.parse(localStorage.getItem('bottom'));
 const top = JSON.parse(localStorage.getItem('top'));
 const campId = localStorage.getItem('campId');
 
+const maintenanceHost =  process.env.NODE_ENV === 'production' ? "/mt" : "//www.dingdandao.com:1443/mt";
+
 /**
  * 检测版本信息并跳转页面
  */
@@ -84,8 +86,7 @@ function showMaintenance(announcement) {
 }
 
 function checkMaintenance() {
-    var host =  process.env.NODE_ENV === 'production' ? "//120.26.83.168:8081/mt" : "//114.215.183.122:20010/mt";
-    $.get(host + '/maintain/getMaintainInfo')
+    $.get(maintenanceHost + '/maintain/getMaintainInfo')
         .done(function(res) {
             if (res.data.open === 1 && res.data.type === 0) {
                 showMaintenance(res.data.announcement);
