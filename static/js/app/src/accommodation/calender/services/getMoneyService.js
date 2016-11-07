@@ -159,19 +159,21 @@ var getMoneyService = function(app){
         //     });
         // };
         var submitGetMoney = function(getMoney, scope){
-            var payments_new = [];
+            /*var payments_new = [];
             getMoney.payments.forEach(function(d){
                 if(d.payChannelId !== -8 && d.payChannelId != -6){
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
                     }
                 }
-            });
+            });*/
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                    payments: JSON.stringify(payments_new),
+                    payments: JSON.stringify(getMoney.payments),
                     remark: getMoney.remark,
-                    orderId: getMoney.orderId
+                    orderId: getMoney.orderId,
+                    dateTime: (new Date()).valueOf(),
+                    orderType: -1
                 }, function(result){
                     if(result.code === 1){
                         modal.somethingAlert("收银成功");
@@ -189,9 +191,11 @@ var getMoneyService = function(app){
                 //还有钱没有付完
                 if(getMoney.isLast && scope.arrearLeft && scope.arrearLeft !== 0){
                     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                        payments: JSON.stringify(payments_new),
+                        payments: JSON.stringify(getMoney.payments),
                         remark: getMoney.remark,
-                        orderId: getMoney.orderId
+                        orderId: getMoney.orderId,
+                        dateTime: (new Date()).valueOf(),
+                        orderType: -1
                     }, function(result){
                         if(result.code === 1){
                             $("#getMoneyModal").modal("hide");
@@ -239,7 +243,7 @@ var getMoneyService = function(app){
             getMoney.payments.forEach(function(d){
                 if(d.isNew && d.fee > 0){
                     payments_new.push(d);
-                    if(d.payChannelId === -6 || d.payChannelId === -8){
+                    if(d.payChannelId === -6 || d.payChannelId === -7 || d.payChannelId === -11 || d.payChannelId === -12){
                         alipayMoneyTotal += parseFloat(d.fee);
                         onlineType = d.payChannelId;
                         paymentType = d.type;
@@ -248,9 +252,22 @@ var getMoneyService = function(app){
             });
             if(alipayMoneyTotal > 0){
                 //要去扫码付钱
-                onlineType = onlineType === -6 ? 2 : 1;
+                var onlineTypeMap = {
+                    '-6': 2,
+                    '-7': 2,
+                    '-11': 1,
+                    '-12': 1
+                };
+                var payChannelTypeMap = {
+                    '-6': 1,
+                    '-7': 2,
+                    '-11': 1,
+                    '-12': 2
+                };
+                var payChannelType = payChannelTypeMap[onlineType];
+                onlineType = onlineTypeMap[onlineType];
                 scope.getMoneyWithGun =
-                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney);
+                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney, payChannelType);
                 $("#getMoneyModal").modal("hide");
                 $("#orderCancelModal").modal("hide");
                 $("#payWithAlipayModal").modal("show");
