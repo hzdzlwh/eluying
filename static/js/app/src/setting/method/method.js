@@ -42,6 +42,8 @@ $(function(){
             c_webPayStatus: '',
             c_facePayStatus: '',
             c_immediaPayStatus: '',
+            c_cardPayStatus: '',
+            c_codePayStatus: '',
             payList: [],
             c_webObj: {},
             c_faceObj: {},
@@ -81,13 +83,17 @@ $(function(){
                                 this.c_faceObj = child;
                             }
                         }.bind(this));
-                    }else{
+                    }else if(item.onlineType === 3){
                         this.c_immediaPayStatus = (item.useState === 1) ? 'open' : 'close';
                         companyAccountStateList.forEach(function(child){
                             if(child.typeId === item.openState ){
                                 this.c_immediaObj = child;
                             }
                         }.bind(this));
+                    }else if(item.onlineType === 4){
+                        this.c_cardPayStatus = (item.useState === 1) ? 'open' : 'close';
+                    }else {
+                        this.c_codePayStatus = (item.useState === 1) ? 'open' : 'close';
                     }
                 }.bind(this));
                 companyAccountStateList.forEach(function(child){
@@ -120,6 +126,8 @@ $(function(){
                                     this.c_webPayStatus = 'close';
                                     this.c_facePayStatus = 'close';
                                     this.c_immediaPayStatus = 'close';
+                                    this.c_cardPayStatus = 'close';
+                                    this.c_codePayStatus = 'close';
                                     AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', {status: (this.walletStatus === 'close' ? 1 : 0)}, function (result) {
                                         if (result.code === 1) {
                                             this.walletStatus = (this.walletStatus === 'close') ? 'open' : (function () {
@@ -166,6 +174,8 @@ $(function(){
                                                 this.c_webPayStatus = 'close';
                                                 this.c_facePayStatus = 'close';
                                                 this.c_immediaPayStatus = 'close';
+                                                this.c_cardPayStatus = 'close';
+                                                this.c_codePayStatus = 'close';
                                                 return 'close'
                                             }).bind(this)()
                                         }else{
@@ -184,6 +194,8 @@ $(function(){
                                         this.c_webPayStatus = 'close';
                                         this.c_facePayStatus = 'close';
                                         this.c_immediaPayStatus = 'close';
+                                        this.c_cardPayStatus = 'close';
+                                        this.c_codePayStatus = 'close';
                                         return 'close'
                                     }).bind(this)()
                                 } else {
@@ -245,6 +257,24 @@ $(function(){
                                 this.c_immediaPayStatus = (this.c_immediaPayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
+                        break;
+                    case 'card-c':
+                        AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', {accountType: 2, onlineType: 4, status: (this.c_cardPayStatus === 'close'  ? 1 : 0)}, result => {
+                            if(result.code !== 1){
+                                modal.somethingAlert(result.msg);
+                            }else{
+                                this.c_cardPayStatus = (this.c_cardPayStatus === 'open')? 'close' : 'open';
+                            }
+                        });
+                        break;
+                    case 'code-c':
+                        AJAXService.ajaxWithToken('get','/collectionMethod/useOrNotUseOnlinePay',{accountType: 2, onlineType: 5, status: (this.c_codePayStatus === 'close' ? 1 : 0)}, result => {
+                            if(result.code !== 1) {
+                                modal.somethingAlert(result.msg);
+                            }else{
+                                this.c_codePayStatus = (this.c_codePayStatus === 'open')? 'close' : 'open';
+                            }
+                        });
                         break;
                 }
             },
@@ -506,7 +536,7 @@ $(function(){
             }
         }
     });
-    
+
     var newMethod = new Vue({
         el: "#method-newMethod",
         data: {
