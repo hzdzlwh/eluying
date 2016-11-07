@@ -6,7 +6,7 @@
   "dependencies": {
     "angular": "^1.5.3",
     "dd-common-css": "0.1.0",
-    "dd-vue-component": "^0.2.11",
+    "dd-vue-component": "^0.3.2",
     "dot": "^1.0.3",
     "md5": "^2.1.0",
     "vue": "^2.0.1"

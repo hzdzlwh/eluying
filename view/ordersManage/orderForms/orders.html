@@ -18,13 +18,13 @@
     <no-auth v-if="!hasAuth" auth-name="订单管理"></no-auth>
     <div class="ordersManage-mainContainer" v-if="hasAuth">
         <div class="topFilters-container">
-            <div class="dd-select-ordertype">
+            <div class="dd-select-ordertype" v-if="false">
                 <dd-select v-model="orderType">
                     <dd-option v-for="option in optionsParentOrderType" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
-            <div class="dd-select-orderstate select-overflow">
+            <div class="dd-select-orderstate select-overflow" v-if="false">
                 <dd-select v-model="orderTypeItem" multiple>
                     <dd-option v-for="option in optionsSubOrderType[orderType]"
                                @click="changeOrderTypeItem(option)"
@@ -34,7 +34,7 @@
                     </dd-option>
                 </dd-select>
             </div>
-            <div class="dd-select-orderstate orders-state">
+            <div class="dd-select-orderstate orders-state" style="margin-left: 0">
                 <dd-select v-model="orderStatus">
                     <dd-option v-for="option in optionsOrderState" :value="option.id" :label="option.name">
                     </dd-option>
@@ -42,11 +42,11 @@
             </div>
             <span class="dd-date-label">使用时间:</span>
             <div class="dd-start-date">
-                <dd-datepicker placeholder="开始时间" v-model="startDate" />
+                <dd-datepicker placeholder="开始时间" v-model="startDate" :disabled-date="disableStartDate" />
             </div>
             <span class="dd-date-symbol">~</span>
             <div class="dd-end-date">
-                <dd-datepicker placeholder="结束时间" v-model="endDate" />
+                <dd-datepicker placeholder="结束时间" v-model="endDate" :disabled-date="disableEndDate"/>
             </div>
             <div class="dd-dropdown">
                 <dd-dropdown text="导出明细" trigger="click">
@@ -68,13 +68,13 @@
             <table class="dd-table orders-manage-table">
                 <thead>
                     <tr>
-                        <th style="padding-left: 42px; width: 212px">订单号</th>
+                        <th style="padding-left: 42px; width: 214px">订单号</th>
                         <th style="width: 120px">订单业态</th>
                         <th>订单金额¥</th>
                         <th>客户已付¥</th>
                         <th>已收押金¥</th>
                         <th>客户姓名</th>
-                        <th style="width: 103px;">手机号码</th>
+                        <th style="width: 104px;">手机号码</th>
                         <th style="position: relative; cursor: pointer" @click="changeListByDate">
                             使用时间
                             <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
@@ -94,15 +94,15 @@
                         <td colspan="10">
                             <div class="noOrders-container">
                                 <img src="http://static.dingdandao.com/ordersManage_noOrders.png" alt="">
-                                <p>没有订单信息</p>
+                                <p v-text="searchContent !== '' ? '没有搜索到符合条件的订单...' : '没有订单信息'"></p>
                             </div>
                         </td>
                     </tr>
                     <template v-for="(item, index) in orderItems" v-if="orderItems.length > 0 && !isLoading">
                         <tr :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']" @click="handleClickTr(item, $event)">
                             <td style="padding-left: 42px; position: relative;">
-                                <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && !item.showSub"></div>
-                                <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="getOrderType(item).length > 1 && item.showSub"></div>
+                                <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && !item.showSub"></div>
+                                <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub"></div>
                                 {{ item.orderNum }}
                             </td>
                             <td style="font-size: 0">
@@ -114,15 +114,18 @@
                             <td v-text="item.orderTotalPrice"></td>
                             <td v-text="item.payAmount"></td>
                             <td v-text="item.depositAmount"></td>
-                            <td v-text="item.customerName || '--'"></td>
+                            <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                             <td v-text="item.customerPhone || '--'"></td>
                             <td v-text="item.date"></td>
                             <td v-text="orderStatusText[item.orderState]"></td>
-                            <td v-text="item.operators.join('、') || '--'"
-                                :title="item.operators.length > 0 ? `${item.operators.join('、')}共${item.operators.length}人` : '没有收银员'">
+                            <td v-text="!!item.operators && item.operators.length > 0
+                                        ? item.operators.join('、') : '--'"
+                                :title="!!item.operators && item.operators.length > 0
+                                        ? `${item.operators.join('、')}共${item.operators.length}人`
+                                        : '没有收银员'">
                             </td>
                         </tr>
-                        <template v-if="item.orderType === -1 && item.subOrderList.length > 1 && item.showSub">
+                        <template v-if="false && item.orderType === -1 && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub">
                             <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
                                 v-for="option in item.subOrderList"
                                 @click="handleClickTr(option, $event)">
@@ -136,12 +139,15 @@
                                 <td v-text="option.orderTotalPrice"></td>
                                 <td v-text="option.payAmount"></td>
                                 <td v-text="option.depositAmount"></td>
-                                <td v-text="option.customerName || '--'"></td>
+                                <td v-text="option.customerName === '单日客' ? '--' : option.customerName"></td>
                                 <td v-text="option.customerPhone || '--'"></td>
                                 <td v-text="option.date"></td>
                                 <td v-text="orderStatusText[option.orderState]"></td>
-                                <td v-text="option.operators.join('、') || '--'"
-                                    :title="option.operators.length > 0 ? `${option.operators.join('、')}共${option.operators.length}人` : '没有收银员'">
+                                <td v-text="!!option.operators && option.operators.length > 0
+                                            ? option.operators.join('、') : '--'"
+                                    :title="!!option.operators && option.operators.length > 0
+                                            ? `${option.operators.join('、')}共${option.operators.length}人`
+                                            : '没有收银员'">
                                 </td>
                             </tr>
                         </template>
@@ -151,7 +157,7 @@
         </div>
         <div class="footer-container" v-if="!isLoading && orderItems.length > 0">
             <span class="orders-total">共计<b>{{ orderNum }}个订单</b></span>
-            <span class="orders-total">金额<b>¥{{ orderTotalPrice }}</b></span>
+            <span class="orders-total">订单金额<b>¥{{ orderTotalPrice }}</b></span>
             <span class="orders-total">客户已付<b>¥{{ totalPay }}</b></span>
             <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span>
             <div class="dd-pagination-container">

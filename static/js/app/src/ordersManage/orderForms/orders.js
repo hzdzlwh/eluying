@@ -41,6 +41,7 @@ $(function(){
             orderItems: [],
             optionsSubOrderType: { '-1': [{id: -1, name: '全部业态'}], '2': [{id: -1, name: '全部商超' }] },
             searchContent: '',
+            sort: null,
             optionsParentOrderType: [{
                 id: -1,
                 name: '全部业态'
@@ -64,7 +65,7 @@ $(function(){
             ],
             orderType: -1,
             orderStatus: '-1',
-            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已完成'],
+            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
             orderTypeItem: [-1],
             optionsOrderState: [{
                 id: '-1',
@@ -80,7 +81,7 @@ $(function(){
                 },
                 {
                     id: '5',
-                    name: '已完成'
+                    name: '已结束'
                 }
             ],
             startDate: '',
@@ -116,14 +117,14 @@ $(function(){
 
         computed: {
             orderParams() {
-                if(this.orderStatus === '-1') {
+                if (this.orderStatus === '-1') {
                     return {}
-                }else {
+                } else {
                     return { orderStatus: this.orderStatus }
                 }
             },
 
-            outPutText(){
+            outPutText() {
                 const paramsObj = this.getParams();
                 const paramsArr = Object.keys(paramsObj);
                 const campId = localStorage.getItem("campId");
@@ -144,20 +145,17 @@ $(function(){
             getOrdersList(obj, pageChange) {
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
-                this.showBothArrow = true;
-                this.showTopArrow = true;
-                this.showDownArrow =true;
                 this.isLoading = true;
                 AJAXService.ajaxWithToken('get', '/order/listPc', obj,
                     (result) => {
                         this.isLoading = false;
-                        if(result.code === 1 && result.data) {
+                        if (result.code === 1 && result.data) {
                             this.orderItems = this.fixOrderItemData(result.data.list);
                             this.depositAmount = result.data.depositAmount;
                             this.orderNum = result.data.orderNum;
                             this.orderTotalPrice = result.data.orderTotalPrice;
                             this.totalPay = result.data.totalPay;
-                        }else if(result.code !== 1) {
+                        } else if (result.code !== 1) {
                             modal.somethingAlert(result.msg);
                         }
                     });
@@ -176,27 +174,20 @@ $(function(){
                 }, delayTime);
             },
 
-            getParams(){
-                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent };
+            getParams() {
+                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent, sort: this.sort };
                 let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
                             orderType: this.orderType};
                 return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
             },
             /**
-             * 为各订单项添加typeArray数组,showSub假数据
+             * 为各订单项添加showSub假数据
              * @param arr
              * @returns {*}
              */
-            fixOrderItemData(arr){
+            fixOrderItemData(arr) {
                 arr.forEach(function(ele){
-                    if(ele.orderType === -1) {
-                        let typeArray = [];
-                        ele.subOrderList.forEach(function(ele){
-                            typeArray.push(ele.orderType);
-                        });
-                        ele.typeArray = typeArray;
-                    }
-                    if(ele.orderType === -1 && ele.subOrderList.length > 1) {
+                    if (ele.orderType === -1 && !!ele.subOrderList && ele.subOrderList.length > 1) {
                         ele.showSub = false;
                     }
                 });
@@ -208,25 +199,26 @@ $(function(){
              * @param item
              * @returns {Array}
              */
-            getOrderType(item){
+            getOrderType(item) {
                 let typeArr = [];
-                if(item.orderType !== -1) {
+                if (item.orderType === -1 && item.subOrderType) {
+                    typeArr = item.subOrderType;
+                } else {
                     typeArr.push(item.orderType);
-                }else{
-                    typeArr = item.typeArray;
                 }
+
                 return typeArr;
             },
 
-            searchOrders(){
+            searchOrders() {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             },
             
-            handleClickTr(item, event){
+            handleClickTr(item, event) {
                 item.showSub = !item.showSub;
                 $('.orders-tr').removeClass('dd-tr-selected');
-                if(event.currentTarget.nodeName.toUpperCase() === 'TR') {
+                if (event.currentTarget.nodeName.toUpperCase() === 'TR') {
                     event.stopPropagation();
                     $(event.currentTarget).addClass('dd-tr-selected');
                 }
@@ -234,26 +226,26 @@ $(function(){
 
             changeListByDate() {
                 this.showBothArrow = false;
-                if(this.showTopArrow && this.showDownArrow){
+                if (this.showTopArrow && this.showDownArrow) {
                     this.showTopArrow = !this.showTopArrow;
-                    this.orderItems.sort(function(pre,next){
-                        let preTime = new Date(pre.date);
-                        let nextTime = new Date(next.date);
-                        return nextTime.getTime() - preTime.getTime();
-                    });
-                }else{
+                    this.sort = 1;
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
+                } else {
+                    this.sort = this.sort === 1 ? 0 : 1;
                     this.showTopArrow = !this.showTopArrow;
                     this.showDownArrow = !this.showDownArrow;
-                    this.orderItems.reverse();
+                    const obj = this.getParams();
+                    this.getOrdersList(Object.assign({}, obj), false);
                 }
             },
 
             changeSearchIcon(str) {
-                if(str === 'blur') {
+                if (str === 'blur') {
                     this.searchIconUrl = this.searchContent === ""
                                          ? "http://static.dingdandao.com/order_manage_search_grey.png"
                                          : "http://static.dingdandao.com/order_manage_search_linght.png";
-                }else{
+                } else {
                     this.searchIconUrl = "http://static.dingdandao.com/order_manage_search_linght.png";
                 }
             },
@@ -264,8 +256,8 @@ $(function(){
                 this.getOrdersList(Object.assign({}, obj, { page: msg }), true);
             },
 
-            changeOrderTypeItem(item){
-                if(item.id === -1 && item.show) {
+            changeOrderTypeItem(item) {
+                if (item.id === -1 && item.show) {
                     this.optionsSubOrderType[this.orderType].forEach(function(el){
                         el.show = false;
                     });
@@ -274,7 +266,7 @@ $(function(){
                         const obj = this.getParams();
                         this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                     });
-                }else if(item.id === -1 && !item.show) {
+                } else if (item.id === -1 && !item.show) {
                     this.optionsSubOrderType[this.orderType].forEach(function(el){
                         el.show = true;
                     });
@@ -283,21 +275,21 @@ $(function(){
                         const obj = this.getParams();
                         this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                     });
-                }else if(item.id !== -1 && item.show) {
+                } else if (item.id !== -1 && item.show) {
                     this.optionsSubOrderType[this.orderType][0].show = false;
                     this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        if(el.id === item.id) {
+                        if (el.id === item.id) {
                             item.show = false;
                         }
                     });
                     this.$nextTick(function() {
-                        if(this.orderTypeItem[0] === -1) {
+                        if (this.orderTypeItem[0] === -1) {
                             this.orderTypeItem.splice(0, 1);
                         }
                         const obj = this.getParams();
                         this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                     });
-                }else if(item.id !== -1 && !item.show) {
+                } else if (item.id !== -1 && !item.show) {
                     this.optionsSubOrderType[this.orderType].forEach(function(el){
                         if(el.id === item.id) {
                             item.show = true;
@@ -311,44 +303,63 @@ $(function(){
                                 const obj = this.getParams();
                                 this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                             });
-                        }else{
+                        } else {
                             const obj = this.getParams();
                             this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
                         }
                     });
                 }
+            },
+
+            disableEndDate(date) {
+                if (this.startDate !== '') {
+                    const arr = this.startDate.split('-');
+                    return date && date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                } else {
+                    return false;
+                }
+            },
+
+            disableStartDate(date) {
+                if (this.endDate !== '') {
+                    const arr = this.endDate.split('-');
+                    return date && date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                } else {
+                    return false;
+                }
             }
         },
 
         watch: {
-            orderType: function(newVal, oldVal){
+            orderType: function(newVal, oldVal) {
                 this.orderTypeItem = [];
                 this.orderTypeItem = this.optionsSubOrderType[newVal].map(el => el.id);
                 const obj = this.getParams();
                 this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
             },
 
-            orderParams: function(newVal, oldVal){
+            orderParams: function(newVal, oldVal) {
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
+                              sort: this.sort,
                               map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
                                                     orderType: this.orderType})};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);
             },
 
-            startDate: function(newVal, oldVal){
+            startDate: function(newVal, oldVal) {
                 let newValTime = new Date(newVal);
                 let endDateTime = new Date(this.endDate);
-                if(newVal !== '' && (this.endDate === '' || newValTime.getTime() > endDateTime.getTime())){
+                if (newVal !== '' && (this.endDate === '' || newValTime.getTime() > endDateTime.getTime())) {
                     this.endDate = newVal;
                 }
             },
 
-            endDate: function(newVal, oldVal){
+            endDate: function(newVal, oldVal) {
                 let newValTime = new Date(newVal);
                 let startDateTime = new Date(this.startDate);
-                if(newVal !== '' && (this.startDate === '' || startDateTime.getTime() > newValTime.getTime())){
+                if (newVal !== '' && (this.startDate === '' || startDateTime.getTime() > newValTime.getTime())) {
                     this.startDate = newVal;
                 }
             }
@@ -366,13 +377,13 @@ $(function(){
     });
 
     orderManage.$watch(
-        function(){
+        function() {
             let startTime = new Date(this.startDate);
             let endTime = new Date(this.endDate);
             return { minusTime: endTime.getTime() - startTime.getTime() };
         },
-        function(newVal, oldVal){
-            if(newVal.minusTime >= 0){
+        function(newVal, oldVal) {
+            if (newVal.minusTime >= 0) {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             }
