@@ -159,19 +159,21 @@ var getMoneyService = function(app){
         //     });
         // };
         var submitGetMoney = function(getMoney, scope){
-            var payments_new = [];
+            /*var payments_new = [];
             getMoney.payments.forEach(function(d){
                 if(d.payChannelId !== -8 && d.payChannelId != -6){
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
                     }
                 }
-            });
+            });*/
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                    payments: JSON.stringify(payments_new),
+                    payments: JSON.stringify(getMoney.payments),
                     remark: getMoney.remark,
-                    orderId: getMoney.orderId
+                    orderId: getMoney.orderId,
+                    dateTime: (new Date()).valueOf(),
+                    orderType: -1
                 }, function(result){
                     if(result.code === 1){
                         modal.somethingAlert("收银成功");
@@ -189,9 +191,11 @@ var getMoneyService = function(app){
                 //还有钱没有付完
                 if(getMoney.isLast && scope.arrearLeft && scope.arrearLeft !== 0){
                     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                        payments: JSON.stringify(payments_new),
+                        payments: JSON.stringify(getMoney.payments),
                         remark: getMoney.remark,
-                        orderId: getMoney.orderId
+                        orderId: getMoney.orderId,
+                        dateTime: (new Date()).valueOf(),
+                        orderType: -1
                     }, function(result){
                         if(result.code === 1){
                             $("#getMoneyModal").modal("hide");

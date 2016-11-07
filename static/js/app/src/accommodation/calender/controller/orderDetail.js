@@ -62,7 +62,7 @@ var orderDetailCtrl = function(app){
                 var params = { orderId: orderDetail.orderId };
                 params = AJAXService.getDataWithToken(params);
                 params = AJAXService.paramsToString(params);
-                window.open('/ws/orderDetail.jsp?' + params);
+                window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
             };
 
             scope.calLeft = orderService.calLeft;
