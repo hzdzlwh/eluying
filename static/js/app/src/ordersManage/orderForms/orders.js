@@ -124,17 +124,7 @@ $(function(){
                 }
             },
 
-            outPutText() {
-                const paramsObj = this.getParams();
-                const paramsArr = Object.keys(paramsObj);
-                const campId = localStorage.getItem("campId");
-                const uid = localStorage.getItem("uid");
-                const host = AJAXService.getUrl2('/order/listOrderListToText');
-                let url = `${host}?campId=${campId}&uid=${uid}&terminal=1&version=10&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}`;
-                paramsArr.map(
-                    el=> {url = `${url}&${el}=${paramsObj[el]}` });
-                return url;
-            }
+
         },
 
         methods: {
@@ -172,6 +162,17 @@ $(function(){
                 clearTime = setTimeout(function() {
                     action.apply(this, args);
                 }, delayTime);
+            },
+
+            outPutText(num) {
+                const paramsObj = this.getParams();
+                // paramsObj.map = JSON.stringify(paramsObj.map);
+                paramsObj.type = num;
+                const host = AJAXService.getUrl2('/order/listOrderListToText');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.map = JSON.parse(pa.map);
+                let params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
             },
 
             getParams() {
