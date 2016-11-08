@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/6/16.
  */
-var Vue = require('vue');
+var Vue = require('vue1');
 var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");

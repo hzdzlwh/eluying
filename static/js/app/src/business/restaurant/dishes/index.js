@@ -2,7 +2,7 @@
  * Created by lcx on 2016/6/24.
  */
 
-var Vue = require('vue');
+var Vue = require('vue1');
 var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");

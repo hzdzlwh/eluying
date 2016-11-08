@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-validate="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="//www.w3.org/1999/xhtml" xmlns:v-validate="//www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,8 +16,8 @@
             <div class="restaurant-head clearfloat" style="width: 725px">
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <ul class="restaurant-head-nav">
-                    <li class="restaurant-head-nav-selected"><a href="/view/business/restaurant/dishes.html?restId={{restId}}">品类管理</a></li>
-                    <li><a href="/view/business/price/food.html?restId={{restId}}">价格维护</a></li>
+                    <li class="restaurant-head-nav-selected"><a :href="`/view/business/restaurant/dishes.html?restId=${restId}`">品类管理</a></li>
+                    <li><a :href="`/view/business/price/food.html?restId=${restId}`">价格维护</a></li>
                 </ul>
                 <span class="create-restaurant" @click="openCreatePackageDialog">新增套餐</span>
             </div>
@@ -97,7 +97,7 @@
                         <p>编辑基本信息</p>
                     </div>
                     <div v-if="dishesSelected || packageSelected" class="rest-operation-item" @click="openDeleteDialog">
-                        <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
+                        <img src="//static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
                         <p>删除</p>
                     </div>
                 </div>
@@ -232,7 +232,7 @@
                     <ul class="dishes-classify-box-classify clearfloat">
                         <li>
                             <div v-if="classifyOffset > 0" @click="decreaseClassifyOffset">
-                                <img src="http://static.dingdandao.com/eluyun/image/D020C482-1230-4842-A204-943A7B3A0C08@1x.png" alt="">
+                                <img src="//static.dingdandao.com/eluyun/image/D020C482-1230-4842-A204-943A7B3A0C08@1x.png" alt="">
                             </div>
                         </li>
                         <li class="ellipsis" v-for="dishesClassify in dishesClassifyList | limitBy 3 classifyOffset" v-bind:class="{'current-classify': currentClassifyId === dishesClassify.dishesClassifyId}" @click="changeClassify(dishesClassify.dishesClassifyId)">
@@ -240,7 +240,7 @@
                         </li>
                         <li style="border-right: 0">
                             <div v-if="dishesClassifyList.length > 3 && classifyOffset < dishesClassifyList.length - 3" @click="increaseClassifyOffset">
-                                <img src="http://static.dingdandao.com/eluyun/image/B6C893C5-A019-45D7-8C2D-A75A8566D721@1x.png" alt="">
+                                <img src="//static.dingdandao.com/eluyun/image/B6C893C5-A019-45D7-8C2D-A75A8566D721@1x.png" alt="">
                             </div>
                         </li>
                     </ul>
@@ -290,7 +290,7 @@
             <p style="color:#178ce6;margin-bottom: 21px">
                 <span style="font-size: 16px;margin-right: 128px">菜品分类管理</span>
                 <span @click="openDishesClassifyCreateDialog" style="cursor: pointer">
-                    <img src="http://static.dingdandao.com/vipAdditional.png" alt="" style="margin-right: 4px">新增分类</span>
+                    <img src="//static.dingdandao.com/vipAdditional.png" alt="" style="margin-right: 4px">新增分类</span>
             </p>
             <div class="dishes-classify-container" style="height: 363px;width:317px;overflow: auto;display: inline-block">
                 <table class="dishes-classify-table">
@@ -314,7 +314,7 @@
                     <p>编辑信息</p>
                 </div>
                 <div v-if="dishesClassifySelected" class="classify-operation-item" @click="openDeleteDialog">
-                    <img src="http://static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
+                    <img src="//static.dingdandao.com/eluyun/image/3ABC942A-7F1C-4319-8C65-E0BD3945257D@1x.png" alt="">
                     <p>删除</p>
                 </div>
             </div>

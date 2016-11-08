@@ -4,21 +4,25 @@
 
 var $ajax = require('./AJAXService');
 
-var ACCOMMODATION_ID = 2;
-var VIP_ID = 11;
-var BUSINESS_ID = 0;
-var HOST_ID = 1;
-var EMPLOYEE_ID = 2;
-var ADMIN_ID = 3;
-var NO_AUTH_URL = '/view/tips/noauth.html';
-var NO_AUTH_FOR_A_URL = '/view/tips/noauthfora.html';
-var NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
-var EXPIRED_URL = '/view/tips/expired.html';
-var UPGRADE_URL = '/view/tips/upgrade.html';
+const ACCOMMODATION_ID = 2;
+const VIP_ID = 11;
+const BUSINESS_ID = 0;
+const HOST_ID = 1;
+const EMPLOYEE_ID = 2;
+const ADMIN_ID = 3;
+const ORDER_ID = 1;
+const NO_AUTH_URL = '/view/tips/noauth.html';
+const NO_AUTH_FOR_A_URL = '/view/tips/noauthfora.html';
+const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
+const EXPIRED_URL = '/view/tips/expired.html';
+const UPGRADE_URL = '/view/tips/upgrade.html';
 
-var camps = JSON.parse(localStorage.getItem("camps"));
-var bottom = JSON.parse(localStorage.getItem("bottom"));
-var campId = localStorage.getItem("campId");
+const camps = JSON.parse(localStorage.getItem('camps'));
+const bottom = JSON.parse(localStorage.getItem('bottom'));
+const top = JSON.parse(localStorage.getItem('top'));
+const campId = localStorage.getItem('campId');
+
+const maintenanceHost =  process.env.NODE_ENV === 'production' ? "/mt" : "//www.dingdandao.com:1443/mt";
 
 /**
  * 检测版本信息并跳转页面
@@ -56,6 +60,12 @@ function checkModule(moduleId){
                 return true;
             }
         }
+
+        for (var k = 0; k < top.length; k++) {
+            if (top[k].type === moduleId && top[k].status === 1) {
+                return true;
+            }
+        }
     }
     return false;
 }
@@ -63,7 +73,7 @@ function checkModule(moduleId){
 function showMaintenance(announcement) {
     var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:11;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
     var html = '<div class="maintenance" ' + style + '>' + announcement
-        + '<img class="maintenance-close" style="position: absolute;right: 16px;top:2px;cursor: pointer" src="http://static.dingdandao.com/99003D43-530F-428A-BC34-6EF8608636D9@1x.png">'
+        + '<img class="maintenance-close" style="position: absolute;right: 16px;top:2px;cursor: pointer" src="//static.dingdandao.com/99003D43-530F-428A-BC34-6EF8608636D9@1x.png">'
         + '</div>';
     $(function(){
         var body = $('body');
@@ -76,8 +86,7 @@ function showMaintenance(announcement) {
 }
 
 function checkMaintenance() {
-    var host =  process.env.NODE_ENV === 'production' ? "http://120.26.83.168:8081/mt" : "http://114.215.183.122:20010/mt";
-    $.get(host + '/maintain/getMaintainInfo')
+    $.get(maintenanceHost + '/maintain/getMaintainInfo')
         .done(function(res) {
             if (res.data.open === 1 && res.data.type === 0) {
                 showMaintenance(res.data.announcement);
@@ -86,7 +95,7 @@ function checkMaintenance() {
     // showMaintenance('为了提供更快速、便捷的服务，订单来了将于2016-06-03（周一）14:00~16:00进行系统升级，届时网站与APP将无法访问，请您提前安排好工作。因此给您造成的不便，敬请谅解！');
 }
 
-function checkAuth(moduleId, url){
+function checkAuth(moduleId, url) {
     var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
     !maintenanceClosed && checkMaintenance();
     url = url || '/view/tips/noauth.html';
@@ -101,7 +110,23 @@ function checkAuth(moduleId, url){
     }
 }
 
+function checkAccess(moduleId) {
+    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
+    !maintenanceClosed && checkMaintenance();
+    var version = checkVersion();
+    var moduleAuth = checkModule(moduleId);
+
+    if (version && version.update) {
+        location.href = UPGRADE_URL;
+    } else if (version && version.expired) {
+        location.href = EXPIRED_URL;
+    } else {
+        return moduleAuth;
+    }
+}
+
 exports.checkAuth = checkAuth;
+exports.checkAccess = checkAccess;
 exports.ACCOMMODATION_ID = ACCOMMODATION_ID;
 exports.VIP_ID = VIP_ID;
 exports.BUSINESS_ID = BUSINESS_ID;
@@ -113,3 +138,4 @@ exports.NO_AUTH_FOR_A_URL = NO_AUTH_FOR_A_URL;
 exports.NO_AUTH_FOR_VIP_URL = NO_AUTH_FOR_VIP_URL;
 exports.EXPIRED_URL = EXPIRED_URL;
 exports.UPGRADE_URL = UPGRADE_URL;
+exports.ORDER_ID = ORDER_ID;

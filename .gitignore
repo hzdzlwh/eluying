@@ -3,15 +3,16 @@
 /.idea/*
 /.sass-cache/*
 /static/css/main.min.css
+/static/css/orders.min.css
 /static/css/*.map
 /static/js/app/dist/*
 /*.war
 /build/*
 /projectFilesBackup/*
 /rev/*
-npm-debug.log
 gulp-ruby-sass-0
 .DS_Store
+npm-debug.log
 /.happypack/*
 /.vscode/*
 /view/home/
