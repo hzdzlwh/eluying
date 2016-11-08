@@ -227,7 +227,7 @@ var util = {
         //data.uid = 85;
         // data.kick = true;
         data.terminal = 1;
-        data.version = data.version || 4;
+        data.version = data.version || 10;
         // data.token = localStorage.getItem("token");
         var array = [];
         for(var key in data){

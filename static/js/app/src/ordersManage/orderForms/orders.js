@@ -130,7 +130,7 @@ $(function(){
                 const campId = localStorage.getItem("campId");
                 const uid = localStorage.getItem("uid");
                 const host = AJAXService.getUrl2('/order/listOrderListToText');
-                let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=8&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}`;
+                let url = `${host}?campId=${campId}&uid=${uid}&terminal=1&version=10&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}`;
                 paramsArr.map(
                     el=> {url = `${url}&${el}=${paramsObj[el]}` });
                 return url;
