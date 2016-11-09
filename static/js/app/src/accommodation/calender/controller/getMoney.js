@@ -17,6 +17,27 @@ var getMoneyCtrl = function(app){
     accommodationService(app);
     getMoneyWithGunService(app);
     validateService(app);
+    app.filter('payChannelFilter', function() {
+        return function(channel, currentChannel) {
+            if (currentChannel.some(function(el) {
+                return el.payChannelId === -6 || el.payChannelId === -11
+            })) {
+                return channel.filter(function(el) {
+                    return el.channelId !== -7 || el.channelId !== -12
+                })
+            }
+
+            if (currentChannel.some(function(el) {
+                    return el.payChannelId === -7 || el.payChannelId === -12
+                })) {
+                return channel.filter(function(el) {
+                    return el.channelId !== -6 || el.channelId !== -11
+                })
+            }
+
+            return channel;
+        }
+    });
     app.controller("getMoneyCtrl", ['$rootScope', '$scope', 'orderService', 'getMoneyService',
         'getMoneyWithGunService', 'getDataService', 'accommodationService', 'validateService',
         function(rootScope, scope, orderService, getMoneyService, getMoneyWithGunService,
@@ -51,6 +72,10 @@ var getMoneyCtrl = function(app){
                     return false;
                 }
                 var left = parseFloat(getMoneyService.calLeft(getMoney));
+                if (left > 0) {
+                    modal.somethingAlert('订单未结清，不能完成收银');
+                    return
+                }
                 var deposit = parseFloat(orderService.calDepositLeft(getMoney));
                 //如果是最后一项了而且还没有付清所有款项
                 rootScope.arrearLeft = null;

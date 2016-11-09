@@ -38,12 +38,11 @@
 }
 .fade-transition {
   transition: all 0.6s linear;
-  height: 263px;
 }
 .show-leave, .show-enter, .fade-leave, .fade-enter{
   height: 0;
 }
-.m-btn-code, .m-btn-wallet, .site-btn, .alipay-btn, .immedia-btn, .m-btn-company {
+.m-btn-code, .m-btn-wallet, .site-btn, .alipay-btn, .immedia-btn, .m-btn-company, .card-btn, .code-btn{
   cursor: pointer;
 }
 .code-container {
@@ -997,7 +996,7 @@
         width: 100px;
         text-align: center;
       }
-      .site-btn, .alipay-btn, .immedia-btn {
+      .site-btn, .alipay-btn, .immedia-btn, .card-btn, .code-btn{
         display: inline-block;
         width: 44px;
         height: 24px;
@@ -1018,7 +1017,7 @@
         line-height: 51px;
         border-bottom: solid 1px #d4d4d4;
       }
-      .site-btn, .alipay-btn, .immedia-btn {
+      .site-btn, .alipay-btn, .immedia-btn, .card-btn, .code-btn{
         display: inline-block;
         width: 44px;
         height: 24px;
@@ -1052,7 +1051,7 @@
           padding-left: 52px;
         }
       }
-      .company-alipay, .company-wechat, .face-pay-account, .immedia-pay-account {
+      .company-alipay, .company-wechat, .face-pay-account, .immedia-pay-account, .card-pay-account, .code-pay-account{
         color: #178ce6;
         cursor: pointer;
       }

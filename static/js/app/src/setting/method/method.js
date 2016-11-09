@@ -42,6 +42,8 @@ $(function(){
             c_webPayStatus: '',
             c_facePayStatus: '',
             c_immediaPayStatus: '',
+            c_cardPayStatus: '',
+            c_codePayStatus: '',
             payList: [],
             c_webObj: {},
             c_faceObj: {},
@@ -50,76 +52,82 @@ $(function(){
             c_weChatObj: {},
             deleteItem: {}
         },
-        created: function(){
+        created: function (){
             AJAXService.ajaxWithToken('get', '/collectionMethod/getPaymentMethodAndState', { }, function(result){
                 this.codeStatus = (result.data.onpassState === 1) ? 'open' : 'close';
                 this.walletStatus = (result.data.onlineCollectionMethod === 1) ? 'open' : 'close';
                 this.companyStatus = (result.data.onlineCollectionMethod === 2) ? 'open' : 'close';
                 this.payList = result.data.payChannelCustomList;
-                result.data.walletOpenAndUseStateList.forEach(function(item){
-                    if(item.onlineType === 1){
+                result.data.walletOpenAndUseStateList.forEach ( function (item) {
+                    if (item.onlineType === 1) {
                         this.w_webPayStatus = (item.useState === 1) ? 'open' : 'close';
-                    }else if(item.onlineType === 2){
+                    } else if(item.onlineType === 2) {
                         this.w_facePayStatus = (item.useState === 1) ? 'open' : 'close';
-                    }else{
+                    } else {
                         this.w_immediaPayStatus = (item.useState === 1) ? 'open' : 'close';
                     }
                 }.bind(this));
-                result.data.enterpriseOpenAndUseStateList.forEach(function(item){
-                    if(item.onlineType === 1){
+                result.data.enterpriseOpenAndUseStateList.forEach ( function (item) {
+                    if (item.onlineType === 1) {
                         this.c_webPayStatus = (item.useState === 1) ? 'open' : 'close';
                         item.openState = (result.data.alipay === 1 && result.data.wechatPay === 1) ? 1 : -1;
-                        companyAccountStateList.forEach(function(child){
-                            if(child.typeId === item.openState ){
+                        companyAccountStateList.forEach(function(child) {
+                            if (child.typeId === item.openState ) {
                                 this.c_webObj = child;
                             }
                         }.bind(this));
-                    }else if(item.onlineType === 2){
+                    } else if (item.onlineType === 2) {
                         this.c_facePayStatus = (item.useState === 1) ? 'open' : 'close';
-                        companyAccountStateList.forEach(function(child){
-                            if(child.typeId === item.openState ){
+                        companyAccountStateList.forEach ( function (child) {
+                            if (child.typeId === item.openState ) {
                                 this.c_faceObj = child;
                             }
                         }.bind(this));
-                    }else{
+                    } else if (item.onlineType === 3) {
                         this.c_immediaPayStatus = (item.useState === 1) ? 'open' : 'close';
-                        companyAccountStateList.forEach(function(child){
-                            if(child.typeId === item.openState ){
+                        companyAccountStateList.forEach ( function (child) {
+                            if ( child.typeId === item.openState ) {
                                 this.c_immediaObj = child;
                             }
                         }.bind(this));
+                    } else if (item.onlineType === 4) {
+                        this.c_cardPayStatus = (item.useState === 1) ? 'open' : 'close';
+                    } else {
+                        this.c_codePayStatus = (item.useState === 1) ? 'open' : 'close';
                     }
                 }.bind(this));
-                companyAccountStateList.forEach(function(child){
-                    if(child.typeId === result.data.alipay){
+                companyAccountStateList.forEach ( function (child) {
+                    if ( child.typeId === result.data.alipay ) {
                         this.c_aliObj = child;
                     }
-                    if(child.typeId === result.data.wechatPay){
+                    if ( child.typeId === result.data.wechatPay ) {
                         this.c_weChatObj = child;
                     }
                 }.bind(this));
             }.bind(this));
         },
         methods: {
-            toggleStatus: function(str){
-                switch(str){
+            toggleStatus: function(str) {
+                switch(str) {
                     case 'code':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseOnePass', { status: (this.codeStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.codeStatus = (this.codeStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'wallet':
-                        if (this.companyStatus === 'open'){
-                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: 0 }, function(result){
-                                if(result.code === 1){
+                        if (this.companyStatus === 'open') {
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: 0 }, function(result) {
+                                if (result.code === 1) {
                                     this.companyStatus = 'close';
                                     this.c_webPayStatus = 'close';
                                     this.c_facePayStatus = 'close';
                                     this.c_immediaPayStatus = 'close';
+                                    this.c_cardPayStatus = 'close';
+                                    this.c_codePayStatus = 'close';
                                     AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', {status: (this.walletStatus === 'close' ? 1 : 0)}, function (result) {
                                         if (result.code === 1) {
                                             this.walletStatus = (this.walletStatus === 'close') ? 'open' : (function () {
@@ -132,7 +140,7 @@ $(function(){
                                             modal.somethingAlert(result.msg);
                                         }
                                     }.bind(this));
-                                }else{
+                                } else {
                                     modal.somethingAlert(result.msg);
                                 }
                             }.bind(this));
@@ -153,26 +161,28 @@ $(function(){
                         }
                         break;
                     case 'company':
-                        if (this.walletStatus === 'open'){
-                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', { status: 0 }, function(result){
-                                if(result.code === 1){
+                        if (this.walletStatus === 'open') {
+                            AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseWallet', { status: 0 }, function (result) {
+                                if (result.code === 1) {
                                     this.walletStatus = 'close';
                                     this.w_webPayStatus = 'close';
                                     this.w_facePayStatus = 'close';
                                     this.w_immediaPayStatus = 'close';
                                     AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: (this.companyStatus === 'close'  ? 1 : 0) }, function(result){
-                                        if(result.code === 1){
-                                            this.companyStatus = (this.companyStatus === 'close') ? 'open' : (function () {
+                                        if (result.code === 1) {
+                                            this.companyStatus = (this.companyStatus === 'close') ? 'open' : (function (){
                                                 this.c_webPayStatus = 'close';
                                                 this.c_facePayStatus = 'close';
                                                 this.c_immediaPayStatus = 'close';
+                                                this.c_cardPayStatus = 'close';
+                                                this.c_codePayStatus = 'close';
                                                 return 'close'
                                             }).bind(this)()
-                                        }else{
+                                        } else {
                                             modal.somethingAlert(result.msg);
                                         }
                                     }.bind(this));
-                                }else{
+                                } else {
                                     modal.somethingAlert(result.msg);
                                 }
                             }.bind(this));
@@ -184,6 +194,8 @@ $(function(){
                                         this.c_webPayStatus = 'close';
                                         this.c_facePayStatus = 'close';
                                         this.c_immediaPayStatus = 'close';
+                                        this.c_cardPayStatus = 'close';
+                                        this.c_codePayStatus = 'close';
                                         return 'close'
                                     }).bind(this)()
                                 } else {
@@ -194,69 +206,87 @@ $(function(){
                         break;
                     case 'web-w':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 1, status: (this.w_webPayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.w_webPayStatus = (this.w_webPayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'face-w':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 2, status: (this.w_facePayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.w_facePayStatus = (this.w_facePayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'immedia-w':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 3, status: (this.w_immediaPayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.w_immediaPayStatus = (this.w_immediaPayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'web-c':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 1, status: (this.c_webPayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            }  else {
                                 this.c_webPayStatus = (this.c_webPayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'face-c':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 2, status: (this.c_facePayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.c_facePayStatus = (this.c_facePayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
                     case 'immedia-c':
                         AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 3, status: (this.c_immediaPayStatus === 'close'  ? 1 : 0) }, function(result){
-                            if (result.code !== 1 ){
+                            if (result.code !== 1 ) {
                                 modal.somethingAlert(result.msg);
-                            }else{
+                            } else {
                                 this.c_immediaPayStatus = (this.c_immediaPayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
+                    case 'card-c':
+                        AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', {accountType: 2, onlineType: 4, status: (this.c_cardPayStatus === 'close'  ? 1 : 0)}, result => {
+                            if (result.code !== 1) {
+                                modal.somethingAlert(result.msg);
+                            } else {
+                                this.c_cardPayStatus = (this.c_cardPayStatus === 'open') ? 'close' : 'open';
+                            }
+                        });
+                        break;
+                    case 'code-c':
+                        AJAXService.ajaxWithToken('get','/collectionMethod/useOrNotUseOnlinePay',{accountType: 2, onlineType: 5, status: (this.c_codePayStatus === 'close' ? 1 : 0)}, result => {
+                            if (result.code !== 1) {
+                                modal.somethingAlert(result.msg);
+                            } else {
+                                this.c_codePayStatus = (this.c_codePayStatus === 'open') ? 'close' : 'open';
+                            }
+                        });
+                        break;
                 }
             },
-            setDeleteItem: function(item){
+            setDeleteItem: function (item) {
                 this.deleteItem = item;
             }
         },
         computed: {
-            walletShow: function(){
+            walletShow: function() {
                 return this.walletStatus === 'open'
             },
-            companyShow: function(){
+            companyShow: function() {
                 return this.companyStatus === 'open'
             }
         }
@@ -289,7 +319,7 @@ $(function(){
                 this.pidTips = (this.pid === '' || this.pid === null);
                 this.valid = this.pidTips ? 'invalid' : 'valid';
             },
-            submitAble: function(){
+            submitAble: function() {
                 if (this.valid === 'invalid'){
                     return false
                 } else {
@@ -321,12 +351,12 @@ $(function(){
                 pidTips: true
             },
             methods: {
-                reset: function(){
+                reset: function() {
                     this.valid = 'invalid';
                     this.pid = '';
                     this.pidTips = true;
                 },
-                copyText: function(){
+                copyText: function() {
                     var ele = document.querySelector('#commonKey');
                     util.copyText(ele);
                     $(".copy-success").css('display', 'inline-block');
@@ -334,12 +364,12 @@ $(function(){
                         $(".copy-success").css('display', 'none');
                     }, 3000);
                 },
-                checkValid: function(){
+                checkValid: function() {
                     this.pidTips = (this.pid === '' || this.pid === null);
                     this.valid = this.pidTips ? 'invalid' : 'valid';
                 },
-                submitAble: function(){
-                    if (this.valid === 'invalid'){
+                submitAble: function() {
+                    if (this.valid === 'invalid') {
                         return false
                     } else {
                         ajaxChannel = 'aliImmedia';
@@ -352,7 +382,7 @@ $(function(){
             }
         });
     $('#ali-immediaPay').on('show.bs.modal', function(){
-        AJAXService.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliImmedia.apiServiceType }, function(result){
+        AJAXService.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliImmedia.apiServiceType }, function (result) {
             aliImmedia.publicKey = result.data.publicKey;
             aliImmedia.pid = result.data.pid;
             aliImmedia.pidTips = (aliImmedia.pid === '' || aliImmedia.pid === null);
@@ -372,28 +402,28 @@ $(function(){
             appIdTips: true
         },
         methods: {
-            reset: function(){
+            reset: function() {
                 this.valid = 'invalid';
                 this.pid = '';
                 this.appId = '';
                 this.pidTips = true;
                 this.appIdTips = true;
             },
-            copyText: function(){
+            copyText: function() {
                 var ele = document.querySelector('#common-key');
                 util.copyText(ele);
                 $('.copy-success').css('display', 'inline-block');
-                setTimeout(function(){
+                setTimeout( function() {
                     $('.copy-success').css('display', 'none');
                 }, 3000);
             },
-            checkValid: function(){
+            checkValid: function() {
                 this.pidTips = (this.pid === '' || this.pid === null);
                 this.appIdTips = (this.appId === '' || this.appId === null);
                 this.valid = (this.pidTips || this.appIdTips) ? 'invalid' : 'valid';
             },
-            submitAble: function(){
-                if (this.valid === 'invalid'){
+            submitAble: function() {
+                if (this.valid === 'invalid') {
                     return false
                 } else {
                     ajaxChannel = 'aliFace';
@@ -405,8 +435,8 @@ $(function(){
             }
         }
     });
-    $('#ali-facePay').on('show.bs.modal', function(){
-        AJAXService.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliFace.apiServiceType }, function(result){
+    $('#ali-facePay').on('show.bs.modal', function() {
+        AJAXService.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliFace.apiServiceType }, function (result) {
             aliFace.publicKey = result.data.publicKey;
             aliFace.pid = result.data.pid;
             aliFace.appId = result.data.appId;
@@ -424,10 +454,10 @@ $(function(){
             tipSecond: ''
         },
         methods: {
-            confirm: function(){
-                if(ajaxChannel === 'aliImmedia'){
-                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliImmedia.apiServiceType, pid: aliImmedia.pid }, function(result){
-                        if(result.code === 1){
+            confirm: function() {
+                if (ajaxChannel === 'aliImmedia') {
+                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliImmedia.apiServiceType, pid: aliImmedia.pid }, function (result) {
+                        if (result.code === 1) {
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                             $('#ali-immediaPay').modal('hide');
@@ -436,14 +466,14 @@ $(function(){
                             setTimeout(function(){
                                 $('#method-submitSuccess').modal('hide');
                             },2000);
-                        }else{
+                        } else {
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                         }
                     });
-                }else if(ajaxChannel === 'aliFace'){
-                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliFace.apiServiceType, pid: aliFace.pid, appId: aliFace.appId }, function(result){
+                } else if (ajaxChannel === 'aliFace') {
+                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliFace.apiServiceType, pid: aliFace.pid, appId: aliFace.appId }, function (result) {
                         if(result.code === 1){
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
@@ -459,9 +489,9 @@ $(function(){
                             $('#method-confirmSubmit').modal('hide');
                         }
                     });
-                }else{
-                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: companyAli.apiServiceType, pid: companyAli.pid }, function(result){
-                        if(result.code === 1){
+                } else {
+                    AJAXService.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: companyAli.apiServiceType, pid: companyAli.pid }, function (result) {
+                        if (result.code === 1) {
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                             $('#company-aliPay').modal('hide');
@@ -471,7 +501,7 @@ $(function(){
                             setTimeout(function(){
                                 $('#method-submitSuccess').modal('hide');
                             },2000)
-                        }else{
+                        } else {
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
                             $('#method-confirmSubmit').modal('hide');
@@ -492,11 +522,11 @@ $(function(){
     var wechatMethod = new Vue({
         el: "#method-wechatMethod",
         methods: {
-            confirm: function(){
-                AJAXService.ajaxWithToken('GET', 'applyWxPayUrl', {}, function(result){
-                    if(result.code !== 1){
+            confirm: function() {
+                AJAXService.ajaxWithToken('GET', 'applyWxPayUrl', {}, function (result) {
+                    if (result.code !== 1) {
                         modal.somethingAlert(result.msg);
-                    }else{
+                    } else {
                         $("#method-wechatMethod").modal("hide");
                         mainContainer.c_weChatObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
                         mainContainer.c_webObj = { typeId: -1, typeStr: '未开通', typeStyle: 'grey', operationStr: '绑定账号' };
@@ -506,38 +536,38 @@ $(function(){
             }
         }
     });
-    
+
     var newMethod = new Vue({
         el: "#method-newMethod",
         data: {
           errorTips: ''  
         },
         methods:{
-            addMethod: function(){
+            addMethod: function() {
                 var newMethod = document.getElementById("newMethod-input");
-                if(!newMethod.checkValidity()){
+                if (!newMethod.checkValidity()) {
                     this.errorTips = ("支付方式名称不能为空");
                     return false;
                 }
-                if(newMethod.value.length > 16){
+                if (newMethod.value.length > 16) {
                     this.errorTips = ("支付方式名称长度不能超过16");
                     return false;
                 }
                 var flag = true;
                 var payChannelCustomList = mainContainer.payList;
-                payChannelCustomList.forEach(function(d){
-                    if(d.name === newMethod.value){
+                payChannelCustomList.forEach( function (d) {
+                    if (d.name === newMethod.value) {
                         flag = false;
                     }
                 });
-                if(!flag){
+                if (!flag) {
                     this.errorTips = ("支付方式重复");
                     return false;
                 }
                 this.errorTips = '';
                 AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                     channelName: newMethod.value
-                }, function(result){
+                }, function (result) {
                     modal.somethingAlert(result.msg);
                     $("#method-newMethod").modal("hide");
                     newMethod.value = '';
@@ -552,15 +582,15 @@ $(function(){
     var deleteMethod = new Vue({
         el: "#method-deleteMethod",
         methods: {
-            deleteMethod: function(){
+            deleteMethod: function() {
                 AJAXService.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
                     channelId: mainContainer.deleteItem.channelId
-                }, function(result){
-                    if(result.code ===1 ){
+                }, function (result) {
+                    if (result.code === 1 ) {
                         $("#method-deleteMethod").modal("hide");
                         mainContainer.payList.$remove(mainContainer.deleteItem);
                         mainContainer.deleteItem = {};
-                    }else{
+                    } else {
                         modal.somethingAlert(result.msg);
                     }
                 });

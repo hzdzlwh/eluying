@@ -181,11 +181,10 @@ var orderNewCtrl = function(app){
                 if(result3.code === 1){
                     orderNewForm.$setPristine();
                     getDataService.getRoomsAndStatus(rootScope);
-                    rootScope.getMoney = getMoneyService.resetGetMoney(rootScope.orderNew, result3.data.orderId, 0);
                     accommodationService.emptySelectedEntries(rootScope);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
-                    $("#getMoneyModal").modal("show");
+                    getDataService.getOrderDetail(result3.data.orderId, rootScope);
                 }else{
                     modal.somethingAlert(result3.msg);
                 }
