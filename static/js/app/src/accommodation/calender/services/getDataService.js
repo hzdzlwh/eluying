@@ -17,7 +17,7 @@ var getDataService = function(app){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
                 type: 2
             }, function(result){
-                var arr1 = [{name: '散客'}];
+                var arr1 = [{name: '散客', id: -1}];
                 var arr2 = result.data.list;
                 var channels = arr1.concat(arr2);
                 callback({
