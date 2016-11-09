@@ -1395,7 +1395,6 @@ object{
           td:nth-child(6) {
             .select1{
               @include select1();
-              width: 100%;
               background-position: 95%;
             }
           }

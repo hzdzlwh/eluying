@@ -151,7 +151,7 @@ var orderEditCtrl = function(app){
                     origin: orderEdit.origin,
                     originId: orderEdit.originId,
                     payments: JSON.stringify([
-                        { fee: orderEdit.discounts, payChannel: "优惠", payChannelId: -1, type: 5 }
+                        { fee: orderEdit.discounts || 0, payChannel: "优惠", payChannelId: -4, type: 5 }
                     ]),
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
