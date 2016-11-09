@@ -5,8 +5,8 @@ $gridHeight: 48px;
 $borderColor: #e6e6e6;
 $bgColor: #f8f9fc;
 $highlightColor: #e6f1ff;
-$trash_grey: url("http://static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
-$trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
+$trash_grey: url("//static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
+$trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
 @mixin modalHeader(){
   background:$color1;
   width:100%;
@@ -3871,13 +3871,13 @@ object{
     @include room-input-button();
     padding-left: 27px;
     margin-left: 164px;
-    background-image: url(http://static.dingdandao.com/B401FC11-4ADF-434B-8D18-C81D7AF43129@1x.png);
+    background-image: url(//static.dingdandao.com/B401FC11-4ADF-434B-8D18-C81D7AF43129@1x.png);
   }
   .room-people-hand {
     @include room-input-button();    
     padding-left: 19px;
     margin-left: 14px;
-    background-image: url(http://static.dingdandao.com/85397197-D670-4B3D-9C2B-A3865871AD34@1x.png);    
+    background-image: url(//static.dingdandao.com/85397197-D670-4B3D-9C2B-A3865871AD34@1x.png);
   }
   .main-container {
     padding: 12px 16px;
@@ -3939,7 +3939,7 @@ object{
     i {
       cursor: pointer;
       display: inline-block;
-      background: url(http://static.dingdandao.com/3C429575-BB57-40DA-A07B-3A8B2232BDFA@1x.png) no-repeat center;
+      background: url(//static.dingdandao.com/3C429575-BB57-40DA-A07B-3A8B2232BDFA@1x.png) no-repeat center;
       height: 16px;
       width: 16px;
       vertical-align: middle;
