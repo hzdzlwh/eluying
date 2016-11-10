@@ -184,7 +184,7 @@ var orderNewCtrl = function(app){
                     accommodationService.emptySelectedEntries(rootScope);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
-                    getDataService.getOrderDetail(result3.data.orderId, rootScope);
+                    getDataService.getOrderDetail(result3.data.relatedOrderId, rootScope);
                 }else{
                     modal.somethingAlert(result3.msg);
                 }
