@@ -15,7 +15,8 @@ var getDataService = function(app){
         function(constService, accommodationService, orderDetailService){
         this.getChannel = function(callback){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                type: 2
+                type: 2,
+                isAll: false,
             }, function(result){
                 var arr1 = [{name: '散客', id: -1}];
                 var arr2 = result.data.list;
