@@ -121,7 +121,15 @@ var getDataService = function(app){
                             channelId: -6,
                             name: '支付宝'
                         });
-                        break;
+                    }
+                    if (map.onlineCollectionMethod === 2 &&
+                        enterpriseOpenAndUseStateList[key].onlineType === 4
+                        && enterpriseOpenAndUseStateList[key].openState === 1
+                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -7,
+                            name: '微信'
+                        });
                     }
                 }
                 payChannels.sort(function(a, b){
