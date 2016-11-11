@@ -2468,7 +2468,7 @@ function onMessage(msg) {
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
                                 title="{{payment.name}}"
-                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
+                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6 && payment.channelId != -7">
                                     {{payment.name}}
                                 </div>
                             </div>
