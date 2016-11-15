@@ -324,6 +324,18 @@
                                 <td class="col-not-first"><span class="immedia-pay-account" data-toggle="modal" data-target="#ali-immediaPay" v-text="c_immediaObj.operationStr" v-if="c_immediaObj.typeId !==0"></span><div class="hr2" v-if="c_immediaObj.typeId ===0 "></div></td>
                                 <td class="col-not-first"><span class="immedia-btn back-{{ c_immediaPayStatus }}" @click="toggleStatus('immedia-c')"></span></td>
                             </tr>
+                            <tr class="tr-origin" v-if="c_weChatObj.typeId === 1">
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信刷卡支付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
+                                <td class="col-not-first"><div class="dot dot-{{ c_weChatObj.typeStyle }}"></div><span v-text="c_weChatObj.typeStr"></span></td>
+                                <td class="col-not-first"><div class="hr2"></div></td>
+                                <td class="col-not-first"><span class="card-btn back-{{ c_cardPayStatus }}" @click="toggleStatus('card-c')"></span></td>
+                            </tr>
+                            <tr class="tr-origin"v-if="c_weChatObj.typeId === 1" >
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信扫码支付</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
+                                <td class="col-not-first"><div class="dot dot-{{ c_weChatObj.typeStyle }}"></div><span v-text="c_weChatObj.typeStr"></span></td>
+                                <td class="col-not-first"><div class="hr2"></div></td>
+                                <td class="col-not-first"><span class="code-btn back-{{ c_codePayStatus }}" @click="toggleStatus('code-c')"></span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

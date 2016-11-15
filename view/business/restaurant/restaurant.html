@@ -19,12 +19,20 @@
             </div>
             <div class="restaurant-box">
                 <div class="hr"></div>
-                <table class="restaurant-table">
+                <table class="restaurant-table" style="table-layout: fixed">
                     <thead>
                     <tr>
                         <th>餐厅名称</th>
                         <th>菜品</th>
                         <th>桌子</th>
+                        <th>
+                            开启扫码下单<img src="//static.dingdandao.com/eluyun/EDE0105F-5118-47DA-8648-DE0021AF4558@1x.png" alt="" class="imgss">
+                            <p class="remindWords" style="display:none;">
+                                <span class="words" style="line-height: 22px;">1、开启扫码下单后，客户可以通过微信、支付宝等扫描该餐厅的桌位二维码进行点菜、付款。<br/>2、您可以进入桌子列表管理和下载桌位二维码</span>
+                                <span class="bkImg"><img src="//static.dingdandao.com/eluyun83C27829-6711-43F4-B37B-B8CF2A81B863@1x.png" alt=""></span>
+                            </p>
+                        </th>
+                        <th>扫码下单公告</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -33,6 +41,8 @@
                         <td>{{restaurant.restName}}</td>
                         <td><a :href="`/view/business/restaurant/dishes.html?restId=${restaurant.restId}`">{{restaurant.dishesSum}}</a></td>
                         <td><a :href="`/view/business/restaurant/table.html?restId=${restaurant.restId}`">{{restaurant.boardSum}}</a></td>
+                        <td><span class="code-btn back-{{restaurant.isOpenCaterScan === 1 ? 'open':'close'}}" @click="toggleStatus(restaurant)"></span></td>
+                        <td style="width:82px;" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
                         <td>
                             <span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
                         </td>
@@ -43,16 +53,21 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" id="restaurantDialog">
-        <div class="modal-dialog modal-w300">
+        <div class="modal-dialog modal-w300" style="width:380px;">
             <div class="modal-content clearfloat v-modal">
                 <p class="rest-title">
                     {{status === 'create' ? '新增餐厅' : '修改餐厅信息'}}
+                    <span @click="close"><img src="//static.dingdandao.com/eluyunCC08FD01-AA5B-44BF-B550-106AE72E7D34@1x.png" alt=""></span>
                 </p>
-                <label for="restaurantName">餐厅名称</label>
+                <p class="sub-line"></p>
+                <label for="restaurantName">餐厅名称<img src="//static.dingdandao.com/eluyunBC267416-CA82-43A8-9F4E-8E47FC3FE798@1x.png" alt=""></label>
                 <input type="text" id="restaurantName" v-model="restaurantName" maxlength="20">
                 <p class="rest-tips">
                     <span v-if="submitted && restaurantName === ''">↑ 必填字段</span>
                 </p>
+                <label for="restaurantNotice">扫码下单公告</label>
+                <textarea v-model="resturantNotice" name="扫码下单公告" id="restaurantNotice" maxlength="140" placeholder="请输入扫码下单公告一行最多一行做多十六字多余的滚动">{{resturantNotice}}</textarea>
+                <p class="sub-num" v-text="`${resturantNotice.length}/140`"></p>
                 <div class="v-btn-group">
                     <button class="v-btn v-blue-btn" v-if="status === 'create'" v-on:click="createRestaurant">确定</button>
                     <button class="v-btn v-blue-btn" v-if="status === 'edit'" v-on:click="editRestaurant">确定</button>

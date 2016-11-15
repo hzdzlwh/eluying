@@ -65,7 +65,7 @@ $(function(){
             ],
             orderType: -1,
             orderStatus: '-1',
-            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已完成'],
+            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
             orderTypeItem: [-1],
             optionsOrderState: [{
                 id: '-1',
@@ -187,7 +187,7 @@ $(function(){
              */
             fixOrderItemData(arr) {
                 arr.forEach(function(ele){
-                    if (ele.orderType === -1 && ele.subOrderType.length > 1) {
+                    if (ele.orderType === -1 && !!ele.subOrderList && ele.subOrderList.length > 1) {
                         ele.showSub = false;
                     }
                 });

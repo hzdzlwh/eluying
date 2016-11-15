@@ -174,7 +174,7 @@
   }
 }
 #packageDialog {
-  input {
+  .inputs {
     width: 238px;
     height: 24px;
     text-indent: 8px;
@@ -344,10 +344,85 @@
   height: 44px;
   background: #fafafa;
   box-shadow: 0px -2px 4px 0px rgba(0,0,0,0.15);
-  width:688px;
+  width: 688px;
 }
 .package-table {
   td {
     padding-left: 28px!important;
   }
 }
+.uploadContainer {
+  position: relative;
+  height: 60px;
+}
+.newPhotos, .editPhotos {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  top: -27px;
+  left: 60px;
+}
+.icon-close {
+  position: absolute;
+  top: -23px;
+  left: 116px;
+  cursor: pointer;
+  z-index: 10;
+}
+#dishesImgs,#packageModelImgs {
+  position: absolute;
+  top: -27px;
+  left: 60px;
+  cursor: pointer;
+  width: 72px;
+  height: 72px;
+}
+.reupload {
+  width: 72px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+  background: #000000;
+  position: absolute;
+  top: 20px;
+  left: 60px;
+  cursor: pointer;
+  z-index: 10;
+}
+.uploadAsk {
+  position: absolute;
+  top: -29px;
+  left: 145px;
+}
+.picture-suggest {
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #999999;
+  text-align: left;
+  margin-top: 7px;
+}
+#dishesPictureDialog {
+  .dishes-title {
+    font-family: MicrosoftYaHei;
+    font-size: 16px;
+    color: #178ce6;
+    text-align: left;
+  }
+}
+.twoCode:hover {
+  cursor: pointer;
+  border: 1px solid #178ce6;
+  padding: 1px;
+}
+.twoCode1:hover {
+  cursor: pointer;
+  border: 1px solid #178ce6;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 27px;
+  height: 27px;
+  line-height: 27px;
+}
+
