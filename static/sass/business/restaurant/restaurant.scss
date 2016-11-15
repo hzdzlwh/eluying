@@ -10,7 +10,7 @@
   margin-bottom: 16px;
 }
 .restaurant-box {
-  width: 464px;
+  width: 695px;
   overflow: hidden;
   border-radius: 2px;
   box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
@@ -27,14 +27,76 @@
   font-size: 14px;
   float: right;
   text-align: right;
+  position: relative;
+  left: 230px;
   background: url(http://static.dingdandao.com/vipAdditional.png) no-repeat 5px;
+}
+.volume-production{
+  cursor: pointer;
+  font-weight: normal;
+  width: 125px;
+  font-size: 14px;
+  float: right;
+  text-align: right;
+  position: relative;
+  left: 95px;
+  background: url(//static.dingdandao.com/eluyunAA8E0D41-A0E2-4208-9BE6-2A827F73D0E7@1x.png) no-repeat 5px;
+}
+.volume-download{
+  cursor: pointer;
+  font-weight: normal;
+  width: 125px;
+  font-size: 14px;
+  float: right;
+  text-align: right;
+  position: relative;
+  left: 350px;
+  background: url(//static.dingdandao.com/eluyunC7FF2EEE-47F3-4789-BABF-7AF8234B9E1B@1x.png) no-repeat 5px;
 }
 .restaurant-table {
   border-radius:2px;
+  .back-open {
+    background-image: url("http://static.dingdandao.com/open-button.png");
+  }
+  .back-close {
+    background-image: url("http://static.dingdandao.com/close-button.png");
+  }
+  .code-btn {
+    cursor: pointer;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+  .remindWords {
+    position: relative;
+    top: -15px;
+    left: 15px;
+  }
+  .words {
+    width: 240px;
+    height: 117px;
+    font-family: MicrosoftYaHei;
+    font-size: 8px;
+    color: #666666;
+    text-align: left;
+    position: absolute;
+    top: 10px;
+    left: 64px;
+    z-index: 10;
+  }
+  .bkImg {
+    position: absolute;
+    z-index: 5;
+  }
   th {
     width: 116px;
     text-align: center;
     font-weight: bolder;
+  }
+  th>img {
+    margin-left: 5px;
   }
   tr {
     height: 48px;
@@ -42,8 +104,8 @@
     border: 1px solid #ededed;
   }
   thead {
-    background:#fafafa;
-    height:48px;
+    background: #fafafa;
+    height: 48px;
   }
   tbody {
     td:nth-child(1) {
@@ -51,9 +113,32 @@
     }
     td:nth-child(2), td:nth-child(3) {
       padding-left: 44px;
-      color:#178ce6;
+      color: #178ce6;
     }
     td:nth-child(4) {
+      text-align:center;
+    }
+    td:nth-child(5) {
+      padding-left: 16px;
+      position: relative;
+      max-height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+    .bkWord {
+      font-family: MicrosoftYaHei;
+      font-size: 14px;
+      color: #666666;
+    }
+    .gyWord {
+      font-family: MicrosoftYaHei;
+      font-size: 14px;
+      color: #cccccc;
+    }
+    td:nth-child(6) {
       padding-left: 27px;
       color:#178ce6;
       span {
@@ -65,12 +150,42 @@
 .rest-title {
   font-size: 16px;
 }
+.rest-title span img{
+  position: absolute;
+  left: 340px;
+  top: 20px;
+  cursor: pointer;
+}
+.sub-line {
+  background: #d4d4d4;
+  width: 328px;
+  height: 1px;
+  position: relative;
+  top: -10px;
+}
 #restaurantName {
   margin-left: 4px;
-  border:1px solid #cccccc;
-  border-radius:2px;
-  width:174px;
-  height:22px;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  width: 238px;
+  height: 22px;
+  position: relative;
+  left: 20px;
+}
+#restaurantNotice {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  width: 238px;
+  height: 72px;
+  position: relative;
+  top: -25px;
+  left: 90px;
+}
+.sub-num {
+  position: relative;
+  top: -25px;
+  left: 290px;
 }
 .v-modal {
   background:#fafafa;
@@ -85,16 +200,16 @@
   }
   .v-btn-group {
     margin-left: 64px;
-    margin-top: 9px;
+    margin-top: -5px;
     .v-btn:nth-child(1) {
       margin-right: 8px;
     }
   }
 }
 .rest-tips {
-  font-size:12px;
-  color:#f24949;
+  font-size: 12px;
+  color: #f24949;
   height: 17px;
   line-height: 17px;
-  margin-left: 67px;
+  margin-left: 90px;
 }
