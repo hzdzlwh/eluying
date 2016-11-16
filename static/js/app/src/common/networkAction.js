@@ -132,10 +132,10 @@ var network = {
 				break;
 			case this.status.JOIN_NETWORK:
 				var that = this;
-				var networkNum = resultDom.find(".networkNum").val();
-				var department = resultDom.find(".department").val();
-				var position = resultDom.find(".position").val();
 				resultDom.find(".createNetworkButton").click(function () {
+					var networkNum = resultDom.find(".networkNum").val();
+					var department = resultDom.find(".department").val();
+					var position = resultDom.find(".position").val();
 					/*$.ajax({
 						url: AJAXService.getUrl2("/network/applyJoinNetwork"),
 						data: {

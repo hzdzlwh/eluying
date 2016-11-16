@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <img class="robot" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/CE9D872B-A001-4662-B7AE-71F2E1D409D4@1x.png" alt="robot"/>
+        <img class="robot" src="http://static.dingdandao.com/CE9D872B-A001-4662-B7AE-71F2E1D409D4@1x.png" alt="robot"/>
         <div class="text" v-text="tips ? tips : getAuthTips">
         </div>
     </div>

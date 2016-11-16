@@ -8,7 +8,7 @@ p {
 .feature-content-1 {
     height: 934px;
     position: relative;
-    background: url(http://static.dingdandao.com/Group_72.png) no-repeat;
+    background: url(//static.dingdandao.com/Group_72.png) no-repeat;
     background-size: 1920px 934px;
     background-position: center;
     text-align: center;
@@ -98,7 +98,7 @@ p {
 }
 .feature-content-3 {
     height: 780px;
-    background: url(http://static.dingdandao.com/man-person-jumping-desert.png) no-repeat;
+    background: url(//static.dingdandao.com/man-person-jumping-desert.png) no-repeat;
     background-size: 1920px 780px;
     background-position: center;
     color: #fff;
@@ -129,7 +129,7 @@ p {
     color: #333333;
 }
 .feature-content-4 {
-    background: url(http://static.dingdandao.com/hpbg4.png) no-repeat;
+    background: url(//static.dingdandao.com/hpbg4.png) no-repeat;
     background-size: 1920px 1230px;
     background-position: center;
     margin-top: 120px;

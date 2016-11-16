@@ -51,7 +51,7 @@
                 <div class="wrapper">
                     <div class="item" ng-repeat="s in status">
                         <div class="itemBox" ng-class="{'active': s.status}" ng-click="onWebsite(s)">
-                            <img class="yesTips" src="http://7xsrk6.com2.z0.glb.qiniucdn.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="s.status"/>
+                            <img class="yesTips" src="//static.dingdandao.com/11176E901CF-4311-4524-A5CD-1E61F5801437@1x.png" alt="" ng-if="s.status"/>
                             <img class="logo" ng-src="{{s.yesUrl}}" alt="" ng-if="s.status"/>
                             <img class="logo" ng-src="{{s.noUrl}}" alt="" ng-if="!s.status"/>
                             <div class="stext active" ng-if="s.status">{{s.yesText}}</div>
@@ -79,7 +79,7 @@
                     <div class="slabel">网站：</div>
                     <div class="stext"><span id="campUrl">{{campUrl}}</span></div>
                     <div class="sbtn" ng-click="copySite()">复制网址</div>
-                    <div class="copy-success"><span class="copy-success-img"><img src="http://static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
+                    <div class="copy-success"><span class="copy-success-img"><img src="//static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
                 </div>
                 <div class="hr2" ng-if="campUrl != ''"></div>
                 <div class="formrow erweima" ng-if="campQrCode != ''">

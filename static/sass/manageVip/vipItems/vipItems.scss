@@ -7,8 +7,8 @@ $gridHeight: 48px;
 $borderColor: #e6e6e6;
 $bgColor: #f8f9fc;
 $highlightColor: #e6f1ff;
-$trash_grey: url("http://static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
-$trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
+$trash_grey: url("//static.dingdandao.com/trash-greyD8FBEAFB-6FE0-4564-ACB2-4771A41B0462@1x.png") no-repeat;
+$trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052AD3DA3B4@1x.png") no-repeat;
 @mixin modalHeader(){
   background:$color1;
   width:100%;
@@ -424,7 +424,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         float: left;
         .gender-select {
           width: 73px;
-          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
+          background: #fff url("//static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 100px no-repeat;
           background-position: 60px;
           span {
             width: 120%
@@ -439,7 +439,7 @@ $trash_blue: url("http://static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA
         }
         .idcard-select {
           width: 70px;
-          background: #fff url("http://static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 57px no-repeat;
+          background: #fff url("//static.dingdandao.com/27822A44-62B9-4B12-9550-EC005EAA3D33@1x.png") 57px no-repeat;
           display: inline-block;
           float: left;
           border-radius: 0px;

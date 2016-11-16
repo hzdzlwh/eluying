@@ -113,15 +113,27 @@ var getMoneyService = function(app){
             if (payChannels.length > 0) {
                 if(type === 2 || type === 3 || type === 1){
                     for(var i = 0; i < payChannels.length; i++){
-                        if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
+                        if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6 && payChannels[i].channelId != -7){
                             payChannel = payChannels[i].name;
                             payChannelId = payChannels[i].channelId;
                             break;
                         }
                     }
                 }else{
-                    payChannel = payChannels[0].name;
-                    payChannelId = payChannels[0].channelId;
+                    if (getMoney.payments.some(function(el) {
+                            return el.payChannelId === -6 || el.payChannelId === -8 || el.payChannelId === -7;
+                        })) {
+                        for(var i = 0; i < payChannels.length; i++){
+                            if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6 && payChannels[i].channelId != -7){
+                                payChannel = payChannels[i].name;
+                                payChannelId = payChannels[i].channelId;
+                                break;
+                            }
+                        }
+                    } else {
+                        payChannel = payChannels[0].name;
+                        payChannelId = payChannels[0].channelId;
+                    }
                 }
             } else {
                 payChannel = '请添加收银方式';
