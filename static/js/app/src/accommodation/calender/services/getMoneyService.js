@@ -171,14 +171,14 @@ var getMoneyService = function(app){
         //     });
         // };
         var submitGetMoney = function(getMoney, scope){
-            /*var payments_new = [];
+            var payments_new = [];
             getMoney.payments.forEach(function(d){
                 if(d.payChannelId !== -8 && d.payChannelId != -6){
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
                     }
                 }
-            });*/
+            });
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                     payments: JSON.stringify(getMoney.payments),
