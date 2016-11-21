@@ -63,7 +63,7 @@ var getMoneyService = function(app){
             var depositMode = 0; //0是收,1是退
             var feeMode = 0; //0是收,1是退
             //退房是退押金
-            if(type === 2 || type === 4){
+            if(type === 2 || type === 4 || type === 1){
                 depositMode = 1;
             }
             var feeLeft = calLeft(getMoney);
