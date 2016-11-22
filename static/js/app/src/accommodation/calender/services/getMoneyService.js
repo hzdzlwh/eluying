@@ -46,7 +46,6 @@ var getMoneyService = function(app){
             for(var key in order){
                 getMoney[key] = order[key];
             }
-            getMoney.payments = [];
             if(asyncObj){
                 for(var key in asyncObj){
                     getMoney[key] = asyncObj[key];
@@ -183,7 +182,7 @@ var getMoneyService = function(app){
             });
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                    payments: JSON.stringify(getMoney.payments),
+                    payments: JSON.stringify(payments_new),
                     remark: getMoney.remark,
                     orderId: getMoney.orderId,
                     dateTime: (new Date()).valueOf(),
@@ -205,7 +204,7 @@ var getMoneyService = function(app){
                 //还有钱没有付完
                 if(getMoney.isLast && scope.arrearLeft && scope.arrearLeft !== 0){
                     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                        payments: JSON.stringify(getMoney.payments),
+                        payments: JSON.stringify(payments_new),
                         remark: getMoney.remark,
                         orderId: getMoney.orderId,
                         dateTime: (new Date()).valueOf(),
@@ -281,7 +280,7 @@ var getMoneyService = function(app){
                 var payChannelType = payChannelTypeMap[onlineType];
                 onlineType = onlineTypeMap[onlineType];
                 scope.getMoneyWithGun =
-                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney, payChannelType);
+                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney, payChannelType, payments_new);
                 $("#getMoneyModal").modal("hide");
                 $("#orderCancelModal").modal("hide");
                 $("#payWithAlipayModal").modal("show");
