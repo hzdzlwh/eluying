@@ -46,6 +46,7 @@ var getMoneyService = function(app){
             for(var key in order){
                 getMoney[key] = order[key];
             }
+            getMoney.payments = [];
             if(asyncObj){
                 for(var key in asyncObj){
                     getMoney[key] = asyncObj[key];
