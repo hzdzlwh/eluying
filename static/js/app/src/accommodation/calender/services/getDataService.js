@@ -105,7 +105,7 @@ var getDataService = function(app){
                        && walletOpenAndUseStateList[key].openState === 1 
                        && walletOpenAndUseStateList[key].useState === 1) {
                         payChannels.push({
-                            channelId: -8,
+                            channelId: -11,
                             name: '支付宝（订单钱包）'
                         });
                         break;

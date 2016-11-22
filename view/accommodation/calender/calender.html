@@ -2491,7 +2491,7 @@ function onMessage(msg) {
                         </div>
                     </div>
                     <div class="item item_big" ng-repeat="p in getMoney.payments"
-                         ng-if="getMoney.depositMode === 1 && p.type === 3 && p.isNew">
+                         ng-if="(getMoney.depositMode === 1 || (getMoney.type === 1 && getMoney.depositTotal > 0)) && p.type === 3 && p.isNew">
                         <input class="moneyInput" type="text" ng-model="p.fee" ng-change="moneyChange(p);">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
