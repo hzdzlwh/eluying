@@ -23,7 +23,7 @@ var getMoneyWithGunCtrl = function(app){
                     dateTime: (new Date()).valueOf(),
                     orderId: orderId,
                     orderType: -1,
-                    payments: JSON.stringify(getMoney.payments),
+                    payments: JSON.stringify(getMoneyWithGun.payments_new),
                 }, function(result){
                     if(result.code === 1){
                         // $("#payWithAlipayModal").modal("hide");
