@@ -54,6 +54,7 @@ var getMoneyService = function(app){
                     type: 4, fee: parseFloat(asyncObj.penaltyAd), isNew: true, payChannel: '违约金', payChannelId: -5,
                 });
             }
+            getMoney.type = type;
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
             getMoney.isLast = isLast; //
@@ -63,7 +64,7 @@ var getMoneyService = function(app){
             var depositMode = 0; //0是收,1是退
             var feeMode = 0; //0是收,1是退
             //退房是退押金
-            if(type === 2 || type === 4 || type === 1){
+            if(type === 2 || type === 4){
                 depositMode = 1;
             }
             var feeLeft = calLeft(getMoney);

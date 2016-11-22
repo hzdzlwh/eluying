@@ -2451,7 +2451,7 @@ function onMessage(msg) {
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 0">
+                    <div class="item item_small" ng-if="getMoney.type !== 1 && getMoney.depositMode === 0">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_add_outer spriteImg">
@@ -2481,7 +2481,7 @@ function onMessage(msg) {
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 1">
+                    <div class="item item_small" ng-if="getMoney.type !== 1 && getMoney.depositMode === 1">
                         <div class="slabel">押金退款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 3)">
                             <div class="eluyun_add_outer spriteImg">
