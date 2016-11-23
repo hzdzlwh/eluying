@@ -15,7 +15,8 @@ var getDataService = function(app){
         function(constService, accommodationService, orderDetailService){
         this.getChannel = function(callback){
             AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                type: 2
+                type: 2,
+                isAll: false,
             }, function(result){
                 var arr1 = [{name: '散客', id: -1}];
                 var arr2 = result.data.list;
@@ -104,7 +105,7 @@ var getDataService = function(app){
                        && walletOpenAndUseStateList[key].openState === 1 
                        && walletOpenAndUseStateList[key].useState === 1) {
                         payChannels.push({
-                            channelId: -8,
+                            channelId: -11,
                             name: '支付宝（订单钱包）'
                         });
                         break;
@@ -120,7 +121,15 @@ var getDataService = function(app){
                             channelId: -6,
                             name: '支付宝'
                         });
-                        break;
+                    }
+                    if (map.onlineCollectionMethod === 2 &&
+                        enterpriseOpenAndUseStateList[key].onlineType === 4
+                        && enterpriseOpenAndUseStateList[key].openState === 1
+                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                        payChannels.push({
+                            channelId: -7,
+                            name: '微信'
+                        });
                     }
                 }
                 payChannels.sort(function(a, b){

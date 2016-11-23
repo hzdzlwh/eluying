@@ -5,25 +5,25 @@ require("angular");
 
 var getDataService = require('../services/getDataService');
 var getMoneyService = require('../services/getMoneyService');
+var accommodationService = require('../services/accommodationService');
 
 var getMoneyWithGunCtrl = function(app){
     getDataService(app);
     getMoneyService(app);
-    app.controller("getMoneyWithGunCtrl", ['$rootScope', '$scope', 'getDataService', 'getMoneyService',
-        function(rootScope, scope, getDataService, getMoneyService){
+    app.controller("getMoneyWithGunCtrl", ['$rootScope', '$scope', 'getDataService', 'getMoneyService', 'accommodationService',
+        function(rootScope, scope, getDataService, getMoneyService, accommodationService){
             scope.submitPayWithAlipay = function(){
+                var getMoney = rootScope.getMoney;
                 var getMoneyWithGun = rootScope.getMoneyWithGun;
                 var authCode = getMoneyWithGun.userCode;
-                var amount = getMoneyWithGun.fee;
-                var collectionOnlineType = getMoneyWithGun.collectionOnlineType;
                 var orderId = getMoneyWithGun.orderId;
-                var paymentType = getMoneyWithGun.paymentType;
-                AJAXService.ajaxWithToken('GET', 'barcodePayUrl', {
-                    amount: amount,
+                AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
                     authCode: authCode,
-                    collectionOnlineType: collectionOnlineType,
+                    remark: getMoney.remark,
+                    dateTime: (new Date()).valueOf(),
                     orderId: orderId,
-                    paymentType: paymentType,
+                    orderType: -1,
+                    payments: JSON.stringify(getMoneyWithGun.payments_new),
                 }, function(result){
                     if(result.code === 1){
                         // $("#payWithAlipayModal").modal("hide");
@@ -32,7 +32,14 @@ var getMoneyWithGunCtrl = function(app){
                         var tradeNum = result.data.tradeNum;
                         if(status === 0){
                             $("#payWithAlipayModal").modal("hide");
-                            getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                            //getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                            modal.somethingAlert("收银成功");
+                            $("#getMoneyModal").modal("hide");
+                            getDataService.getRoomsAndStatus(scope);
+                            accommodationService.emptySelectedEntries(scope);
+                            setTimeout(function(){
+                                getDataService.getOrderDetail(getMoney.orderId, scope);
+                            }, 2500);
                         }else if(status === 1){
                             modal.somethingAlert("收款失败");
                             setTimeout(function(){
@@ -49,7 +56,14 @@ var getMoneyWithGunCtrl = function(app){
                                         if(status1 === 0){
                                             clearInterval(inter);
                                             $("#payWithAlipayModal").modal("hide");
-                                            getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
+                                            modal.somethingAlert("收银成功");
+                                            $("#getMoneyModal").modal("hide");
+                                            getDataService.getRoomsAndStatus(scope);
+                                            accommodationService.emptySelectedEntries(scope);
+                                            setTimeout(function(){
+                                                getDataService.getOrderDetail(getMoney.orderId, scope);
+                                            }, 2500);
+                                            // getMoneyService.submitGetMoney(rootScope.getMoney, rootScope);
                                         }else if(status1 === 1){
                                             modal.somethingAlert("收款失败");
                                             setTimeout(function(){

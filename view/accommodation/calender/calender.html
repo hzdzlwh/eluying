@@ -271,10 +271,10 @@ function onMessage(msg) {
                         </div>
                         <span class="modal-close">&times;</span>
                         <div class="btns">
+                            <div class="abtn" ng-click="openPrint(orderDetail)">打印</div>
                             <div class="abtn" ng-if="orderDetail.editable"
                                  ng-click="showOrderEdit()">编辑订单</div>
                             <div class="abtn" ng-if="orderDetail.cancelable" ng-click="showOrderCancel()">取消订单</div>
-                            <!--<div class="abtn">打印凭条</div>-->
                         </div>
                     </div>
                 </div>
@@ -450,7 +450,7 @@ function onMessage(msg) {
                                 <div class="desc-box">
                                     <div class="subt">订单总结：</div>
                                     <div class="sitem">
-                                        <div class="sl">订单总价</div>
+                                        <div class="sl">总价</div>
                                         <div class="sval">¥{{itemPrice(orderDetail)}}</div>
                                         <!--<div class="clearline"></div>-->
                                     </div>
@@ -687,7 +687,7 @@ function onMessage(msg) {
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
-                                    <div class="sl">订单总价</div>
+                                    <div class="sl">总价</div>
                                     <div class="sval">¥{{itemPrice(orderCancel)}}</div>
                                     <div class="clearline"></div>
                                 </div>
@@ -2302,7 +2302,7 @@ function onMessage(msg) {
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
-                                    <div class="sl">订单总价</div>
+                                    <div class="sl">总价</div>
                                     <div class="sval">
                                         ¥{{itemPrice(getMoney) - (getMoney.roomsRefund || 0)}}
                                     </div>
@@ -2343,7 +2343,7 @@ function onMessage(msg) {
                             <div class="desc-box">
                                 <div class="subt">订单总结：</div>
                                 <div class="sitem">
-                                    <div class="sl">订单总价</div>
+                                    <div class="sl">总价</div>
                                     <div class="sval">¥{{itemPrice(getMoney)
                                         - (getMoney.roomsRefund || 0)}}</div>
                                     <!--<div class="clearline"></div>-->
@@ -2416,7 +2416,7 @@ function onMessage(msg) {
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment);"
                                     title="{{payment.name}}"
-                                     ng-repeat="payment in payChannels">{{payment.name}}</div>
+                                     ng-repeat="payment in payChannels | payChannelFilter: getMoney.payments">{{payment.name}}</div>
                             </div>
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
@@ -2451,7 +2451,7 @@ function onMessage(msg) {
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 0 && !isOrderDetail">
+                    <div class="item item_small" ng-if="getMoney.type !== 1 && getMoney.depositMode === 0">
                         <div class="slabel">押金收款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 1)">
                             <div class="eluyun_add_outer spriteImg">
@@ -2468,7 +2468,7 @@ function onMessage(msg) {
                             <div class="select1_options">
                                 <div class="oitem" ng-click="changePayChannel(p, payment)"
                                 title="{{payment.name}}"
-                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6">
+                                ng-repeat="payment in payChannels" ng-if="payment.channelId != -8 && payment.channelId != -6 && payment.channelId != -7">
                                     {{payment.name}}
                                 </div>
                             </div>
@@ -2481,7 +2481,7 @@ function onMessage(msg) {
                         </div>
                         <div class="sdelete" ng-click="deletePayment($index, getMoney.payments)"></div>
                     </div>
-                    <div class="item item_small" ng-if="getMoney.depositMode === 1">
+                    <div class="item item_small" ng-if="getMoney.depositMode === 1 || (getMoney.type === 1 && getMoney.depositTotal > 0)">
                         <div class="slabel">押金退款</div>
                         <div class="sadd" ng-click="addPayment(getMoney, payChannels, 3)">
                             <div class="eluyun_add_outer spriteImg">
@@ -2491,7 +2491,7 @@ function onMessage(msg) {
                         </div>
                     </div>
                     <div class="item item_big" ng-repeat="p in getMoney.payments"
-                         ng-if="getMoney.depositMode === 1 && p.type === 3 && p.isNew">
+                         ng-if="(getMoney.depositMode === 1 || (getMoney.type === 1 && getMoney.depositTotal > 0)) && p.type === 3 && p.isNew">
                         <input class="moneyInput" type="text" ng-model="p.fee" ng-change="moneyChange(p);">
                         <div class="select1">
                             <span>{{p.payChannel}}</span>
