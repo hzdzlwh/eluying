@@ -3,7 +3,6 @@ var util = require("util");
 var modal = require("modal");
 require("fileupload");
 var showInfo = {
-
     changed: false,
 
     isLoading: true,
@@ -25,11 +24,24 @@ var showInfo = {
                 showInfo.showRoomShowInfo(result.data);
             }
         })*/
+        var counter1;
+        var counter2;
         AJAXService.ajaxWithToken('get', '/category/pullShowInfoPC', {id: id}, function (result) {
             showInfo.isLoading = false;
             showInfo.coverIsLoading = false;
             showInfo.detailIsLoading = false;
             showInfo.showRoomShowInfo(result.data);
+            counter1 = $("#roomShowDescription").val().length;
+            counter2 = $("#roomShowPolicy").val().length;
+            $(".subNumDescription").html(counter1+"/70");
+            $(".subNumPolicy").html(counter2+"/140");
+        });
+
+        $(document).keyup(function(){
+            counter1 = $("#roomShowDescription").val().length;
+            counter2 = $("#roomShowPolicy").val().length;
+            $(".subNumDescription").html(counter1+"/70");
+            $(".subNumPolicy").html(counter2+"/140");
         });
     },
 
@@ -152,7 +164,8 @@ var showInfo = {
                 showInfo.changed = true;
                 showInfo.detailIsLoading = false;
             }
-        })
+        });
+
     },
 
 //准备展示信息数据

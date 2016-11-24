@@ -22,7 +22,8 @@ var leftMenu = {
                       },
 
                       {subMenuName: 'salesite', subArray: [{menuName: 'operation', pathUrl: '/view/salesite/operation/operation.html', name: '网站运营'},
-                                                           {menuName: 'info', pathUrl: '/view/salesite/info/info.html', name: '基本信息'}
+                                                           {menuName: 'info', pathUrl: '/view/salesite/info/info.html', name: '基本信息'},
+                                                            {menuName: 'detail', pathUrl: '/view/salesite/detail/detail.html', name: '详情介绍'}
                                                           ]
                       },
 
