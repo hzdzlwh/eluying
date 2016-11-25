@@ -1,23 +1,21 @@
 /**
  * Created by Administrator on 2016/11/23.
  */
-export function mapInit() {
-    function G(id) {
-        return document.getElementById(id);
-    }
-    var map = new BMap.Map("mapShow");
+export function mapInit(eleStr, pointObj, scale) {
+    var map = new BMap.Map(eleStr);
+    var address;
     map.enableScrollWheelZoom(true);
     map.enableDoubleClickZoom(true);
-    var point = new BMap.Point(116.331398,39.897445);
-    map.centerAndZoom(point,16);                   // 初始化地图,设置城市和地图级别。
+    var point = new BMap.Point(pointObj.lgn, pointObj.lat);
+    map.centerAndZoom(point,scale);                   // 初始化地图,设置城市和地图级别。
 
     var geolocation = new BMap.Geolocation();
-    geolocation.getCurrentPosition(function(r){
-        if(this.getStatus() == BMAP_STATUS_SUCCESS){
-            var mk = new BMap.Marker(r.point);
-            map.addOverlay(mk);
-            map.panTo(r.point);
-            var circle = new BMap.Circle(r.point,500,{
+            geolocation.getCurrentPosition(function(r){
+                if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                    var mk = new BMap.Marker(r.point);
+                    map.addOverlay(mk);
+                    map.panTo(r.point);
+                    var circle = new BMap.Circle(r.point,500,{
                 fillColor:"blue",
                 fillOpacity:0.2,
                 strokeColor:"blue",
@@ -51,14 +49,14 @@ export function mapInit() {
             value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
         }
         str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-        G("searchResultPanel").innerHTML = str;
+        document.querySelector("#searchResultPanel").innerHTML = str;
     });
 
     var myValue;
     ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
         var _value = e.item.value;
         myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-        G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+        document.querySelector("#searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
         setPlace();
     });
 
@@ -76,10 +74,27 @@ export function mapInit() {
                 strokeWeight:1
             });
             map.addOverlay(circle);
+            var geoc = new BMap.Geocoder();
+            geoc.getLocation(pp, function(rs){
+                var addComp = rs.addressComponents;
+                address = addComp.province + addComp.city  + addComp.district + addComp.street + addComp.streetNumber;
+                var map = new BMap.Map("smallMap");
+                map.centerAndZoom(pp,16);
+                map.addOverlay(new BMap.Marker(pp));
+                var circle = new BMap.Circle(pp,500,{
+                    fillColor:"blue",
+                    fillOpacity:0.2,
+                    strokeColor:"blue",
+                    strokeOpacity:0.5,
+                    strokeWeight:1
+                });
+                map.addOverlay(circle);
+            });
         }
         var local = new BMap.LocalSearch(map, { //智能搜索
             onSearchComplete: myFun
         });
         local.search(myValue);
     }
+    return address;
 }

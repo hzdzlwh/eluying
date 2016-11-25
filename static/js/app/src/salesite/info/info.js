@@ -27,6 +27,9 @@ $(function() {
 
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
+        "click #smallMap": function () {
+            $('#addressShowDialog').modal('show');
+        }
     };
 
     util.bindDomAction(events);
@@ -67,11 +70,11 @@ $(function() {
         ],
         shopType: -1,
         shopPhone: '',
-        imgUrls: []
+        imgUrls: [],
+        infoWords: ''
     },
     created: function() {
         this.getShopList();
-        mapInit();
     },
     methods: {
       getShopList () {
@@ -117,12 +120,19 @@ $(function() {
           });
           $('#detail').click();
       },
+      confirm: function() {
+          $('#addressShowDialog').modal('hide');
+      },
+      openAddressShowDialog: function() {
+          $('#addressShowDialog').modal('show');
+      }
     },
     components: {
         DdSelect,
         DdOption
     }
     });
+    mapInit('bigMap','北京',16);
 });
 
 
