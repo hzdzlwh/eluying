@@ -68,7 +68,6 @@ export function mapInit(mapContainer, addressObj, zoom, callback) {
             // TODO
         }
     });
-    return localSearch;
 }
 
 
