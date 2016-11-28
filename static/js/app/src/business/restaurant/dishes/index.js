@@ -12,6 +12,8 @@ var restaurantMenu = require('../restaurantMenu');
 var showInfo = require("../../category/food/showInfo");
 require("bootstrap");
 require("validation");
+require("jqueryui");
+require("fileupload");
 
 var auth = require('../../../common/auth');
 auth.checkAuth(auth.BUSINESS_ID);
@@ -31,11 +33,16 @@ $(function() {
     window.addEventListener('resize', util.mainContainer);
 
     var events = {
-
         "show.bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
-
+        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
+        "click .dishesShow": function() {
+            $('#uploadDishesPicture').click();
+        },
+        "click .packageModelShow": function() {
+            $('#uploadPackageModelPicture').click();
+        }
     };
+
 
     util.bindDomAction(events);
 
@@ -156,6 +163,18 @@ $(function() {
                             modal.somethingAlert(res.msg);
                         }
                     }.bind(this))
+            },
+            openDishesPictureDialog: function(packageModel) {
+                dishesPictureDialog.pictureName = packageModel.name;
+                dishesPictureDialog.pictureUrl = packageModel.imgUrl;
+                dishesPictureDialog.categoryId = packageModel.packageId;
+                $('#dishesPictureDialog').modal('show');
+            },
+            openDishesDialog: function(dishes){
+                dishesPictureDialog.pictureName = dishes.name;
+                dishesPictureDialog.pictureUrl = dishes.imgUrl;
+                dishesPictureDialog.categoryId = dishes.categoryId;
+                $('#dishesPictureDialog').modal('show');
             }
         }
 
@@ -166,10 +185,21 @@ $(function() {
         data: {
             dishes: {},
             dishesClassifyList: [],
-            submitted: false
+            submitted: false,
+            source: ''
         },
         created: function() {
             this.getDishesClassify();
+            var that = this;
+            $('#uploadDishesPicture').fileupload({
+                url: AJAXService.getUrl2("uploadImageUrl"),
+                done:  (e, data) => {
+                    var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+                    result = JSON.parse(result);
+                    var url = result.data.url;
+                    that.$set('dishes.imgUrl', url);
+                }
+            });
         },
         methods: {
             getDishesClassify: function() {
@@ -207,8 +237,12 @@ $(function() {
                 this.dishes = {};
                 this.submitted = false;
                 $('#dishesDialog').modal('hide');
+            },
+            closeDishesShow: function(item) {
+                item.imgUrl = '';
             }
-        }
+        },
+
     });
 
     var dishesClassify = new Vue({
@@ -402,6 +436,18 @@ $(function() {
             },
             submitted: false
         },
+        created: function() {
+            var that = this;
+            $('#uploadPackageModelPicture').fileupload ({
+            url: AJAXService.getUrl2("uploadImageUrl"),
+            done:  (e, data) => {
+            var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
+            result = JSON.parse(result);
+            var url = result.data.url;
+            that.$set('packageModel.imgUrl', url);
+            }
+        });
+        },
         methods: {
             openPackageSelectDialog: function() {
                 $('#packageSelectDialog').modal('show');
@@ -442,6 +488,9 @@ $(function() {
                 packageSelect.dishesInClassify = [];
                 $('#packageDialog').modal('hide');
                 this.packageModel = { dishesNum: undefined };
+            },
+            closePackageModelShow: function(item) {
+                item.imgUrl = '';
             }
         }
     });
@@ -476,5 +525,19 @@ $(function() {
                 $('#dishesClassifyEditDialog').modal('hide');
             }
         }
-    })
+    });
+
+    var dishesPictureDialog = new Vue({
+        el: '#dishesPictureDialog',
+        data: {
+            pictureName: '',
+            pictureUrl: '',
+            categoryId: undefined
+        },
+        methods: {
+            closeDishesPictureDialog: function() {
+                $('#dishesPictureDialog').modal('hide');
+            }
+        }
+    });
 });
