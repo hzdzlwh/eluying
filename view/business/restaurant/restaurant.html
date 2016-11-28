@@ -66,7 +66,7 @@
                     <span v-if="submitted && restaurantName === ''">↑ 必填字段</span>
                 </p>
                 <label for="restaurantNotice">扫码下单公告</label>
-                <textarea v-model="resturantNotice" name="扫码下单公告" id="restaurantNotice" maxlength="140" placeholder="请输入扫码下单公告一行最多一行做多十六字多余的滚动">{{resturantNotice}}</textarea>
+                <textarea v-model="resturantNotice" name="扫码下单公告" id="restaurantNotice" maxlength="140" placeholder="请输入扫码下单公告一行最多十六字多余的滚动">{{resturantNotice}}</textarea>
                 <p class="sub-num" v-text="`${resturantNotice.length}/140`"></p>
                 <div class="v-btn-group">
                     <button class="v-btn v-blue-btn" v-if="status === 'create'" v-on:click="createRestaurant">确定</button>

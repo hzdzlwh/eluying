@@ -36,15 +36,24 @@
                 </div>
                 <div class="info-message clearfloat">
                     <div class="info-definition">店铺地址</div>
-                    <div class="info-imgs" style="float: left ;margin-left: 16px ;">
-                        <div class="info-logo" v-if="infoWords === ''">
-                        <img  src="//static.dingdandao.com/eluyunF30DBA32-2C67-4BA8-8259-17F65AFF0A63@1x.png" alt="" style="cursor: pointer;">
-                        <span  class="info-add" style="cursor: pointer;" @click="openAddressShowDialog">点击选择地址</span>
+                    <div class="info-imgs" style="float: left ;margin-left: 10px ;">
+                        <dd-select class="info-choose">
+                            <dd-option  value="1" label="北京">
+                            </dd-option>
+                        </dd-select>
+                        <dd-select class="info-choose">
+                            <dd-option  value="1" label="北京市">
+                            </dd-option>
+                        </dd-select>
+                        <dd-select class="info-choose">
+                            <dd-option  value="1" label="王府井">
+                            </dd-option>
+                        </dd-select>
+                        <div>
+                            <input type="text" class="dd-input" style="width:280px;margin:10px 0;">
+                            <button class="dd-btn-primary" style="width:110px">搜索</button>
                         </div>
-                        <div class="info-map" style="position:relative;" v-if="infoWords !== ''">
-                            <div id="infoWord" class="info-word" v-text="infoWords"></div>
-                            <div id="smallMap" style="width:408px;height:200px;" @click="openAddressShowDialog"></div>
-                        </div>
+                        <div id="info-map" style="width:408px;height:150px;border:1px solid #ddd;"></div>
                     </div>
                 </div>
                 <div class="info-message clearfloat">
@@ -75,17 +84,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" role="dialog" id="addressShowDialog">
-        <div class="modal-dialog" style="width: 650px">
-            <div class="modal-content clearfloat v-modal" style="width:650px;position:relative">
-                <div id="bigMap" style="width:600px;height:400px;"></div>
-                <div id="r-result"><input type="text" class="dd-input" id="suggestId" size="20" style="width:150px;border-radius: 20px;position:absolute;top:25px;right:25px;" placeholder="请输入地址"/></div>
-                <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-                <button class="dd-btn-primary" style="width:100px;height:24px;border: 1px solid #178ce6; margin:5px 0 5px 250px;" @click="confirm">确定</button>
-            </div>
-        </div>
-    </div>
 </div>
-
 </body>
 </html>

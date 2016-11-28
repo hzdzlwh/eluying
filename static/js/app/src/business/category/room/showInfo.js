@@ -51,6 +51,7 @@ var showInfo = {
         data.area && $("#roomShowArea").val(data.area);
         data.bedType && $("#roomShowBed").val(data.bedType);
         data.remark && $("#roomShowDescription").val(data.remark);
+        data.policy && $("#roomShowPolicy").val(data.policy);
         if (data.facilities.hotWater.status == 1) {
             $("#hotWaterY").prop("checked", true);
             $("#hotWaterDescription").val(data.facilities.hotWater.description);
@@ -215,6 +216,7 @@ var showInfo = {
             extraFacilities: JSON.stringify(extraFacilities),
             fitNum: $("#roomShowFitNum").val(),
             remark: $("#roomShowDescription").val(),
+            policy: $("#roomShowPolicy").val(),
             id: $("#roomCategoryList").find(".mainActive").find(".id").val(),
             facilities: JSON.stringify(facilities)
         };

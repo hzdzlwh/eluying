@@ -27,9 +27,6 @@ $(function() {
 
         "resize window": util.mainContainer,
         "show.bs.modal .modal": modal.centerModals,
-        "click #smallMap": function () {
-            $('#addressShowDialog').modal('show');
-        }
     };
 
     util.bindDomAction(events);
@@ -78,9 +75,12 @@ $(function() {
     },
     methods: {
       getShopList () {
-        AJAXService.ajaxWithToken('get', '', {}, result => {
+        AJAXService.ajaxWithToken('get', '/directNet/getBasicInfo', {}, result => {
             if (result.code === 1 && result.data) {
-
+                this.campName = result.data.campName;
+                this.shopType = result.data.campType;
+                this.shopPhone = result.data.recePhone;
+                this.imgUrls = result.data.imgs;
             } else if (result.code !== 1) {
                 modal.somethingAlert(result.msg);
             }
@@ -120,19 +120,12 @@ $(function() {
           });
           $('#detail').click();
       },
-      confirm: function() {
-          $('#addressShowDialog').modal('hide');
-      },
-      openAddressShowDialog: function() {
-          $('#addressShowDialog').modal('show');
-      }
     },
     components: {
         DdSelect,
         DdOption
     }
     });
-    mapInit('bigMap','北京',16);
 });
 
 
