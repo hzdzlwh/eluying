@@ -91,7 +91,7 @@ $(function(){
             },
             openResetDialog: function(board) {
                 var restNames = this.getRestaurants();
-                resetDialog.boardName = board.boardName;
+                resetDialog.restName = this.restName;
                 resetDialog.boardId = board.boardId;
                 resetDialog.boardUrl = board.qrCodeUrl;
                 $('#resetDialog').modal('show');
@@ -206,7 +206,7 @@ $(function(){
     var resetDialog = new Vue({
         el: '#resetDialog',
         data: {
-            boardName: '',
+            restName: '',
             boardId: undefined,
             boardUrl: '',
         },

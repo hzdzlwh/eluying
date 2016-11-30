@@ -37,23 +37,23 @@
                 <div class="info-message clearfloat">
                     <div class="info-definition">店铺地址</div>
                     <div class="info-imgs" style="float: left ;margin-left: 10px ;">
-                        <dd-select class="info-choose">
-                            <dd-option  value="1" label="北京">
+                        <dd-select class="info-choose" v-model="provinceType" placeholder="请选择">
+                            <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
                             </dd-option>
                         </dd-select>
-                        <dd-select class="info-choose">
-                            <dd-option  value="1" label="北京市">
+                        <dd-select class="info-choose" v-model="cityType" placeholder="请选择">
+                            <dd-option  v-for="n in cityItems"  :value="n.id" :label="n.name" >
                             </dd-option>
                         </dd-select>
-                        <dd-select class="info-choose">
-                            <dd-option  value="1" label="王府井">
+                        <dd-select class="info-choose" v-model="countyType" placeholder="请选择">
+                            <dd-option  v-for="n in countyItems"  :value="n.id" :label="n.name" >
                             </dd-option>
                         </dd-select>
                         <div>
-                            <input type="text" class="dd-input" style="width:280px;margin:10px 0;">
-                            <button class="dd-btn-primary" style="width:110px">搜索</button>
+                            <input type="text" class="dd-input" style="width:280px;margin:10px 0;" v-model="mapMessage">
+                            <button class="dd-btn dd-btn-primary" style="width:110px" @click="search(mapMessage)">搜索</button>
                         </div>
-                        <div id="info-map" style="width:408px;height:150px;border:1px solid #ddd;"></div>
+                        <div id="infoMap" style="width:408px;height:200px;"></div>
                     </div>
                 </div>
                 <div class="info-message clearfloat">
@@ -78,8 +78,8 @@
                     </div>
                 </div>
                 <div class="info-footer clearfloat" style="margin:10px 5px 10px 218px;">
-                    <button class="dd-btn-primary" style="width:100px;height:24px;border: 1px solid #178ce6;margin-right:40px;" @click="saveMessage">保存</button>
-                    <button class="dd-btn-ghost" style="width:100px;height:24px;border: 1px solid #178ce6;">取消</button>
+                    <button class="dd-btn dd-btn-primary" style="width:100px;height:24px;margin-right:40px;" @click="saveMessage">保存</button>
+                    <button class="dd-btn dd-btn-ghost" style="width:100px;height:24px" @click="cancel">取消</button>
                 </div>
             </div>
         </div>

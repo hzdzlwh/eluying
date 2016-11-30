@@ -61,7 +61,7 @@ export function mapInit(mapContainer, addressObj, zoom, callback) {
             var a = n.getPoi(0);
             pointLat = a.point.lat;
             pointLon = a.point.lng;
-
+            callback({pointLat,pointLon});
             mapInit(mapContainer, { pointLat: pointLat, pointLon: pointLon }, zoom, callback);
             // TODO
         } catch (i) {
