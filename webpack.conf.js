@@ -53,7 +53,8 @@ var webpackConf =  {
             {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] },
             {test: /\.vue$/, loader: 'vue'},
             {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
-            {test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'}
+            {test: /\.css$/, loaders: ['style', 'css']},
+            {test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000'}
         ]
     },
     resolve: {

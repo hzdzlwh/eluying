@@ -21,7 +21,8 @@ gulp.task('browser-sync', function () {
     browserSync.init({
         server: {
             baseDir: './',
-            index: 'login.html'
+            index: 'login.html',
+            https: true
         }
     });
 });

@@ -50,8 +50,8 @@
             </div>
             <div class="dd-dropdown">
                 <dd-dropdown text="导出明细" trigger="click">
-                    <dd-dropdown-item><span><a :href="`${outPutText}&type=1`" download>导出PDF</a></span></dd-dropdown-item>
-                    <dd-dropdown-item><span><a :href="`${outPutText}&type=0`" download>导出Excel</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="outPutText(1)" download>导出PDF</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="outPutText(0)" download>导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
             <div class="order-search-container">
@@ -93,7 +93,7 @@
                     <tr class="noOrders-tr" v-show="orderItems.length === 0 && !isLoading">
                         <td colspan="10">
                             <div class="noOrders-container">
-                                <img src="http://static.dingdandao.com/ordersManage_noOrders.png" alt="">
+                                <img src="//static.dingdandao.com/ordersManage_noOrders.png" alt="">
                                 <p v-text="searchContent !== '' ? '没有搜索到符合条件的订单...' : '没有订单信息'"></p>
                             </div>
                         </td>

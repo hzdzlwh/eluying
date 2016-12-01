@@ -162,7 +162,9 @@ var orderNewCtrl = function(app){
                 items: JSON.stringify(items),
                 payments: JSON.stringify([{
                     fee: orderNew.discounts || 0,
-                    type: 5
+                    type: 5,
+                    payChannel: '优惠',
+                    payChannelId: -4,
                 }]),
                 rooms: JSON.stringify(rooms),
                 entertainmentItems: JSON.stringify(entertainmentItems),
@@ -182,7 +184,7 @@ var orderNewCtrl = function(app){
                     accommodationService.emptySelectedEntries(rootScope);
                     rootScope.$apply();
                     $("#newOrderModal").modal("hide");
-                    getDataService.getOrderDetail(result3.data.orderId, rootScope);
+                    getDataService.getOrderDetail(result3.data.relatedOrderId, rootScope);
                 }else{
                     modal.somethingAlert(result3.msg);
                 }

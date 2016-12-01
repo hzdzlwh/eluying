@@ -3,12 +3,12 @@ var md5 = require("md5");
 var AJAXService = {
     urls: {
         //正式服务器 http://120.26.83.168:8081/mg
-        //测试服 http://121.41.101059.:8081/mg
+        //测试服 http://121.41.109.105:8081/mg
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        host: process.env.NODE_ENV === 'production' ? "http://120.26.83.168:8081/mg" : "http://192.168.0.42:8081/mg",
-        host2: process.env.NODE_ENV === 'production' ? "http://120.26.83.168:8081/ws" : "http://192.168.0.42:8081/ws",
+        host: process.env.NODE_ENV === 'production' ? "/mg" : "//www.dingdandao.com:1443/mg",
+        host2: process.env.NODE_ENV === 'production' ? "/ws" : "//www.dingdandao.com:1443/ws",
         // host2: "http://192.168.0.124:8081/ws", //勉之测试服
         //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",

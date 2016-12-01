@@ -20,18 +20,10 @@ var getMoneyCtrl = function(app){
     app.filter('payChannelFilter', function() {
         return function(channel, currentChannel) {
             if (currentChannel.some(function(el) {
-                return el.payChannelId === -6 || el.payChannelId === -11
+                return el.payChannelId === -6 || el.payChannelId === -11 || el.payChannelId === -7 || el.payChannelId === -12
             })) {
                 return channel.filter(function(el) {
-                    return el.channelId !== -7 || el.channelId !== -12
-                })
-            }
-
-            if (currentChannel.some(function(el) {
-                    return el.payChannelId === -7 || el.payChannelId === -12
-                })) {
-                return channel.filter(function(el) {
-                    return el.channelId !== -6 || el.channelId !== -11
+                    return el.channelId !== -7 && el.channelId !== -12 && el.channelId !== -6 && el.channelId !== -11
                 })
             }
 

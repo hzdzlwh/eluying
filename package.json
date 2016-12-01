@@ -9,7 +9,8 @@
     "dd-vue-component": "^0.3.2",
     "dot": "^1.0.3",
     "md5": "^2.1.0",
-    "vue": "^2.0.1"
+    "vue": "^2.0.1",
+    "wangeditor": "^2.1.22"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

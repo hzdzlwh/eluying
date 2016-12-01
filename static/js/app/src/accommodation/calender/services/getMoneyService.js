@@ -54,6 +54,7 @@ var getMoneyService = function(app){
                     type: 4, fee: parseFloat(asyncObj.penaltyAd), isNew: true, payChannel: '违约金', payChannelId: -5,
                 });
             }
+            getMoney.type = type;
             getMoney.orderId = orderId;
             getMoney.getMoneyType = type; //0为新建订单进入，1为订单详情进入, 2为退房进入, 3为办理入住， 4为提前退房
             getMoney.isLast = isLast; //
@@ -113,15 +114,27 @@ var getMoneyService = function(app){
             if (payChannels.length > 0) {
                 if(type === 2 || type === 3 || type === 1){
                     for(var i = 0; i < payChannels.length; i++){
-                        if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6){
+                        if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6 && payChannels[i].channelId != -7){
                             payChannel = payChannels[i].name;
                             payChannelId = payChannels[i].channelId;
                             break;
                         }
                     }
                 }else{
-                    payChannel = payChannels[0].name;
-                    payChannelId = payChannels[0].channelId;
+                    if (getMoney.payments.some(function(el) {
+                            return el.payChannelId === -6 || el.payChannelId === -8 || el.payChannelId === -7;
+                        })) {
+                        for(var i = 0; i < payChannels.length; i++){
+                            if(payChannels[i].channelId != -8 && payChannels[i].channelId != -6 && payChannels[i].channelId != -7){
+                                payChannel = payChannels[i].name;
+                                payChannelId = payChannels[i].channelId;
+                                break;
+                            }
+                        }
+                    } else {
+                        payChannel = payChannels[0].name;
+                        payChannelId = payChannels[0].channelId;
+                    }
                 }
             } else {
                 payChannel = '请添加收银方式';
@@ -159,17 +172,17 @@ var getMoneyService = function(app){
         //     });
         // };
         var submitGetMoney = function(getMoney, scope){
-            /*var payments_new = [];
+            var payments_new = [];
             getMoney.payments.forEach(function(d){
                 if(d.payChannelId !== -8 && d.payChannelId != -6){
                     if(d.isNew && d.fee > 0){
                         payments_new.push(d);
                     }
                 }
-            });*/
+            });
             if(!getMoney.async){
                 AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                    payments: JSON.stringify(getMoney.payments),
+                    payments: JSON.stringify(payments_new),
                     remark: getMoney.remark,
                     orderId: getMoney.orderId,
                     dateTime: (new Date()).valueOf(),
@@ -191,7 +204,7 @@ var getMoneyService = function(app){
                 //还有钱没有付完
                 if(getMoney.isLast && scope.arrearLeft && scope.arrearLeft !== 0){
                     AJAXService.ajaxWithToken('GET', 'finishPaymentUrl', {
-                        payments: JSON.stringify(getMoney.payments),
+                        payments: JSON.stringify(payments_new),
                         remark: getMoney.remark,
                         orderId: getMoney.orderId,
                         dateTime: (new Date()).valueOf(),
@@ -267,7 +280,7 @@ var getMoneyService = function(app){
                 var payChannelType = payChannelTypeMap[onlineType];
                 onlineType = onlineTypeMap[onlineType];
                 scope.getMoneyWithGun =
-                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney, payChannelType);
+                    getMoneyWithGunService.resetGetMoneyWithGun(alipayMoneyTotal, onlineType, paymentType, getMoney, payChannelType, payments_new);
                 $("#getMoneyModal").modal("hide");
                 $("#orderCancelModal").modal("hide");
                 $("#payWithAlipayModal").modal("show");

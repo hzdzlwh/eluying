@@ -13,6 +13,10 @@ var validateService = function(app){
             return reg.test(phoneStr);
         };
         this.checkRemark = function(remark){
+            if (!remark) {
+                return true;
+            }
+
             return remark.length <= 140;
         };
         this.checkId = function(idVal){

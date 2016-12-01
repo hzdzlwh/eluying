@@ -8,7 +8,6 @@
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15);
   border-radius: 2px;
   width: 400px;
-  height: 560px;
   margin-top: 10px;
   margin-bottom: 30px;
 }
@@ -17,20 +16,56 @@
   width: 400px;
   height: 4px;
 }
+.detail-title {
+  padding:20px 20px 20px 20px;
+}
 .detail-remind {
   font-size: 12px;
   color: #999999;
   text-align: left;
+  float: left;
+}
+.detail-upload {
+  float: right;
+}
+.detail-upload-btn {
+  cursor: pointer;
+  display: inline-block;
 }
 .detail-add {
   font-size:14px;
   color:#178ce6;
   text-align:center;
+  cursor: pointer;
+}
+.detail-num {
+  color: #999999;
+}
+#upload {
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 .detail-message {
   background: #ffffff;
   border-radius: 1.2px;
   width: 360px;
-  float: left;
   margin-top: 6px;
+  float: left;
+}
+#editor {
+  height: 450px;
+}
+.detail-textNum {
+  text-align: right;
+  width: 100%;
+  float: right;
+  color: #999999;
+}
+.detail-btn {
+  margin-top: 16px;
+  float: right;
+}
+.detail-confirm {
+  margin-right: 40px;
 }

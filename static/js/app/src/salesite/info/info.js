@@ -72,11 +72,11 @@ $(function() {
             provinceItems: dsyForComponent['0'],
             cityItems: dsyForComponent['0_0'],
             countyItems: dsyForComponent['0_0_0'],
-            mapMessage: '',
+            address: '',
             lat: undefined,
             lon: undefined
         },
-        created: function () {
+        mounted: function () {
             this.getShopList();
         },
         methods: {
@@ -87,19 +87,14 @@ $(function() {
                         this.shopType = result.data.type;
                         this.shopPhone = result.data.recePhone;
                         this.imgUrls = result.data.imgs || [];
-                        this.mapMessage = result.data.address;
+                        this.address = result.data.address;
                         this.provinceType = this.mapAddress(this.provinceItems, result.data.province);
-                        this.cityItems = dsyForComponent[0+'_'+this.mapAddress(this.provinceItems, result.data.province)];
+                        this.cityItems = dsyForComponent[0+'_'+this.provinceType];
                         this.cityType = this.mapAddress(this.cityItems, result.data.city);
-                        this.countyItems = dsyForComponent[0+'_'+this.mapAddress(this.provinceItems, result.data.province)+'_'+this.mapAddress(this.cityItems, result.data.city)];
+                        this.countyItems = dsyForComponent[0+'_'+this.provinceType+'_'+this.cityType];
                         this.countyType = this.mapAddress(this.countyItems, result.data.county);
-                        console.log(this.provinceItems);
-                        console.log(this.provinceType);
-                        console.log(this.cityItems);
-                        console.log(this.cityType);
-                        this.search();
                         mapInit('infoMap', {
-                            addressStr: result.data.address,
+                            addressStr: `${result.data.province}${result.data.city}${result.data.county}`,
                             pointLat: result.data.lat,
                             pointLon: result.data.lon
                         }, 16, obj => {
@@ -112,7 +107,7 @@ $(function() {
                 })
             },
             fileUpload(callback) {
-                var a = $('#detail').fileupload({
+                $('#detail').fileupload({
                     url: AJAXService.getUrl2("uploadImageUrl"),
                     done: (e, data) => {
                         var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
@@ -127,24 +122,25 @@ $(function() {
                 });
                 $('#detail').click();
             },
-            remove: function (index) {
+            remove(index) {
                 this.imgUrls.splice(index, 1);
             },
-            replace: function (index) {
+            replace(index) {
                 this.fileUpload(url => {
                     this.imgUrls.splice(index, 1, url);
                 });
                 $('#detail').click();
             },
-            search: function (mapMessage) {
-                mapInit('infoMap', {addressStr: mapMessage}, 16, obj => {
+            search() {
+                let addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[this.countyType].name}${this.address}`;
+                mapInit('infoMap', {addressStr: addressStr}, 16, obj => {
                     this.lat = obj.pointLat;
                     this.lon = obj.pointLon;
                 });
             },
-            saveMessage: function () {
+            saveMessage() {
                 AJAXService.ajaxWithToken('get', '/directNet/editBasicInfo', {
-                    address: this.mapMessage,
+                    address: this.address,
                     campType: this.shopType,
                     recePhone: this.shopPhone,
                     province: this.provinceItems[this.provinceType].name,
@@ -156,18 +152,16 @@ $(function() {
                     version: 13,
                 }, result => {
                     if (result.code === 1) {
-                        this.getShopList();
-                        this.search();
                         modal.somethingAlert('保存成功');
                     } else if (result.code !== 1) {
                         modal.somethingAlert('请把信息填写完整');
                     }
                 })
             },
-            cancel: function () {
+            cancel() {
                     this.getShopList();
             },
-            mapAddress: function(arr , value) {
+            mapAddress(arr, value) {
                 let i;
                 arr.forEach((item, index) => {
                     if(item.name == value ) {
@@ -178,12 +172,15 @@ $(function() {
             }
         },
         watch: {
-            provinceType: function (newval, oldval) {
-                this.cityItems = dsyForComponent[0 + '_' + newval];
-                this.cityType = newval;
+            provinceType: function (newVal) {
+                this.cityItems = dsyForComponent[0 + '_' + newVal];
+                this.cityType = 0;
+                this.countyItems = dsyForComponent[0 + '_' + this.provinceType + '_' + this.cityType];
+                this.countyType = 0;
             },
-            cityType: function (newval, oldval) {
-                this.countyItems = dsyForComponent[0 + '_' + this.provinceType + '_' + newval];
+            cityType: function (newVal) {
+                this.countyItems = dsyForComponent[0 + '_' + this.provinceType + '_' + newVal];
+                this.countyType = 0;
             },
         },
         components: {

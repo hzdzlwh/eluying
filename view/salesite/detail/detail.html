@@ -17,17 +17,22 @@
             <div class="detail-head">基本信息用于在微官网上展示给客户，请确保基本信息的真实和完整</div>
             <div class="detail-content">
                 <div class="detail-tips"></div>
-                <div class="detail-title clearfloat" style="padding:20px 20px 8px 20px;">
-                    <div class="detail-remind" style="float:left;">详情介绍小于1000字</div>
-                    <div class="detail-upload" style="float:right;">
-                        <img src="//static.dingdandao.com/eluyun4BF1D477-3E1F-4785-92E5-FB8DD2D51460@1x.png" alt="" style="cursor: pointer;">
-                        <span class="detail-add" style="cursor: pointer;">添加图片</span>
-                        <span class="detail-num">0/10</span>
+                <div class="detail-title clearfloat">
+                    <div class="detail-remind">详情介绍小于1000字</div>
+                    <div class="detail-upload">
+                        <div class="detail-upload-btn" @click="uploadImg">
+                            <img src="//static.dingdandao.com/eluyun4BF1D477-3E1F-4785-92E5-FB8DD2D51460@1x.png" alt="" style="cursor: pointer;">
+                            <span class="detail-add">添加图片</span>
+                        </div>
+                        <span class="detail-num">{{imgNum}}/10</span>
                     </div>
-                    <input id="detail" type="file" name="file" accept="image/*" style="height: 1px;width: 1px;opacity: 0;" />
-                    <div class="detail-message" contenteditable>
-
+                    <input id="upload" type="file" name="file" accept="image/*" />
+                    <div class="detail-message">
+                        <div id="editor"></div>
                     </div>
+                    <span class="detail-textNum">0/1000</span>
+                    <button class="dd-btn dd-btn-ghost detail-btn">取消</button>
+                    <button class="dd-btn dd-btn-primary detail-btn detail-confirm">保存</button>
                 </div>
             </div>
         </div>
