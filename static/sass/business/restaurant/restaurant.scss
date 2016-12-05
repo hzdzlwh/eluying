@@ -75,6 +75,7 @@
     left: 15px;
   }
   .words {
+    padding: 8px;
     width: 240px;
     height: 117px;
     font-family: MicrosoftYaHei;
@@ -158,16 +159,16 @@
 }
 .sub-line {
   background: #d4d4d4;
-  width: 328px;
   height: 1px;
   position: relative;
   top: -10px;
 }
 #restaurantName {
-  margin-left: 4px;
+  padding-left: 8px;
+  margin-left: 2px;
   border: 1px solid #cccccc;
   border-radius: 2px;
-  width: 238px;
+  width: 230px;
   height: 22px;
   position: relative;
   left: 20px;
@@ -176,16 +177,15 @@
   background: #ffffff;
   border: 1px solid #cccccc;
   border-radius: 2px;
-  width: 238px;
+  width: 230px;
   height: 72px;
   position: relative;
-  top: -25px;
-  left: 90px;
+  padding: 4px 8px;
 }
 .sub-num {
   position: relative;
-  top: -25px;
-  left: 290px;
+  top: -6px;
+  text-align: right;
 }
 .v-modal {
   background:#fafafa;
@@ -199,10 +199,10 @@
     margin-bottom: 18px;
   }
   .v-btn-group {
-    margin-left: 64px;
-    margin-top: -5px;
+    margin-left: 90px;
+    .v-btn { width: 100px; }
     .v-btn:nth-child(1) {
-      margin-right: 8px;
+      margin-right: 24px;
     }
   }
 }
