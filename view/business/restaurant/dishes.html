@@ -74,12 +74,12 @@
                             <td class="ellipsis">{{dishes.name}}</td>
                             <td class="ellipsis">{{dishes.shortName}}</td>
                             <td style="padding-left: 18px">{{dishes.unit}}</td>
-                            <td style="padding-left: 18px" class="ellipsis">{{dishes.dishesClassify}}</td>
+                            <td class="ellipsis">{{dishes.dishesClassify}}</td>
                             <td style="padding-left: 18px">{{dishes.fitNum}}</td>
                             <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
                             <td style="text-align:center;padding-left:2px;"><span class="twoCode1"><img v-if="dishes.imgUrl" :src="dishes.imgUrl" alt="" style="margin-top: -3px; margin-left: 1px; width:24px; height:24px;" @click="openDishesDialog(dishes)"></span></td>
                             <td style="padding-left: 18px"><p class="ellipsis" style="width: 90.625px;">{{dishes.description}}</p></td>
-                            <td style="padding-left: 18px">{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
+                            <td style="text-align: center">{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
                             <input type="hidden" class="id" :value="dishes.categoryId">
                         </tr>
                         </tbody>
