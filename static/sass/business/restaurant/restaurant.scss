@@ -11,7 +11,6 @@
 }
 .restaurant-box {
   width: 695px;
-  overflow: hidden;
   border-radius: 2px;
   box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
   .hr {
@@ -70,21 +69,21 @@
     vertical-align: middle;
   }
   .remindWords {
-    position: absolute;
-    top: 80px;
-    right: 531px;
+    position: relative;
+    top: -15px;
+    left: 15px;
   }
   .words {
-    padding: 5px;
+    padding: 8px;
     width: 240px;
     height: 117px;
     font-family: MicrosoftYaHei;
-    font-size: 3px;
+    font-size: 8px;
     color: #666666;
     text-align: left;
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 64px;
     z-index: 10;
   }
   .bkImg {
@@ -159,16 +158,16 @@
 }
 .sub-line {
   background: #d4d4d4;
-  width: 328px;
   height: 1px;
   position: relative;
   top: -10px;
 }
 #restaurantName {
-  margin-left: 4px;
+  padding-left: 8px;
+  margin-left: 2px;
   border: 1px solid #cccccc;
   border-radius: 2px;
-  width: 238px;
+  width: 230px;
   height: 22px;
   position: relative;
   left: 20px;
@@ -177,16 +176,15 @@
   background: #ffffff;
   border: 1px solid #cccccc;
   border-radius: 2px;
-  width: 238px;
+  width: 230px;
   height: 72px;
   position: relative;
-  top: -25px;
-  left: 90px;
+  padding: 4px 8px;
 }
 .sub-num {
   position: relative;
-  top: -25px;
-  left: 290px;
+  top: -6px;
+  text-align: right;
 }
 .v-modal {
   background:#fafafa;
@@ -200,10 +198,10 @@
     margin-bottom: 18px;
   }
   .v-btn-group {
-    margin-left: 64px;
-    margin-top: -5px;
+    margin-left: 90px;
+    .v-btn { width: 100px; }
     .v-btn:nth-child(1) {
-      margin-right: 8px;
+      margin-right: 24px;
     }
   }
 }

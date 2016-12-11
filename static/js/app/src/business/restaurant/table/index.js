@@ -92,6 +92,7 @@ $(function(){
             openResetDialog: function(board) {
                 var restNames = this.getRestaurants();
                 resetDialog.restName = this.restName;
+                resetDialog.boardName = board.boardName;
                 resetDialog.boardId = board.boardId;
                 resetDialog.boardUrl = board.qrCodeUrl;
                 $('#resetDialog').modal('show');
@@ -207,6 +208,7 @@ $(function(){
         el: '#resetDialog',
         data: {
             restName: '',
+            boardName: '',
             boardId: undefined,
             boardUrl: '',
         },

@@ -281,9 +281,6 @@
   }
 }
 .dishes-table {
-  th, td {
-    width: 90.625px;
-  }
   td:nth-child(2), td:nth-child(3), td:nth-child(4){
     color: #333!important;
   }
@@ -416,13 +413,15 @@
   border: 1px solid #178ce6;
   padding: 1px;
 }
-.twoCode1:hover {
+.twoCode1 {
   cursor: pointer;
-  border: 1px solid #178ce6;
   display: inline-block;
   box-sizing: border-box;
   width: 27px;
   height: 27px;
   line-height: 27px;
+  &:hover {
+    border: 1px solid #178ce6;
+  }
 }
 
