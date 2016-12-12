@@ -38,13 +38,24 @@ $(function() {
         data: {
             content: '',
             editor: undefined,
-            imgNum: 0
+            imgNum: 0,
+            textNum: 0
         },
         mounted() {
-            this.createEditor();
+            this.getData();
             this.initFileUpload();
         },
         methods: {
+            getData()  {
+                AJAXService.ajaxWithToken('get', '/directNet/getRemark4DirectNet', {}, result => {
+                    if (result.code === 1 && result.data) {
+                        this.content = result.data.remark;
+                        this.createEditor();
+                    } else if (result.code !== 1) {
+                        modal.somethingAlert(result.msg);
+                    }
+                })
+            },
             createEditor() {
                 const self = this;
                 this.editor = new WangEditor('editor');
@@ -52,10 +63,12 @@ $(function() {
                 editor.config.menus = [];
                 editor.config.uploadImgUrl = AJAXService.getUrl2('uploadImageUrl');
                 editor.onchange = function() {
-                    self.imgNum = document.querySelectorAll('#editor img').length;
+                    self.imgNum = this.$txt.find('img').length;
+                    self.textNum = this.$txt.text().length;
                     self.content = this.$txt.html();
                 };
                 editor.create();
+                editor.$txt.html(this.content);
             },
             initFileUpload() {
                 const self = this;
@@ -77,6 +90,27 @@ $(function() {
             },
             insertImg(url) {
                 this.editor.command(null, 'insertHtml', '<img src="' + url + '" style="max-width:100%;"/>');
+            },
+            saveData() {
+                AJAXService.ajaxWithToken('get', '/directNet/editRemark4DirectNet', {
+                    remark: this.content
+                }, result => {
+                    if (result.code === 1) {
+                        modal.somethingAlert('保存成功');
+                    } else if (result.code !== 1) {
+                        modal.somethingAlert(result.msg);
+                    }
+                })
+            },
+            cancel() {
+                AJAXService.ajaxWithToken('get', '/directNet/getRemark4DirectNet', {}, result => {
+                    if (result.code === 1 && result.data) {
+                        this.content = result.data.remark;
+                        this.editor.$txt.html(this.content);
+                    } else if (result.code !== 1) {
+                        modal.somethingAlert(result.msg);
+                    }
+                })
             }
         }
 

@@ -30,9 +30,9 @@
                     <div class="detail-message">
                         <div id="editor"></div>
                     </div>
-                    <span class="detail-textNum">0/1000</span>
-                    <button class="dd-btn dd-btn-ghost detail-btn">取消</button>
-                    <button class="dd-btn dd-btn-primary detail-btn detail-confirm">保存</button>
+                    <span class="detail-textNum">{{textNum}}/1000</span>
+                    <button class="dd-btn dd-btn-ghost detail-btn" @click="cancel">取消</button>
+                    <button class="dd-btn dd-btn-primary detail-btn detail-confirm" @click="saveData">保存</button>
                 </div>
             </div>
         </div>
