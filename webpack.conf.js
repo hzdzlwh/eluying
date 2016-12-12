@@ -35,6 +35,7 @@ var webpackConf =  {
         'tips/expired': './static/js/app/src/tips/expired.js',
         'ordersManage/orders': './static/js/app/src/ordersManage/orderForms/orders.js',
         'accommodation/calender': './static/js/app/src/accommodation/calender/calender.js',
+        'accommodation': './static/js/app/src/accommodation/main.js',
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
         'restaurant/table': './static/js/app/src/business/restaurant/table',
@@ -53,7 +54,7 @@ var webpackConf =  {
             {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] },
             {test: /\.vue$/, loader: 'vue'},
             {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
-            {test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'}
+            {test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'},
         ]
     },
     resolve: {
