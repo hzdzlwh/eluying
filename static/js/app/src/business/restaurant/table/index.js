@@ -12,6 +12,7 @@ var restaurantMenu = require('../restaurantMenu');
 require("bootstrap");
 require("validation");
 
+
 var auth = require('../../../common/auth');
 auth.checkAuth(auth.BUSINESS_ID);
 
@@ -23,8 +24,8 @@ $(function(){
     modal.centerModals();
     var events = {
 
-        "resize window": util.mainContainer
-        
+        "resize window": util.mainContainer,
+
     };
 
     util.bindDomAction(events);
@@ -34,7 +35,8 @@ $(function(){
         data: {
             boards: [],
             boardIdWillDeleted: undefined,
-            restName: undefined
+            restName: undefined,
+            boardName: undefined,
         },
         created: function() {
             this.getBoards();
@@ -86,8 +88,31 @@ $(function(){
                             modal.confirmDialog({okText: '我知道了', message: result.msg, hasCancel: false});
                         }
                     }.bind(this));
+            },
+            openResetDialog: function(board) {
+                var restNames = this.getRestaurants();
+                resetDialog.restName = this.restName;
+                resetDialog.boardName = board.boardName;
+                resetDialog.boardId = board.boardId;
+                resetDialog.boardUrl = board.qrCodeUrl;
+                $('#resetDialog').modal('show');
+            },
+            volumeReset: function() {
+                confirmResetDialog.tipsText = '全部桌位号';
+                $('#confirmResetDialog').modal('show');
+            },
+        },
+
+        computed: {
+            volumeDownload: function() {
+                var restId = location.search.split('=')[1];
+                var campId = localStorage.getItem("campId");
+                var uid = localStorage.getItem("uid");
+                var host = AJAXService.getUrl2('/catering/downloadAllBoardQrCodes');
+                let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=12&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}&restId=${restId}`;
+                return url;
             }
-        }
+        },
     });
 
     var boardDialog = new Vue({
@@ -179,4 +204,60 @@ $(function(){
         }
     });
 
+    var resetDialog = new Vue({
+        el: '#resetDialog',
+        data: {
+            restName: '',
+            boardName: '',
+            boardId: undefined,
+            boardUrl: '',
+        },
+        methods: {
+            closeResetDialog: function() {
+                $('#resetDialog').modal('hide');
+            },
+            resetTwoCode: function() {
+                confirmResetDialog.tipsText = '原桌位号';
+                confirmResetDialog.boardId = this.boardId;
+                $('#confirmResetDialog').modal('show');
+                $('#resetDialog').modal('hide');
+            }
+        },
+
+    });
+
+    var confirmResetDialog = new Vue({
+        el: '#confirmResetDialog',
+        data: {
+            boardId: undefined,
+            boardIdList: [],
+            tipsText: ''
+        },
+        methods: {
+            confirmResetTwoCode: function() {
+                var params = {
+                    restId: restId
+                };
+                var url;
+                if (this.tipsText === '原桌位号') {
+                    params.boardId = this.boardId;
+                    url = '/catering/resetOneBoardQrCode';
+                } else if (this.tipsText === '全部桌位号') {
+                    params = params;
+                    url = '/catering/resetAllBoardQrCode';
+                }
+                AJAXService.ajaxWithToken('GET', url, params, result => {
+                    if(result.code === 1){
+                        table.getBoards();
+                        $('#confirmResetDialog').modal('hide');
+                    } else {
+                        modal.somethingAlert(result.msg);
+                    }
+                })
+            },
+            closeResetTwoCode: function() {
+                $('#confirmResetDialog').modal('hide');
+            }
+        }
+    });
 });

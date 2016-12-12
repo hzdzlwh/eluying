@@ -17,6 +17,8 @@
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <span class="restaurant-head-list">桌子列表</span>
                 <span class="create-restaurant" v-on:click="openCreateDialog">新增桌子</span>
+                <span class="volume-production" @click="volumeReset()">批量重置二维码</span>
+                <a :href="`${volumeDownload}`" target="_blank" style="color: #178ce6;" download><span class="volume-download">批量下载二维码</span></a>
             </div>
             <div class="restaurant-box">
                 <div class="hr"></div>
@@ -25,6 +27,7 @@
                     <tr>
                         <th>桌子名称</th>
                         <th>可容纳人数</th>
+                        <th>桌位二维码</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -32,6 +35,7 @@
                     <tr v-for="board in boards" track-by="boardId">
                         <td>{{board.boardName}}</td>
                         <td>{{board.seatNum}}</td>
+                        <td><img :src="board.qrCodeUrl" alt="" class="twoCode" @click="openResetDialog(board)"></td>
                         <td>
                             <span v-on:click="openEditDialog(board)">修改</span>/<span v-on:click="openDeleteDialog(board.boardId)">删除</span>
                         </td>
@@ -78,6 +82,27 @@
                     <button class="v-btn v-blue-btn" v-if="status === 'edit'" @click="editBoard">确定</button>
                     <button class="v-btn v-white-btn" v-on:click="cancel">取消</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="resetDialog">
+        <div class="modal-dialog modal-w300" style="width:273px; min-height: 440px">
+            <div class="modal-content clearfloat v-modal">
+                <p class="item-title">{{restName}}<span><img src="//static.dingdandao.com/eluyunCC08FD01-AA5B-44BF-B550-106AE72E7D34@1x.png" alt="" @click="closeResetDialog"></span></p>
+                <div class="item-container" style="text-align:center;">
+                    <img :src="boardUrl" alt="" style="margin:10px 0;width:100%;height:100%;">
+                </div>
+                <button class="v-btn v-blue-btn" @click="resetTwoCode">重置</button>
+                <a :href="boardUrl" target="_blank" download><button class="v-btn v-blue-btn" style="margin-left:7px;">下载</button></a>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="confirmResetDialog">
+        <div class="modal-dialog modal-w300" style="width:380px">
+            <div class="modal-content clearfloat v-modal">
+                <p class="remind-message">重置后，{{tipsText}}的二维码将失效，并请重新下载打印，并及时张贴到桌位上！</p>
+                <button class="v-btn v-blue-btn btn-l" @click="confirmResetTwoCode">确定重置</button>
+                <button class="v-btn v-white-btn btn-r" @click="closeResetTwoCode">取消</button>
             </div>
         </div>
     </div>
