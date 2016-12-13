@@ -63,7 +63,7 @@ $(function() {
                     name: '青旅'
                 },
             ],
-            shopType: -1,
+            shopType: 0,
             shopPhone: '',
             imgUrls: [],
             provinceType: 0,
@@ -88,11 +88,17 @@ $(function() {
                         this.shopPhone = result.data.recePhone;
                         this.imgUrls = result.data.imgs || [];
                         this.address = result.data.address;
+                        this.lat = result.data.lat;
+                        this.lon = result.data.lon;
                         this.provinceType = this.mapAddress(this.provinceItems, result.data.province);
                         this.cityItems = dsyForComponent[0+'_'+this.provinceType];
-                        this.cityType = this.mapAddress(this.cityItems, result.data.city);
-                        this.countyItems = dsyForComponent[0+'_'+this.provinceType+'_'+this.cityType];
-                        this.countyType = this.mapAddress(this.countyItems, result.data.county);
+                        this.$nextTick(() => {
+                            this.cityType = this.mapAddress(this.cityItems, result.data.city);
+                            this.countyItems = dsyForComponent[0+'_'+this.provinceType+'_'+this.cityType];
+                            this.$nextTick(() => {
+                                this.countyType = this.mapAddress(this.countyItems, result.data.county);
+                            }, result);
+                        }, result);
                         mapInit('infoMap', {
                             addressStr: `${result.data.province}${result.data.city}${result.data.county}`,
                             pointLat: result.data.lat,
@@ -181,7 +187,7 @@ $(function() {
             cityType: function (newVal) {
                 this.countyItems = dsyForComponent[0 + '_' + this.provinceType + '_' + newVal];
                 this.countyType = 0;
-            },
+            }
         },
         components: {
             DdSelect,
