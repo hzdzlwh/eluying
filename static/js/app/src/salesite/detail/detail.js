@@ -69,6 +69,8 @@ $(function() {
                 };
                 editor.create();
                 editor.$txt.html(this.content);
+                this.imgNum = editor.$txt.find('img').length;
+                this.textNum = editor.$txt.text().length;
             },
             initFileUpload() {
                 const self = this;
