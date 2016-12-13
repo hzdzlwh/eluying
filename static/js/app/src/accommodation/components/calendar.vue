@@ -1,27 +1,22 @@
 <template>
     <div>
-        <header-component/>
-        <div>this is template body</div>
-        <other-component/>
+        <!--<div class="calendar-leftHeader">
+            <div class="category-item" ng-repeat="c in cRoomArray" ng-if="pRoomList[c.pId].selected">
+                <div class="category-name">
+                    <span class="stext">{{c.name}}</span>
+                </div>
+                <div class="category-list">
+                    <div class="room-item" room="{{r.id}}" ng-repeat="r in c.rooms">{{r.sn}}</div>
+                </div>
+            </div>
+        </div>-->
     </div>
 </template>
-<style>
-    body{
-        background-color:#ff0000;
-    }
+<style lang="sass">
+   @import "~dd-common-css/src/variables";
+
 </style>
 <script>
-    import HeaderComponent from './components/header.vue'
-    import OtherComponent from './components/other.vue'
     export default{
-        data(){
-            return{
-                msg:'hello vue'
-            }
-        },
-        components:{
-            'other-component':OtherComponent,
-            HeaderComponent,
-        }
     }
 </script>
