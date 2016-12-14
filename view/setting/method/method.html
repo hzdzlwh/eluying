@@ -269,9 +269,19 @@
                                 <td class="col-last"><span class="site-btn back-{{ w_facePayStatus }}" @click="toggleStatus('face-w')"></span></td>
                             </tr>
                             <tr class="tr-origin">
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信刷卡支付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
+                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
+                                <td class="col-last"><span class="site-btn back-{{ w_immediaPayStatus }}"></span></td>
+                            </tr>
+                            <tr class="tr-origin">
                                 <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝即时到账</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
                                 <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
                                 <td class="col-last"><span class="site-btn back-{{ w_immediaPayStatus }}" @click="toggleStatus('immedia-w')"></span></td>
+                            </tr>
+                            <tr class="tr-origin">
+                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信扫码支付</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
+                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
+                                <td class="col-last"><span class="site-btn back-{{ w_immediaPayStatus }}"></span></td>
                             </tr>
                         </tbody>
                     </table>
