@@ -87,7 +87,7 @@ $(function() {
                         this.shopType = result.data.type;
                         this.shopPhone = result.data.recePhone;
                         this.imgUrls = result.data.imgs || [];
-                        this.address = result.data.address;
+                        this.address = result.data.address || '';
                         this.lat = result.data.lat;
                         this.lon = result.data.lon;
                         this.provinceType = this.mapAddress(this.provinceItems, result.data.province || '北京市');
@@ -138,7 +138,8 @@ $(function() {
                 $('#detail').click();
             },
             search() {
-                let addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[this.countyType].name}${this.address}`;
+                const countyIndex = this.provinceType == 0 ? this.countyType + 1 : this.countyType;
+                const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[countyIndex].name}${this.address}`;
                 mapInit('infoMap', {addressStr: addressStr}, 16, obj => {
                     this.lat = obj.pointLat;
                     this.lon = obj.pointLon;
@@ -173,7 +174,7 @@ $(function() {
             },
             mapAddress(arr, value) {
                 let i;
-                arr.forEach((item, index) => {
+                arr.forEach((item) => {
                     if(item.name.indexOf(value) >= 0 ) {
                         i = item.id;
                     }
