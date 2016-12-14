@@ -145,6 +145,10 @@ $(function() {
                 });
             },
             saveMessage() {
+                if (this.countyType < 0) {
+                    modal.somethingAlert('请把信息填写完整');
+                    return;
+                }
                 AJAXService.ajaxWithToken('get', '/directNet/editBasicInfo', {
                     address: this.address,
                     campType: this.shopType,
