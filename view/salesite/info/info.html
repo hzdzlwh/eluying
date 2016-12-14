@@ -61,8 +61,10 @@
                     <div class="info-uploading" style="float:left;">
                         <div class="info-remind" style="float:left;margin-left:8px;">注:首张为封面，图片推荐比例16:9</div>
                         <div class="info-press" style="float:left;margin-left:100px;">
-                            <img src="//static.dingdandao.com/eluyun4BF1D477-3E1F-4785-92E5-FB8DD2D51460@1x.png" alt="" style="cursor: pointer;" class="add-img">
-                            <span class="info-add" style="cursor: pointer;" @click="uploadNewImg">添加图片</span>
+                            <div  @click="uploadNewImg" style="cursor: pointer; display: inline-block">
+                                <img src="//static.dingdandao.com/eluyun4BF1D477-3E1F-4785-92E5-FB8DD2D51460@1x.png" class="add-img">
+                                <span class="info-add" style="cursor: pointer;">添加图片</span>
+                            </div>
                             <span class="info-num" v-text="`${imgUrls.length}/20`"></span>
                         </div>
                         <input id="detail" type="file" name="file" accept="image/*" style="height: 1px;width: 1px;opacity: 0;" />

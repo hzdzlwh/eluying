@@ -71,7 +71,7 @@ $(function() {
             countyType: 0,
             provinceItems: dsyForComponent['0'],
             cityItems: dsyForComponent['0_0'],
-            countyItems: dsyForComponent['0_0_0'],
+            countyItems: dsyForComponent['0_0_0'].unshift({id: -1, name: '请选择'}),
             address: '',
             lat: undefined,
             lon: undefined
@@ -90,17 +90,17 @@ $(function() {
                         this.address = result.data.address;
                         this.lat = result.data.lat;
                         this.lon = result.data.lon;
-                        this.provinceType = this.mapAddress(this.provinceItems, result.data.province);
+                        this.provinceType = this.mapAddress(this.provinceItems, result.data.province || '北京市');
                         this.cityItems = dsyForComponent[0+'_'+this.provinceType];
                         this.$nextTick(() => {
-                            this.cityType = this.mapAddress(this.cityItems, result.data.city);
+                            this.cityType = this.mapAddress(this.cityItems, result.data.city || '北京市');
                             this.countyItems = dsyForComponent[0+'_'+this.provinceType+'_'+this.cityType];
                             this.$nextTick(() => {
-                                this.countyType = this.mapAddress(this.countyItems, result.data.county);
+                                this.countyType = this.mapAddress(this.countyItems, result.data.county || '请选择');
                             }, result);
                         }, result);
                         mapInit('infoMap', {
-                            addressStr: `${result.data.province}${result.data.city}${result.data.county}`,
+                            addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county}`,
                             pointLat: result.data.lat,
                             pointLon: result.data.lon
                         }, 16, obj => {
@@ -170,8 +170,8 @@ $(function() {
             mapAddress(arr, value) {
                 let i;
                 arr.forEach((item, index) => {
-                    if(item.name == value ) {
-                        i = index;
+                    if(item.name.indexOf(value) >= 0 ) {
+                        i = item.id;
                     }
                 });
                 return i;
