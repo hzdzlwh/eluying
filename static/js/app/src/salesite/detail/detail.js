@@ -69,8 +69,24 @@ $(function() {
                 };
                 editor.create();
                 editor.$txt.html(this.content);
+                if (this.content) {
+                    document.querySelector('.editor-placeholder').style.display = 'none';
+                    document.querySelector('.wangEditor-container').style.opacity = '1';
+                }
+                $('#editor').focus(() => {
+                    document.querySelector('.editor-placeholder').style.display = 'none';
+                    document.querySelector('.wangEditor-container').style.opacity = '1';
+                });
+                $('#editor').blur(() => {
+                    const num = editor.$txt.text().length + editor.$txt.find('img').length;
+                    if (num <= 0) {
+                        document.querySelector('.wangEditor-container').style.opacity = '0';
+                        document.querySelector('.editor-placeholder').style.display = 'block';
+                    }
+                });
                 this.imgNum = editor.$txt.find('img').length;
                 this.textNum = editor.$txt.text().length;
+                $('#editor').blur();
             },
             initFileUpload() {
                 const self = this;
@@ -84,8 +100,9 @@ $(function() {
                 });
             },
             uploadImg() {
-                if (this.imgNum > 10) {
-                    return;
+                if (this.imgNum >= 10) {
+                    modal.somethingAlert('上传图片数量已达上限!');
+                    return false;
                 }
 
                 $('#upload').click();
