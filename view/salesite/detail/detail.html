@@ -28,7 +28,9 @@
                     </div>
                     <input id="upload" type="file" name="file" accept="image/*" />
                     <div class="detail-message">
-                        <div id="editor"></div>
+                        <label class="editor-placeholder" for="editor">可在此编辑您的店铺详情、店铺特色、详细地址等</label>
+                        <div id="editor">
+                        </div>
                     </div>
                     <span class="detail-textNum">{{textNum}}/1000</span>
                     <button class="dd-btn dd-btn-ghost detail-btn" @click="cancel">取消</button>

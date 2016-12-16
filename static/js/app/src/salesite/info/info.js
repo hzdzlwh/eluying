@@ -123,6 +123,10 @@ $(function() {
                 });
             },
             uploadNewImg() {
+                if (imgUrls.length >= 20) {
+                    modal.somethingAlert('上传图片数量已达上限!');
+                    return false;
+                }
                 this.fileUpload(url => {
                     this.imgUrls.push(url);
                 });

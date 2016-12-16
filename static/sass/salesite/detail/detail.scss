@@ -45,6 +45,8 @@
   width: 0;
   height: 0;
   opacity: 0;
+  position: absolute;
+  left: -1000px;
 }
 .detail-message {
   background: #ffffff;
@@ -52,9 +54,20 @@
   width: 360px;
   margin-top: 6px;
   float: left;
+  position: relative;
+  border: 1px solid #cccccc;
 }
 #editor {
   height: 450px;
+}
+.wangEditor-container {
+  border: none !important;
+}
+.editor-placeholder {
+  position: absolute;
+  color: #999999;
+  top: 4px;
+  left: 4px;
 }
 .detail-textNum {
   text-align: right;
