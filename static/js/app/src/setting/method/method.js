@@ -38,7 +38,9 @@ $(function(){
             companyStatus: '',
             w_webPayStatus: '',
             w_facePayStatus: '',
+            w_cardPayStatus: '',
             w_immediaPayStatus: '',
+            w_codePayStatus: '',
             c_webPayStatus: '',
             c_facePayStatus: '',
             c_immediaPayStatus: '',
@@ -63,8 +65,12 @@ $(function(){
                         this.w_webPayStatus = (item.useState === 1) ? 'open' : 'close';
                     } else if(item.onlineType === 2) {
                         this.w_facePayStatus = (item.useState === 1) ? 'open' : 'close';
-                    } else {
+                    } else if(item.onlineType === 3) {
                         this.w_immediaPayStatus = (item.useState === 1) ? 'open' : 'close';
+                    } else if(item.onlineType === 4) {
+                        this.w_cardPayStatus = (item.useState === 1) ? 'open' : 'close';
+                    } else {
+                        this.w_codePayStatus = (item.useState === 1) ? 'open' : 'close';
                     }
                 }.bind(this));
                 result.data.enterpriseOpenAndUseStateList.forEach ( function (item) {
@@ -134,6 +140,8 @@ $(function(){
                                                 this.w_webPayStatus = 'close';
                                                 this.w_facePayStatus = 'close';
                                                 this.w_immediaPayStatus = 'close';
+                                                this.w_cardPayStatus = 'close';
+                                                this.w_codePayStatus = 'close';
                                                 return 'close'
                                             }).bind(this)()
                                         } else {
@@ -152,6 +160,8 @@ $(function(){
                                         this.w_webPayStatus = 'close';
                                         this.w_facePayStatus = 'close';
                                         this.w_immediaPayStatus = 'close';
+                                        this.w_cardPayStatus = 'close';
+                                        this.w_codePayStatus = 'close';
                                         return 'close'
                                     }).bind(this)()
                                 } else {
@@ -168,6 +178,8 @@ $(function(){
                                     this.w_webPayStatus = 'close';
                                     this.w_facePayStatus = 'close';
                                     this.w_immediaPayStatus = 'close';
+                                    this.w_cardPayStatus = 'close';
+                                    this.w_codePayStatus = 'close';
                                     AJAXService.ajaxWithToken('get', '/collectionMethod/openCloseEnterprisePay', { status: (this.companyStatus === 'close'  ? 1 : 0) }, function(result){
                                         if (result.code === 1) {
                                             this.companyStatus = (this.companyStatus === 'close') ? 'open' : (function (){
@@ -228,6 +240,24 @@ $(function(){
                                 modal.somethingAlert(result.msg);
                             } else {
                                 this.w_immediaPayStatus = (this.w_immediaPayStatus === 'open') ? 'close' : 'open';
+                            }
+                        }.bind(this));
+                        break;
+                    case 'card-w':
+                        AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 4, status: (this.w_cardPayStatus === 'close'  ? 1 : 0) }, function(result){
+                            if (result.code !== 1 ) {
+                                modal.somethingAlert(result.msg);
+                            } else {
+                                this.w_cardPayStatus = (this.w_cardPayStatus === 'open') ? 'close' : 'open';
+                            }
+                        }.bind(this));
+                        break;
+                    case 'code-w':
+                        AJAXService.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 1, onlineType: 5, status: (this.w_codePayStatus === 'close'  ? 1 : 0) }, function(result){
+                            if (result.code !== 1 ) {
+                                modal.somethingAlert(result.msg);
+                            } else {
+                                this.w_codePayStatus = (this.w_codePayStatus === 'open') ? 'close' : 'open';
                             }
                         }.bind(this));
                         break;
