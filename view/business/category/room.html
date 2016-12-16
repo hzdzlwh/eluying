@@ -263,10 +263,10 @@
         <ul class="nav nav-tabs clearfloat" role="tablist">
           <li role="presentation" class="active leftTab nav-tabs-li"><a class="leftTab" href="#type"
                                                                         aria-controls="type" role="tab"
-                                                                        data-toggle="tab">房型规格</a></li>
+                                                                        data-toggle="tab">基本信息</a></li>
           <li role="presentation" class="rightTab nav-tabs-li"><a class="rightTab" href="#facility"
                                                                   aria-controls="facility" role="tab"
-                                                                  data-toggle="tab">房型设施</a></li>
+                                                                  data-toggle="tab">配套服务</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content clearfloat">
@@ -276,7 +276,7 @@
               <h2>基本规格</h2>
               <ul>
                 <li>
-                  <label for="roomShowFitNum">可容纳人数</label>
+                  <label for="roomShowFitNum">可住人数</label>
                   <input maxlength="8" range="[1,99999999]" digits="true" type="text"
                          class="text required" id="roomShowFitNum" name="roomShowFitNum"
                          placeholder="请填写纯数字" required="true">
@@ -293,9 +293,16 @@
                          name="roomShowBed" placeholder="例如：2米双人床/睡袋/两张1.2米床,最长8个汉字" require="true">
                 </li>
                 <li>
-                  <label for="roomShowDescription">描述或备注</label>
-                                    <textarea maxlength="140" name="description" id="roomShowDescription"
-                                              name="roomShowDescription" placeholder="最长140个汉字"></textarea>
+                  <label for="roomShowDescription">房间介绍</label>
+                                    <textarea maxlength="70" name="description" id="roomShowDescription"
+                                              name="roomShowDescription" placeholder="最长70个汉字"></textarea>
+                  <p class="subNumDescription" style="text-align: right;width:345px;"></p>
+                </li>
+                <li>
+                    <label for="roomShowPolicy">相关政策</label>
+                    <textarea maxlength="140" name="description" id="roomShowPolicy"
+                              name="roomShowroomShowPolicy" placeholder="最长140个汉字"></textarea>
+                  <p class="subNumPolicy" style="text-align: right;width:345px;"></p>
                 </li>
               </ul>
             </form>
@@ -305,7 +312,7 @@
 
                 <div class="cover">
                   <div class="title clearfloat">
-                    <span>封面</span>
+                    <span>封面<span class="imgsAsk">图片推荐比例16:9</span></span>
                     <label for="cover" class="create">
                       <img src="/static/image/icon_xinjian.png" alt="新增">
                       <span>上传图片</span>
@@ -319,7 +326,7 @@
                 </div>
                 <div class="detail">
                   <div class="title clearfloat">
-                    <span>详细图片</span>
+                    <span>详细图片<span class="imgsAsk">图片推荐比例16:9</span></span>
                     <label for="detail" class="create" disabled="disabled">
                       <img src="/static/image/icon_xinjian.png" alt="新增">
                       <span>上传图片</span>
@@ -329,7 +336,7 @@
                   <div class="photoContainer photoCon2"></div>
                   <p class="detailError hide">请上传详细图片
 
-                  <p>
+                  </p>
                 </div>
               </div>
               <div class="operate">

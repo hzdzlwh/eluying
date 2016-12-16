@@ -396,5 +396,10 @@ dsy.add("0", ["北京市", "天津市", "上海市", "重庆市", "河北省", "
 //         document.getElementById(s[i]).onchange = new Function("change(" + (i + 1) + ")");
 //     change(0);
 // }
-
-module.exports = dsy;
+var dsyForComponent = { ...dsy.Items};
+for ( let key in dsyForComponent) {
+    dsyForComponent[key] = dsyForComponent[key].map(function(option, index){
+        return { id: index, name: option };
+    });
+}
+module.exports = {  dsy, dsyForComponent };
