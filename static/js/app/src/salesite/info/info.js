@@ -100,7 +100,7 @@ $(function() {
                             }, result);
                         }, result);
                         mapInit('infoMap', {
-                            addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county}`,
+                            addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county || ''}`,
                             pointLat: result.data.lat,
                             pointLon: result.data.lon
                         }, 16, obj => {
@@ -123,7 +123,7 @@ $(function() {
                 });
             },
             uploadNewImg() {
-                if (imgUrls.length >= 20) {
+                if (this.imgUrls.length >= 20) {
                     modal.somethingAlert('上传图片数量已达上限!');
                     return false;
                 }
