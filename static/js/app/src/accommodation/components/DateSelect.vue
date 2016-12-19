@@ -1,27 +1,46 @@
 <template>
-    <div>
-        <header-component/>
-        <div>this is template body</div>
-        <other-component/>
-    </div>
+    <span class="calendar-date-select">
+        <span @click="handleClick">{{dateStr}}</span>
+        <DdDatepicker v-model="date" ref="datepicker"/>
+    </span>
 </template>
 <style>
-    body{
-        background-color:#ff0000;
+    .calendar-date-select .dd-datepicker-input {
+        display: none;
     }
 </style>
 <script>
-    import HeaderComponent from './components/header.vue'
-    import OtherComponent from './components/other.vue'
+    import { DdDatepicker } from 'dd-vue-component';
+    import { dateFormat, stringToDate, dateFormatWithoutYear } from '../../common/util';
     export default{
+        props: {
+            defaultDate: {
+                type: String,
+                default: dateFormat(new Date()),
+            },
+            onChange: Function,
+        },
         data(){
             return{
-                msg:'hello vue'
+                date: undefined,
             }
         },
-        components:{
-            'other-component':OtherComponent,
-            HeaderComponent,
+        created() {
+            this.date = this.defaultDate;
+        },
+        computed: {
+            dateStr() {
+                return dateFormatWithoutYear(stringToDate(this.date));
+            }
+        },
+        methods: {
+            handleClick(ev) {
+                ev.stopPropagation();
+                this.$refs.datepicker.toggleCalendar();
+            }
+        },
+        components: {
+            DdDatepicker,
         }
     }
 </script>

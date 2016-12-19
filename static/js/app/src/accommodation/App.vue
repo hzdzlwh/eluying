@@ -5,8 +5,11 @@
 </template>
 <style>
 .acc-container {
-    position: relative;
+    position: absolute;
     top: 68px;
+    bottom: 0;
+    left: 0;
+    zoom: 1;
     width: 100%;
     min-width: 1200px;
 }

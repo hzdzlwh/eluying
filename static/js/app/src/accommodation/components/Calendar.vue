@@ -1,22 +1,34 @@
 <template>
-    <div>
+    <div class="calendar">
         <div class="calendar-header">
-            <div class="calendar-header-item" v-for="d in dateRange">
-                <div class="calendar-header-date"
-                     :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
-                >
-                    <div class="calendar-header-day">
-                        {{d.dateStr}}
-                        <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
-                            <div class="eluyun_rest"></div>
-                        </div>
-                    </div>
-                    <div class="calendar-header-desc">{{d.weekday}}</div>
-                </div>
-                <div class="calendar-header-left">剩</div>
+            <div class="calendar-header-picker">
+                <DateSelect />
+                <RoomFilter />
+            </div>
+            <div class="calendar-header-timeline">
+                <table class="calendar-header-table">
+                    <tbody>
+                    <tr>
+                        <th class="calendar-header-item" v-for="d in dateRange">
+                            <div class="calendar-header-date"
+                                 :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
+                            >
+                                <div class="calendar-header-day">
+                                    {{d.dateStr}}
+                                    <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
+                                        <div class="eluyun_rest"></div>
+                                    </div>
+                                </div>
+                                <div class="calendar-header-desc">{{d.weekday}}</div>
+                            </div>
+                            <div class="calendar-header-left">剩</div>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div>
+        <div class="calendar-body">
             <div class="calendar-leftHeader">
                 <div class="calendar-category" v-for="c in categories">
                     <div class="calendar-category-name">
@@ -28,29 +40,46 @@
                 </div>
             </div>
             <div class="calendar-status-list">
-                <div class="calendar-status-row" v-for="room in roomStatus">
-                    <div class="calendar-status" v-for="status in room.st">
-                        <div class="calendar-status-inner">
-                            <div class="calendar-status-date">{{status.date}}</div>
-                            <div class="calendar-status-price">￥{{status.p}}</div>
-                            <div class="calendar-status-name">{{room.sn}}</div>
-                        </div>
-                    </div>
-                </div>
+                <table class="calendar-status-table">
+                    <tbody>
+                        <tr class="calendar-status-row" v-for="room in roomStatus">
+                            <td class="calendar-status" v-for="status in room.st">
+                                <div class="calendar-status-inner">
+                                    <div class="calendar-status-date">{{status.date}}</div>
+                                    <div class="calendar-status-price">￥{{status.p}}</div>
+                                    <div class="calendar-status-name">{{room.sn}}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </template>
 <style lang="sass">
-   @import "~dd-common-css/src/variables";
+    @import "~dd-common-css/src/variables";
+    .calendar {
+       height: 100%;
+        width: 100%;
+    }
+    .calendar-header-picker {
+        width: 140px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+    }
     .calendar-leftHeader {
         border-right: solid thin #e6e6e6;
-        position: fixed;
-        top: 148px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
         left: 0;
         background: #f8f9fc;
         width: 140px;
-        height: auto;
+        overflow-x: scroll;
+        overflow-y: hidden;
     }
     .calendar-category {
         width: 100%;
@@ -90,17 +119,25 @@
         height: 48px;
     }
     .calendar-header {
-        position: fixed;
-        width: 3000px;
-        top: 68px;
-        left: 140px;
-        height: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
         z-index: 1;
+        height: 80px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    .calendar-header-timeline {
+        position: absolute;
+        left: 140px;
+    }
+    .calendar-header-table {
+        width: 100%;
+        table-layout: fixed;
     }
     .calendar-header-item {
         width: 100px;
-        height: auto;
-        float: left;
     }
     .calendar-header-date {
         width: 100%;
@@ -130,33 +167,40 @@
         border-bottom: solid thin #e6e6e6;
         border-right: solid thin #e6e6e6;
     }
+    .calendar-body {
+        position: absolute;
+        top: 80px;
+        bottom: 0;
+        width: 100%;
+    }
     .calendar-status-list {
         will-change: transform;
         transform: translateZ(0);
         position: absolute;
+        margin-top: -1px;
         left: 140px;
         right: 0;
-        top: 80px;
+        top: 0;
         bottom: 0;
-        height: auto;
-        width: 3000px;
+        overflow: scroll;
+    }
+    .calendar-status-table {
+        width: 100%;
+        table-layout: fixed;
     }
     .calendar-status-row {
-        width: 100%;
-        height: 48px;
+        display: table-row;
     }
     .calendar-status {
         width: 100px;
         height: 48px;
         background: white;
-        float: left;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
-        position: relative;
     }
     .calendar-status-inner {
-        width: 96px;
-        height: 44px;
+        width: 100%;
+        height: 100%;
         margin: auto;
         margin-top: 2px;
         font-size: 12px;
@@ -194,12 +238,18 @@
     }
 </style>
 <script>
+    import DateSelect from './DateSelect.vue';
+    import RoomFilter from './RoomFilter.vue';
     export default{
         props: {
             categories: Array,
             dateRange: Array,
             holidays: Array,
             roomStatus: Array,
+        },
+        components: {
+            DateSelect,
+            RoomFilter,
         }
     }
 </script>
