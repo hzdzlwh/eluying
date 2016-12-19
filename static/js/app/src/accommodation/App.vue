@@ -1,10 +1,15 @@
 <template>
-    <div>
+    <div class="acc-container">
         <Calendar :categories="categories" :dateRange="dateRange" :holidays="holidays" :roomStatus="roomStatus" />
     </div>
 </template>
 <style>
-
+.acc-container {
+    position: relative;
+    top: 68px;
+    width: 100%;
+    min-width: 1200px;
+}
 </style>
 <script>
     import Calendar from './components/Calendar.vue';
@@ -58,8 +63,8 @@
                         isToday,
                         isHoliday,
                         dateStr: isHoliday ? holiday.holiday : (isToday ? '今天' : util.dateFormatWithoutYear(date)),
-                        weekday: util.getWeek(date),
-                    })
+                        weekday: util.getWeek(date)
+                    });
                 }
 
                 return arr;
