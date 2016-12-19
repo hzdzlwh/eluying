@@ -1,6 +1,7 @@
 <template>
     <div class="acc-container">
         <Calendar :categories="categories" :dateRange="dateRange" :holidays="holidays" :roomStatus="roomStatus" />
+        <RegisterInfoModal />
     </div>
 </template>
 <style>
@@ -13,6 +14,7 @@
 </style>
 <script>
     import Calendar from './components/Calendar.vue';
+    import RegisterInfoModal from './components/RegisterInfoModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -74,7 +76,8 @@
 
         },
         components: {
-            Calendar
+            Calendar,
+            RegisterInfoModal
         }
     }
 </script>

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div @click="showModal">弹窗</div>
         <div class="calendar-header">
             <div class="calendar-header-item" v-for="d in dateRange">
                 <div class="calendar-header-date"
@@ -200,6 +201,11 @@
             dateRange: Array,
             holidays: Array,
             roomStatus: Array,
+        },
+        methods:{
+            showModal(){
+                $("#registerInfoModal").modal("show");
+            }
         }
     }
 </script>
