@@ -1,13 +1,16 @@
 <template>
-    <div class="acc-container">
+    <div class="acc-container" @click="showModal">
         <Calendar :categories="categories" :dateRange="dateRange" :holidays="holidays" :roomStatus="roomStatus" />
         <RegisterInfoModal />
     </div>
 </template>
 <style>
 .acc-container {
-    position: relative;
+    position: absolute;
     top: 68px;
+    bottom: 0;
+    left: 0;
+    zoom: 1;
     width: 100%;
     min-width: 1200px;
 }
@@ -73,7 +76,9 @@
             }
         },
         methods: {
-
+            showModal(){
+                $('#registerInfoModal').modal('show');
+            }
         },
         components: {
             Calendar,
