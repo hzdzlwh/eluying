@@ -1,35 +1,33 @@
 <template>
     <div class="calendar">
-        <div class="calendar-header">
-            <div class="calendar-header-picker">
-                <DateSelect />
-                <RoomFilter />
-            </div>
-            <div class="calendar-header-timeline">
-                <table class="calendar-header-table">
-                    <tbody>
-                    <tr>
-                        <th class="calendar-header-item" v-for="d in dateRange">
-                            <div class="calendar-header-date"
-                                 :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
-                            >
-                                <div class="calendar-header-day">
-                                    {{d.dateStr}}
-                                    <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
-                                        <div class="eluyun_rest"></div>
-                                    </div>
+        <div class="calendar-picker">
+            <DateSelect />
+            <RoomFilter />
+        </div>
+        <div ref="calendarHeader" class="calendar-header">
+            <table class="calendar-header-table">
+                <tbody>
+                <tr>
+                    <th class="calendar-header-item" v-for="d in dateRange">
+                        <div class="calendar-header-date"
+                             :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
+                        >
+                            <div class="calendar-header-day">
+                                {{d.dateStr}}
+                                <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
+                                    <div class="eluyun_rest"></div>
                                 </div>
-                                <div class="calendar-header-desc">{{d.weekday}}</div>
                             </div>
-                            <div class="calendar-header-left">剩</div>
-                        </th>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                            <div class="calendar-header-desc">{{d.weekday}}</div>
+                        </div>
+                        <div class="calendar-header-left">剩</div>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div class="calendar-body">
-            <div class="calendar-leftHeader">
+            <div ref="calendarLeftHeader" class="calendar-leftHeader">
                 <div class="calendar-category" v-for="c in categories">
                     <div class="calendar-category-name">
                         <span class="calendar-category-name-text">{{c.cName}}</span>
@@ -71,7 +69,7 @@
         z-index: 2;
     }
     .calendar-leftHeader {
-        border-right: solid thin #e6e6e6;
+        border-right: solid thin #ccc;
         position: absolute;
         top: 0;
         bottom: 0;
@@ -122,15 +120,12 @@
         position: absolute;
         top: 0;
         right: 0;
-        left: 0;
+        left: 140px;
         z-index: 1;
         height: 80px;
+        margin-left: 1px;
         overflow-x: hidden;
         overflow-y: scroll;
-    }
-    .calendar-header-timeline {
-        position: absolute;
-        left: 140px;
     }
     .calendar-header-table {
         width: 100%;
@@ -198,15 +193,22 @@
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
     }
+    .calendar-status:hover {
+        .calendar-status-inner {
+            display: block;
+        }
+    }
     .calendar-status-inner {
-        width: 100%;
-        height: 100%;
+        width: 96px;
+        height: 44px;
         margin: auto;
         margin-top: 2px;
         font-size: 12px;
         position: relative;
         line-height: 48px;
         text-align: center;
+        display: none;
+        border: 1px solid $blue;
     }
     .calendar-status-date {
         width: 45px;
@@ -250,6 +252,21 @@
         components: {
             DateSelect,
             RoomFilter,
+        },
+        mounted() {
+            const calendarLeftHeader = $('.calendar-leftHeader');
+            const calendarHeader = $('.calendar-header');
+            $('.calendar-status-list').on('scroll', ev => {
+                //this.$refs.calendarLeftHeader.scrollTop(ev.target.scrollTop);
+                //this.$refs.calendarHeader.scrollLeft(ev.target.scrollLeft);
+                calendarLeftHeader.scrollTop(ev.target.scrollTop);
+                calendarHeader.scrollLeft(ev.target.scrollLeft);
+            });
+        },
+        methods: {
+            handleStatusScroll(ev) {
+
+            }
         }
     }
 </script>

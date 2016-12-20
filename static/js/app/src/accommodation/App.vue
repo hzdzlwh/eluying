@@ -41,6 +41,7 @@
 
                         category.rooms.push(room);
                     })
+                    this.categories = this.categories.filter(c => c.rooms && c.rooms.length > 0);
                 });
         },
         data() {
