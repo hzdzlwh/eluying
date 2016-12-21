@@ -48,6 +48,11 @@
                 date: undefined,
             }
         },
+        watch: {
+            date(v) {
+                this.$emit('change', v);
+            }
+        },
         created() {
             this.date = this.defaultDate;
         },
