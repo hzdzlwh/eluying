@@ -3,18 +3,76 @@
         <div class="modal fade" id="registerInfoModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="registerInfoModal-header padding-style">
+                    <div class="registerInfoModal-header">
                         <span class="header-text">预订</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="registerInfoModal-body">
+                        <div class="content-item">
+                            <p class="content-item-title"><span>客户信息</span></p>
+                            <div class="userInfo-items">
+                                <div class="userInfo-item">
+                                    <label for="name">联系人</label>
+                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name">
+                                </div>
+                                <div class="userInfo-item userInfo-phone">
+                                    <label for="phone">手机号</label>
+                                    <input class="dd-input" type="text" id="phone" placeholder="11位手机号" @blur="checkPhone" v-model="phone">
+                                    <span class="error-phone-tip" v-show="!phoneValid"><span style="vertical-align: text-bottom">&uarr;</span>请输入正确的手机号</span>
+                                </div>
+                                <div class="userInfo-item">
+                                    <label>客源渠道</label>
+                                    <dd-select v-model="userOriginType">
+                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name" :key="origin.id+origin.name">
+                                        </dd-option>
+                                    </dd-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-item">
+                            <p class="content-item-title">
+                                <span>房间信息</span>
+                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                            </p>
+                        </div>
+                        <div class="content-item">
+                            <p class="content-item-title">
+                                <span>娱乐信息</span>
+                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                            </p>
+                        </div>
+                        <div class="content-item">
+                            <p class="content-item-title">
+                                <span>商超信息</span>
+                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                            </p>
+                            <div class="shop-items">
+                                <div class="shop-item">
+                                    <span class="shop-icon"></span>
+                                    <div class="shop-item-content">
+                                        <dd-select v-model="shopType">
+                                            <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name" :key="shop.id+shop.name">
+                                            </dd-option>
+                                        </dd-select>
+                                    </div>
+                                    <span class="delete-icon"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-item">
+                            <p class="content-item-title"><span>备注信息</span></p>
+                            <div class="remark-items">
+                                <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark" class="dd-input"></textarea>
+                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{`${remark.length}/140`}}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="registerInfoModal-footer">
                         <div>
-                            <span class="footer-label font-style">订单金额</span>
+                            <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥9999</span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="hideModal">完成预订</div>
+                        <div class="dd-btn dd-btn-primary" @click="submitInfo">完成预订</div>
                     </div>
                 </div>
             </div>
@@ -23,6 +81,16 @@
 </template>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
     @import "~dd-common-css/src/variables";
+    .error {
+        position: absolute;
+        font-size: $font-size-sm;
+        color: #f24949;
+    }
+    .valid {
+        position: absolute;
+        font-size: $font-size-sm;
+        color: #999999;
+    }
     #registerInfoModal {
         box-sizing: border-box;
         font-size: $font-size-base;
@@ -39,27 +107,19 @@
             padding: 0 0 56px 0;
             margin-top: 42.5px;
         }
-        .font-style {
-            font-size: $font-size-sm;
-            color: $gary-daker;
-            font-weight: bold;
-        }
-        .padding-style {
-            padding: 0 24px;
-        }
     }
     .registerInfoModal-header {
         width: 100%;
-        height: 54px;
+        height: 53px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid $gary-light;
+        padding: 0 24px;
         .close-icon {
             display: inline-block;
             width: 14px;
             height: 14px;
-            background: url("../../../../../image/room_modal_close.png");
+            background: url("../../../../../image/modal/room_modal_close.png");
             background-size: contain;
             cursor: pointer;
         }
@@ -71,8 +131,98 @@
     }
     .registerInfoModal-body {
         width: 100%;
-        max-height: 485px;
+        height: 485px;
         overflow: scroll;
+        label {
+            margin: 0;
+        }
+        input {
+            width: 120px;
+        }
+        .content-item {
+            padding: 16px 24px;
+            border-top: 1px solid $gary-light;
+        }
+        .content-item-title {
+            display: flex;
+            justify-content: space-between;
+            font-size: $font-size-sm;
+            color: $gary-daker;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        .increase-container {
+            font-size: $font-size-base;
+            font-weight: normal;
+            color: $blue;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .increase-icon {
+            height: 16px;
+            width: 16px;
+            background: url("../../../../../image/modal/room_modal_incre.png");
+            background-size: contain;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .userInfo-items {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            div:last-child {
+                margin-right: 16px;
+            }
+        }
+        .userInfo-phone {
+            position: relative;
+        }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shop-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_cart.png");
+            background-size: contain;
+            margin-right: 16px;
+        }
+        .shop-item-content {
+            flex-grow: 1;
+        }
+        .delete-icon {
+            width: 16px;
+            height: 16px;
+            background: url("../../../../../image/modal/room_modal_delete.png");
+            background-size: contain;
+            cursor: pointer;
+        }
+        .remark-items {
+            position: relative;
+            textarea {
+                width: 100%;
+                height: 65px;
+                resize: none;
+            }
+        }
+        .valid-remark-tip {
+            @extend .valid;
+            right: 0;
+        }
+        .error-phone-tip {
+            @extend .error;
+            left: 45px;
+        }
+        .dd-select {
+            display: inline-block;
+        }
+        .dd-select-menu {
+            max-height: 120px;
+            overflow: scroll;
+        }
     }
     .registerInfoModal-footer {
         position: absolute;
@@ -85,6 +235,9 @@
         justify-content: space-between;
         align-items: center;
         .footer-label {
+            font-size: $font-size-sm;
+            color: $gary-daker;
+            font-weight: bold;
             margin-right: 8px;
         }
         .footer-price {
@@ -95,18 +248,74 @@
     }
 </style>
 <script>
+    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import AJAXService from 'AJAXService';
+    import modal from 'modal';
     export default{
         data() {
-            return {}
+            return {
+                name: '',
+                phone: '',
+                userOriginType: undefined,
+                userOrigins: [],
+                phoneValid: true,
+                remark: '',
+                shopList: [{id: -1, name: '选择商超项目'}],
+                shopType: -1
+            }
         },
 
-        created(){},
+        created(){
+            this.getData();
+        },
 
         methods:{
+            getData(){
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
+                    if (res.code === 1) {
+                        this.userOriginType = res.data.list[0].id;
+                        this.userOrigins = res.data.list;
+                    } else {
+                        modal.somethingAlert(result.msg);
+                    }
+                });
+                AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, (res) =>{
+                    res.data.list.forEach((d) => {
+                        d.gList.forEach((dd) => {
+                            this.shopList.push({
+                                id: dd.i,
+                                price: dd.p,
+                                name: dd.n,
+                                type: 3
+                            });
+                        });
+                    });
+                });
+            },
             hideModal(e){
                 e.stopPropagation();
                 $("#registerInfoModal").modal("hide");
+            },
+            checkPhone(){
+                const phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
+            },
+            submitInfo(e){
+                if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
+                    modal.somethingAlert("请输入联系人或手机号!");
+                    return undefined;
+                }
+                this.hideModal(e);
             }
+        },
+
+        components:{
+            DdDropdown,
+            DdDropdownItem,
+            DdPagination,
+            DdDatepicker,
+            DdSelect,
+            DdOption
         }
     }
 </script>
