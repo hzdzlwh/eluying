@@ -10,7 +10,12 @@
             :defaultStartDate="startDateStr"
             :orderList="orderList"
             :startDate="startDate"
+            :dateRange="dateRange"
+            :leftMap="leftMap"
             :DAYS="DAYS"
+        />
+        <ShopCart
+            :selectedEntries="selectedEntries"
         />
     </div>
 </template>
@@ -27,6 +32,7 @@
 </style>
 <script>
     import Calendar from './components/Calendar.vue';
+    import ShopCart from './components/ShopCart.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -63,11 +69,26 @@
                 orderList: [],
                 startDate: util.diffDate(new Date(), -2),
                 DAYS: 30,
+                dateRange: [],
+                leftMap: {}
             }
         },
         computed: {
             startDateStr() {
                 return util.dateFormat(this.startDate);
+            },
+            selectedEntries() {
+                const temp = [];
+                this.roomStatus.map(r => {
+                    const category = this.categories.find(category => category.cId === r.ti);
+                    r.st.map(s => {
+                        // ShopCart 组件使用
+                        if (s.selected) {
+                            temp.push({ ...s, id: r.i, cName: category.cName, rName: r.sn });
+                        }
+                    })
+                });
+                return temp;
             }
         },
         methods: {
@@ -81,6 +102,26 @@
                         const { holidays, orderList, rs } = res.data;
                         this.holidays = holidays;
                         this.orderList = orderList;
+                        this.leftMap = {};
+                        rs.map(r => {
+                            r.st.map((s, index) => {
+                                s.date = util.diffDate(this.startDate, index);
+
+                                // 计算库存，不把left放在computed中是为了优化性能
+                                // leftMap的结构为{ 房型id: [某天的库存] }
+                                if (s.s === -1) {
+                                    if (!this.leftMap[r.ti]) {
+                                        this.leftMap[r.ti] = [];
+                                    }
+
+                                    if (!this.leftMap[r.ti][index]) {
+                                        this.leftMap[r.ti][index] = 1;
+                                    } else {
+                                        this.leftMap[r.ti][index] ++;
+                                    }
+                                }
+                            });
+                        });
                         this.roomStatus = rs;
                     })
             },
@@ -107,7 +148,8 @@
             }
         },
         components: {
-            Calendar
+            Calendar,
+            ShopCart
         }
     }
 </script>

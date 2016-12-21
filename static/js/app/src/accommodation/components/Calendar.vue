@@ -20,7 +20,7 @@
                             </div>
                             <div class="calendar-header-desc">{{d.weekday}}</div>
                         </div>
-                        <div class="calendar-header-left">剩{{d.left}}</div>
+                        <div class="calendar-header-left">剩{{d.left}}间</div>
                     </th>
                 </tr>
                 </tbody>
@@ -335,6 +335,7 @@
             defaultStartDate: String,
             orderList: Array,
             startDate: Date,
+            leftMap: Object,
             DAYS: Number
         },
         components: {
@@ -350,13 +351,15 @@
                     const holiday = this.holidays.find(d => d.date === util.dateFormat(date));
                     const isToday = util.isSameDay(date, new Date());
                     const isHoliday = holiday && holiday.type === 0;
+
                     let left = 0;
-                    // 计算剩余房间
-                    /*this.finalRoomStatus.map(room => {
-                        if (room.selected && room.st[i].s === -1) {
-                            left ++;
+                    this.categories.map(c => {
+                        if (!this.leftMap[c.cId] || !c.selected) {
+                            return
                         }
-                    });*/
+
+                        left += this.leftMap[c.cId][i];
+                    });
 
                     arr.push({
                         date,
