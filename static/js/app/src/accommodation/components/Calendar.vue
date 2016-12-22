@@ -34,38 +34,46 @@
                         <span class="calendar-category-name-text">{{c.cName}}</span>
                     </div>
                     <div class="calendar-category-list">
-                        <div class="calendar-category-room" v-if="!c.folded" v-for="r in c.rooms" :room="r.i">{{r.sn}}</div>
+                        <template v-for="r in c.rooms">
+                            <div class="calendar-category-room" v-if="!c.folded" :room="r.i">{{r.sn}}</div>
+                            <div class="calendar-category-room" v-if="r.isLast && c.folded">剩余</div>
+                        </template>
                     </div>
                 </div>
             </div>
             <div class="calendar-status-list" @scroll="handleStatusScroll">
                 <table class="calendar-status-table">
                     <tbody>
-                        <tr class="calendar-status-row" v-for="room in finalRoomStatus" v-if="room.selected">
-                            <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
-                                <div
-                                    v-if="status.s === -1"
-                                    class="calendar-status-inner"
-                                    :class="{'selected': status.selected}"
-                                    @click="selectStatus(status)"
-                                >
-                                    <div class="calendar-status-info">
-                                        <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
-                                        <div class="calendar-status-price">￥{{status.p}}</div>
-                                        <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
+                        <template v-for="room in finalRoomStatus">
+                            <tr class="calendar-status-row" v-if="room.selected && !room.folded">
+                                <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
+                                    <div
+                                        v-if="status.s === -1"
+                                        class="calendar-status-inner"
+                                        :class="{'selected': status.selected}"
+                                        @click="selectStatus(status)"
+                                    >
+                                        <div class="calendar-status-info">
+                                            <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
+                                            <div class="calendar-status-price">￥{{status.p}}</div>
+                                            <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="calendar-status-close" v-if="status.s === 100">
-                                    已关闭
-                                </div>
-                                <div
-                                    class="calendar-status-action"
-                                    @click="openOrCloseStatus(room, status)"
-                                >
-                                    {{status.s === 100 ? '打开房间' : '关闭房间'}}
-                                </div>
-                            </td>
-                        </tr>
+                                    <div class="calendar-status-close" v-if="status.s === 100">
+                                        已关闭
+                                    </div>
+                                    <div
+                                        class="calendar-status-action"
+                                        @click="openOrCloseStatus(room, status)"
+                                    >
+                                        {{status.s === 100 ? '打开房间' : '关闭房间'}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="calendar-status-row" v-if="room.isLast && room.folded">
+                                <td class="calendar-status" style="text-align: center" v-for="left in leftMap[room.ti]">{{left}}间</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
                 <div class="calendar-glyph"
@@ -144,6 +152,7 @@
         position: relative;
     }
     .calendar-category-name {
+        cursor: pointer;
         width: 74px;
         top: 0;
         bottom: 0;
@@ -160,6 +169,7 @@
         position: absolute;
         left: 50%;
         top: 50%;
+        cursor: pointer;
     }
     .calendar-category-list {
         display: inline-block;
@@ -344,6 +354,7 @@
         top: 32px;
         left: 49px;
         z-index: 1;
+        cursor: pointer;
     }
     .calendar-status-close {
         background: #bfbfbf;
@@ -516,6 +527,7 @@
                 return this.roomStatus.map(room => {
                     const category = this.categories.find(category => category.cId === room.ti);
                     room.selected = category.selected;
+                    room.folded = category.folded;
                     room.cName = category.cName;
                     return room;
                 });
@@ -551,7 +563,7 @@
                 this.orderList.map(order => {
                     // 过滤未选中的房型
                     const category = this.categories.find(category => category.cId === order.id);
-                    if (!category.selected) {
+                    if (!category.selected || category.folded) {
                         return
                     }
 
@@ -616,17 +628,19 @@
                     dateList: JSON.stringify([util.dateFormat(status.date)]),
                     open: status.s === 100 ? 1 : 0,
                     roomId: room.i
-                }, function(result) {
-                    if (result.code === 1) {
-                        status.s = status.s === 100 ? -1 : 100;
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                    status.actionVisible = false;
+                }).then(
+                    result => {
+                        if (result.code === 1) {
+                            status.s = status.s === 100 ? -1 : 100;
+                            // 修改库存
+                            const index = util.DateDiff(this.startDate, status.date);
+                            const oldV = this.leftMap[room.ti][index];
+                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1)
+                        } else {
+                            modal.somethingAlert(result.msg);
+                        }
+                        status.actionVisible = false;
                 });
-            },
-            hideStatus(status) {
-                status.actionVisible = false;
             }
         },
         directives: {
