@@ -155,8 +155,7 @@
         components: {
             Calendar,
             ShopCart,
-            Search
-            ShopCart,
+            Search,
             RegisterInfoModal
         }
     }
