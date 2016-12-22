@@ -1,5 +1,6 @@
 <template>
     <div class="acc-container">
+        <Search />
         <Calendar
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
@@ -35,6 +36,7 @@
 <script>
     import Calendar from './components/Calendar.vue';
     import ShopCart from './components/ShopCart.vue';
+    import Search from './components/Search.vue';
     import RegisterInfoModal from './components/RegisterInfoModal.vue';
     import OrderDetail from './components/OrderDetail.vue';
     import AJAXService from 'AJAXService';
@@ -46,8 +48,8 @@
                 this.getCategories()
             ])
                 .then(() => {
-                    // 将房间加入房型中
                     this.roomStatus.map(room => {
+                        // 将房间加入房型中
                         const category = this.categories.find(category => category.cId === room.ti);
                         if (!category.rooms) {
                             category.rooms = [];
@@ -110,6 +112,7 @@
                         rs.map(r => {
                             r.st.map((s, index) => {
                                 s.date = util.diffDate(this.startDate, index);
+                                s.dateStr = util.dateFormat(s.date);
 
                                 // 计算库存，不把left放在computed中是为了优化性能
                                 // leftMap的结构为{ 房型id: [某天的库存] }
@@ -154,6 +157,7 @@
         components: {
             Calendar,
             ShopCart,
+            Search,
             RegisterInfoModal,
             OrderDetail
         }

@@ -5,9 +5,9 @@
             <div class="shopcart-room" v-for="room in selectedRooms">{{room}}</div>
         </div>
         <div class="shopcart-action">
-            <button class="dd-btn dd-btn-primary">补录</button>
-            <button class="dd-btn dd-btn-primary" @click="showInfoModal">预定</button>
-            <button class="dd-btn dd-btn-primary" @click="showOrderModal">直接入住</button>
+            <button class="dd-btn shopcart-addition" v-if="finishShow">补录</button>
+            <button class="dd-btn shopcart-book" v-if="bookShow" @click="showInfoModal">预定</button>
+            <button class="dd-btn shopcart-live" v-if="ingShow">直接入住</button>
         </div>
     </div>
 </template>
@@ -41,19 +41,53 @@
         position: absolute;
         bottom: 16px;
         right: 60px;
+        .dd-btn {
+            width: 120px;
+            height: 36px;
+            font-size: 16px;
+            color: #fff;
+            margin-left: 20px;
+        }
+    }
+    .shopcart-addition {
+        background: #f24949;
+    }
+    .shopcart-book {
+        background: #ff9326;
+    }
+    .shopcart-live {
+        background: #178ce6;
     }
 </style>
 <script>
+    import util from '../../common/util';
     export default{
         props: {
             selectedEntries: Array
         },
         computed: {
             selectedRooms() {
+                const today = new Date();
+                let p = false;
+                let t = false;
+                let f = false;
                 const temp = {};
                 this.selectedEntries.map(e => {
+                    // 直接抄的浇浇代码
+                    const date = new Date(e.date);
+                    if (util.isSameDay(date, today)) {
+                        t = true;
+                    } else if(date > today) {
+                        f = true;
+                    } else if(date < today) {
+                        p = true;
+                    }
+
                     temp[e.id] = `${e.cName}-${e.rName}`;
                 });
+                this.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
+                this.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
+                this.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
                 return temp;
             },
             selectedRoomsCount() {
@@ -62,15 +96,14 @@
         },
         data(){
             return{
-                msg:'hello vue'
+                finishShow: false,
+                ingShow: false,
+                bookShow: false
             }
         },
         methods: {
             showInfoModal() {
                 $('#registerInfoModal').modal('show');
-            },
-            showOrderModal() {
-                $('#orderDetailModal').modal('show');
             }
         }
     }

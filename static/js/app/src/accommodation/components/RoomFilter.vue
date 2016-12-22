@@ -1,5 +1,5 @@
 <template>
-    <div style="position: relative">
+    <div style="position: relative" v-clickoutside="hide">
         <div class="calendar-room-filter-label" @click="toggleSelect">
             <span style="cursor: pointer">筛选房型</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png">
@@ -99,6 +99,7 @@
     }
 </style>
 <script>
+    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     export default{
         props: {
             categories: Array
@@ -127,6 +128,9 @@
             },
             toggleAll() {
                 this.allSelected = !this.allSelected;
+            },
+            hide() {
+                this.visible = false;
             }
         },
         computed: {
@@ -145,6 +149,9 @@
                     }
                 }
             }
+        },
+        directives: {
+            Clickoutside
         }
     }
 </script>
