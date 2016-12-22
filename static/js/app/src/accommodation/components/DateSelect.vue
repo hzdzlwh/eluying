@@ -1,12 +1,35 @@
 <template>
-    <span class="calendar-date-select">
-        <span @click="handleClick">{{dateStr}}</span>
+    <div @click="handleClick" class="calendar-date-select">
+        <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
         <DdDatepicker v-model="date" ref="datepicker"/>
-    </span>
+    </div>
 </template>
 <style>
     .calendar-date-select .dd-datepicker-input {
         display: none;
+    }
+    .calendar-date-select {
+        width: 140px;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        background: #f8f9fc;
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        cursor: pointer;
+    }
+    .calendar-date-label::after {
+        display: inline-block;
+        content: '';
+        width: 16px;
+        margin-left: 10px;
+        vertical-align: text-top;
+        height: 16px;
+        background: url(/static/image/calendar.png);
+    }
+    .calendar-date-select .dd-datepicker-calendar {
+        position: relative !important;
+        top: 0 !important;
     }
 </style>
 <script>
@@ -23,6 +46,11 @@
         data(){
             return{
                 date: undefined,
+            }
+        },
+        watch: {
+            date(v) {
+                this.$emit('change', v);
             }
         },
         created() {
