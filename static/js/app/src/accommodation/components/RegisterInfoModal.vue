@@ -38,24 +38,66 @@
                         <div class="content-item">
                             <p class="content-item-title">
                                 <span>娱乐信息</span>
-                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(2)"><span class="increase-icon"></span>添加项目</span>
                             </p>
+                            <div class="shop-items">
+                                <div class="shop-item" v-for="(item, index) in enterItems">
+                                    <span class="enter-icon"></span>
+                                    <div class="shop-item-content">
+                                        <dd-select v-model="item.id">
+                                            <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name" :key="enter.id+enter.name">
+                                            </dd-option>
+                                        </dd-select>
+                                        <div class="time-container">
+                                            <label>时长</label>
+                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2"></counter>
+                                        </div>
+                                        <div class="enterDate-container">
+                                            <label>时间</label>
+                                            <div class="enterDate">
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date" :disabled-date="disableStartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="shop-item-count">
+                                            <label>数量</label>
+                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2">
+                                                <p class="valid" v-if="false"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余10</p>
+                                            </counter>
+                                            <p class="shop-item-price">
+                                                <label>小计</label>
+                                                <span>{{`¥${(getGoodsPrice(item.type, item.id) * item.count).toFixed(2)}`}}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
+                                </div>
+                            </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title">
                                 <span>商超信息</span>
-                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(3)"><span class="increase-icon"></span>添加项目</span>
                             </p>
                             <div class="shop-items">
-                                <div class="shop-item">
+                                <div class="shop-item" v-for="(item, index) in shopGoodsItems">
                                     <span class="shop-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="shopType">
+                                        <dd-select v-model="item.id">
                                             <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name" :key="shop.id+shop.name">
                                             </dd-option>
                                         </dd-select>
+                                        <div class="shop-item-count">
+                                            <label>数量</label>
+                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="3">
+                                                <p class="valid" v-if="false"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余10</p>
+                                            </counter>
+                                            <p class="shop-item-price">
+                                                <label>小计</label>
+                                                <span>{{`¥${(getGoodsPrice(item.type, item.id) * item.count).toFixed(2)}`}}</span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <span class="delete-icon"></span>
+                                    <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
                                 </div>
                             </div>
                         </div>
@@ -178,10 +220,36 @@
         .userInfo-phone {
             position: relative;
         }
+        .enter-icon {
+            width: 18px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_enter.png");
+            background-size: contain;
+            margin-right: 14px;
+        }
+        .enterDate-container {
+            position: absolute;
+            top: 0;
+            right: 264px;
+            input {
+                width: 110px;
+            }
+        }
+        .time-container {
+            margin-left: 24px;
+        }
+        .time-container, .enterDate-container, .enterDate {
+            display: inline-block;
+        }
         .shop-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
         }
         .shop-icon {
             width: 16px;
@@ -192,6 +260,17 @@
         }
         .shop-item-content {
             flex-grow: 1;
+            position: relative;
+        }
+        .shop-item-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 240px;
+        }
+        .shop-item-price {
+            display: inline-block;
+            margin-left: 24px;
         }
         .delete-icon {
             width: 16px;
@@ -249,6 +328,7 @@
 </style>
 <script>
     import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
     export default{
@@ -260,15 +340,17 @@
                 userOrigins: [],
                 phoneValid: true,
                 remark: '',
+                enterList: [{id: -1, name: '选择娱乐项目'}],
+                enterItems: [],
                 shopList: [{id: -1, name: '选择商超项目'}],
-                shopType: -1
+                shopGoodsItems: []
             }
         },
 
         created(){
             this.getData();
         },
-
+        computed:{},
         methods:{
             getData(){
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
@@ -291,21 +373,94 @@
                         });
                     });
                 });
+                AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
+                        .then(res => {
+                            if (res.code === 1) {
+                                res.data.list.map(el => {
+                                    el.id = el.categoryId;
+                                    el.itemId = el.categoryId;
+                                    el.type = 2;
+                                    this.enterList.push(el)
+                                });
+                            }
+                        });
             },
             hideModal(e){
                 e.stopPropagation();
                 $("#registerInfoModal").modal("hide");
             },
+
             checkPhone(){
                 const phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
+            /**
+             * 添加住宿,娱乐-2,商朝-3项目
+             * @param type
+             */
+            addItem(type){
+                if (type === 3) {
+                    this.shopGoodsItems.push({ id: -1, count: 1, type: 3 });
+                } else if (type === 2) {
+                    this.enterItems.push({ id: -1, count: 1, type: 2, date: '', timeCount: 1 });
+                }
+            },
+
+            deleteItem(type,index){
+                if (type === 3) {
+                    this.shopGoodsItems.splice(index, 1);
+                } else if (type === 2) {
+                    this.enterItems.splice(index, 1);
+                }
+            },
+            /**
+             * 根据娱乐-2,商超-3的id获取对应的价格
+             * @param index
+             * @returns {number}
+             */
+            getGoodsPrice(type, index){
+                let goodsPrice = 0;
+                if (index === -1) {
+                    return goodsPrice;
+                } else {
+                    if (type === 3) {
+                        this.shopList.forEach((item) => {goodsPrice = (item.id === index) ? item.price : goodsPrice;});
+                    } else if (type === 2) {
+                        this.enterList.forEach((item) => {goodsPrice = (item.id === index) ? item.price : goodsPrice;});
+                    }
+                    return goodsPrice;
+                }
+            },
+
+            getEnterInfo(index){
+                let enterInfo = {};
+                if (index === -1) {
+                    return enterInfo;
+                } else {
+                    this.enterList.forEach((item) => {
+                        if (item.id === index) {
+                            enterInfo = Object.assign({}, item);
+                        }
+                    });
+                    return enterInfo;
+                }
+                console.log(enterInfo);
+            },
+
             submitInfo(e){
                 if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
                     modal.somethingAlert("请输入联系人或手机号!");
                     return undefined;
                 }
                 this.hideModal(e);
+            },
+
+            handleNumChange(type, tag, num){
+                if (type === 3) {
+                    this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                } else if (type === 2) {
+                    this.enterItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                }
             }
         },
 
@@ -315,7 +470,8 @@
             DdPagination,
             DdDatepicker,
             DdSelect,
-            DdOption
+            DdOption,
+            counter
         }
     }
 </script>
