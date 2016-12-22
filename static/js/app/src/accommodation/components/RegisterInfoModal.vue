@@ -48,9 +48,9 @@
                                             <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name" :key="enter.id+enter.name">
                                             </dd-option>
                                         </dd-select>
-                                        <div class="time-container">
-                                            <label>时长</label>
-                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2"></counter>
+                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime']">
+                                            <label>{{`时长(${getItemInfo(item.type, item.id)['timeUnit']})`}}</label>
+                                            <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
                                         </div>
                                         <div class="enterDate-container">
                                             <label>时间</label>
@@ -65,7 +65,7 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getGoodsPrice(item.type, item.id) * item.count).toFixed(2)}`}}</span>
+                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}`}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -93,13 +93,17 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getGoodsPrice(item.type, item.id) * item.count).toFixed(2)}`}}</span>
+                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}`}}</span>
                                             </p>
                                         </div>
                                     </div>
                                     <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="content-item" v-if="true">
+                            <p class="content-item-title"><span>押金信息</span></p>
+                            <p><label>押金</label><input type="text" placeholder="本次押金金额" class="dd-input" style="margin-left: 4px"/></p>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
@@ -236,7 +240,7 @@
             }
         }
         .time-container {
-            margin-left: 24px;
+            margin-left: 14px;
         }
         .time-container, .enterDate-container, .enterDate {
             display: inline-block;
@@ -385,8 +389,16 @@
                             }
                         });
             },
+            refreshData(){
+                this.name = '';
+                this.phone = '';
+                this.remark = '';
+                this.enterItems = [];
+                this.shopGoodsItems = [];
+            },
             hideModal(e){
                 e.stopPropagation();
+                this.refreshData();
                 $("#registerInfoModal").modal("hide");
             },
 
@@ -400,9 +412,17 @@
              */
             addItem(type){
                 if (type === 3) {
+                    if (this.shopGoodsItems.length >= 2) {
+                        modal.somethingAlert('一次最多添加99个商超项目!');
+                        return false;
+                    }
                     this.shopGoodsItems.push({ id: -1, count: 1, type: 3 });
                 } else if (type === 2) {
-                    this.enterItems.push({ id: -1, count: 1, type: 2, date: '', timeCount: 1 });
+                    if (this.enterItems.length >= 2) {
+                        modal.somethingAlert('一次做多添加99个娱乐项目!');
+                        return false;
+                    }
+                    this.enterItems.push({ id: -1, count: 1, type: 2, date: '', timeAmount: 1 });
                 }
             },
 
@@ -414,37 +434,29 @@
                 }
             },
             /**
-             * 根据娱乐-2,商超-3的id获取对应的价格
+             * 根据id type(商超-3, 娱乐-2)获取详细信息
+             * @param type
              * @param index
-             * @returns {number}
+             * @returns {{}}
              */
-            getGoodsPrice(type, index){
-                let goodsPrice = 0;
-                if (index === -1) {
-                    return goodsPrice;
-                } else {
+            getItemInfo(type, index){
+                let enterInfo = { price: 0 };
+                if (index !== -1) {
                     if (type === 3) {
-                        this.shopList.forEach((item) => {goodsPrice = (item.id === index) ? item.price : goodsPrice;});
+                        this.shopList.forEach((item) => {
+                            if (item.id === index) {
+                                enterInfo = item;
+                            }
+                        });
                     } else if (type === 2) {
-                        this.enterList.forEach((item) => {goodsPrice = (item.id === index) ? item.price : goodsPrice;});
+                        this.enterList.forEach((item) => {
+                            if (item.id === index) {
+                                enterInfo = item;
+                            }
+                        });
                     }
-                    return goodsPrice;
                 }
-            },
-
-            getEnterInfo(index){
-                let enterInfo = {};
-                if (index === -1) {
-                    return enterInfo;
-                } else {
-                    this.enterList.forEach((item) => {
-                        if (item.id === index) {
-                            enterInfo = Object.assign({}, item);
-                        }
-                    });
-                    return enterInfo;
-                }
-                console.log(enterInfo);
+                return enterInfo;
             },
 
             submitInfo(e){
@@ -460,6 +472,8 @@
                     this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
                 } else if (type === 2) {
                     this.enterItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                } else if (type === -2) {
+                    this.enterItems.forEach((item, index) => {item.timeAmount = (index === tag) ? num : item.timeAmount;});
                 }
             }
         },

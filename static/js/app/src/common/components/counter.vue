@@ -66,20 +66,26 @@
                 value: this.num
             }
         },
+        computed: {},
         methods: {
             decreaseNum(){
-                if (this.value <= this.min) {
+                if (this.value <= this.min || this.value <= this.step) {
                     return;
                 }
                 this.value -= this.step;
-                this.$emit('numChange', this.type, this.id, this.value);
+                this.$emit('numChange', this.type, this.id, this.value / this.step);
             },
             increaseNum(){
                 if (this.value >= this.max) {
                     return;
                 }
                 this.value += this.step;
-                this.$emit('numChange', this.type, this.id, this.value);
+                this.$emit('numChange', this.type, this.id, this.value / this.step);
+            }
+        },
+        watch:{
+            num(newVal) {
+                this.value = newVal;
             }
         }
     }
