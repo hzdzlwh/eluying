@@ -18,6 +18,7 @@
         <ShopCart
             :selectedEntries="selectedEntries"
         />
+        <RegisterInfoModal />
     </div>
 </template>
 <style>
@@ -35,6 +36,7 @@
     import Calendar from './components/Calendar.vue';
     import ShopCart from './components/ShopCart.vue';
     import Search from './components/Search.vue';
+    import RegisterInfoModal from './components/RegisterInfoModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -154,6 +156,8 @@
             Calendar,
             ShopCart,
             Search
+            ShopCart,
+            RegisterInfoModal
         }
     }
 </script>

@@ -6,7 +6,7 @@
         </div>
         <div class="shopcart-action">
             <button class="dd-btn shopcart-addition" v-if="finishShow">补录</button>
-            <button class="dd-btn shopcart-book" v-if="bookShow">预定</button>
+            <button class="dd-btn shopcart-book" v-if="bookShow" @click="showModal">预定</button>
             <button class="dd-btn shopcart-live" v-if="ingShow">直接入住</button>
         </div>
     </div>
@@ -99,6 +99,11 @@
                 finishShow: false,
                 ingShow: false,
                 bookShow: false
+            }
+        },
+        methods: {
+            showModal() {
+                $('#registerInfoModal').modal('show');
             }
         }
     }
