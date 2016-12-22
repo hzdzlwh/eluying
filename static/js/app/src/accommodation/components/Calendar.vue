@@ -35,7 +35,15 @@
                     </div>
                     <div class="calendar-category-list">
                         <template v-for="r in c.rooms">
-                            <div class="calendar-category-room" v-if="!c.folded" :room="r.i">{{r.sn}}</div>
+                            <div
+                                class="calendar-category-room"
+                                :class="{'calendar-category-room-dirty': r.isDirty}"
+                                v-if="!c.folded"
+                                :room="r.i"
+                                @click="setDirtyRoom(r)"
+                            >
+                                {{r.sn}}
+                            </div>
                             <div class="calendar-category-room" v-if="r.isLast && c.folded">剩余</div>
                         </template>
                     </div>
@@ -179,11 +187,26 @@
         height: auto;
     }
     .calendar-category-room {
+        cursor: pointer;
+        position: relative;
         width: 100%;
         line-height: 48px;
         text-align: center;
         border-bottom: solid thin #e6e6e6;
         height: 48px;
+    }
+    .calendar-category-room-dirty {
+        background: #e1e5f0;
+    }
+    .calendar-category-room-dirty::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 14px;
+        height: 17px;
+        background: url('../../../../../image/dirty-room.png');
     }
     .calendar-category-room.hover, .calendar-header-date.hover {
         background: #bfdeff;
@@ -641,6 +664,19 @@
                         }
                         status.actionVisible = false;
                 });
+            },
+            setDirtyRoom(room) {
+                AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {
+                    actionType: !room.isDirty,
+                    roomId: room.i
+                })
+                    .then(result => {
+                        if (result.code === 1) {
+                            room.isDirty = !room.isDirty;
+                        } else {
+                            modal.somethingAlert(result.msg);
+                        }
+                    });
             }
         },
         directives: {
