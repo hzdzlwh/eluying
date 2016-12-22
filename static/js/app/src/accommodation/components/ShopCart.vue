@@ -6,8 +6,8 @@
         </div>
         <div class="shopcart-action">
             <button class="dd-btn dd-btn-primary">补录</button>
-            <button class="dd-btn dd-btn-primary" @click="showModal">预定</button>
-            <button class="dd-btn dd-btn-primary">直接入住</button>
+            <button class="dd-btn dd-btn-primary" @click="showInfoModal">预定</button>
+            <button class="dd-btn dd-btn-primary" @click="showOrderModal">直接入住</button>
         </div>
     </div>
 </template>
@@ -66,8 +66,11 @@
             }
         },
         methods: {
-            showModal() {
+            showInfoModal() {
                 $('#registerInfoModal').modal('show');
+            },
+            showOrderModal() {
+                $('#orderDetailModal').modal('show');
             }
         }
     }

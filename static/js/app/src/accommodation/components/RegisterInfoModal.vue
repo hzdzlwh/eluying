@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="modal fade" id="registerInfoModal" role="dialog">
+        <div class="modal fade roomModals" id="registerInfoModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="registerInfoModal-header">
+                    <div class="roomModals-header">
                         <span class="header-text">预订</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
-                    <div class="registerInfoModal-body">
+                    <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="registerInfoModal-footer">
+                    <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥9999</span>
@@ -137,7 +137,7 @@
         font-size: $font-size-sm;
         color: #999999;
     }
-    #registerInfoModal {
+    .roomModals {
         box-sizing: border-box;
         font-size: $font-size-base;
         color: $gary-daker;
@@ -154,7 +154,7 @@
             margin-top: 42.5px;
         }
     }
-    .registerInfoModal-header {
+    .roomModals-header {
         width: 100%;
         height: 53px;
         display: flex;
@@ -175,7 +175,7 @@
             font-weight: bold;
         }
     }
-    .registerInfoModal-body {
+    .roomModals-body {
         width: 100%;
         height: 485px;
         overflow: scroll;
@@ -307,7 +307,7 @@
             overflow: scroll;
         }
     }
-    .registerInfoModal-footer {
+    .roomModals-footer {
         position: absolute;
         bottom: 0;
         width: 100%;
