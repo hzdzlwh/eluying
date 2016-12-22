@@ -25,7 +25,7 @@
         margin-left: 10px;
         vertical-align: text-top;
         height: 16px;
-        background: url(/static/image/calendar.png);
+        background: url(../../../../../image/calendar.png);
     }
     .calendar-date-select .dd-datepicker-calendar {
         position: relative !important;
