@@ -10,6 +10,7 @@
                 <tr>
                     <th class="calendar-header-item" v-for="d in dateRange">
                         <div class="calendar-header-date"
+                             :date="d.date"
                              :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
                         >
                             <div class="calendar-header-day">
@@ -33,7 +34,7 @@
                         <span class="calendar-category-name-text">{{c.cName}}</span>
                     </div>
                     <div class="calendar-category-list">
-                        <div class="calendar-category-room" v-if="!c.folded" v-for="r in c.rooms">{{r.sn}}</div>
+                        <div class="calendar-category-room" v-if="!c.folded" v-for="r in c.rooms" :room="r.i">{{r.sn}}</div>
                     </div>
                 </div>
             </div>
@@ -41,13 +42,27 @@
                 <table class="calendar-status-table">
                     <tbody>
                         <tr class="calendar-status-row" v-for="room in finalRoomStatus" v-if="room.selected">
-                            <td class="calendar-status" v-for="(status, index) in room.st">
-                                <div v-if="status.s === -1" class="calendar-status-inner" :class="{'selected': status.selected}" @click="selectStatus(status)">
+                            <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
+                                <div
+                                    v-if="status.s === -1"
+                                    class="calendar-status-inner"
+                                    :class="{'selected': status.selected}"
+                                    @click="selectStatus(status)"
+                                >
                                     <div class="calendar-status-info">
                                         <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
                                         <div class="calendar-status-price">￥{{status.p}}</div>
                                         <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
                                     </div>
+                                </div>
+                                <div class="calendar-status-close" v-if="status.s === 100">
+                                    已关闭
+                                </div>
+                                <div
+                                    class="calendar-status-action"
+                                    @click="openOrCloseStatus(room, status)"
+                                >
+                                    {{status.s === 100 ? '打开房间' : '关闭房间'}}
                                 </div>
                             </td>
                         </tr>
@@ -63,6 +78,34 @@
                         <img class="" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
                         <img class="" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
                         <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2">
+                    </div>
+                    <div class="calendar-glyph-detail ing up">
+                        <div class="glyph-arrow-up"></div>
+                        <div class="glyph-arrow-down"></div>
+                        <div class="glyph-detail-name">
+                            <div>{{g.customerName}} ({{g.phone}})</div>
+                            <div class="eluyun_book2-small_outer spriteImg" v-if="g.roomState === 0">
+                                <div class="eluyun_book2-small"></div>
+                            </div>
+                            <div class="eluyun_ing2-room_outer spriteImg" v-if="g.roomState === 1">
+                                <div class="eluyun_ing2-room"></div>
+                            </div>
+                            <div class="eluyun_finish2-small_outer spriteImg" v-if="g.roomState === 2">
+                                <div class="eluyun_finish2-small"></div>
+                            </div>
+                        </div>
+                        <div class="glyph-detail-time">
+                            <div class="start">{{g.checkInDateShort}}<span class="glyph-label">&nbsp;入住</span></div>
+                            <div class="end">{{g.checkOutDateShort}}<span class="glyph-label">&nbsp;离店</span></div>
+                            <div class="glyph-label">共<span>{{g.days}}</span>晚</div>
+                            <div class="glyph-label">{{g.channelName}}</div>
+                        </div>
+                        <div class="glyph-detail-price">
+                            <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{g.amountPay}}</span></div>
+                            <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{-g.needPay}}</span></div>
+                            <div v-if="g.needPay >= 0"><span class="glyph-label">客户需补：</span><span class="num">¥ {{g.needPay}}</span></div>
+                        </div>
+                        <div class="glyph-detail-remarks" v-if="g.remark"><span class="glyph-label">备注：</span>{{g.remark}}</div>
                     </div>
                 </div>
             </div>
@@ -132,6 +175,9 @@
         border-bottom: solid thin #e6e6e6;
         height: 48px;
     }
+    .calendar-category-room.hover, .calendar-header-date.hover {
+        background: #bfdeff;
+    }
     .calendar-header {
         position: absolute;
         top: 0;
@@ -155,7 +201,7 @@
         height: 48px;
         text-align: center;
         background: #f8f9fc;
-        border-bottom: solid thin #e6e6e6;
+        border-bottom: solid thin #ccc;
         border-right: solid thin #e6e6e6;
         position: relative;
     }
@@ -172,10 +218,10 @@
     .calendar-header-left {
         width: 100%;
         height: 32px;
-        background: #f8f9fc;
+        background: #ebebeb;
         text-align: center;
         line-height: 32px;
-        border-bottom: solid thin #e6e6e6;
+        border-bottom: solid thin #ccc;
         border-right: solid thin #e6e6e6;
     }
     .calendar-body {
@@ -222,6 +268,10 @@
         }
     }
     .calendar-status-inner {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         width: 96px;
         height: 44px;
         margin: auto;
@@ -232,6 +282,7 @@
         text-align: center;
         display: none;
         border: 1px solid $blue;
+        cursor: pointer;
         &.selected {
              background: #e6f1ff;
              display: block;
@@ -281,11 +332,35 @@
         text-overflow: ellipsis;
         text-align: center;
     }
+    .calendar-status-action {
+        display: none;
+        background: #fafafa;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+        width: 88px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        position: absolute;
+        top: 32px;
+        left: 49px;
+        z-index: 1;
+    }
+    .calendar-status-close {
+        background: #bfbfbf;
+        width: 96px;
+        height: 44px;
+        margin: auto;
+        margin-top: 2px;
+        color: #fff;
+        line-height: 44px;
+        padding-left: 14px;
+    }
     .calendar-glyph {
         position: absolute;
         height: 44px;
         color: white;
         padding-left: 8px;
+        cursor: pointer;
     }
     .glyph-book {
         background: #ffba75;
@@ -322,11 +397,75 @@
         overflow: hidden;
         white-space: nowrap;
     }
+    .calendar-glyph-detail {
+        display: none;
+        width: 300px;
+        background: #fafafa;
+        box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
+        color: #666;
+        position: absolute;
+        padding: 10px 8px;
+        z-index: 2;
+        .glyph-label {
+            color: #999;
+        }
+    }
+    .calendar-glyph-detail.down {
+        left: 0;
+        top: 48px;
+        .glyph-arrow-up {
+            display: block;
+        }
+        .glyph-arrow-down {
+            display: none;
+        }
+    }
+    .calendar-glyph-detail.up {
+        left: 0;
+        bottom: 48px;
+        .glyph-arrow-up {
+            display: none;
+        }
+        .glyph-arrow-down {
+            display: block;
+        }
+    }
+    .glyph-detail-name, .glyph-detail-time, .glyph-detail-price {
+        display: flex;
+        justify-content: space-between;
+        line-height: 22px;
+    }
+    .glyph-detail-price {
+        padding-top: 4px;
+        margin-top: 4px;
+        border-top: 1px solid #e6e6e6;
+    }
+    .glyph-arrow-down, .glyph-arrow-up {
+        position: absolute;
+        left: 20px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fafafa;
+        line-height: 0;
+    }
+    .glyph-arrow-up {
+        top: -10px;
+    }
+    .glyph-arrow-down {
+        bottom: -10px;
+        border-bottom: none;
+        border-top: 10px solid #fafafa;
+    }
 </style>
 <script>
     import DateSelect from './DateSelect.vue';
     import RoomFilter from './RoomFilter.vue';
     import util from 'util';
+    import AJAXService from '../../common/AJAXService';
+    import modal from '../../common/modal';
+    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     export default{
         props: {
             categories: Array,
@@ -362,7 +501,7 @@
                     });
 
                     arr.push({
-                        date,
+                        date: util.dateFormat(date),
                         isToday,
                         isHoliday,
                         left,
@@ -467,7 +606,31 @@
             },
             selectStatus(status) {
                 this.$set(status, 'selected', !status.selected);
+            },
+            toggleStatus(status) {
+                status.actionVisible = true;
+            },
+            openOrCloseStatus(room, status) {
+                AJAXService.ajaxWithToken('GET', 'modifyRoomStatusUrl', {
+                    isAll: false,
+                    dateList: JSON.stringify([util.dateFormat(status.date)]),
+                    open: status.s === 100 ? 1 : 0,
+                    roomId: room.i
+                }, function(result) {
+                    if (result.code === 1) {
+                        status.s = status.s === 100 ? -1 : 100;
+                    } else {
+                        modal.somethingAlert(result.msg);
+                    }
+                    status.actionVisible = false;
+                });
+            },
+            hideStatus(status) {
+                status.actionVisible = false;
             }
+        },
+        directives: {
+            Clickoutside
         }
     }
 </script>
