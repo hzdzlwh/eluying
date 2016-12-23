@@ -249,6 +249,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-left: 13px;
             &:not(:last-child) {
                 padding-bottom: 15px;
                 margin-bottom: 16px;
