@@ -27,7 +27,7 @@
         </div>
     </div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar-room-filter-label {
         position: relative;

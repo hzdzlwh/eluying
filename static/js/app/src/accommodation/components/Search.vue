@@ -33,7 +33,7 @@
                             </span>
                             <span class="search-label">{{g.origin}}</span>
                         </div>
-                        <div><div class="triangle"></div>{{g.html}}</div>
+                        <div class="acc-search-order-status" :class="ORDER_STATUS[g.orderState].en">{{ORDER_STATUS[g.orderState].long}}</div>
                     </div>
                 </div>
                 <div class="acc-search-page" v-if="searchResultsNum > limit">
@@ -64,7 +64,7 @@
         </div>
     </div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/scss">
     .acc-search {
         position: absolute;
         right: 242px;
@@ -105,6 +105,7 @@
         justify-content: flex-end;
     }
     .acc-search-item {
+        position: relative;
         border-bottom: 1px solid #e6e6e6;
         padding: 7px 0;
         cursor: pointer;
@@ -128,14 +129,53 @@
         display: flex;
         justify-content: space-between;
     }
+    .acc-search-order-status {
+        position: absolute;
+        top: 4px;
+        right: 0;
+        font-size: 12px;
+        text-align: center;
+        width: 44px;
+        height: 22px;
+        line-height: 22px;
+        color: #fff;
+        &.book {
+            background: #ffba75;
+            &::before {
+                border-right: solid #ffba75 11px;
+            }
+         }
+        &.finish, &.cancel {
+            background: #bfbfbf;
+            &::before {
+                border-right: solid #bfbfbf 11px;
+            }
+        }
+        &.ing {
+            background: #82beff;
+            &::before {
+                border-right: solid #82beff 11px;
+            }
+        }
+        &::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: -11px;
+             border-top: solid transparent 11px;
+             border-bottom: solid transparent 11px;
+        }
+    }
 </style>
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
+    import { ORDER_STATUS } from '../const';
     export default{
         data(){
             return{
+                ORDER_STATUS,
                 page: 1,
                 searchResults: [],
                 searchVisible: false,

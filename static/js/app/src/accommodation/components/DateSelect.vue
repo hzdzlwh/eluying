@@ -1,6 +1,8 @@
 <template>
-    <div @click="handleClick" class="calendar-date-select">
-        <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
+    <div class="calendar-date-select">
+        <div @click="handleClick">
+            <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
+        </div>
         <DdDatepicker v-model="date" ref="datepicker"/>
     </div>
 </template>

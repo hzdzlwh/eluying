@@ -15,7 +15,7 @@
                         >
                             <div class="calendar-header-day">
                                 {{d.dateStr}}
-                                <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
+                                <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.holiday">
                                     <div class="eluyun_rest"></div>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                             >
                                 {{r.sn}}
                             </div>
-                            <div class="calendar-category-room" v-if="r.isLast && c.folded">剩余</div>
+                            <div class="calendar-category-room fold" v-if="r.isLast && c.folded">剩余</div>
                         </template>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
         </div>
     </div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar {
        height: 100%;
@@ -195,6 +195,9 @@
         border-bottom: solid thin #e6e6e6;
         height: 48px;
     }
+    .calendar-category-room.fold {
+        cursor: default;
+    }
     .calendar-category-room-dirty {
         background: #e1e5f0;
     }
@@ -237,6 +240,12 @@
         border-bottom: solid thin #ccc;
         border-right: solid thin #e6e6e6;
         position: relative;
+    }
+    .calendar-header-date.weekend {
+        color: #f24949;
+    }
+    .calendar-header-date.today {
+        color: $blue;
     }
     .calendar-header-day {
         width: 100%;
@@ -523,7 +532,6 @@
                     const date = util.diffDate(startDate, i);
                     const holiday = this.holidays.find(d => d.date === util.dateFormat(date));
                     const isToday = util.isSameDay(date, new Date());
-                    const isHoliday = holiday && holiday.type === 0;
 
                     let left = 0;
                     this.categories.map(c => {
@@ -537,9 +545,9 @@
                     arr.push({
                         date: util.dateFormat(date),
                         isToday,
-                        isHoliday,
+                        holiday,
                         left,
-                        dateStr: isHoliday ? holiday.holiday : (isToday ? '今天' : util.dateFormatWithoutYear(date)),
+                        dateStr: holiday && holiday.type === 0 ? holiday.holiday : (isToday ? '今天' : util.dateFormatWithoutYear(date)),
                         weekday: util.getWeek(date)
                     });
                 }
