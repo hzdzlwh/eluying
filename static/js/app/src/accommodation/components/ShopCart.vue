@@ -106,7 +106,7 @@
                 if (val > 0) {
                     $('.acc-container').css('bottom', '90px');
                 } else {
-                    $('.acc-container').css('bottom', '90px');
+                    $('.acc-container').css('bottom', '0');
                 }
             }
         },
