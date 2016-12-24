@@ -101,6 +101,15 @@
                 bookShow: false
             }
         },
+        watch: {
+            selectedRoomsCount(val) {
+                if (val > 0) {
+                    $('.acc-container').css('bottom', '90px');
+                } else {
+                    $('.acc-container').css('bottom', '90px');
+                }
+            }
+        },
         methods: {
             showInfoModal() {
                 $('#registerInfoModal').modal('show');
