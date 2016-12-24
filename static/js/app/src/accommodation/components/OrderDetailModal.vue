@@ -40,7 +40,7 @@
                                     <div class="room-info">
                                         <div class="room-name">
                                             <span class="room-icon"></span>
-                                            <span class="room-name">{{item.name}}</span>
+                                            <span>{{item.name}}</span>
                                             <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
                                         </div>
                                         <div class="room-date">
@@ -59,15 +59,43 @@
                                         <span class="user-icon"></span>
                                         <span class="user-name">{{user.name}}</span>
                                         <div class="card-type">
-                                            <label class="label-text">{{user.idCardType}}</label>
+                                            <label class="label-text">{{ID_CARD_TYPE[user.idCardType]}}</label>
                                             <span>{{user.idCardNum}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="order.foodItems && order.foodItems.length > 0">
                             <p class="content-item-title"><span>餐饮信息</span></p>
+                            <div class="items">
+                                <div class="item" v-for="item in order.foodItems">
+                                    <div class="food-item">
+                                        <span class="food-icon"></span>
+                                        <div class="item-content">
+                                            <div class="item-name">
+                                                <span class="item-name">{{item.restName}}</span>
+                                                <span class="food-state-icon" :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">{{getRoomOrFoodState(0, item.foodState).text}}</span>
+                                            </div>
+                                            <div class="item-date">
+                                                <label class="label-text">时间</label>
+                                                <span>{{item.date}}</span>
+                                            </div>
+                                            <div class="item-count">
+                                                <label class="label-text">人数</label>
+                                                <span>{{item.peopleNum}}</span>
+                                            </div>
+                                            <div class="item-price" style="margin-right: 81px">
+                                                <label class="label-text">小计</label>
+                                                <span>{{`¥${item.foodPrice}`}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="info-icon">
+                                            <div class="info-content"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="content-item" v-if="order.playItems && order.playItems.length > 0">
                             <p class="content-item-title"><span>娱乐信息</span></p>
@@ -103,7 +131,28 @@
                             <div>{{order.remark}}</div>
                         </div>
                     </div>
-                    <div class="roomModals-footer" style="height: 149px;"></div>
+                    <div class="roomModals-footer" style="height: 149px;">
+                        <div style="width: 100%;">
+                            <p class="content-item-title" style="justify-content: flex-start"><span style="margin-right: 4px">收银信息</span><span class="info-icon"></span></p>
+                            <div class="footer-price">
+                                <span class="order-price-text">订单金额:<span class="order-price-num grey">{{`¥${findTypePrice(13)}`}}</span></span>
+                                <span class="order-price-text">违约金:<span class="order-price-num grey">{{`¥${findTypePrice(4)}`}}</span></span>
+                                <span class="order-price-text">已付金额:<span class="order-price-num grey">{{`¥${findTypePrice(16)}`}}</span></span>
+                                <span class="order-price-text">需补金额:<span class="order-price-num red">{{`¥${findTypePrice(15)}`}}</span></span>
+                                <span class="order-price-text">需退押金:<span class="order-price-num green">{{`¥${findTypePrice(1)}`}}</span></span>
+                            </div>
+                            <p class="order-info">
+                                <span class="order-info-text">{{`订单号:${order.orderNum}`}}</span>
+                                <span class="order-info-operator" style="margin-left: 24px">{{`办理员工:${order.operatorName}`}}</span>
+                            </p>
+                            <div class="order-btns">
+                                <div class="dd-btn dd-btn-primary order-btn">办理入住</div>
+                                <div class="dd-btn dd-btn-primary order-btn">提前退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn">收银</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,96 +165,153 @@
             color: #999999;
         }
     }
-    .header-container {
-        display: flex;
-        align-items: center;
-    }
-    .order-state-angle {
-        margin-left: 16px;
-        border-right: 12px solid;
-        border-top: 11px solid;
-        border-bottom: 11px solid;
-    }
-    .order-state {
-        color: #ffffff;
-        font-size: $font-size-sm;
-        display: inline-flex;
-        width: 40px;
-        height: 22px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 1px;
-        padding-right: 3px;
-    }
-    .header-tools {
-        color: $blue;
-        font-size: $font-size-sm;
-        cursor: pointer;
-        margin-right: 16px;
-    }
-    .item {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-left: 13px;
-        &:not(:last-child) {
-            padding-bottom: 15px;
-            margin-bottom: 16px;
-            border-bottom: 1px dotted #e6e6e6;
+    .roomModals {
+        .grey {
+            color: #666666;
         }
-    }
-    .item-content {
-        display: flex;
-        flex-grow: 1;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .card-type {
-        margin-left: 96px;
-    }
-    .room-date {
-        .startDate, .endDate {
-            margin: 0 14px;
+        .green {
+            color: #00af10;
         }
-    }
-    .room-info {
-        justify-content: space-between;
-    }
-    .room-info, .room-name, .room-user, .play-item {
-        display: flex;
-        align-items: center;
-    }
-    .room-user {
-        margin-top: 12px;
-    }
-    .room-state-icon {
-        width: 16px;
-        height: 16px;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        color: #ffffff;
-        font-size: 10px;
-        border-radius: 2px;
-        margin-left: 4px;
-    }
-    .room-icon {
-        width: 16px;
-        height: 15px;
-        background: url("../../../../../image/modal/room_modal_home.png");
-        background-size: contain;
-        margin-right: 25px;
-    }
-    .user-icon {
-        width: 16px;
-        height: 15px;
-        background: url("../../../../../image/modal/room_modal_user.png");
-        background-size: contain;
-        margin-right: 25px;
+        .red {
+            color: #f24949;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+        }
+        .order-state-angle {
+            margin-left: 16px;
+            border-right: 12px solid;
+            border-top: 11px solid;
+            border-bottom: 11px solid;
+        }
+        .order-state {
+            color: #ffffff;
+            font-size: $font-size-sm;
+            display: inline-flex;
+            width: 40px;
+            height: 22px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1px;
+            padding-right: 3px;
+        }
+        .header-tools {
+            color: $blue;
+            font-size: $font-size-sm;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+        .item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-left: 13px;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+        }
+        .item-content {
+            display: flex;
+            flex-grow: 1;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-type {
+            margin-left: 96px;
+        }
+        .room-date {
+            .startDate, .endDate {
+                margin: 0 14px;
+            }
+        }
+        .room-info {
+            justify-content: space-between;
+        }
+        .room-info, .room-name, .room-user, .play-item, .food-item {
+            display: flex;
+            align-items: center;
+        }
+        .room-user {
+            margin-top: 12px;
+        }
+        .room-state-icon, .food-state-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 10px;
+            border-radius: 2px;
+            margin-left: 4px;
+        }
+        .room-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_home.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .user-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_user.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .food-icon {
+            width: 14px;
+            height: 18px;
+            background: url("../../../../../image/modal/room_modal_food.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .info-icon {
+            position: relative;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            background: url("../../../../../image/modal/room_modal_info.png");
+            background-size: contain;
+        }
+        .info-content {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 8px;
+        }
+        .order-price-text {
+            color: $gary-daker;
+            font-size: $font-size-base;
+            margin-right: 24px;
+        }
+        .order-price-num {
+            font-size: $font-size-lg;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+        .order-btns {
+            display: flex;
+            justify-content: flex-end;
+            .order-btn {
+                margin-left: 24px;
+            }
+        }
+        .roomModals-footer {
+            .order-info {
+                color: #999999;
+                font-size: $font-size-sm;
+                margin-bottom: 16px;
+            }
+        }
     }
 </style>
 <script>
     import AJAXService from 'AJAXService';
+    import { ID_CARD_TYPE } from '../const';
     export default{
         props: {
           order: {
@@ -214,7 +320,9 @@
           }
         },
         data(){
-            return{}
+            return{
+                ID_CARD_TYPE
+            }
         },
         computed: {},
         methods: {
@@ -261,6 +369,17 @@
                 params = AJAXService.getDataWithToken(params);
                 params = AJAXService.paramsToString(params);
                 window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
+            },
+            findTypePrice(type) {
+                let price = 0;
+                if (this.order.payments) {
+                    this.order.payments.forEach(item => {
+                        if (item.type === type) {
+                            price += item.fee;
+                        }
+                    });
+                }
+                return price;
             }
         },
         components:{}

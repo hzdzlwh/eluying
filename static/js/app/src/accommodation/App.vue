@@ -111,25 +111,30 @@
                         this.holidays = holidays;
                         this.orderList = orderList;
                         this.leftMap = {};
-                        rs.map(r => {
+                        rs.map((r, i) => {
                             r.st.map((s, index) => {
                                 s.date = util.diffDate(this.startDate, index);
                                 s.dateStr = util.dateFormat(s.date);
 
                                 // 计算库存，不把left放在computed中是为了优化性能
                                 // leftMap的结构为{ 房型id: [某天的库存] }
-                                if (s.s === -1) {
-                                    if (!this.leftMap[r.ti]) {
-                                        this.leftMap[r.ti] = [];
-                                    }
+                                if (!this.leftMap[r.ti]) {
+                                    this.$set(this.leftMap, r.ti, []);
+                                }
 
-                                    if (!this.leftMap[r.ti][index]) {
-                                        this.leftMap[r.ti][index] = 1;
-                                    } else {
-                                        this.leftMap[r.ti][index] ++;
-                                    }
+                                if (!this.leftMap[r.ti][index]) {
+                                    this.leftMap[r.ti][index] = 0;
+                                }
+
+                                if (s.s === -1) {
+                                    this.leftMap[r.ti][index] ++;
                                 }
                             });
+
+                            // 判断是否是该房型的最后一间房，用来折叠房间
+                            if (i === rs.length - 1 || r.ti !== rs[i + 1].ti) {
+                                r.isLast = true;
+                            }
                         });
                         this.roomStatus = rs;
                     })

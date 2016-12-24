@@ -11,7 +11,7 @@
         </div>
     </div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .shopcart{
         min-width: 1200px;

@@ -1,6 +1,8 @@
 <template>
-    <div @click="handleClick" class="calendar-date-select">
-        <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
+    <div class="calendar-date-select">
+        <div @click="handleClick">
+            <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
+        </div>
         <DdDatepicker v-model="date" ref="datepicker"/>
     </div>
 </template>
@@ -25,7 +27,7 @@
         margin-left: 10px;
         vertical-align: text-top;
         height: 16px;
-        background: url(/static/image/calendar.png);
+        background: url(../../../../../image/calendar.png);
     }
     .calendar-date-select .dd-datepicker-calendar {
         position: relative !important;

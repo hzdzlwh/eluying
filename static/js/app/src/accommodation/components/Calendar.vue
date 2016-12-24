@@ -15,7 +15,7 @@
                         >
                             <div class="calendar-header-day">
                                 {{d.dateStr}}
-                                <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.isHoliday">
+                                <div class="eluyun_rest_outer spriteImg isHoliday" v-if="d.holiday">
                                     <div class="eluyun_rest"></div>
                                 </div>
                             </div>
@@ -34,38 +34,54 @@
                         <span class="calendar-category-name-text">{{c.cName}}</span>
                     </div>
                     <div class="calendar-category-list">
-                        <div class="calendar-category-room" v-if="!c.folded" v-for="r in c.rooms" :room="r.i">{{r.sn}}</div>
+                        <template v-for="r in c.rooms">
+                            <div
+                                class="calendar-category-room"
+                                :class="{'calendar-category-room-dirty': r.isDirty}"
+                                v-if="!c.folded"
+                                :room="r.i"
+                                @click="setDirtyRoom(r)"
+                            >
+                                {{r.sn}}
+                            </div>
+                            <div class="calendar-category-room fold" v-if="r.isLast && c.folded">剩余</div>
+                        </template>
                     </div>
                 </div>
             </div>
             <div class="calendar-status-list" @scroll="handleStatusScroll">
                 <table class="calendar-status-table">
                     <tbody>
-                        <tr class="calendar-status-row" v-for="room in finalRoomStatus" v-if="room.selected">
-                            <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
-                                <div
-                                    v-if="status.s === -1"
-                                    class="calendar-status-inner"
-                                    :class="{'selected': status.selected}"
-                                    @click="selectStatus(status)"
-                                >
-                                    <div class="calendar-status-info">
-                                        <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
-                                        <div class="calendar-status-price">￥{{status.p}}</div>
-                                        <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
+                        <template v-for="room in finalRoomStatus">
+                            <tr class="calendar-status-row" v-if="room.selected && !room.folded">
+                                <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
+                                    <div
+                                        v-if="status.s === -1"
+                                        class="calendar-status-inner"
+                                        :class="{'selected': status.selected}"
+                                        @click="selectStatus(status)"
+                                    >
+                                        <div class="calendar-status-info">
+                                            <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
+                                            <div class="calendar-status-price">￥{{status.p}}</div>
+                                            <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="calendar-status-close" v-if="status.s === 100">
-                                    已关闭
-                                </div>
-                                <div
-                                    class="calendar-status-action"
-                                    @click="openOrCloseStatus(room, status)"
-                                >
-                                    {{status.s === 100 ? '打开房间' : '关闭房间'}}
-                                </div>
-                            </td>
-                        </tr>
+                                    <div class="calendar-status-close" v-if="status.s === 100">
+                                        已关闭
+                                    </div>
+                                    <div
+                                        class="calendar-status-action"
+                                        @click="openOrCloseStatus(room, status)"
+                                    >
+                                        {{status.s === 100 ? '打开房间' : '关闭房间'}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="calendar-status-row" v-if="room.isLast && room.folded">
+                                <td class="calendar-status" style="text-align: center" v-for="left in leftMap[room.ti]">{{left}}间</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
                 <div class="calendar-glyph"
@@ -113,7 +129,7 @@
         </div>
     </div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar {
        height: 100%;
@@ -145,6 +161,7 @@
         position: relative;
     }
     .calendar-category-name {
+        cursor: pointer;
         width: 74px;
         top: 0;
         bottom: 0;
@@ -161,6 +178,7 @@
         position: absolute;
         left: 50%;
         top: 50%;
+        cursor: pointer;
     }
     .calendar-category-list {
         display: inline-block;
@@ -170,11 +188,29 @@
         height: auto;
     }
     .calendar-category-room {
+        cursor: pointer;
+        position: relative;
         width: 100%;
         line-height: 48px;
         text-align: center;
         border-bottom: solid thin #e6e6e6;
         height: 48px;
+    }
+    .calendar-category-room.fold {
+        cursor: default;
+    }
+    .calendar-category-room-dirty {
+        background: #e1e5f0;
+    }
+    .calendar-category-room-dirty::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 14px;
+        height: 17px;
+        background: url('../../../../../image/dirty-room.png');
     }
     .calendar-category-room.hover, .calendar-header-date.hover {
         background: #bfdeff;
@@ -205,6 +241,12 @@
         border-bottom: solid thin #ccc;
         border-right: solid thin #e6e6e6;
         position: relative;
+    }
+    .calendar-header-date.weekend {
+        color: #f24949;
+    }
+    .calendar-header-date.today {
+        color: $blue;
     }
     .calendar-header-day {
         width: 100%;
@@ -345,6 +387,7 @@
         top: 32px;
         left: 49px;
         z-index: 1;
+        cursor: pointer;
     }
     .calendar-status-close {
         background: #bfbfbf;
@@ -490,7 +533,6 @@
                     const date = util.diffDate(startDate, i);
                     const holiday = this.holidays.find(d => d.date === util.dateFormat(date));
                     const isToday = util.isSameDay(date, new Date());
-                    const isHoliday = holiday && holiday.type === 0;
 
                     let left = 0;
                     this.categories.map(c => {
@@ -504,9 +546,9 @@
                     arr.push({
                         date: util.dateFormat(date),
                         isToday,
-                        isHoliday,
+                        holiday,
                         left,
-                        dateStr: isHoliday ? holiday.holiday : (isToday ? '今天' : util.dateFormatWithoutYear(date)),
+                        dateStr: holiday && holiday.type === 0 ? holiday.holiday : (isToday ? '今天' : util.dateFormatWithoutYear(date)),
                         weekday: util.getWeek(date)
                     });
                 }
@@ -517,6 +559,7 @@
                 return this.roomStatus.map(room => {
                     const category = this.categories.find(category => category.cId === room.ti);
                     room.selected = category.selected;
+                    room.folded = category.folded;
                     room.cName = category.cName;
                     return room;
                 });
@@ -552,7 +595,7 @@
                 this.orderList.map(order => {
                     // 过滤未选中的房型
                     const category = this.categories.find(category => category.cId === order.id);
-                    if (!category.selected) {
+                    if (!category.selected || category.folded) {
                         return
                     }
 
@@ -617,20 +660,35 @@
                     dateList: JSON.stringify([util.dateFormat(status.date)]),
                     open: status.s === 100 ? 1 : 0,
                     roomId: room.i
-                }, function(result) {
-                    if (result.code === 1) {
-                        status.s = status.s === 100 ? -1 : 100;
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                    status.actionVisible = false;
+                }).then(
+                    result => {
+                        if (result.code === 1) {
+                            status.s = status.s === 100 ? -1 : 100;
+                            // 修改库存
+                            const index = util.DateDiff(this.startDate, status.date);
+                            const oldV = this.leftMap[room.ti][index];
+                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1)
+                        } else {
+                            modal.somethingAlert(result.msg);
+                        }
+                        status.actionVisible = false;
                 });
-            },
-            hideStatus(status) {
-                status.actionVisible = false;
             },
             pullOrder(id){
                 this.$emit('pullOrder', id);
+            },
+            setDirtyRoom(room) {
+                AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {
+                    actionType: !room.isDirty,
+                    roomId: room.i
+                })
+                    .then(result => {
+                        if (result.code === 1) {
+                            room.isDirty = !room.isDirty;
+                        } else {
+                            modal.somethingAlert(result.msg);
+                        }
+                    });
             }
         },
         directives: {

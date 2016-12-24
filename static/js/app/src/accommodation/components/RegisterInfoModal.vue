@@ -189,14 +189,6 @@
             padding: 16px 24px;
             border-top: 1px solid $gary-light;
         }
-        .content-item-title {
-            display: flex;
-            justify-content: space-between;
-            font-size: $font-size-sm;
-            color: $gary-daker;
-            font-weight: bold;
-            margin-bottom: 16px;
-        }
         .increase-container {
             font-size: $font-size-base;
             font-weight: normal;
@@ -307,6 +299,14 @@
             max-height: 120px;
             overflow: scroll;
         }
+    }
+    .content-item-title {
+        display: flex;
+        justify-content: space-between;
+        font-size: $font-size-sm;
+        color: $gary-daker;
+        font-weight: bold;
+        margin-bottom: 16px;
     }
     .roomModals-footer {
         position: absolute;
