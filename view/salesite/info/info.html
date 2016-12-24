@@ -27,7 +27,7 @@
                     <div class="info-definition">店铺类型</div>
                     <div class="info-selections">
                         <dd-select placeholder="请选择店铺类型" style="width:160px;" v-model="shopType">
-                            <dd-option v-for="option in optionShopType" :value="option.id" :label="option.name" :key="option.id+option.name">
+                            <dd-option v-for="option in optionShopType" :value="option.id" :label="option.name">
                             </dd-option>
                         </dd-select>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="info-definition">店铺地址</div>
                     <div class="info-imgs" style="float: left ;margin-left: 10px ;">
                         <dd-select class="info-choose" v-model="provinceType" placeholder="请选择">
-                            <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'pro'">
+                            <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
                             </dd-option>
                         </dd-select>
                         <dd-select class="info-choose" v-model="cityType" placeholder="请选择">
