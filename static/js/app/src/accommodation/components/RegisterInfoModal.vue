@@ -146,7 +146,6 @@
         }
         .modal-content {
             width: 794px;
-            height: 600px;
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
@@ -177,7 +176,7 @@
     }
     .roomModals-body {
         width: 100%;
-        height: 485px;
+        max-height: 485px;
         overflow: scroll;
         label {
             margin: 0;

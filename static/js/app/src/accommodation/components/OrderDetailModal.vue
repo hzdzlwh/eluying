@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" style="padding-bottom: 149px">
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">订单详情</span>
@@ -148,7 +148,7 @@
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn">办理入住</div>
                                 <div class="dd-btn dd-btn-primary order-btn">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut">办理退房</div>
                                 <div class="dd-btn dd-btn-primary order-btn">收银</div>
                             </div>
                         </div>
@@ -380,6 +380,10 @@
                     });
                 }
                 return price;
+            },
+            checkOut() {
+                $('#orderDetail').modal('hide');
+                $('#checkOut').modal('show');
             }
         },
         components:{}

@@ -21,6 +21,7 @@
         />
         <RegisterInfoModal />
         <OrderDetailModal :order="orderDetail"/>
+        <CheckOutModal />
     </div>
 </template>
 <style>
@@ -40,6 +41,7 @@
     import Search from './components/Search.vue';
     import RegisterInfoModal from './components/RegisterInfoModal.vue';
     import OrderDetailModal from './components/OrderDetailModal.vue';
+    import CheckOutModal from './components/CheckOutModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -173,7 +175,8 @@
             ShopCart,
             Search,
             RegisterInfoModal,
-            OrderDetailModal
+            OrderDetailModal,
+            CheckOutModal
         }
     }
 </script>
