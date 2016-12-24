@@ -5,6 +5,7 @@
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
             @fold="handleFold"
+            @pullOrder="pullOrderDetail"
             :categories="categories"
             :holidays="holidays"
             :roomStatus="roomStatus"
@@ -19,7 +20,7 @@
             :selectedEntries="selectedEntries"
         />
         <RegisterInfoModal />
-        <OrderDetail />
+        <OrderDetailModal :order="orderDetail"/>
     </div>
 </template>
 <style>
@@ -38,7 +39,7 @@
     import ShopCart from './components/ShopCart.vue';
     import Search from './components/Search.vue';
     import RegisterInfoModal from './components/RegisterInfoModal.vue';
-    import OrderDetail from './components/OrderDetail.vue';
+    import OrderDetailModal from './components/OrderDetailModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -76,7 +77,8 @@
                 startDate: util.diffDate(new Date(), -2),
                 DAYS: 30,
                 dateRange: [],
-                leftMap: {}
+                leftMap: {},
+                orderDetail: {}
             }
         },
         computed: {
@@ -157,6 +159,13 @@
             handleFold(id) {
                 const category = this.categories.find(category => category.cId === id);
                 category.folded = !category.folded;
+            },
+            pullOrderDetail(id) {
+                return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
+                        .then(res => {
+                            this.orderDetail = res.data;
+                            $('#orderDetail').modal('show');
+                        });
             }
         },
         components: {
@@ -164,7 +173,7 @@
             ShopCart,
             Search,
             RegisterInfoModal,
-            OrderDetail
+            OrderDetailModal
         }
     }
 </script>

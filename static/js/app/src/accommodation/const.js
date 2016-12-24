@@ -10,3 +10,5 @@ export const ORDER_STATUS = [
     {short: '取', long: '已取消', en: 'cancel'},
     {short: '完', long: '已完成', en: 'finish'}
 ];
+
+export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
