@@ -94,6 +94,7 @@ var checkinCtrl = function(app){
                         startDate: d.startDate,
                         sub: d.sub,
                         idCardList: JSON.stringify(d.idCardList),
+                        roomOrderId: d.serviceId
                     };
                     postRooms.push(room);
                 });
