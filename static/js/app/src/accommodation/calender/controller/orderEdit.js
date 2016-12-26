@@ -100,6 +100,7 @@ var orderEditCtrl = function(app){
                         roomId: d.roomId,
                         startDate: d.startDate,
                         sub: d.sub,
+                        roomOrderId: d.serviceId
                     };
                     rooms.push(room);
                 });
@@ -156,7 +157,7 @@ var orderEditCtrl = function(app){
                     rooms: JSON.stringify(rooms),
                     items: JSON.stringify(items),
                     foodItems: JSON.stringify([]),
-                    playItems: JSON.stringify(playItems),
+                    playItems: JSON.stringify(playItems)
                 };
                 if(orderEdit.idVal){
                     order.customerIdCardArr = JSON.stringify([

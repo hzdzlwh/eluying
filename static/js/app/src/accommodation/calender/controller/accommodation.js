@@ -134,6 +134,7 @@ var accommodationCtrl = function(app){
                         roomId: d.roomId,
                         startDate: d.startDate,
                         sub: d.sub,
+                        roomOrderId: d.serviceId
                     };
                     rooms.push(room);
                 });
