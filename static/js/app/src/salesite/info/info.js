@@ -68,10 +68,10 @@ $(function() {
             imgUrls: [],
             provinceType: 0,
             cityType: 0,
-            countyType: 0,
+            countyType: undefined,
             provinceItems: dsyForComponent['0'],
             cityItems: dsyForComponent['0_0'],
-            countyItems: dsyForComponent['0_0_0'].unshift({id: -1, name: '请选择'}),
+            countyItems: dsyForComponent['0_0_0'],
             address: '',
             lat: undefined,
             lon: undefined
@@ -174,7 +174,7 @@ $(function() {
                 })
             },
             cancel() {
-                    this.getShopList();
+                this.getShopList();
             },
             mapAddress(arr, value) {
                 let i;
