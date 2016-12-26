@@ -87,6 +87,7 @@
                 <div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart, 'glyph-book': g.roomState === 0, 'glyph-ing': g.roomState === 1, 'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
+                     @click="pullOrder(g.orderId)"
                      :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}">
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
@@ -687,6 +688,9 @@
                         }
                         status.actionVisible = false;
                 });
+            },
+            pullOrder(id){
+                this.$emit('pullOrder', id);
             },
             setDirtyRoom(room) {
                 AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {
