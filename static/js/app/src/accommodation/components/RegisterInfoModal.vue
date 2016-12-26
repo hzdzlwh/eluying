@@ -17,7 +17,7 @@
                                 </div>
                                 <div class="userInfo-item userInfo-phone">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" placeholder="11位手机号" @blur="checkPhone" v-model="phone">
+                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号" @blur="checkPhone" v-model="phone">
                                     <span class="error-phone-tip" v-show="!phoneValid"><span style="vertical-align: text-bottom">&uarr;</span>请输入正确的手机号</span>
                                 </div>
                                 <div class="userInfo-item">
@@ -336,6 +336,9 @@
     import AJAXService from 'AJAXService';
     import modal from 'modal';
     export default{
+        props: {
+            selectedEntries: Array
+        },
         data() {
             return {
                 name: '',

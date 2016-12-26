@@ -19,7 +19,7 @@
         <ShopCart
             :selectedEntries="selectedEntries"
         />
-        <RegisterInfoModal />
+        <RegisterInfoModal :selectedEntries="selectedEntries"/>
         <OrderDetailModal :order="orderDetail"/>
         <CheckOutModal />
     </div>
