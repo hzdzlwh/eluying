@@ -142,8 +142,7 @@ $(function() {
                 $('#detail').click();
             },
             search() {
-                const countyIndex = this.provinceType == 0 ? this.countyType + 1 : this.countyType;
-                const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[countyIndex].name}${this.address}`;
+                const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[this.countyType].name}${this.address}`;
                 mapInit('infoMap', {addressStr: addressStr}, 16, obj => {
                     this.lat = obj.pointLat;
                     this.lon = obj.pointLon;
