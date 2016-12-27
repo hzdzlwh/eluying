@@ -177,7 +177,8 @@
     .roomModals-body {
         width: 100%;
         max-height: 485px;
-        overflow: scroll;
+        overflow-y: scroll;
+        overflow-x: hidden;
         label {
             margin: 0;
         }

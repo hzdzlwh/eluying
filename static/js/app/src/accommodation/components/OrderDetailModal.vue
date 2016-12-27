@@ -45,9 +45,9 @@
                                         </div>
                                         <div class="room-date">
                                             <label class="label-text">入住</label>
-                                            <span class="startDate">{{item.startDate}}</span>
+                                            <span class="startDate">{{item.startDate.slice(5)}}</span>
                                             <span>~</span>
-                                            <span class="endDate">{{item.endDate}}</span>
+                                            <span class="endDate">{{item.endDate.slice(5)}}</span>
                                             <label class="label-text">{{`共${item.duration}晚`}}</label>
                                         </div>
                                         <div class="room-fee" style="margin-right: 81px">
@@ -79,7 +79,7 @@
                                             </div>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
-                                                <span>{{item.date}}</span>
+                                                <span>{{item.date.slice(5)}}</span>
                                             </div>
                                             <div class="item-count">
                                                 <label class="label-text">人数</label>
@@ -90,8 +90,53 @@
                                                 <span>{{`¥${item.foodPrice}`}}</span>
                                             </div>
                                         </div>
-                                        <div class="info-icon">
-                                            <div class="info-content"></div>
+                                        <div class="info-icon" @mousemove="changeFoodOrderId(item)">
+                                            <div class="info-content">
+                                                <p class="restName">{{foodInfoContent ? foodInfoContent.restName : ''}}</p>
+                                                <p class="deskNum"><span>桌号:5</span><span>人数:8</span></p>
+                                                <p class="foodTime">就餐时间:2016-03-03 15:30</p>
+                                                <div class="food-container">
+                                                    <p class="food-item">
+                                                        <span>面包诱惑大份</span>
+                                                        <span>x9</span>
+                                                        <span>¥100000</span>
+                                                    </p>
+                                                    <p class="food-item">
+                                                        <span>面包诱惑大份</span>
+                                                        <span>x9</span>
+                                                        <span>¥100000</span>
+                                                    </p>
+                                                    <p class="food-item">
+                                                        <span>面包诱惑大份</span>
+                                                        <span>x9</span>
+                                                        <span>¥100000</span>
+                                                    </p>
+                                                    <p class="food-item">
+                                                        <span>面包诱惑大份</span>
+                                                        <span>x9</span>
+                                                        <span>¥100000</span>
+                                                    </p>
+                                                </div>
+                                                <div class="money-container">
+                                                    <p class="money-item">
+                                                        <span class="money-type">订单金额</span>
+                                                        <span class="money-num">¥100000</span>
+                                                    </p>
+                                                    <p class="money-item">
+                                                        <span class="money-type">订单金额</span>
+                                                        <span class="money-num">¥100000</span>
+                                                    </p>
+                                                    <p class="money-item">
+                                                        <span class="money-type">订单金额</span>
+                                                        <span class="money-num">¥100000</span>
+                                                    </p>
+                                                </div>
+                                                <div class="operator-container">
+                                                    <p>订单状态:已预订</p>
+                                                    <p>预订时间:2016-03-03 15:14</p>
+                                                    <p>操作员:产品</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +152,7 @@
                                             <span class="item-name">{{item.name}}</span>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
-                                                <span>{{item.date}}</span>
+                                                <span>{{item.date.slice(5)}}</span>
                                             </div>
                                             <div class="item-count">
                                                 <label class="label-text">数量</label>
@@ -165,6 +210,14 @@
             color: #999999;
         }
     }
+    .small-font {
+        font-size: $font-size-sm;
+        color: $gary-dark;
+    }
+    .normal-font {
+        font-size: $font-size-base;
+        color: $gary-daker;
+    }
     .roomModals {
         .grey {
             color: #666666;
@@ -219,8 +272,8 @@
             justify-content: space-between;
             align-items: center;
         }
-        .card-type {
-            margin-left: 96px;
+        .user-name {
+            width: 124px;
         }
         .room-date {
             .startDate, .endDate {
@@ -276,12 +329,57 @@
             height: 16px;
             background: url("../../../../../image/modal/room_modal_info.png");
             background-size: contain;
+            &:hover {
+                .info-content {
+                    display: block;
+                }
+            }
         }
         .info-content {
+            display: none;
+            background: #fafafa;
+            border-radius: 2px;
+            box-shadow: 0 0 5px 0;
+            width: 274px;
             position: absolute;
-            right: 0;
+            left: -4px;
             bottom: 0;
             padding: 8px;
+            transform: translateX(-100%);
+            .restName {
+                @extend .normal-font;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .food-item, .money-item {
+                display: flex;
+                justify-content: space-between;
+            }
+            .deskNum {
+                @extend .small-font;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+            .foodTime {
+                @extend .small-font;
+                margin-bottom: 8px;
+            }
+            .food-container {
+                padding: 8px 0;
+                border-top: 1px solid #e6e6e6;
+            }
+            .money-container {
+                padding: 8px 0;
+                border-top: 1px solid #e6e6e6;
+            }
+            .operator-container {
+                @extend .small-font;
+                padding-top: 8px;
+                border-top: 1px solid #e6e6e6;
+            }
         }
         .order-price-text {
             color: $gary-daker;
@@ -321,10 +419,23 @@
         },
         data(){
             return{
-                ID_CARD_TYPE
+                ID_CARD_TYPE,
+                foodOrderId: undefined
             }
         },
-        computed: {},
+        computed: {
+            foodInfoContent(){
+                let foodContent;
+                AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', { caterOrderId: this.foodOrderId })
+                        .then(res => {
+                            if (res.code === 1) {
+                                foodContent = res.data;
+                            }
+                        });
+                console.log(foodContent);
+                return foodContent;
+            }
+        },
         methods: {
             hideModal(e){
                 e.stopPropagation();
@@ -370,6 +481,14 @@
                 params = AJAXService.paramsToString(params);
                 window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
             },
+            changeFoodOrderId(food) {
+                this.foodOrderId = food.foodOrderId;
+            },
+            /**
+             * 计算各种类型的收费金额
+             * @param type
+             * @returns {number}
+             */
             findTypePrice(type) {
                 let price = 0;
                 if (this.order.payments) {
