@@ -12,3 +12,4 @@ export const ORDER_STATUS = [
 ];
 
 export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
+export const FOOD_STATE = ['已预订', '就餐中', '已结束', '已取消'];
