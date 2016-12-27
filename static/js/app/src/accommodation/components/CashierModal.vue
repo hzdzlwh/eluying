@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="checkStand" role="dialog">
+        <div class="modal fade roomModals" id="Cashier" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
