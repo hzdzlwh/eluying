@@ -521,6 +521,13 @@
             leftMap: Object,
             DAYS: Number
         },
+        data() {
+            return {
+                scrollTicking: false,
+                lastScrollTop: 0,
+                lastScrollLeft: 0
+            }
+        },
         components: {
             DateSelect,
             RoomFilter,
@@ -636,8 +643,16 @@
         },
         methods: {
             handleStatusScroll(ev) {
-                this.$refs.calendarLeftHeader.scrollTop = ev.target.scrollTop;
-                this.$refs.calendarHeader.scrollLeft = ev.target.scrollLeft;
+                this.lastScrollTop = ev.target.scrollTop;
+                this.lastScrollLeft = ev.target.scrollLeft;
+                if (!this.scrollTicking) {
+                    window.requestAnimationFrame(() => {
+                        this.$refs.calendarLeftHeader.scrollTop = this.lastScrollTop;
+                        this.$refs.calendarHeader.scrollLeft = this.lastScrollLeft;
+                        this.scrollTicking = false;
+                    })
+                }
+                this.scrollTicking = true;
             },
             handleDateChange(date) {
                 this.$emit('dateChange', date);
