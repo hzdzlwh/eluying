@@ -68,13 +68,13 @@ $(function() {
             imgUrls: [],
             provinceType: 0,
             cityType: 0,
-            countyType: 0,
+            countyType: undefined,
             provinceItems: dsyForComponent['0'],
             cityItems: dsyForComponent['0_0'],
-            countyItems: dsyForComponent['0_0_0'].unshift({id: -1, name: '请选择'}),
+            countyItems: dsyForComponent['0_0_0'],
             address: '',
-            lat: undefined,
-            lon: undefined
+            lat: null,
+            lon: null
         },
         mounted: function () {
             this.getShopList();
@@ -99,14 +99,23 @@ $(function() {
                                 this.countyType = this.mapAddress(this.countyItems, result.data.county || '请选择');
                             }, result);
                         }, result);
-                        mapInit('infoMap', {
-                            addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county || ''}`,
-                            pointLat: result.data.lat,
-                            pointLon: result.data.lon
-                        }, 16, obj => {
-                            this.lat = obj.pointLat;
-                            this.lon = obj.pointLon;
-                        });
+                        result.data.lat ?
+                            mapInit('infoMap', {
+                                addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county || ''}`,
+                                pointLat: result.data.lat,
+                                pointLon: result.data.lon
+                            }, 16, obj => {
+                                this.lat = obj.pointLat;
+                                this.lon = obj.pointLon;
+                            }) :
+                            mapInit('infoMap', {
+                                addressStr: `${result.data.province || '北京市'}${result.data.city || '北京市'}${result.data.county || ''}`,
+                                pointLat: result.data.lat,
+                                pointLon: result.data.lon
+                            }, 16, () => {
+                                this.lat = null;
+                                this.lon = null;
+                            });
                     } else if (result.code !== 1) {
                         modal.somethingAlert(result.msg);
                     }
@@ -142,8 +151,7 @@ $(function() {
                 $('#detail').click();
             },
             search() {
-                const countyIndex = this.provinceType == 0 ? this.countyType + 1 : this.countyType;
-                const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[countyIndex].name}${this.address}`;
+                const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[this.countyType].name}${this.address}`;
                 mapInit('infoMap', {addressStr: addressStr}, 16, obj => {
                     this.lat = obj.pointLat;
                     this.lon = obj.pointLon;
@@ -174,7 +182,7 @@ $(function() {
                 })
             },
             cancel() {
-                    this.getShopList();
+                this.getShopList();
             },
             mapAddress(arr, value) {
                 let i;
