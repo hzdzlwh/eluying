@@ -11,7 +11,8 @@
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
-                            <span class="header-tools">编辑订单</span>
+                            <span class="header-tools" v-if="order.orderState !== 5">编辑订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -260,10 +261,10 @@
                                 <span class="order-info-operator" style="margin-left: 24px">{{`办理员工:${order.operatorName}`}}</span>
                             </p>
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut">办理退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn">收银</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble">办理入住</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkOutAdAble">提前退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut" v-if="getRoomsState.checkOutAble">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
                             </div>
                         </div>
                     </div>
@@ -547,9 +548,20 @@
                 let roomsState = {checkOutAdAble: false, checkOutAble: false, checkInAble: false};
                 if (this.order.rooms) {
                     this.order.rooms.forEach(item => {
-
+                        if (item.state === 0) {
+                            roomsState.checkInAble = true;
+                        } else if (item.state === 1) {
+                            let today = new Date();
+                            let endDate = new Date(item.endDate);
+                            if(endDate > today && !util.isSameDay(endDate, today)){
+                                roomsState.checkOutAdAble = true;
+                            }else{
+                                roomsState.checkOutAble = true;
+                            }
+                        }
                     });
                 }
+                return roomsState;
             }
         },
         methods: {
