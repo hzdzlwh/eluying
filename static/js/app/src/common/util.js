@@ -53,6 +53,19 @@ var util = {
         return y + '-' + m + '-' + d;
     },
 
+    timeFormat: function(dateArg){
+        let date = new Date(dateArg);
+        let m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        let d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        let h = date.getHours();
+        h = h < 10 ? '0' + h : h;
+        let M = date.getMinutes();
+        M = M < 10 ? '0' + M : M;
+        return m + '-' + d + ' ' + h + ':' + M;
+    },
+
     tomorrow: function(date){
         var d = date.getDate();
         return new Date(date.setDate(d + 1));

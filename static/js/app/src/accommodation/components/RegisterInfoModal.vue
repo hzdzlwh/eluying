@@ -44,7 +44,7 @@
                                 <div class="shop-item" v-for="(item, index) in enterItems">
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id">
+                                        <dd-select v-model="item.id" placeholder="选择娱乐项目">
                                             <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name" :key="enter.id+enter.name">
                                             </dd-option>
                                         </dd-select>
@@ -82,7 +82,7 @@
                                 <div class="shop-item" v-for="(item, index) in shopGoodsItems">
                                     <span class="shop-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id">
+                                        <dd-select v-model="item.id" placeholder="选择商超项目">
                                             <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name" :key="shop.id+shop.name">
                                             </dd-option>
                                         </dd-select>
@@ -348,9 +348,9 @@
                 userOrigins: [],
                 phoneValid: true,
                 remark: '',
-                enterList: [{id: -1, name: '选择娱乐项目'}],
+                enterList: [],
                 enterItems: [],
-                shopList: [{id: -1, name: '选择商超项目'}],
+                shopList: [],
                 shopGoodsItems: []
             }
         },
@@ -420,13 +420,13 @@
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
-                    this.shopGoodsItems.push({ id: -1, count: 1, type: 3 });
+                    this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
                 } else if (type === 2) {
                     if (this.enterItems.length >= 2) {
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: -1, count: 1, type: 2, date: '', timeAmount: 1 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 });
                 }
             },
 
