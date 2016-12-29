@@ -74,9 +74,9 @@ export default {
          SAMID				阅读器的设备ID
          *******************************************************************************************************************/
 
-        vm.$emit('read', {
+        return {
             name: this.data.IDname,
             cardNo: this.data.IDCardNo
-        });
+        }
     }
 };
