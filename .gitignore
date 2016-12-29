@@ -16,3 +16,4 @@ npm-debug.log*
 /.happypack/*
 /.vscode/*
 /view/home/
+/login.html
