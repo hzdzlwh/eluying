@@ -116,7 +116,10 @@
                     r.st.map(s => {
                         // ShopCart 组件使用
                         if (s.selected) {
-                            temp.push({ ...s, id: r.i, cName: category.cName, rName: r.sn });
+                            s.id = r.i;
+                            s.cName = category.cName;
+                            s.rName= r.sn;
+                            temp.push(s);
                         }
                     })
                 });
