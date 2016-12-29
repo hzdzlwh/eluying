@@ -34,10 +34,11 @@
 }
 .show-transition {
   transition: all 0.6s linear;
-  height: 211px;
+  height: 315px;
 }
 .fade-transition {
   transition: all 0.6s linear;
+  height: 371px;
 }
 .show-leave, .show-enter, .fade-leave, .fade-enter{
   height: 0;

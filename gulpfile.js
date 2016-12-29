@@ -123,7 +123,7 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-        webpackConf, {devtool: 'inline-source-map'},
+        webpackConf, {devtool: 'inline-source-map', watch: true},
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
@@ -143,8 +143,9 @@ gulp.task('webpack-dev', function () {
 
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
+    //gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
+    //gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']);
+    //gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
     gulp.watch('./static/tpl/*.html', ['file-include']);
 });
