@@ -10,6 +10,9 @@
                     <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>房间信息</span></p>
+                            <div v-for="item in rooms">
+                                hello
+                            </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>订单总结</span></p>
@@ -41,6 +44,12 @@
 </style>
 <script>
     export default{
+        props:{
+            rooms:{
+                type: Object,
+                default: {}
+            }
+        },
         data(){
             return{}
         },

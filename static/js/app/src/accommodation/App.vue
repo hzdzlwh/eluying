@@ -20,8 +20,23 @@
             :selectedEntries="selectedEntries"
         />
         <RegisterInfoModal :selectedEntries="selectedEntries"/>
-        <OrderDetailModal :order="orderDetail"/>
-        <CheckOutModal />
+        <OrderDetailModal
+                :order="orderDetail"
+                @changeCheckOutRooms="changeCheckOutRooms"
+                @changeCheckInRooms="changeCheckInRooms"
+        />
+        <CheckOutModal :rooms="checkOutRooms"/>
+        <CheckInModal
+                :rooms="checkInRooms"
+                @changeCashierType="changeCashierType"
+                @changePayMents="changePayMents"
+        />
+        <CashierModal
+                :cashierType="cashierType"
+                :checkInRooms="checkInRooms"
+                :checkOutRooms="checkOutRooms"
+                :payMents="payMents"
+        />
     </div>
 </template>
 <style>
@@ -42,6 +57,8 @@
     import RegisterInfoModal from './components/RegisterInfoModal.vue';
     import OrderDetailModal from './components/OrderDetailModal.vue';
     import CheckOutModal from './components/CheckOutModal.vue';
+    import CheckInModal from './components/CheckInModal.vue';
+    import CashierModal from './components/CashierModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -80,7 +97,12 @@
                 DAYS: 30,
                 dateRange: [],
                 leftMap: {},
-                orderDetail: {}
+                orderDetail: {},
+                checkOutRooms: {},
+                checkInRooms: {},
+                cashier: {},
+                cashierType: '',
+                payMents: {}
             }
         },
         computed: {
@@ -168,6 +190,19 @@
                             this.orderDetail = res.data;
                             $('#orderDetail').modal('show');
                         });
+            },
+            changeCheckOutRooms(obj) {
+                this.checkOutRooms = obj;
+                console.log(this.checkOutRooms);
+            },
+            changeCheckInRooms(obj) {
+                this.checkInRooms = obj;
+            },
+            changeCashierType(str) {
+                this.cashierType = str;
+            },
+            changePayMents(obj) {
+                this.payMents = obj;
             }
         },
         components: {
@@ -176,7 +211,9 @@
             Search,
             RegisterInfoModal,
             OrderDetailModal,
-            CheckOutModal
+            CheckOutModal,
+            CheckInModal,
+            CashierModal
         }
     }
 </script>
