@@ -125,6 +125,7 @@
 
             },
             check(type) {
+                // 根据操作行为，弹出确认框，清除不合适的日期
                 const dialogConfig = {
                     showTitle: false,
                     okText: '清除'
@@ -161,17 +162,15 @@
                 const today = new Date();
                 this.selectedEntries.map(e => {
                     const date = new Date(e.date);
+                    // 补录清除今天和将来
                     if (type === 'finish') {
                         if (util.isSameDay(date, today) || date > today) {
                             e.selected = false;
                         }
                     }
-                    if (type === 'ing') {
-                        if (!util.isSameDay(date, today) && date < today) {
-                            e.selected = false;
-                        }
-                    }
-                    if (type === 'book') {
+
+                    // 直接入住和预定清除过去
+                    if (type === 'ing' || type === 'book') {
                         if (!util.isSameDay(date, today) && date < today) {
                             e.selected = false;
                         }
