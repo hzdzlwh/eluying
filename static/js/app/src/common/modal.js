@@ -89,22 +89,22 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
     var header = showTitle ? "<div class='modal-header'>" +
     "<p>" + title + "</p>" +
     "</div>" : '';
-    var okButton = hasOk === false ? '' : '<button class="btn-ok" id="confirmDialogOk">' + okText + '</button>';
-    var cancelButton = hasCancel === false ? '' : '<button class="btn-cancel" id="confirmDialogCancel">' + cancelText + '</button>';
+    var okButton = hasOk === false ? '' : '<button class="dd-btn dd-btn-primary" id="confirmDialogOk">' + okText + '</button>';
+    var cancelButton = hasCancel === false ? '' : '<button class="dd-btn dd-btn-ghost" id="confirmDialogCancel">' + cancelText + '</button>';
     if ($('.confirm-dialog-container').length === 0) {
         $("body").prepend('<div class="confirm-dialog-container"></div>');
     }
     $('.confirm-dialog-container').html(
         "<div class='modal fade' role='dialog' id='confirmDialog'>" +
-        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-dialog' style='width: 300px'>" +
         "<div class='modal-content clearfloat'>" +
         header +
         "<div class='modal-body'>" +
         "<p>" + message + "</p>" +
         "</div>" +
-        "<div class='footer clearfloat'>" +
-        cancelButton +
+        "<div class='footer'>" +
         okButton +
+        cancelButton +
         "</div>" +
         "</div>" +
         "</div>" +

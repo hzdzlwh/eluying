@@ -5,9 +5,9 @@
             <div class="shopcart-room" v-for="room in selectedRooms">{{room}}</div>
         </div>
         <div class="shopcart-action">
-            <button class="dd-btn shopcart-addition" v-if="finishShow">补录</button>
-            <button class="dd-btn shopcart-book" v-if="bookShow" @click="showInfoModal">预定</button>
-            <button class="dd-btn shopcart-live" v-if="ingShow">直接入住</button>
+            <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button>
+            <button class="dd-btn shopcart-book" v-if="bookShow" @click="check('book')">预定</button>
+            <button class="dd-btn shopcart-live" v-if="ingShow" @click="check('ing')">直接入住</button>
         </div>
     </div>
 </template>
@@ -61,11 +61,16 @@
 </style>
 <script>
     import util from '../../common/util';
+    import modal from '../../common/modal';
     export default{
         props: {
             selectedEntries: Array
         },
         computed: {
+            /**
+             * {房间id: 房型-房间名}
+             * @returns {{}}
+             */
             selectedRooms() {
                 const today = new Date();
                 let p = false;
@@ -88,6 +93,9 @@
                 this.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
                 this.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
                 this.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
+                this.t = t;
+                this.p = p;
+                this.f = f;
                 return temp;
             },
             selectedRoomsCount() {
@@ -95,7 +103,10 @@
             }
         },
         data(){
-            return{
+            return {
+                p: false,
+                t: false,
+                f: false,
                 finishShow: false,
                 ingShow: false,
                 bookShow: false
@@ -109,6 +120,92 @@
         methods: {
             showInfoModal() {
                 $('#registerInfoModal').modal('show');
+            },
+            showModal(type) {
+
+            },
+            check(type) {
+                const dialogConfig = {
+                    showTitle: false,
+                    okText: '清除'
+                };
+                const callback = () => {
+                    this.clear(type);
+                    console.log(this.getRoomsWithDate());
+                    this.showModal(type);
+                };
+                if (type == 'finish') {
+                    if (this.t || this.f) {
+                        dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
+                        modal.confirmDialog(dialogConfig, callback);
+                        return false;
+                    }
+                } else if(type == 'ing') {
+                    if (this.p) {
+                        dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
+                        modal.confirmDialog(dialogConfig, callback);
+                        return false;
+                    }
+                } else if(type == 'book') {
+                    if (this.p) {
+                        dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
+                        modal.confirmDialog(dialogConfig, callback);
+                        return false;
+                    }
+                }
+
+                this.getRoomsWithDate();
+                this.showModal(type);
+            },
+            clear(type) {
+                const today = new Date();
+                this.selectedEntries.map(e => {
+                    const date = new Date(e.date);
+                    if (type === 'finish') {
+                        if (util.isSameDay(date, today) || date > today) {
+                            e.selected = false;
+                        }
+                    }
+                    if (type === 'ing') {
+                        if (!util.isSameDay(date, today) && date < today) {
+                            e.selected = false;
+                        }
+                    }
+                    if (type === 'book') {
+                        if (!util.isSameDay(date, today) && date < today) {
+                            e.selected = false;
+                        }
+                    }
+                });
+            },
+            getRoomsWithDate() {
+                const temp = [];
+                this.selectedEntries.map(e => {
+                    if (!e.selected) {
+                        return false;
+                    }
+
+                    if (temp.length === 0) {
+                        temp.push({
+                            roomId: e.id,
+                            startDate: e.date,
+                            endDate: e.date
+                        });
+                    } else {
+                        const lastItem = temp[temp.length - 1];
+                        // 将时间连续的房子放到一起
+                        if (e.id === lastItem.roomId && util.DateDiff(lastItem.endDate, e.date) === 1) {
+                            lastItem.endDate = e.date;
+                        } else {
+                            temp.push({
+                                roomId: e.id,
+                                startDate: e.date,
+                                endDate: e.date
+                            });
+                        }
+                    }
+                });
+                return temp;
             }
         }
     }
