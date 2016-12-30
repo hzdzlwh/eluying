@@ -28,18 +28,29 @@
     </div>
 </template>
 <style>
-    body{
-        background-color:#ff0000;
-    }
 </style>
 <script>
     export default{
+        props: {
+            cashierType: {
+                type: String,
+                default: ''//决定以何种方式收银
+            },
+            checkInRooms: {
+                type: Object,
+                default: function(){ return {} }//办理入住收银时的一些参数
+            },
+            checkOutRooms: {
+                type: Object,
+                default: function(){ return {} }//办理退房收银时的一些参数
+            }
+        },
         data(){
             return{}
         },
         methods: {
             hideModal(){
-                $('#checkoutStand').modal('hide');
+                $('#Cashier').modal('hide');
             }
         },
         components:{

@@ -261,7 +261,7 @@
                                 <span class="order-info-operator" style="margin-left: 24px">{{`办理员工:${order.operatorName}`}}</span>
                             </p>
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble">办理入住</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkIn">办理入住</div>
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkOutAdAble">提前退房</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkOut" v-if="getRoomsState.checkOutAble">办理退房</div>
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
@@ -514,6 +514,7 @@
     import AJAXService from 'AJAXService';
     import util from 'util';
     import { ID_CARD_TYPE, FOOD_STATE } from '../const';
+    import modal from 'modal';
     export default{
         props: {
           order: {
@@ -665,9 +666,46 @@
                 let dateStr = util.timeFormat(date);
                 return dateStr;
             },
+            /**
+             * 筛选各种状态下的房间
+             * @param type
+             */
+            filterRooms(type) {
+                let rooms = [];
+                if (this.order.rooms) {
+                    this.order.rooms.forEach(item => {
+                        if (item.state === type) {
+                            rooms.push(item);
+                        }
+                    });
+                }
+                return rooms;
+            },
+            checkIn() {
+                let orderId = this.filterRooms(0)[0].serviceId;
+                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 0, roomOrderId: orderId})
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.$emit('changeCheckInRooms', res.data);
+                                $('#orderDetail').modal('hide');
+                                $('#checkIn').modal('show');
+                            } else {
+                                modal.somethingAlert(res.msg);
+                            }
+                        });
+            },
             checkOut() {
-                $('#orderDetail').modal('hide');
-                $('#checkOut').modal('show');
+                let orderId = this.filterRooms(1)[0].serviceId;
+                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 1, roomOrderId: orderId})
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.$emit('changeCheckOutRooms', res.data);
+                                $('#orderDetail').modal('hide');
+                                $('#checkOut').modal('show');
+                            } else {
+                                modal.somethingAlert(res.msg);
+                            }
+                        });
             }
         },
         components:{}
