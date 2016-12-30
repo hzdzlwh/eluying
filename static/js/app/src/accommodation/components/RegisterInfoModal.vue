@@ -231,6 +231,19 @@
                 width: 110px;
             }
         }
+        .room-select-icon {
+            width: 16px;
+            height: 16px;
+            background-size: contain;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+        .selected-icon {
+            background: url("../../../../../image/modal/room_modal_selected.png");
+        }
+        .notSelect-icon {
+            background: url("../../../../../image/modal/room_modal_notSelect.png");
+        }
         .time-container {
             margin-left: 14px;
         }
