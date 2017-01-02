@@ -22,6 +22,7 @@
         />
         <RegisterInfoModal
                 :registerRooms="registerRooms"
+                :categories="categories"
                 :checkState="checkState"
         />
         <OrderDetailModal
@@ -40,6 +41,7 @@
                 :checkInRooms="checkInRooms"
                 :checkOutRooms="checkOutRooms"
                 :payMents="payMents"
+                :order="orderDetail"
         />
     </div>
 </template>
@@ -88,6 +90,7 @@
                         this.$set(c, 'selected', true);
                         this.$set(c, 'folded', false);
                     });
+                    console.log(this.categories);
                 })
 
         },
@@ -201,9 +204,20 @@
                         });
             },
             changeCheckState(type, arr) {
+                let registerRooms = [];
+                arr.forEach(item => {
+                    let id = undefined;
+                    this.categories.forEach(category => {
+                        category.rooms.forEach(room => {
+                            if (room.i === item.roomId) {
+                                id = category.cId;
+                            }
+                        });
+                    });
+                    registerRooms.push({ categoryType: id, roomType: item.roomId, price: 100, room: item, idCardList: []});
+                });
                 this.checkState = type;
-                this.registerRooms = arr;
-                console.log(this.registerRooms);
+                this.registerRooms = registerRooms;
                 $('#registerInfoModal').modal('show');
             },
             changeCheckOutRooms(obj) {

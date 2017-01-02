@@ -23,7 +23,7 @@
                                 <div class="userInfo-item">
                                     <label>客源渠道</label>
                                     <dd-select v-model="userOriginType">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name" :key="origin.id+origin.name">
+                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
                                         </dd-option>
                                     </dd-select>
                                 </div>
@@ -32,18 +32,46 @@
                         <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
                             <p class="content-item-title">
                                 <span>房间信息</span>
-                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(0)"><span class="increase-icon"></span>添加项目</span>
                             </p>
                             <div class="registerRoom-items">
-                                <div class="registerRoom-container" v-for="item in registerRooms">
+                                <div class="registerRoom-container" v-for="(item,index) in registerRooms">
                                     <div class="registerRoom-item">
                                         <span class="room-icon"></span>
                                         <div class="shop-item-content">
-                                            hello
+                                            <dd-select v-model="item.categoryType" placeholder="请选择房型">
+                                                <dd-option v-for="category in categoryList" :value="category.id" :label="category.name">
+                                                </dd-option>
+                                            </dd-select>
+                                            <div style="width: 60px; display: inline-block" class="room-category">
+                                                <dd-select v-model="item.roomType" placeholder="请选择房型">
+                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :label="room.name">
+                                                    </dd-option>
+                                                </dd-select>
+                                            </div>
+                                            <div class="room-date" style="display: inline-block">
+                                                <label class="label-text">入住</label>
+                                                <div class="enterDate">
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" :disabled-date="disableStartDate" />
+                                                </div>
+                                                <span>~</span>
+                                                <div class="enterDate">
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" :disabled-date="disableStartDate" />
+                                                </div>
+                                                <label class="label-text">{{`共${getDateDiff(item.room.startDate, item.room.endDate)}晚`}}</label>
+                                            </div>
+                                            <label class="label-text">房费</label>
+                                            <div class="registerInfoModal-roomPrice">
+                                                <input class="dd-input" v-model="item.price" style="width: 80px"/>
+                                            </div>
                                         </div>
-                                        <span class="delete-icon"></span>
+                                        <span class="delete-icon" @click="deleteItem(0, index)"></span>
                                     </div>
-                                    <CheckInPerson />
+                                    <CheckInPerson
+                                            :personsObj="{id: index, persons: item.idCardList}"
+                                            @addPerson="addPerson"
+                                            @deletePerson="deletePerson"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -197,6 +225,9 @@
         input {
             width: 120px;
         }
+        .room-category input {
+            width: 100%;
+        }
         .content-item {
             padding: 16px 24px;
             border-top: 1px solid $gary-light;
@@ -256,6 +287,10 @@
             background: url("../../../../../image/modal/room_modal_home.png");
             background-size: contain;
             margin-right: 25px;
+        }
+        .registerInfoModal-roomPrice {
+            display: inline-block;
+            position: relative;
         }
         .selected-icon {
             background: url("../../../../../image/modal/room_modal_selected.png");
@@ -384,9 +419,14 @@
     import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
+    import util from 'util';
     export default{
         props: {
             registerRooms: {
+                type: Array,
+                default: function() { return [] }
+            },
+            categories: {
                 type: Array,
                 default: function() { return [] }
             },
@@ -426,9 +466,20 @@
             roomItems() {
                 let roomItems = [];
                 if (this.registerRooms.length > 0) {
-
+                    this.registerRooms.forEach(item => {
+                        roomItems.push({ categoryType: undefined, price: 100, room: item, idCardList: []});
+                    });
                 }
                 return roomItems;
+            },
+            categoryList() {
+                let categoryList = [];
+                if (this.categories.length > 0) {
+                    this.categories.forEach(item => {
+                        categoryList.push({id: item.cId, name: item.cName});
+                    });
+                }
+                return categoryList;
             }
         },
         methods:{
@@ -483,7 +534,7 @@
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
             /**
-             * 添加住宿,娱乐-2,商朝-3项目
+             * 添加住宿-0,娱乐-2,商朝-3项目
              * @param type
              */
             addItem(type){
@@ -499,6 +550,15 @@
                         return false;
                     }
                     this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 });
+                } else {
+                    let len = this.registerRooms.length;
+                    if (len >= 99) {
+                        modal.somethingAlert('一个订单最多添加99间房!');
+                        return false;
+                    }
+                    let obj = Object.assign({}, this.registerRooms[len - 1]);
+                    obj.idCardList = [];
+                    this.registerRooms.push(obj);
                 }
             },
 
@@ -507,7 +567,33 @@
                     this.shopGoodsItems.splice(index, 1);
                 } else if (type === 2) {
                     this.enterItems.splice(index, 1);
+                } else {
+                    let len = this.registerRooms.length;
+                    if (len <= 1) {
+                        modal.somethingAlert('已经是最后一间房间了!');
+                        return false;
+                    }
+                    this.registerRooms.splice(index, 1);
                 }
+            },
+            addPerson(id) {
+                this.registerRooms.forEach((item, index) => {
+                    if (index === id) {
+                    if(item.idCardList){
+                        item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                    } else {
+                        item.idCardList = [];
+                        item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                    }
+                }
+            });
+            },
+            deletePerson(id, num) {
+                this.registerRooms.forEach((item, index) => {
+                    if (index === id) {
+                    item.idCardList.splice(num, 1);
+                }
+            });
             },
             /**
              * 根据id type(商超-3, 娱乐-2)获取详细信息
@@ -551,6 +637,25 @@
                 } else if (type === -2) {
                     this.enterItems.forEach((item, index) => {item.timeAmount = (index === tag) ? num : item.timeAmount;});
                 }
+            },
+
+            getDateDiff(date1, date2) {
+                let dateStart = new Date(date1);
+                let dateEnd = new Date(date2);
+                let duration = util.DateDiff(dateStart, dateEnd);
+                return duration + 1;
+            },
+
+            getRoomsList(id){
+                let roomsList = [];
+                this.categories.forEach(category => {
+                    if (category.cId === id) {
+                        category.rooms.forEach(room => {
+                            roomsList.push({id: room.i, name: room.sn,});
+                        });
+                    }
+                });
+                return roomsList;
             }
         },
 

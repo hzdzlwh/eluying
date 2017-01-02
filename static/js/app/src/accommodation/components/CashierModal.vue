@@ -63,7 +63,7 @@
                             <span class="footer-label">需补金额:<span class="order-price-num red">{{`¥${(payMents.payableFee - payMents.paidFee).toFixed(2)}`}}</span></span>
                             <span class="footer-label">需退押金:<span class="order-price-num green">¥1200</span></span>
                         </div>
-                        <div class="dd-btn dd-btn-primary">完成</div>
+                        <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                     </div>
                 </div>
             </div>
@@ -129,6 +129,7 @@
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
     import AJAXService from 'AJAXService';
+    import modal from 'modal';
     export default{
         props: {
             cashierType: {
@@ -146,6 +147,10 @@
             payMents: {
                 type: Object,
                 default: function(){ return {} }//收银时的订单的支付信息
+            },
+            order: {
+                type: Object,
+                default: function() { return {} }
             }
         },
         data(){
@@ -250,6 +255,33 @@
             },
             deleteDeposit() {
                 this.deposit = false;
+            },
+            payMoney() {
+                let businessJson = {};
+                if (this.cashierType === 'checkIn') {
+                    businessJson.functionType = 1;
+                    businessJson.orderId = this.order.orderId;
+                    businessJson.type = 0;
+                    businessJson.rooms = this.checkInRooms.roomOrderInfoList;
+                }
+                if (this.payments.length > 0) {
+                    this.payments.forEach(item => {
+                        this.payChannels.forEach(channel => {
+                            if (item.payChannelId === channel.channelId) {
+                                item.payChannel = channel.name;
+                            }
+                        });
+                    });
+                }
+                let params = {orderId: this.order.orderId, orderType: -1, payments: JSON.stringify(this.payments), businessJson: JSON.stringify(businessJson)};
+                AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                        .then(result => {
+                            if(result.code !== 1) {
+                                modal.somethingAlert(result.msg);
+                            } else {
+                                $("#Cashier").modal("hide");
+                            }
+                        });
             }
         },
         components: {

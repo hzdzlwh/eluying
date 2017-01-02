@@ -512,7 +512,7 @@
         props: {
           order: {
               type: Object,
-              default: {}
+              default: function() { return {} }
           }
         },
         data(){
