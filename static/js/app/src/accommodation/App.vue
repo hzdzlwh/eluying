@@ -18,8 +18,12 @@
         />
         <ShopCart
             :selectedEntries="selectedEntries"
+            @changeCheckState="changeCheckState"
         />
-        <RegisterInfoModal :selectedEntries="selectedEntries"/>
+        <RegisterInfoModal
+                :registerRooms="registerRooms"
+                :checkState="checkState"
+        />
         <OrderDetailModal
                 :order="orderDetail"
                 @changeCheckOutRooms="changeCheckOutRooms"
@@ -98,6 +102,8 @@
                 dateRange: [],
                 leftMap: {},
                 orderDetail: {},
+                checkState: undefined,
+                registerRooms: [],
                 checkOutRooms: {},
                 checkInRooms: {},
                 cashier: {},
@@ -194,9 +200,14 @@
                             $('#orderDetail').modal('show');
                         });
             },
+            changeCheckState(type, arr) {
+                this.checkState = type;
+                this.registerRooms = arr;
+                console.log(this.registerRooms);
+                $('#registerInfoModal').modal('show');
+            },
             changeCheckOutRooms(obj) {
                 this.checkOutRooms = obj;
-                console.log(this.checkOutRooms);
             },
             changeCheckInRooms(obj) {
                 this.checkInRooms = obj;

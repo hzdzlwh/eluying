@@ -372,13 +372,6 @@
             border-radius: 2px;
             margin-left: 4px;
         }
-        .room-icon {
-            width: 16px;
-            height: 15px;
-            background: url("../../../../../image/modal/room_modal_home.png");
-            background-size: contain;
-            margin-right: 25px;
-        }
         .orderDetailModal-shop-item {
             display: flex;
         }

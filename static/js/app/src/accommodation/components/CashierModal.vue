@@ -7,14 +7,14 @@
                         <span class="header-text">收银台</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
-                    <div class="roomModals-body">
+                    <div class="roomModals-body" style="overflow: inherit">
                         <div class="content-item">
-                            <p class="content-item-title"><span>订单收款</span></p>
+                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单付款'}`}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>{{`¥${payMents.payableFee}`}}</span></span>
                                 <span class="cashier-money-text" v-if="payMents.penalty && payMents.penalty > 0">违约金:<span>{{`¥${payMents.penalty}`}}</span></span>
                                 <span class="cashier-money-text">已付金额:<span>{{`¥${payMents.paidFee}`}}</span></span>
-                                <span class="cashier-money-text">需补金额:<span>{{`¥${(payMents.payableFee - payMents.paidFee).toFixed(2)}`}}</span></span>
+                                <span class="cashier-money-text">{{`${orderState ? '需补金额:' : '需退金额:'}`}}<span>{{`¥${(payMents.payableFee - payMents.paidFee).toFixed(2)}`}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
@@ -22,7 +22,10 @@
                                         <span>金额:</span>
                                         <input type="text" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">收款方式:</span>
-                                        <input type="text" class="dd-input">
+                                        <dd-select v-model="payment.payChannelId" placeholder="请选择收款方式">
+                                            <dd-option v-for="payChannel in payChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                            </dd-option>
+                                        </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
                                     </div>
                                 </div>
@@ -42,7 +45,10 @@
                                     <span>押金:</span>
                                     <input type="text" class="dd-input">
                                     <span style="margin-left: 24px">收款方式:</span>
-                                    <input type="text" class="dd-input">
+                                    <dd-select v-model="depositPayChannel" placeholder="请选择收款方式">
+                                        <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                        </dd-option>
+                                    </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
                                 </div>
                                 <div class="cashier-addBtn"  @click="addDeposit" v-show="!deposit">
@@ -99,6 +105,7 @@
     .cashier-addBtn {
         height: 24px;
         display: flex;
+        align-items: center;
         cursor: pointer;
     }
     .cashier-addBtn-icon {
@@ -121,6 +128,7 @@
 </style>
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
+    import AJAXService from 'AJAXService';
     export default{
         props: {
             cashierType: {
@@ -143,17 +151,84 @@
         data(){
             return{
                 payments: [],
-                deposit: false
+                deposit: false,
+                payChannels: [],
+                depositPayChannels: [],
+                depositPayChannel: undefined
             }
         },
-        computed:{},
+        computed:{
+            orderState(){
+                if (this.payMents.payableFee) {
+                    let income = this.payMents.payableFee - this.payMents.paidFee;
+                    return income > 0;
+                }
+                return false;
+            }
+        },
+        created() {
+            this.getData();
+        },
         methods: {
             resetData() {
                 this.payments = [];
                 this.deposit = false;
+                this.depositPayChannel = undefined;
+
             },
             getData() {
-                AJAXService.ajaxWithToken('GET', '', {});
+                AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {})
+                        .then(result => {
+                            let payChannels = [].concat(result.data.payChannelCustomList);
+                            let map = result.data;
+                            let walletOpenAndUseStateList = map.walletOpenAndUseStateList;
+                            for (let key in walletOpenAndUseStateList) {
+                                if (map.onlineCollectionMethod === 1 &&
+                                        walletOpenAndUseStateList[key].onlineType === 2
+                                        && walletOpenAndUseStateList[key].openState === 1
+                                        && walletOpenAndUseStateList[key].useState === 1) {
+                                    payChannels.push({
+                                        channelId: -11,
+                                        name: '支付宝（订单钱包）'
+                                    });
+                                }
+                                if (map.onlineCollectionMethod === 1 &&
+                                        walletOpenAndUseStateList[key].onlineType === 4
+                                        && walletOpenAndUseStateList[key].openState === 1
+                                        && walletOpenAndUseStateList[key].useState === 1) {
+                                    payChannels.push({
+                                        channelId: -12,
+                                        name: '微信支付（订单钱包）'
+                                    });
+                                }
+                            }
+                            let enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
+                            for (let key in enterpriseOpenAndUseStateList) {
+                                if (map.onlineCollectionMethod === 2 &&
+                                        enterpriseOpenAndUseStateList[key].onlineType === 2
+                                        && enterpriseOpenAndUseStateList[key].openState === 1
+                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                                    payChannels.push({
+                                        channelId: -6,
+                                        name: '支付宝'
+                                    });
+                                }
+                                if (map.onlineCollectionMethod === 2 &&
+                                        enterpriseOpenAndUseStateList[key].onlineType === 4
+                                        && enterpriseOpenAndUseStateList[key].openState === 1
+                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
+                                    payChannels.push({
+                                        channelId: -7,
+                                        name: '微信支付'
+                                    });
+                                }
+                            }
+                            payChannels.sort(function(a, b){
+                                return a.channelId - b.channelId;
+                            });
+                            this.payChannels = payChannels;
+                            this.depositPayChannels = result.data.payChannelCustomList;
+                        });
             },
             hideModal() {
                 this.resetData();
@@ -162,9 +237,9 @@
             addPayMent() {
                 let payMoney = (this.payMents.payableFee - this.payMents.paidFee).toFixed(2)
                 if (this.payments.length <= 0) {
-                    this.payments.push({fee: payMoney, payChannelId: 5, type: 0});
+                    this.payments.push({fee: payMoney, payChannelId: undefined, type: 0});
                 } else {
-                    this.payments.push({fee: 0, payChannelId: 5, type: 0});
+                    this.payments.push({fee: 0, payChannelId: undefined, type: 0});
                 }
             },
             deletePayMent(index) {
@@ -173,8 +248,7 @@
             addDeposit() {
                 this.deposit = true;
             },
-            deleteDeposit(e) {
-                e.stopPropagation();
+            deleteDeposit() {
                 this.deposit = false;
             }
         },

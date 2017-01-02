@@ -4,7 +4,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <span class="header-text">预订</span>
+                        <span class="header-text">{{modalTitle}}</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="roomModals-body">
@@ -29,11 +29,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
                             <p class="content-item-title">
                                 <span>房间信息</span>
                                 <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
                             </p>
+                            <div class="registerRoom-items">
+                                <div class="registerRoom-container" v-for="item in registerRooms">
+                                    <div class="registerRoom-item">
+                                        <span class="room-icon"></span>
+                                        <div class="shop-item-content">
+                                            hello
+                                        </div>
+                                        <span class="delete-icon"></span>
+                                    </div>
+                                    <CheckInPerson />
+                                </div>
+                            </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title">
@@ -238,6 +250,13 @@
             margin-right: 16px;
             cursor: pointer;
         }
+        .room-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_home.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
         .selected-icon {
             background: url("../../../../../image/modal/room_modal_selected.png");
         }
@@ -254,6 +273,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-left: 13px;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+        }
+        .registerRoom-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .registerRoom-container {
+            display: flex;
+            flex-direction: column;
             padding-left: 13px;
             &:not(:last-child) {
                 padding-bottom: 15px;
@@ -346,12 +380,20 @@
 </style>
 <script>
     import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import CheckInPerson from './CheckInPerson.vue';
     import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
     export default{
         props: {
-            selectedEntries: Array
+            registerRooms: {
+                type: Array,
+                default: function() { return [] }
+            },
+            checkState: {
+                type: String,
+                default: ''
+            }
         },
         data() {
             return {
@@ -371,7 +413,24 @@
         created(){
             this.getData();
         },
-        computed:{},
+        computed:{
+            modalTitle() {
+                if (this.checkState === 'ing') {
+                    return '直接入住'
+                } else if (this.checkState === 'finish') {
+                    return '补录'
+                } else {
+                    return '预订'
+                }
+            },
+            roomItems() {
+                let roomItems = [];
+                if (this.registerRooms.length > 0) {
+
+                }
+                return roomItems;
+            }
+        },
         methods:{
             getData(){
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
@@ -429,13 +488,13 @@
              */
             addItem(type){
                 if (type === 3) {
-                    if (this.shopGoodsItems.length >= 2) {
+                    if (this.shopGoodsItems.length >= 99) {
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
                     this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
                 } else if (type === 2) {
-                    if (this.enterItems.length >= 2) {
+                    if (this.enterItems.length >= 99) {
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
@@ -502,7 +561,8 @@
             DdDatepicker,
             DdSelect,
             DdOption,
-            counter
+            counter,
+            CheckInPerson
         }
     }
 </script>

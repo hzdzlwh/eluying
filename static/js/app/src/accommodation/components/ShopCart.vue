@@ -121,9 +121,6 @@
             showInfoModal() {
                 $('#registerInfoModal').modal('show');
             },
-            showModal(type) {
-
-            },
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
                 const dialogConfig = {
@@ -132,8 +129,7 @@
                 };
                 const callback = () => {
                     this.clear(type);
-                    console.log(this.getRoomsWithDate());
-                    this.showModal(type);
+                    this.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
                 if (type == 'finish') {
                     if (this.t || this.f) {
@@ -155,8 +151,7 @@
                     }
                 }
 
-                this.getRoomsWithDate();
-                this.showModal(type);
+                this.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
             clear(type) {
                 const today = new Date();
