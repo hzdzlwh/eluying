@@ -262,8 +262,8 @@
                             </p>
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkIn">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkOutAdAble">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut" v-if="getRoomsState.checkOutAble">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
                             </div>
                         </div>
@@ -679,6 +679,9 @@
                 AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 0, roomOrderId: orderId})
                         .then(res => {
                             if (res.code === 1) {
+                                res.data.roomOrderInfoList.map(item => {
+                                    this.$set(item, 'selected', true);
+                                });
                                 this.$emit('changeCheckInRooms', res.data);
                                 $('#orderDetail').modal('hide');
                                 $('#checkIn').modal('show');
@@ -687,11 +690,16 @@
                             }
                         });
             },
-            checkOut() {
+            checkOut(type) {
                 let orderId = this.filterRooms(1)[0].serviceId;
-                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 1, roomOrderId: orderId})
+                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: type, roomOrderId: orderId})
                         .then(res => {
                             if (res.code === 1) {
+                                res.data.roomOrderInfoList.map(item => {
+                                    this.$set(item, 'selected', true);
+                                });
+                                // 退房1,提前退房2
+                                res.data.type = type;
                                 this.$emit('changeCheckOutRooms', res.data);
                                 $('#orderDetail').modal('hide');
                                 $('#checkOut').modal('show');
