@@ -13,12 +13,12 @@ const store = new Vuex.Store({
         orderDetail: {}
     },
     mutations: {
-        setOrderDetail(state, { orderDetail }) {
+        [types.SET_ORDER_DETAIL](state, { orderDetail }) {
             state.orderDetail = orderDetail;
         }
     },
     actions: {
-        loadOrderDetail({ commit }, { orderId }) {
+        [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
                 AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId })
                     .then((res) => {
@@ -26,7 +26,7 @@ const store = new Vuex.Store({
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.date });
                             resolve(res);
                         } else {
-                            reject(res)
+                            reject(res);
                         }
                     })
                     .catch(e => reject(e));
