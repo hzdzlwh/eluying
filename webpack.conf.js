@@ -5,6 +5,7 @@ var webpack = require('webpack'),
     path = require('path');
     // HappyPack = require('happypack');
 var webpackConf =  {
+    devtool: 'inline-source-map',
     plugins: [
         new webpack.ProvidePlugin({
             '$': 'jquery',

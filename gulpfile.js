@@ -130,7 +130,7 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-        webpackConf, {devtool: 'inline-source-map', watch: true},
+        webpackConf, {watch: true},
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
