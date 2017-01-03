@@ -232,33 +232,33 @@
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`¥${item.fee}`}}</span>
+                                            <span class="money-num">¥{{item.fee}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">{{findTypePrice(order.payments, 15) > 0 ? '需补金额' : '需退金额'}}</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 15)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 15)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 16)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`¥${item.fee}`}}</span>
+                                            <span class="money-num">¥{{item.fee}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="footer-price">
-                                <span class="order-price-text">订单金额:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 13)}`}}</span></span>
-                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 4)}`}}</span></span>
-                                <span class="order-price-text">已付金额:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 14)}`}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">{{`¥${findTypePrice(order.payments, 15)}`}}</span></span>
-                                <span class="order-price-text">需退押金:<span class="order-price-num green">{{`¥${findTypePrice(order.payments, 16)}`}}</span></span>
+                                <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
+                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
+                                <span class="order-price-text">已付金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 14)}}</span></span>
+                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{findTypePrice(order.payments, 15)}}</span></span>
+                                <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
                             </div>
                             <p class="order-info">
-                                <span class="order-info-text">{{`订单号:${order.orderNum}`}}</span>
-                                <span class="order-info-operator" style="margin-left: 24px">{{`办理员工:${order.operatorName}`}}</span>
+                                <span class="order-info-text">订单号:{{order.orderNum}}</span>
+                                <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkIn">办理入住</div>
@@ -508,12 +508,21 @@
     import util from 'util';
     import { ID_CARD_TYPE, FOOD_STATE } from '../const';
     import modal from 'modal';
+    import types from '../store/types';
+    import { mapActions, mapState } from 'vuex';
     export default{
         props: {
-          order: {
-              type: Object,
-              default: function() { return {} }
-          }
+            /*order: {
+                type: Object,
+                default: function() { return {} }
+            },*/
+            orderId: {
+                type: Number
+            },
+            orderDetailShow: {
+                type: Boolean,
+                default: false
+            }
         },
         data(){
             return{
@@ -522,6 +531,7 @@
             }
         },
         computed: {
+            ...mapState({order: 'orderDetail'}),
             filterShopList() {
                 let shopList = {};
                 if (this.order.pcGoodsItems) {
@@ -559,8 +569,11 @@
             }
         },
         methods: {
-            hideModal(e){
-                e.stopPropagation();
+            ...mapActions([
+                types.LOAD_ORDER_DETAIL
+            ]),
+            hideModal() {
+                this.$emit('changeOrderDetailShow', false);
                 $("#orderDetail").modal("hide");
             },
             getOrderState(state){
@@ -684,7 +697,7 @@
                                     this.$set(item, 'selected', true);
                                 });
                                 this.$emit('changeCheckInRooms', res.data);
-                                $('#orderDetail').modal('hide');
+                                this.hideModal();
                                 $('#checkIn').modal('show');
                             } else {
                                 modal.somethingAlert(res.msg);
@@ -694,22 +707,33 @@
             checkOut(type) {
                 let orderId = this.filterRooms(1)[0].serviceId;
                 AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: type, roomOrderId: orderId})
-                        .then(res => {
-                            if (res.code === 1) {
-                                res.data.roomOrderInfoList.map(item => {
-                                    this.$set(item, 'selected', true);
-                                });
-                                // 退房1,提前退房2
-                                res.data.type = type;
-                                this.$emit('changeCheckOutRooms', res.data);
-                                $('#orderDetail').modal('hide');
-                                $('#checkOut').modal('show');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
+                    .then(res => {
+                        if (res.code === 1) {
+                            res.data.roomOrderInfoList.map(item => {
+                                this.$set(item, 'selected', true);
+                            });
+                            // 退房1,提前退房2
+                            res.data.type = type;
+                            this.$emit('changeCheckOutRooms', res.data);
+                            this.hideModal();
+                            $('#checkOut').modal('show');
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             }
         },
-        components:{}
+        components:{},
+        watch: {
+            orderDetailShow(newVal, oldVal) {
+                if(newVal && !oldVal){
+                    this[types.LOAD_ORDER_DETAIL]({ orderId: this.orderId })
+                        .then(res => {
+                            $('#orderDetail').modal('show');
+                        })
+                    .catch(e => modal.somethingAlert(e.msg));
+                }
+            }
+        }
     }
 </script>

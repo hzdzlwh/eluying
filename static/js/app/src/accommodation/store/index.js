@@ -22,15 +22,16 @@ const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId })
                     .then((res) => {
-                        if (res.code = 1) {
-                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.date });
+                        if (res.code === 1) {
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
                             resolve(res);
                         } else {
                             reject(res)
                         }
-                    })
-                    .catch(e => reject(e));
+                    });
             })
         }
     }
 });
+
+export default store;

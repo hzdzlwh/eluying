@@ -58,7 +58,7 @@
                                                 <div class="enterDate">
                                                     <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" :disabled-date="disableStartDate" />
                                                 </div>
-                                                <label class="label-text">{{`共${getDateDiff(item.room.startDate, item.room.endDate)}晚`}}</label>
+                                                <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
                                             </div>
                                             <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice">
@@ -90,7 +90,7 @@
                                             </dd-option>
                                         </dd-select>
                                         <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime']">
-                                            <label>{{`时长(${getItemInfo(item.type, item.id)['timeUnit']})`}}</label>
+                                            <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
                                         </div>
                                         <div class="enterDate-container">
@@ -106,7 +106,7 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}`}}</span>
+                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -134,7 +134,7 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}`}}</span>
+                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -150,7 +150,7 @@
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
                                 <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark" class="dd-input"></textarea>
-                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{`${remark.length}/140`}}</span>
+                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{remark.length}}/140</span>
                             </div>
                         </div>
                     </div>

@@ -5,7 +5,7 @@
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
             @fold="handleFold"
-            @pullOrder="pullOrderDetail"
+            @showOrder="showOrder"
             :categories="categories"
             :holidays="holidays"
             :roomStatus="roomStatus"
@@ -26,7 +26,10 @@
                 :checkState="checkState"
         />
         <OrderDetailModal
+                :orderId="orderId"
+                :orderDetailShow="orderDetailShow"
                 :order="orderDetail"
+                @changeOrderDetailShow="changeOrderDetailShow"
                 @changeCheckOutRooms="changeCheckOutRooms"
                 @changeCheckInRooms="changeCheckInRooms"
         />
@@ -104,6 +107,8 @@
                 DAYS: 30,
                 dateRange: [],
                 leftMap: {},
+                orderDetailShow: false,
+                orderId: undefined,
                 orderDetail: {},
                 checkState: undefined,
                 registerRooms: [],
@@ -196,12 +201,17 @@
                 const category = this.categories.find(category => category.cId === id);
                 category.folded = !category.folded;
             },
-            pullOrderDetail(id) {
-                return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
+            showOrder(id) {
+                /*return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
                         .then(res => {
                             this.orderDetail = res.data;
                             $('#orderDetail').modal('show');
-                        });
+                        });*/
+                this.orderDetailShow = true;
+                this.orderId = id;
+            },
+            changeOrderDetailShow(value) {
+                this.orderDetailShow = value;
             },
             changeCheckState(type, arr) {
                 let registerRooms = [];

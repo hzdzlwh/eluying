@@ -9,9 +9,12 @@ import topMenu from "../common/topMenu";
 import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
+import store from './store';
+
 auth.checkAuth(auth.ACCOMMODATION_ID, auth.NO_AUTH_FOR_A_URL);
 
 const app = new Vue({
+    store,
     ...App
 });
 
