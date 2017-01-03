@@ -261,10 +261,10 @@
                                 <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkIn">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
                             </div>
                         </div>
                     </div>
@@ -570,10 +570,11 @@
         },
         methods: {
             ...mapActions([
-                types.LOAD_ORDER_DETAIL
+                types.LOAD_ORDER_DETAIL,
+                types.LOAD_ROOM_BUSINESS_INFO
             ]),
             hideModal() {
-                this.$emit('changeOrderDetailShow', false);
+                this.$emit('hideOrderDetail');
                 $("#orderDetail").modal("hide");
             },
             getOrderState(state){
@@ -616,7 +617,10 @@
                 params = AJAXService.paramsToString(params);
                 window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
             },
-            cancelOrder() {},
+            cancelOrder() {
+                this.hideModal();
+                this.$emit('showCancelOrder', orderDetail.orderId)
+            },
             getFoodDetail(food) {
                 if (food.detail) {
                     food.visible = true;
@@ -670,57 +674,24 @@
                 return price.toFixed(2);
             },
             dateFormat(date) {
-                let dateStr = util.timeFormat(date);
-                return dateStr;
+                return util.timeFormat(date);
             },
-            /**
-             * 筛选各种状态下的房间
-             * @param type
-             */
-            filterRooms(type) {
-                let rooms = [];
-                if (this.order.rooms) {
-                    this.order.rooms.forEach(item => {
-                        if (item.state === type) {
-                            rooms.push(item);
-                        }
-                    });
-                }
-                return rooms;
-            },
-            checkIn() {
-                let orderId = this.filterRooms(0)[0].serviceId;
-                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 0, roomOrderId: orderId})
-                        .then(res => {
-                            if (res.code === 1) {
-                                res.data.roomOrderInfoList.map(item => {
-                                    this.$set(item, 'selected', true);
-                                });
-                                this.$emit('changeCheckInRooms', res.data);
-                                this.hideModal();
-                                $('#checkIn').modal('show');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
-            },
-            checkOut(type) {
-                let orderId = this.filterRooms(1)[0].serviceId;
-                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: type, roomOrderId: orderId})
+            checkInOrCheckOut(type) {
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
-                        if (res.code === 1) {
-                            res.data.roomOrderInfoList.map(item => {
-                                this.$set(item, 'selected', true);
-                            });
-                            // 退房1,提前退房2
-                            res.data.type = type;
-                            this.$emit('changeCheckOutRooms', res.data);
-                            this.hideModal();
-                            $('#checkOut').modal('show');
+                        if (type === 0) {
+                            $('#checkIn').modal('show');
                         } else {
-                            modal.somethingAlert(res.msg);
+                            $('#checkOut').modal('show');
                         }
-                    });
+
+                        this.hideModal();
+                    })
+                    .catch(res => modal.somethingAlert(res.msg));
+            },
+            showCashier() {
+                this.hideModal();
+                this.$emit('showCashier', {})
             }
         },
         components:{},
@@ -731,7 +702,7 @@
                         .then(res => {
                             $('#orderDetail').modal('show');
                         })
-                    .catch(e => modal.somethingAlert(e.msg));
+                        .catch(e => modal.somethingAlert(e.msg));
                 }
             }
         }
