@@ -12,7 +12,7 @@
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState !== 5">编辑订单</span>
-                            <span class="header-tools" v-if="order.orderState === 2">取消订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -603,6 +603,7 @@
                 params = AJAXService.paramsToString(params);
                 window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
             },
+            cancelOrder() {},
             getFoodDetail(food) {
                 if (food.detail) {
                     food.visible = true;

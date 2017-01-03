@@ -63,6 +63,7 @@
                                             <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice">
                                                 <input class="dd-input" v-model="item.price" style="width: 80px"/>
+                                                <div class="registerInfoModal-roomPriceList"></div>
                                             </div>
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)"></span>
@@ -291,6 +292,12 @@
         .registerInfoModal-roomPrice {
             display: inline-block;
             position: relative;
+        }
+        .registerInfoModal-roomPriceList {
+            position: absolute;
+            max-width: 484px;
+            max-height: 200px;
+            background: #178ce6;
         }
         .selected-icon {
             background: url("../../../../../image/modal/room_modal_selected.png");
