@@ -21,9 +21,11 @@
             @changeCheckState="changeCheckState"
         />
         <RegisterInfoModal
-                :registerRooms="registerRooms"
+                :roomsItems="registerRooms"
                 :categories="categories"
                 :checkState="checkState"
+                :registerInfoShow="registerInfoShow"
+                @changeRegisterInfoShow="changeRegisterInfoShow"
         />
         <OrderDetailModal
                 :orderId="orderId"
@@ -93,7 +95,6 @@
                         this.$set(c, 'selected', true);
                         this.$set(c, 'folded', false);
                     });
-                    console.log(this.categories);
                 })
 
         },
@@ -108,6 +109,7 @@
                 dateRange: [],
                 leftMap: {},
                 orderDetailShow: false,
+                registerInfoShow: false,
                 orderId: undefined,
                 orderDetail: {},
                 checkState: undefined,
@@ -213,6 +215,9 @@
             changeOrderDetailShow(value) {
                 this.orderDetailShow = value;
             },
+            changeRegisterInfoShow(value){
+                this.registerInfoShow = value;
+            },
             changeCheckState(type, arr) {
                 let registerRooms = [];
                 arr.forEach(item => {
@@ -224,11 +229,13 @@
                             }
                         });
                     });
-                    registerRooms.push({ categoryType: id, roomType: item.roomId, price: 100, room: item, idCardList: []});
+                    let duration = this.getDateDiff(item.startDate, item.endDate);
+                    registerRooms.push({ categoryType: id, roomType: item.roomId, price: 100, room: item, idCardList: [], showPriceList: false });
                 });
                 this.checkState = type;
-                this.registerRooms = registerRooms;
-                $('#registerInfoModal').modal('show');
+                this.registerRooms = arr;
+                this.registerInfoShow = true;
+                //$('#registerInfoModal').modal('show');
             },
             changeCheckOutRooms(obj) {
                 this.checkOutRooms = obj;
@@ -241,6 +248,12 @@
             },
             changePayMents(obj) {
                 this.payMents = obj;
+            },
+            getDateDiff(date1, date2) {
+                let dateStart = new Date(date1);
+                let dateEnd = new Date(date2);
+                let duration = util.DateDiff(dateStart, dateEnd);
+                return duration + 1;
             }
         },
         components: {

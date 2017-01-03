@@ -52,18 +52,28 @@
                                             <div class="room-date" style="display: inline-block">
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" :disabled-date="disableStartDate" />
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"/>
                                                 </div>
                                                 <span>~</span>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" :disabled-date="disableStartDate" />
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" />
                                                 </div>
                                                 <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
                                             </div>
                                             <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice">
-                                                <input class="dd-input" v-model="item.price" style="width: 80px"/>
-                                                <div class="registerInfoModal-roomPriceList"></div>
+                                                <input class="dd-input" v-model="item.price" style="width: 80px" @focus="showPriceList(item)"/>
+                                                <div style="padding-top: 10px">
+                                                    <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
+                                                        <dl class="price-item" v-for="priceItem in item.datePriceList">
+                                                            <dt>{{priceItem.date.slice(5)}}</dt>
+                                                            <dd>¥{{getDatePrice(priceItem.dateFee, item.datePriceList, item.price)}}</dd>
+                                                            <dd style="display: none">
+                                                                <input class="dd-input" style="width: 60px;">
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)"></span>
@@ -295,9 +305,25 @@
         }
         .registerInfoModal-roomPriceList {
             position: absolute;
-            max-width: 484px;
-            max-height: 200px;
-            background: #178ce6;
+            width: 491px;
+            right: 0;
+            top: 30px;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: scroll;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                float: left;
+                margin-left: 8px;
+            }
         }
         .selected-icon {
             background: url("../../../../../image/modal/room_modal_selected.png");
@@ -429,7 +455,7 @@
     import util from 'util';
     export default{
         props: {
-            registerRooms: {
+            roomsItems: {
                 type: Array,
                 default: function() { return [] }
             },
@@ -440,6 +466,10 @@
             checkState: {
                 type: String,
                 default: ''
+            },
+            registerInfoShow: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -453,7 +483,8 @@
                 enterList: [],
                 enterItems: [],
                 shopList: [],
-                shopGoodsItems: []
+                shopGoodsItems: [],
+                registerRooms: []
             }
         },
 
@@ -469,15 +500,6 @@
                 } else {
                     return '预订'
                 }
-            },
-            roomItems() {
-                let roomItems = [];
-                if (this.registerRooms.length > 0) {
-                    this.registerRooms.forEach(item => {
-                        roomItems.push({ categoryType: undefined, price: 100, room: item, idCardList: []});
-                    });
-                }
-                return roomItems;
             },
             categoryList() {
                 let categoryList = [];
@@ -529,10 +551,12 @@
                 this.remark = '';
                 this.enterItems = [];
                 this.shopGoodsItems = [];
+                this.registerRooms = [];
             },
             hideModal(e){
                 e.stopPropagation();
                 this.refreshData();
+                this.$emit('changeRegisterInfoShow', false);
                 $("#registerInfoModal").modal("hide");
             },
 
@@ -663,9 +687,21 @@
                     }
                 });
                 return roomsList;
+            },
+            showPriceList(item) {
+                item.showPriceList = true;
+            },
+            hidePriceList(item) {
+                item.showPriceList = false;
+            },
+            getDatePrice(dateFee, arr, totalPrice){
+                let totalFee = 0;
+                arr.forEach(item => {
+                    totalFee += item.dateFee;
+                });
+                return ((dateFee / totalFee) * totalPrice).toFixed(2);
             }
         },
-
         components:{
             DdDropdown,
             DdDropdownItem,
@@ -675,6 +711,36 @@
             DdOption,
             counter,
             CheckInPerson
+        },
+        watch: {
+            registerInfoShow(newVal, oldVal) {
+                if (newVal && !oldVal) {
+                    this.roomsItems.forEach(item => {
+                        let id = undefined;
+                        this.categories.forEach(category => {
+                            category.rooms.forEach(room => {
+                                if (room.i === item.roomId) {
+                                    id = category.cId;
+                                }
+                            });
+                        });
+                        let duration = this.getDateDiff(item.startDate, item.endDate);
+                        AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId, date: util.dateFormat(item.startDate), days: duration })
+                            .then(res => {
+                                if (res.code === 1) {
+                                    let datePriceList = [];
+                                    let price = 0;
+                                    res.data.rs.status.forEach((option,index) => {
+                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p});
+                                        price += option.p;
+                                    });
+                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: price, room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList });
+                                }
+                            });
+                    });
+                    $('#registerInfoModal').modal('show');
+                }
+            }
         }
     }
 </script>
