@@ -61,29 +61,25 @@
     import AJAXService from 'AJAXService';
     import modal from 'modal';
     import CheckInPerson from './CheckInPerson.vue';
+    import { mapState } from 'vuex';
     export default{
-        props: {
-            rooms: {
-                type: Object,
-                default: function(){ return {} }
-            }
-        },
         data(){
             return{}
         },
         computed: {
+            ...mapState(['roomBusinessInfo']),
             roomsList() {
-                if (this.rooms.roomOrderInfoList) {
-                    this.rooms.roomOrderInfoList.map(item => {
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.map(item => {
                         this.$set(item, 'selected', true);
                     });
-                    return this.rooms.roomOrderInfoList;
+                    return this.roomBusinessInfo.roomOrderInfoList;
                 }
             },
             finalPrice() {
                 let price  = 0;
-                if (this.rooms.roomOrderInfoList) {
-                    this.rooms.roomOrderInfoList.forEach(item => {
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                         if (item.selected) {
                             item.payments.forEach(pay => {
                                 if (pay.type === 15) {
@@ -104,7 +100,7 @@
                 room.selected = !room.selected;
             },
             addPerson(id) {
-                this.rooms.roomOrderInfoList.forEach((item, index) => {
+                this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
                     if (index === id) {
                         if(item.idCardList){
                             item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
@@ -116,34 +112,41 @@
                 });
             },
             deletePerson(id, num) {
-                this.rooms.roomOrderInfoList.forEach((item, index) => {
+                this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
                     if (index === id) {
                         item.idCardList.splice(num, 1);
                     }
                 });
             },
             finishCheckIn() {
-                this.$emit('changeCashierType', 'checkIn');
-                let orderId = this.rooms.orderId;
+                let orderId = this.roomBusinessInfo.orderId;
                 let subOrderIds = [];
-                if (this.rooms.roomOrderInfoList) {
-                    this.rooms.roomOrderInfoList.forEach(item => {
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                         if (item.selected) {
                             subOrderIds.push(item.roomOrderId);
                         }
                     });
                 }
-                let params = { operationType: 3, orderId: orderId, orderType: -1, subOrderIds: JSON.stringify(subOrderIds) };
-                AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params )
-                        .then(res => {
-                            if (res.code === 1) {
-                                this.$emit('changePayMents', res.data);
-                                $('#Cashier').modal('show');
-                                $('#checkIn').modal('hide');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
+                const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                    if (room.selected) {
+                        return {
+                            startDate: room.checkInDate,
+                            endDate: room.checkOutDate,
+                            idCardList: room.idCardList,
+                            roomId: room.roomId,
+                            roomOrderId: room.roomOrderId
+                        }
+                    }
+                });
+                const business = {
+                    functionType: 1,
+                    type: 0,
+                    orderId: this.roomBusinessInfo.orderId,
+                    rooms: rooms
+                };
+                $('#checkIn').modal('hide');
+                this.$emit('showCashier', { type: 'checkIn', business });
             }
         },
         components:{

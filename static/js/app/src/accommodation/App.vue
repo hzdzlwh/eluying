@@ -28,25 +28,33 @@
                 @changeRegisterInfoShow="changeRegisterInfoShow"
         />
         <OrderDetailModal
-                :orderId="orderId"
-                :orderDetailShow="orderDetailShow"
-                :order="orderDetail"
-                @changeOrderDetailShow="changeOrderDetailShow"
-                @changeCheckOutRooms="changeCheckOutRooms"
-                @changeCheckInRooms="changeCheckInRooms"
+            :orderId="orderId"
+            :orderDetailShow="orderDetailShow"
+            :order="orderDetail"
+            @showCancelOrder="showCancelOrder"
+            @hideOrderDetail="hideOrderDetail"
+            @showCashier="showCashier"
         />
-        <CheckOutModal :rooms="checkOutRooms"/>
+        <CheckOutModal
+            @showOrder="showOrder"
+            @showCashier="showCashier"
+        />
         <CheckInModal
-                :rooms="checkInRooms"
-                @changeCashierType="changeCashierType"
-                @changePayMents="changePayMents"
+            @showCashier="showCashier"
         />
         <CashierModal
-                :cashierType="cashierType"
-                :checkInRooms="checkInRooms"
-                :checkOutRooms="checkOutRooms"
-                :payMents="payMents"
-                :order="orderDetail"
+            :show="cashierShow"
+            :Type="cashierType"
+            :business="cashierBusiness"
+            @hide="hideCashier"
+            @showOrder="showOrder"
+        />
+        <CancelOrderModal
+            :orderId="orderId"
+            :show="cancelOrderShow"
+            @showOrder="showOrder"
+            @hideCancelOrder="hideCancelOrder"
+            @showCashier="showCashier"
         />
     </div>
 </template>
@@ -70,6 +78,7 @@
     import CheckOutModal from './components/CheckOutModal.vue';
     import CheckInModal from './components/CheckInModal.vue';
     import CashierModal from './components/CashierModal.vue';
+    import CancelOrderModal from './components/CancelOrderModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -118,7 +127,9 @@
                 checkInRooms: {},
                 cashier: {},
                 cashierType: '',
-                payMents: {}
+                cashierShow: false,
+                cancelOrderShow: false,
+                cashierBusiness: {}
             }
         },
         computed: {
@@ -204,16 +215,11 @@
                 category.folded = !category.folded;
             },
             showOrder(id) {
-                /*return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
-                        .then(res => {
-                            this.orderDetail = res.data;
-                            $('#orderDetail').modal('show');
-                        });*/
                 this.orderDetailShow = true;
                 this.orderId = id;
             },
-            changeOrderDetailShow(value) {
-                this.orderDetailShow = value;
+            hideOrderDetail() {
+                this.orderDetailShow = false;
             },
             changeRegisterInfoShow(value){
                 this.registerInfoShow = value;
@@ -237,14 +243,16 @@
                 this.registerInfoShow = true;
                 //$('#registerInfoModal').modal('show');
             },
-            changeCheckOutRooms(obj) {
-                this.checkOutRooms = obj;
+            showCashier({ type, business }) {
+                this.cashierType = type;
+                this.cashierBusiness = business;
+                this.cashierShow = true;
             },
-            changeCheckInRooms(obj) {
-                this.checkInRooms = obj;
+            hideCashier() {
+                this.cashierShow = false;
             },
-            changeCashierType(str) {
-                this.cashierType = str;
+            showCancelOrder() {
+                this.cancelOrderShow = true;
             },
             changePayMents(obj) {
                 this.payMents = obj;
@@ -254,6 +262,9 @@
                 let dateEnd = new Date(date2);
                 let duration = util.DateDiff(dateStart, dateEnd);
                 return duration + 1;
+            },
+            hideCancelOrder() {
+                this.cancelOrderShow = false;
             }
         },
         components: {
@@ -264,7 +275,8 @@
             OrderDetailModal,
             CheckOutModal,
             CheckInModal,
-            CashierModal
+            CashierModal,
+            CancelOrderModal
         }
     }
 </script>

@@ -10,7 +10,7 @@
                     <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>房间信息</span></p>
-                            <div v-for="room in rooms.roomOrderInfoList">
+                            <div v-for="room in roomBusinessInfo.roomOrderInfoList">
                                 <div class="room-info">
                                     <div class="room-name">
                                             <span class="room-select-icon"
@@ -20,7 +20,7 @@
                                             </span>
                                         <span class="room-icon"></span>
                                         <span>{{room.roomName}}</span>
-                                        <span class="room-state-icon" style="background: #ffba75">预</span>
+                                        <span class="room-state-icon" style="background: #82beff">住</span>
                                     </div>
                                     <div class="room-date">
                                         <label class="label-text">入住</label>
@@ -36,12 +36,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item" v-if="rooms.type === 2">
+                        <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>订单总结</span></p>
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
                             <span style="margin-left: 24px">已付金额:<span>¥{{payed}}</span></span>
                         </div>
-                        <div class="content-item" v-if="rooms.type === 2">
+                        <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>违约信息</span></p>
                             <span>提前退房部分房价：￥{{noCheckInMoney}}</span>
                             <span>提前退房违约金：</span>
@@ -65,42 +65,38 @@
 <script>
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
+    import { mapState } from 'vuex';
     export default{
-        props:{
-            rooms:{
-                type: Object,
-                default: {}
-            }
-        },
         data(){
             return{
                 penalty: undefined
             }
         },
         computed: {
+            ...mapState(['roomBusinessInfo']),
             totalPrice() {
                 let sum = 0;
-                if (!this.rooms.roomOrderInfoList) {
+                if (!this.roomBusinessInfo.roomOrderInfoList) {
                     return sum;
                 }
 
-                this.rooms.roomOrderInfoList.map(
+                this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += room.totalPrice;
                         }
                     }
-                )
+                );
 
                 return sum;
             },
             payed() {
                 let sum = 0;
-                if (!this.rooms.roomOrderInfoList) {
+                if (!this.roomBusinessInfo.roomOrderInfoList) {
                     return sum;
                 }
 
-                this.rooms.roomOrderInfoList.map(
+                this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += room.payments.reduce((a, b) => {
@@ -112,14 +108,14 @@
                             }, 0);
                         }
                     }
-                )
+                );
 
                 return sum;
             },
             finalPrice() {
                 let price  = 0;
-                if (this.rooms.roomOrderInfoList) {
-                    this.rooms.roomOrderInfoList.forEach(item => {
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                         if (item.selected) {
                             item.payments.forEach(pay => {
                                 if (pay.type === 15) {
@@ -133,21 +129,21 @@
                 return price + this.penalty ? this.penalty : 0;
             },
             deposit() {
-                return this.rooms.deposit - this.rooms.depositRefund;
+                return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
             },
             noCheckInMoney() {
                 let sum = 0;
-                if (!this.rooms.roomOrderInfoList) {
+                if (!this.roomBusinessInfo.roomOrderInfoList) {
                     return sum;
                 }
 
-                this.rooms.roomOrderInfoList.map(
+                this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += room.noCheckInMoney;
                         }
                     }
-                )
+                );
 
                 return sum;
             }
@@ -160,49 +156,41 @@
                 room.selected = !room.selected;
             },
             checkOut() {
-                if (this.deposit === 0 && this.finalPrice === 0) {
-                    const rooms = this.rooms.roomOrderInfoList.map(room => {
-                        if (room.selected) {
-                            return {
-                                startDate: room.checkInDate,
-                                endDate: room.checkOutDate,
-                                idCardList: room.idCardList,
-                                roomId: room.roomId,
-                                roomOrderId: room.roomOrderId
-                            }
+                const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                    if (room.selected) {
+                        return {
+                            startDate: room.checkInDate,
+                            endDate: room.checkOutDate,
+                            idCardList: room.idCardList,
+                            roomId: room.roomId,
+                            roomOrderId: room.roomOrderId
                         }
-                    });
-                    AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {type: this.rooms.type, orderId: this.rooms.orderId, rooms: JSON.stringify(rooms)})
-                        .then(res => {
-                            if (res.code === 1) {
-                                $('#checkOut').modal('hide');
-                                $('#orderDetail').modal('show');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        })
-                } else {
-                    this.$emit('changeCashierType', 'checkOut');
-                    let orderId = this.rooms.orderId;
-                    let subOrderIds = [];
-                    if (this.rooms.roomOrderInfoList) {
-                        this.rooms.roomOrderInfoList.forEach(item => {
-                            if (item.selected) {
-                                subOrderIds.push(item.roomOrderId);
-                            }
-                        });
                     }
-                    let params = { operationType: 1, orderId: this.rooms.orderId, orderType: -1, subOrderIds: JSON.stringify(subOrderIds), penalty: this.penalty };
-                    AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params )
+                });
+                const business =  {
+                    type: this.roomBusinessInfo.businessType,
+                    orderId: this.roomBusinessInfo.orderId,
+                    rooms: rooms
+                };
+                if (this.deposit === 0 && this.finalPrice === 0) {
+                    AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
+                        ...business,
+                        rooms: JSON.stringify(rooms)
+                    })
                         .then(res => {
                             if (res.code === 1) {
-                                this.$emit('changePayMents', res.data);
-                                $('#Cashier').modal('show');
                                 $('#checkOut').modal('hide');
+                                modal.somethingAlert('退房成功');
+                                this.$emit('showOrder', this.roomBusinessInfo.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
                         });
+                } else {
+                    business.penalty = Number(this.penalty);
+                    business.functionType = 2;
+                    $('#checkOut').modal('hide');
+                    this.$emit('showCashier', { type: 'checkOut', business });
                 }
             }
         },

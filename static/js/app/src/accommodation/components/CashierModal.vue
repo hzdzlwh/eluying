@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="Cashier" role="dialog">
+        <div class="modal fade roomModals" id="cashier" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -11,10 +11,10 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单付款'}`}}</span></p>
                             <div class="cashier-order-item">
-                                <span class="cashier-money-text">订单金额:<span>{{`¥${payMents.payableFee}`}}</span></span>
-                                <span class="cashier-money-text" v-if="payMents.penalty && payMents.penalty > 0">违约金:<span>{{`¥${payMents.penalty}`}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>{{`¥${payMents.paidFee}`}}</span></span>
-                                <span class="cashier-money-text">{{`${orderState ? '需补金额:' : '需退金额:'}`}}<span>{{`¥${(payMents.payableFee - payMents.paidFee).toFixed(2)}`}}</span></span>
+                                <span class="cashier-money-text">订单金额:<span>{{`¥${orderPayment.payableFee}`}}</span></span>
+                                <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>{{`¥${penalty}`}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>{{`¥${orderPayment.paidFee}`}}</span></span>
+                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
@@ -38,12 +38,12 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>押金信息</span></p>
                             <div class="cashier-order-item">
-                                <span class="cashier-money-text">已付押金:<span>¥100</span></span>
+                                <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
-                                <div class="cashier-deposit-info" v-show="deposit">
+                                <div class="cashier-deposit-info" v-show="showDeposit">
                                     <span>押金:</span>
-                                    <input type="text" class="dd-input">
+                                    <input type="text" class="dd-input" v-model="deposit">
                                     <span style="margin-left: 24px">收款方式:</span>
                                     <dd-select v-model="depositPayChannel" placeholder="请选择收款方式">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
@@ -51,7 +51,7 @@
                                     </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
                                 </div>
-                                <div class="cashier-addBtn"  @click="addDeposit" v-show="!deposit">
+                                <div class="cashier-addBtn"  @click="addDeposit" v-show="!showDeposit">
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加押金</span>
                                 </div>
@@ -60,8 +60,8 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">需补金额:<span class="order-price-num red">{{`¥${(payMents.payableFee - payMents.paidFee).toFixed(2)}`}}</span></span>
-                            <span class="footer-label">需退押金:<span class="order-price-num green">¥1200</span></span>
+                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                            <span v-if="totalDeposit != 0" class="footer-label">{{totalDeposit > 0 ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                     </div>
@@ -130,9 +130,10 @@
     import { DdSelect, DdOption } from 'dd-vue-component';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
+    import { mapState } from 'vuex';
     export default{
         props: {
-            cashierType: {
+            type: {
                 type: String,
                 default: ''//该界面的跳转来源界面类型
             },
@@ -144,42 +145,92 @@
                 type: Object,
                 default: function(){ return {} }//办理退房收银时的一些参数
             },
-            payMents: {
-                type: Object,
-                default: function(){ return {} }//收银时的订单的支付信息
+            business: {
+                type: Object
             },
-            order: {
-                type: Object,
-                default: function() { return {} }
+            show: {
+                type: Boolean
             }
         },
         data(){
             return{
                 payments: [],
-                deposit: false,
+                showDeposit: false,
                 payChannels: [],
                 depositPayChannels: [],
-                depositPayChannel: undefined
+                depositPayChannel: undefined,
+                deposit: undefined,
+                orderPayment: {}
             }
         },
         computed:{
-            orderState(){
-                if (this.payMents.payableFee) {
-                    let income = this.payMents.payableFee - this.payMents.paidFee;
+            ...mapState(['orderDetail', 'roomBusinessInfo']),
+            orderState() {
+                if (this.orderPayment.payableFee) {
+                    let income = this.orderPayment.payableFee - this.orderPayment.paidFee;
                     return income > 0;
                 }
                 return false;
+            },
+            totalDeposit() {
+                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
+            },
+            penalty() {
+                return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
             }
         },
         created() {
             this.getData();
         },
+        watch: {
+            show(val) {
+                if (val) {
+                    this.getOrderPayment();
+                    $('#cashier').modal('show');
+                } else {
+                    $('#cashier').modal('hide');
+                }
+            }
+        },
         methods: {
             resetData() {
                 this.payments = [];
-                this.deposit = false;
+                this.showDeposit = false;
                 this.depositPayChannel = undefined;
+            },
+            getOrderPayment() {
+                let operationType;
+                let penalty;
+                if (this.type === 'checkIn') {
+                    operationType = 3;
+                } else if (this.type === 'checkOut') {
+                    operationType = 1;
+                    penalty = this.business.penalty;
+                }
+                const orderId = this.orderDetail.orderId;
+                let subOrderIds = [];
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                        if (item.selected) {
+                            subOrderIds.push(item.roomOrderId);
+                        }
+                    });
+                }
+                const params = {
+                    orderType: -1,
+                    subOrderIds: JSON.stringify(subOrderIds),
+                    operationType,
+                    orderId
+                };
 
+                AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params )
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.orderPayment = res.data;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             },
             getData() {
                 AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {})
@@ -237,10 +288,11 @@
             },
             hideModal() {
                 this.resetData();
+                this.$emit('hide');
                 $('#Cashier').modal('hide');
             },
             addPayMent() {
-                let payMoney = (this.payMents.payableFee - this.payMents.paidFee).toFixed(2)
+                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2)
                 if (this.payments.length <= 0) {
                     this.payments.push({fee: payMoney, payChannelId: undefined, type: 0});
                 } else {
@@ -251,37 +303,47 @@
                 this.payments.splice(index, 1);
             },
             addDeposit() {
-                this.deposit = true;
+                this.showDeposit = true;
             },
             deleteDeposit() {
-                this.deposit = false;
+                this.showDeposit = false;
             },
             payMoney() {
-                let businessJson = {};
-                if (this.cashierType === 'checkIn') {
-                    businessJson.functionType = 1;
-                    businessJson.orderId = this.order.orderId;
-                    businessJson.type = 0;
-                    businessJson.rooms = this.checkInRooms.roomOrderInfoList;
+                const payments = this.payments.map(payment => {
+                    const channel = this.payChannels.find(c => c.channelId === payment.payChannelId);
+                    return {
+                        ...payment,
+                        payChannel: channel.name
+                    }
+                });
+
+                if (this.deposit) {
+                    const channel = this.payChannels.find(c => c.channelId === this.depositPayChannel);
+
+                    payments.push({
+                        fee: this.deposit,
+                        payChannelId: this.depositPayChannel,
+                        payChannel: channel.name,
+                        type: 1
+                    })
                 }
-                if (this.payments.length > 0) {
-                    this.payments.forEach(item => {
-                        this.payChannels.forEach(channel => {
-                            if (item.payChannelId === channel.channelId) {
-                                item.payChannel = channel.name;
-                            }
-                        });
-                    });
-                }
-                let params = {orderId: this.order.orderId, orderType: -1, payments: JSON.stringify(this.payments), businessJson: JSON.stringify(businessJson)};
+
+                const params = {
+                    orderId: this.orderDetail.orderId,
+                    orderType: -1,
+                    payments: JSON.stringify(payments),
+                    businessJson: JSON.stringify(this.business)
+                };
                 AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
-                        .then(result => {
-                            if(result.code !== 1) {
-                                modal.somethingAlert(result.msg);
-                            } else {
-                                $("#Cashier").modal("hide");
-                            }
-                        });
+                    .then(result => {
+                        if(result.code === 1) {
+                            modal.somethingAlert('收银成功');
+                            this.hideModal();
+                            this.$emit('showOrder', this.roomBusinessInfo.orderId);
+                        } else {
+                            modal.somethingAlert(result.msg);
+                        }
+                    });
             }
         },
         components: {
