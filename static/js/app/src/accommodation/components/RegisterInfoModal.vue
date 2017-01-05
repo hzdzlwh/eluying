@@ -2,9 +2,9 @@
     <div>
         <div class="modal fade roomModals" id="registerInfoModal" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" @click="hidePriceList(registerRooms)">
                     <div class="roomModals-header">
-                        <span class="header-text">预订</span>
+                        <span class="header-text">{{modalTitleOrBtn.title}}</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="roomModals-body">
@@ -23,17 +23,67 @@
                                 <div class="userInfo-item">
                                     <label>客源渠道</label>
                                     <dd-select v-model="userOriginType">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name" :key="origin.id+origin.name">
+                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
                                         </dd-option>
                                     </dd-select>
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
                             <p class="content-item-title">
                                 <span>房间信息</span>
-                                <span class="increase-container"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(0)"><span class="increase-icon"></span>添加项目</span>
                             </p>
+                            <div class="registerRoom-items">
+                                <div class="registerRoom-container" v-for="(item,index) in registerRooms">
+                                    <div class="registerRoom-item">
+                                        <span class="room-icon"></span>
+                                        <div class="shop-item-content">
+                                            <span class="useless-tip error" v-if="item.showTip">该房型在该时间段无可用房间</span>
+                                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
+                                                <dd-option v-for="category in categoryList" :value="category.id" :label="category.name">
+                                                </dd-option>
+                                            </dd-select>
+                                            <div class="room-category">
+                                                <dd-select v-model="item.roomType" placeholder="请选择房型" @input="modifyRoom(item)">
+                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :label="room.name">
+                                                    </dd-option>
+                                                </dd-select>
+                                            </div>
+                                            <div class="room-date" style="display: inline-block">
+                                                <label class="label-text">入住</label>
+                                                <div class="enterDate">
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())"/>
+                                                </div>
+                                                <span>~</span>
+                                                <div class="enterDate">
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" @input="modifyRoom(item)" :disabled-date="disabledEndDate(item.room.startDate)"/>
+                                                </div>
+                                                <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
+                                            </div>
+                                            <label class="label-text">房费</label>
+                                            <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
+                                                <input class="dd-input" v-model="item.price" style="width: 80px" @click.stop="showPriceList(index)"/>
+                                                <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
+                                                        <dl class="price-item" v-for="priceItem in item.datePriceList">
+                                                            <dt>{{priceItem.date.slice(5)}}</dt>
+                                                            <dd>¥{{getDatePrice(priceItem, item.datePriceList, item.price)}}</dd>
+                                                            <dd style="display: none">
+                                                                <input class="dd-input" style="width: 60px;">
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <span class="delete-icon" @click="deleteItem(0, index)"></span>
+                                    </div>
+                                    <CheckInPerson
+                                            :personsObj="{id: index, persons: item.idCardList}"
+                                            @addPerson="addPerson"
+                                            @deletePerson="deletePerson"
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title">
@@ -44,28 +94,28 @@
                                 <div class="shop-item" v-for="(item, index) in enterItems">
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id" placeholder="选择娱乐项目">
-                                            <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name" :key="enter.id+enter.name">
+                                        <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
+                                            <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
                                             </dd-option>
                                         </dd-select>
                                         <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime']">
-                                            <label>{{`时长(${getItemInfo(item.type, item.id)['timeUnit']})`}}</label>
+                                            <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
                                         </div>
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
-                                                <dd-datepicker placeholder="选择时间" v-model="item.date" :disabled-date="disableStartDate" />
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" />
                                             </div>
                                         </div>
                                         <div class="shop-item-count">
                                             <label>数量</label>
-                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2">
-                                                <p class="valid" v-if="false"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余10</p>
+                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :max=" item.inventory ? item.inventory : 999">
+                                                <p class="valid" v-if="item.inventory"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}`}}</span>
+                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -93,7 +143,7 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>{{`¥${(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}`}}</span>
+                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -101,24 +151,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item" v-if="true">
+                        <!--<div class="content-item" v-if="checkState === 'ing'">
                             <p class="content-item-title"><span>押金信息</span></p>
                             <p><label>押金</label><input type="text" placeholder="本次押金金额" class="dd-input" style="margin-left: 4px"/></p>
-                        </div>
+                        </div>-->
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
                                 <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark" class="dd-input"></textarea>
-                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{`${remark.length}/140`}}</span>
+                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{remark.length}}/140</span>
                             </div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">订单金额</span>
-                            <span class="footer-price">¥9999</span>
+                            <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="submitInfo">完成预订</div>
+                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{modalTitleOrBtn.btn}}</div>
                     </div>
                 </div>
             </div>
@@ -185,6 +235,13 @@
         input {
             width: 120px;
         }
+        .room-category{
+            width: 60px;
+            display: inline-block;
+            input {
+                width: 100%;
+            }
+        }
         .content-item {
             padding: 16px 24px;
             border-top: 1px solid $gary-light;
@@ -238,6 +295,40 @@
             margin-right: 16px;
             cursor: pointer;
         }
+        .room-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_home.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .registerInfoModal-roomPrice {
+            display: inline-block;
+            position: relative;
+        }
+        .registerInfoModal-roomPriceList {
+            position: absolute;
+            width: 491px;
+            right: 0;
+            top: 30px;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: scroll;
+            z-index: 9;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                float: left;
+                margin-left: 8px;
+            }
+        }
         .selected-icon {
             background: url("../../../../../image/modal/room_modal_selected.png");
         }
@@ -245,7 +336,7 @@
             background: url("../../../../../image/modal/room_modal_notSelect.png");
         }
         .time-container {
-            margin-left: 14px;
+            margin-left: 2px;
         }
         .time-container, .enterDate-container, .enterDate {
             display: inline-block;
@@ -254,6 +345,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-left: 13px;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+        }
+        .registerRoom-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .registerRoom-container {
+            display: flex;
+            flex-direction: column;
             padding-left: 13px;
             &:not(:last-child) {
                 padding-bottom: 15px;
@@ -271,6 +377,9 @@
         .shop-item-content {
             flex-grow: 1;
             position: relative;
+            .useless-tip {
+                bottom: -16px;
+            }
         }
         .shop-item-count {
             position: absolute;
@@ -346,12 +455,29 @@
 </style>
 <script>
     import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import CheckInPerson from './CheckInPerson.vue';
     import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
+    import util from 'util';
     export default{
         props: {
-            selectedEntries: Array
+            roomsItems: {
+                type: Array,
+                default: function() { return [] }
+            },
+            categories: {
+                type: Array,
+                default: function() { return [] }
+            },
+            checkState: {
+                type: String,
+                default: ''
+            },
+            registerInfoShow: {
+                type: Boolean,
+                default: false
+            }
         },
         data() {
             return {
@@ -364,14 +490,60 @@
                 enterList: [],
                 enterItems: [],
                 shopList: [],
-                shopGoodsItems: []
+                shopGoodsItems: [],
+                registerRooms: [],
             }
         },
 
         created(){
             this.getData();
         },
-        computed:{},
+        computed:{
+            modalTitleOrBtn() {
+                if (this.checkState === 'ing') {
+                    return { title: '直接入住', btn: '入住并收银' }
+                } else if (this.checkState === 'finish') {
+                    return { title: '补录', btn: '补录' }
+                } else {
+                    return { title: '预订', btn: '完成预订' }
+                }
+            },
+            categoryList() {
+                let categoryList = [];
+                if (this.categories.length > 0) {
+                    this.categories.forEach(item => {
+                        categoryList.push({id: item.cId, name: item.cName});
+                    });
+                }
+                return categoryList;
+            },
+            totalPrice() {
+                let totalPrice = 0;
+                if (this.registerRooms.length > 0) {
+                    this.registerRooms.forEach(room => {
+                        totalPrice += Number(room.price);
+                    });
+                }
+                if (this.enterItems.length > 0) {
+                    this.enterItems.forEach(enter => {
+                        if (enter.id) {
+                            let enterPrice = (this.getItemInfo(enter.type, enter.id)['price'] * enter.count * enter.timeAmount).toFixed(2);
+                            totalPrice += Number(enterPrice);
+                        }
+                    });
+                }
+                if (this.shopGoodsItems.length > 0) {
+                    this.shopGoodsItems.forEach(good => {
+                        if (good.id) {
+                            let goodPrice = (this.getItemInfo(good.type, good.id)['price'] * good.count).toFixed(2);
+                            totalPrice += Number(goodPrice);
+                        }
+                    });
+                }
+
+                return Number(totalPrice).toFixed(2)
+            }
+        },
         methods:{
             getData(){
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
@@ -406,16 +578,53 @@
                             }
                         });
             },
+            disabledStartDate(endDate) {
+                const str = util.dateFormat(new Date(endDate));
+                const arr = str.split('-');
+                if (this.checkState === 'finish') {
+                    return (date) => {
+                        return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    }
+                } else if (this.checkState === 'ing') {
+                    return (date) => {
+                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    }
+                }else {
+                    return (date) => {
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    }
+                }
+            },
+            disabledEndDate(startDate) {
+                if (this.checkState === 'finish') {
+                    const str = util.dateFormat(new Date(startDate));
+                    const arr = str.split('-');
+                    const str1 = util.dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                        return disable;
+                    }
+                } else {
+                    const str = util.dateFormat(new Date(startDate));
+                    const arr = str.split('-');
+                    return (date) => {
+                        return date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    }
+                }
+            },
             refreshData(){
                 this.name = '';
                 this.phone = '';
                 this.remark = '';
                 this.enterItems = [];
                 this.shopGoodsItems = [];
+                this.registerRooms = [];
             },
             hideModal(e){
                 e.stopPropagation();
                 this.refreshData();
+                this.$emit('changeRegisterInfoShow', false);
                 $("#registerInfoModal").modal("hide");
             },
 
@@ -424,22 +633,31 @@
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
             /**
-             * 添加住宿,娱乐-2,商朝-3项目
+             * 添加住宿-0,娱乐-2,商朝-3项目
              * @param type
              */
             addItem(type){
                 if (type === 3) {
-                    if (this.shopGoodsItems.length >= 2) {
+                    if (this.shopGoodsItems.length >= 99) {
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
                     this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
                 } else if (type === 2) {
-                    if (this.enterItems.length >= 2) {
+                    if (this.enterItems.length >= 99) {
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined });
+                } else {
+                    let len = this.registerRooms.length;
+                    if (len >= 99) {
+                        modal.somethingAlert('一个订单最多添加99间房!');
+                        return false;
+                    }
+                    let obj = JSON.parse(JSON.stringify(this.registerRooms[len - 1]));
+                    obj.idCardList = [];
+                    this.registerRooms.push(obj);
                 }
             },
 
@@ -448,7 +666,33 @@
                     this.shopGoodsItems.splice(index, 1);
                 } else if (type === 2) {
                     this.enterItems.splice(index, 1);
+                } else {
+                    let len = this.registerRooms.length;
+                    if (len <= 1) {
+                        modal.somethingAlert('已经是最后一间房间了!');
+                        return false;
+                    }
+                    this.registerRooms.splice(index, 1);
                 }
+            },
+            addPerson(id) {
+                this.registerRooms.forEach((item, index) => {
+                    if (index === id) {
+                        if(item.idCardList){
+                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                        } else {
+                            item.idCardList = [];
+                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                        }
+                    }
+                });
+            },
+            deletePerson(id, num) {
+                this.registerRooms.forEach((item, index) => {
+                    if (index === id) {
+                    item.idCardList.splice(num, 1);
+                }
+            });
             },
             /**
              * 根据id type(商超-3, 娱乐-2)获取详细信息
@@ -477,11 +721,103 @@
             },
 
             submitInfo(e){
+                let valid = true;
                 if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
                     modal.somethingAlert("请输入联系人或手机号!");
-                    return undefined;
+                    return false;
                 }
-                this.hideModal(e);
+                this.registerRooms.forEach(item => {
+                    if (item.showTip) {
+                        valid = false;
+                    }
+                });
+                if (!valid) {
+                    modal.somethingAlert("订单信息有误，请核对信息后再提交！");
+                    return false;
+                }
+                const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
+                if (this.checkState === 'ing') {
+                    params.type = 0;
+                } else if (this.checkState === 'finish') {
+                    params.type = 1;
+                } else {
+                    params.type = 2;
+                }
+                this.userOrigins.forEach(origin => {
+                    if (origin.id === this.userOriginType) {
+                        params.origin = origin.name;
+                    }
+                });
+                let rooms = [];
+                this.registerRooms.forEach(item => {
+                    const room = {};
+                    room.datePriceList = item.datePriceList;
+                    room.endDate = item.room.endDate;
+                    room.id = item.categoryType;
+                    room.roomId = item.roomType;
+                    room.idCardList = item.idCardList;
+                    room.fee = item.price;
+                    room.startDate = item.room.startDate;
+                    room.sub = true;
+
+                    rooms.push(room);
+                });
+
+                let entertainmentItems = [];
+                this.enterItems.forEach(item => {
+                    const enter = {};
+                    enter.amount = item.count;
+                    enter.timeAmount = item.timeAmount;
+                    enter.date = item.date;
+                    enter.categoryId = item.id;
+                    this.enterList.forEach(option => {
+                        if (option.id === item.id) {
+                            enter.categoryName = option.name;
+                            enter.price = option.price;
+                        }
+                    });
+
+                    entertainmentItems.push(enter);
+                });
+
+                let items = [];
+                this.shopGoodsItems.forEach(item => {
+                    const good = {};
+                    good.amount = item.count;
+                    good.id = item.id;
+                    good.type = 3;
+                    good.priceId = 0;
+                    good.date = util.dateFormat(new Date());
+                    this.shopList.forEach(shop => {
+                       if (shop.id === item.id) {
+                           good.name = shop.name;
+                           good.price = shop.price;
+                       }
+                    });
+
+                    items.push(good);
+                });
+                params.rooms = JSON.stringify(rooms);
+                params.entertainmentItems = JSON.stringify(entertainmentItems);
+                params.items = JSON.stringify(items);
+
+                AJAXService.ajaxWithToken('get', '/room/confirmOrder', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal(e);
+                            if(this.checkState === 'ing' || this.checkState === 'finish') {
+                                let business = {};
+                                business.businessJson = JSON.parse(JSON.stringify(params));
+                                business.businessJson.functionType = 1;
+                                business.orderDetail = {orderId: res.data.orderId, orderType: res.data.orderType};
+                                this.$emit('showCashier', { type: 'register', business: business });
+                            } else {
+                                this.$emit('showOrder', res.data.orderId);
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             },
 
             handleNumChange(type, tag, num){
@@ -492,9 +828,114 @@
                 } else if (type === -2) {
                     this.enterItems.forEach((item, index) => {item.timeAmount = (index === tag) ? num : item.timeAmount;});
                 }
+            },
+
+            getDateDiff(date1, date2) {
+                let dateStart = new Date(date1);
+                let dateEnd = new Date(date2);
+                let duration = util.DateDiff(dateStart, dateEnd);
+                return duration;
+            },
+
+            getRoomsList(id) {
+                let roomsList = [];
+                this.categories.forEach(category => {
+                    if (category.cId === id) {
+                        category.rooms.forEach(room => {
+                            roomsList.push({id: room.i, name: room.sn,});
+                        });
+                    }
+                });
+                return roomsList;
+            },
+            showPriceList(id) {
+                this.registerRooms.forEach((item, index) => {
+                    if (index === id) {
+                        let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                        if (duration > 1) {
+                            item.showPriceList = true;
+                        }
+                    } else {
+                        item.showPriceList = false;
+                    }
+                });
+            },
+            hidePriceList(arr) {
+                arr.forEach(item => {
+                    item.showPriceList = false;
+                });
+            },
+            stopPropagation() {
+                return false;
+            },
+            getDatePrice(obj, arr, totalPrice) {
+                let totalFee = 0;
+                arr.forEach(item => {
+                    totalFee += item.dateFee;
+                });
+                obj.modifyFee = Number(((obj.dateFee / totalFee) * totalPrice).toFixed(2));
+                return obj.modifyFee;
+            },
+            setDateFee(obj, item) {
+                let totalPrice = 0;
+                obj.dateFee = parseFloat(obj.modifyFee, 2);
+                item.datePriceList.forEach(date => {
+                    totalPrice += parseFloat(date.modifyFee, 2);
+                });
+                item.price = totalPrice;
+            },
+
+            modifyRoom(item) {
+                let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                if (duration < 1) {
+                    item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
+                }
+                let startDate = util.dateFormat(new Date(item.room.startDate));
+                let endDate = util.dateFormat(new Date(item.room.endDate));
+                AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
+                    .then(res => {
+                        if (res.code === 1) {
+                            let datePriceList = [];
+                            let price = 0;
+                            res.data.rs.status.forEach((option,index) => {
+                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p});
+                                price += option.p;
+                            });
+                            item.price = price;
+                            item.datePriceList = datePriceList;
+                        }
+                    });
+                AJAXService.ajaxWithToken('get', '/room/getStatusAndTotalPrice', { roomId: item.roomType, startDate: startDate, endDate: endDate})
+                    .then(res => {
+                        if (res.code === 1) {
+                            item.showTip = !res.data.available;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+
+            modifyEnter(item) {
+                if (item.id && item.date) {
+                    let date = util.dateFormat(new Date(item.date));
+                    AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
+                        .then(res => {
+                            if (res.code === 1) {
+                                item.inventory = res.data.inventory;
+                            } else {
+                                modal.somethingAlert(res.msg);
+                            }
+                        });
+                }
+            },
+
+            changeRoomType(item) {
+                this.$nextTick(function() {
+                    item.roomType = this.getRoomsList(item.categoryType)[0].id;
+                    this.modifyRoom(item);
+                });
             }
         },
-
         components:{
             DdDropdown,
             DdDropdownItem,
@@ -502,7 +943,39 @@
             DdDatepicker,
             DdSelect,
             DdOption,
-            counter
+            counter,
+            CheckInPerson
+        },
+        watch: {
+            registerInfoShow(newVal, oldVal) {
+                if (newVal && !oldVal) {
+                    this.roomsItems.forEach(item => {
+                        let id = undefined;
+                        this.categories.forEach(category => {
+                            category.rooms.forEach(room => {
+                                if (room.i === item.roomId) {
+                                    id = category.cId;
+                                }
+                            });
+                        });
+                        item.endDate = util.diffDate(item.endDate, 1);
+                        let duration = this.getDateDiff(item.startDate, item.endDate);
+                        AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId, date: util.dateFormat(item.startDate), days: duration })
+                            .then(res => {
+                                if (res.code === 1) {
+                                    let datePriceList = [];
+                                    let price = 0;
+                                    res.data.rs.status.forEach((option,index) => {
+                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p});
+                                        price += option.p;
+                                    });
+                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: price, room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
+                                }
+                            });
+                    });
+                    $('#registerInfoModal').modal('show');
+                }
+            }
         }
     }
 </script>

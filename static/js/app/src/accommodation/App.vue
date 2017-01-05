@@ -5,7 +5,7 @@
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
             @fold="handleFold"
-            @pullOrder="pullOrderDetail"
+            @showOrder="showOrder"
             :categories="categories"
             :holidays="holidays"
             :roomStatus="roomStatus"
@@ -18,24 +18,45 @@
         />
         <ShopCart
             :selectedEntries="selectedEntries"
+            @changeCheckState="changeCheckState"
         />
-        <RegisterInfoModal :selectedEntries="selectedEntries"/>
+        <RegisterInfoModal
+                :roomsItems="registerRooms"
+                :categories="categories"
+                :checkState="checkState"
+                :registerInfoShow="registerInfoShow"
+                @changeRegisterInfoShow="changeRegisterInfoShow"
+                @showOrder="showOrder"
+                @showCashier="showCashier"
+        />
         <OrderDetailModal
-                :order="orderDetail"
-                @changeCheckOutRooms="changeCheckOutRooms"
-                @changeCheckInRooms="changeCheckInRooms"
+            :orderId="orderId"
+            :orderDetailShow="orderDetailShow"
+            :order="orderDetail"
+            @showCancelOrder="showCancelOrder"
+            @hideOrderDetail="hideOrderDetail"
+            @showCashier="showCashier"
         />
-        <CheckOutModal :rooms="checkOutRooms"/>
+        <CheckOutModal
+            @showOrder="showOrder"
+            @showCashier="showCashier"
+        />
         <CheckInModal
-                :rooms="checkInRooms"
-                @changeCashierType="changeCashierType"
-                @changePayMents="changePayMents"
+            @showCashier="showCashier"
         />
         <CashierModal
-                :cashierType="cashierType"
-                :checkInRooms="checkInRooms"
-                :checkOutRooms="checkOutRooms"
-                :payMents="payMents"
+            :show="cashierShow"
+            :type="cashierType"
+            :business="cashierBusiness"
+            @hide="hideCashier"
+            @showOrder="showOrder"
+        />
+        <CancelOrderModal
+            :orderId="orderId"
+            :show="cancelOrderShow"
+            @showOrder="showOrder"
+            @hideCancelOrder="hideCancelOrder"
+            @showCashier="showCashier"
         />
     </div>
 </template>
@@ -59,6 +80,7 @@
     import CheckOutModal from './components/CheckOutModal.vue';
     import CheckInModal from './components/CheckInModal.vue';
     import CashierModal from './components/CashierModal.vue';
+    import CancelOrderModal from './components/CancelOrderModal.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -97,12 +119,19 @@
                 DAYS: 30,
                 dateRange: [],
                 leftMap: {},
+                orderDetailShow: false,
+                registerInfoShow: false,
+                orderId: undefined,
                 orderDetail: {},
+                checkState: undefined,
+                registerRooms: [],
                 checkOutRooms: {},
                 checkInRooms: {},
                 cashier: {},
                 cashierType: '',
-                payMents: {}
+                cashierShow: false,
+                cancelOrderShow: false,
+                cashierBusiness: {}
             }
         },
         computed: {
@@ -187,25 +216,57 @@
                 const category = this.categories.find(category => category.cId === id);
                 category.folded = !category.folded;
             },
-            pullOrderDetail(id) {
-                return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
-                        .then(res => {
-                            this.orderDetail = res.data;
-                            $('#orderDetail').modal('show');
+            showOrder(id) {
+                this.orderDetailShow = true;
+                this.orderId = id;
+            },
+            hideOrderDetail() {
+                this.orderDetailShow = false;
+            },
+            changeRegisterInfoShow(value){
+                this.registerInfoShow = value;
+            },
+            changeCheckState(type, arr) {
+                let registerRooms = [];
+                arr.forEach(item => {
+                    let id = undefined;
+                    this.categories.forEach(category => {
+                        category.rooms.forEach(room => {
+                            if (room.i === item.roomId) {
+                                id = category.cId;
+                            }
                         });
+                    });
+                    let duration = this.getDateDiff(item.startDate, item.endDate);
+                    registerRooms.push({ categoryType: id, roomType: item.roomId, price: 100, room: item, idCardList: [], showPriceList: false });
+                });
+                this.checkState = type;
+                this.registerRooms = arr;
+                this.registerInfoShow = true;
+                //$('#registerInfoModal').modal('show');
             },
-            changeCheckOutRooms(obj) {
-                this.checkOutRooms = obj;
-                console.log(this.checkOutRooms);
+            showCashier({ type, business }) {
+                this.cashierType = type;
+                this.cashierBusiness = business;
+                this.cashierShow = true;
             },
-            changeCheckInRooms(obj) {
-                this.checkInRooms = obj;
+            hideCashier() {
+                this.cashierShow = false;
             },
-            changeCashierType(str) {
-                this.cashierType = str;
+            showCancelOrder() {
+                this.cancelOrderShow = true;
             },
             changePayMents(obj) {
                 this.payMents = obj;
+            },
+            getDateDiff(date1, date2) {
+                let dateStart = new Date(date1);
+                let dateEnd = new Date(date2);
+                let duration = util.DateDiff(dateStart, dateEnd);
+                return duration + 1;
+            },
+            hideCancelOrder() {
+                this.cancelOrderShow = false;
             }
         },
         components: {
@@ -216,7 +277,8 @@
             OrderDetailModal,
             CheckOutModal,
             CheckInModal,
-            CashierModal
+            CashierModal,
+            CancelOrderModal
         }
     }
 </script>
