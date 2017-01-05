@@ -1,6 +1,6 @@
 <template>
     <div class="acc-container">
-        <Search />
+        <Search @showOrder="showOrder" />
         <Calendar
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"

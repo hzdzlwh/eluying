@@ -211,7 +211,7 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
-                    const orderId = this.orderDetail.orderId;
+                    const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     let subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList) {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
@@ -221,7 +221,7 @@
                         });
                     }
                     params = {
-                        orderType: -1,
+                        orderType: this.orderDetail.orderType,
                         subOrderIds: JSON.stringify(subOrderIds),
                         operationType,
                         orderId
@@ -292,8 +292,24 @@
             },
             hideModal() {
                 this.resetData();
-                this.$emit('hide');
-                $('#Cashier').modal('hide');
+                if (this.type === 'register') {
+                    let params = {
+                        orderId: this.business.orderDetail.orderId,
+                        orderType: this.business.orderDetail.orderType
+                    }
+                    AJAXService.ajaxWithToken('get', '/order/cancel', params)
+                        .then(res => {
+                            if (res.code !== 1) {
+                                modal.somethingAlert(res.msg);
+                            } else {
+                                this.$emit('hide');
+                                $('#Cashier').modal('hide');
+                            }
+                        });
+                } else {
+                    this.$emit('hide');
+                    $('#Cashier').modal('hide');
+                }
             },
             addPayMent() {
                 const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2)
@@ -352,7 +368,7 @@
                         if(result.code === 1) {
                             modal.somethingAlert('收银成功');
                             this.hideModal();
-                            this.$emit('showOrder', this.roomBusinessInfo.orderId);
+                            this.$emit('showOrder', this.orderDetail.orderId);
                         } else {
                             modal.somethingAlert(result.msg);
                         }
