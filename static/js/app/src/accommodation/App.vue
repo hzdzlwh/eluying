@@ -26,6 +26,8 @@
                 :checkState="checkState"
                 :registerInfoShow="registerInfoShow"
                 @changeRegisterInfoShow="changeRegisterInfoShow"
+                @showOrder="showOrder"
+                @showCashier="showCashier"
         />
         <OrderDetailModal
             :orderId="orderId"
@@ -44,7 +46,7 @@
         />
         <CashierModal
             :show="cashierShow"
-            :Type="cashierType"
+            :type="cashierType"
             :business="cashierBusiness"
             @hide="hideCashier"
             @showOrder="showOrder"

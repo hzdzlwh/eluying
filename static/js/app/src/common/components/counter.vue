@@ -86,6 +86,11 @@
         watch:{
             num(newVal) {
                 this.value = newVal;
+            },
+            max(newVal) {
+                if (this.value > newVal) {
+                    this.value = newVal;
+                }
             }
         }
     }

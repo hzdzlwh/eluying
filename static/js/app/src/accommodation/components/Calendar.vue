@@ -100,7 +100,7 @@
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
                         <div class="glyph-detail-name">
-                            <div>{{g.customerName}} ({{g.phone}})</div>
+                            <div>{{g.customerName || '未填写'}} ({{g.phone}})</div>
                             <div class="eluyun_book2-small_outer spriteImg" v-if="g.roomState === 0">
                                 <div class="eluyun_book2-small"></div>
                             </div>

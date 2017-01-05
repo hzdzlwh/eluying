@@ -138,8 +138,8 @@
                         return false;
                     }
                 } else if(type == 'ing') {
-                    if (this.p) {
-                        dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
+                    if (this.f || this.p) {
+                        dialogConfig.message = '选择直接入住，系统将自动清除今天之外的房态格子。';
                         modal.confirmDialog(dialogConfig, callback);
                         return false;
                     }
@@ -164,9 +164,16 @@
                         }
                     }
 
-                    // 直接入住和预定清除过去
-                    if (type === 'ing' || type === 'book') {
+                    // 预定清除过去
+                    if (type === 'book') {
                         if (!util.isSameDay(date, today) && date < today) {
+                            e.selected = false;
+                        }
+                    }
+
+                    // 直接入住清除非今天
+                    if (type === 'ing') {
+                        if (!util.isSameDay(date, today)) {
                             e.selected = false;
                         }
                     }

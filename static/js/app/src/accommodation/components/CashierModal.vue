@@ -199,30 +199,34 @@
                 this.depositPayChannel = undefined;
             },
             getOrderPayment() {
-                let operationType;
-                let penalty;
-                if (this.type === 'checkIn') {
-                    operationType = 3;
-                } else if (this.type === 'checkOut') {
-                    operationType = 1;
-                    penalty = this.business.penalty;
+                let params = undefined;
+                if (this.type === 'register') {
+                    params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
+                } else {
+                    let operationType;
+                    let penalty;
+                    if (this.type === 'checkIn') {
+                        operationType = 3;
+                    } else if (this.type === 'checkOut') {
+                        operationType = 1;
+                        penalty = this.business.penalty;
+                    }
+                    const orderId = this.orderDetail.orderId;
+                    let subOrderIds = [];
+                    if (this.roomBusinessInfo.roomOrderInfoList) {
+                        this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                            if (item.selected) {
+                                subOrderIds.push(item.roomOrderId);
+                            }
+                        });
+                    }
+                    params = {
+                        orderType: -1,
+                        subOrderIds: JSON.stringify(subOrderIds),
+                        operationType,
+                        orderId
+                    };
                 }
-                const orderId = this.orderDetail.orderId;
-                let subOrderIds = [];
-                if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
-                        if (item.selected) {
-                            subOrderIds.push(item.roomOrderId);
-                        }
-                    });
-                }
-                const params = {
-                    orderType: -1,
-                    subOrderIds: JSON.stringify(subOrderIds),
-                    operationType,
-                    orderId
-                };
-
                 AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params )
                     .then(res => {
                         if (res.code === 1) {
@@ -327,13 +331,22 @@
                         type: 1
                     })
                 }
-
-                const params = {
-                    orderId: this.orderDetail.orderId,
-                    orderType: -1,
-                    payments: JSON.stringify(payments),
-                    businessJson: JSON.stringify(this.business)
-                };
+                let params = undefined;
+                if (this.type === 'register') {
+                    params = {
+                        orderId: this.business.orderDetail.orderId,
+                        orderType: this.business.orderDetail.orderType,
+                        payments: JSON.stringify(payments),
+                        businessJson: JSON.stringify(this.business.businessJson)
+                    };
+                } else {
+                    params = {
+                        orderId: this.orderDetail.orderId,
+                        orderType: -1,
+                        payments: JSON.stringify(payments),
+                        businessJson: JSON.stringify(this.business)
+                    };
+                }
                 AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                     .then(result => {
                         if(result.code === 1) {
