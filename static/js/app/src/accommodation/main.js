@@ -5,7 +5,6 @@ import Vue from 'vue';
 import App from './App';
 import 'bootstrap';
 import header from 'header';
-import topMenu from "../common/topMenu";
 import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
