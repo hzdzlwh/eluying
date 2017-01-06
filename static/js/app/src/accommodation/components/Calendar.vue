@@ -78,8 +78,8 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="calendar-status-row" v-if="room.isLast && room.folded">
-                                <td class="calendar-status" style="text-align: center" v-for="left in leftMap[room.ti]">{{left}}间</td>
+                            <tr class="calendar-status-row" v-if="room.selected && room.isLast && room.folded">
+                                <td class="calendar-status" :class="{'calendar-status-busy': left === 0}" style="text-align: center" v-for="left in leftMap[room.ti]">{{left === 0 ? '满房' : `${left}间`}}</td>
                             </tr>
                         </template>
                     </tbody>
@@ -298,6 +298,9 @@
         background: white;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
+    }
+    .calendar-status-busy {
+        color: #f24949;
     }
     .calendar-status:hover {
         .calendar-status-inner {
