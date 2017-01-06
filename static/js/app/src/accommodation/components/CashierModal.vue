@@ -23,7 +23,7 @@
                                         <input type="text" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">收款方式:</span>
                                         <dd-select v-model="payment.payChannelId" placeholder="请选择收款方式">
-                                            <dd-option v-for="payChannel in payChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
@@ -186,7 +186,7 @@
             show(val) {
                 if (val) {
                     this.getOrderPayment();
-                    $('#cashier').modal('show');
+                    $('#cashier').modal({backdrop: 'static'});
                 } else {
                     $('#cashier').modal('hide');
                 }
@@ -197,6 +197,27 @@
                 this.payments = [];
                 this.showDeposit = false;
                 this.depositPayChannel = undefined;
+            },
+            getPayChannels(index) {
+                if (this.payments.length <= 1) {
+                    return this.payChannels;
+                } else {
+                    let own = false;
+                    let arr = this.payChannels;
+                    this.payments.forEach((pay, num) => {
+                        let id = pay.payChannelId;
+                        if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
+                            own = true;
+                        }
+                    });
+                    if (own) {
+                        arr = this.payChannels.filter(item => {
+                            let index = item.channelId;
+                            return index !== -6 && index !== -7 && index !== -11 && index !== -12
+                        })
+                    }
+                    return arr
+                }
             },
             getOrderPayment() {
                 let params = undefined;
@@ -312,12 +333,19 @@
                 }
             },
             addPayMent() {
-                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2)
-                if (this.payments.length <= 0) {
+                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                /*if (this.payments.length <= 0) {
                     this.payments.push({fee: payMoney, payChannelId: undefined, type: 0});
                 } else {
                     this.payments.push({fee: 0, payChannelId: undefined, type: 0});
+                }*/
+                let paidMoney = 0;
+                if (this.payments.length > 0) {
+                    this.payments.forEach(pay => {
+                        paidMoney += Number(pay.fee);
+                    });
                 }
+                this.payments.push({fee: (payMoney - Number(paidMoney)).toFixed(2), payChannelId: undefined, type: 0});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -353,7 +381,6 @@
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType,
                         payments: JSON.stringify(payments),
-                        businessJson: JSON.stringify(this.business.businessJson)
                     };
                 } else {
                     params = {
@@ -368,7 +395,8 @@
                         if(result.code === 1) {
                             modal.somethingAlert('收银成功');
                             this.hideModal();
-                            this.$emit('showOrder', this.orderDetail.orderId);
+                            let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                            this.$emit('showOrder', orderId);
                         } else {
                             modal.somethingAlert(result.msg);
                         }

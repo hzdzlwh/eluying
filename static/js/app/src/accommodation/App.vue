@@ -58,6 +58,7 @@
             @hideCancelOrder="hideCancelOrder"
             @showCashier="showCashier"
         />
+        <GetMoneyWithCode />
     </div>
 </template>
 <style>
@@ -81,6 +82,7 @@
     import CheckInModal from './components/CheckInModal.vue';
     import CashierModal from './components/CashierModal.vue';
     import CancelOrderModal from './components/CancelOrderModal.vue';
+    import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -107,7 +109,6 @@
                         this.$set(c, 'folded', false);
                     });
                 })
-
         },
         data() {
             return {
@@ -278,7 +279,8 @@
             CheckOutModal,
             CheckInModal,
             CashierModal,
-            CancelOrderModal
+            CancelOrderModal,
+            GetMoneyWithCode
         }
     }
 </script>

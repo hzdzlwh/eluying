@@ -32,7 +32,7 @@
                         <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
                             <p class="content-item-title">
                                 <span>房间信息</span>
-                                <span class="increase-container" @click="addItem(0)"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(0)"><span class="increase-icon"></span>添加房间</span>
                             </p>
                             <div class="registerRoom-items">
                                 <div class="registerRoom-container" v-for="(item,index) in registerRooms">
@@ -50,7 +50,8 @@
                                                     </dd-option>
                                                 </dd-select>
                                             </div>
-                                            <div class="room-date" style="display: inline-block">
+                                            <div class="room-date" style="display: inline-block; position: relative;">
+                                                <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">该房间的入住时间必需为今日！</span>
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
                                                     <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())"/>
@@ -548,8 +549,9 @@
             getData(){
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
                     if (res.code === 1) {
-                        this.userOriginType = res.data.list[0].id;
                         this.userOrigins = res.data.list;
+                        this.userOrigins.unshift({ id: -1, name: '散客' });
+                        this.userOriginType = this.userOrigins[0].id;
                     } else {
                         modal.somethingAlert(result.msg);
                     }
@@ -577,6 +579,9 @@
                                 });
                             }
                         });
+            },
+            checkIsToday(date) {
+                 return !util.isSameDay(new Date(date), new Date());
             },
             disabledStartDate(endDate) {
                 const str = util.dateFormat(new Date(endDate));
@@ -678,6 +683,10 @@
             addPerson(id) {
                 this.registerRooms.forEach((item, index) => {
                     if (index === id) {
+                        if (item.idCardList && item.idCardList.length >= 20) {
+                            modal.somethingAlert('一间房最多添加20个入住人');
+                            return false;
+                        }
                         if(item.idCardList){
                             item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
                         } else {
@@ -727,7 +736,7 @@
                     return false;
                 }
                 this.registerRooms.forEach(item => {
-                    if (item.showTip) {
+                    if (item.showTip || this.checkIsToday(item.room.startDate)) {
                         valid = false;
                     }
                 });
@@ -809,7 +818,8 @@
                                 let business = {};
                                 business.businessJson = JSON.parse(JSON.stringify(params));
                                 business.businessJson.functionType = 1;
-                                business.orderDetail = {orderId: res.data.orderId, orderType: res.data.orderType};
+                                business.businessJson.orderId = res.data.orderId;
+                                business.orderDetail = { ...res.data };
                                 this.$emit('showCashier', { type: 'register', business: business });
                             } else {
                                 this.$emit('showOrder', res.data.orderId);
@@ -973,7 +983,8 @@
                                 }
                             });
                     });
-                    $('#registerInfoModal').modal('show');
+                    //$('#payWithCode').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({backdrop: 'static'});
                 }
             }
         }

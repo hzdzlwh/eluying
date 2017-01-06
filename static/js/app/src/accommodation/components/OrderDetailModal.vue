@@ -680,9 +680,9 @@
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
-                            $('#checkIn').modal('show');
+                            $('#checkIn').modal({backdrop: 'static'});
                         } else {
-                            $('#checkOut').modal('show');
+                            $('#checkOut').modal({backdrop: 'static'});
                         }
 
                         this.hideModal();
@@ -700,7 +700,7 @@
                 if(newVal && !oldVal){
                     this[types.LOAD_ORDER_DETAIL]({ orderId: this.orderId })
                         .then(res => {
-                            $('#orderDetail').modal('show');
+                            $('#orderDetail').modal({backdrop: 'static'});
                         })
                         .catch(e => modal.somethingAlert(e.msg));
                 }
