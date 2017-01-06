@@ -31,31 +31,25 @@
                                 <span class="search-label">订单号:</span>
                                 <span class="desc">{{g.orderNum}}</span>
                             </span>
-                            <span class="search-label">{{g.origin}}</span>
+                            <span class="search-label search-origin" :title="g.origin">{{g.origin}}</span>
                         </div>
                         <div class="acc-search-order-status" :class="ORDER_STATUS[g.orderState].en">{{ORDER_STATUS[g.orderState].long}}</div>
                     </div>
                 </div>
                 <div class="acc-search-page" v-if="searchResultsNum > limit">
-                    <div class="acc-search-btn previous" @click="search(--page);"
-                         v-if="page !== 1">
-                        <div class="eluyun_forward_outer spriteImg">
+                    <div class="acc-search-btn previous" @click="changePage(--page);">
+                        <div v-if="page !== 1" class="eluyun_forward_outer spriteImg">
                             <div class="eluyun_forward"></div>
                         </div>
-                    </div>
-                    <div class="acc-search-btn privious" v-if="page === 1">
-                        <div class="eluyun_3_outer spriteImg">
+                        <div class="eluyun_3_outer spriteImg" v-if="page === 1">
                             <div class="eluyun_3"></div>
                         </div>
                     </div>
-                    <div class="acc-search-btn next" @click="search(++page)"
-                         v-if="page * limit < searchResultsNum">
-                        <div class="eluyun_backward_outer spriteImg">
+                    <div class="acc-search-btn next" @click="changePage(++page)">
+                        <div class="eluyun_backward_outer spriteImg" v-if="page * limit < searchResultsNum">
                             <div class="eluyun_backward"></div>
                         </div>
-                    </div>
-                    <div class="acc-search-btn next" v-if="page * limit >= searchResultsNum">
-                        <div class="eluyun_4_outer spriteImg">
+                        <div class="eluyun_4_outer spriteImg" v-if="page * limit >= searchResultsNum">
                             <div class="eluyun_4"></div>
                         </div>
                     </div>
@@ -166,6 +160,12 @@
              border-bottom: solid transparent 11px;
         }
     }
+    .search-origin {
+        max-width: 56px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 </style>
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
@@ -188,6 +188,13 @@
         methods: {
             showSearch() {
                 this.searchVisible = true;
+            },
+            changePage(page) {
+                if (page < 1 || page > Math.ceil(this.searchResultsNum / this.limit)) {
+                    return false;
+                }
+
+                this.search(page);
             },
             search(page) {
                 this.page = page;
