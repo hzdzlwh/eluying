@@ -581,7 +581,7 @@
                         });
             },
             checkIsToday(date) {
-                 return !util.isSameDay(new Date(date), new Date());
+                 return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
             },
             disabledStartDate(endDate) {
                 const str = util.dateFormat(new Date(endDate));
@@ -680,7 +680,7 @@
                     this.registerRooms.splice(index, 1);
                 }
             },
-            addPerson(id) {
+            addPerson(id, obj) {
                 this.registerRooms.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
@@ -688,10 +688,10 @@
                             return false;
                         }
                         if(item.idCardList){
-                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                            item.idCardList.push(obj);
                         } else {
                             item.idCardList = [];
-                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                            item.idCardList.push(obj);
                         }
                     }
                 });

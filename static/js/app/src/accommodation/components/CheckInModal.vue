@@ -99,14 +99,14 @@
             toggleRoomSelectedState(room) {
                 room.selected = !room.selected;
             },
-            addPerson(id) {
+            addPerson(id, obj) {
                 this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
                     if (index === id) {
                         if(item.idCardList){
-                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                            item.idCardList.push(obj);
                         } else {
                             item.idCardList = [];
-                            item.idCardList.push({idCardNum:'', idCardType: 0, name: ''});
+                            item.idCardList.push(obj);
                         }
                     }
                 });
