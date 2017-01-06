@@ -50,6 +50,7 @@
             :business="cashierBusiness"
             @hide="hideCashier"
             @showOrder="showOrder"
+            @showGetMoney="showGetMoney"
         />
         <CancelOrderModal
             :orderId="orderId"
@@ -58,7 +59,16 @@
             @hideCancelOrder="hideCancelOrder"
             @showCashier="showCashier"
         />
-        <GetMoneyWithCode />
+        <GetMoneyWithCode
+            :show="getMoneyShow"
+            :type="getMoneyType"
+            :business="getMoneyBusiness"
+            :params="getMoneyParams"
+            :totalPrice="payWithAlipay"
+            @hide="hideGetMoney"
+            @showCashier="showCashier"
+            @showOrder="showOrder"
+        />
     </div>
 </template>
 <style>
@@ -132,6 +142,11 @@
                 cashierType: '',
                 cashierShow: false,
                 cancelOrderShow: false,
+                getMoneyShow: false,
+                getMoneyType: '',
+                getMoneyBusiness: {},
+                getMoneyParams: {},
+                payWithAlipay: 0,
                 cashierBusiness: {}
             }
         },
@@ -253,6 +268,16 @@
             },
             hideCashier() {
                 this.cashierShow = false;
+            },
+            showGetMoney({ type, business, params, payWithAlipay }) {
+                this.getMoneyType = type;
+                this.getMoneyBusiness = business;
+                this.getMoneyParams = params;
+                this.payWithAlipay = payWithAlipay;
+                this.getMoneyShow = true;
+            },
+            hideGetMoney() {
+                this.getMoneyShow = false;
             },
             showCancelOrder() {
                 this.cancelOrderShow = true;

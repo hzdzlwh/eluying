@@ -983,7 +983,6 @@
                                 }
                             });
                     });
-                    //$('#payWithCode').modal({backdrop: 'static'});
                     $('#registerInfoModal').modal({backdrop: 'static'});
                 }
             }

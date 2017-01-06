@@ -366,7 +366,7 @@
                 });
 
                 if (this.deposit) {
-                    const channel = this.payChannels.find(c => c.channelId === this.depositPayChannel);
+                    const channel = this.depositPayChannels.find(c => c.channelId === this.depositPayChannel);
 
                     payments.push({
                         fee: this.deposit,
@@ -390,17 +390,32 @@
                         businessJson: JSON.stringify(this.business)
                     };
                 }
-                AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
-                    .then(result => {
-                        if(result.code === 1) {
-                            modal.somethingAlert('收银成功');
-                            this.hideModal();
-                            let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                            this.$emit('showOrder', orderId);
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    });
+                //判断是否进行扫码收款
+                let payWithAlipay = 0;
+                this.payments.forEach(pay => {
+                    let id = pay.payChannelId;
+                    if (id === -6 || id === -7 || id === -11 || id === -12) {
+                        payWithAlipay += Number(pay.fee);
+                    }
+                });
+                if (payWithAlipay <= 0) {
+                    AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                        .then(result => {
+                            if(result.code === 1) {
+                                modal.somethingAlert('收银成功');
+                                this.hideModal();
+                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                this.$emit('showOrder', orderId);
+                            } else {
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                } else {
+                    this.resetData();
+                    this.$emit('hide');
+                    $('#Cashier').modal('hide');
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay});
+                }
             }
         },
         components: {
