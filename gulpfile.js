@@ -15,6 +15,7 @@ var gulp = require('gulp'),
     rev = require('gulp-rev'),
     revCollector = require('gulp-rev-collector'),
     webpackConf = require('./webpack.conf'),
+    url = require('url'),
     fileInclude = require('gulp-file-include');
 
 gulp.task('browser-sync', function () {
@@ -22,7 +23,13 @@ gulp.task('browser-sync', function () {
         server: {
             baseDir: './',
             index: 'login.html',
-            https: true
+            https: true,
+            middleware: function(req, res, next) {
+                if (req.url.indexOf('/view/reports') > -1) {
+                    req.url = '/view/reports/index.html';
+                }
+                return next();
+            }
         }
     });
 });

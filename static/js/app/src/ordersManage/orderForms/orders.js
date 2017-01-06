@@ -94,7 +94,7 @@ $(function(){
             showBothArrow: true,
             showTopArrow: true,
             showDownArrow: true,
-            searchIconUrl: 'http://static.dingdandao.com/order_manage_search_grey.png'
+            searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png'
         },
 
         created() {
@@ -244,10 +244,10 @@ $(function(){
             changeSearchIcon(str) {
                 if (str === 'blur') {
                     this.searchIconUrl = this.searchContent === ""
-                                         ? "http://static.dingdandao.com/order_manage_search_grey.png"
-                                         : "http://static.dingdandao.com/order_manage_search_linght.png";
+                                         ? "//static.dingdandao.com/order_manage_search_grey.png"
+                                         : "//static.dingdandao.com/order_manage_search_linght.png";
                 } else {
-                    this.searchIconUrl = "http://static.dingdandao.com/order_manage_search_linght.png";
+                    this.searchIconUrl = "//static.dingdandao.com/order_manage_search_linght.png";
                 }
             },
             
