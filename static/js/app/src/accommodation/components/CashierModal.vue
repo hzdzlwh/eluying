@@ -35,13 +35,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="!appearDeposit">
                             <p class="content-item-title"><span>押金信息</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
-                                <div class="cashier-deposit-info" v-show="showDeposit">
+                                <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="text" class="dd-input" v-model="deposit">
                                     <span style="margin-left: 24px">收款方式:</span>
@@ -51,7 +51,7 @@
                                     </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
                                 </div>
-                                <div class="cashier-addBtn"  @click="addDeposit" v-show="!showDeposit">
+                                <div class="cashier-addBtn"  @click="addDeposit" v-if="!showDeposit">
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加押金</span>
                                 </div>
@@ -177,6 +177,9 @@
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            },
+            appearDeposit() {
+                return (this.type === 'register' && this.business.cashierType === 'finish');
             }
         },
         created() {
@@ -194,11 +197,17 @@
         },
         methods: {
             resetData() {
-                this.payments = [];
-                this.showDeposit = false;
-                this.depositPayChannel = undefined;
+                this.$nextTick(() => {
+                    this.payments = [];
+                    this.showDeposit = false;
+                    this.deposit = undefined;
+                    this.depositPayChannel = undefined;
+                });
             },
             getPayChannels(index) {
+                if (this.type === 'register' && this.business.cashierType === 'finish') {
+                    return this.depositPayChannels;
+                }
                 if (this.payments.length <= 1) {
                     return this.payChannels;
                 } else {
@@ -334,11 +343,6 @@
             },
             addPayMent() {
                 const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
-                /*if (this.payments.length <= 0) {
-                    this.payments.push({fee: payMoney, payChannelId: undefined, type: 0});
-                } else {
-                    this.payments.push({fee: 0, payChannelId: undefined, type: 0});
-                }*/
                 let paidMoney = 0;
                 if (this.payments.length > 0) {
                     this.payments.forEach(pay => {
@@ -353,10 +357,26 @@
             addDeposit() {
                 this.showDeposit = true;
             },
-            deleteDeposit() {
+            deleteDeposit(e) {
+                e.stopPropagation();
                 this.showDeposit = false;
             },
             payMoney() {
+                let invalid = false;
+                if (this.payments.length > 0) {
+                    this.payments.forEach(payment => {
+                        if (!payment.payChannelId) {
+                            invalid = true;
+                        }
+                    });
+                }
+                if (this.deposit && !this.depositPayChannel) {
+                    invalid = true;
+                }
+                if(invalid) {
+                    modal.somethingAlert('请选择收款方式！');
+                    return false;
+                }
                 const payments = this.payments.map(payment => {
                     const channel = this.payChannels.find(c => c.channelId === payment.payChannelId);
                     return {

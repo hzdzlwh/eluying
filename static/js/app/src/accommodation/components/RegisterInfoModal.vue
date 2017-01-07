@@ -106,13 +106,13 @@
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
-                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" />
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" />
                                             </div>
                                         </div>
                                         <div class="shop-item-count">
                                             <label>数量</label>
                                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :max=" item.inventory ? item.inventory : 999">
-                                                <p class="valid" v-if="item.inventory"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
+                                                <p class="valid" v-if="item.inventory && checkState !== 'finish'"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
@@ -602,13 +602,22 @@
             },
             disabledEndDate(startDate) {
                 if (this.checkState === 'finish') {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    const str1 = util.dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                        return disable;
+                    if (util.isSameDay(new Date(startDate), new Date())) {
+                        const str1 = util.dateFormat(new Date());
+                        const arr1 = str1.split('-');
+                        return (date) => {
+                            let disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                            return disable;
+                        }
+                    } else {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        const str1 = util.dateFormat(new Date());
+                        const arr1 = str1.split('-');
+                        return (date) => {
+                            let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                            return disable;
+                        }
                     }
                 } else {
                     const str = util.dateFormat(new Date(startDate));
@@ -820,9 +829,11 @@
                                 business.businessJson.functionType = 1;
                                 business.businessJson.orderId = res.data.orderId;
                                 business.orderDetail = { ...res.data };
+                                business.cashierType = this.checkState;
                                 this.$emit('showCashier', { type: 'register', business: business });
                             } else {
-                                this.$emit('showOrder', res.data.orderId);
+                                let orderId = res.data.orderType === 3 ? res.data.relatedOrderId : res.data.orderId;
+                                this.$emit('showOrder', orderId);
                             }
                         } else {
                             modal.somethingAlert(res.msg);

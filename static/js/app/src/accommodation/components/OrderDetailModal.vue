@@ -41,7 +41,7 @@
                                     <div class="room-info">
                                         <div class="room-name">
                                             <span class="room-icon"></span>
-                                            <span>{{item.name}}</span>
+                                            <span>{{item.name}}({{item.serialNum}})</span>
                                             <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
                                         </div>
                                         <div class="room-date">

@@ -50,7 +50,9 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{`${finalPrice >= 0 ? '需补金额:' : '需退金额:'}`}}<span class="order-price-num red">{{`¥${finalPrice}`}}</span></span>
+                            <span class="footer-label">{{`${finalPrice >= 0 ? '需补金额:' : '需退金额:'}`}}
+                                <span class="order-price-num" :class="finalPrice >= 0 ? 'red' : 'green'">{{`¥${Math.abs(finalPrice)}`}}</span>
+                            </span>
                             <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="checkOut">确认退房</div>
