@@ -118,9 +118,6 @@
             }
         },
         methods: {
-            showInfoModal() {
-                $('#registerInfoModal').modal('show');
-            },
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
                 const dialogConfig = {

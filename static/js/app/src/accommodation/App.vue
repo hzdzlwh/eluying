@@ -25,6 +25,7 @@
                 :categories="categories"
                 :checkState="checkState"
                 :registerInfoShow="registerInfoShow"
+                :order="orderDetail"
                 @changeRegisterInfoShow="changeRegisterInfoShow"
                 @showOrder="showOrder"
                 @showCashier="showCashier"
@@ -36,6 +37,7 @@
             @showCancelOrder="showCancelOrder"
             @hideOrderDetail="hideOrderDetail"
             @showCashier="showCashier"
+            @editOrder="editOrder"
         />
         <CheckOutModal
             @showOrder="showOrder"
@@ -243,23 +245,14 @@
                 this.registerInfoShow = value;
             },
             changeCheckState(type, arr) {
-                let registerRooms = [];
-                arr.forEach(item => {
-                    let id = undefined;
-                    this.categories.forEach(category => {
-                        category.rooms.forEach(room => {
-                            if (room.i === item.roomId) {
-                                id = category.cId;
-                            }
-                        });
-                    });
-                    let duration = this.getDateDiff(item.startDate, item.endDate);
-                    registerRooms.push({ categoryType: id, roomType: item.roomId, price: 100, room: item, idCardList: [], showPriceList: false });
-                });
                 this.checkState = type;
                 this.registerRooms = arr;
                 this.registerInfoShow = true;
-                //$('#registerInfoModal').modal('show');
+            },
+            editOrder(type, obj) {
+              this.checkState = type;
+              this.registerInfoShow = true;
+              this.orderDetail = obj;
             },
             showCashier({ type, business }) {
                 this.cashierType = type;

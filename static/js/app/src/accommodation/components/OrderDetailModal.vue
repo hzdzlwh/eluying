@@ -11,7 +11,7 @@
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
-                            <span class="header-tools" v-if="order.orderState !== 5">编辑订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
@@ -692,6 +692,10 @@
             showCashier() {
                 this.hideModal();
                 this.$emit('showCashier', {})
+            },
+            editOrder() {
+                this.hideModal();
+                this.$emit('editOrder', 'editOrder', this.order);
             }
         },
         components:{},
