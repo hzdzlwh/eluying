@@ -440,7 +440,7 @@
                     this.resetData();
                     this.$emit('hide');
                     $('#Cashier').modal('hide');
-                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: payWithAlipay.toFixed(2)});
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2))});
                 }
             }
         },

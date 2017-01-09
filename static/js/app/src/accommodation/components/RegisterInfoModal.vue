@@ -460,6 +460,12 @@
                 width: 0;
             }
             max-height: 120px;
+            .dd-select-option {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
     .content-item-title {
