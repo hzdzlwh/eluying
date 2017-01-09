@@ -37,15 +37,15 @@
                     </div>
                 </div>
                 <div class="acc-search-page" v-if="searchResultsNum > limit">
-                    <div class="acc-search-btn previous" @click="changePage(--page);">
-                        <div v-if="page !== 1" class="eluyun_forward_outer spriteImg">
+                    <div class="acc-search-btn previous" @click="changePage(page-1);">
+                        <div v-if="page > 1" class="eluyun_forward_outer spriteImg">
                             <div class="eluyun_forward"></div>
                         </div>
-                        <div class="eluyun_3_outer spriteImg" v-if="page === 1">
+                        <div class="eluyun_3_outer spriteImg" v-if="page <= 1">
                             <div class="eluyun_3"></div>
                         </div>
                     </div>
-                    <div class="acc-search-btn next" @click="changePage(++page)">
+                    <div class="acc-search-btn next" @click="changePage(page+1)">
                         <div class="eluyun_backward_outer spriteImg" v-if="page * limit < searchResultsNum">
                             <div class="eluyun_backward"></div>
                         </div>
