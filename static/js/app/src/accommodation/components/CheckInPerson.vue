@@ -3,23 +3,23 @@
         <div class="checkInPerson-personsList" v-if="personsObj.persons && personsObj.persons.length > 0">
             <div class="checkInPerson-person" v-for="(person, index) in personsObj.persons">
                 <span class="checkInPerson-person-icon"></span>
-                <input class="dd-input checkInPerson-person-name" placeholder="入住人姓名" v-model="person.name">
+                <input class="dd-input checkInPerson-person-name" placeholder="入住人姓名" v-model="person.name" maxlength="16">
                 <div class="checkInPerson-component-container">
                     <dd-select v-model="person.idCardType">
                         <dd-option v-for="card in cardsList" :value="card.id" :label="card.name" :key="card.id+card.name">
                         </dd-option>
                     </dd-select>
                 </div>
-                <input class="dd-input checkInPerson-person-cardNum" style="width: 170px;" placeholder="证件号码" v-model="person.idCardNum">
+                <input class="dd-input checkInPerson-person-cardNum" style="width: 170px;" placeholder="证件号码" v-model="person.idCardNum" maxlength="18">
                 <span class="checkInPerson-delete-icon" @click="deletePerson(index)"></span>
             </div>
         </div>
         <div class="checkInPerson-btns">
-            <div class="checkInPerson-btn" @click="addPerson">
+            <div class="checkInPerson-btn" @click="addPerson(0)">
                 <span class="checkInPerson-add-icon"></span>
                 <span class="checkInPerson-text">添加入住人</span>
             </div>
-            <div class="checkInPerson-btn">
+            <div class="checkInPerson-btn" @click="addPerson(1)">
                 <span class="checkInPerson-card-icon"></span>
                 <span class="checkInPerson-text">读卡添加入住人</span>
             </div>
@@ -99,6 +99,8 @@
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
     import { ID_CARD_TYPE } from '../const';
+    import modal from 'modal';
+    import ieidc  from '../utils/ieidc';
     export default{
         props: {
           personsObj:{
@@ -121,8 +123,20 @@
             }
         },
         methods: {
-            addPerson(){
-                this.$emit('addPerson', this.personsObj.id);
+            addPerson(type){
+                if (type === 0) {
+                    this.$emit('addPerson', this.personsObj.id, {idCardNum:'', idCardType: 0, name: ''});
+                } else {
+                    let obj = { idCardType: 0 };
+                    try{
+                        ieidc.init();
+                        obj.idCardNum = ieidc.read().cardNo;
+                        obj.name = ieidc.read().name;
+                        this.$emit('addPerson', this.personsObj.id, obj);
+                    }catch(e){
+                        modal.somethingAlert(e);
+                    }
+                }
             },
             deletePerson(index){
                 this.$emit('deletePerson', this.personsObj.id, index);

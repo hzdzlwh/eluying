@@ -118,12 +118,6 @@
             }
         },
         methods: {
-            showInfoModal() {
-                $('#registerInfoModal').modal('show');
-            },
-            showModal(type) {
-
-            },
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
                 const dialogConfig = {
@@ -132,8 +126,7 @@
                 };
                 const callback = () => {
                     this.clear(type);
-                    console.log(this.getRoomsWithDate());
-                    this.showModal(type);
+                    this.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
                 if (type == 'finish') {
                     if (this.t || this.f) {
@@ -155,8 +148,7 @@
                     }
                 }
 
-                this.getRoomsWithDate();
-                this.showModal(type);
+                this.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
             clear(type) {
                 const today = new Date();
@@ -169,8 +161,8 @@
                         }
                     }
 
-                    // 直接入住和预定清除过去
-                    if (type === 'ing' || type === 'book') {
+                    // 预定清除过去
+                    if (type === 'book' || type === 'ing') {
                         if (!util.isSameDay(date, today) && date < today) {
                             e.selected = false;
                         }

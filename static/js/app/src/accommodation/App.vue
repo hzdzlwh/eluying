@@ -1,11 +1,11 @@
 <template>
     <div class="acc-container">
-        <Search />
+        <Search @showOrder="showOrder" />
         <Calendar
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
             @fold="handleFold"
-            @pullOrder="pullOrderDetail"
+            @showOrder="showOrder"
             :categories="categories"
             :holidays="holidays"
             :roomStatus="roomStatus"
@@ -18,24 +18,58 @@
         />
         <ShopCart
             :selectedEntries="selectedEntries"
+            @changeCheckState="changeCheckState"
         />
-        <RegisterInfoModal :selectedEntries="selectedEntries"/>
-        <OrderDetailModal
+        <RegisterInfoModal
+                :roomsItems="registerRooms"
+                :categories="categories"
+                :checkState="checkState"
+                :registerInfoShow="registerInfoShow"
                 :order="orderDetail"
-                @changeCheckOutRooms="changeCheckOutRooms"
-                @changeCheckInRooms="changeCheckInRooms"
+                @changeRegisterInfoShow="changeRegisterInfoShow"
+                @showOrder="showOrder"
+                @showCashier="showCashier"
         />
-        <CheckOutModal :rooms="checkOutRooms"/>
+        <OrderDetailModal
+            :orderId="orderId"
+            :orderDetailShow="orderDetailShow"
+            :order="orderDetail"
+            @showCancelOrder="showCancelOrder"
+            @hideOrderDetail="hideOrderDetail"
+            @showCashier="showCashier"
+            @editOrder="editOrder"
+        />
+        <CheckOutModal
+            @showOrder="showOrder"
+            @showCashier="showCashier"
+        />
         <CheckInModal
-                :rooms="checkInRooms"
-                @changeCashierType="changeCashierType"
-                @changePayMents="changePayMents"
+            @showCashier="showCashier"
         />
         <CashierModal
-                :cashierType="cashierType"
-                :checkInRooms="checkInRooms"
-                :checkOutRooms="checkOutRooms"
-                :payMents="payMents"
+            :show="cashierShow"
+            :type="cashierType"
+            :business="cashierBusiness"
+            @hide="hideCashier"
+            @showOrder="showOrder"
+            @showGetMoney="showGetMoney"
+        />
+        <CancelOrderModal
+            :orderId="orderId"
+            :show="cancelOrderShow"
+            @showOrder="showOrder"
+            @hideCancelOrder="hideCancelOrder"
+            @showCashier="showCashier"
+        />
+        <GetMoneyWithCode
+            :show="getMoneyShow"
+            :type="getMoneyType"
+            :business="getMoneyBusiness"
+            :params="getMoneyParams"
+            :totalPrice="payWithAlipay"
+            @hide="hideGetMoney"
+            @showCashier="showCashier"
+            @showOrder="showOrder"
         />
     </div>
 </template>
@@ -59,6 +93,8 @@
     import CheckOutModal from './components/CheckOutModal.vue';
     import CheckInModal from './components/CheckInModal.vue';
     import CashierModal from './components/CashierModal.vue';
+    import CancelOrderModal from './components/CancelOrderModal.vue';
+    import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
     import AJAXService from 'AJAXService';
     import util from 'util';
     export default{
@@ -85,7 +121,6 @@
                         this.$set(c, 'folded', false);
                     });
                 })
-
         },
         data() {
             return {
@@ -97,12 +132,24 @@
                 DAYS: 30,
                 dateRange: [],
                 leftMap: {},
+                orderDetailShow: false,
+                registerInfoShow: false,
+                orderId: undefined,
                 orderDetail: {},
+                checkState: undefined,
+                registerRooms: [],
                 checkOutRooms: {},
                 checkInRooms: {},
                 cashier: {},
                 cashierType: '',
-                payMents: {}
+                cashierShow: false,
+                cancelOrderShow: false,
+                getMoneyShow: false,
+                getMoneyType: '',
+                getMoneyBusiness: {},
+                getMoneyParams: {},
+                payWithAlipay: 0,
+                cashierBusiness: {}
             }
         },
         computed: {
@@ -187,25 +234,58 @@
                 const category = this.categories.find(category => category.cId === id);
                 category.folded = !category.folded;
             },
-            pullOrderDetail(id) {
-                return AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId: id })
-                        .then(res => {
-                            this.orderDetail = res.data;
-                            $('#orderDetail').modal('show');
-                        });
+            showOrder(id) {
+                this.orderDetailShow = true;
+                this.orderId = id;
             },
-            changeCheckOutRooms(obj) {
-                this.checkOutRooms = obj;
-                console.log(this.checkOutRooms);
+            hideOrderDetail() {
+                this.orderDetailShow = false;
             },
-            changeCheckInRooms(obj) {
-                this.checkInRooms = obj;
+            changeRegisterInfoShow(value){
+                this.registerInfoShow = value;
             },
-            changeCashierType(str) {
-                this.cashierType = str;
+            changeCheckState(type, arr) {
+                this.checkState = type;
+                this.registerRooms = arr;
+                this.registerInfoShow = true;
+            },
+            editOrder(type, obj) {
+              this.checkState = type;
+              this.registerInfoShow = true;
+              this.orderDetail = obj;
+            },
+            showCashier({ type, business }) {
+                this.cashierType = type;
+                this.cashierBusiness = business;
+                this.cashierShow = true;
+            },
+            hideCashier() {
+                this.cashierShow = false;
+            },
+            showGetMoney({ type, business, params, payWithAlipay }) {
+                this.getMoneyType = type;
+                this.getMoneyBusiness = business;
+                this.getMoneyParams = params;
+                this.payWithAlipay = payWithAlipay;
+                this.getMoneyShow = true;
+            },
+            hideGetMoney() {
+                this.getMoneyShow = false;
+            },
+            showCancelOrder() {
+                this.cancelOrderShow = true;
             },
             changePayMents(obj) {
                 this.payMents = obj;
+            },
+            getDateDiff(date1, date2) {
+                let dateStart = new Date(date1);
+                let dateEnd = new Date(date2);
+                let duration = util.DateDiff(dateStart, dateEnd);
+                return duration + 1;
+            },
+            hideCancelOrder() {
+                this.cancelOrderShow = false;
             }
         },
         components: {
@@ -216,7 +296,9 @@
             OrderDetailModal,
             CheckOutModal,
             CheckInModal,
-            CashierModal
+            CashierModal,
+            CancelOrderModal,
+            GetMoneyWithCode
         }
     }
 </script>

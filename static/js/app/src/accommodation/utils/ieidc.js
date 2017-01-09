@@ -38,13 +38,13 @@ export default {
      * @param vm vue实例
      * @returns {boolean}
      */
-    read(timeout, vm) {
+    read(timeout) {
         //- timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
         if (!this.idc) {
             return false;
         }
 
-        const cid = this.idc.ReadOneCID(timeout);
+        this.idc.ReadOneCID(timeout);
         /*******************************************************************************************************************
          读卡后数据获取（通过控件的idcard对象）
          idName				姓名，替换了生僻字的（如果有的话）

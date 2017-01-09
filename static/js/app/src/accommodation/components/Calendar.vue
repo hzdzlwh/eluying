@@ -78,8 +78,8 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="calendar-status-row" v-if="room.isLast && room.folded">
-                                <td class="calendar-status" style="text-align: center" v-for="left in leftMap[room.ti]">{{left}}间</td>
+                            <tr class="calendar-status-row" v-if="room.selected && room.isLast && room.folded">
+                                <td class="calendar-status" :class="{'calendar-status-busy': left === 0}" style="text-align: center" v-for="left in leftMap[room.ti]">{{left === 0 ? '满房' : `${left}间`}}</td>
                             </tr>
                         </template>
                     </tbody>
@@ -87,7 +87,7 @@
                 <div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart, 'glyph-book': g.roomState === 0, 'glyph-ing': g.roomState === 1, 'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
-                     @click="pullOrder(g.orderId)"
+                     @click="showOrder(g.orderId)"
                      :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}">
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
@@ -100,7 +100,7 @@
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
                         <div class="glyph-detail-name">
-                            <div>{{g.customerName}} ({{g.phone}})</div>
+                            <div>{{g.customerName || '未填写'}} ({{g.phone}})</div>
                             <div class="eluyun_book2-small_outer spriteImg" v-if="g.roomState === 0">
                                 <div class="eluyun_book2-small"></div>
                             </div>
@@ -298,6 +298,9 @@
         background: white;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
+    }
+    .calendar-status-busy {
+        color: #f24949;
     }
     .calendar-status:hover {
         .calendar-status-inner {
@@ -689,8 +692,8 @@
                         status.actionVisible = false;
                 });
             },
-            pullOrder(id){
-                this.$emit('pullOrder', id);
+            showOrder(id){
+                this.$emit('showOrder', id);
             },
             setDirtyRoom(room) {
                 AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {

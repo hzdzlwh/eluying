@@ -11,8 +11,8 @@
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
-                            <span class="header-tools" v-if="order.orderState !== 5">编辑订单</span>
-                            <span class="header-tools" v-if="order.orderState === 2">取消订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                                     <div class="room-info">
                                         <div class="room-name">
                                             <span class="room-icon"></span>
-                                            <span>{{item.name}}</span>
+                                            <span>{{item.name}}({{item.serialNum}})</span>
                                             <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
                                         </div>
                                         <div class="room-date">
@@ -232,39 +232,39 @@
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`¥${item.fee}`}}</span>
+                                            <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">{{findTypePrice(order.payments, 15) > 0 ? '需补金额' : '需退金额'}}</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 15)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 15)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 16)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`¥${item.fee}`}}</span>
+                                            <span class="money-num">{{`${item.type === 3 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="footer-price">
-                                <span class="order-price-text">订单金额:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 13)}`}}</span></span>
-                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 4)}`}}</span></span>
-                                <span class="order-price-text">已付金额:<span class="order-price-num grey">{{`¥${findTypePrice(order.payments, 14)}`}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">{{`¥${findTypePrice(order.payments, 15)}`}}</span></span>
-                                <span class="order-price-text">需退押金:<span class="order-price-num green">{{`¥${findTypePrice(order.payments, 16)}`}}</span></span>
+                                <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
+                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
+                                <span class="order-price-text">已付金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 14)}}</span></span>
+                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{findTypePrice(order.payments, 15)}}</span></span>
+                                <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
                             </div>
                             <p class="order-info">
-                                <span class="order-info-text">{{`订单号:${order.orderNum}`}}</span>
-                                <span class="order-info-operator" style="margin-left: 24px">{{`办理员工:${order.operatorName}`}}</span>
+                                <span class="order-info-text">订单号:{{order.orderNum}}</span>
+                                <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkIn">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkOutAdAble">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkOut" v-if="getRoomsState.checkOutAble">办理退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
                             </div>
                         </div>
                     </div>
@@ -371,13 +371,6 @@
             font-size: 10px;
             border-radius: 2px;
             margin-left: 4px;
-        }
-        .room-icon {
-            width: 16px;
-            height: 15px;
-            background: url("../../../../../image/modal/room_modal_home.png");
-            background-size: contain;
-            margin-right: 25px;
         }
         .orderDetailModal-shop-item {
             display: flex;
@@ -515,12 +508,21 @@
     import util from 'util';
     import { ID_CARD_TYPE, FOOD_STATE } from '../const';
     import modal from 'modal';
+    import types from '../store/types';
+    import { mapActions, mapState } from 'vuex';
     export default{
         props: {
-          order: {
-              type: Object,
-              default: {}
-          }
+            /*order: {
+                type: Object,
+                default: function() { return {} }
+            },*/
+            orderId: {
+                type: Number
+            },
+            orderDetailShow: {
+                type: Boolean,
+                default: false
+            }
         },
         data(){
             return{
@@ -529,6 +531,7 @@
             }
         },
         computed: {
+            ...mapState({order: 'orderDetail'}),
             filterShopList() {
                 let shopList = {};
                 if (this.order.pcGoodsItems) {
@@ -566,8 +569,12 @@
             }
         },
         methods: {
-            hideModal(e){
-                e.stopPropagation();
+            ...mapActions([
+                types.LOAD_ORDER_DETAIL,
+                types.LOAD_ROOM_BUSINESS_INFO
+            ]),
+            hideModal() {
+                this.$emit('hideOrderDetail');
                 $("#orderDetail").modal("hide");
             },
             getOrderState(state){
@@ -609,6 +616,10 @@
                 params = AJAXService.getDataWithToken(params);
                 params = AJAXService.paramsToString(params);
                 window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
+            },
+            cancelOrder() {
+                this.hideModal();
+                this.$emit('showCancelOrder', orderDetail.orderId)
             },
             getFoodDetail(food) {
                 if (food.detail) {
@@ -663,51 +674,41 @@
                 return price.toFixed(2);
             },
             dateFormat(date) {
-                let dateStr = util.timeFormat(date);
-                return dateStr;
+                return util.timeFormat(date);
             },
-            /**
-             * 筛选各种状态下的房间
-             * @param type
-             */
-            filterRooms(type) {
-                let rooms = [];
-                if (this.order.rooms) {
-                    this.order.rooms.forEach(item => {
-                        if (item.state === type) {
-                            rooms.push(item);
+            checkInOrCheckOut(type) {
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
+                    .then(res => {
+                        if (type === 0) {
+                            $('#checkIn').modal({backdrop: 'static'});
+                        } else {
+                            $('#checkOut').modal({backdrop: 'static'});
                         }
-                    });
-                }
-                return rooms;
+
+                        this.hideModal();
+                    })
+                    .catch(res => modal.somethingAlert(res.msg));
             },
-            checkIn() {
-                let orderId = this.filterRooms(0)[0].serviceId;
-                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 0, roomOrderId: orderId})
-                        .then(res => {
-                            if (res.code === 1) {
-                                this.$emit('changeCheckInRooms', res.data);
-                                $('#orderDetail').modal('hide');
-                                $('#checkIn').modal('show');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
+            showCashier() {
+                this.hideModal();
+                this.$emit('showCashier', {})
             },
-            checkOut() {
-                let orderId = this.filterRooms(1)[0].serviceId;
-                AJAXService.ajaxWithToken('GET', '/order/getRoomBusinessInfo', { businessType: 1, roomOrderId: orderId})
-                        .then(res => {
-                            if (res.code === 1) {
-                                this.$emit('changeCheckOutRooms', res.data);
-                                $('#orderDetail').modal('hide');
-                                $('#checkOut').modal('show');
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
+            editOrder() {
+                this.hideModal();
+                this.$emit('editOrder', 'editOrder', this.order);
             }
         },
-        components:{}
+        components:{},
+        watch: {
+            orderDetailShow(newVal, oldVal) {
+                if(newVal && !oldVal){
+                    this[types.LOAD_ORDER_DETAIL]({ orderId: this.orderId })
+                        .then(res => {
+                            $('#orderDetail').modal({backdrop: 'static'});
+                        })
+                        .catch(e => modal.somethingAlert(e.msg));
+                }
+            }
+        }
     }
 </script>
