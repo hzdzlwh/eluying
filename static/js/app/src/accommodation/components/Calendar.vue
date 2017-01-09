@@ -100,7 +100,7 @@
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
                         <div class="glyph-detail-name">
-                            <div>{{g.customerName || '未填写'}} ({{g.phone}})</div>
+                            <div>{{g.customerName}} {{g.phone}}</div>
                             <div class="eluyun_book2-small_outer spriteImg" v-if="g.roomState === 0">
                                 <div class="eluyun_book2-small"></div>
                             </div>
@@ -115,8 +115,8 @@
                             <div class="start">{{g.checkInDateShort}}<span class="glyph-label">&nbsp;入住</span></div>
                             <div class="end">{{g.checkOutDateShort}}<span class="glyph-label">&nbsp;离店</span></div>
                             <div class="glyph-label">共<span>{{g.days}}</span>晚</div>
-                            <div class="glyph-label">{{g.channelName}}</div>
                         </div>
+                        <div class="glyph-label">{{g.channelName}}</div>
                         <div class="glyph-detail-price">
                             <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{g.amountPay}}</span></div>
                             <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{-g.needPay}}</span></div>
