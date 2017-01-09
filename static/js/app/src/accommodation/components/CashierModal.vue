@@ -43,7 +43,7 @@
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
-                                    <input type="text" class="dd-input" v-model="deposit">
+                                    <input type="text" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">收款方式:</span>
                                     <dd-select v-model="depositPayChannel" placeholder="请选择收款方式">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
