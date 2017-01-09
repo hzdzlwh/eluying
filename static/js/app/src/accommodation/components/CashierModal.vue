@@ -9,7 +9,7 @@
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
                         <div class="content-item">
-                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单付款'}`}}</span></p>
+                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单退款'}`}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>{{`¥${orderPayment.payableFee}`}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>{{`¥${penalty}`}}</span></span>
@@ -22,7 +22,7 @@
                                         <span>金额:</span>
                                         <input type="text" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">收款方式:</span>
-                                        <dd-select v-model="payment.payChannelId" placeholder="请选择收款方式">
+                                        <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
                                             <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="cashier-addBtn" @click="addPayMent">
                                     <span class="cashier-addBtn-icon"></span>
-                                    <span style="cursor: pointer">添加收款</span>
+                                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment.payableFee) {
-                    let income = this.orderPayment.payableFee - this.orderPayment.paidFee;
+                    let income = this.orderPayment.payableFee + this.penalty - this.orderPayment.paidFee;
                     return income > 0;
                 }
                 return false;
@@ -349,7 +349,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: (payMoney - Number(paidMoney)).toFixed(2), payChannelId: undefined, type: 0});
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: 0});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -359,6 +359,7 @@
             },
             deleteDeposit(e) {
                 e.stopPropagation();
+                this.deposit = undefined;
                 this.showDeposit = false;
             },
             payMoney() {
