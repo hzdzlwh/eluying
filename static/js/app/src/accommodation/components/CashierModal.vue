@@ -23,7 +23,7 @@
                                         <input type="text" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">收款方式:</span>
                                         <dd-select v-model="payment.payChannelId" placeholder="请选择收款方式">
-                                            <dd-option v-for="payChannel in payChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
@@ -35,13 +35,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="!appearDeposit">
                             <p class="content-item-title"><span>押金信息</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
-                                <div class="cashier-deposit-info" v-show="showDeposit">
+                                <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="text" class="dd-input" v-model="deposit">
                                     <span style="margin-left: 24px">收款方式:</span>
@@ -51,7 +51,7 @@
                                     </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
                                 </div>
-                                <div class="cashier-addBtn"  @click="addDeposit" v-show="!showDeposit">
+                                <div class="cashier-addBtn"  @click="addDeposit" v-if="!showDeposit">
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加押金</span>
                                 </div>
@@ -177,6 +177,9 @@
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            },
+            appearDeposit() {
+                return (this.type === 'register' && this.business.cashierType === 'finish');
             }
         },
         created() {
@@ -186,7 +189,7 @@
             show(val) {
                 if (val) {
                     this.getOrderPayment();
-                    $('#cashier').modal('show');
+                    $('#cashier').modal({backdrop: 'static'});
                 } else {
                     $('#cashier').modal('hide');
                 }
@@ -194,9 +197,36 @@
         },
         methods: {
             resetData() {
-                this.payments = [];
-                this.showDeposit = false;
-                this.depositPayChannel = undefined;
+                this.$nextTick(() => {
+                    this.payments = [];
+                    this.showDeposit = false;
+                    this.deposit = undefined;
+                    this.depositPayChannel = undefined;
+                });
+            },
+            getPayChannels(index) {
+                if (this.type === 'register' && this.business.cashierType === 'finish') {
+                    return this.depositPayChannels;
+                }
+                if (this.payments.length <= 1) {
+                    return this.payChannels;
+                } else {
+                    let own = false;
+                    let arr = this.payChannels;
+                    this.payments.forEach((pay, num) => {
+                        let id = pay.payChannelId;
+                        if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
+                            own = true;
+                        }
+                    });
+                    if (own) {
+                        arr = this.payChannels.filter(item => {
+                            let index = item.channelId;
+                            return index !== -6 && index !== -7 && index !== -11 && index !== -12
+                        })
+                    }
+                    return arr
+                }
             },
             getOrderPayment() {
                 let params = undefined;
@@ -211,7 +241,7 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
-                    const orderId = this.orderDetail.orderId;
+                    const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     let subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList) {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
@@ -221,7 +251,7 @@
                         });
                     }
                     params = {
-                        orderType: -1,
+                        orderType: this.orderDetail.orderType,
                         subOrderIds: JSON.stringify(subOrderIds),
                         operationType,
                         orderId
@@ -292,16 +322,34 @@
             },
             hideModal() {
                 this.resetData();
-                this.$emit('hide');
-                $('#Cashier').modal('hide');
+                if (this.type === 'register') {
+                    let params = {
+                        orderId: this.business.orderDetail.orderId,
+                        orderType: this.business.orderDetail.orderType
+                    }
+                    AJAXService.ajaxWithToken('get', '/order/cancel', params)
+                        .then(res => {
+                            if (res.code !== 1) {
+                                modal.somethingAlert(res.msg);
+                            } else {
+                                this.$emit('hide');
+                                $('#Cashier').modal('hide');
+                            }
+                        });
+                } else {
+                    this.$emit('hide');
+                    $('#Cashier').modal('hide');
+                }
             },
             addPayMent() {
-                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2)
-                if (this.payments.length <= 0) {
-                    this.payments.push({fee: payMoney, payChannelId: undefined, type: 0});
-                } else {
-                    this.payments.push({fee: 0, payChannelId: undefined, type: 0});
+                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                let paidMoney = 0;
+                if (this.payments.length > 0) {
+                    this.payments.forEach(pay => {
+                        paidMoney += Number(pay.fee);
+                    });
                 }
+                this.payments.push({fee: (payMoney - Number(paidMoney)).toFixed(2), payChannelId: undefined, type: 0});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -309,10 +357,26 @@
             addDeposit() {
                 this.showDeposit = true;
             },
-            deleteDeposit() {
+            deleteDeposit(e) {
+                e.stopPropagation();
                 this.showDeposit = false;
             },
             payMoney() {
+                let invalid = false;
+                if (this.payments.length > 0) {
+                    this.payments.forEach(payment => {
+                        if (!payment.payChannelId) {
+                            invalid = true;
+                        }
+                    });
+                }
+                if (this.deposit && !this.depositPayChannel) {
+                    invalid = true;
+                }
+                if(invalid) {
+                    modal.somethingAlert('请选择收款方式！');
+                    return false;
+                }
                 const payments = this.payments.map(payment => {
                     const channel = this.payChannels.find(c => c.channelId === payment.payChannelId);
                     return {
@@ -322,7 +386,7 @@
                 });
 
                 if (this.deposit) {
-                    const channel = this.payChannels.find(c => c.channelId === this.depositPayChannel);
+                    const channel = this.depositPayChannels.find(c => c.channelId === this.depositPayChannel);
 
                     payments.push({
                         fee: this.deposit,
@@ -337,7 +401,6 @@
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType,
                         payments: JSON.stringify(payments),
-                        businessJson: JSON.stringify(this.business.businessJson)
                     };
                 } else {
                     params = {
@@ -347,16 +410,32 @@
                         businessJson: JSON.stringify(this.business)
                     };
                 }
-                AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
-                    .then(result => {
-                        if(result.code === 1) {
-                            modal.somethingAlert('收银成功');
-                            this.hideModal();
-                            this.$emit('showOrder', this.roomBusinessInfo.orderId);
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    });
+                //判断是否进行扫码收款
+                let payWithAlipay = 0;
+                this.payments.forEach(pay => {
+                    let id = pay.payChannelId;
+                    if (id === -6 || id === -7 || id === -11 || id === -12) {
+                        payWithAlipay += Number(pay.fee);
+                    }
+                });
+                if (payWithAlipay <= 0) {
+                    AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                        .then(result => {
+                            if(result.code === 1) {
+                                modal.somethingAlert('收银成功');
+                                this.hideModal();
+                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                this.$emit('showOrder', orderId);
+                            } else {
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                } else {
+                    this.resetData();
+                    this.$emit('hide');
+                    $('#Cashier').modal('hide');
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay});
+                }
             }
         },
         components: {

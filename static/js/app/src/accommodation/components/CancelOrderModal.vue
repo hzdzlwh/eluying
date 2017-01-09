@@ -53,7 +53,7 @@
             show(val) {
                 if (val) {
                     this.getCancelOrder();
-                    $('#cancelOrder').modal('show');
+                    $('#cancelOrder').modal({backdrop: 'static'});
                 } else {
                     $('#cancelOrder').modal('hide');
                 }
