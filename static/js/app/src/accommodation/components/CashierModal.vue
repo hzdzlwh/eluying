@@ -36,17 +36,17 @@
                             </div>
                         </div>
                         <div class="content-item" v-if="appearDeposit">
-                            <p class="content-item-title"><span>押金信息</span></p>
+                            <p class="content-item-title"><span>{{`${ orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款' }`}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
-                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
+                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="text" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">收款方式:</span>
-                                    <dd-select v-model="depositPayChannel" placeholder="请选择收款方式">
+                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
@@ -147,7 +147,8 @@
                 default: function(){ return {} }//办理退房收银时的一些参数
             },
             business: {
-                type: Object
+                type: Object,
+                default: function(){ return {} }
             },
             show: {
                 type: Boolean
