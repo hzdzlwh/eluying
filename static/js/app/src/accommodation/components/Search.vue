@@ -23,8 +23,7 @@
                         </div>
                         <div>
                             <span class="search-label">客户:</span>
-                            <span>{{g.customerName}}</span>
-                            <span v-if="g.customerPhone">({{g.customerPhone}})</span>
+                            <span>{{g.customerName}} {{g.customerPhone}}</span>
                         </div>
                         <div class="acc-search-order">
                             <span>
