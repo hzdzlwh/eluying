@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item" v-if="!appearDeposit">
+                        <div class="content-item" v-if="appearDeposit">
                             <p class="content-item-title"><span>押金信息</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
@@ -179,7 +179,10 @@
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
             },
             appearDeposit() {
-                return (this.type === 'register' && this.business.cashierType === 'finish');
+                const type = this.type;
+                const cashierType = this.business.cashierType;
+                const deposit = this.orderPayment.deposit;
+                return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
             }
         },
         created() {
