@@ -154,8 +154,8 @@
         },
         data(){
             return{
-                payments: [],
                 showDeposit: false,
+                payments: [],
                 payChannels: [],
                 depositPayChannels: [],
                 depositPayChannel: undefined,
@@ -261,6 +261,11 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
+                            const penalty = ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
+                            const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
+                            if (payMoney !== 0) {
+                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: 0});
+                            }
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -435,7 +440,7 @@
                     this.resetData();
                     this.$emit('hide');
                     $('#Cashier').modal('hide');
-                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay});
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: payWithAlipay.toFixed(2)});
                 }
             }
         },
