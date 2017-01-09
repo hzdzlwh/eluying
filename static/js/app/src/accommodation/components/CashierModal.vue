@@ -168,7 +168,7 @@
             orderState() {
                 if (this.orderPayment.payableFee) {
                     let income = this.orderPayment.payableFee + this.penalty - this.orderPayment.paidFee;
-                    return income > 0;
+                    return income >= 0;
                 }
                 return false;
             },
