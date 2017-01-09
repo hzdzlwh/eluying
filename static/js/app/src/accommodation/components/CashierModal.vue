@@ -9,7 +9,7 @@
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
                         <div class="content-item">
-                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单付款'}`}}</span></p>
+                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单退款'}`}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>{{`¥${orderPayment.payableFee}`}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>{{`¥${penalty}`}}</span></span>
@@ -22,7 +22,7 @@
                                         <span>金额:</span>
                                         <input type="text" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">收款方式:</span>
-                                        <dd-select v-model="payment.payChannelId" placeholder="请选择收款方式">
+                                        <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
                                             <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
@@ -31,21 +31,22 @@
                                 </div>
                                 <div class="cashier-addBtn" @click="addPayMent">
                                     <span class="cashier-addBtn-icon"></span>
-                                    <span style="cursor: pointer">添加收款</span>
+                                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item" v-if="!appearDeposit">
-                            <p class="content-item-title"><span>押金信息</span></p>
+                        <div class="content-item" v-if="appearDeposit">
+                            <p class="content-item-title"><span>{{`${ orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款' }`}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
+                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
-                                    <input type="text" class="dd-input" v-model="deposit">
+                                    <input type="text" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">收款方式:</span>
-                                    <dd-select v-model="depositPayChannel" placeholder="请选择收款方式">
+                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
@@ -146,7 +147,8 @@
                 default: function(){ return {} }//办理退房收银时的一些参数
             },
             business: {
-                type: Object
+                type: Object,
+                default: function(){ return {} }
             },
             show: {
                 type: Boolean
@@ -154,8 +156,8 @@
         },
         data(){
             return{
-                payments: [],
                 showDeposit: false,
+                payments: [],
                 payChannels: [],
                 depositPayChannels: [],
                 depositPayChannel: undefined,
@@ -167,8 +169,8 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment.payableFee) {
-                    let income = this.orderPayment.payableFee - this.orderPayment.paidFee;
-                    return income > 0;
+                    let income = this.orderPayment.payableFee + this.penalty - this.orderPayment.paidFee;
+                    return income >= 0;
                 }
                 return false;
             },
@@ -179,7 +181,10 @@
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
             },
             appearDeposit() {
-                return (this.type === 'register' && this.business.cashierType === 'finish');
+                const type = this.type;
+                const cashierType = this.business.cashierType;
+                const deposit = this.orderPayment.deposit;
+                return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
             }
         },
         created() {
@@ -261,6 +266,15 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
+                            const penalty = ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
+                            const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
+                            if (payMoney != 0) {
+                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: 0});
+                            }
+                            if (this.orderPayment.deposit > 0) {
+                                this.showDeposit = true;
+                                this.deposit = this.orderPayment.deposit;
+                            }
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -349,7 +363,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: (payMoney - Number(paidMoney)).toFixed(2), payChannelId: undefined, type: 0});
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: 0});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -359,6 +373,7 @@
             },
             deleteDeposit(e) {
                 e.stopPropagation();
+                this.deposit = undefined;
                 this.showDeposit = false;
             },
             payMoney() {
@@ -434,7 +449,7 @@
                     this.resetData();
                     this.$emit('hide');
                     $('#Cashier').modal('hide');
-                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay});
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2))});
                 }
             }
         },
