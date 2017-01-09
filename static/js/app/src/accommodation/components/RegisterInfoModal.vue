@@ -358,6 +358,13 @@
                 width: 60px;
                 float: left;
                 margin-left: 8px;
+                dt {
+                    color: #999999;
+                    font-size: 12px;
+                }
+                dd {
+                    height: 24px;
+                }
             }
         }
         .selected-icon {
@@ -834,6 +841,8 @@
                     params.type = 1;
                 } else if (this.checkState === 'book') {
                     params.type = 2;
+                } else {
+                    params.orderId = this.order.orderId;
                 }
                 this.userOrigins.forEach(origin => {
                     if (origin.id === this.userOriginType) {
@@ -1049,7 +1058,12 @@
                             item.datePriceList = datePriceList;
                         }
                     });
-                AJAXService.ajaxWithToken('get', '/room/getStatusAndTotalPrice', { roomId: item.roomType, startDate: startDate, endDate: endDate})
+                const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
+                if (item.roomOrderId) {
+                    params.roomOrderId = item.roomOrderId;
+                }
+
+                AJAXService.ajaxWithToken('get', '/room/getStatusAndTotalPrice', params)
                     .then(res => {
                         if (res.code === 1) {
                             item.showTip = !res.data.available;
@@ -1158,7 +1172,7 @@
                         room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
                         room.showPriceList = false;
                         room.showTip = false;
-                        room.roomOrderId = item.orderId;
+                        room.roomOrderId = item.serviceId;
                         registerRooms.push(room);
                     });
                     this.registerRooms = registerRooms;
