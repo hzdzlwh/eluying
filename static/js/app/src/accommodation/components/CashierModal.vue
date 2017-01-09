@@ -39,6 +39,7 @@
                             <p class="content-item-title"><span>押金信息</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
+                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
@@ -266,8 +267,12 @@
                             this.orderPayment = res.data;
                             const penalty = ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
                             const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
-                            if (payMoney !== 0) {
+                            if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: 0});
+                            }
+                            if (this.orderPayment.deposit > 0) {
+                                this.showDeposit = true;
+                                this.deposit = this.orderPayment.deposit;
                             }
                         } else {
                             modal.somethingAlert(res.msg);
