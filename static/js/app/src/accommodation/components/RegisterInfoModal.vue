@@ -133,7 +133,7 @@
                                 <span>商超信息</span>
                                 <span class="increase-container" @click="addItem(3)"><span class="increase-icon"></span>添加项目</span>
                             </p>
-                            <div v-if="order.orderState" class="items">
+                            <div v-if="order.orderState && showOrder" class="items">
                                 <div class="shop-item" :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''" style="align-items: stretch; flex-direction: column" v-for="item in filterShopList">
                                     <div class="orderDetailModal-shop-item">
                                         <span class="shop-icon"></span>
@@ -460,6 +460,12 @@
                 width: 0;
             }
             max-height: 120px;
+            .dd-select-option {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
     .content-item-title {
@@ -536,6 +542,7 @@
                 shopList: [],
                 shopGoodsItems: [],
                 registerRooms: [],
+                showOrder: false
             }
         },
 
@@ -698,7 +705,7 @@
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
-                        return date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     }
                 }
             },
@@ -1137,6 +1144,7 @@
                     this.phone = this.order.customerPhone;
                     this.userOriginType = this.order.originId;
                     this.remark = this.order.remark;
+                    this.showOrder = true;
 
                     let enterItems = [];
                     this.order.playItems.forEach(item => {
@@ -1178,6 +1186,8 @@
                     this.registerRooms = registerRooms;
 
                     $('#registerInfoModal').modal({backdrop: 'static'});
+                } else if (!newVal) {
+                    this.showOrder = false;
                 }
             }
         }

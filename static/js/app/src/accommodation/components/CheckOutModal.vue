@@ -19,7 +19,7 @@
                                             >
                                             </span>
                                         <span class="room-icon"></span>
-                                        <span>{{room.roomName}}</span>
+                                        <span>{{room.roomName}}({{room.serialNum}})</span>
                                         <span class="room-state-icon" style="background: #82beff">住</span>
                                     </div>
                                     <div class="room-date">
@@ -43,7 +43,7 @@
                         </div>
                         <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>违约信息</span></p>
-                            <span>提前退房部分房价：￥{{noCheckInMoney}}</span>
+                            <span style="margin-right: 24px">提前退房部分房价：￥{{noCheckInMoney}}</span>
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
                         </div>

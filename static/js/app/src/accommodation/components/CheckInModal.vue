@@ -20,7 +20,7 @@
                                             >
                                             </span>
                                             <span class="room-icon"></span>
-                                            <span>{{room.roomName}}</span>
+                                            <span>{{room.roomName}}({{room.serialNum}})</span>
                                             <span class="room-state-icon" style="background: #ffba75">预</span>
                                         </div>
                                         <div class="room-date">
