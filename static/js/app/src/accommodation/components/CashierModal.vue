@@ -21,7 +21,7 @@
                                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments">
                                         <span>金额:</span>
                                         <input type="text" class="dd-input" v-model="payment.fee">
-                                        <span style="margin-left: 24px">收款方式:</span>
+                                        <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
                                             <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
@@ -45,7 +45,7 @@
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="text" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
-                                    <span style="margin-left: 24px">收款方式:</span>
+                                    <span style="margin-left: 24px">{{orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
                                     <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
@@ -175,7 +175,7 @@
                 return false;
             },
             totalDeposit() {
-                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
+                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0)).toFixed(2);
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
@@ -266,7 +266,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
-                            const penalty = ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) - (this.deposit || 0)).toFixed(2);
+                            const penalty = (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
                             const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
                             if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: 0});
