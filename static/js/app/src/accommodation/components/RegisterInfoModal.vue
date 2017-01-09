@@ -72,8 +72,8 @@
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
-                                                            <dd>¥{{priceItem.dateFee}}</dd>
-                                                            <dd>
+                                                            <dd v-show="!priceItem.showInput" @click="changShowInput(item, priceItem)">¥{{priceItem.dateFee}}</dd>
+                                                            <dd v-show="priceItem.showInput">
                                                                 <input class="dd-input" style="width: 60px;" type="number" v-model="priceItem.dateFee" @input="setTotalPrice(item)">
                                                             </dd>
                                                         </dl>
@@ -996,7 +996,16 @@
             hidePriceList(arr) {
                 arr.forEach(item => {
                     item.showPriceList = false;
+                    item.datePriceList.forEach(date => {
+                        date.showInput = false;
+                    });
                 });
+            },
+            changShowInput(item, option) {
+                item.datePriceList.forEach(datePrice => {
+                    datePrice.showInput = false;
+                });
+                option.showInput = true;
             },
             stopPropagation() {
                 return false;
@@ -1012,6 +1021,7 @@
                     }
                     return item.dateFee / totalPrice;
                 });
+                console.log(countArr);
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = Math.round(num * countArr[index]);
                 });
@@ -1032,7 +1042,7 @@
                             let datePriceList = [];
                             let price = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p});
+                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
                                 price += option.p;
                             });
                             item.price = price;
@@ -1100,7 +1110,7 @@
                                     let datePriceList = [];
                                     let price = 0;
                                     res.data.rs.status.forEach((option,index) => {
-                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p});
+                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p, showInput: false});
                                         price += option.p;
                                     });
                                     this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: price, room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
@@ -1145,7 +1155,7 @@
                         room.price = item.fee;
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
-                        room.datePriceList = item.datePriceList;
+                        room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
                         room.showPriceList = false;
                         room.showTip = false;
                         room.roomOrderId = item.orderId;
