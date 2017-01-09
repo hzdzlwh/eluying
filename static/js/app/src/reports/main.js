@@ -4,7 +4,13 @@
 import Vue from 'vue';
 import 'bootstrap';
 import header from 'header';
+import App from './App';
+
+const app = new Vue({
+    ...App
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     header.showHeader();
+    app.$mount('#app');
 });
