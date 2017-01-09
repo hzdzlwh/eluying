@@ -11,7 +11,7 @@
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
-                            <span class="header-tools" v-if="order.orderState !== 5">编辑订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
@@ -41,7 +41,7 @@
                                     <div class="room-info">
                                         <div class="room-name">
                                             <span class="room-icon"></span>
-                                            <span>{{item.name}}</span>
+                                            <span>{{item.name}}({{item.serialNum}})</span>
                                             <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
                                         </div>
                                         <div class="room-date">
@@ -232,7 +232,7 @@
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">¥{{item.fee}}</span>
+                                            <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">{{findTypePrice(order.payments, 15) > 0 ? '需补金额' : '需退金额'}}</span>
@@ -244,7 +244,7 @@
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">¥{{item.fee}}</span>
+                                            <span class="money-num">{{`${item.type === 3 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -680,9 +680,9 @@
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
-                            $('#checkIn').modal('show');
+                            $('#checkIn').modal({backdrop: 'static'});
                         } else {
-                            $('#checkOut').modal('show');
+                            $('#checkOut').modal({backdrop: 'static'});
                         }
 
                         this.hideModal();
@@ -692,6 +692,10 @@
             showCashier() {
                 this.hideModal();
                 this.$emit('showCashier', {})
+            },
+            editOrder() {
+                this.hideModal();
+                this.$emit('editOrder', 'editOrder', this.order);
             }
         },
         components:{},
@@ -700,7 +704,7 @@
                 if(newVal && !oldVal){
                     this[types.LOAD_ORDER_DETAIL]({ orderId: this.orderId })
                         .then(res => {
-                            $('#orderDetail').modal('show');
+                            $('#orderDetail').modal({backdrop: 'static'});
                         })
                         .catch(e => modal.somethingAlert(e.msg));
                 }

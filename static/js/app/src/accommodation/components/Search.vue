@@ -15,7 +15,7 @@
                    v-model="searchKeyword" @keyup.enter="search(1)">
             <div class="acc-search-results" v-if="resultsVisible">
                 <div class="acc-search-count">{{searchResultsNum === 0 ? '没有搜索结果' : `共有${searchResultsNum}条搜索结果`}}</div>
-                <div v-for="g in searchResults" @click="searchResultOnClick(g.orderId)">
+                <div v-for="g in searchResults" @click="showOrder(g.orderId)">
                     <div class="acc-search-item" :orderId="g.orderId">
                         <div>
                             <span class="search-label">开始于:</span>
@@ -223,6 +223,10 @@
                 this.searchResults = [];
                 this.searchResultsNum = 0;
                 this.searchKeyword = '';
+            },
+            showOrder(id) {
+                this.resultsVisible = false;
+                this.$emit('showOrder', id);
             }
         },
         directives: {
