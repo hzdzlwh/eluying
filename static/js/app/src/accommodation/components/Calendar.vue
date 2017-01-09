@@ -119,8 +119,8 @@
                         <div class="glyph-label">{{g.channelName}}</div>
                         <div class="glyph-detail-price">
                             <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{g.amountPay}}</span></div>
-                            <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{-g.needPay}}</span></div>
-                            <div v-if="g.needPay >= 0"><span class="glyph-label">客户需补：</span><span class="num">¥ {{g.needPay}}</span></div>
+                            <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{(-g.needPay).toFixed(2)}}</span></div>
+                            <div v-if="g.needPay >= 0"><span class="glyph-label">客户需补：</span><span class="num">¥ {{g.needPay.toFixed(2)}}</span></div>
                         </div>
                         <div class="glyph-detail-remarks" v-if="g.remark"><span class="glyph-label">备注：</span>{{g.remark}}</div>
                     </div>
