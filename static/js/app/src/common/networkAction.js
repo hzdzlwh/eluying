@@ -54,7 +54,7 @@ var network = {
 							resultDom.modal("hide");
 							that.init(that.status.CREATE_SUCCESS, result.camp).modal("show");
 						}else{
-							//创建失败
+							modal.somethingAlert(data.msg)
 						}
 					})
 				}
