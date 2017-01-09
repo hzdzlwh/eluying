@@ -1,14 +1,19 @@
 <template>
-    <div>
-        <div>this is template body</div>
+    <div class="reports-container">
+        <LeftMenu></LeftMenu>
+        <DateSelect></DateSelect>
+        <router-view></router-view>
     </div>
 </template>
 <style>
-    body {
-
+    .reports-container {
+        padding-top: 68px;
+        padding-left: 168px;
     }
 </style>
 <script>
+    import LeftMenu from './components/LeftMenu.vue';
+    import DateSelect from './components/DateSelect.vue';
     export default{
         data() {
             return{
@@ -16,6 +21,8 @@
             }
         },
         components:{
+            LeftMenu,
+            DateSelect
         }
     }
 </script>
