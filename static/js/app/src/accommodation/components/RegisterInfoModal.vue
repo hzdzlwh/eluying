@@ -68,13 +68,13 @@
                                             </div>
                                             <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
-                                                <input class="dd-input" v-model="item.price" style="width: 80px" @click.stop="showPriceList(index)"/>
+                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
-                                                            <dd>¥{{getDatePrice(priceItem, item.datePriceList, item.price)}}</dd>
-                                                            <dd style="display: none">
-                                                                <input class="dd-input" style="width: 60px;">
+                                                            <dd>¥{{priceItem.dateFee}}</dd>
+                                                            <dd>
+                                                                <input class="dd-input" style="width: 60px;" type="number" v-model="priceItem.dateFee" @input="setTotalPrice(item)">
                                                             </dd>
                                                         </dl>
                                                     </div>
@@ -250,6 +250,9 @@
         }
     }
     .roomModals-body {
+        &::-webkit-scrollbar{
+            width: 0;
+        }
         width: 100%;
         max-height: 485px;
         overflow-y: scroll;
@@ -332,6 +335,9 @@
             position: relative;
         }
         .registerInfoModal-roomPriceList {
+            &::-webkit-scrollbar{
+                width: 0;
+            }
             position: absolute;
             width: 491px;
             right: 0;
@@ -443,8 +449,10 @@
             display: inline-block;
         }
         .dd-select-menu {
+            &::-webkit-scrollbar {
+                width: 0;
+            }
             max-height: 120px;
-            overflow: scroll;
         }
     }
     .content-item-title {
@@ -993,21 +1001,22 @@
             stopPropagation() {
                 return false;
             },
-            getDatePrice(obj, arr, totalPrice) {
-                let totalFee = 0;
-                arr.forEach(item => {
-                    totalFee += item.dateFee;
-                });
-                obj.modifyFee = Number(((obj.dateFee / totalFee) * totalPrice).toFixed(2));
-                return obj.modifyFee;
+            setTotalPrice(obj) {
+                obj.price = obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0);
             },
-            setDateFee(obj, item) {
-                let totalPrice = 0;
-                obj.dateFee = parseFloat(obj.modifyFee, 2);
-                item.datePriceList.forEach(date => {
-                    totalPrice += parseFloat(date.modifyFee, 2);
+            setDateFee(num, obj) {
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
+                let countArr = obj.datePriceList.map(item => {
+                    if (totalPrice === 0) {
+                        return 1 / obj.datePriceList.length;
+                    }
+                    return item.dateFee / totalPrice;
                 });
-                item.price = totalPrice;
+                obj.datePriceList.forEach((item,index) => {
+                    item.dateFee = Math.round(num * countArr[index]);
+                });
+                let total = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
+                obj.datePriceList[0].dateFee += (num - total);
             },
 
             modifyRoom(item) {
@@ -1100,7 +1109,6 @@
                     });
                     $('#registerInfoModal').modal({backdrop: 'static'});
                 } else if (newVal && this.checkState === 'editOrder') {
-                    console.log(this.order);
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
                     this.userOriginType = this.order.originId;
