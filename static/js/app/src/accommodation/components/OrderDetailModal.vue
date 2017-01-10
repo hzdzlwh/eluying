@@ -235,7 +235,7 @@
                                             <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 15) > 0 ? '需补金额' : '需退金额'}}</span>
+                                            <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额' : '需退金额'}}</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 15)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
@@ -253,7 +253,7 @@
                                 <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
                                 <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
                                 <span class="order-price-text">已付金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 14)}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{findTypePrice(order.payments, 15)}}</span></span>
+                                <span class="order-price-text">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{findTypePrice(order.payments, 15)}}</span></span>
                                 <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
                             </div>
                             <p class="order-info">
