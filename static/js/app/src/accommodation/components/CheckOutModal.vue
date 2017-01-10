@@ -19,7 +19,7 @@
                                             >
                                             </span>
                                         <span class="room-icon"></span>
-                                        <span>{{room.roomName}}({{room.serialNum}})</span>
+                                        <span>{{room.serialNum}}({{room.roomName}})</span>
                                         <span class="room-state-icon" style="background: #82beff">住</span>
                                     </div>
                                     <div class="room-date">
