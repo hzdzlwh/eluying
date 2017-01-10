@@ -22,7 +22,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">需退金额:<span class="order-price-num green">¥{{need - (penalty || 0)}}</span></span>
+                            <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
                     </div>
@@ -49,6 +49,11 @@
                 oldPenalty: undefined
             }
         },
+        computed: {
+            need() {
+                return this.paid - (this.oldPenalty || 0) - (this.penalty || 0);
+            }
+        },
         watch: {
             show(val) {
                 if (val) {
@@ -67,10 +72,9 @@
                 AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: this.orderId, orderType: -1 })
                     .then(res => {
                         if (res.code === 1) {
-                            this.cancelFee = res.data.payments.find(p => p.type === 11);
+                            this.cancelFee = res.data.payments.find(p => p.type === 10).fee;
                             this.paid = res.data.payments.find(p => p.type === 16).fee;
-                            this.need = res.data.payments.find(p => p.type === 15).fee;
-                            this.oldPenalty = res.data.payments.find(p => p.type === 14).fee;
+                            this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
                         }
                     })
             },
