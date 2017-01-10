@@ -147,7 +147,7 @@
                     functionType: 1,
                     type: 0,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms
+                    rooms: rooms.filter((room) => { return room })
                 };
                 $('#checkIn').modal('hide');
                 this.$emit('showCashier', { type: 'checkIn', business });

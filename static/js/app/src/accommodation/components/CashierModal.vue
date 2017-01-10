@@ -138,14 +138,6 @@
                 type: String,
                 default: ''//该界面的跳转来源界面类型
             },
-            checkInRooms: {
-                type: Object,
-                default: function(){ return {} }//办理入住收银时的一些参数
-            },
-            checkOutRooms: {
-                type: Object,
-                default: function(){ return {} }//办理退房收银时的一些参数
-            },
             business: {
                 type: Object,
                 default: function(){ return {} }
@@ -202,12 +194,10 @@
         },
         methods: {
             resetData() {
-                this.$nextTick(() => {
-                    this.payments = [];
-                    this.showDeposit = false;
-                    this.deposit = undefined;
-                    this.depositPayChannel = undefined;
-                });
+                this.payments = [];
+                this.showDeposit = false;
+                this.deposit = undefined;
+                this.depositPayChannel = undefined;
             },
             getPayChannels(index) {
                 if (this.type === 'register' && this.business.cashierType === 'finish') {
@@ -269,7 +259,7 @@
                             const penalty = (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
                             const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
                             if (payMoney != 0) {
-                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: 0});
+                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
                             }
                             if (this.orderPayment.deposit > 0) {
                                 this.showDeposit = true;
@@ -363,7 +353,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: 0});
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -392,7 +382,7 @@
                     modal.somethingAlert('请选择收款方式！');
                     return false;
                 }
-                const receiveMoney = this.payments.reduce((a,b) => { return a + b.fee }, 0);
+                const receiveMoney = this.payments.reduce((a,b) => { return a + Number(b.fee) }, 0);
                 const shouldPayMoney = Math.abs(this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
                 if (receiveMoney.toFixed(2) !== shouldPayMoney) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
@@ -413,7 +403,7 @@
                         fee: this.deposit,
                         payChannelId: this.depositPayChannel,
                         payChannel: channel.name,
-                        type: 1
+                        type: (this.orderPayment.deposit > 0 && this.type !== 'checkIn') ? 3 : 1
                     })
                 }
                 let params = undefined;
@@ -430,6 +420,16 @@
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(this.business)
                     };
+                    let  subOrderIds = [];
+                    this.business.rooms.forEach(room => {
+                        if (room) {
+                            subOrderIds.push(room.roomOrderId);
+                        }
+                    });
+                    params.subOrderIds = JSON.stringify(subOrderIds);
+                    if (this.business.type === 2) {
+                        params.operationType = 1;
+                    }
                 }
                 //判断是否进行扫码收款
                 let payWithAlipay = 0;
@@ -444,7 +444,9 @@
                         .then(result => {
                             if(result.code === 1) {
                                 modal.somethingAlert('收银成功');
-                                this.hideModal();
+                                this.resetData();
+                                this.$emit('hide');
+                                $('#Cashier').modal('hide');
                                 let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('showOrder', orderId);
                             } else {

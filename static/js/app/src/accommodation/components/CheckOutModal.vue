@@ -51,7 +51,7 @@
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">{{`${ (totalPrice + (penalty || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
-                                <span class="order-price-num" :class="finalPrice >= 0 ? 'red' : 'green'">¥{{Math.abs(totalPrice + (penalty || 0) - payed)}}</span>
+                                <span class="order-price-num" :class="(totalPrice + (penalty || 0) - payed) >= 0 ? 'red' : 'green'">¥{{Math.abs(totalPrice + (penalty || 0) - payed)}}</span>
                             </span>
                             <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span>
                         </div>
@@ -158,7 +158,10 @@
                     orderId: this.roomBusinessInfo.orderId,
                     rooms: rooms
                 };
-                if (this.deposit === 0 && this.finalPrice === 0) {
+                if (business.type === 2) {
+                    business.penalty = this.penalty;
+                }
+                if (this.deposit === 0 && (this.totalPrice+ (this.penalty || 0) - this.payed) === 0) {
                     AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
@@ -174,7 +177,7 @@
                         });
                 } else {
                     business.penalty = Number(this.penalty);
-                    business.functionType = 2;
+                    business.functionType = 1;
                     $('#checkOut').modal('hide');
                     this.$emit('showCashier', { type: 'checkOut', business });
                 }
