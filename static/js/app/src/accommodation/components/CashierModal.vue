@@ -9,12 +9,12 @@
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
                         <div class="content-item">
-                            <p class="content-item-title"><span>{{`${orderState ? '订单收款' : '订单退款'}`}}</span></p>
+                            <p class="content-item-title"><span>{{orderState ? '订单收款' : '订单退款'}}</span></p>
                             <div class="cashier-order-item">
-                                <span class="cashier-money-text">订单金额:<span>{{`¥${orderPayment.payableFee}`}}</span></span>
-                                <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>{{`¥${penalty}`}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>{{`¥${orderPayment.paidFee}`}}</span></span>
-                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                                <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
+                                <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee}}</span></span>
+                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="content-item" v-if="appearDeposit">
-                            <p class="content-item-title"><span>{{`${ orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款' }`}}</span></p>
+                            <p class="content-item-title"><span>{{orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
                                 <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
                             <span v-if="totalDeposit != 0" class="footer-label">{{totalDeposit > 0 ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
@@ -161,7 +161,7 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment.payableFee) {
-                    let income = this.orderPayment.payableFee + this.penalty - this.orderPayment.paidFee;
+                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - this.orderPayment.paidFee;
                     return income >= 0;
                 }
                 return false;
@@ -198,6 +198,15 @@
                 this.showDeposit = false;
                 this.deposit = undefined;
                 this.depositPayChannel = undefined;
+            },
+            getPayMentType() {
+                if (this.type === 'cancel') {
+                    return 4;
+                } else if (this.orderState) {
+                    return 0;
+                } else {
+                    return 2;
+                }
             },
             getPayChannels(index) {
                 if (this.type === 'register' && this.business.cashierType === 'finish') {
@@ -257,9 +266,9 @@
                         if (res.code === 1) {
                             this.orderPayment = res.data;
                             const penalty = (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
-                            const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
+                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
                             if (payMoney != 0) {
-                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
+                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.getPayMentType()});
                             }
                             if (this.orderPayment.deposit > 0) {
                                 this.showDeposit = true;
@@ -346,14 +355,14 @@
                 }
             },
             addPayMent() {
-                const payMoney = (this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
                 let paidMoney = 0;
                 if (this.payments.length > 0) {
                     this.payments.forEach(pay => {
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2});
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.getPayMentType()});
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -383,7 +392,7 @@
                     return false;
                 }
                 const receiveMoney = this.payments.reduce((a,b) => { return a + Number(b.fee) }, 0);
-                const shouldPayMoney = Math.abs(this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
                 if (receiveMoney.toFixed(2) !== shouldPayMoney) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
                     return false;
@@ -413,7 +422,19 @@
                         orderType: this.business.orderDetail.orderType,
                         payments: JSON.stringify(payments),
                     };
-                } else {
+                } else if (this.type === 'cancel') {
+                    const businessJson = {
+                        functionType: this.business.functionType,
+                        orderId: this.business.orderId,
+                        orderType: this.business.orderType
+                    };
+                    params = {
+                        orderId: this.business.orderId,
+                        orderType: this.business.orderType,
+                        payments: JSON.stringify(payments),
+                        businessJson: JSON.stringify(businessJson)
+                    }
+                }else {
                     params = {
                         orderId: this.orderDetail.orderId,
                         orderType: -1,

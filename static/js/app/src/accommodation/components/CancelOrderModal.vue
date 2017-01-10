@@ -66,6 +66,7 @@
         },
         methods:{
             hideModal() {
+                this.penalty = undefined;
                 this.$emit('hideCancelOrder');
             },
             getCancelOrder() {
@@ -81,14 +82,17 @@
             cancel() {
                 const business = {
                     orderId: this.orderId,
-                    orderType: -1
+                    orderType: -1,
                 };
                 if (this.need - (this.penalty || 0) === 0) {
+                    if (this.penalty) {
+                        payments: JSON.stringify([{fee: this.penalty, type: 4}])
+                    }
                     AJAXService.ajaxWithToken('get', '/order/cancel', business)
                         .then(res => {
                             if (res.code === 1) {
-                                this.hideModal();
                                 modal.somethingAlert('取消成功');
+                                this.hideModal();
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderId);
                             } else {
@@ -96,9 +100,9 @@
                             }
                         })
                 } else {
-                    this.hideModal();
                     business.penalty = Number(this.penalty);
                     business.functionType = 0;
+                    this.hideModal();
                     this.$emit('showCashier', { type: 'cancel', business });
                 }
             }
