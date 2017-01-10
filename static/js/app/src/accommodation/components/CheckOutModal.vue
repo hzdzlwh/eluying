@@ -170,6 +170,7 @@
                             if (res.code === 1) {
                                 $('#checkOut').modal('hide');
                                 modal.somethingAlert('退房成功');
+                                this.$emit('refreshView');
                                 this.$emit('showOrder', this.roomBusinessInfo.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);

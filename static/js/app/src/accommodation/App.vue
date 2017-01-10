@@ -21,14 +21,15 @@
             @changeCheckState="changeCheckState"
         />
         <RegisterInfoModal
-                :roomsItems="registerRooms"
-                :categories="categories"
-                :checkState="checkState"
-                :registerInfoShow="registerInfoShow"
-                :order="orderDetail"
-                @changeRegisterInfoShow="changeRegisterInfoShow"
-                @showOrder="showOrder"
-                @showCashier="showCashier"
+            :roomsItems="registerRooms"
+            :categories="categories"
+            :checkState="checkState"
+            :registerInfoShow="registerInfoShow"
+            :order="orderDetail"
+            @changeRegisterInfoShow="changeRegisterInfoShow"
+            @refreshView="getRoomAndStatus"
+            @showOrder="showOrder"
+            @showCashier="showCashier"
         />
         <OrderDetailModal
             :orderId="orderId"
@@ -40,6 +41,7 @@
             @editOrder="editOrder"
         />
         <CheckOutModal
+            @refreshView="getRoomAndStatus"
             @showOrder="showOrder"
             @showCashier="showCashier"
         />
@@ -51,12 +53,14 @@
             :type="cashierType"
             :business="cashierBusiness"
             @hide="hideCashier"
+            @refreshView="getRoomAndStatus"
             @showOrder="showOrder"
             @showGetMoney="showGetMoney"
         />
         <CancelOrderModal
             :orderId="orderId"
             :show="cancelOrderShow"
+            @refreshView="getRoomAndStatus"
             @showOrder="showOrder"
             @hideCancelOrder="hideCancelOrder"
             @showCashier="showCashier"
@@ -67,6 +71,7 @@
             :business="getMoneyBusiness"
             :params="getMoneyParams"
             :totalPrice="payWithAlipay"
+            @refreshView="getRoomAndStatus"
             @hide="hideGetMoney"
             @showCashier="showCashier"
             @showOrder="showOrder"

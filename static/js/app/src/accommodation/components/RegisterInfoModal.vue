@@ -930,6 +930,7 @@
                         .then(res => {
                             if (res.code === 1) {
                                 this.hideModal(e);
+                                this.$emit('refreshView');
                                 this.$emit('showOrder', this.order.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
@@ -950,6 +951,7 @@
                                     this.$emit('showCashier', { type: 'register', business: business });
                                 } else {
                                     let orderId = res.data.orderType === 3 ? res.data.relatedOrderId : res.data.orderId;
+                                    this.$emit('refreshView');
                                     this.$emit('showOrder', orderId);
                                 }
                             } else {

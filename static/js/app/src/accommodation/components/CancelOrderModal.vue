@@ -85,6 +85,7 @@
                             if (res.code === 1) {
                                 this.hideModal();
                                 modal.somethingAlert('取消成功');
+                                this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
