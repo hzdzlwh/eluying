@@ -6,7 +6,7 @@
         </div>
         <div class="shopcart-action">
             <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button>
-            <button class="dd-btn shopcart-book" v-if="bookShow" @click="check('book')">预定</button>
+            <button class="dd-btn shopcart-book" v-if="bookShow" @click="check('book')">预订</button>
             <button class="dd-btn shopcart-live" v-if="ingShow" @click="check('ing')">直接入住</button>
         </div>
     </div>
