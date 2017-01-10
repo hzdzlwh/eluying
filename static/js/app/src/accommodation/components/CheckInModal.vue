@@ -102,6 +102,10 @@
             addPerson(id, obj) {
                 this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
                     if (index === id) {
+                        if (item.idCardList && item.idCardList.length >= 20) {
+                            modal.somethingAlert('一间房最多添加20个入住人');
+                            return false;
+                        }
                         if(item.idCardList){
                             item.idCardList.push(obj);
                         } else {

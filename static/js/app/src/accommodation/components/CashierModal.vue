@@ -14,7 +14,7 @@
                                 <span class="cashier-money-text">订单金额:<span>{{`¥${orderPayment.payableFee}`}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>{{`¥${penalty}`}}</span></span>
                                 <span class="cashier-money-text">已付金额:<span>{{`¥${orderPayment.paidFee}`}}</span></span>
-                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee).toFixed(2)}}</span></span>
+                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs(orderPayment.payableFee - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
