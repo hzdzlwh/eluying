@@ -20,7 +20,7 @@
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments">
                                         <span>金额:</span>
-                                        <input type="text" class="dd-input" v-model="payment.fee">
+                                        <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
                                             <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
@@ -44,7 +44,7 @@
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
-                                    <input type="text" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
+                                    <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">{{orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
                                     <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
@@ -390,6 +390,12 @@
                 }
                 if(invalid) {
                     modal.somethingAlert('请选择收款方式！');
+                    return false;
+                }
+                const receiveMoney = this.payments.reduce((a,b) => { return a + b.fee }, 0);
+                const shouldPayMoney = Math.abs(this.orderPayment.payableFee - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                if (receiveMoney.toFixed(2) !== shouldPayMoney) {
+                    modal.somethingAlert('订单未结清，无法完成收银！');
                     return false;
                 }
                 const payments = this.payments.map(payment => {
