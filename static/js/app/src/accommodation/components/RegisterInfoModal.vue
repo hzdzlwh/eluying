@@ -256,12 +256,9 @@
         }
     }
     .roomModals-body {
-        &::-webkit-scrollbar{
-            width: 0;
-        }
         width: 100%;
         max-height: 485px;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
         label {
             margin: 0;
@@ -341,9 +338,6 @@
             position: relative;
         }
         .registerInfoModal-roomPriceList {
-            &::-webkit-scrollbar{
-                width: 0;
-            }
             position: absolute;
             width: 491px;
             right: 0;
@@ -353,7 +347,7 @@
             box-shadow: 0 0 5px 0;
             border-radius: 2px;
             max-height: 100px;
-            overflow-y: scroll;
+            overflow-y: auto;
             z-index: 9;
             &:before {
                 display: table;
