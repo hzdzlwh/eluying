@@ -373,6 +373,7 @@
             deleteDeposit(e) {
                 e.stopPropagation();
                 this.deposit = undefined;
+                this.depositPayChannel = undefined;
                 this.showDeposit = false;
             },
             payMoney() {
