@@ -60,6 +60,7 @@
 <script>
     import AJAXService from 'AJAXService';
     import modal from 'modal';
+    import util from 'util';
     import CheckInPerson from './CheckInPerson.vue';
     import { mapState } from 'vuex';
     export default{
@@ -70,16 +71,19 @@
             ...mapState(['roomBusinessInfo']),
             roomsList() {
                 if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomBusinessInfo.roomOrderInfoList.map(item => {
+                    let rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
+                        return util.isSameDay(new Date(room.checkInDate), new Date());
+                    });
+                    rooms.forEach(item => {
                         this.$set(item, 'selected', true);
                     });
-                    return this.roomBusinessInfo.roomOrderInfoList;
+                    return rooms;
                 }
             },
             finalPrice() {
                 let price  = 0;
                 if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                    this.roomsList.forEach(item => {
                         if (item.selected) {
                             item.payments.forEach(pay => {
                                 if (pay.type === 15) {
@@ -100,7 +104,7 @@
                 room.selected = !room.selected;
             },
             addPerson(id, obj) {
-                this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
+                this.roomsList.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
                             modal.somethingAlert('一间房最多添加20个入住人');
@@ -116,23 +120,27 @@
                 });
             },
             deletePerson(id, num) {
-                this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
+                this.roomsList.forEach((item, index) => {
                     if (index === id) {
                         item.idCardList.splice(num, 1);
                     }
                 });
             },
             finishCheckIn() {
-                let orderId = this.roomBusinessInfo.orderId;
+                let selectedRoom = this.roomsList.some(room => { return room.selected });
+                if (!selectedRoom) {
+                    modal.somethingAlert('请选择入住的房间！');
+                    return false;
+                }
                 let subOrderIds = [];
                 if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                    this.roomsList.forEach(item => {
                         if (item.selected) {
                             subOrderIds.push(item.roomOrderId);
                         }
                     });
                 }
-                const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                const rooms = this.roomsList.map(room => {
                     if (room.selected) {
                         return {
                             startDate: room.checkInDate,

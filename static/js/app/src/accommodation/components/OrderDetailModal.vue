@@ -680,7 +680,15 @@
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
-                            $('#checkIn').modal({backdrop: 'static'});
+                            const haveToday = res.data.roomOrderInfoList.some((room) => {
+                                return util.isSameDay(new Date(room.checkInDate), new Date());
+                            });
+                            if (haveToday) {
+                                $('#checkIn').modal({backdrop: 'static'});
+                            } else {
+                                modal.somethingAlert('未到办理入住的时间，无法入住！');
+                                return false;
+                            }
                         } else {
                             $('#checkOut').modal({backdrop: 'static'});
                         }
