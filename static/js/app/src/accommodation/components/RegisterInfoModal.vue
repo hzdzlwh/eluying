@@ -256,12 +256,9 @@
         }
     }
     .roomModals-body {
-        &::-webkit-scrollbar{
-            width: 0;
-        }
         width: 100%;
         max-height: 485px;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
         label {
             margin: 0;
@@ -341,9 +338,6 @@
             position: relative;
         }
         .registerInfoModal-roomPriceList {
-            &::-webkit-scrollbar{
-                width: 0;
-            }
             position: absolute;
             width: 491px;
             right: 0;
@@ -353,7 +347,7 @@
             box-shadow: 0 0 5px 0;
             border-radius: 2px;
             max-height: 100px;
-            overflow-y: scroll;
+            overflow-y: auto;
             z-index: 9;
             &:before {
                 display: table;
@@ -1038,7 +1032,7 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0);
+                obj.price = Number(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
@@ -1048,18 +1042,18 @@
                     }
                     return item.dateFee / totalPrice;
                 });
-                console.log(countArr);
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = Math.round(num * countArr[index]);
+                    item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 let total = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee += (num - total);
+                obj.datePriceList[0].dateFee = Number((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));
             },
 
             modifyRoom(item) {
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
+                    return false;
                 }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
