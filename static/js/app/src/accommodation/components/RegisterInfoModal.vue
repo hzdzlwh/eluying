@@ -1167,7 +1167,10 @@
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
                     let registerRooms = [];
-                    this.order.rooms.forEach(item => {
+                    let filterRooms = this.order.rooms.filter(room => {
+                        return room.state === 0 || room.state === 1;
+                    });
+                    filterRooms.forEach(item => {
                         const room = {};
                         let id = undefined;
                         this.categories.forEach(category => {
