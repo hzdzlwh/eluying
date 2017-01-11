@@ -132,7 +132,7 @@
                                                     </p>
                                                     <p class="money-item">
                                                         <span class="money-type">已付金额</span>
-                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 16)}}</span>
+                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 14)}}</span>
                                                     </p>
                                                     <p class="money-item">
                                                         <span class="money-type">需补金额</span>
@@ -634,6 +634,7 @@
                 AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {caterOrderId: food.foodOrderId}, function(res){
                     if (res.code === 1) {
                         food.detail = res.data;
+                        food.detail.boardDetailResps = res.data.boardDetailResps.reduce((a,b) => {a.concat(b.boardName)}, []);
                         this.$set(food, 'visible', true);
                     }
                 }.bind(this));
