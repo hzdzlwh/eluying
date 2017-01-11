@@ -58,7 +58,7 @@
                                                 <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">该房间的入住时间必需为今日！</span>
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())"/>
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())" :disabled="item.state === 1"/>
                                                 </div>
                                                 <span>~</span>
                                                 <div class="enterDate">
@@ -80,7 +80,8 @@
                                                     </div>
                                             </div>
                                         </div>
-                                        <span class="delete-icon" @click="deleteItem(0, index)"></span>
+                                        <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
+                                        <span v-if="item.state === 1"></span>
                                     </div>
                                     <CheckInPerson
                                             :personsObj="{id: index, persons: item.idCardList}"
@@ -110,12 +111,16 @@
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
-                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" />
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" :disabled="item.usedAmount > 0"/>
                                             </div>
                                         </div>
                                         <div class="shop-item-count">
                                             <label>数量</label>
-                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :max=" item.inventory >= 0 ? item.inventory : 999">
+                                            <counter @numChange="handleNumChange"
+                                                     :num="item.count"
+                                                     :id="index" :type="2"
+                                                     :min="item.usedAmount >=1 ? item.usedAmount : 1"
+                                                     :max="item.inventory >= 0 ? item.inventory : 999">
                                                 <p class="valid" v-if="item.inventory >= 0 && checkState !== 'finish'" :class="item.inventory <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
@@ -124,7 +129,8 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
+                                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0"></span>
+                                    <span v-if="item.usedAmount > 0"></span>
                                 </div>
                             </div>
                         </div>
@@ -745,7 +751,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -754,6 +760,9 @@
                     }
                     let obj = JSON.parse(JSON.stringify(this.registerRooms[len - 1]));
                     obj.idCardList = [];
+                    if (obj.roomOrderId) {
+                        delete obj.roomOrderId;
+                    }
                     this.registerRooms.push(obj);
                 }
             },
@@ -1145,7 +1154,7 @@
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
                     this.userOriginType = this.order.originId;
-                    this.remark = this.order.remark;
+                    this.remark = this.order.remark || '';
                     this.showOrder = true;
 
                     let enterItems = [];
@@ -1159,12 +1168,16 @@
                         enter.inventory = undefined;
                         enter.playOrderId = item.playOrderId;
                         enter.entertainmentId = item.entertainmentId;
+                        enter.usedAmount = item.usedAmount;
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
                     let registerRooms = [];
-                    this.order.rooms.forEach(item => {
+                    let filterRooms = this.order.rooms.filter(room => {
+                        return room.state === 0 || room.state === 1;
+                    });
+                    filterRooms.forEach(item => {
                         const room = {};
                         let id = undefined;
                         this.categories.forEach(category => {
@@ -1182,6 +1195,7 @@
                         room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
                         room.showPriceList = false;
                         room.showTip = false;
+                        room.state = item.state;
                         room.roomOrderId = item.serviceId;
                         registerRooms.push(room);
                     });

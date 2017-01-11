@@ -70,7 +70,7 @@
                     <tr>
                         <th style="padding-left: 42px; width: 214px">订单号</th>
                         <th style="width: 120px">订单业态</th>
-                        <th>订单金额¥</th>
+                        <th>消费金额¥</th>
                         <th>客户已付¥</th>
                         <th>已收押金¥</th>
                         <th>客户姓名</th>
@@ -157,7 +157,7 @@
         </div>
         <div class="footer-container" v-if="!isLoading && orderItems.length > 0">
             <span class="orders-total">共计<b>{{ orderNum }}个订单</b></span>
-            <span class="orders-total">订单金额<b>¥{{ orderTotalPrice }}</b></span>
+            <span class="orders-total">消费金额<b>¥{{ orderTotalPrice }}</b></span>
             <span class="orders-total">客户已付<b>¥{{ totalPay }}</b></span>
             <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span>
             <div class="dd-pagination-container">

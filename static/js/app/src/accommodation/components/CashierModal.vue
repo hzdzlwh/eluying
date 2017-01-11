@@ -441,13 +441,15 @@
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(this.business)
                     };
-                    let  subOrderIds = [];
-                    this.business.rooms.forEach(room => {
-                        if (room) {
-                            subOrderIds.push(room.roomOrderId);
-                        }
-                    });
-                    params.subOrderIds = JSON.stringify(subOrderIds);
+                    if (this.business.rooms) {
+                        let  subOrderIds = [];
+                        this.business.rooms.forEach(room => {
+                            if (room) {
+                                subOrderIds.push(room.roomOrderId);
+                            }
+                        });
+                        params.subOrderIds = JSON.stringify(subOrderIds);
+                    }
                     if (this.business.type === 2) {
                         params.operationType = 1;
                     }

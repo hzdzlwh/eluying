@@ -95,7 +95,7 @@
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
                                                 <p class="info-title">{{item.detail.restName}}</p>
                                                 <p class="deskNum"><span>桌号:{{item.detail.boardDetailResps.join(',')}}</span><span>人数:{{item.detail.peopleNum}}</span></p>
-                                                <p class="foodTime">就餐时间:{{item.detail.orderTime}}</p>
+                                                <p class="foodTime">就餐时间:{{item.detail.orderTime.slice(0, 16)}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
                                                         <p class="food-sub-item" v-for="dish in food.dishItemResp">
@@ -121,7 +121,7 @@
                                                             <span class="money-type">优惠</span>
                                                             <span class="money-num">¥{{findTypePrice(item.detail.payments, 5)}}</span>
                                                         </p>
-                                                        <p class="money-item">
+                                                        <p class="money-item" v-if="findTypePrice(item.detail.payments, 11) > 0">
                                                             <span class="money-type">取消订单</span>
                                                             <span class="money-num">¥{{findTypePrice(item.detail.payments, 11)}}</span>
                                                         </p>
@@ -225,6 +225,10 @@
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
                                             <span class="money-type">{{item.payChannel}}</span>
                                             <span class="money-num">¥{{item.fee}}</span>
+                                        </p>
+                                        <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
+                                            <span class="money-type">违约金</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">已付金额</span>
@@ -680,7 +684,15 @@
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
-                            $('#checkIn').modal({backdrop: 'static'});
+                            const haveToday = res.data.roomOrderInfoList.some((room) => {
+                                return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
+                            });
+                            if (haveToday) {
+                                $('#checkIn').modal({backdrop: 'static'});
+                            } else {
+                                modal.somethingAlert('未到办理入住的时间，无法入住！');
+                                return false;
+                            }
                         } else {
                             $('#checkOut').modal({backdrop: 'static'});
                         }
