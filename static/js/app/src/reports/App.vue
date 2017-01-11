@@ -1,14 +1,45 @@
 <template>
     <div class="reports-container">
         <LeftMenu></LeftMenu>
-        <DateSelect></DateSelect>
-        <router-view></router-view>
+        <div class="view-container">
+            <div class="date-select-container">
+                <DateSelect @change="handleDateChange"></DateSelect>
+            </div>
+            <router-view></router-view>
+        </div>
     </div>
 </template>
-<style>
+<style lang="sass" rel="stylesheet/scss">
+    @import "~dd-common-css/src/variables";
     .reports-container {
-        padding-top: 68px;
-        padding-left: 168px;
+        padding-top: 89px;
+        padding-left: 244px;
+        position: relative;
+    }
+    .date-select-container {
+        position: absolute;
+        right: 0;
+    }
+    .view-container {
+        position: relative;
+        width: 1000px;
+        margin: 0 auto;
+    }
+    .card {
+        box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
+        border-radius: 2px;
+        padding: 16px 40px;
+    }
+    .card-title {
+        border-bottom: 1px solid #e6e6e6;
+        margin: 0 -40px;
+        padding: 0 40px 16px;
+    }
+    h5 {
+        font-size: $font-size-h5;
+    }
+    h4 {
+        font-size: $font-size-h4;
     }
 </style>
 <script>
@@ -18,6 +49,11 @@
         data() {
             return{
                 msg:'hello vue'
+            }
+        },
+        methods: {
+            handleDateChange(date) {
+                console.log(date);
             }
         },
         components:{
