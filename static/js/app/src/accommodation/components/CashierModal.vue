@@ -160,7 +160,7 @@
         computed:{
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
-                if (this.orderPayment.payableFee) {
+                if (this.orderPayment) {
                     let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - this.orderPayment.paidFee;
                     return income >= 0;
                 }
