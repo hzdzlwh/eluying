@@ -159,6 +159,7 @@
                             this.$emit('hide');
                             $('#payWithCode').modal('hide');
                             let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                            this.emit('refreshView');
                             this.$emit('showOrder', orderId);
                         } else {
                             modal.somethingAlert(result.msg);

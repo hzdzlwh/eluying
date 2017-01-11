@@ -20,7 +20,7 @@
                                             >
                                             </span>
                                             <span class="room-icon"></span>
-                                            <span>{{room.roomName}}({{room.serialNum}})</span>
+                                            <span>{{room.serialNum}}({{room.roomName}})</span>
                                             <span class="room-state-icon" style="background: #ffba75">预</span>
                                         </div>
                                         <div class="room-date">
@@ -102,6 +102,10 @@
             addPerson(id, obj) {
                 this.roomBusinessInfo.roomOrderInfoList.forEach((item, index) => {
                     if (index === id) {
+                        if (item.idCardList && item.idCardList.length >= 20) {
+                            modal.somethingAlert('一间房最多添加20个入住人');
+                            return false;
+                        }
                         if(item.idCardList){
                             item.idCardList.push(obj);
                         } else {
@@ -143,7 +147,7 @@
                     functionType: 1,
                     type: 0,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms
+                    rooms: rooms.filter((room) => { return room })
                 };
                 $('#checkIn').modal('hide');
                 this.$emit('showCashier', { type: 'checkIn', business });
