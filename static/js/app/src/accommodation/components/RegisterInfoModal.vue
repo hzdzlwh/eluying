@@ -1060,6 +1060,7 @@
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
+                    return false;
                 }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
