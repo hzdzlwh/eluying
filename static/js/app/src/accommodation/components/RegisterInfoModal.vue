@@ -754,6 +754,9 @@
                     }
                     let obj = JSON.parse(JSON.stringify(this.registerRooms[len - 1]));
                     obj.idCardList = [];
+                    if (obj.roomOrderId) {
+                        delete obj.roomOrderId;
+                    }
                     this.registerRooms.push(obj);
                 }
             },
