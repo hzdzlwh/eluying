@@ -111,12 +111,16 @@
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
-                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" />
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" :disabled="item.usedAmount > 0"/>
                                             </div>
                                         </div>
                                         <div class="shop-item-count">
                                             <label>数量</label>
-                                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :max=" item.inventory >= 0 ? item.inventory : 999">
+                                            <counter @numChange="handleNumChange"
+                                                     :num="item.count"
+                                                     :id="index" :type="2"
+                                                     :min="item.usedAmount >=1 ? item.usedAmount : 1"
+                                                     :max="item.inventory >= 0 ? item.inventory : 999">
                                                 <p class="valid" v-if="item.inventory >= 0 && checkState !== 'finish'" :class="item.inventory <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
@@ -125,7 +129,8 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
+                                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0"></span>
+                                    <span v-if="item.usedAmount > 0"></span>
                                 </div>
                             </div>
                         </div>
@@ -746,7 +751,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -1163,6 +1168,7 @@
                         enter.inventory = undefined;
                         enter.playOrderId = item.playOrderId;
                         enter.entertainmentId = item.entertainmentId;
+                        enter.usedAmount = item.usedAmount;
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
