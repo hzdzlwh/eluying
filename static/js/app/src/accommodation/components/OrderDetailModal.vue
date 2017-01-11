@@ -685,7 +685,7 @@
                     .then(res => {
                         if (type === 0) {
                             const haveToday = res.data.roomOrderInfoList.some((room) => {
-                                return util.isSameDay(new Date(room.checkInDate), new Date());
+                                return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                             });
                             if (haveToday) {
                                 $('#checkIn').modal({backdrop: 'static'});

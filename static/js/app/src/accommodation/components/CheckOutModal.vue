@@ -75,7 +75,7 @@
             }
         },
         computed: {
-            ...mapState(['roomBusinessInfo']),
+            ...mapState(['roomBusinessInfo', 'orderDetail']),
             totalPrice() {
                 let sum = 0;
                 if (!this.roomBusinessInfo.roomOrderInfoList) {
@@ -171,7 +171,7 @@
                                 $('#checkOut').modal('hide');
                                 modal.somethingAlert('退房成功');
                                 this.$emit('refreshView');
-                                this.$emit('showOrder', this.roomBusinessInfo.orderId);
+                                this.$emit('showOrder', this.orderDetail.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }

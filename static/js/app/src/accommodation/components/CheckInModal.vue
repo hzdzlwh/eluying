@@ -72,7 +72,7 @@
             roomsList() {
                 if (this.roomBusinessInfo.roomOrderInfoList) {
                     let rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
-                        return util.isSameDay(new Date(room.checkInDate), new Date());
+                        return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                     });
                     rooms.forEach(item => {
                         this.$set(item, 'selected', true);
