@@ -1038,7 +1038,7 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0);
+                obj.price = Number(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
@@ -1048,12 +1048,11 @@
                     }
                     return item.dateFee / totalPrice;
                 });
-                console.log(countArr);
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = Math.round(num * countArr[index]);
+                    item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 let total = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee += (num - total);
+                obj.datePriceList[0].dateFee = Number((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));
             },
 
             modifyRoom(item) {
