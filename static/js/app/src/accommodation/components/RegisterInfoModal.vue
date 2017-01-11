@@ -80,7 +80,8 @@
                                                     </div>
                                             </div>
                                         </div>
-                                        <span class="delete-icon" @click="deleteItem(0, index)"></span>
+                                        <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
+                                        <span v-if="item.state === 1"></span>
                                     </div>
                                     <CheckInPerson
                                             :personsObj="{id: index, persons: item.idCardList}"
@@ -1188,6 +1189,7 @@
                         room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
                         room.showPriceList = false;
                         room.showTip = false;
+                        room.state = item.state;
                         room.roomOrderId = item.serviceId;
                         registerRooms.push(room);
                     });
