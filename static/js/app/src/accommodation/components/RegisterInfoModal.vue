@@ -1145,7 +1145,7 @@
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
                     this.userOriginType = this.order.originId;
-                    this.remark = this.order.remark;
+                    this.remark = this.order.remark || '';
                     this.showOrder = true;
 
                     let enterItems = [];
