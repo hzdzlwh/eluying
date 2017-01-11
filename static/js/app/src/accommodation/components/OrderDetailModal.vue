@@ -95,7 +95,7 @@
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
                                                 <p class="info-title">{{item.detail.restName}}</p>
                                                 <p class="deskNum"><span>桌号:{{item.detail.boardDetailResps.join(',')}}</span><span>人数:{{item.detail.peopleNum}}</span></p>
-                                                <p class="foodTime">就餐时间:{{item.detail.orderTime}}</p>
+                                                <p class="foodTime">就餐时间:{{item.detail.orderTime.slice(0, 16)}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
                                                         <p class="food-sub-item" v-for="dish in food.dishItemResp">
@@ -121,7 +121,7 @@
                                                             <span class="money-type">优惠</span>
                                                             <span class="money-num">¥{{findTypePrice(item.detail.payments, 5)}}</span>
                                                         </p>
-                                                        <p class="money-item">
+                                                        <p class="money-item" v-if="findTypePrice(item.detail.payments, 11) > 0">
                                                             <span class="money-type">取消订单</span>
                                                             <span class="money-num">¥{{findTypePrice(item.detail.payments, 11)}}</span>
                                                         </p>
