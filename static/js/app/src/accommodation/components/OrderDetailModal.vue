@@ -226,6 +226,10 @@
                                             <span class="money-type">{{item.payChannel}}</span>
                                             <span class="money-num">¥{{item.fee}}</span>
                                         </p>
+                                        <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
+                                            <span class="money-type">违约金</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
+                                        </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">已付金额</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 14)}}</span>
