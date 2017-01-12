@@ -1064,7 +1064,7 @@
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
                                 price += option.p;
                             });
-                            item.price = price;
+                            item.price = Number(price.toFixed(2));
                             item.datePriceList = datePriceList;
                         }
                     });
@@ -1137,7 +1137,7 @@
                                         datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p, showInput: false});
                                         price += option.p;
                                     });
-                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: price, room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
+                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: Number(price.toFixed(2)), room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
                                 }
                             });
                     });
@@ -1181,7 +1181,7 @@
                         });
                         room.categoryType = id;
                         room.roomType = item.roomId;
-                        room.price = item.fee;
+                        room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
                         room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
