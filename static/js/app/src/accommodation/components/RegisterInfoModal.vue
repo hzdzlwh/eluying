@@ -1156,7 +1156,10 @@
                     this.showOrder = true;
 
                     let enterItems = [];
-                    this.order.playItems.forEach(item => {
+                    let filterEnters = this.order.playItems.filter(enter => {
+                        return enter.state !== 3;
+                    });
+                    filterEnters.forEach(item => {
                         const enter = {...item};
                         enter.id = item.categoryId;
                         enter.count = item.amount;
