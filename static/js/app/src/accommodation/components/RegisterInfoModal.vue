@@ -456,9 +456,7 @@
             display: inline-block;
         }
         .dd-select-menu {
-            &::-webkit-scrollbar {
-                width: 0;
-            }
+            overflow-y: auto;
             max-height: 120px;
             .dd-select-option {
                 max-width: 100%;
