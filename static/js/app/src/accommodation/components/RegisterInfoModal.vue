@@ -759,6 +759,7 @@
                     obj.idCardList = [];
                     if (obj.roomOrderId) {
                         delete obj.roomOrderId;
+                        delete obj.state;
                     }
                     this.registerRooms.push(obj);
                 }
