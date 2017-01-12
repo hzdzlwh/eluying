@@ -858,11 +858,15 @@
                 } else {
                     params.orderId = this.order.orderId;
                 }
-                this.userOrigins.forEach(origin => {
-                    if (origin.id === this.userOriginType) {
-                        params.origin = origin.name;
-                    }
-                });
+                if (this.userOriginType === -3) {
+                    params.origin = '微官网';
+                } else {
+                    this.userOrigins.forEach(origin => {
+                        if (origin.id === this.userOriginType) {
+                            params.origin = origin.name;
+                        }
+                    });
+                }
                 let rooms = [];
                 this.registerRooms.forEach(item => {
                     const room = {};
