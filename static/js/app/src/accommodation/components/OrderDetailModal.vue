@@ -222,6 +222,10 @@
                                             <span class="money-type">优惠</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 5)}}</span>
                                         </p>
+                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
+                                            <span class="money-type">取消订单</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 11)}}</span>
+                                        </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
                                             <span class="money-type">{{item.payChannel}}</span>
                                             <span class="money-num">¥{{item.fee}}</span>
