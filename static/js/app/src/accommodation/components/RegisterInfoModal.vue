@@ -100,14 +100,18 @@
                                 <div class="shop-item" v-for="(item, index) in enterItems">
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
-                                            <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
-                                            </dd-option>
-                                        </dd-select>
-                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime']">
+                                        <div v-if = "item.usedAmount <= 0">
+                                            <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
+                                                <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
+                                                </dd-option>
+                                            </dd-select>
+                                        </div>
+                                        <span v-if = "item.usedAmount > 0">{{item.name}}</span>
+                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
                                             <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
                                         </div>
+                                        <span v-if = "item.usedAmount > 0 && item.chargeUnit" style="position: absolute; right: 466px;">{{`时长(${item.chargeUnit})`}}<span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span></span>
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
@@ -120,8 +124,8 @@
                                                      :num="item.count"
                                                      :id="index" :type="2"
                                                      :min="item.usedAmount >=1 ? item.usedAmount : 1"
-                                                     :max="item.inventory >= 0 ? item.inventory : 999">
-                                                <p class="valid" v-if="item.inventory >= 0 && checkState !== 'finish'" :class="item.inventory <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
+                                                     :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999">
+                                                <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory + item.selfInventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
@@ -413,6 +417,7 @@
             margin-right: 16px;
         }
         .shop-item-content {
+            padding-top: 3px;
             flex-grow: 1;
             position: relative;
             .useless-tip {
@@ -743,7 +748,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -1151,16 +1156,12 @@
 
                     let enterItems = [];
                     this.order.playItems.forEach(item => {
-                        const enter = {};
+                        const enter = {...item};
                         enter.id = item.categoryId;
                         enter.count = item.amount;
-                        enter.date = item.date;
-                        enter.timeAmount = item.timeAmount;
+                        enter.selfInventory = item.amount;
                         enter.type = 2;
                         enter.inventory = undefined;
-                        enter.playOrderId = item.playOrderId;
-                        enter.entertainmentId = item.entertainmentId;
-                        enter.usedAmount = item.usedAmount;
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));

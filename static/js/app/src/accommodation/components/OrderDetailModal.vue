@@ -163,7 +163,7 @@
                                     <div class="play-item">
                                         <span class="enter-icon"></span>
                                         <div class="item-content">
-                                            <span class="item-name">{{item.name}}</span>
+                                            <span class="item-name">{{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}</span>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
                                                 <span>{{item.date.slice(5)}}</span>
