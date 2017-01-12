@@ -77,7 +77,7 @@
                                                                 <input class="dd-input" style="width: 60px;" type="number" v-model="priceItem.dateFee" @input="setTotalPrice(item)">
                                                             </dd>
                                                         </dl>
-                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>

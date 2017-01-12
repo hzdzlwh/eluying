@@ -51,9 +51,15 @@
                                             <span class="endDate">{{item.endDate.slice(5)}}</span>
                                             <label class="label-text">共{{item.duration}}晚</label>
                                         </div>
-                                        <div class="room-fee" style="margin-right: 81px">
+                                        <div class="room-fee" style="margin-right: 81px; position: relative;">
                                             <label class="label-text">房费</label>
                                             <span>¥{{item.fee}}</span>
+                                            <div class="orderDetailModal-roomPriceList">
+                                                <dl class="price-item" v-for="priceItem in item.datePriceList">
+                                                    <dt>{{priceItem.date.slice(5)}}</dt>
+                                                    <dd>¥{{priceItem.dateFee}}</dd>
+                                                </dl>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="room-user" v-for="user in item.idCardList">
@@ -382,6 +388,41 @@
         }
         .orderDetailModal-shop-item {
             display: flex;
+        }
+        .room-fee:hover{
+            .orderDetailModal-roomPriceList {
+                display: block;
+            }
+        }
+        .orderDetailModal-roomPriceList {
+            display: none;
+            position: absolute;
+            width: 491px;
+            right: 0;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: auto;
+            z-index: 9;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                float: left;
+                margin-left: 8px;
+                dt {
+                    color: #999999;
+                    font-size: 12px;
+                }
+                dd {
+                    height: 24px;
+                }
+            }
         }
         .user-icon {
             width: 16px;
