@@ -265,8 +265,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
-                            const penalty = ((this.business && this.business.penalty) || 0);
-                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + Number(penalty)).toFixed(2);
+                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + Number(this.penalty)).toFixed(2);
                             if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.getPayMentType()});
                             }
