@@ -90,7 +90,7 @@
                     }
                 );
 
-                return sum;
+                return Number(sum.toFixed(2));
             },
             payed() {
                 let sum = 0;
