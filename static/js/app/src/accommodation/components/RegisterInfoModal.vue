@@ -66,8 +66,8 @@
                                                 </div>
                                                 <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
                                             </div>
-                                            <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
+                                                <label class="label-text">房费</label>
                                                 <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
@@ -338,12 +338,14 @@
             margin-right: 25px;
         }
         .registerInfoModal-roomPrice {
-            display: inline-block;
-            position: relative;
+            display: flex;
+            align-items: center;
         }
         .registerInfoModal-roomPriceList {
+            display: flex;
+            flex-wrap: wrap;
             position: absolute;
-            width: 491px;
+            max-width: 491px;
             right: 0;
             top: 30px;
             padding: 8px 8px 8px 0;
@@ -360,7 +362,6 @@
             }
             .price-item {
                 width: 60px;
-                float: left;
                 margin-left: 8px;
                 dt {
                     color: #999999;
@@ -420,6 +421,8 @@
             padding-top: 3px;
             flex-grow: 1;
             position: relative;
+            display: flex;
+            justify-content: space-between;
             .useless-tip {
                 bottom: -16px;
             }
@@ -435,6 +438,7 @@
             margin-left: 24px;
         }
         .delete-icon {
+            margin-left: 16px;
             width: 16px;
             height: 16px;
             background: url("../../../../../image/modal/room_modal_delete.png");
@@ -1063,6 +1067,10 @@
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
+                /*if (duration > 400) {
+                    modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                    return false;
+                }*/
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
