@@ -81,7 +81,7 @@
                                             </div>
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
-                                        <span v-if="item.state === 1"></span>
+                                        <span v-if="item.state === 1" class="delete-icon-like"></span>
                                     </div>
                                     <CheckInPerson
                                             :personsObj="{id: index, persons: item.idCardList}"
@@ -134,7 +134,7 @@
                                         </div>
                                     </div>
                                     <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0"></span>
-                                    <span v-if="item.usedAmount > 0"></span>
+                                    <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                                 </div>
                             </div>
                         </div>
@@ -444,6 +444,12 @@
             background: url("../../../../../image/modal/room_modal_delete.png");
             background-size: contain;
             cursor: pointer;
+        }
+        .delete-icon-like {
+            margin-left: 16px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
         }
         .remark-items {
             position: relative;
