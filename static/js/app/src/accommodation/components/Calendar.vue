@@ -8,7 +8,7 @@
             <table class="calendar-header-table">
                 <tbody>
                 <tr>
-                    <th class="calendar-header-item" v-for="d in dateRange">
+                    <th class="calendar-header-item" v-for="d in dateRange" :key="d.date">
                         <div class="calendar-header-date"
                              :date="d.date"
                              :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
@@ -54,7 +54,7 @@
                     <tbody>
                         <template v-for="room in finalRoomStatus">
                             <tr class="calendar-status-row" v-if="room.selected && !room.folded">
-                                <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
+                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr">
                                     <div
                                         v-if="status.s === -1"
                                         class="calendar-status-inner"
