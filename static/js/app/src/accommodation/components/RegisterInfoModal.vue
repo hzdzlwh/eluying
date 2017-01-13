@@ -549,7 +549,8 @@
                 shopList: [],
                 shopGoodsItems: [],
                 registerRooms: [],
-                showOrder: false
+                showOrder: false,
+                lastModifyRoomTime: 0
             }
         },
 
@@ -834,6 +835,7 @@
 
             submitInfo(e){
                 let valid = true;
+                let durationValid = true;
                 if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
                     modal.somethingAlert("请输入联系人或手机号!");
                     return false;
@@ -842,14 +844,21 @@
                     if (item.showTip || this.checkIsToday(item.room.startDate)) {
                         valid = false;
                     }
+                    if (this.getDateDiff(item.room.startDate, item.room.endDate) > 400) {
+                        durationValid = false;
+                    }
                 });
                 this.enterItems.forEach(item => {
-                    if (item.inventory <= 0) {
+                    if (item.inventory + item.selfInventory <= 0) {
                         valid = false;
                     }
                 });
                 if (!valid) {
                     modal.somethingAlert("订单信息有误，请核对信息后再提交！");
+                    return false;
+                }
+                if (!durationValid) {
+                    modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
                     return false;
                 }
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
@@ -1044,7 +1053,7 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = Number(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
+                obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
@@ -1055,10 +1064,10 @@
                     return item.dateFee / totalPrice;
                 });
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = Number((num * countArr[index]).toFixed(2));
+                    item.dateFee = +((num * countArr[index]).toFixed(2));
                 });
-                let total = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee = Number((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));
+                /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
+                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
 
             modifyRoom(item) {
@@ -1067,10 +1076,14 @@
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
-                /*if (duration > 400) {
-                    modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                if (duration > 400) {
+                    let currentTime = + new Date();
+                    if (currentTime - this.lastModifyRoomTime > 2000) {
+                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        this.lastModifyRoomTime = currentTime;
+                    }
                     return false;
-                }*/
+                 }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
@@ -1080,10 +1093,22 @@
                             let price = 0;
                             res.data.rs.status.forEach((option,index) => {
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
-                                price += option.p;
+                            });
+                            if (item.datePriceList.length > 0) {
+                                datePriceList.forEach(newDate => {
+                                    item.datePriceList.forEach(oldDate => {
+                                        if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
+                                            newDate.dateFee = oldDate.dateFee;
+                                        }
+                                    })
+                                });
+                            }
+                            datePriceList.forEach(date => {
+                                price += date.dateFee;
                             });
                             item.price = Number(price.toFixed(2));
                             item.datePriceList = datePriceList;
+
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
@@ -1201,7 +1226,13 @@
                         room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
-                        room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
+                        room.datePriceList = item.datePriceList.map(dat => {
+                            let newDate = { showInput: false };
+                            newDate.date = dat.date;
+                            newDate.dateFee = dat.dateFee;
+                            return newDate;
+
+                        });
                         room.showPriceList = false;
                         room.showTip = false;
                         room.state = item.state;
