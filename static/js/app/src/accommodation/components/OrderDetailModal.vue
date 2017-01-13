@@ -51,7 +51,7 @@
                                             <span class="endDate">{{item.endDate.slice(5)}}</span>
                                             <label class="label-text">共{{item.duration}}晚</label>
                                         </div>
-                                        <div class="room-fee" style="margin-right: 81px; position: relative;">
+                                        <div class="room-fee" style="margin-right: 81px">
                                             <label class="label-text">房费</label>
                                             <span>¥{{item.fee}}</span>
                                             <div class="orderDetailModal-roomPriceList">
@@ -367,6 +367,7 @@
         }
         .room-info {
             justify-content: space-between;
+            position: relative;
         }
         .room-info, .room-name, .room-user, .play-item, .food-item {
             display: flex;
@@ -391,14 +392,15 @@
         }
         .room-fee:hover{
             .orderDetailModal-roomPriceList {
-                display: block;
+                display: flex;
             }
         }
         .orderDetailModal-roomPriceList {
             display: none;
+            flex-wrap: wrap;
             position: absolute;
-            width: 491px;
-            right: 0;
+            max-width: 491px;
+            right: 81px;
             padding: 8px 8px 8px 0;
             background: #fafafa;
             box-shadow: 0 0 5px 0;
@@ -413,7 +415,6 @@
             }
             .price-item {
                 width: 60px;
-                float: left;
                 margin-left: 8px;
                 dt {
                     color: #999999;
