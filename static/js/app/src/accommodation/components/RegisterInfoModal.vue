@@ -549,7 +549,8 @@
                 shopList: [],
                 shopGoodsItems: [],
                 registerRooms: [],
-                showOrder: false
+                showOrder: false,
+                lastModifyRoomTime: 0
             }
         },
 
@@ -834,6 +835,7 @@
 
             submitInfo(e){
                 let valid = true;
+                let durationValid = true;
                 if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
                     modal.somethingAlert("请输入联系人或手机号!");
                     return false;
@@ -842,14 +844,21 @@
                     if (item.showTip || this.checkIsToday(item.room.startDate)) {
                         valid = false;
                     }
+                    if (this.getDateDiff(item.room.startDate, item.room.endDate) > 400) {
+                        durationValid = false;
+                    }
                 });
                 this.enterItems.forEach(item => {
-                    if (item.inventory <= 0) {
+                    if (item.inventory + item.selfInventory <= 0) {
                         valid = false;
                     }
                 });
                 if (!valid) {
                     modal.somethingAlert("订单信息有误，请核对信息后再提交！");
+                    return false;
+                }
+                if (!durationValid) {
+                    modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
                     return false;
                 }
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
@@ -1067,10 +1076,14 @@
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
-                /*if (duration > 400) {
-                    modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                if (duration > 400) {
+                    let currentTime = + new Date();
+                    if (currentTime - this.lastModifyRoomTime > 2000) {
+                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        this.lastModifyRoomTime = currentTime;
+                    }
                     return false;
-                }*/
+                 }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
