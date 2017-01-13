@@ -7,10 +7,11 @@ import container from './views/container.vue';
 import channel from './views/overview/channel.vue';
 import sale from './views/overview/sale.vue';
 import accommodation from './views/accommodation.vue';
-import cateringOperation from './views/catering/operation';
+import childContainer from './views/childContainer.vue';
 import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
-
+import statistics from './views/entertainment/operation/statistics.vue';
+import detail from './views/entertainment/operation/detail.vue';
 
 export const routes = [
     {
@@ -78,7 +79,7 @@ export const routes = [
                     name: '运营'
                 },
                 redirect: '/catering/operation/restaurant',
-                component: cateringOperation,
+                component: childContainer,
                 children: [
                     {
                         path: '/catering/operation/restaurant',
@@ -103,13 +104,32 @@ export const routes = [
         meta: {
             name: '娱乐'
         },
+        component: container,
         redirect: '/entertainment/operation',
         children: [
             {
-                path: 'operation',
+                path: '/entertainment/operation',
                 meta: {
                     name: '运营'
-                }
+                },
+                component: childContainer,
+                redirect: '/entertainment/operation/statistics',
+                children: [
+                    {
+                        path: '/entertainment/operation/statistics',
+                        meta: {
+                            name: '娱乐统计'
+                        },
+                        component: statistics
+                    },
+                    {
+                        path: '/entertainment/operation/detail',
+                        meta: {
+                            name: '娱乐明细'
+                        },
+                        component: detail
+                    }
+                ]
             }
         ]
     },

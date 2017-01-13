@@ -1,20 +1,21 @@
 <template>
     <div>
-        <TopMenu />
     </div>
 </template>
 <style>
 </style>
 <script>
-    import TopMenu from '../../../components/TopMenu.vue'
+    import echarts from 'echarts';
+    import { mapState } from 'vuex';
+    import AJAXService from '../../../../common/AJAXService';
     export default{
         data() {
             return {
-                msg: 'hello vue'
+               
             }
         },
-        components: {
-            TopMenu
+        methods: {
+        
         }
     }
 </script>

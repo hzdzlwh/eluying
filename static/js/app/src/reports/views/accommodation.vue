@@ -4,21 +4,21 @@
         <div style="display: flex">
             <div class="card" style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
-                    <p>房费</p>
+                    <p><small><i>房费</i></small></p>
                     <h4>¥{{roomFee}}</h4>
-                    <p>消费金额：¥{{}}</p>
-                    <p>违约金：¥{{penalty}}</p>
+                    <p><small><i>消费金额：¥{{consumeAmount}}</i></small></p>
+                    <p><small><i>违约金：¥{{penalty}}</i></small></p>
                 </div>
                 <div>
-                    <p>间夜量</p>
+                    <p><small>间夜量</small></p>
                     <h4>{{roomNights}}</h4>
                 </div>
                 <div>
-                    <p>平均房价</p>
+                    <p><small>平均房价</small></p>
                     <h4>¥{{avgPrice}}</h4>
                 </div>
                 <div>
-                    <p>平均入住率</p>
+                    <p><small>平均入住率</small></p>
                     <h4 v-if="occupancyRate !== 'undefined'">{{occupancyRate * 100}}%</h4>
                 </div>
             </div>
@@ -27,6 +27,7 @@
                 <div id="line" style="width: 100%;height:352px"></div>
             </div>
         </div>
+        <p>房间消费明细<small><i>({{date.startDate}}~{{date.endDate}})</i></small></p>
     </div>
 </template>
 <style>
@@ -42,7 +43,8 @@
                 occupancyRate: undefined,
                 penalty: undefined,
                 roomFee: undefined,
-                roomNights: undefined
+                roomNights: undefined,
+                consumeAmount: undefined,
             }
         },
         computed: {
@@ -68,6 +70,7 @@
                         this.occupancyRate = res.data.summary.occupancyRate;
                         this.penalty = res.data.summary.penalty;
                         this.roomFee = res.data.summary.roomFee;
+                        this.consumeAmount = res.data.summary.consumeAmount;
                         this.roomNights = res.data.summary.roomNights;
                     }
                 })
@@ -81,7 +84,7 @@
                     },],
                     legend: {
                         selectedMode: 'single',
-                        data:[/*'房费',*/ '间夜量', '入住率', '平均房价']
+                        data:['房费', '间夜量', '入住率', '平均房价']
                     },
                     tooltip: {
                         trigger: 'item',
@@ -96,11 +99,11 @@
                         type: 'value'
                     },
                     series:[
-                        /*{
+                        {
                             name: '房费',
                             type: 'line',
-                            data: data.roomFee.dateValues.map(i => i.value)
-                        },*/
+                            data: data.roomFee.map(i => i.value)
+                        },
                         {
                             name: '间夜量',
                             type: 'line',

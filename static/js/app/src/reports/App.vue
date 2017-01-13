@@ -41,6 +41,10 @@
     h4 {
         font-size: $font-size-h4;
     }
+    i {
+        color: #999;
+        font-style: inherit;
+    }
 </style>
 <script>
     import LeftMenu from './components/LeftMenu.vue';

@@ -14,15 +14,5 @@
 </style>
 <script>
     export default{
-        created() {
-            console.log(this.$router, this.$route);
-        },
-        data(){
-            return{
-                msg:'hello vue'
-            }
-        },
-        components:{
-        }
     }
 </script>

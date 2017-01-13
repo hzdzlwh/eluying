@@ -11,12 +11,16 @@
     export default{
         data() {
             return {
-                msg: 'hello vue',
                 routes: []
             }
         },
         created() {
             this.routes = this.$route.matched[1].meta.children;
+        },
+        watch: {
+            ['$route.path']() {
+                this.routes = this.$route.matched[1].meta.children;
+            }
         },
         methods: {
         

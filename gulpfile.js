@@ -136,22 +136,25 @@ gulp.task('webpack-prod', function () {
 });
 
 gulp.task('webpack-dev', function () {
-    var webpackDevConf = Object.assign({},
-        webpackConf, {watch: true},
-        webpackConf.plugins.push(
-            new webpack.DefinePlugin({
-                'process.env': {
-                    ENV: JSON.stringify('development'),
-                    NODE_ENV: JSON.stringify('development')
-            }
-    })));
-    return gulp.src('static/js/app/src/entry.js')
-        .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
-            gutil.log('[webpack]', stats.toString({}));
-        }, webpack))
-        .pipe(gulp.dest('static/js/app/dist/'))
-        .pipe(reload({stream: true}));
-        //.pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
+    try {
+        var webpackDevConf = Object.assign({},
+            webpackConf, {watch: true},
+            webpackConf.plugins.push(
+                new webpack.DefinePlugin({
+                    'process.env': {
+                        ENV: JSON.stringify('development'),
+                        NODE_ENV: JSON.stringify('development')
+                    }
+                })));
+        return gulp.src('static/js/app/src/entry.js')
+            .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
+                gutil.log('[webpack]', stats.toString({}));
+            }, webpack))
+            .pipe(gulp.dest('static/js/app/dist/'))
+            .pipe(reload({stream: true}));
+    } catch (e) {
+
+    }
 });
 
 gulp.task('watch', function () {

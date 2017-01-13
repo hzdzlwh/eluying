@@ -5,7 +5,7 @@
             <div class="card"
                  style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
-                    <p>餐费</p>
+                    <p>订单金额</p>
                     <h4>¥{{caterFee}}</h4>
                     <p>消费金额：¥{{consumeAmount}}</p>
                     <p>违约金：¥{{penalty}}</p>
@@ -15,11 +15,11 @@
                     <h4>{{orderCount}}</h4>
                 </div>
                 <div>
-                    <p>就餐人次</p>
+                    <p>消费人次</p>
                     <h4>{{peopleCount}}</h4>
                 </div>
                 <div>
-                    <p>人均消费</p>
+                    <p>均次消费</p>
                     <h4>¥{{peopleAvgConsume}}</h4>
                 </div>
             </div>
@@ -34,17 +34,12 @@
 </style>
 <script>
     import echarts from 'echarts';
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import AJAXService from '../../../../common/AJAXService';
     export default{
         data() {
             return {
-                caterFee: undefined,
-                consumeAmount: undefined,
-                orderCount: undefined,
-                penalty: undefined,
-                peopleAvgConsume: undefined,
-                peopleCount: undefined,
+               
             }
         },
         computed: {
@@ -52,15 +47,15 @@
         },
         watch: {
             date() {
-                this.getCaterStatistics();
+                this.getEntertainmentStatistics();
             }
         },
         created() {
-            this.getCaterStatistics();
+            this.getEntertainmentStatistics();
         },
         methods: {
-            getCaterStatistics() {
-                AJAXService.ajaxWithToken('get', '/stat/getCaterStatistics', {
+            getEntertainmentStatistics() {
+                AJAXService.ajaxWithToken('get', '/stat/getEntertainmentStatistics', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 }).then(res => {
@@ -86,7 +81,7 @@
                     ],
                     legend: {
                         selectedMode: 'single',
-                        data: ['餐费', '订单数', '就餐人次', '人均消费']
+                        data: ['订单金额', '订单数', '消费次数', '均次消费']
                     },
                     tooltip: {
                         trigger: 'item',
@@ -102,7 +97,7 @@
                     },
                     series: [
                         {
-                            name: '餐费',
+                            name: '订单金额',
                             type: 'line',
                             data: data.caterFee.map(i => i.value)
                         },
@@ -112,12 +107,12 @@
                             data: data.orderCount.map(i => i.value)
                         },
                         {
-                            name: '就餐人次',
+                            name: '消费次数',
                             type: 'line',
                             data: data.peopleCount.map(i => i.value)
                         },
                         {
-                            name: '人均消费',
+                            name: '均次消费',
                             type: 'line',
                             data: data.peopleAvgConsume.map(i => i.value)
                         }
