@@ -73,8 +73,8 @@
                 AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: this.orderId, orderType: -1 })
                     .then(res => {
                         if (res.code === 1) {
-                            this.cancelFee = res.data.payments.find(p => p.type === 10).fee;
-                            this.paid = res.data.payments.find(p => p.type === 16).fee;
+                            this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
+                            this.paid = res.data.payments.find(p => p.type === 14).fee;
                             this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
                         }
                     })

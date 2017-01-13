@@ -66,8 +66,8 @@
                                                 </div>
                                                 <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
                                             </div>
-                                            <label class="label-text">房费</label>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
+                                                <label class="label-text">房费</label>
                                                 <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
@@ -77,7 +77,7 @@
                                                                 <input class="dd-input" style="width: 60px;" type="number" v-model="priceItem.dateFee" @input="setTotalPrice(item)">
                                                             </dd>
                                                         </dl>
-                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
@@ -100,14 +100,18 @@
                                 <div class="shop-item" v-for="(item, index) in enterItems">
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
-                                            <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
-                                            </dd-option>
-                                        </dd-select>
-                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime']">
+                                        <div v-if = "item.usedAmount <= 0">
+                                            <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
+                                                <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
+                                                </dd-option>
+                                            </dd-select>
+                                        </div>
+                                        <span v-if = "item.usedAmount > 0">{{item.name}}</span>
+                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
                                             <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
                                         </div>
+                                        <span v-if = "item.usedAmount > 0 && item.chargeUnit" style="position: absolute; right: 466px;">{{`时长(${item.chargeUnit})`}}<span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span></span>
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
@@ -120,8 +124,8 @@
                                                      :num="item.count"
                                                      :id="index" :type="2"
                                                      :min="item.usedAmount >=1 ? item.usedAmount : 1"
-                                                     :max="item.inventory >= 0 ? item.inventory : 999">
-                                                <p class="valid" v-if="item.inventory >= 0 && checkState !== 'finish'" :class="item.inventory <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory}}</p>
+                                                     :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999">
+                                                <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory + item.selfInventory}}</p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
@@ -334,12 +338,14 @@
             margin-right: 25px;
         }
         .registerInfoModal-roomPrice {
-            display: inline-block;
-            position: relative;
+            display: flex;
+            align-items: center;
         }
         .registerInfoModal-roomPriceList {
+            display: flex;
+            flex-wrap: wrap;
             position: absolute;
-            width: 491px;
+            max-width: 491px;
             right: 0;
             top: 30px;
             padding: 8px 8px 8px 0;
@@ -356,7 +362,6 @@
             }
             .price-item {
                 width: 60px;
-                float: left;
                 margin-left: 8px;
                 dt {
                     color: #999999;
@@ -413,8 +418,11 @@
             margin-right: 16px;
         }
         .shop-item-content {
+            padding-top: 3px;
             flex-grow: 1;
             position: relative;
+            display: flex;
+            justify-content: space-between;
             .useless-tip {
                 bottom: -16px;
             }
@@ -430,6 +438,7 @@
             margin-left: 24px;
         }
         .delete-icon {
+            margin-left: 16px;
             width: 16px;
             height: 16px;
             background: url("../../../../../image/modal/room_modal_delete.png");
@@ -456,9 +465,7 @@
             display: inline-block;
         }
         .dd-select-menu {
-            &::-webkit-scrollbar {
-                width: 0;
-            }
+            overflow-y: auto;
             max-height: 120px;
             .dd-select-option {
                 max-width: 100%;
@@ -705,7 +712,7 @@
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     }
                 }
             },
@@ -745,7 +752,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -756,6 +763,7 @@
                     obj.idCardList = [];
                     if (obj.roomOrderId) {
                         delete obj.roomOrderId;
+                        delete obj.state;
                     }
                     this.registerRooms.push(obj);
                 }
@@ -854,11 +862,15 @@
                 } else {
                     params.orderId = this.order.orderId;
                 }
-                this.userOrigins.forEach(origin => {
-                    if (origin.id === this.userOriginType) {
-                        params.origin = origin.name;
-                    }
-                });
+                if (this.userOriginType === -3) {
+                    params.origin = '微官网';
+                } else {
+                    this.userOrigins.forEach(origin => {
+                        if (origin.id === this.userOriginType) {
+                            params.origin = origin.name;
+                        }
+                    });
+                }
                 let rooms = [];
                 this.registerRooms.forEach(item => {
                     const room = {};
@@ -1055,6 +1067,10 @@
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
+                /*if (duration > 400) {
+                    modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                    return false;
+                }*/
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
@@ -1066,7 +1082,7 @@
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
                                 price += option.p;
                             });
-                            item.price = price;
+                            item.price = Number(price.toFixed(2));
                             item.datePriceList = datePriceList;
                         }
                     });
@@ -1139,7 +1155,7 @@
                                         datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p, showInput: false});
                                         price += option.p;
                                     });
-                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: price, room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
+                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: Number(price.toFixed(2)), room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
                                 }
                             });
                     });
@@ -1152,17 +1168,16 @@
                     this.showOrder = true;
 
                     let enterItems = [];
-                    this.order.playItems.forEach(item => {
-                        const enter = {};
+                    let filterEnters = this.order.playItems.filter(enter => {
+                        return enter.state !== 3;
+                    });
+                    filterEnters.forEach(item => {
+                        const enter = {...item};
                         enter.id = item.categoryId;
                         enter.count = item.amount;
-                        enter.date = item.date;
-                        enter.timeAmount = item.timeAmount;
+                        enter.selfInventory = item.amount;
                         enter.type = 2;
                         enter.inventory = undefined;
-                        enter.playOrderId = item.playOrderId;
-                        enter.entertainmentId = item.entertainmentId;
-                        enter.usedAmount = item.usedAmount;
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
@@ -1183,7 +1198,7 @@
                         });
                         room.categoryType = id;
                         room.roomType = item.roomId;
-                        room.price = item.fee;
+                        room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
                         room.datePriceList = item.datePriceList.map(item => { item.showInput = false });

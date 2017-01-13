@@ -90,7 +90,7 @@
                     }
                 );
 
-                return sum;
+                return Number(sum.toFixed(2));
             },
             payed() {
                 let sum = 0;
@@ -136,6 +136,7 @@
         },
         methods:{
             hideModal(){
+                this.penalty = undefined;
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
@@ -168,7 +169,7 @@
                     })
                         .then(res => {
                             if (res.code === 1) {
-                                $('#checkOut').modal('hide');
+                                this.hideModal();
                                 modal.somethingAlert('退房成功');
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderDetail.orderId);
@@ -179,7 +180,7 @@
                 } else {
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
-                    $('#checkOut').modal('hide');
+                    this.hideModal();
                     this.$emit('showCashier', { type: 'checkOut', business });
                 }
             }

@@ -145,6 +145,7 @@
         },
         methods:{
             hideModal() {
+                this.authCode = '';
                 this.$emit('hide');
                 $('#payWithCode').modal('hide');
                 this.$emit('showCashier', { type: this.type, business: this.business });
@@ -155,12 +156,43 @@
                 AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                     .then(result => {
                         if(result.code === 1) {
-                            modal.somethingAlert('收银成功');
-                            this.$emit('hide');
-                            $('#payWithCode').modal('hide');
-                            let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                            this.emit('refreshView');
-                            this.$emit('showOrder', orderId);
+                            let status = result.data.status;
+                            let tradeNum = result.data.tradeNum;
+                            if (status === 0) {
+                                modal.somethingAlert('收银成功');
+                                this.$emit('hide');
+                                $('#payWithCode').modal('hide');
+                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                this.emit('refreshView');
+                                this.$emit('showOrder', orderId);
+                            } else if (status === 1) {
+                                modal.somethingAlert("收款失败");
+                                this.hideModal();
+                            } else if (status === 2) {
+                                let inter = setInterval(() => {
+                                    AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
+                                        tradeNum: tradeNum
+                                    }, (result1) => {
+                                        if (result1.code === 1) {
+                                            var status1 = result1.data.status;
+                                            if (status1 !== 2) {
+                                                clearInterval(inter);
+                                            }
+                                            if (status1 === 0) {
+                                                modal.somethingAlert('收银成功');
+                                                this.$emit('hide');
+                                                $('#payWithCode').modal('hide');
+                                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                                this.emit('refreshView');
+                                                this.$emit('showOrder', orderId);
+                                            } else if (status1 === 1) {
+                                                modal.somethingAlert("收款失败");
+                                                this.hideModal();
+                                            }
+                                        }
+                                    });
+                                }, 5000);
+                            }
                         } else {
                             modal.somethingAlert(result.msg);
                         }
