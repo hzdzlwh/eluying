@@ -38,7 +38,7 @@
                         <div class="content-item" v-if="appearDeposit">
                             <p class="content-item-title"><span>{{orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
                             <div class="cashier-order-item">
-                                <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
+                                <span class="cashier-money-text">已付押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
                                 <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
