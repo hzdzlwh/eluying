@@ -39,7 +39,7 @@
                             <p class="content-item-title"><span>{{orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{orderPayment.deposit || 0}}</span></span>
-                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{orderPayment.deposit || 0}}</span></span>
+                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
                             </div>
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
@@ -62,7 +62,7 @@
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
-                            <span v-if="totalDeposit != 0" class="footer-label">{{totalDeposit > 0 ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
+                            <span v-if="totalDeposit != 0" class="footer-label">{{(totalDeposit > 0 && type !== 'checkIn') ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                     </div>
@@ -167,7 +167,7 @@
                 return false;
             },
             totalDeposit() {
-                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0)).toFixed(2);
+                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) + (this.type === 'checkIn' ? (this.deposit || 0) : 0)).toFixed(2);
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
@@ -271,7 +271,7 @@
                             }
                             if (this.orderPayment.deposit > 0) {
                                 this.showDeposit = true;
-                                this.deposit = this.orderPayment.deposit;
+                                this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                             }
                         } else {
                             modal.somethingAlert(res.msg);
@@ -395,6 +395,11 @@
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
                 if (receiveMoney.toFixed(2) !== shouldPayMoney) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
+                    return false;
+                }
+                const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
+                if (this.deposit > shouldDeposit && this.type !== 'checkIn') {
+                    modal.somethingAlert('退款押金无法大于已付押金！');
                     return false;
                 }
                 const payments = this.payments.map(payment => {
