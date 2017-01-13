@@ -161,9 +161,10 @@
                             if (status === 0) {
                                 modal.somethingAlert('收银成功');
                                 this.$emit('hide');
+                                this.authCode = '';
                                 $('#payWithCode').modal('hide');
                                 let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                this.emit('refreshView');
+                                this.$emit('refreshView');
                                 this.$emit('showOrder', orderId);
                             } else if (status === 1) {
                                 modal.somethingAlert("收款失败");
@@ -181,9 +182,10 @@
                                             if (status1 === 0) {
                                                 modal.somethingAlert('收银成功');
                                                 this.$emit('hide');
+                                                this.authCode = '';
                                                 $('#payWithCode').modal('hide');
                                                 let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                                this.emit('refreshView');
+                                                this.$emit('refreshView');
                                                 this.$emit('showOrder', orderId);
                                             } else if (status1 === 1) {
                                                 modal.somethingAlert("收款失败");
@@ -205,6 +207,7 @@
                     $('#payWithCode').modal({backdrop: 'static'});
                 } else {
                     this.$emit('hide');
+                    this.authCode = '';
                     $('#payWithCode').modal('hide');
                 }
             }

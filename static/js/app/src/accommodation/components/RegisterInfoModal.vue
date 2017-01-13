@@ -962,7 +962,7 @@
                             }
                         });
                 } else {
-                    AJAXService.ajaxWithToken('get', '/room/confirmOrder', params)
+                    AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
                         .then(res => {
                             if (res.code === 1) {
                                 this.hideModal(e);
