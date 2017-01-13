@@ -107,6 +107,7 @@
                                             </dd-select>
                                         </div>
                                         <span v-if = "item.usedAmount > 0">{{item.name}}</span>
+                                        <div class="time-container" style="width: 145px" v-if="!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0"></div>
                                         <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
                                             <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
@@ -316,9 +317,6 @@
             margin-right: 14px;
         }
         .enterDate-container {
-            position: absolute;
-            top: 0;
-            right: 264px;
             input {
                 width: 110px;
             }
@@ -428,9 +426,6 @@
             }
         }
         .shop-item-count {
-            position: absolute;
-            top: 0;
-            right: 0;
             width: 240px;
         }
         .shop-item-price {
@@ -719,7 +714,7 @@
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
-                        return date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     }
                 }
             },
