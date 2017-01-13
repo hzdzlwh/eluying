@@ -1093,10 +1093,22 @@
                             let price = 0;
                             res.data.rs.status.forEach((option,index) => {
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
-                                price += option.p;
+                            });
+                            if (item.datePriceList.length > 0) {
+                                datePriceList.forEach(newDate => {
+                                    item.datePriceList.forEach(oldDate => {
+                                        if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
+                                            newDate.dateFee = oldDate.dateFee;
+                                        }
+                                    })
+                                });
+                            }
+                            datePriceList.forEach(date => {
+                                price += date.dateFee;
                             });
                             item.price = Number(price.toFixed(2));
                             item.datePriceList = datePriceList;
+
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
@@ -1214,7 +1226,13 @@
                         room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
-                        room.datePriceList = item.datePriceList.map(item => { item.showInput = false });
+                        room.datePriceList = item.datePriceList.map(dat => {
+                            let newDate = { showInput: false };
+                            newDate.date = dat.date;
+                            newDate.dateFee = dat.dateFee;
+                            return newDate;
+
+                        });
                         room.showPriceList = false;
                         room.showTip = false;
                         room.state = item.state;
