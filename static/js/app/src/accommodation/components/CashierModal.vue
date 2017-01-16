@@ -200,15 +200,6 @@
                 this.deposit = undefined;
                 this.depositPayChannel = undefined;
             },
-            getPayMentType() {
-                if (this.type === 'cancel') {
-                    return 4;
-                } else if (this.orderState) {
-                    return 0;
-                } else {
-                    return 2;
-                }
-            },
             getPayChannels(index) {
                 if (this.type === 'register' && this.business.cashierType === 'finish') {
                     return this.depositPayChannels;
@@ -362,7 +353,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.getPayMentType()});
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2 });
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -439,8 +430,12 @@
                     const businessJson = {
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
-                        orderType: this.business.orderType
+                        orderType: this.business.orderType,
+                        payments: [{ fee: this.business.penalty, type: 4 }]
                     };
+                    if (this.business.penalty) {
+                        payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
+                    }
                     params = {
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
