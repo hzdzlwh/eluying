@@ -157,7 +157,7 @@
                 const business =  {
                     type: this.roomBusinessInfo.businessType,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms
+                    rooms: rooms.filter(room => { return room })
                 };
                 if (business.type === 2) {
                     business.penalty = this.penalty;
