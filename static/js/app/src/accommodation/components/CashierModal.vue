@@ -231,9 +231,10 @@
                 } else {
                     let operationType;
                     let penalty;
-                    if (this.type === 'checkIn') {
+                    /*if (this.type === 'checkIn') {
                         operationType = 3;
-                    } else if (this.type === 'checkOut') {
+                    } else */
+                    if (this.type === 'checkOut') {
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
