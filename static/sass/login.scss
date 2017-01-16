@@ -148,125 +148,45 @@
       }
     }
   }
-  .login2-banner{
-    width: 100%;
-    height: 630px;
+  .carousel {
     margin-top: 70px;
-    position: relative;
-    overflow: hidden;
-    img{
+    .bg-img {
+      max-width: none;
+    }
+    .carousel-inner {
       width: 100%;
-      min-width: 1920px;
+      height: 100%;
+      position: relative;
+    }
+    .carousel-caption {
       position: absolute;
       left: 0;
       top: 0;
-    }
-    .title{
-      width: 100%;
-      position: absolute;
-      top: 230px;
-      left: 0;
-      font-size: 60px;
-      text-align: center;
-      color: white;
-      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
-    }
-    .titletwo{
-      width: 100%;
-      position: absolute;
-      top: 355px;
-      left: 0;
-      font-size: 24px;
-      text-align: center;
-      color: white;
-      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
-    }
-    .btns{
-      width: 100%;
-      position: absolute;
-      top: 456px;
-      left: 0;
-      text-align: center;
-      .sbtn{
-        @include btn_big();
-        display: inline-block;
-        margin: 0 30px;
+      right: 0;
+      bottom: 0;
+      padding: 0;
+      .title{
+        width: 100%;
+        position: absolute;
+        top: 230px;
+        left: 0;
+        font-size: 60px;
+        text-align: center;
+        color: white;
+        text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
       }
-      .sbtn.reg{
-        @include btn4_normal();
-      }
-      .sbtn.reg:hover{
-        @include btn4_hover();
-      }
-      .sbtn.reg:active{
-        @include btn4_click();
-      }
-      .sbtn.video{
-        @include btn3_normal();
-      }
-      .sbtn.video:hover{
-        @include btn3_hover();
-      }
-      .sbtn.video:active{
-        @include btn3_click();
+      .titletwo{
+        width: 100%;
+        position: absolute;
+        top: 355px;
+        left: 0;
+        font-size: 24px;
+        text-align: center;
+        color: white;
+        text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
       }
     }
-  }
-  .ball{
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #fff;
-    position: absolute;
-    top: 588px;
-    left: 49%;
-    text-align: center;
-    cursor: pointer;
-  }
-  .balltwo{
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(200, 200, 200, 0.5);
-    position: absolute;
-    top: 588px;
-    left: 51%;
-    text-align: center;
-  }
-  .login2-banner-hide{
-    width: 100%;
-    height: 630px;
-    margin-top: 70px;
-    position: relative;
-    overflow: hidden;
-    img{
-      width: 100%;
-      min-width: 1920px;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-    .title{
-      width: 100%;
-      position: absolute;
-      top: 230px;
-      left: 0;
-      font-size: 60px;
-      text-align: center;
-      color: white;
-      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
-    }
-    .titletwo{
-      width: 100%;
-      position: absolute;
-      top: 355px;
-      left: 0;
-      font-size: 24px;
-      text-align: center;
-      color: white;
-      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
-    }
-    .btns{
+    .btns {
       width: 100%;
       position: absolute;
       top: 456px;
