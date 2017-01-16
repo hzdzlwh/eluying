@@ -125,11 +125,11 @@
                                                         </p>
                                                         <p class="money-item">
                                                             <span class="money-type">优惠</span>
-                                                            <span class="money-num">¥-{{Math.abs(findTypePrice(item.detail.payments, 5))}}</span>
+                                                            <span class="money-num">-¥{{Math.abs(findTypePrice(item.detail.payments, 5))}}</span>
                                                         </p>
                                                         <p class="money-item" v-if="findTypePrice(item.detail.payments, 11) > 0">
                                                             <span class="money-type">取消订单</span>
-                                                            <span class="money-num">¥-{{Math.abs(findTypePrice(item.detail.payments, 11))}}</span>
+                                                            <span class="money-num">-¥{{Math.abs(findTypePrice(item.detail.payments, 11))}}</span>
                                                         </p>
                                                     </div>
                                                     <p class="money-item" v-if="findTypePrice(item.detail.payments, 4) > 0">
@@ -226,11 +226,11 @@
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 5) > 0">
                                             <span class="money-type">优惠</span>
-                                            <span class="money-num">¥-{{Math.abs(findTypePrice(order.payments, 5))}}</span>
+                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 5))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
                                             <span class="money-type">取消订单</span>
-                                            <span class="money-num">¥-{{Math.abs(findTypePrice(order.payments, 11))}}</span>
+                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 11))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
                                             <span class="money-type">{{item.payChannel}}</span>
