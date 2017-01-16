@@ -945,7 +945,7 @@
                 params.items = JSON.stringify(items);
                 if (this.checkState === 'editOrder') {
                     params.playItems = JSON.stringify(playItems);
-                    params.payments = JSON.stringify(this.order.payments);
+                    params.payments = JSON.stringify([]);
                 } else {
                     params.entertainmentItems = JSON.stringify(entertainmentItems);
                 }
