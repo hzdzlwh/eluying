@@ -347,7 +347,7 @@
                 }
             },
             addPayMent() {
-                const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2));
                 let paidMoney = 0;
                 if (this.payments.length > 0) {
                     this.payments.forEach(pay => {

@@ -407,6 +407,15 @@
                 margin-bottom: 16px;
                 border-bottom: 1px dotted #e6e6e6;
             }
+            .checkInPerson-person {
+                padding-left: 0;
+                .checkInPerson-person-icon {
+                    margin-right: 25px;
+                }
+            }
+            .checkInPerson-btns {
+                padding-left: 41px;
+            }
         }
         .shop-icon {
             width: 16px;
