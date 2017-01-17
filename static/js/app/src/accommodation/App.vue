@@ -27,7 +27,7 @@
             :registerInfoShow="registerInfoShow"
             :order="orderDetail"
             @changeRegisterInfoShow="changeRegisterInfoShow"
-            @refreshView="getRoomAndStatus"
+            @refreshView="refreshView"
             @showOrder="showOrder"
             @showCashier="showCashier"
         />
@@ -41,7 +41,7 @@
             @editOrder="editOrder"
         />
         <CheckOutModal
-            @refreshView="getRoomAndStatus"
+            @refreshView="refreshView"
             @showOrder="showOrder"
             @showCashier="showCashier"
         />
@@ -53,14 +53,14 @@
             :type="cashierType"
             :business="cashierBusiness"
             @hide="hideCashier"
-            @refreshView="getRoomAndStatus"
+            @refreshView="refreshView"
             @showOrder="showOrder"
             @showGetMoney="showGetMoney"
         />
         <CancelOrderModal
             :orderId="orderId"
             :show="cancelOrderShow"
-            @refreshView="getRoomAndStatus"
+            @refreshView="refreshView"
             @showOrder="showOrder"
             @hideCancelOrder="hideCancelOrder"
             @showCashier="showCashier"
@@ -71,7 +71,7 @@
             :business="getMoneyBusiness"
             :params="getMoneyParams"
             :totalPrice="payWithAlipay"
-            @refreshView="getRoomAndStatus"
+            @refreshView="refreshView"
             @hide="hideGetMoney"
             @showCashier="showCashier"
             @showOrder="showOrder"
@@ -109,15 +109,7 @@
                 this.getCategories()
             ])
                 .then(() => {
-                    this.roomStatus.map(room => {
-                        // 将房间加入房型中
-                        const category = this.categories.find(category => category.cId === room.ti);
-                        if (!category.rooms) {
-                            category.rooms = [];
-                        }
-
-                        category.rooms.push(room);
-                    });
+                    this.mapRoomsToCategory();
                     // 去除没有房间的房型
                     this.categories = this.categories.filter(c => c.rooms && c.rooms.length > 0);
                     // 筛选房型标志
@@ -218,6 +210,18 @@
                         this.roomStatus = rs;
                     })
             },
+            mapRoomsToCategory() {
+                this.categories.map(c => c.rooms = undefined);
+                this.roomStatus.map(room => {
+                    // 将房间加入房型中
+                    const category = this.categories.find(category => category.cId === room.ti);
+                    if (!category.rooms) {
+                        category.rooms = [];
+                    }
+
+                    category.rooms.push(room);
+                });
+            },
             getCategories() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomCategories', {})
                     .then(res => {
@@ -231,6 +235,9 @@
 
                 this.startDate = util.stringToDate(date);
                 this.getRoomAndStatus();
+            },
+            refreshView() {
+                Promise.all([this.getRoomAndStatus()]).then(() => { this.mapRoomsToCategory(); });
             },
             handleRoomFilter(data) {
                 this.categories = data;
