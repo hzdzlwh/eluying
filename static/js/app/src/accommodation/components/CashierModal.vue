@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="content-item" v-if="appearDeposit">
-                            <p class="content-item-title"><span>{{orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
+                            <p class="content-item-title"><span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
                                 <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
@@ -45,8 +45,8 @@
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
-                                    <span style="margin-left: 24px">{{orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
-                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
+                                    <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
+                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
@@ -262,7 +262,7 @@
                             if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
                             }
-                            if (this.orderPayment.deposit > 0) {
+                            if (this.orderPayment.deposit > 0 && this.type !== 'checkIn') {
                                 this.showDeposit = true;
                                 this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                             }
