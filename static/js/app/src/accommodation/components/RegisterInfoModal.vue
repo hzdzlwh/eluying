@@ -6,8 +6,8 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{modalTitleOrBtn.title}}</span>
-                            <span v-if="order.orderState" class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span v-if="order.orderState" class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
+                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
                         </div>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
