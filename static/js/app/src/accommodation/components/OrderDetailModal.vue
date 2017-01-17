@@ -750,7 +750,7 @@
             },
             showCashier() {
                 this.hideModal();
-                this.$emit('showCashier', {})
+                this.$emit('showCashier', { type: 'orderDetail' })
             },
             editOrder() {
                 this.hideModal();

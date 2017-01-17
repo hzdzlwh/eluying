@@ -231,16 +231,13 @@
                 } else {
                     let operationType;
                     let penalty;
-                    /*if (this.type === 'checkIn') {
-                        operationType = 3;
-                    } else */
                     if (this.type === 'checkOut') {
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
                     const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     let subOrderIds = [];
-                    if (this.roomBusinessInfo.roomOrderInfoList) {
+                    if (this.roomBusinessInfo.roomOrderInfoList && this.type !== 'orderDetail') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);

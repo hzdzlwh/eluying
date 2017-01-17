@@ -211,14 +211,10 @@
                     })
             },
             mapRoomsToCategory() {
-                this.categories.map(c => c.rooms = undefined);
+                this.categories.map(c => this.$set(c, 'rooms', []));
                 this.roomStatus.map(room => {
                     // 将房间加入房型中
                     const category = this.categories.find(category => category.cId === room.ti);
-                    if (!category.rooms) {
-                        category.rooms = [];
-                    }
-
                     category.rooms.push(room);
                 });
             },
