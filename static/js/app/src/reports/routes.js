@@ -12,6 +12,7 @@ import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
 import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
+import retail from './views/retail.vue';
 
 export const routes = [
     {
@@ -137,7 +138,8 @@ export const routes = [
         path: '/retail',
         meta: {
             name: '商超'
-        }
+        },
+        component: retail
     }
 ];
 

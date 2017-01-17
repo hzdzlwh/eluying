@@ -6,7 +6,7 @@
                  style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
                     <p>订单金额</p>
-                    <h4>¥{{caterFee}}</h4>
+                    <h4>¥{{orderFee}}</h4>
                     <p>消费金额：¥{{consumeAmount}}</p>
                     <p>违约金：¥{{penalty}}</p>
                 </div>
@@ -16,11 +16,11 @@
                 </div>
                 <div>
                     <p>消费人次</p>
-                    <h4>{{peopleCount}}</h4>
+                    <h4>{{consumeCount}}</h4>
                 </div>
                 <div>
                     <p>均次消费</p>
-                    <h4>¥{{peopleAvgConsume}}</h4>
+                    <h4>¥{{avgConsume}}</h4>
                 </div>
             </div>
             <div class="card" style="flex: 1">
@@ -39,7 +39,12 @@
     export default{
         data() {
             return {
-               
+                orderFee: undefined,
+                consumeAmount: undefined,
+                orderCount: undefined,
+                penalty: undefined,
+                avgConsume: undefined,
+                consumeCount: undefined,
             }
         },
         computed: {
@@ -61,12 +66,12 @@
                 }).then(res => {
                     if (res.code === 1) {
                         this.setLine(res.data);
-                        this.caterFee = res.data.summary.caterFee;
+                        this.orderFee = res.data.summary.orderFee;
                         this.consumeAmount = res.data.summary.consumeAmount;
                         this.orderCount = res.data.summary.orderCount;
                         this.penalty = res.data.summary.penalty;
-                        this.peopleAvgConsume = res.data.summary.peopleAvgConsume;
-                        this.peopleCount = res.data.summary.peopleCount;
+                        this.avgConsume = res.data.summary.avgConsume;
+                        this.consumeCount = res.data.summary.consumeCount;
                     }
                 })
             },
@@ -90,7 +95,7 @@
                     xAxis: {
                         boundaryGap: false,
                         type: 'category',
-                        data: data.caterFee.map(i => i.date.substr(5, 5))
+                        data: data.orderFee.map(i => i.date.substr(5, 5))
                     },
                     yAxis: {
                         type: 'value'
@@ -99,7 +104,7 @@
                         {
                             name: '订单金额',
                             type: 'line',
-                            data: data.caterFee.map(i => i.value)
+                            data: data.orderFee.map(i => i.value)
                         },
                         {
                             name: '订单数',
@@ -109,12 +114,12 @@
                         {
                             name: '消费次数',
                             type: 'line',
-                            data: data.peopleCount.map(i => i.value)
+                            data: data.consumeCount.map(i => i.value)
                         },
                         {
                             name: '均次消费',
                             type: 'line',
-                            data: data.peopleAvgConsume.map(i => i.value)
+                            data: data.avgConsume.map(i => i.value)
                         }
                     ]
                 });
