@@ -13,7 +13,7 @@
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee - orderPayment.refundFee}}</span></span>
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
                             <span v-if="totalDeposit != 0" class="footer-label">{{(totalDeposit > 0 && type !== 'checkIn') ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
@@ -162,7 +162,7 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - this.orderPayment.paidFee;
+                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
                     return income >= 0;
                 }
                 return false;
