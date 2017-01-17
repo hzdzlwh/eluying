@@ -43,7 +43,7 @@
                                     <div class="registerRoom-item">
                                         <span class="room-icon"></span>
                                         <div class="shop-item-content">
-                                            <span class="useless-tip error" v-if="item.showTip">该房型在该时间段无可用房间</span>
+                                            <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                                             <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
                                                 <dd-option v-for="category in categoryList" :value="category.id" :label="category.name">
                                                 </dd-option>

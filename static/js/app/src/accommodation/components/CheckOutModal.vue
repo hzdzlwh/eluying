@@ -154,10 +154,15 @@
                         }
                     }
                 });
+                const　filterRooms = rooms.filter(room => { return room });
+                if (filterRooms.length <= 0) {
+                    modal.somethingAlert('请选择房间！');
+                    return false;
+                }
                 const business =  {
                     type: this.roomBusinessInfo.businessType,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms.filter(room => { return room })
+                    rooms: filterRooms
                 };
                 if (business.type === 2) {
                     business.penalty = this.penalty;
