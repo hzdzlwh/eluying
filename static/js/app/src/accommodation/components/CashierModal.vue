@@ -397,7 +397,7 @@
                     return false;
                 }
                 const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
-                if (this.deposit > shouldDeposit && this.type !== 'checkIn') {
+                if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
                     modal.somethingAlert('退款押金无法大于已付押金！');
                     this.disabledBtn = false;
                     return false;
