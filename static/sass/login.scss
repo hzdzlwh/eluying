@@ -40,10 +40,10 @@
   border:1px solid #ffffff;
   border-radius: 2px;
   font-size:18px;
-  height: 50px;
+  height: 40px;
   color:#ffffff;
   text-align:center;
-  line-height: 48px;
+  line-height: 40px;
   cursor: pointer;
 }
 @mixin btn3_hover(){
@@ -56,10 +56,10 @@
   background: $color1;
   border-radius: 2px;
   font-size:18px;
-  height: 50px;
+  height: 40px;
   color: white;
   text-align:center;
-  line-height: 50px;
+  line-height: 40px;
   cursor: pointer;
 }
 @mixin btn4_hover(){
@@ -76,9 +76,9 @@
   width: 76px;
 }
 @mixin btn_big(){
-  width: 150px;
+  width: 160px;
 }
-#login2-body{
+#login2-body {
   min-width: 1200px;
   position: relative;
   .login2-top{
@@ -148,33 +148,48 @@
       }
     }
   }
-  .login2-banner{
-    width: 100%;
-    height: 630px;
+  .carousel {
     margin-top: 70px;
-    position: relative;
-    overflow: hidden;
-    img{
+    .bg-img {
+      max-width: none;
+    }
+    .carousel-inner {
       width: 100%;
-      min-width: 1920px;
+      height: 100%;
+      position: relative;
+    }
+    .carousel-caption {
       position: absolute;
       left: 0;
       top: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0;
+      .title{
+        width: 100%;
+        position: absolute;
+        top: 230px;
+        left: 0;
+        font-size: 60px;
+        text-align: center;
+        color: white;
+        text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
+      }
+      .titletwo{
+        width: 100%;
+        position: absolute;
+        top: 355px;
+        left: 0;
+        font-size: 24px;
+        text-align: center;
+        color: white;
+        text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
+      }
     }
-    .title{
+    .btns {
       width: 100%;
       position: absolute;
-      top: 230px;
-      left: 0;
-      font-size: 60px;
-      text-align: center;
-      color: white;
-      text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
-    }
-    .btns{
-      width: 100%;
-      position: absolute;
-      top: 340px;
+      top: 456px;
       left: 0;
       text-align: center;
       .sbtn{
@@ -275,146 +290,108 @@
   }
   .login2-sell{
     width: 100%;
-    height: 860px;
-    overflow: hidden;
-    background: #f5f8fa;
-    .stitle{
-      margin-top: 90px;
-      font-size: 36px;
-      height: 36px;
-      color: #444959;
-      text-align: center;
-    }
-    .desc{
-      margin-top: 20px;
-      font-size: 24px;
-      height: 24px;
-      color: #9297a3;
-      text-align: center;
-    }
-    .hr{
-      width: 34px;
-      height: 5px;
-      background: $color1;
-      margin: auto;
-      margin-top: 20px;
-    }
-    .wrapper{
-      width: 1200px;
-      height: 660px;
-      position: relative;
-      margin: auto;
-      padding-top: 50px;
-      text-align: center;
-      .item{
-        position: absolute;
-        width: 300px;
-        .title{
-          width: 100%;
-          font-size: 24px;
-          color: #333743;
-          line-height: 48px;
-        }
-        .text{
-          width: 100%;
-          font-size: 16px;
-          color: #9297a3;
-          line-height: 28px;
-        }
-      }
-      .item.left{
-        text-align: right;
-        left: 0;
-        .spriteImg{
-          position: absolute;
-          right: -80px;
-          top: 28px;
-        }
-      }
-      .item.right{
-        text-align: left;
-        right: 0;
-        .spriteImg{
-          position: absolute;
-          left: -80px;
-          top: 28px;
-        }
-      }
-      .item:nth-child(2){
-        top: 150px;
-      }
-      .item:nth-child(3){
-        top: 150px;
-      }
-      .item:nth-child(4){
-        top: 370px;
-      }
-      .item:nth-child(5){
-        top: 370px;
-      }
-    }
-  }
-  .login2-manage{
-    width: 100%;
-    height: 860px;
+    height: 985px;
     overflow: hidden;
     background: url("//static.dingdandao.com//login2/background_2.jpg");
     background-size: 100% 100%;
     color: white;
     .stitle{
       margin-top: 90px;
-      font-size: 36px;
-      height: 36px;
+      font-family: PingFangSC-Thin;
+      font-size: 48px;
+      color: #fff;
+      letter-spacing: 0;
       text-align: center;
     }
     .desc{
-      margin-top: 20px;
-      font-size: 24px;
+      margin-top: 1px;
       height: 24px;
+      font-family: PingFangSC-Ultralight;
+      font-size: 24px;
+      color: #fff;
+      letter-spacing: 0;
       text-align: center;
-      opacity: 0.8;
     }
-    .hr{
+    .shr{
       width: 34px;
-      height: 5px;
-      background: white;
+      height: 4px;
+      background: #fff;
       margin: auto;
       margin-top: 20px;
     }
-    .wrapper{
+    .feat-sell{
+      display: inline-block;
+      position: relative;
+      left: 34%;
+      .text{
+        display: inline-block;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #fff;
+        letter-spacing: 0px;
+        text-align: left;
+      }
+    }
+    .feat-manage{
+      display:inline-block;
+      position: relative;
+      left: 42%;
+      .text{
+        display: inline-block;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #fff;
+        letter-spacing: 0px;
+        text-align: left;
+      }
+    }
+    .swrapper-selected{
       width: 1200px;
       height: 660px;
       position: relative;
       margin: auto;
       padding-top: 50px;
       text-align: center;
+      .sellphone{
+        position: absolute;
+        left: 18%;
+      }
       .item{
         position: absolute;
         width: 300px;
+        .hr{
+          position: absolute;
+          border: 1px dashed #fff;
+          width: 99px;
+          height: 1px;
+          top: 33px;
+          left: -225px;
+        }
+        img{
+          position: absolute;
+          top: 20px;
+          left: -100px;
+        }
         .title{
           width: 100%;
-          font-size: 24px;
+          font-size: 20px;
+          color: #fff;
           line-height: 48px;
+          font-family: MicrosoftYaHei;
         }
         .text{
           width: 100%;
-          font-size: 16px;
+          font-size: 14px;
+          color: #fff;
           line-height: 28px;
-          opacity: 0.8;
-        }
-      }
-      .item.left{
-        text-align: right;
-        left: 0;
-        .spriteImg{
-          position: absolute;
-          right: -80px;
-          top: 28px;
+          font-family: MicrosoftYaHei;
+          letter-spacing: 0;
+          text-align: left;
         }
       }
       .item.right{
         text-align: left;
-        right: 0;
+        right: 160px;
         .spriteImg{
           position: absolute;
           left: -80px;
@@ -422,114 +399,222 @@
         }
       }
       .item:nth-child(2){
-        top: 150px;
+        top: 65px;
       }
       .item:nth-child(3){
-        top: 150px;
+        top: 195px;
       }
       .item:nth-child(4){
-        top: 370px;
+        top: 325px;
       }
       .item:nth-child(5){
-        top: 370px;
+        top: 455px;
       }
     }
-  }
-  .login2-modules{
-    width: 100%;
-    height: 650px;
-    .stitle{
-      margin-top: 90px;
-      font-size: 36px;
-      height: 36px;
-      color: #444959;
-      text-align: center;
-    }
-    .desc{
-      margin-top: 20px;
-      font-size: 24px;
-      height: 24px;
-      color: #9297a3;
-      text-align: center;
-    }
-    .hr{
-      width: 34px;
-      height: 5px;
-      background: $color1;
+    .swrapper{
+      width: 1200px;
+      height: 660px;
+      position: relative;
       margin: auto;
-      margin-top: 20px;
-    }
-    .wrapper{
-      width: 100%;
+      padding-top: 50px;
       text-align: center;
-      margin-top: 45px;
+      .sellphone{
+        position: absolute;
+        right: 18%;
+      }
       .item{
-        width: 190px;
-        height: 400px;
-        background-size: 100% 100%;
-        margin: 0 2px;
-        display: inline-block;
+        position: absolute;
+        width: 300px;
+        .hr{
+          position: absolute;
+          border: 1px dashed #fff;
+          width: 99px;
+          height: 1px;
+          top: 33px;
+          right: -225px;
+        }
+        img{
+          position: absolute;
+          top: 20px;
+          right: -100px;
+        }
         .title{
           width: 100%;
-          font-size: 24px;
-          height: 84px;
-          line-height: 84px;
-          text-align: center;
-          color: white;
+          font-size: 20px;
+          color: #fff;
+          line-height: 48px;
+          font-family: MicrosoftYaHei;
+        }
+        .text{
+          width: 100%;
+          font-size: 14px;
+          color: #fff;
+          line-height: 28px;
+          font-family: MicrosoftYaHei;
+          letter-spacing: 0;
+          text-align: right;
         }
       }
-      .item:first-child{
-        background: url("//static.dingdandao.com//login2/vacation.jpg");
+      .item.left{
+        text-align: right;
+        left: 160px;
+        .spriteImg{
+          position: absolute;
+          left: -80px;
+          top: 28px;
+        }
       }
       .item:nth-child(2){
-        background: url("//static.dingdandao.com//login2/campsite.jpg");
+        top: 65px;
       }
       .item:nth-child(3){
-        background: url("//static.dingdandao.com//login2/landscape.jpg");
+        top: 195px;
       }
       .item:nth-child(4){
-        background: url("//static.dingdandao.com//login2/basement.jpg");
+        top: 325px;
       }
       .item:nth-child(5){
-        background: url("//static.dingdandao.com//login2/farm.jpg");
+        top: 455px;
       }
     }
   }
-  .login2-platform{
+  .login2-feature {
     width: 100%;
-    height: 700px;
+    height: 2100px;
     overflow: hidden;
-    background: url("//static.dingdandao.com//login2/background_3.jpg");
-    background-size: 100% 100%;
-    color: white;
-    .stitle{
+    .stitle {
       margin-top: 90px;
       font-size: 36px;
       height: 36px;
       text-align: center;
     }
-    .desc{
+    .desc {
       margin-top: 20px;
       font-size: 24px;
       height: 24px;
       text-align: center;
       opacity: 0.8;
     }
-    .hr{
+    .hr {
       width: 34px;
       height: 5px;
-      background: white;
+      background: $color1;
       margin: auto;
       margin-top: 20px;
     }
-    .wrapper{
-      padding-top: 50px;
-      text-align: center;
+    .feature-background {
+      position: absolute;
+      width: 100%;
+    }
+    .featureone {
+        margin-bottom: 353px;
+      .feature-directorone {
+        width: 204px;
+        height: 60px;
+        background-image: url("../image/feature-director.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+        left: 40%;
+        margin-top: 70px;
+        margin-bottom: 60px;
+        .text {
+          color: $color1;
+          height: 25px;
+          text-align: center;
+          line-height: 60px;
+          font-size: 32px;
+        }
+      }
+      .feature-text {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+        right: 50%;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #666;
+        text-align: right;
+        .img {
+          margin-top: 5px;
+        }
+      }
+    }
+    .featuretwo {
+        margin-bottom: 353px;
+      .feature-directortwo {
+        width: 204px;
+        height: 60px;
+        background-image: url("../image/feature-director.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+        left: 50%;
+        margin-top: 70px;
+        margin-bottom: 60px;
+        .text {
+          color: $color1;
+          height: 25px;
+          text-align: center;
+          line-height: 60px;
+          font-size: 32px;
+        }
+      }
+      .feature-text {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+        left: 50%;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #666;
+        text-align: left;
+        .img {
+          margin-top: 5px;
+        }
+      }
+    }
+    .featurethree {
+      .feature-directorthree {
+        width: 204px;
+        height: 60px;
+        background-image: url("../image/feature-director.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+        left: 40%;
+        margin-top: 70px;
+        margin-bottom: 60px;
+        .text {
+          color: $color1;
+          height: 25px;
+          text-align: center;
+          line-height: 60px;
+          font-size: 32px;
+        }
+      }
+      .feature-text {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+        right: 50%;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #666;
+        text-align: right;
+        .img {
+          margin-top: 5px;
+        }
+      }
     }
   }
   .login2-partners{
     width: 100%;
     height: 625px;
+    text-align: center;
     .stitle{
       margin-top: 90px;
       font-size: 36px;
@@ -546,14 +631,49 @@
     }
     .hr{
       width: 34px;
-      height: 5px;
+      height: 4px;
       background: $color1;
       margin: auto;
       margin-top: 20px;
     }
-    .wrapper{
+    .partner{
+      position: relative;
+      margin: auto;
       padding-top: 50px;
+    }
+  }
+  .login2-about{
+    margin-bottom: 100px;
+    .stitle{
+      margin-top: 90px;
+      font-size: 36px;
+      height: 36px;
+      color: #444959;
       text-align: center;
+    }
+    .desc{
+      margin-top: 20px;
+      font-size: 24px;
+      height: 24px;
+      color: #9297a3;
+      text-align: center;
+    }
+    .hr{
+      width: 34px;
+      height: 4px;
+      background: $color1;
+      margin: auto;
+      margin-top: 20px;
+      margin-bottom: 50px;
+    }
+    .text{
+      width: 39%;
+      margin: auto;
+      font-family:MicrosoftYaHei;
+      font-size:14px;
+      color:#999;
+      letter-spacing:0;
+      text-align:center;
     }
   }
   .login2-useit{
@@ -673,7 +793,6 @@
       }
     }
   }
-}
 #loginForgetPwd {
   .modal-dialog {
     width: 777px;
@@ -1199,3 +1318,7 @@
     border-bottom: 1px solid #a0a0a0;
   }
 }
+}
+
+
+
