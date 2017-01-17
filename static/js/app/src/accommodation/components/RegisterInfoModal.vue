@@ -6,8 +6,8 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{modalTitleOrBtn.title}}</span>
-                            <span v-if="order.orderState" class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span v-if="order.orderState" class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
+                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
                         </div>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
@@ -43,7 +43,7 @@
                                     <div class="registerRoom-item">
                                         <span class="room-icon"></span>
                                         <div class="shop-item-content">
-                                            <span class="useless-tip error" v-if="item.showTip">该房型在该时间段无可用房间</span>
+                                            <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                                             <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
                                                 <dd-option v-for="category in categoryList" :value="category.id" :label="category.name">
                                                 </dd-option>
@@ -229,6 +229,13 @@
         color: $gary-daker;
         .modal-dialog {
             width: 794px;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%) !important;
+            -ms-transform: translate(-50%, -50%) !important;
+            transform: translate(-50%, -50%) !important;
         }
         .modal-content {
             width: 794px;
@@ -236,7 +243,7 @@
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             padding: 0 0 56px 0;
-            margin-top: 42.5px;
+            margin-top: 0 !important;
         }
     }
     .roomModals-header {

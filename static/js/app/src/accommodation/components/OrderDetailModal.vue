@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content" style="padding-bottom: 149px">
+                <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">订单详情</span>
@@ -16,7 +16,7 @@
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
-                    <div class="roomModals-body" style="height: 392px;">
+                    <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
@@ -204,13 +204,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item" v-if="order.remark !== ''">
+                        <div class="content-item" v-if="order.remark && order.remark !== ''">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{order.remark}}</div>
                         </div>
-                    </div>
-                    <div class="roomModals-footer" style="height: 149px;">
-                        <div style="width: 100%;">
+                        <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
                                 <span style="margin-right: 4px">收银信息</span>
                                 <div class="info-icon">
@@ -274,6 +272,10 @@
                                 <span class="order-info-text">订单号:{{order.orderNum}}</span>
                                 <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
+                        </div>
+                    </div>
+                    <div class="roomModals-footer">
+                        <div style="width: 100%;">
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
@@ -538,7 +540,7 @@
                 margin-left: 24px;
             }
         }
-        .roomModals-footer {
+        .content-item {
             .order-info {
                 color: #999999;
                 font-size: $font-size-sm;
@@ -750,7 +752,7 @@
             },
             showCashier() {
                 this.hideModal();
-                this.$emit('showCashier', {})
+                this.$emit('showCashier', { type: 'orderDetail' })
             },
             editOrder() {
                 this.hideModal();

@@ -13,8 +13,8 @@
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee}}</span></span>
-                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee - orderPayment.refundFee}}</span></span>
+                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="content-item" v-if="appearDeposit">
-                            <p class="content-item-title"><span>{{orderPayment.deposit > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
+                            <p class="content-item-title"><span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">已付押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
                                 <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
@@ -45,8 +45,8 @@
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
                                     <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
-                                    <span style="margin-left: 24px">{{orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
-                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${orderPayment.deposit > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
+                                    <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
+                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - orderPayment.paidFee + penalty).toFixed(2)}}</span></span>
+                            <span class="footer-label">{{orderState ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
                             <span v-if="totalDeposit != 0" class="footer-label">{{(totalDeposit > 0 && type !== 'checkIn') ? '需退押金' : '需补押金'}}:<span class="order-price-num green">¥{{Math.abs(totalDeposit)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
@@ -162,7 +162,7 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - this.orderPayment.paidFee;
+                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
                     return income >= 0;
                 }
                 return false;
@@ -231,16 +231,13 @@
                 } else {
                     let operationType;
                     let penalty;
-                    /*if (this.type === 'checkIn') {
-                        operationType = 3;
-                    } else */
                     if (this.type === 'checkOut') {
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
                     const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     let subOrderIds = [];
-                    if (this.roomBusinessInfo.roomOrderInfoList) {
+                    if (this.roomBusinessInfo.roomOrderInfoList && this.type !== 'orderDetail') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
@@ -258,11 +255,11 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
-                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + Number(this.penalty)).toFixed(2);
+                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                             if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
                             }
-                            if (this.orderPayment.deposit > 0) {
+                            if (this.orderPayment.deposit > 0 && this.type !== 'checkIn') {
                                 this.showDeposit = true;
                                 this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                             }
@@ -397,7 +394,7 @@
                     return false;
                 }
                 const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
-                if (this.deposit > shouldDeposit && this.type !== 'checkIn') {
+                if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
                     modal.somethingAlert('退款押金无法大于已付押金！');
                     this.disabledBtn = false;
                     return false;

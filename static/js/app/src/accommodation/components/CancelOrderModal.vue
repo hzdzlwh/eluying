@@ -22,7 +22,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need)}}</span></span>
+                            <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need.toFixed(2))}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
                     </div>
