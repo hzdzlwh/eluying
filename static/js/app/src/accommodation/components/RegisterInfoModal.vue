@@ -229,6 +229,13 @@
         color: $gary-daker;
         .modal-dialog {
             width: 794px;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%) !important;
+            -ms-transform: translate(-50%, -50%) !important;
+            transform: translate(-50%, -50%) !important;
         }
         .modal-content {
             width: 794px;
@@ -236,7 +243,7 @@
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             padding: 0 0 56px 0;
-            margin-top: 42.5px;
+            margin-top: 0 !important;
         }
     }
     .roomModals-header {
