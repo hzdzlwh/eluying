@@ -770,7 +770,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: '', timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -876,6 +876,16 @@
                 }
                 if (!durationValid) {
                     modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
+                    return false;
+                }
+                let enterItemsValid = this.enterItems.every(enter => { return enter.id && enter.date });
+                if (!enterItemsValid) {
+                    modal.somethingAlert("请完善娱乐信息！");
+                    return false;
+                }
+                let shopGoodsItemsValid = this.shopGoodsItems.every(good => { return good.id });
+                if (!shopGoodsItemsValid) {
+                    modal.somethingAlert("请完善商超信息！");
                     return false;
                 }
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
