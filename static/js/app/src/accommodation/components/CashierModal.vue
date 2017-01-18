@@ -168,7 +168,7 @@
                 return false;
             },
             totalDeposit() {
-                return ((this.orderPayment.deposit || 0) - (this.orderPayment.refundDeposit || 0) + (this.type === 'checkIn' ? (this.deposit || 0) : 0)).toFixed(2);
+                return ((this.type === 'checkIn' ? (this.deposit || 0) : 0)).toFixed(2);
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);

@@ -704,7 +704,7 @@
                         }
                     });
                 }
-                return price;
+                return Math.abs(price.toFixed(2));
             },
             filterPayMents(arr, type1,type2) {
                 let newPayMents = [];
