@@ -168,7 +168,7 @@
                 return false;
             },
             totalDeposit() {
-                return ((this.type === 'checkIn' ? (this.deposit || 0) : 0)).toFixed(2);
+                return Number((this.deposit || 0).toFixed(2));
             },
             penalty() {
                 return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
@@ -176,7 +176,7 @@
             appearDeposit() {
                 const type = this.type;
                 const cashierType = this.business.cashierType;
-                const deposit = this.orderPayment.deposit;
+                const deposit = this.totalDeposit;
                 return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
             }
         },
@@ -259,7 +259,7 @@
                             if (payMoney != 0) {
                                 this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
                             }
-                            if (this.orderPayment.deposit > 0 && this.type !== 'checkIn') {
+                            if ((this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0)) !== 0 && this.type !== 'checkIn') {
                                 this.showDeposit = true;
                                 this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                             }

@@ -10,7 +10,7 @@
                     <div class="payWithCodeModal-body">
                         <div class="payWithCodeModal-code-container">
                             <div class="payWithCodeModal-picture-container"></div>
-                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode">
+                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode" autofocus="autofocus">
                         </div>
                         <div class="payWithCodeModal-info-container">
                             <p class="payWithCodeModal-info">应收金额：¥{{totalPrice}}</p>
@@ -165,7 +165,9 @@
                                 $('#payWithCode').modal('hide');
                                 let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('refreshView');
-                                this.$emit('showOrder', orderId);
+                                setTimeout(() => {
+                                    this.$emit('showOrder', orderId);
+                                }, 2500);
                             } else if (status === 1) {
                                 modal.somethingAlert("收款失败");
                                 this.hideModal();
@@ -186,7 +188,9 @@
                                                 $('#payWithCode').modal('hide');
                                                 let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                                 this.$emit('refreshView');
-                                                this.$emit('showOrder', orderId);
+                                                setTimeout(() => {
+                                                    this.$emit('showOrder', orderId);
+                                                }, 2500);
                                             } else if (status1 === 1) {
                                                 modal.somethingAlert("收款失败");
                                                 this.hideModal();

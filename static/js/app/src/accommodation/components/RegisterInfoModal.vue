@@ -68,7 +68,7 @@
                                             </div>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
                                                 <label class="label-text">房费</label>
-                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
+                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" @blur="setFirstDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
@@ -853,6 +853,7 @@
             submitInfo(e){
                 let valid = true;
                 let durationValid = true;
+                let roomPersonValid = true;
                 if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
                     modal.somethingAlert("请输入联系人或手机号!");
                     return false;
@@ -876,6 +877,19 @@
                 }
                 if (!durationValid) {
                     modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
+                    return false;
+                }
+                this.registerRooms.forEach(item => {
+                    if (item.idCardList.length > 0) {
+                        item.idCardList.forEach(person => {
+                            if (person.idCardNum === '' || person.name === '') {
+                                roomPersonValid = false;
+                            }
+                        });
+                    }
+                });
+                if (!roomPersonValid) {
+                    modal.somethingAlert("请完善入住人信息！");
                     return false;
                 }
                 let enterItemsValid = this.enterItems.every(enter => { return enter.id && enter.date });
@@ -1095,6 +1109,10 @@
                 });
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
+            },
+            setFirstDateFee(num, obj) {
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
+                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
             modifyRoom(item) {
