@@ -12,6 +12,8 @@ import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
 import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
+import flowChannels from './views/overview/flow/channels.vue';
+import flowRecords from './views/overview/flow/records.vue';
 
 export const routes = [
     {
@@ -37,20 +39,38 @@ export const routes = [
                 },
             },
             {
-                path: 'flow',
+                path: '/overview/flow',
                 meta: {
                     name: '流水'
                 },
+                component: childContainer,
+                redirect: '/overview/flow/channels',
+                children: [
+                    {
+                        path: '/overview/flow/channels',
+                        component: flowChannels,
+                        meta: {
+                            name: '收款方式'
+                        }
+                    },
+                    {
+                        path: '/overview/flow/records',
+                        component: flowRecords,
+                        meta: {
+                            name: '收款记录'
+                        }
+                    }
+                ]
             },
             {
-                path: 'sale',
+                path: '/overview/sale',
                 component: sale,
                 meta: {
                     name: '销售'
                 },
             },
             {
-                path: 'channel',
+                path: '/overview/channel',
                 component: channel,
                 meta: {
                     name: '渠道'
@@ -141,15 +161,14 @@ export const routes = [
     }
 ];
 
-function mapChildren(routes) {
+(function mapChildren(routes) {
     routes.map( route => {
         if (route.children) {
             route.meta.children = route.children;
             mapChildren(route.children);
         }
     });
-}
-mapChildren(routes);
+})(routes);
 
 export const router = new Router({
     mode: 'history',
