@@ -127,9 +127,23 @@
                 });
             },
             finishCheckIn() {
-                let selectedRoom = this.roomsList.some(room => { return room.selected });
-                if (!selectedRoom) {
+                let selectedRoom = this.roomsList.filter(room => { return room.selected });
+                if (selectedRoom.length <= 0) {
                     modal.somethingAlert('请选择入住的房间！');
+                    return false;
+                }
+                let roomPersonValid = true;
+                selectedRoom.forEach(item => {
+                    if (item.idCardList.length > 0) {
+                        item.idCardList.forEach(person => {
+                            if (person.idCardNum === '' || person.name === '') {
+                                roomPersonValid = false;
+                            }
+                        });
+                    }
+                });
+                if (!roomPersonValid) {
+                    modal.somethingAlert("请完善入住人信息！");
                     return false;
                 }
                 let subOrderIds = [];
