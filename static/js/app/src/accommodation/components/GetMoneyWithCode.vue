@@ -10,7 +10,7 @@
                     <div class="payWithCodeModal-body">
                         <div class="payWithCodeModal-code-container">
                             <div class="payWithCodeModal-picture-container"></div>
-                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode" autofocus="autofocus">
+                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode" autofocus>
                         </div>
                         <div class="payWithCodeModal-info-container">
                             <p class="payWithCodeModal-info">应收金额：¥{{totalPrice}}</p>
