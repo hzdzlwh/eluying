@@ -4,8 +4,11 @@
         <div class="card">
             <h5 class="card-title"><b>销售统计</b></h5>
             <div id="bar" style="width: 100%; height: 300px">
-
             </div>
+        </div>
+        <p>销售记录（{{date.startDate}}~{{date.endDate}}）</p>
+        <div>
+
         </div>
     </div>
 </template>
@@ -63,7 +66,8 @@
                         data: salesStat.items.map(i => i.date.substr(5, 5))
                     },
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        name: '金额（元）'
                     },
                     series: [{
                         type: 'bar',
