@@ -68,7 +68,7 @@
                                             </div>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
                                                 <label class="label-text">房费</label>
-                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
+                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" @blur="setFirstDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
@@ -1095,6 +1095,10 @@
                 });
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
+            },
+            setFirstDateFee(num, obj) {
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
+                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
             modifyRoom(item) {
