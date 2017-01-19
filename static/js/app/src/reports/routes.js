@@ -12,6 +12,7 @@ import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
 import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
+import retail from './views/retail.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
 
@@ -157,7 +158,8 @@ export const routes = [
         path: '/retail',
         meta: {
             name: '商超'
-        }
+        },
+        component: retail
     }
 ];
 
