@@ -74,7 +74,7 @@ export default {
          *******************************************************************************************************************/
 
         return {
-            name: this.data.IDname,
+            name: this.data.IDName,
             cardNo: this.data.IDCardNo
         }
     }
