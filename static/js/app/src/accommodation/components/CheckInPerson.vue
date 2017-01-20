@@ -130,12 +130,12 @@
                     let obj = { idCardType: 0 };
                     try{
                         ieidc.init();
-                        const { idCardNum, name } = ieidc.read(3).cardNo;
-                        if (!idCardNum || !name) {
+                        const { cardNo, name } = ieidc.read(3).cardNo;
+                        if (!cardNo || !name) {
                             modal.somethingAlert('读卡失败，请重试。');
                             return false;
                         }
-                        this.$emit('addPerson', this.personsObj.id, { idCardType: 0, idCardNum, name });
+                        this.$emit('addPerson', this.personsObj.id, { idCardType: 0, idCardNum: cardNo, name });
                     }catch(e){
                         modal.somethingAlert(e);
                     }
