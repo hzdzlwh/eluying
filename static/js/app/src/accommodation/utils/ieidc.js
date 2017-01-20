@@ -35,7 +35,6 @@ export default {
     /**
      *
      * @param timeout
-     * @param vm vue实例
      * @returns {boolean}
      */
     read(timeout) {
@@ -44,7 +43,7 @@ export default {
             return false;
         }
 
-        this.idc.ReadOneCID(timeout);
+        const cid = this.idc.ReadOneCID(timeout);
         /*******************************************************************************************************************
          读卡后数据获取（通过控件的idcard对象）
          idName				姓名，替换了生僻字的（如果有的话）
