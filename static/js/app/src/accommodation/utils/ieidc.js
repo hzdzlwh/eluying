@@ -72,9 +72,9 @@ export default {
          idVerify				MD5校验码，由用户指定数据组合生成的MD5编码，用于在服务端校验上传的数据是否完整，防止被篡改
          SAMID				阅读器的设备ID
          *******************************************************************************************************************/
-
+        console.log(this.data)
         return {
-            name: this.data.IDName,
+            name: this.data.IDname,
             cardNo: this.data.IDCardNo
         }
     }
