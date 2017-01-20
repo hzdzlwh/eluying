@@ -1511,9 +1511,9 @@ dd-common-css@0.2.0:
   version "0.2.0"
   resolved "http://registry.npm.taobao.org/dd-common-css/download/dd-common-css-0.2.0.tgz#af9ab803375c36742182b9f5d57ce33391b689a9"
 
-dd-vue-component@^0.4.0:
-  version "0.4.0"
-  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.4.0.tgz#b812c0042f98d67f80a40ef495e53055b48e9e65"
+dd-vue-component@0.4.1:
+  version "0.4.1"
+  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.4.1.tgz#1a6579dcb7bad8b4703a514009de988f21e0f24a"
   dependencies:
     dd-common-css "0.1.0"
     vue "^2.0.1"

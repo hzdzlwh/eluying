@@ -8,7 +8,7 @@
         </div>
         <p>销售记录（{{date.startDate}}~{{date.endDate}}）</p>
         <div>
-
+            <dd-table ></dd-table>
         </div>
     </div>
 </template>
@@ -19,6 +19,7 @@
     import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
+    import { DdTable } from 'dd-vue-component';
     export default{
         data() {
             return{
@@ -35,6 +36,9 @@
             date() {
                 this.getSaleStatistics();
             }
+        },
+        components: {
+            DdTable
         },
         methods: {
             getSaleStatistics() {
