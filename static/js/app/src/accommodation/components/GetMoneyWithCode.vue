@@ -13,8 +13,7 @@
                             <input type="text"
                                    class="payWithCodeModal-codeNum"
                                    placeholder="付款码使用条码枪录入，也可手动输入。"
-                                   v-model="authCode"
-                                   v-focused="inputFocus">
+                                   v-model="authCode">
                         </div>
                         <div class="payWithCodeModal-info-container">
                             <p class="payWithCodeModal-info">应收金额：¥{{totalPrice}}</p>
@@ -217,24 +216,16 @@
                     });
             }
         },
-        directives: {
-            focused: {
-                componentUpdated: function (el, {value}) {
-                    if (value) {
-                        setTimeout(function(){
-                            el.focus();
-                        }, 1000);
-                    }
-                }
-            }
+        mounted() {
+            $('#payWithCode').on('shown.bs.modal', function(e) {
+                $('.payWithCodeModal-codeNum').focus();
+            });
         },
         watch:{
             show(val){
                 if (val) {
                     $('#payWithCode').modal({backdrop: 'static'});
-                    this.inputFocus = true;
                 } else {
-                    this.inputFocus = false;
                     this.$emit('hide');
                     this.authCode = '';
                     $('#payWithCode').modal('hide');
