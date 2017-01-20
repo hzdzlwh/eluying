@@ -13,7 +13,7 @@
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>¥{{orderPayment.paidFee - orderPayment.refundFee}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>¥{{(orderPayment.paidFee - orderPayment.refundFee).toFixed(2)}}</span></span>
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container">
@@ -388,7 +388,7 @@
                 }
                 const receiveMoney = this.payments.reduce((a,b) => { return a + Number(b.fee) }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
-                if (receiveMoney.toFixed(2) !== shouldPayMoney) {
+                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney)) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
                     this.disabledBtn = false;
                     return false;

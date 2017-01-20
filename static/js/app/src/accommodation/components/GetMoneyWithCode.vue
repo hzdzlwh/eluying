@@ -10,7 +10,11 @@
                     <div class="payWithCodeModal-body">
                         <div class="payWithCodeModal-code-container">
                             <div class="payWithCodeModal-picture-container"></div>
-                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode" autofocus>
+                            <input type="text"
+                                   class="payWithCodeModal-codeNum"
+                                   placeholder="付款码使用条码枪录入，也可手动输入。"
+                                   v-model="authCode"
+                                   v-focused="inputFocus">
                         </div>
                         <div class="payWithCodeModal-info-container">
                             <p class="payWithCodeModal-info">应收金额：¥{{totalPrice}}</p>
@@ -36,6 +40,13 @@
         color: $gary-daker;
         .modal-dialog {
             width: 400px;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%) !important;
+            -ms-transform: translate(-50%, -50%) !important;
+            transform: translate(-50%, -50%) !important;
         }
         .modal-content {
             width: 400px;
@@ -43,7 +54,7 @@
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             padding: 0;
-            margin-top: 42.5px;
+            margin-top: 0 !important;
         }
         .payWithCodeModal-header {
             width: 100%;
@@ -130,7 +141,8 @@
         },
         data(){
             return{
-                authCode: ''
+                authCode: '',
+                inputFocus: false
             }
         },
         computed:{
@@ -205,11 +217,24 @@
                     });
             }
         },
+        directives: {
+            focused: {
+                componentUpdated: function (el, {value}) {
+                    if (value) {
+                        setTimeout(function(){
+                            el.focus();
+                        }, 1000);
+                    }
+                }
+            }
+        },
         watch:{
             show(val){
                 if (val) {
                     $('#payWithCode').modal({backdrop: 'static'});
+                    this.inputFocus = true;
                 } else {
+                    this.inputFocus = false;
                     this.$emit('hide');
                     this.authCode = '';
                     $('#payWithCode').modal('hide');
