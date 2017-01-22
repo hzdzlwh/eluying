@@ -128,12 +128,12 @@
                     this.$emit('addPerson', this.personsObj.id, {idCardNum:'', idCardType: 0, name: ''});
                 } else {
                     let obj = { idCardType: 0 };
-                    try{
+                    try {
                         ieidc.init();
                         const { idCardNum, name } = ieidc.read(3);
 
                         this.$emit('addPerson', this.personsObj.id, { idCardType: 0, idCardNum, name });
-                    }catch(e){
+                    } catch(e) {
                         modal.somethingAlert(e);
                     }
                 }
