@@ -5,6 +5,7 @@ var webpack = require('webpack'),
     path = require('path');
     // HappyPack = require('happypack');
 var webpackConf =  {
+    devtool: 'inline-source-map',
     plugins: [
         new webpack.ProvidePlugin({
             '$': 'jquery',
@@ -35,6 +36,7 @@ var webpackConf =  {
         'tips/expired': './static/js/app/src/tips/expired.js',
         'ordersManage/orders': './static/js/app/src/ordersManage/orderForms/orders.js',
         'accommodation/calender': './static/js/app/src/accommodation/calender/calender.js',
+        'accommodation': './static/js/app/src/accommodation/main.js',
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
         'restaurant/table': './static/js/app/src/business/restaurant/table',

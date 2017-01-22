@@ -48,7 +48,6 @@ function revHash() {
         .pipe(rev.manifest())
         .pipe(gulp.dest('rev/css'));
     gulp.src('static/js/app/dist/**/*.js')
-        .pipe(uglify())
         .pipe(rev())
         .pipe(gulp.dest('build/static/js/app/dist'))
         .pipe(rev.manifest())
@@ -104,17 +103,25 @@ gulp.task('styles', function () {
 });
 
 gulp.task('webpack-prod', function () {
-    var webpackProdConf = Object.assign({},
-        webpackConf,
-        webpackConf.plugins.push(
-            new webpack.DefinePlugin({
-                'process.env': {
-                    ENV: JSON.stringify('production'),
-                    NODE_ENV: JSON.stringify('production')
-                }
-            })));
+    webpackConf.plugins.push(
+        new webpack.DefinePlugin({
+            'process.env': {
+                ENV: JSON.stringify('production'),
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            beautify: false,
+            mangle: { screw_ie8: true },
+            compress: {
+                screw_ie8: true,
+                warnings: false
+            },
+            comments: false
+        })
+    );
     return gulp.src('static/js/app/src/entry.js')
-        .pipe(gulpWebpack(webpackProdConf, null, function (err, stats) {
+        .pipe(gulpWebpack(webpackConf, null, function (err, stats) {
             if (err) throw new gutil.PluginError('webpack', err);
             gutil.log('[webpack]', stats.toString({}));
         }, webpack))
@@ -123,7 +130,7 @@ gulp.task('webpack-prod', function () {
 
 gulp.task('webpack-dev', function () {
     var webpackDevConf = Object.assign({},
-        webpackConf, {devtool: 'inline-source-map'},
+        webpackConf, {watch: true},
         webpackConf.plugins.push(
             new webpack.DefinePlugin({
                 'process.env': {
@@ -143,10 +150,11 @@ gulp.task('webpack-dev', function () {
 
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
-    gulp.watch('static/tpl/*.html', ['file-include']);
+    //gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
+    //gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']);
+    //gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
+    gulp.watch('./static/tpl/*.html', ['file-include']);
 });
 
 gulp.task('default', function () {
