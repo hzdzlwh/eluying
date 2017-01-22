@@ -237,7 +237,9 @@
                     }
                     const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     let subOrderIds = [];
-                    if (this.roomBusinessInfo.roomOrderInfoList && this.type !== 'orderDetail') {
+                    if (this.roomBusinessInfo.roomOrderInfoList
+                            && this.type !== 'orderDetail'
+                            && this.type !== 'cancel') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
