@@ -81,7 +81,7 @@
 #login2-body {
   min-width: 1200px;
   position: relative;
-  .login2-top{
+  .login2-top {
     width: 100%;
     min-width: 1200px;
     height: 70px;
@@ -90,7 +90,7 @@
     left: 0;
     top: 0;
     z-index: 100;
-    .logo{
+    .logo {
       line-height: 70px;
       position: absolute;
       width: auto;
@@ -98,18 +98,18 @@
       left: 30px;
       top: 0;
     }
-    .navbar{
+    .navbar {
       position: absolute;
       right: 0;
       width: auto;
       height: 100%;
       line-height: 70px;
-      font-size:16px;
-      .item{
+      font-size: 16px;
+      .item {
         display: inline-block;
         vertical-align: middle;
       }
-      .navitem{
+      .navitem {
         margin-right: 40px;
         cursor: pointer;
         a {
@@ -123,27 +123,27 @@
           }
         }
       }
-      .sbtn{
+      .sbtn {
         @include btn_small();
       }
-      .sbtn.reg{
+      .sbtn.reg {
         @include btn2_normal();
         margin-right: 30px;
       }
-      .sbtn.reg:hover{
+      .sbtn.reg:hover {
         @include btn2_hover();
       }
-      .sbtn.reg:active{
+      .sbtn.reg:active {
         @include btn2_click();
       }
-      .sbtn.log{
+      .sbtn.log {
         @include btn1_normal();
         margin-right: 20px;
       }
-      .sbtn.log:hover{
+      .sbtn.log:hover {
         @include btn1_hover();
       }
-      .sbtn.log:active{
+      .sbtn.log:active {
         @include btn1_click();
       }
     }
@@ -165,7 +165,7 @@
       right: 0;
       bottom: 0;
       padding: 0;
-      .title{
+      .title {
         width: 100%;
         position: absolute;
         top: 230px;
@@ -175,7 +175,7 @@
         color: white;
         text-shadow: 1px 1px 9px rgba(31, 75, 106, 0.79);
       }
-      .titletwo{
+      .titletwo {
         width: 100%;
         position: absolute;
         top: 355px;
@@ -192,110 +192,110 @@
       top: 456px;
       left: 0;
       text-align: center;
-      .sbtn{
+      .sbtn {
         @include btn_big();
         display: inline-block;
         margin: 0 30px;
       }
-      .sbtn.reg{
+      .sbtn.reg {
         @include btn4_normal();
       }
-      .sbtn.reg:hover{
+      .sbtn.reg:hover {
         @include btn4_hover();
       }
-      .sbtn.reg:active{
+      .sbtn.reg:active {
         @include btn4_click();
       }
-      .sbtn.video{
+      .sbtn.video {
         @include btn3_normal();
       }
-      .sbtn.video:hover{
+      .sbtn.video:hover {
         @include btn3_hover();
       }
-      .sbtn.video:active{
+      .sbtn.video:active {
         @include btn3_click();
       }
     }
   }
-  .login2-chart{
+  .login2-chart {
     width: 100%;
     height: 735px;
     line-height: 735px;
     text-align: center;
     position: relative;
-    img{
+    img {
       vertical-align: middle;
     }
-    .wrapper{
+    .wrapper {
       width: 100%;
       height: 100%;
       position: absolute;
       left: 0;
       top: 0;
-      .shining_points{
+      .shining_points {
         width: 988px;
         height: 100%;
         margin: auto;
         position: relative;
-        .item{
+        .item {
           position: absolute;
-          .title{
+          .title {
             width: 100%;
             font-size: 20px;
             color: #333743;
             line-height: 40px;
           }
-          .text{
+          .text {
             width: 100%;
             font-size: 16px;
             color: #9297a3;
             line-height: 28px;
           }
         }
-        .item.left{
+        .item.left {
           text-align: right;
           left: 0;
         }
-        .item.right{
+        .item.right {
           text-align: left;
           right: 0;
         }
-        .item:first-child{
+        .item:first-child {
           top: 120px;
           width: 280px;
         }
-        .item:nth-child(2){
+        .item:nth-child(2) {
           top: 120px;
           width: 280px;
         }
-        .item:nth-child(3){
+        .item:nth-child(3) {
           top: 320px;
           width: 163px;
         }
-        .item:nth-child(4){
+        .item:nth-child(4) {
           top: 320px;
           right: -100px;
           width: 260px;
         }
-        .item:nth-child(5){
+        .item:nth-child(5) {
           top: 525px;
           width: 288px;
         }
-        .item:nth-child(6){
+        .item:nth-child(6) {
           top: 525px;
           width: 277px;
         }
       }
     }
   }
-  .login2-sell{
+  .login2-sell {
     width: 100%;
     height: 985px;
     overflow: hidden;
     background: url("//static.dingdandao.com//login2/background_2.jpg");
     background-size: 100% 100%;
     color: white;
-    .stitle{
+    .stitle {
       margin-top: 90px;
       font-family: PingFangSC-Thin;
       font-size: 48px;
@@ -303,7 +303,7 @@
       letter-spacing: 0;
       text-align: center;
     }
-    .desc{
+    .desc {
       margin-top: 1px;
       height: 24px;
       font-family: PingFangSC-Ultralight;
@@ -312,18 +312,18 @@
       letter-spacing: 0;
       text-align: center;
     }
-    .shr{
+    .shr {
       width: 34px;
       height: 4px;
       background: #fff;
       margin: auto;
       margin-top: 20px;
     }
-    .feat-sell{
+    .feat-sell {
       display: inline-block;
       position: relative;
       left: 34%;
-      .text{
+      .text {
         display: inline-block;
         font-family: MicrosoftYaHei;
         font-size: 30px;
@@ -332,11 +332,11 @@
         text-align: left;
       }
     }
-    .feat-manage{
-      display:inline-block;
+    .feat-manage {
+      display: inline-block;
       position: relative;
       left: 42%;
-      .text{
+      .text {
         display: inline-block;
         font-family: MicrosoftYaHei;
         font-size: 30px;
@@ -345,21 +345,21 @@
         text-align: left;
       }
     }
-    .swrapper-selected{
+    .swrapper-selected {
       width: 1200px;
       height: 660px;
       position: relative;
       margin: auto;
       padding-top: 50px;
       text-align: center;
-      .sellphone{
+      .sellphone {
         position: absolute;
         left: 18%;
       }
-      .item{
+      .item {
         position: absolute;
         width: 300px;
-        .hr{
+        .hr {
           position: absolute;
           border: 1px dashed #fff;
           width: 99px;
@@ -367,19 +367,19 @@
           top: 33px;
           left: -225px;
         }
-        img{
+        img {
           position: absolute;
           top: 20px;
           left: -100px;
         }
-        .title{
+        .title {
           width: 100%;
           font-size: 20px;
           color: #fff;
           line-height: 48px;
           font-family: MicrosoftYaHei;
         }
-        .text{
+        .text {
           width: 100%;
           font-size: 14px;
           color: #fff;
@@ -389,43 +389,43 @@
           text-align: left;
         }
       }
-      .item.right{
+      .item.right {
         text-align: left;
         right: 160px;
-        .spriteImg{
+        .spriteImg {
           position: absolute;
           left: -80px;
           top: 28px;
         }
       }
-      .item:nth-child(2){
+      .item:nth-child(2) {
         top: 65px;
       }
-      .item:nth-child(3){
+      .item:nth-child(3) {
         top: 195px;
       }
-      .item:nth-child(4){
+      .item:nth-child(4) {
         top: 325px;
       }
-      .item:nth-child(5){
+      .item:nth-child(5) {
         top: 455px;
       }
     }
-    .swrapper{
+    .swrapper {
       width: 1200px;
       height: 660px;
       position: relative;
       margin: auto;
       padding-top: 50px;
       text-align: center;
-      .sellphone{
+      .sellphone {
         position: absolute;
         right: 18%;
       }
-      .item{
+      .item {
         position: absolute;
         width: 300px;
-        .hr{
+        .hr {
           position: absolute;
           border: 1px dashed #fff;
           width: 99px;
@@ -433,19 +433,19 @@
           top: 33px;
           right: -225px;
         }
-        img{
+        img {
           position: absolute;
           top: 20px;
           right: -100px;
         }
-        .title{
+        .title {
           width: 100%;
           font-size: 20px;
           color: #fff;
           line-height: 48px;
           font-family: MicrosoftYaHei;
         }
-        .text{
+        .text {
           width: 100%;
           font-size: 14px;
           color: #fff;
@@ -455,25 +455,25 @@
           text-align: right;
         }
       }
-      .item.left{
+      .item.left {
         text-align: right;
         left: 160px;
-        .spriteImg{
+        .spriteImg {
           position: absolute;
           left: -80px;
           top: 28px;
         }
       }
-      .item:nth-child(2){
+      .item:nth-child(2) {
         top: 65px;
       }
-      .item:nth-child(3){
+      .item:nth-child(3) {
         top: 195px;
       }
-      .item:nth-child(4){
+      .item:nth-child(4) {
         top: 325px;
       }
-      .item:nth-child(5){
+      .item:nth-child(5) {
         top: 455px;
       }
     }
@@ -482,113 +482,74 @@
     width: 100%;
     height: 2100px;
     overflow: hidden;
-      .stitle {
-        margin-top: 90px;
-        font-size: 36px;
-        height: 36px;
-        text-align: center;
+    .stitle {
+      margin-top: 90px;
+      font-size: 36px;
+      height: 36px;
+      text-align: center;
+    }
+    .desc {
+      margin-top: 20px;
+      font-size: 24px;
+      height: 24px;
+      text-align: center;
+      opacity: 0.8;
+    }
+    .hr {
+      width: 34px;
+      height: 5px;
+      background: $color1;
+      margin: auto;
+      margin-top: 20px;
+    }
+    .featureone {
+      background-image: url("../image/login-feature1.png");
+      height: 504px;
+      padding-top: 70px;
+      width: 1200px;
+      margin: auto;
+      .feature-directorone {
+        width: 204px;
+        height: 60px;
+        background-image: url("../image/feature-director.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+        left: 40%;
+        margin-bottom: 60px;
+        .text {
+          color: $color1;
+          height: 25px;
+          text-align: center;
+          line-height: 60px;
+          font-size: 32px;
+        }
       }
-      .desc {
-        margin-top: 20px;
-        font-size: 24px;
-        height: 24px;
-        text-align: center;
-        opacity: 0.8;
+      .feature-text {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+        right: 50%;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #666;
+        text-align: right;
+        .img {
+          margin-top: 5px;
+        }
       }
-      .hr {
-        width: 34px;
-        height: 5px;
-        background: $color1;
-        margin: auto;
-        margin-top: 20px;
-      }
-      .featureone {
-        background-image: url("../image/login-feature1.png");
-        height: 504px;
-        padding-top: 70px;
+    }
+    .featuretwo {
+      width: 100%;
+      background-color: #f4f8fb;
+      .featuretwos {
         width: 1200px;
         margin: auto;
-        .feature-directorone {
-          width: 204px;
-          height: 60px;
-          background-image: url("../image/feature-director.png");
-          background-repeat: no-repeat;
-          background-size: cover;
-          overflow: hidden;
-          position: relative;
-          left: 40%;
-          margin-bottom: 60px;
-          .text {
-            color: $color1;
-            height: 25px;
-            text-align: center;
-            line-height: 60px;
-            font-size: 32px;
-          }
-        }
-        .feature-text {
-          margin-top: 30px;
-          position: relative;
-          overflow: hidden;
-          right: 50%;
-          font-family: MicrosoftYaHei;
-          font-size: 30px;
-          color: #666;
-          text-align: right;
-          .img {
-            margin-top: 5px;
-          }
-        }
-      }
-      .featuretwo {
-        width: 100%;
-        background-color: #f4f8fb;
-        .featuretwos {
-          width: 1200px;
-          margin: auto;
-          background-image: url("../image/login-feature2.png");
-          height: 700px;
-          padding-top: 140px;
-          .feature-directortwo {
-            width: 204px;
-            height: 60px;
-            background-image: url("../image/feature-director.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-            overflow: hidden;
-            position: relative;
-            left: 50%;
-            margin-bottom: 60px;
-            .text {
-              color: $color1;
-              height: 25px;
-              text-align: center;
-              line-height: 60px;
-              font-size: 32px;
-            }
-          }
-          .feature-text {
-            margin-top: 30px;
-            position: relative;
-            overflow: hidden;
-            left: 50%;
-            font-family: MicrosoftYaHei;
-            font-size: 30px;
-            color: #666;
-            text-align: left;
-            .img {
-              margin-top: 5px;
-            }
-          }
-        }
-      }
-      .featurethree {
-        background-image: url("../image/login-feature3.png");
-        height: 605px;
+        background-image: url("../image/login-feature2.png");
+        height: 700px;
         padding-top: 140px;
-        width: 1200px;
-        margin: auto;
-        .feature-directorthree {
+        .feature-directortwo {
           width: 204px;
           height: 60px;
           background-image: url("../image/feature-director.png");
@@ -596,7 +557,7 @@
           background-size: cover;
           overflow: hidden;
           position: relative;
-          left: 40%;
+          left: 50%;
           margin-bottom: 60px;
           .text {
             color: $color1;
@@ -610,65 +571,104 @@
           margin-top: 30px;
           position: relative;
           overflow: hidden;
-          right: 50%;
+          left: 50%;
           font-family: MicrosoftYaHei;
           font-size: 30px;
           color: #666;
-          text-align: right;
+          text-align: left;
           .img {
             margin-top: 5px;
           }
         }
       }
+    }
+    .featurethree {
+      background-image: url("../image/login-feature3.png");
+      height: 605px;
+      padding-top: 140px;
+      width: 1200px;
+      margin: auto;
+      .feature-directorthree {
+        width: 204px;
+        height: 60px;
+        background-image: url("../image/feature-director.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+        left: 40%;
+        margin-bottom: 60px;
+        .text {
+          color: $color1;
+          height: 25px;
+          text-align: center;
+          line-height: 60px;
+          font-size: 32px;
+        }
+      }
+      .feature-text {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+        right: 50%;
+        font-family: MicrosoftYaHei;
+        font-size: 30px;
+        color: #666;
+        text-align: right;
+        .img {
+          margin-top: 5px;
+        }
+      }
+    }
   }
-  .login2-partners{
+  .login2-partners {
     width: 100%;
     height: 625px;
     text-align: center;
-    .stitle{
+    .stitle {
       margin-top: 90px;
       font-size: 36px;
       height: 36px;
       color: #444959;
       text-align: center;
     }
-    .desc{
+    .desc {
       margin-top: 20px;
       font-size: 24px;
       height: 24px;
       color: #9297a3;
       text-align: center;
     }
-    .hr{
+    .hr {
       width: 34px;
       height: 4px;
       background: $color1;
       margin: auto;
       margin-top: 20px;
     }
-    .partner{
+    .partner {
       position: relative;
       margin: auto;
       padding-top: 50px;
     }
   }
-  .login2-about{
+  .login2-about {
     margin-bottom: 100px;
-    .stitle{
+    .stitle {
       margin-top: 90px;
       font-size: 36px;
       height: 36px;
       color: #444959;
       text-align: center;
     }
-    .desc{
+    .desc {
       margin-top: 20px;
       font-size: 24px;
       height: 24px;
       color: #9297a3;
       text-align: center;
     }
-    .hr{
+    .hr {
       width: 34px;
       height: 4px;
       background: $color1;
@@ -676,17 +676,17 @@
       margin-top: 20px;
       margin-bottom: 50px;
     }
-    .text{
+    .text {
       width: 39%;
       margin: auto;
-      font-family:MicrosoftYaHei;
-      font-size:14px;
-      color:#999;
-      letter-spacing:0;
-      text-align:center;
+      font-family: MicrosoftYaHei;
+      font-size: 14px;
+      color: #999;
+      letter-spacing: 0;
+      text-align: center;
     }
   }
-  .login2-useit{
+  .login2-useit {
     width: 100%;
     height: 375px;
     overflow: hidden;
@@ -694,55 +694,55 @@
     //background-size: 100% 100%;
     position: relative;
     color: white;
-    img{
+    img {
       width: 100%;
       min-width: 1920px;
       position: absolute;
       top: 0;
       z-index: -1;
     }
-    .stitle{
+    .stitle {
       margin-top: 90px;
       font-size: 36px;
       height: 36px;
       text-align: center;
     }
-    .desc{
+    .desc {
       margin-top: 20px;
       font-size: 24px;
       height: 24px;
       text-align: center;
       opacity: 0.8;
     }
-    .btns{
+    .btns {
       width: 100%;
       margin-top: 40px;
       text-align: center;
-      .sbtn{
+      .sbtn {
         @include btn_big();
         display: inline-block;
         margin: 0 32px;
         @include btn3_normal();
       }
-      .sbtn:hover{
+      .sbtn:hover {
         @include btn3_hover();
       }
-      .sbtn:active{
+      .sbtn:active {
         @include btn3_click();
       }
     }
   }
-  .login2-contact{
+  .login2-contact {
     width: 100%;
     height: 280px;
     background: #2a3b47;
-    .wrapper{
+    .wrapper {
       width: 1000px;
       height: 100%;
       margin: auto;
       position: relative;
       color: white;
-      .copyright{
+      .copyright {
         width: 100%;
         position: absolute;
         bottom: 20px;
@@ -751,12 +751,12 @@
         text-align: center;
         font-size: 12px;
       }
-      .erweima{
+      .erweima {
         position: absolute;
         top: 50px;
         left: 200px;
       }
-      .erweima-text{
+      .erweima-text {
         position: absolute;
         text-align: right;
         left: 200px;
@@ -765,35 +765,35 @@
         font-size: 18px;
         opacity: 0.87;
       }
-      .phone{
+      .phone {
         position: absolute;
         left: 390px;
         top: 78px;
         font-size: 28px;
         opacity: 0.87;
       }
-      .phone-text{
+      .phone-text {
         position: absolute;
         left: 390px;
         top: 50px;
         font-size: 18px;
         opacity: 0.87;
       }
-      .email{
+      .email {
         position: absolute;
         left: 390px;
         top: 179px;
         font-size: 28px;
         opacity: 0.87;
       }
-      .email-text{
+      .email-text {
         position: absolute;
         left: 390px;
         top: 150px;
         font-size: 18px;
         opacity: 0.87;
       }
-      .vr{
+      .vr {
         width: 1px;
         height: 162px;
         background: #8c959b;
@@ -803,6 +803,7 @@
       }
     }
   }
+}
 #loginForgetPwd {
   .modal-dialog {
     width: 777px;
@@ -1328,7 +1329,7 @@
     border-bottom: 1px solid #a0a0a0;
   }
 }
-}
+
 
 
 
