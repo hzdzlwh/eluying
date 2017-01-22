@@ -288,7 +288,6 @@
     @@include('./homeFooter.html')
     <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>
-        $('.feat-value').hide();
         $('#tab-price').hover(function() {
             if ($(this).hasClass('feat-tab-selected')) {
                 return
@@ -298,8 +297,7 @@
             $('.feat-tab-bg').removeClass('right').addClass('left');
             $('.feat-value').fadeOut(150, function() {
                 $('.feat-price').fadeIn(150);
-            });
-        });
+            });});
         $('#tab-value').hover(function() {
             if ($(this).hasClass('feat-tab-selected')) {
                 return

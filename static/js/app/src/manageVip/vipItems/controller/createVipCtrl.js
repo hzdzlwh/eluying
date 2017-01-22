@@ -2,7 +2,7 @@
  * Created by lingchenxuan on 16/6/5.
  */
 require('angular');
-import { dsy } from "dsy";
+import { dsy } from 'dsy';
 var createVipService = require('../services/createVipService');
 
 var createVipCtrl = function(app) {
