@@ -8,7 +8,7 @@
             <table class="calendar-header-table">
                 <tbody>
                 <tr>
-                    <th class="calendar-header-item" v-for="d in dateRange">
+                    <th class="calendar-header-item" v-for="d in dateRange" :key="d.date">
                         <div class="calendar-header-date"
                              :date="d.date"
                              :class="{'today':d.isToday, 'weekend': d.weekday == '周五' || d.weekday == '周六'}"
@@ -54,7 +54,7 @@
                     <tbody>
                         <template v-for="room in finalRoomStatus">
                             <tr class="calendar-status-row" v-if="room.selected && !room.folded">
-                                <td class="calendar-status" v-for="(status, index) in room.st" :room="room.i" :date="status.dateStr">
+                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr">
                                     <div
                                         v-if="status.s === -1"
                                         class="calendar-status-inner"
@@ -100,7 +100,7 @@
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
                         <div class="glyph-detail-name">
-                            <div>{{g.customerName || '未填写'}} ({{g.phone}})</div>
+                            <div>{{g.customerName}} {{g.phone}}</div>
                             <div class="eluyun_book2-small_outer spriteImg" v-if="g.roomState === 0">
                                 <div class="eluyun_book2-small"></div>
                             </div>
@@ -115,12 +115,12 @@
                             <div class="start">{{g.checkInDateShort}}<span class="glyph-label">&nbsp;入住</span></div>
                             <div class="end">{{g.checkOutDateShort}}<span class="glyph-label">&nbsp;离店</span></div>
                             <div class="glyph-label">共<span>{{g.days}}</span>晚</div>
-                            <div class="glyph-label">{{g.channelName}}</div>
                         </div>
+                        <div class="glyph-label">{{g.channelName}}</div>
                         <div class="glyph-detail-price">
-                            <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{g.amountPay}}</span></div>
-                            <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{-g.needPay}}</span></div>
-                            <div v-if="g.needPay >= 0"><span class="glyph-label">客户需补：</span><span class="num">¥ {{g.needPay}}</span></div>
+                            <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{g.amountPay.toFixed(2)}}</span></div>
+                            <div v-if="g.needPay < 0"><span class="glyph-label">商家需退：</span><span class="num">¥ {{(-g.needPay).toFixed(2)}}</span></div>
+                            <div v-if="g.needPay >= 0"><span class="glyph-label">客户需补：</span><span class="num">¥ {{g.needPay.toFixed(2)}}</span></div>
                         </div>
                         <div class="glyph-detail-remarks" v-if="g.remark"><span class="glyph-label">备注：</span>{{g.remark}}</div>
                     </div>
