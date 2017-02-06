@@ -1,27 +1,29 @@
 <template>
     <div>
-        <p>订单金额拆分到每日订单，统计每日产生的消费金额，</p>
-        <p>包括已预订、进行中、已结束、已取消的订单</p>
+        <div style="margin-bottom: 20px">
+            <p><i>订单金额拆分到每日订单，统计每日产生的消费金额，</i></p>
+            <p><i>包括已预订、进行中、已结束、已取消的订单</i></p>
+        </div>
         <div class="card" style="display: flex;justify-content: space-around;margin-bottom: 20px">
             <div>
-                <p>总消费金额</p>
-                <h4><b>¥{{allTotalAmount}}</b></h4>
+                <p><i><small>总消费金额</small></i></p>
+                <h4><b>¥ {{allTotalAmount}}</b></h4>
             </div>
             <div>
-                <p>住宿</p>
-                <h4>¥{{roomTotalAmount}}</h4>
+                <p><i><small>住宿</small></i></p>
+                <h4>¥ {{roomTotalAmount}}</h4>
             </div>
             <div>
-                <p>餐饮</p>
-                <h4>¥{{caterTotalAmount}}</h4>
+                <p><i><small>餐饮</small></i></p>
+                <h4>¥ {{caterTotalAmount}}</h4>
             </div>
             <div>
-                <p>娱乐</p>
-                <h4>¥{{playTotalAmount}}</h4>
+                <p><i><small>娱乐</small></i></p>
+                <h4>¥ {{playTotalAmount}}</h4>
             </div>
             <div>
-                <p>商超</p>
-                <h4>¥{{goodsTotalAmount}}</h4>
+                <p><i><small>商超</small></i></p>
+                <h4>¥ {{goodsTotalAmount}}</h4>
             </div>
         </div>
         <div class="card">
