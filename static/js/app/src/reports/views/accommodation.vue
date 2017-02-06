@@ -43,8 +43,8 @@
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
             <p>房间消费明细
                 <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
-                <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
             </p>
+            <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
         </div>
         <div>
             <dd-Table :columns="columns" :data-source="dataSource" :bordered="true" size="small"></dd-Table>
