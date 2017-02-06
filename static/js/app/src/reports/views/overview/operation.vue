@@ -119,7 +119,7 @@
                         filterMode: 'filter'
                     },],
                     legend: {
-                        bottom: 0,
+                        top: 0,
                         data:['总消费金额', '住宿','餐饮','娱乐','商超']
                     },
                     tooltip: {
@@ -132,7 +132,20 @@
                         data: operationStat.roomStat.items.map(i => i.date.substr(5, 5))
                     },
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        splitArea: {
+                            show: true
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        name: '金额（元）'
                     },
                     series:[
                         {

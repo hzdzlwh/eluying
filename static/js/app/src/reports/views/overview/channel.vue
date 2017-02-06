@@ -70,7 +70,7 @@
                         filterMode: 'filter'
                     },],
                     legend: {
-                        bottom: 0,
+                        top: 0,
                         data: channelsStatByDate.map(i => i.name)
                     },
                     tooltip: {
@@ -80,10 +80,29 @@
                     xAxis: {
                         boundaryGap: false,
                         type: 'category',
-                        data: channelsStatByDate[0].channelsStatByDate.map(i => i.date.substr(5, 5))
+                        data: channelsStatByDate[0].channelsStatByDate.map(i => i.date.substr(5, 5)),
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        }
                     },
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        splitArea: {
+                            show: true
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        name: '金额（元）'
                     },
                     series:
                         channelsStatByDate.map(i => ({
