@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>订单金额拆分到每日订单，统计每日产生的消费金额</p>
+        <p style="margin-bottom: 22px">订单金额拆分到每日订单，统计每日产生的消费金额</p>
         <div style="display: flex">
             <div class="card" style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
@@ -27,7 +27,8 @@
                 <div id="line" style="width: 100%;height:352px"></div>
             </div>
         </div>
-        <p>房间消费明细<small><i>({{date.startDate}}~{{date.endDate}})</i></small></p>
+        <p style="margin: 20px 0 10px">房间消费明细<small><i>({{date.startDate}}~{{date.endDate}})</i></small></p>
+
     </div>
 </template>
 <style>

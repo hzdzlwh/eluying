@@ -1,7 +1,9 @@
 <template>
     <div>
-        <p>订单金额拆分到每日订单，统计每日产生的消费金额，</p>
-        <p>包括已预订、进行中、已结束、已取消的订单</p>
+        <div style="margin-bottom: 20px">
+            <p>订单金额拆分到每日订单，统计每日产生的消费金额，</p>
+            <p>包括已预订、进行中、已结束、已取消的订单</p>
+        </div>
         <div class="card" style="display: flex;justify-content: space-around;margin-bottom: 20px">
             <div>
                 <p>总消费金额</p>

@@ -14,7 +14,11 @@
     .reports-container {
         padding-top: 89px;
         padding-left: 244px;
+        padding-bottom: 50px;
         position: relative;
+        .text-right {
+            text-align: right;
+        }
     }
     .date-select-container {
         position: absolute;
