@@ -49,6 +49,9 @@
         color: #999;
         font-style: inherit;
     }
+    .dd-dropdown-menu {
+        z-index: 1;
+    }
 </style>
 <script>
     import LeftMenu from './components/LeftMenu.vue';

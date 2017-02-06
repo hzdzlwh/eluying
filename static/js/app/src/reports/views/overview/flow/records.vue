@@ -1,18 +1,22 @@
 <template>
     <div>
-        <p style="margin: 20px 0 10px">收款记录（{{date.startDate}}~{{date.endDate}}）</p>
+        <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
+            <p>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></p>
+            <dd-dropdown text="导出明细" trigger="click">
+                <dd-dropdown-item><span><a :href="exportUrl(1)" download>导出PDF</a></span></dd-dropdown-item>
+                <dd-dropdown-item><span><a :href="exportUrl(0)" download>导出Excel</a></span></dd-dropdown-item>
+            </dd-dropdown>
+        </div>
         <dd-Table :columns="columns" :data-source="dataSource" :bordered="true"></dd-Table>
         <div style="display: flex;justify-content: space-between;margin-top: 20px">
-            <span>共计{{num}}笔收款记录 收款金额¥{{totalPrice}}</span>
+            <span>共计{{num}}笔收款记录 收款金额¥ {{totalPrice}}</span>
             <dd-pagination @currentchange="queryCashierInfo" :visible-pager-count="6" :show-one-page="false" :page-count="pages" />
         </div>
     </div>
 </template>
-<style>
-</style>
 <script>
     import { mapState } from 'vuex';
-    import { DdTable, DdPagination } from 'dd-vue-component';
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem } from 'dd-vue-component';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
     export default{
@@ -29,7 +33,9 @@
         },
         components: {
             DdTable,
-            DdPagination
+            DdPagination,
+            DdDropdown,
+            DdDropdownItem
         },
         data() {
             return {
@@ -108,8 +114,19 @@
                         }
                     });
             },
-            setTable() {
-
+            exportUrl(type) {
+                const paramsObj = {
+                    exportType: type,
+                    reportType: 9,
+                    params: {
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    }
+                };
+                const host = AJAXService.getUrl2('/stat/exportReport');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                const params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
             }
         }
     }

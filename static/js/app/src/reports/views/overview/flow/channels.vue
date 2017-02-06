@@ -1,18 +1,21 @@
 <template>
     <div>
-        <p style="margin: 20px 0 10px">统计每日的实际收款金额</p>
+        <p style="margin: 20px 0 10px"><i>统计每日的实际收款金额</i></p>
         <div class="card">
-            <p class="card-title">
-                <span>总流水 ¥{{totalFlow}}</span>
-                <span>总收入：¥{{totalIncome}}</span>
-                <span>总支出：¥{{totalExpense}}</span>
-            </p>
+            <div class="card-title" style="display: flex;">
+                <h5><strong>总流水 ¥ {{totalFlow}}</strong></h5>
+                <i style="margin-left: 56px">总收入：¥ {{totalIncome}}</i>
+                <i style="margin-left: 32px">总支出：¥ {{totalExpense}}</i>
+            </div>
             <div style="display: flex;height: 500px">
                 <div id="collect" style="width: 50%;height: 100%"></div>
                 <div id="refund" style="width: 50%;height: 100%"></div>
             </div>
         </div>
-        <p style="margin: 20px 0 10px">收款方式明细（{{date.startDate}}~{{date.endDate}}）</p>
+        <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
+            <p>收款方式明细<i>（{{date.startDate}}~{{date.endDate}}）</i></p>
+            <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
+        </div>
         <div>
             <dd-Table :columns="columns" :data-source="dataSource" :bordered="true" size="small"></dd-Table>
         </div>
@@ -28,7 +31,21 @@
     import echarts from 'echarts';
     export default{
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            exportUrl () {
+                const paramsObj = {
+                    exportType: 0,
+                    reportType: 8,
+                    params: {
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    }
+                };
+                const host = AJAXService.getUrl2('/stat/exportReport');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                const params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
+            }
         },
         watch: {
             date() {
@@ -99,7 +116,7 @@
                 });
 
                 list.push({
-                    channelName: '总和合计',
+                    channelName: '综合合计',
                     list: dates.map((d, i) => {
                         const value = list.reduce((a, b) => {
                             return a + b.list[i].value
@@ -129,6 +146,9 @@
             setPie(id , data) {
                 const chart = echarts.init(document.getElementById(id));
                 chart.setOption({
+                    title: {
+                        text: id === 'collect' ? '总收入' : '总支出'
+                    },
                     tooltip: {
                         trigger: 'item',
                         formatter: "{b}: {c} ({d}%)"

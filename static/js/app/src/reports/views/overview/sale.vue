@@ -6,7 +6,13 @@
             <div id="bar" style="width: 100%; height: 300px">
             </div>
         </div>
-        <p style="margin: 20px 0 10px">销售记录（{{date.startDate}}~{{date.endDate}}）</p>
+        <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
+            <p>销售记录<i>（{{date.startDate}}~{{date.endDate}}）</i></p>
+            <dd-dropdown text="导出明细" trigger="click">
+                <dd-dropdown-item><span><a :href="exportUrl(1)" download>导出PDF</a></span></dd-dropdown-item>
+                <dd-dropdown-item><span><a :href="exportUrl(0)" download>导出Excel</a></span></dd-dropdown-item>
+            </dd-dropdown>
+        </div>
         <div>
             <dd-table :columns="columns" :dataSource="dataSource" :bordered="true" />
         </div>
@@ -23,7 +29,7 @@
     import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
-    import { DdTable, DdPagination } from 'dd-vue-component';
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem } from 'dd-vue-component';
     export default{
         data() {
             return {
@@ -78,7 +84,9 @@
         },
         components: {
             DdTable,
-            DdPagination
+            DdPagination,
+            DdDropdown,
+            DdDropdownItem
         },
         methods: {
             getSaleStatistics() {
@@ -108,6 +116,20 @@
                             this.pages = Math.ceil(this.orderSize / 30);
                         }
                     });
+            },
+            exportUrl(type) {
+                const paramsObj = {
+                    exportType: type,
+                    reportType: 1,
+                    params: {
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    }
+                };
+                const host = AJAXService.getUrl2('/stat/exportReport');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                const params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
             },
             setBar(salesStat) {
                 const chart = echarts.init(document.getElementById('bar'));
