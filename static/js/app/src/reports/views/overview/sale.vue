@@ -102,7 +102,9 @@
                         }
                     })
             },
-            getSalesRecordList() {
+            getSalesRecordList(page) {
+                this.page = page ? page : this.page;
+
                 AJAXService.ajaxWithToken('get', '/stat/getSalesRecordList', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,

@@ -95,10 +95,12 @@
             }
         },
         methods: {
-            queryCashierInfo() {
+            queryCashierInfo(page) {
                 if (!this.date.startDate) {
                     return false;
                 }
+
+                this.page = page ? page : this.page;
 
                 AJAXService.ajaxWithToken('get', '/stat/queryCashierInfoPC', {
                     startDate: this.date.startDate,
