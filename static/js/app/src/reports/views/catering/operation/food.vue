@@ -85,7 +85,7 @@
                 AJAXService.ajaxWithToken('get', '/stat/getFoodConsumeDetail', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
-                    restId: this.restaurantId
+                    nodeId: this.restaurantId
                 }).then(res => {
                     if (res.code === 1) {
                         this.setTable(res.data.classifyList);

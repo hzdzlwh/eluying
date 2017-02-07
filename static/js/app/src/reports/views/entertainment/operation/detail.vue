@@ -96,7 +96,7 @@
                     })
             },
             getEnterConsumeDetail() {
-                const params = this.entertainmentId === -1 ? { ...this.date } : { ...this.date, entertainmentId: this.entertainmentId };
+                const params = this.entertainmentId === -1 ? { ...this.date } : { ...this.date, nodeId: this.entertainmentId };
                 AJAXService.ajaxWithToken('get', '/stat/getEnterConsumeDetail', params)
                     .then(res => {
                     if (res.code === 1) {
