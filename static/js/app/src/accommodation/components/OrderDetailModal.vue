@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content" style="padding-bottom: 149px">
+                <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">订单详情</span>
@@ -16,7 +16,7 @@
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
-                    <div class="roomModals-body" style="height: 392px;">
+                    <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
@@ -41,7 +41,7 @@
                                     <div class="room-info">
                                         <div class="room-name">
                                             <span class="room-icon"></span>
-                                            <span>{{item.name}}({{item.serialNum}})</span>
+                                            <span>{{item.serialNum}}({{item.name}})</span>
                                             <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
                                         </div>
                                         <div class="room-date">
@@ -49,11 +49,17 @@
                                             <span class="startDate">{{item.startDate.slice(5)}}</span>
                                             <span>~</span>
                                             <span class="endDate">{{item.endDate.slice(5)}}</span>
-                                            <label class="label-text">{{`共${item.duration}晚`}}</label>
+                                            <label class="label-text">共{{item.duration}}晚</label>
                                         </div>
                                         <div class="room-fee" style="margin-right: 81px">
                                             <label class="label-text">房费</label>
-                                            <span>{{`¥${item.fee}`}}</span>
+                                            <span>¥{{item.fee}}</span>
+                                            <div class="orderDetailModal-roomPriceList">
+                                                <dl class="price-item" v-for="priceItem in item.datePriceList">
+                                                    <dt>{{priceItem.date.slice(5)}}</dt>
+                                                    <dd>¥{{priceItem.dateFee}}</dd>
+                                                </dl>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="room-user" v-for="user in item.idCardList">
@@ -88,21 +94,21 @@
                                             </div>
                                             <div class="item-price" style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>{{`¥${item.foodPrice}`}}</span>
+                                                <span>¥{{item.foodPrice}}</span>
                                             </div>
                                         </div>
                                         <div class="info-icon" @mouseenter="getFoodDetail(item)" @mouseleave="setInfoContentVisible(item)">
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
                                                 <p class="info-title">{{item.detail.restName}}</p>
-                                                <p class="deskNum"><span>桌号:{{item.detail.boardDetailResps.join(',')}}</span><span>人数:{{item.detail.peopleNum}}</span></p>
-                                                <p class="foodTime">就餐时间:{{item.detail.orderTime}}</p>
+                                                <p class="deskNum"><span>桌号:{{ item.detail.boardDetailResps ? item.detail.boardDetailResps.join(',') : '' }}</span><span>人数:{{item.detail.peopleNum}}</span></p>
+                                                <p class="foodTime">就餐时间:{{ item.detail.orderTime ? item.detail.orderTime.slice(0, 16) : ''}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
                                                         <p class="food-sub-item" v-for="dish in food.dishItemResp">
                                                             <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">{{dish.categoryName}}</span>
                                                             <span class="dish-numAndPrice">
-                                                                <span>{{`x${dish.bookNum}`}}</span>
-                                                                <span>{{`¥${dish.price}`}}</span>
+                                                                <span>x{{dish.bookNum}}</span>
+                                                                <span>¥{{dish.price}}</span>
                                                             </span>
                                                         </p>
                                                     </div>
@@ -110,33 +116,33 @@
                                                 <div class="money-container">
                                                     <p class="money-item">
                                                         <span class="money-type">订单金额</span>
-                                                        <span class="money-num">{{`¥${findTypePrice(item.detail.payments, 13)}`}}</span>
+                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 13)}}</span>
                                                     </p>
                                                     <div class="item-indent" v-if="findTypePrice(item.detail.payments, 5) > 0">
                                                         <p class="money-item">
                                                             <span class="money-type">商品总价</span>
-                                                            <span class="money-num">{{`¥{findTypePrice(item.detail.payments, 10)}`}}</span>
+                                                            <span class="money-num">¥{{findTypePrice(item.detail.payments, 10)}}</span>
                                                         </p>
                                                         <p class="money-item">
                                                             <span class="money-type">优惠</span>
-                                                            <span class="money-num">{{`¥{findTypePrice(item.detail.payments, 5)}`}}</span>
+                                                            <span class="money-num">-¥{{Math.abs(findTypePrice(item.detail.payments, 5))}}</span>
                                                         </p>
-                                                        <p class="money-item">
+                                                        <p class="money-item" v-if="findTypePrice(item.detail.payments, 11) > 0">
                                                             <span class="money-type">取消订单</span>
-                                                            <span class="money-num">{{`¥{findTypePrice(item.detail.payments, 11)}`}}</span>
+                                                            <span class="money-num">-¥{{Math.abs(findTypePrice(item.detail.payments, 11))}}</span>
                                                         </p>
                                                     </div>
                                                     <p class="money-item" v-if="findTypePrice(item.detail.payments, 4) > 0">
                                                         <span class="money-type">违约金</span>
-                                                        <span class="money-num">{{`¥${findTypePrice(item.detail.payments, 4)}`}}</span>
+                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 4)}}</span>
                                                     </p>
                                                     <p class="money-item">
                                                         <span class="money-type">已付金额</span>
-                                                        <span class="money-num">{{`¥${findTypePrice(item.detail.payments, 16)}`}}</span>
+                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 14)}}</span>
                                                     </p>
                                                     <p class="money-item">
                                                         <span class="money-type">需补金额</span>
-                                                        <span class="money-num">{{`¥${findTypePrice(item.detail.payments, 15)}`}}</span>
+                                                        <span class="money-num">¥{{findTypePrice(item.detail.payments, 15)}}</span>
                                                     </p>
                                                 </div>
                                                 <div class="operator-container">
@@ -157,7 +163,7 @@
                                     <div class="play-item">
                                         <span class="enter-icon"></span>
                                         <div class="item-content">
-                                            <span class="item-name">{{item.name}}</span>
+                                            <span class="item-name">{{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}</span>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
                                                 <span>{{item.date.slice(5)}}</span>
@@ -168,7 +174,7 @@
                                             </div>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>{{`¥${item.totalPrice}`}}</span>
+                                                <span>¥{{item.totalPrice}}</span>
                                             </div>
                                         </div>
                                         <span></span>
@@ -186,25 +192,23 @@
                                             <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>{{`¥${getTotalPrice(item['items'])}`}}</span>
+                                                <span>¥{{getTotalPrice(item['items'])}}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="item-content" v-for="option in item['items']">
                                         <span style="padding-left: 32px; width: 120px;">{{option.name}}</span>
-                                        <span>{{`x${option.amount}`}}</span>
-                                        <span style="margin-right: 304px;width: 120px; text-align: right">{{`¥${(option.price * option.amount).toFixed(2)}`}}</span>
+                                        <span>x{{option.amount}}</span>
+                                        <span style="margin-right: 304px;width: 120px; text-align: right">¥{{(option.price * option.amount).toFixed(2)}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="order.remark && order.remark !== ''">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{order.remark}}</div>
                         </div>
-                    </div>
-                    <div class="roomModals-footer" style="height: 149px;">
-                        <div style="width: 100%;">
+                        <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
                                 <span style="margin-right: 4px">收银信息</span>
                                 <div class="info-icon">
@@ -212,31 +216,39 @@
                                         <p class="info-title">收银信息</p>
                                         <p class="money-item">
                                             <span class="money-type">订单金额</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 13)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 13)}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item">
                                             <span class="money-type">商品总价</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 10)}`}}</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 5) > 0">
                                             <span class="money-type">优惠</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 5)}`}}</span>
+                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 5))}}</span>
+                                        </p>
+                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
+                                            <span class="money-type">取消订单</span>
+                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 11))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
                                             <span class="money-type">{{item.payChannel}}</span>
-                                            <span class="money-num">{{`¥${item.fee}`}}</span>
+                                            <span class="money-num">¥{{item.fee}}</span>
+                                        </p>
+                                        <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
+                                            <span class="money-type">违约金</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">已付金额</span>
-                                            <span class="money-num">{{`¥${findTypePrice(order.payments, 14)}`}}</span>
+                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额' : '已退金额'}}</span>
+                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
                                             <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
                                             <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 15) > 0 ? '需补金额' : '需退金额'}}</span>
-                                            <span class="money-num">¥{{findTypePrice(order.payments, 15)}}</span>
+                                            <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额' : '需退金额'}}</span>
+                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
@@ -252,14 +264,18 @@
                             <div class="footer-price">
                                 <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
                                 <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
-                                <span class="order-price-text">已付金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 14)}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) > 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{findTypePrice(order.payments, 15)}}</span></span>
+                                <span class="order-price-text">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}<span class="order-price-num grey">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span></span>
+                                <span class="order-price-text">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span></span>
                                 <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum}}</span>
                                 <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
+                        </div>
+                    </div>
+                    <div class="roomModals-footer">
+                        <div style="width: 100%;">
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
@@ -353,6 +369,7 @@
         }
         .room-info {
             justify-content: space-between;
+            position: relative;
         }
         .room-info, .room-name, .room-user, .play-item, .food-item {
             display: flex;
@@ -374,6 +391,41 @@
         }
         .orderDetailModal-shop-item {
             display: flex;
+        }
+        .room-fee:hover{
+            .orderDetailModal-roomPriceList {
+                display: flex;
+            }
+        }
+        .orderDetailModal-roomPriceList {
+            display: none;
+            flex-wrap: wrap;
+            position: absolute;
+            max-width: 491px;
+            right: 81px;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: auto;
+            z-index: 9;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                margin-left: 8px;
+                dt {
+                    color: #999999;
+                    font-size: 12px;
+                }
+                dd {
+                    height: 24px;
+                }
+            }
         }
         .user-icon {
             width: 16px;
@@ -399,16 +451,20 @@
         }
         .info-content {
             @extend .normal-font;
-            max-height: 400px;
-            overflow: scroll;
+            max-height: 230px;
+            overflow-y: scroll;
             background: #fafafa;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             width: 274px;
             position: absolute;
             bottom: 0;
+            margin: 0;
             padding: 8px;
             transform: translateX(-100%);
+            &::-webkit-scrollbar {
+                width: 0;
+            }
             .item-indent {
                 padding-left: 16px;
             }
@@ -484,7 +540,7 @@
                 margin-left: 24px;
             }
         }
-        .roomModals-footer {
+        .content-item {
             .order-info {
                 color: #999999;
                 font-size: $font-size-sm;
@@ -512,10 +568,6 @@
     import { mapActions, mapState } from 'vuex';
     export default{
         props: {
-            /*order: {
-                type: Object,
-                default: function() { return {} }
-            },*/
             orderId: {
                 type: Number
             },
@@ -630,6 +682,7 @@
                 AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {caterOrderId: food.foodOrderId}, function(res){
                     if (res.code === 1) {
                         food.detail = res.data;
+                        food.detail.boardDetailResps = res.data.boardDetailResps.reduce((a,b) => { return a.concat(b.boardName) }, []);
                         this.$set(food, 'visible', true);
                     }
                 }.bind(this));
@@ -651,7 +704,7 @@
                         }
                     });
                 }
-                return price;
+                return Math.abs(price.toFixed(2));
             },
             filterPayMents(arr, type1,type2) {
                 let newPayMents = [];
@@ -680,7 +733,15 @@
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
-                            $('#checkIn').modal({backdrop: 'static'});
+                            const haveToday = res.data.roomOrderInfoList.some((room) => {
+                                return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
+                            });
+                            if (haveToday) {
+                                $('#checkIn').modal({backdrop: 'static'});
+                            } else {
+                                modal.somethingAlert('未到办理入住的时间，无法入住！');
+                                return false;
+                            }
                         } else {
                             $('#checkOut').modal({backdrop: 'static'});
                         }
@@ -691,7 +752,7 @@
             },
             showCashier() {
                 this.hideModal();
-                this.$emit('showCashier', {})
+                this.$emit('showCashier', { type: 'orderDetail' })
             },
             editOrder() {
                 this.hideModal();

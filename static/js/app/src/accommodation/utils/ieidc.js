@@ -11,7 +11,7 @@ export default {
             //$(".readBtn").removeClass('ing');
             throw new Error('请使用360浏览器（极速模式）、火狐、Opera、Chrome（低于44版）、WEBKIT内核等浏览器并安装IDCardWeb控件!');
         }
-        this.data = this.idc.IDCarf;
+        this.data = this.idc.IDCard;
         //- 网站授权，此属性必须在属性Verify和RarelyWord设置之前设置。License请与phototake@qq.com联系获取。
         //this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
         this.idc.License = "G95dPDwfAAsvk1IzmDT1CZr8I777NZ8mj3XO+d7Ak2yXn80EfIDgQ4MSrls/Eewbb16nRTnjvvY18VW8uPWKbPUAe4Hfo6OxicY4q4ZlGTMeW6DIfAAGI3Psuu8a9tpkl4bF1t4s3d";
@@ -35,7 +35,6 @@ export default {
     /**
      *
      * @param timeout
-     * @param vm vue实例
      * @returns {boolean}
      */
     read(timeout) {
@@ -44,7 +43,7 @@ export default {
             return false;
         }
 
-        this.idc.ReadOneCID(timeout);
+        const cid = this.idc.ReadOneCID(timeout);
         /*******************************************************************************************************************
          读卡后数据获取（通过控件的idcard对象）
          idName				姓名，替换了生僻字的（如果有的话）
@@ -73,10 +72,14 @@ export default {
          idVerify				MD5校验码，由用户指定数据组合生成的MD5编码，用于在服务端校验上传的数据是否完整，防止被篡改
          SAMID				阅读器的设备ID
          *******************************************************************************************************************/
+        const { IDname, IDCardNo } = this.data;
+        if (!IDCardNo || !IDname) {
+            throw new Error('读卡失败，请重试。');
+        }
 
         return {
-            name: this.data.IDname,
-            cardNo: this.data.IDCardNo
+            name: IDname,
+            idCardNum: IDCardNo
         }
     }
 };

@@ -10,7 +10,10 @@
                     <div class="payWithCodeModal-body">
                         <div class="payWithCodeModal-code-container">
                             <div class="payWithCodeModal-picture-container"></div>
-                            <input type="text" class="payWithCodeModal-codeNum" placeholder="付款码使用条码枪录入，也可手动输入。" v-model="authCode">
+                            <input type="text"
+                                   class="payWithCodeModal-codeNum"
+                                   placeholder="付款码使用条码枪录入，也可手动输入。"
+                                   v-model="authCode">
                         </div>
                         <div class="payWithCodeModal-info-container">
                             <p class="payWithCodeModal-info">应收金额：¥{{totalPrice}}</p>
@@ -36,6 +39,13 @@
         color: $gary-daker;
         .modal-dialog {
             width: 400px;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%) !important;
+            -ms-transform: translate(-50%, -50%) !important;
+            transform: translate(-50%, -50%) !important;
         }
         .modal-content {
             width: 400px;
@@ -43,7 +53,7 @@
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             padding: 0;
-            margin-top: 42.5px;
+            margin-top: 0 !important;
         }
         .payWithCodeModal-header {
             width: 100%;
@@ -130,7 +140,8 @@
         },
         data(){
             return{
-                authCode: ''
+                authCode: '',
+                inputFocus: false
             }
         },
         computed:{
@@ -145,6 +156,7 @@
         },
         methods:{
             hideModal() {
+                this.authCode = '';
                 this.$emit('hide');
                 $('#payWithCode').modal('hide');
                 this.$emit('showCashier', { type: this.type, business: this.business });
@@ -155,16 +167,59 @@
                 AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                     .then(result => {
                         if(result.code === 1) {
-                            modal.somethingAlert('收银成功');
-                            this.$emit('hide');
-                            $('#payWithCode').modal('hide');
-                            let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                            this.$emit('showOrder', orderId);
+                            let status = result.data.status;
+                            let tradeNum = result.data.tradeNum;
+                            if (status === 0) {
+                                modal.somethingAlert('收银成功');
+                                this.$emit('hide');
+                                this.authCode = '';
+                                $('#payWithCode').modal('hide');
+                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                this.$emit('refreshView');
+                                setTimeout(() => {
+                                    this.$emit('showOrder', orderId);
+                                }, 2500);
+                            } else if (status === 1) {
+                                modal.somethingAlert("收款失败");
+                                this.hideModal();
+                            } else if (status === 2) {
+                                let inter = setInterval(() => {
+                                    AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
+                                        tradeNum: tradeNum
+                                    }, (result1) => {
+                                        if (result1.code === 1) {
+                                            var status1 = result1.data.status;
+                                            if (status1 !== 2) {
+                                                clearInterval(inter);
+                                            }
+                                            if (status1 === 0) {
+                                                modal.somethingAlert('收银成功');
+                                                this.$emit('hide');
+                                                this.authCode = '';
+                                                $('#payWithCode').modal('hide');
+                                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                                this.$emit('refreshView');
+                                                setTimeout(() => {
+                                                    this.$emit('showOrder', orderId);
+                                                }, 2500);
+                                            } else if (status1 === 1) {
+                                                modal.somethingAlert("收款失败");
+                                                this.hideModal();
+                                            }
+                                        }
+                                    });
+                                }, 5000);
+                            }
                         } else {
                             modal.somethingAlert(result.msg);
                         }
                     });
             }
+        },
+        mounted() {
+            $('#payWithCode').on('shown.bs.modal', function(e) {
+                $('.payWithCodeModal-codeNum').focus();
+            });
         },
         watch:{
             show(val){
@@ -172,6 +227,7 @@
                     $('#payWithCode').modal({backdrop: 'static'});
                 } else {
                     this.$emit('hide');
+                    this.authCode = '';
                     $('#payWithCode').modal('hide');
                 }
             }
