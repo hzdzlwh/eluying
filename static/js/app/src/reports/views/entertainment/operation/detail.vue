@@ -66,13 +66,15 @@
             exportUrl () {
                 const paramsObj = {
                     exportType: 0,
-                    reportType: 4,
+                    reportType: 6,
                     params: {
                         startDate: this.date.startDate,
                         endDate: this.date.endDate,
-                        entertainmentId: this.entertainmentId
                     }
                 };
+                if (this.entertainmentId !== -1) {
+                    paramsObj.params.nodeId = this.entertainmentId;
+                }
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
                 const params = AJAXService.paramsToString(pa);
@@ -85,6 +87,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.entertainmentList = res.data.entertainmentList;
+                            this.entertainmentList.unshift({ entertainmentId: -1, entertainmentName: '全部项目' });
                             this.entertainmentId = res.data.entertainmentList[0].entertainmentId;
                         }
                     })
@@ -93,11 +96,9 @@
                     })
             },
             getEnterConsumeDetail() {
-                AJAXService.ajaxWithToken('get', '/stat/getEnterConsumeDetail', {
-                    startDate: this.date.startDate,
-                    endDate: this.date.endDate,
-                    entertainmentId: this.entertainmentId
-                }).then(res => {
+                const params = this.entertainmentId === -1 ? { ...this.date } : { ...this.date, entertainmentId: this.entertainmentId };
+                AJAXService.ajaxWithToken('get', '/stat/getEnterConsumeDetail', params)
+                    .then(res => {
                     if (res.code === 1) {
                         this.setTable(res.data.classifyList);
                     }
@@ -133,6 +134,20 @@
                     });
                 });
 
+                list.push({
+                    name: '综合合计',
+                    dateValues: dates.map((d, i) => {
+                        const value = list.reduce((a, b) => {
+                            return a + b.dateValues[i].value
+                        }, 0);
+
+                        return {
+                            date: util.dateFormat(d),
+                            value: value.toFixed(2) == value ? value : Number(value.toFixed(2))
+                        };
+                    })
+                });
+
                 const format = (list) => (
                     list.map(i => {
                         const data = {
@@ -152,6 +167,8 @@
                 );
 
                 this.dataSource = format(list);
+
+                this.dataSource[this.dataSource.length - 1].foot = true;
             },
         }
     }

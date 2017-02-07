@@ -59,7 +59,7 @@
                     params: {
                         startDate: this.date.startDate,
                         endDate: this.date.endDate,
-                        restId: this.restaurantId
+                        nodeId: this.restaurantId
                     }
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
