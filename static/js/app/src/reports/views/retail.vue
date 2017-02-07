@@ -8,7 +8,7 @@
                     <h4>¥{{orderPrice || 0}}</h4>
                 </div>
                 <div>
-                    <p><small>订单数</small></p>
+                    <p><small><i>订单数</i></small></p>
                     <h4>{{orderNum}}</h4>
                 </div>
             </div>
