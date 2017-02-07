@@ -431,18 +431,18 @@
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
-                        payments: [{ fee: this.business.penalty, type: 4 }]
+                        subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
                     };
-                    if (this.business.penalty) {
+                    /*if (this.business.penalty) {
                         payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
-                    }
+                    }*/
                     params = {
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(businessJson)
                     }
-                }else {
+                } else {
                     params = {
                         orderId: this.orderDetail.orderId,
                         orderType: -1,

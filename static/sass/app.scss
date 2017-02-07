@@ -1,433 +1,441 @@
 @import "./variable";
 
 @mixin minWidth($minWidth: 1200px) {
-    min-width: $minWidth;
+  min-width: $minWidth;
 }
-@mixin sbtn(){
-  border:1px solid $color1;
-  border-radius:$BorderRadius;
-  width:24px;
-  height:24px;
+
+@mixin sbtn() {
+  border: 1px solid $color1;
+  border-radius: $BorderRadius;
+  width: 24px;
+  height: 24px;
   line-height: 24px;
   color: $color1;
   text-align: center;
   font-size: 14px;
   display: inline-block;
-  img{
+  img {
     vertical-align: top;
     margin-top: 5px;
   }
 }
 
 .header {
-    background-color: $headerBg;
-    color: #FFF;
+  background-color: $headerBg;
+  color: #FFF;
+  height: 68px;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  .logo {
+    position: absolute;
+    left: 52px;
+    top: 19px;
+    //width: 100px;
+    height: 30px;
+    cursor: pointer;
+  }
+  .dividor {
+    height: 30px;
+    width: 1px;
+    background: #666666;
+    margin-left: 384px;
+    margin-top: 19px;
+    float: left;
+  }
+  .dividor2 {
+    height: 30px;
+    width: 1px;
+    background: #666666;
+    margin-right: 0;
+    margin-top: 19px;
+    float: right;
+  }
+  .settingsEntry {
+    font-size: 16px;
+    color: #999999;
+    margin-right: 16px;
+    letter-spacing: 0px;
     height: 68px;
-    position: fixed;
-    width: 100%;
-    z-index: 999;
-    .logo{
-      position: absolute;
-      left: 52px;
-      top: 19px;
-      //width: 100px;
-      height: 30px;
-      cursor: pointer;
+    line-height: 68px;
+    text-align: left;
+    float: right;
+    cursor: pointer;
+  }
+  .settingsEntry:hover {
+    color: #ffffff;
+  }
+  .settingsEntry.selected {
+    color: #ffffff;
+    background: url("//static.dingdandao.com/9E45600D-40AE-4107-AACF-C1FF3BCEEA54@1x.png") no-repeat;
+    background-position: 28px 62px;
+  }
+  .header-entry {
+    //display: none;
+    font-size: 16px;
+    color: #999;
+    margin-left: 16px;
+    letter-spacing: 0;
+    height: 68px;
+    line-height: 68px;
+    text-align: left;
+    float: left;
+    cursor: pointer;
+    &:hover {
+      color: #fff;
     }
-    .dividor{
-      height: 30px;
-      width: 1px;
-      background: #666666;
-      margin-left: 384px;
-      margin-top: 19px;
-      float: left;
-    }
-    .dividor2{
-      height: 30px;
-      width: 1px;
-      background: #666666;
-      margin-right: 0;
-      margin-top: 19px;
-      float: right;
-    }
-    .settingsEntry{
-      font-size:16px;
-      color: #999999;
-      margin-right: 16px;
-      letter-spacing:0px;
-      height: 68px;
-      line-height: 68px;
-      text-align:left;
-      float: right;
-      cursor: pointer;
-      a{
-        color: #999999;
-      }
-    }
-    .settingsEntry:hover{
-      color:#ffffff;
-    }
-    .settingsEntry.selected{
-      a{
-        color:#ffffff;
-      }
+    &.selected {
+      color: #fff;
       background: url("//static.dingdandao.com/9E45600D-40AE-4107-AACF-C1FF3BCEEA54@1x.png") no-repeat;
       background-position: 28px 62px;
     }
-    .accomodationEntry, .manageVipEntry, .ordersManageEntry{
-      //display: none;
-      font-size:16px;
-      color:#999999;
-      margin-left: 16px;
-      letter-spacing:0px;
-      height: 68px;
-      line-height: 68px;
-      text-align:left;
+  }
+  .camp-name {
+    float: left;
+    white-space: nowrap;
+    max-width: 130px;
+    height: 68px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 20px;
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0px;
+    line-height: 68px;
+    text-align: left;
+  }
+  @include minWidth();
+  ul {
+    margin-left: 32px;
+    float: left;
+    li {
       float: left;
+      width: 110px;
+      line-height: 68px;
+      font-size: 14px;
+      text-align: center;
       cursor: pointer;
-      a{
-        color: #999999;
-      }
     }
-    .accomodationEntry:hover, .manageVipEntry:hover, .ordersManageEntry:hover{
-      a{
-        color: #ffffff;
-      }
+    a:hover, a.active {
+      background-color: #2677D1;
     }
-    .accomodationEntry.selected, .manageVipEntry.selected, .ordersManageEntry.selected{
-      a{
-        color:#ffffff;
-      }
-      background: url("//static.dingdandao.com/9E45600D-40AE-4107-AACF-C1FF3BCEEA54@1x.png") no-repeat;
-      background-position: 28px 62px;
-    }
-    .camp-name {
-        float: left;
-        white-space: nowrap;
-        max-width: 130px;
-        height: 68px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-left: 20px;
-        font-size:16px;
-        color:#ffffff;
-        letter-spacing:0px;
-        line-height:68px;
-        text-align:left;
-    }
-    @include minWidth();
-    ul {
-        margin-left: 32px;
-        float: left;
-        li {
-            float: left;
-            width: 110px;
-            line-height: 68px;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-        }
-        a:hover,a.active {
-            background-color: #2677D1;
-        }
 
-        a {
-            display: inline-block;
-            width: 100%;
-        }
+    a {
+      display: inline-block;
+      width: 100%;
     }
-    a, a:hover {
-        color: #FFF;
-        text-decoration: none;
+  }
+  a, a:hover {
+    color: #FFF;
+    text-decoration: none;
+  }
+  .userPhoto {
+    border: 1px solid #FFF;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin: 11px 0;
+    overflow: hidden;
+  }
+  .userName {
+    line-height: 68px;
+    width: 140px;
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 17px;
+    span {
+      cursor: pointer;
+      font-size: 14px;
+      color: #ffffff;
+      float: left;
+      margin-left: 8px;
+      max-width: 42px;
+      max-height: 68px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .userPhoto {
-        border: 1px solid #FFF;
-        border-radius: 100%;
-        width: 30px;
-        height: 30px;
+    .uesrPicture {
+      height: 34px;
+      width: 34px;
+      float: left;
+      display: inline-block;
+      border-radius: 100%;
+      overflow: hidden;
+      margin: 17px 0;
+      img {
+        width: 100%;
+        height: 100%;
         float: left;
-        margin: 11px 0;
-        overflow: hidden;
+      }
     }
-    .userName {
-        line-height: 68px;
-        width: 140px;
-        float: left;
-        text-align: center;
-        cursor: pointer;
-        padding: 0 17px;
-        span {
-            cursor: pointer;
-            font-size: 14px;
-            color: #ffffff;
-            float: left;
-            margin-left: 8px;
-            max-width: 42px;
-            max-height: 68px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .uesrPicture{
-          height: 34px;
-          width: 34px;
-          float: left;
-          display: inline-block;
-          border-radius: 100%;
-          overflow: hidden;
-          margin: 17px 0;
-          img{
-            width: 100%;
-            height: 100%;
-            float: left;
-          }
-        }
-    }
-    .userName:hover {
-        background-color: $headerBg;
-    }
-    .line {
-        width: 1px;
-        height: 38px;
-        float: left;
-        margin: 7px 0;
-        background: url("../image/Line.png");
-    }
-    .logout {
-        width: 140px;
-        padding: 12px 0 20px;
-        line-height: 20px;
+  }
+  .userName:hover {
+    background-color: $headerBg;
+  }
+  .line {
+    width: 1px;
+    height: 38px;
+    float: left;
+    margin: 7px 0;
+    background: url("../image/Line.png");
+  }
+  .logout {
+    width: 140px;
+    padding: 12px 0 20px;
+    line-height: 20px;
+    position: absolute;
+    top: 68px;
+    right: 0;
+    background-color: $headerBg;
+    text-align: center;
+  }
+  .userName-active {
+    background-color: $headerBg;
+  }
+  .right {
+    float: right;
+  }
+  #headerSwitchCamp {
+    display: none;
+  }
+  .switchCampActive {
+    background: $headerBg;
+  }
+  .headerSwitch {
+    float: left;
+    cursor: pointer;
+    position: relative;
+    margin-left: 197px;
+    width: 188px;
+    .avatorContainer {
+      float: left;
+      width: 188px;
+      position: absolute;
+      .upload {
         position: absolute;
-        top: 68px;
-        right: 0;
-        background-color: $headerBg;
-        text-align: center;
+        right: 17px;
+        top: 31px;
+      }
     }
-    .userName-active {
-        background-color: $headerBg;
+    &:hover {
+      background: #2a2a2a;
+      .camp-name {
+        color: white;
+      }
     }
-    .right {
-        float: right;
-    }
-    #headerSwitchCamp{
-        display: none;
-    }
-    .switchCampActive{
+    dl {
+      position: absolute;
+      top: 68px;
+      padding: 0 8px;
       background: $headerBg;
-    }
-    .headerSwitch{
-        float: left;
-        cursor: pointer;
-        position: relative;
-        margin-left: 197px;
-        width: 188px;
-        .avatorContainer{
-          float: left;
-          width: 188px;
-          position: absolute;
-          .upload{
-            position: absolute;
-            right: 17px;
-            top: 31px;
-          }
-        }
-        &:hover{
-            background: #2a2a2a;
-            .camp-name{
-                color: white;
-            }
-        }
-        dl{
-            position: absolute;
-            top: 68px;
-            padding: 0 8px;
-            background: $headerBg;
-            width: 100%;
-            font-size: 14px;
-            font-weight: normal;
-            dt{
-                color:#95c3e6;
-                line-height:20px;
-                text-align:left;
-                margin: 16px 0 10px;
-            }
-            dd{
-                padding: 10px 0;
-                text-indent: 1.8em;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
-                &.on{
-                    background: url("//static.dingdandao.com/ADA3A3B5-2D91-4280-9A10-0EF740AF8559@1x.png") no-repeat;
-                    background-position: 0 16px;
-                }
-                &:hover{
-                    background-color: #585858;
-                }
-            }
-        }
-      #headerJoinNewNetwork, #headerCreateNetwork{
-          text-indent: 1.8em;
+      width: 100%;
+      font-size: 14px;
+      font-weight: normal;
+      dt {
+        color: #95c3e6;
+        line-height: 20px;
+        text-align: left;
+        margin: 16px 0 10px;
       }
-      #headerJoinNewNetwork{
-        background: url("//static.dingdandao.com/B2D51C9F-5433-4589-93DF-8B608F1AD181@1x.png") no-repeat;
-        background-position: 0 14px;
-      }
-      #headerCreateNetwork{
-        background: url("//static.dingdandao.com/C71C4CC2-5866-4655-B7FE-FFA0EE5AE8F3@1x.png") no-repeat;
-        background-position: 0 14px;
-      }
-      hr{
-        border-top: 1px solid #595959;
-          margin:0;
+      dd {
+        padding: 10px 0;
+        text-indent: 1.8em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        &.on {
+          background: url("//static.dingdandao.com/ADA3A3B5-2D91-4280-9A10-0EF740AF8559@1x.png") no-repeat;
+          background-position: 0 16px;
+        }
+        &:hover {
+          background-color: #585858;
+        }
       }
     }
+    #headerJoinNewNetwork, #headerCreateNetwork {
+      text-indent: 1.8em;
+    }
+    #headerJoinNewNetwork {
+      background: url("//static.dingdandao.com/B2D51C9F-5433-4589-93DF-8B608F1AD181@1x.png") no-repeat;
+      background-position: 0 14px;
+    }
+    #headerCreateNetwork {
+      background: url("//static.dingdandao.com/C71C4CC2-5866-4655-B7FE-FFA0EE5AE8F3@1x.png") no-repeat;
+      background-position: 0 14px;
+    }
+    hr {
+      border-top: 1px solid #595959;
+      margin: 0;
+    }
+  }
 }
 
 .mainContainer {
-    position: absolute;
-    top: 68px;
-    left: 220px;
-    zoom:1;
-    width: 100%;
-    .content {
-        margin: 40px auto 0 auto;
-        width: 950px;
-            .title {
-                width: 745px;
-                height: 41px;
-                .campName {
-                    color: $color1;
-                    font-size: 31px;
-                }
-            }
-            .menu{
-              height: 42px;
-              border: 1px solid $color1;
-              border-right: none;
-              border-radius: 2px;
-              margin-bottom: 30px;
-              display: inline-block;
-              ul {
-                overflow: hidden;
-              }
-              li {
-                border-right: 1px solid $color1;
-                float: left;
-                width: 102px;
-                line-height: 40px;
-                height: 40px;
-                font-size: 14px;
-                text-align: center;
-                cursor: pointer;
-              }
-              a:hover,a.active {
-                background-color: #2677D1;
-                color: #fff;
-              }
-
-              a {
-                display: inline-block;
-                width: 100%;
-                color: $color1;
-              }
-              a, a:hover {
-                text-decoration: none;
-              }
-            }
-        }
+  position: absolute;
+  top: 68px;
+  left: 220px;
+  zoom: 1;
+  width: 100%;
+  .content {
+    margin: 40px auto 0 auto;
+    width: 950px;
+    .title {
+      width: 745px;
+      height: 41px;
+      .campName {
+        color: $color1;
+        font-size: 31px;
+      }
     }
+    .menu {
+      height: 42px;
+      border: 1px solid $color1;
+      border-right: none;
+      border-radius: 2px;
+      margin-bottom: 30px;
+      display: inline-block;
+      ul {
+        overflow: hidden;
+      }
+      li {
+        border-right: 1px solid $color1;
+        float: left;
+        width: 102px;
+        line-height: 40px;
+        height: 40px;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+      }
+      a:hover, a.active {
+        background-color: #2677D1;
+        color: #fff;
+      }
 
-.mainContainer:after {
-    display:block;
-    clear:both;
-    content:"";
-    visibility:hidden;
-    height:0
+      a {
+        display: inline-block;
+        width: 100%;
+        color: $color1;
+      }
+      a, a:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
-.leftMenu {
+.mainContainer:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0
+}
+
+#leftMenu-children {
   width: 88px;
   background-color: #fff;
   height: 100%;
-    position: fixed;
-    top: 68px;
-    left: 116px;
-    z-index: 10;
-    box-shadow: 2px 0px 2px 0px #dadada;
+  position: fixed;
+  top: 68px;
+  left: 116px;
+  z-index: 10;
+  box-shadow: 2px 0 2px 0 #dadada;
+  padding-top: 15px;
+
+  .leftMenu-back {
+    margin-top: -15px;
+    padding-top: 12px;
+    background: #f4f4f4;
+    width: 88px;
+    height: 68px;
+    text-align: center;
+    a {
+      font-size: 14px;
+      color: #999;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    a.active {
+      color: $color1;
+      border-right: #178CE6 solid medium;
+    }
+    a:hover {
+      color: $color1;
+      background: #f4f4f4;
+    }
+  }
+
+  li {
+    line-height: 42px;
+    height: 42px;
+    width: 100%;
+    margin-bottom: 4px;
+    a {
+      font-size: 14px;
+      color: #999;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+    }
+    a.active {
+      color: $color1;
+      border-right: #178CE6 solid medium;
+    }
+    a:hover {
+      color: $color1;
+    }
+  }
+
+}
+
+.leftMenu {
+  width: 116px;
+  background-color: $color1;
+  height: 100%;
+  position: fixed;
+  top: 68px;
+  left: 0;
+  z-index: 10;
+  padding-top: 15px;
+}
+
+.leftMenu-item {
+  height: 42px;
+  line-height: 42px;
+  width: 110px;
+  margin-left: 10px;
+  margin-bottom: 4px;
   a {
-    //font-family: PingFangSC-Regular;
     font-size: 14px;
-    color: #999999;
+    color: #fff;
     text-decoration: none;
     display: inline-block;
     width: 100%;
-    text-align: center;
-    cursor: pointer;
+    text-align: left;
+    padding-left: 6px;
   }
-  a.active{
-    color: $color1;
-    border-right: #178CE6 solid medium;
+  a:hover {
+    color: #3d83e1;
+    background-color: #ffffff;
+    border-radius: 2px 0 0 2px;
   }
-  a:hover{
-    color: $color1;
+  a.active {
+    color: #3d83e1;
+    background-color: #ffffff;
+    border-radius: 2px 0 0 2px;
   }
-    .leftMenu-back {
-      margin-top: -15px;
-      padding-top: 12px;
-      background: #f4f4f4;
-      width: 88px;
-      height: 68px;
-      text-align: center;
-    }
-    ul {
-        margin-top: 15px;
-        li {
-            line-height: 42px;
-            height: 42px;
-            width: 100%;
-            margin-bottom: 4px;
-        }
-    }
 }
-.leftParentMenu{
-    width: 116px;
-    background-color: $color1;
-    height: 100%;
-    position: fixed;
-    top: 68px;
-    z-index: 10;
-    ul{
-      margin-top: 15px;
-      li{
-        height: 42px;
-        line-height: 42px;
-        width: 110px;
-        margin-left: 10px;
-        margin-bottom: 4px;
-        a{
-          //font-family: PingFangSC-Regular;
-          font-size: 14px;
-          color: #ffffff;
-          text-decoration: none;
-          display: inline-block;
-          width: 100%;
-          text-align: left;
-          padding-left: 6px;
-        }
-        a:hover{
-          color: #3d83e1;
-          background-color: #ffffff;
-          border-radius: 2px 0 0 2px;
-        }
-        a.active{
-          color: #3d83e1;
-          background-color: #ffffff;
-          border-radius: 2px 0 0 2px;
-        }
-      }
-    }
-}
+
 
 label {
   font-weight: normal;

@@ -5,7 +5,6 @@ import Vue from 'vue';
 import App from './App';
 import 'bootstrap';
 import header from 'header';
-import topMenu from "../common/topMenu";
 import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
@@ -20,14 +19,7 @@ const app = new Vue({
 
 document.addEventListener('DOMContentLoaded', () => {
     header.showHeader();
-    //高亮"前台录入"
-    $(".ordersManageEntry").removeClass("selected");
-    $(".settingsEntry").removeClass("selected");
-    $(".manageVipEntry").removeClass("selected");
-    $(".accomodationEntry").addClass("selected");
-    topMenu.showTopMenu();
     modal.modalInit();
-    modal.centerModals();
 
     const events = {
         // hover高亮时间和房间
@@ -81,4 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     util.bindDomAction(events);
 
     app.$mount('#app');
+
+    modal.centerModals();
 });

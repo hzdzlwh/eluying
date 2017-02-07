@@ -16,8 +16,26 @@
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>违约信息</span></p>
-                            <span>违约金：</span>
-                            <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
+                            <div v-if="order && order.orderType !== -1" >
+                                <span>违约金：</span>
+                                <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
+                            </div>
+                            <div v-if="order && order.orderType === -1">
+                                <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
+                                    <div class="cashier-getMoney-channel" v-for="(subOrderPenalty, index) in subOrderPenaltys">
+                                        <dd-select v-model="subOrderPenalty.nodeId">
+                                            <dd-option v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
+                                            </dd-option>
+                                        </dd-select>
+                                        <input type="number" class="dd-input" v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金">
+                                        <span class="cashier-delBtn-icon" @click="deletePenalty(index)"></span>
+                                    </div>
+                                </div>
+                                <span class="cashier-addBtn" @click="addPenalty" style="display: inline-flex;">
+                                    <span class="cashier-addBtn-icon"></span>
+                                    <span style="cursor: pointer">添加违约金</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -36,6 +54,8 @@
 <script>
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
+    import { mapState } from 'vuex';
+    import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
         props: {
             show: Boolean,
@@ -46,10 +66,13 @@
                 cancelFee: 0,
                 paid: 0,
                 penalty: undefined,
-                oldPenalty: undefined
+                subOrderPenaltys: [],
+                oldPenalty: undefined,
+                subOrders: []
             }
         },
         computed: {
+            ...mapState({order: 'orderDetail'}),
             need() {
                 return this.paid - (this.oldPenalty || 0) - (this.penalty || 0);
             }
@@ -67,7 +90,18 @@
         methods:{
             hideModal() {
                 this.penalty = undefined;
+                this.subOrderPenaltys = [];
                 this.$emit('hideCancelOrder');
+            },
+            addPenalty() {
+                if (this.subOrderPenaltys.length >= this.subOrders.length) {
+                    modal.somethingAlert('已选择所有违约项目');
+                    return false;
+                }
+                this.subOrderPenaltys.push({ nodeId: this.subOrders[0].nodeId, penalty: undefined });
+            },
+            deletePenalty(index) {
+                this.subOrderPenaltys.splice(index, 1);
             },
             getCancelOrder() {
                 AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: this.orderId, orderType: -1 })
@@ -76,18 +110,45 @@
                             this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
                             this.paid = res.data.payments.find(p => p.type === 14).fee;
                             this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
+                            this.subOrders = res.data.subOrdersTotalPriceList;
                         }
                     })
             },
             cancel() {
+                let totalPenalty = this.penalty || 0;
                 const business = {
                     orderId: this.orderId,
                     orderType: -1,
                 };
-                if (this.need - (this.penalty || 0) === 0) {
-                    if (this.penalty) {
-                        payments: JSON.stringify([{fee: this.penalty, type: 4}])
-                    }
+                let valid = true;
+                if (this.subOrderPenaltys.length > 0) {
+                    totalPenalty = this.subOrderPenaltys.reduce((a, b) => { return Number(a) + Number(b.penalty); }, totalPenalty);
+                    valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 });
+                }
+                if (!valid) {
+                    modal.somethingAlert('违约信息填写有误，请核对！');
+                    return false;
+                }
+                if (this.penalty && this.order.orderType !== -1) {
+                    this.subOrderPenaltys[0] = {};
+                    this.subOrderPenaltys[0].nodeId = this.subOrders[0].nodeId;
+                    this.subOrderPenaltys[0].nodeName = this.subOrders[0].nodeName;
+                    this.subOrderPenaltys[0].subOrderType = this.subOrders[0].subOrderType;
+                    this.subOrderPenaltys[0].penalty = this.penalty;
+                    business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
+                } else if (this.subOrderPenaltys.length > 0 && this.order.orderType === -1) {
+                    this.subOrderPenaltys.forEach(subOrderPenalty => {
+                        this.subOrders.forEach(subOrder => {
+                            if (subOrderPenalty.nodeId === subOrder.nodeId) {
+                                subOrderPenalty.nodeName = subOrder.nodeName;
+                                subOrderPenalty.subOrderType = subOrder.subOrderType;
+                            }
+                        });
+                    });
+
+                    business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
+                }
+                if (this.need - Number(totalPenalty) === 0) {
                     AJAXService.ajaxWithToken('get', '/order/cancel', business)
                         .then(res => {
                             if (res.code === 1) {
@@ -100,13 +161,16 @@
                             }
                         })
                 } else {
-                    business.penalty = Number(this.penalty);
+                    business.penalty = Number(totalPenalty);
                     business.functionType = 0;
                     this.hideModal();
                     this.$emit('showCashier', { type: 'cancel', business });
                 }
             }
         },
-        components:{}
+        components:{
+            DdSelect,
+            DdOption
+        }
     }
 </script>

@@ -41,6 +41,13 @@
     color:#178ce6;
     text-align:center;
     display: inline-block;
+    a.active {
+      width:100px;
+      height:24px;
+      display: inline-block;
+      background-color: #178ce6;
+      color: #ffffff;
+    }
   }
 }
 .restaurant-head-nav-selected {

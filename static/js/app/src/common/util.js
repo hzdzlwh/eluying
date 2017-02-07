@@ -385,6 +385,15 @@ var util = {
         }
         document.execCommand('Copy');
         window.getSelection().removeAllRanges();
+    },
+    getDateBetween(startDate, endDate) {
+        const days = this.DateDiff(startDate, endDate) + 1;
+        const dates = [];
+        for (let i = 0; i < days; i ++) {
+            dates.push(this.diffDate(startDate, i));
+        }
+
+        return dates;
     }
 };
 module.exports = util;

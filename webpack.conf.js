@@ -44,6 +44,7 @@ var webpackConf =  {
         'codesite/operation': './static/js/app/src/codesite/operation/operation.js',
         'linesite/operation': './static/js/app/src/linesite/operation/operation.js',
         'salesite/detail': './static/js/app/src/salesite/detail/detail.js',
+        'reports/reports': './static/js/app/src/reports/main.js'
     },
     output: {
         filename: '[name].js',
@@ -69,8 +70,8 @@ var webpackConf =  {
             jqueryui: path.join(__dirname, './static/js/lib/jquery-ui.min.js'),
             'datepicker-zh': path.join(__dirname, './static/js/lib/datepicker-zh-CN.js'),
             bootstrap: path.join(__dirname, './static/js/lib/bootstrap.min.js'),
-            header: path.join(__dirname, './static/js/app/src/common/header.js'),
-            leftMenu: path.join(__dirname, './static/js/app/src/common/leftMenu.js'),
+            header: path.join(__dirname, './static/js/app/src/common/header'),
+            leftMenu: path.join(__dirname, './static/js/app/src/common/leftMenu'),
             util: path.join(__dirname, './static/js/app/src/common/util.js'),
             logout: path.join(__dirname, './static/js/app/src/common/logout.js'),
             AJAXService: path.join(__dirname, './static/js/app/src/common/AJAXService.js'),

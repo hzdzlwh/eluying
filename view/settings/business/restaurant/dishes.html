@@ -16,8 +16,8 @@
             <div class="restaurant-head clearfloat" style="width: 725px">
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <ul class="restaurant-head-nav">
-                    <li class="restaurant-head-nav-selected"><a :href="`/view/business/restaurant/dishes.html?restId=${restId}`">品类管理</a></li>
-                    <li><a :href="`/view/business/price/food.html?restId=${restId}`">价格维护</a></li>
+                    <li class="restaurant-head-nav-selected"><a :href="`/view/settings/business/restaurant/dishes.html?restId=${restId}`">品类管理</a></li>
+                    <li><a :href="`/view/settings/business/price/food.html?restId=${restId}`">价格维护</a></li>
                 </ul>
                 <span class="create-restaurant" @click="openCreatePackageDialog" style="margin-right: 230px;">新增套餐</span>
             </div>

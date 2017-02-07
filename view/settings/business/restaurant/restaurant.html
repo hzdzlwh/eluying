@@ -39,8 +39,8 @@
                     <tbody>
                     <tr v-for="restaurant in restaurants" track-by="restId">
                         <td>{{restaurant.restName}}</td>
-                        <td><a :href="`/view/business/restaurant/dishes.html?restId=${restaurant.restId}`">{{restaurant.dishesSum}}</a></td>
-                        <td><a :href="`/view/business/restaurant/table.html?restId=${restaurant.restId}`">{{restaurant.boardSum}}</a></td>
+                        <td><a :href="`/view/settings/business/restaurant/dishes.html?restId=${restaurant.restId}`">{{restaurant.dishesSum}}</a></td>
+                        <td><a :href="`/view/settings/business/restaurant/table.html?restId=${restaurant.restId}`">{{restaurant.boardSum}}</a></td>
                         <td><span class="code-btn back-{{restaurant.isOpenCaterScan === 1 ? 'open':'close'}}" @click="toggleStatus(restaurant)"></span></td>
                         <td style="width:82px;" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
                         <td>

@@ -16,7 +16,7 @@ $(function(){
     //初始化界面
     header.showHeader();
     leftMenu.showLeftMenu();
-    var location = window.location.pathname.split("/")[4].split(".")[0];
+    var location = window.location.pathname.split("/")[5].split(".")[0];
     var restId = window.location.search.split('=')[1];
     if (location === 'food') {
         restaurantMenu.render({ menuActive: 'dishes' });
