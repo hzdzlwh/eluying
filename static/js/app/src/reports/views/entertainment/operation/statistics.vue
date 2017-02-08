@@ -196,11 +196,11 @@
                     ],
                     legend: {
                         selectedMode: 'single',
-                        data: ['订单金额', '订单数', '消费次数', '均次消费']
+                        data: ['订单金额(元)', '订单数(个)', '消费次数(次)', '均次消费(元)']
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a}{b}: {c}"
+                        formatter: "{b}{a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,
@@ -224,22 +224,22 @@
                     },
                     series: [
                         {
-                            name: '订单金额',
+                            name: '订单金额(元)',
                             type: 'line',
                             data: data.orderFee.map(i => i.value)
                         },
                         {
-                            name: '订单数',
+                            name: '订单数(个)',
                             type: 'line',
                             data: data.orderCount.map(i => i.value)
                         },
                         {
-                            name: '消费次数',
+                            name: '消费次数(次)',
                             type: 'line',
                             data: data.consumeCount.map(i => i.value)
                         },
                         {
-                            name: '均次消费',
+                            name: '均次消费(元)',
                             type: 'line',
                             data: data.avgConsume.map(i => i.value)
                         }

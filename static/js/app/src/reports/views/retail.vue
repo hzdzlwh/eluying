@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="margin-bottom: 22px"><i>订单金额拆分到每日订单，统计每日产生的消费金额</i></p>
+        <p style="margin-bottom: 22px"><i>订单金额按下单时间统计</i></p>
         <div style="display: flex">
             <div class="card" style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
@@ -97,7 +97,7 @@
                         width: width
                     },
                     {
-                        title: '合计',
+                        title: '数量合计',
                         fixed: true,
                         dataIndex: 'total',
                         width: width,
@@ -147,11 +147,11 @@
                     },],
                     legend: {
                         selectedMode: 'single',
-                        data:['订单金额', '订单数']
+                        data:['订单金额(元)', '订单数(个)']
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a}{b}: {c}"
+                        formatter: "{b}{a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,
@@ -175,12 +175,12 @@
                     },
                     series:[
                         {
-                            name: '订单金额',
+                            name: '订单金额(元)',
                             type: 'line',
                             data: data.orderPriceList.map(i => i.value)
                         },
                         {
-                            name: '订单数',
+                            name: '订单数(个)',
                             type: 'line',
                             data: data.orderNumList.map(i => i.orderNum)
                         }
