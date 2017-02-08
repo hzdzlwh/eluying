@@ -147,11 +147,11 @@
                     },],
                     legend: {
                         selectedMode: 'single',
-                        data:['订单金额', '订单数']
+                        data:['订单金额(元)', '订单数(个)']
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a}{b}: {c}"
+                        formatter: "{b}{a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,
@@ -175,12 +175,12 @@
                     },
                     series:[
                         {
-                            name: '订单金额',
+                            name: '订单金额(元)',
                             type: 'line',
                             data: data.orderPriceList.map(i => i.value)
                         },
                         {
-                            name: '订单数',
+                            name: '订单数(个)',
                             type: 'line',
                             data: data.orderNumList.map(i => i.orderNum)
                         }

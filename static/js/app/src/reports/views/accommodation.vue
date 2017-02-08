@@ -196,11 +196,11 @@
                     ],
                     legend: {
                         selectedMode: 'single',
-                        data: ['房费', '间夜量', '入住率', '平均房价']
+                        data: ['房费(元)', '间夜量(间夜)', '入住率(％)', '平均房价(元)']
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a}{b}: {c}"
+                        formatter: "{b}{a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,
@@ -224,22 +224,22 @@
                     },
                     series: [
                         {
-                            name: '房费',
+                            name: '房费(元)',
                             type: 'line',
                             data: data.roomFee.map(i => i.value)
                         },
                         {
-                            name: '间夜量',
+                            name: '间夜量(间夜)',
                             type: 'line',
                             data: data.roomNights.map(i => i.value)
                         },
                         {
-                            name: '入住率',
+                            name: '入住率(％)',
                             type: 'line',
-                            data: data.occupancyRate.map(i => i.value)
+                            data: data.occupancyRate.map(i => i.value * 100)
                         },
                         {
-                            name: '平均房价',
+                            name: '平均房价(元)',
                             type: 'line',
                             data: data.avgPrice.map(i => i.value)
                         }

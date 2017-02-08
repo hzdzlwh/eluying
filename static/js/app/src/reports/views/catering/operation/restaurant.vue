@@ -196,11 +196,11 @@
                     ],
                     legend: {
                         selectedMode: 'single',
-                        data: ['餐费', '订单数', '就餐人次', '人均消费']
+                        data: ['餐费(元)', '订单数(个)', '就餐人次(个)', '人均消费(元)']
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a}{b}: {c}"
+                        formatter: "{b}{a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,
@@ -224,22 +224,22 @@
                     },
                     series: [
                         {
-                            name: '餐费',
+                            name: '餐费(元)',
                             type: 'line',
                             data: data.caterFee.map(i => i.value)
                         },
                         {
-                            name: '订单数',
+                            name: '订单数(个)',
                             type: 'line',
                             data: data.orderCount.map(i => i.value)
                         },
                         {
-                            name: '就餐人次',
+                            name: '就餐人次(个)',
                             type: 'line',
                             data: data.peopleCount.map(i => i.value)
                         },
                         {
-                            name: '人均消费',
+                            name: '人均消费(元)',
                             type: 'line',
                             data: data.peopleAvgConsume.map(i => i.value)
                         }
