@@ -208,7 +208,19 @@
                         data: data.orderFee.map(i => i.date.substr(5, 5))
                     },
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        splitArea: {
+                            show: true
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        }
                     },
                     series: [
                         {
