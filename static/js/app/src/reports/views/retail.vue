@@ -97,7 +97,7 @@
                         width: width
                     },
                     {
-                        title: '合计',
+                        title: '数量合计',
                         fixed: true,
                         dataIndex: 'total',
                         width: width,
