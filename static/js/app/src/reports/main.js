@@ -21,7 +21,10 @@ const app = hasAuth
         ...App
     })
     : new Vue({
-        ...NoAuth
+        render: h => <NoAuth tips="您还没有查看统计报表的权限，请找创建人申请权限。" />,
+        components: {
+            NoAuth
+        }
     });
 
 document.addEventListener('DOMContentLoaded', () => {
