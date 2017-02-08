@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="margin-bottom: 22px"><i>订单金额拆分到每日订单，统计每日产生的消费金额</i></p>
+        <p style="margin-bottom: 22px"><i>订单金额按下单时间统计</i></p>
         <div style="display: flex">
             <div class="card" style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">
                 <div>
