@@ -74,7 +74,8 @@
         computed: {
             ...mapState({order: 'orderDetail'}),
             need() {
-                return this.paid - (this.oldPenalty || 0) - (this.penalty || 0);
+                let penalty = this.subOrderPenaltys.reduce((a, b) => { return a + (Number(b.penalty) || 0) }, 0);
+                return this.paid - (this.oldPenalty || 0) - (this.penalty || 0) - penalty;
             }
         },
         watch: {
@@ -123,7 +124,7 @@
                 let valid = true;
                 if (this.subOrderPenaltys.length > 0) {
                     totalPenalty = this.subOrderPenaltys.reduce((a, b) => { return Number(a) + Number(b.penalty); }, totalPenalty);
-                    valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 });
+                    valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== '' });
                 }
                 if (!valid) {
                     modal.somethingAlert('违约信息填写有误，请核对！');
