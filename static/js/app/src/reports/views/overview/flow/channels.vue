@@ -29,6 +29,7 @@
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
     import echarts from 'echarts';
+    import { getTableData } from '../../../utils/tableHelper';
     import { setPie } from '../../../utils/chartHelper';
     export default{
         computed: {
@@ -82,68 +83,21 @@
                             this.totalExpense = res.data.totalExpense;
                             setPie(collectList, '总收入',  'collect');
                             setPie(refundList, '总支出', 'refund');
-                            this.setTable(listByChannels);
+                            listByChannels.forEach(channel => {
+                                channel.name = channel.channelName;
+                                channel.dateValues = channel.list;
+                            });
+                            const tableData = getTableData({
+                                list: listByChannels,
+                                firstTitle: '收款方式',
+                                secondTitle: '合计',
+                                foot: true
+                            });
+                            this.dataSource = tableData.dataSource;
+                            this.columns = tableData.columns;
                         }
                     })
-            },
-            setTable(list) {
-                const width = 1000 / 9;
-                this.columns = [
-                    {
-                        title: '收款方式',
-                        fixed: true,
-                        dataIndex: 'channelName',
-                        width: width
-                    },
-                    {
-                        title: '合计',
-                        fixed: true,
-                        dataIndex: 'total',
-                        width: width,
-                        className: 'text-right'
-                    }
-                ];
-                const startDate = new Date(this.date.startDate);
-                const endDate = new Date(this.date.endDate);
-
-                const dates = util.getDateBetween(startDate, endDate);
-                dates.map(date => {
-                    this.columns.push({
-                        title: util.dateFormatWithoutYear(date),
-                        dataIndex: util.dateFormat(date),
-                        width: width,
-                        className: 'text-right'
-                    });
-                });
-
-                list.push({
-                    channelName: '综合合计',
-                    list: dates.map((d, i) => {
-                        const value = list.reduce((a, b) => {
-                            return a + b.list[i].value
-                        }, 0);
-
-                        return {
-                            date: util.dateFormat(d),
-                            value: value.toFixed(2) == value ? value : Number(value.toFixed(2))
-                        };
-                    })
-                });
-
-                this.dataSource = list.map(i => {
-                    const data = {
-                        channelName: i.channelName
-                    };
-                    const total = i.list.reduce((a, b) => {
-                        data[b.date] = b.value;
-                        return a + b.value;
-                    }, 0);
-                    data.total = total.toFixed(2) == total ? total : total.toFixed(2);
-                    return data;
-                });
-
-                this.dataSource[this.dataSource.length - 1].foot = true;
-            },
+            }
         }
     }
 </script>

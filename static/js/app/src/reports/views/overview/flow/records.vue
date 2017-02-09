@@ -10,7 +10,7 @@
         <dd-Table :columns="columns" :data-source="dataSource" :bordered="true"></dd-Table>
         <div style="display: flex;justify-content: space-between;margin-top: 20px">
             <span>共计{{num}}笔收款记录 收款金额¥ {{totalPrice}}</span>
-            <dd-pagination @currentchange="queryCashierInfo" :visible-pager-count="6" :show-one-page="false" :page-count="pages" />
+            <dd-pagination @currentchange="queryCashierInfo" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="page" />
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@
         },
         watch: {
             date() {
+                this.page = 1;
                 this.queryCashierInfo();
             }
         },
