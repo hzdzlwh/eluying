@@ -43,6 +43,7 @@
     import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
+    import { setPie, setLine } from '../../utils/chartHelper';
     export default{
         props: {
             startDate: String,
@@ -83,99 +84,40 @@
                             this.playTotalAmount = operationStat.playStat.totalAmount;
                             this.goodsTotalAmount = operationStat.goodsStat.totalAmount;
                             this.allTotalAmount = operationStat.allStat.totalAmount;
-                            this.setPie(operationStat);
-                            this.setLine(operationStat);
+                            setPie([
+                                {value: operationStat.roomStat.totalAmount, name:'住宿'},
+                                {value: operationStat.caterStat.totalAmount, name:'餐饮'},
+                                {value: operationStat.playStat.totalAmount, name:'娱乐'},
+                                {value: operationStat.goodsStat.totalAmount, name:'商超'},
+                            ]);
+                            setLine([
+                                {
+                                    name: '住宿',
+                                    data: operationStat.roomStat.items.map(i => i.value)
+                                },
+                                {
+                                    name: '餐饮',
+                                    data: operationStat.caterStat.items.map(i => i.value)
+                                },
+                                {
+                                    name: '娱乐',
+                                    data: operationStat.playStat.items.map(i => i.value)
+                                },
+                                {
+                                    name: '商超',
+                                    data: operationStat.goodsStat.items.map(i => i.value)
+                                },
+                                {
+                                    name: '总消费金额',
+                                    data: operationStat.allStat.items.map(i => i.value)
+                                },
+                            ],
+                                operationStat.roomStat.items.map(i => i.date.substr(5, 5)),
+                                '金额（元）'
+                            );
                         }
                     })
             },
-            setPie(operationStat) {
-                const chart = echarts.init(document.getElementById('pie'));
-                chart.setOption({
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}: {c} ({d}%)"
-                    },
-                    legend: {
-                        bottom: 0,
-                        data:['住宿','餐饮','娱乐','商超']
-                    },
-                    series: [{
-                        type: 'pie',
-                        radius: ['50%', '70%'],
-                        data:[
-                            {value: operationStat.roomStat.totalAmount, name:'住宿'},
-                            {value: operationStat.caterStat.totalAmount, name:'餐饮'},
-                            {value: operationStat.playStat.totalAmount, name:'娱乐'},
-                            {value: operationStat.goodsStat.totalAmount, name:'商超'},
-                        ]
-                    }],
-                });
-            },
-            setLine(operationStat) {
-                const chart = echarts.init(document.getElementById('line'));
-                chart.setOption({
-                    dataZoom: [{
-                        type: 'slider',
-                        filterMode: 'filter'
-                    },],
-                    legend: {
-                        top: 0,
-                        data:['总消费金额', '住宿','餐饮','娱乐','商超']
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}{a}: {c}"
-                    },
-                    xAxis: {
-                        boundaryGap: false,
-                        type: 'category',
-                        data: operationStat.roomStat.items.map(i => i.date.substr(5, 5))
-                    },
-                    yAxis: {
-                        type: 'value',
-                        splitArea: {
-                            show: true
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        },
-                        name: '金额（元）'
-                    },
-                    series:[
-                        {
-                            name: '总消费金额',
-                            type: 'line',
-                            data: operationStat.allStat.items.map(i => i.value)
-                        },
-                        {
-                            name: '住宿',
-                            type: 'line',
-                            data: operationStat.roomStat.items.map(i => i.value)
-                        },
-                        {
-                            name: '餐饮',
-                            type: 'line',
-                            data: operationStat.caterStat.items.map(i => i.value)
-                        },
-                        {
-                            name: '娱乐',
-                            type: 'line',
-                            data: operationStat.playStat.items.map(i => i.value)
-                        },
-                        {
-                            name: '商超',
-                            type: 'line',
-                            data: operationStat.goodsStat.items.map(i => i.value)
-                        }
-                    ]
-                });
-            }
         }
     }
 </script>
