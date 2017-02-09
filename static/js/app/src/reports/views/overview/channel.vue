@@ -17,6 +17,8 @@
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
     import echarts from 'echarts';
+    import { setPie, setLine } from '../../utils/chartHelper';
+
     export default{
         computed: {
             ...mapState(['date'])
@@ -39,78 +41,16 @@
                 .then(res => {
                     if (res.code === 1) {
                         const { channelIncome, channelsStatByDate } = res.data;
-                        this.setPie(channelIncome);
-                        this.setLine(channelsStatByDate)
-                    }
-                })
-            },
-            setPie(channelIncome) {
-                const chart = echarts.init(document.getElementById('pie'));
-                chart.setOption({
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}: {c} ({d}%)"
-                    },
-                    legend: {
-                        bottom: 0,
-                        data: channelIncome.items.map(i => i.name)
-                    },
-                    series: [{
-                        type: 'pie',
-                        radius: ['50%', '70%'],
-                        data: channelIncome.items
-                    }],
-                });
-            },
-            setLine(channelsStatByDate) {
-                const chart = echarts.init(document.getElementById('line'));
-                chart.setOption({
-                    dataZoom: [{
-                        type: 'slider',
-                        filterMode: 'filter'
-                    },],
-                    legend: {
-                        top: 0,
-                        data: channelsStatByDate.map(i => i.name)
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}  {a}: {c}"
-                    },
-                    xAxis: {
-                        boundaryGap: false,
-                        type: 'category',
-                        data: channelsStatByDate[0].channelsStatByDate.map(i => i.date.substr(5, 5)),
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        }
-                    },
-                    yAxis: {
-                        type: 'value',
-                        splitArea: {
-                            show: true
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        },
-                        name: '金额（元）'
-                    },
-                    series:
-                        channelsStatByDate.map(i => ({
+                        setPie(channelIncome.items);
+                        setLine(channelsStatByDate.map(i => ({
                             name: i.name,
                             type: 'line',
                             data: i.channelsStatByDate.map(i => i.value)
-                        }))
-                });
+                        })),
+                            channelsStatByDate[0].channelsStatByDate.map(i => i.date.substr(5, 5)),
+                            '金额（元）')
+                    }
+                })
             }
         }
     }

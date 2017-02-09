@@ -60,6 +60,8 @@
     import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
+    import { setLine } from '../../../utils/chartHelper';
+
     export default{
         data() {
             return {
@@ -108,7 +110,34 @@
                     endDate: this.date.endDate
                 }).then(res => {
                     if (res.code === 1) {
-                        this.setLine(res.data);
+                        const data = res.data;
+                        setLine([
+                            {
+                                name: '餐费(元)',
+                                type: 'line',
+                                data: data.caterFee.map(i => i.value)
+                            },
+                            {
+                                name: '订单数(个)',
+                                type: 'line',
+                                data: data.orderCount.map(i => i.value)
+                            },
+                            {
+                                name: '就餐人次(个)',
+                                type: 'line',
+                                data: data.peopleCount.map(i => i.value)
+                            },
+                            {
+                                name: '人均消费(元)',
+                                type: 'line',
+                                data: data.peopleAvgConsume.map(i => i.value)
+                            }
+                        ],
+                            data.caterFee.map(i => i.date.substr(5, 5)),
+                            '',
+                            'line',
+                            'single'
+                        );
                         this.caterFee = res.data.summary.caterFee;
                         this.consumeAmount = res.data.summary.consumeAmount;
                         this.orderCount = res.data.summary.orderCount;
@@ -126,67 +155,7 @@
                     }
                 })
             },
-            setLine(data) {
-                const chart = echarts.init(document.getElementById('line'));
-                chart.setOption({
-                    dataZoom: [
-                        {
-                            type: 'slider',
-                            filterMode: 'filter'
-                        },
-                    ],
-                    legend: {
-                        selectedMode: 'single',
-                        data: ['餐费(元)', '订单数(个)', '就餐人次(个)', '人均消费(元)']
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}  {a}: {c}"
-                    },
-                    xAxis: {
-                        boundaryGap: false,
-                        type: 'category',
-                        data: data.caterFee.map(i => i.date.substr(5, 5))
-                    },
-                    yAxis: {
-                        type: 'value',
-                        splitArea: {
-                            show: true
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        }
-                    },
-                    series: [
-                        {
-                            name: '餐费(元)',
-                            type: 'line',
-                            data: data.caterFee.map(i => i.value)
-                        },
-                        {
-                            name: '订单数(个)',
-                            type: 'line',
-                            data: data.orderCount.map(i => i.value)
-                        },
-                        {
-                            name: '就餐人次(个)',
-                            type: 'line',
-                            data: data.peopleCount.map(i => i.value)
-                        },
-                        {
-                            name: '人均消费(元)',
-                            type: 'line',
-                            data: data.peopleAvgConsume.map(i => i.value)
-                        }
-                    ]
-                });
-            }
+
         }
     }
 </script>

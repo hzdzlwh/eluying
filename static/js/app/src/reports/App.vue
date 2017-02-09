@@ -3,7 +3,7 @@
         <LeftMenu></LeftMenu>
         <div class="view-container">
             <div class="date-select-container">
-                <DateSelect></DateSelect>
+                <DateSelect />
             </div>
             <router-view></router-view>
         </div>

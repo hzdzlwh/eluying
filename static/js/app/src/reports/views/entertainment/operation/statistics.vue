@@ -60,6 +60,8 @@
     import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
+    import { setLine } from '../../../utils/chartHelper';
+
     export default{
         data() {
             return {
@@ -108,7 +110,34 @@
                     endDate: this.date.endDate
                 }).then(res => {
                     if (res.code === 1) {
-                        this.setLine(res.data);
+                        const data = res.data;
+                        setLine([
+                            {
+                                name: '订单金额(元)',
+                                type: 'line',
+                                data: data.orderFee.map(i => i.value)
+                            },
+                            {
+                                name: '订单数(个)',
+                                type: 'line',
+                                data: data.orderCount.map(i => i.value)
+                            },
+                            {
+                                name: '消费次数(次)',
+                                type: 'line',
+                                data: data.consumeCount.map(i => i.value)
+                            },
+                            {
+                                name: '均次消费(元)',
+                                type: 'line',
+                                data: data.avgConsume.map(i => i.value)
+                            }
+                        ],
+                            data.orderFee.map(i => i.date.substr(5, 5)),
+                            '',
+                            'line',
+                            'single'
+                        );
                         this.orderFee = res.data.summary.orderFee;
                         this.consumeAmount = res.data.summary.consumeAmount;
                         this.orderCount = res.data.summary.orderCount;

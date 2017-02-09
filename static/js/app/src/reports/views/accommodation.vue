@@ -60,6 +60,7 @@
     import util from '../../common/util';
     import { getTableData } from '../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
+    import { setLine } from '../utils/chartHelper';
     export default{
         data() {
             return {
@@ -108,7 +109,33 @@
                     endDate: this.date.endDate
                 }).then(res => {
                     if (res.code === 1) {
-                        this.setLine(res.data);
+                        const data = res.data;
+                        setLine([
+                            {
+                                name: '房费(元)',
+                                type: 'line',
+                                data: data.roomFee.map(i => i.value)
+                            },
+                            {
+                                name: '间夜量(间夜)',
+                                type: 'line',
+                                data: data.roomNights.map(i => i.value)
+                            },
+                            {
+                                name: '入住率(％)',
+                                type: 'line',
+                                data: data.occupancyRate.map(i => i.value * 100)
+                            },
+                            {
+                                name: '平均房价(元)',
+                                type: 'line',
+                                data: data.avgPrice.map(i => i.value)
+                            }
+                        ],
+                            data.avgPrice.map(i => i.date.substr(5, 5)),
+                        '',
+                        'line',
+                        'single');
                         this.avgPrice = res.data.summary.avgPrice;
                         this.occupancyRate = res.data.summary.occupancyRate;
                         this.penalty = res.data.summary.penalty;

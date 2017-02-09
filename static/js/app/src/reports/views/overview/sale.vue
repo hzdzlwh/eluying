@@ -30,6 +30,7 @@
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem } from 'dd-vue-component';
+    import { setBar } from '../../utils/chartHelper';
     export default{
         data() {
             return {
@@ -98,7 +99,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             const salesStat = res.data.salesStat;
-                            this.setBar(salesStat);
+                            setBar(salesStat.items.map(i => i.value), '金额（元）', salesStat.items.map(i => i.date.substr(5, 5)));
                         }
                     })
             },
