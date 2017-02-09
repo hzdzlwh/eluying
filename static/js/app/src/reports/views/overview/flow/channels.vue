@@ -29,6 +29,7 @@
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
     import echarts from 'echarts';
+    import { setPie } from '../../../utils/chartHelper';
     export default{
         computed: {
             ...mapState(['date']),
@@ -79,8 +80,8 @@
                             this.totalFlow = res.data.totalFlow;
                             this.totalIncome = res.data.totalIncome;
                             this.totalExpense = res.data.totalExpense;
-                            this.setPie('collect', collectList);
-                            this.setPie('refund', refundList);
+                            setPie(collectList, '总收入',  'collect');
+                            setPie(refundList, '总支出', 'refund');
                             this.setTable(listByChannels);
                         }
                     })
@@ -143,27 +144,6 @@
 
                 this.dataSource[this.dataSource.length - 1].foot = true;
             },
-            setPie(id , data) {
-                const chart = echarts.init(document.getElementById(id));
-                chart.setOption({
-                    title: {
-                        text: id === 'collect' ? '总收入' : '总支出'
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}: {c} ({d}%)"
-                    },
-                    legend: {
-                        bottom: 0,
-                        data: data.map(i => i.name)
-                    },
-                    series: [{
-                        type: 'pie',
-                        radius: ['50%', '70%'],
-                        data: data
-                    }],
-                });
-            }
         }
     }
 </script>
