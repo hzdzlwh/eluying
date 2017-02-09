@@ -18,7 +18,7 @@
         </div>
         <div style="display: flex;justify-content: space-between;margin-top: 20px">
             <span>共计{{orderSize}}个订单 销售金额¥{{totalPrice}}</span>
-            <dd-pagination @currentchange="getSalesRecordList" :visible-pager-count="6" :show-one-page="false" :page-count="pages" />
+            <dd-pagination @currentchange="getSalesRecordList" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="page" />
         </div>
     </div>
 </template>
@@ -79,6 +79,7 @@
         },
         watch: {
             date() {
+                this.page = 1;
                 this.getSaleStatistics();
                 this.getSalesRecordList();
             }
