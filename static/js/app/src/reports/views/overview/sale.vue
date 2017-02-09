@@ -17,7 +17,7 @@
             <dd-table :columns="columns" :dataSource="dataSource" :bordered="true" />
         </div>
         <div style="display: flex;justify-content: space-between;margin-top: 20px">
-            <span>共计{{orderSize}}个订单 订单金额¥{{totalPrice}}</span>
+            <span>共计{{orderSize}}个订单 销售金额¥{{totalPrice}}</span>
             <dd-pagination @currentchange="getSalesRecordList" :visible-pager-count="6" :show-one-page="false" :page-count="pages" />
         </div>
     </div>
@@ -44,7 +44,7 @@
                         dataIndex: 'creater'
                     },
                     {
-                        title: '渠道',
+                        title: '客源渠道',
                         dataIndex: 'origin'
                     },
                     {

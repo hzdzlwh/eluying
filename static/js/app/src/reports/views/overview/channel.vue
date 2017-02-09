@@ -75,7 +75,7 @@
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{b}{a}: {c}"
+                        formatter: "{b}  {a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,

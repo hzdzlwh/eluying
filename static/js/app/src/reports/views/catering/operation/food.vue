@@ -23,6 +23,7 @@
     import {mapState} from 'vuex';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
+    import { getTableData } from '../../../utils/tableHelper';
     import { DdTable, DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
@@ -88,59 +89,16 @@
                     nodeId: this.restaurantId
                 }).then(res => {
                     if (res.code === 1) {
-                        this.setTable(res.data.classifyList);
+                        const tableData = getTableData({
+                            list: res.data.classifyList,
+                            firstTitle: '菜品名称',
+                            secondTitle: '合计',
+                            foot: false
+                        });
+                        this.dataSource = tableData.dataSource;
+                        this.columns = tableData.columns;
                     }
                 })
-            },
-            setTable(list) {
-                const width = 1000 / 9;
-                this.columns = [
-                    {
-                        title: '菜品名称',
-                        fixed: true,
-                        dataIndex: 'name',
-                        width: width
-                    },
-                    {
-                        title: '合计',
-                        fixed: true,
-                        dataIndex: 'total',
-                        width: width,
-                        className: 'text-right'
-                    }
-                ];
-                const startDate = new Date(this.date.startDate);
-                const endDate = new Date(this.date.endDate);
-
-                const dates = util.getDateBetween(startDate, endDate);
-                dates.map(date => {
-                    this.columns.push({
-                        title: util.dateFormatWithoutYear(date),
-                        dataIndex: util.dateFormat(date),
-                        width: width,
-                        className: 'text-right'
-                    });
-                });
-
-                const format = (list) => (
-                    list.map(i => {
-                        const data = {
-                            name: i.name
-                        };
-                        const total = i.dateValues.reduce((a, b) => {
-                            data[b.date] = b.value;
-                            return a + b.value;
-                        }, 0);
-                        data.total = total.toFixed(2) == total ? total : total.toFixed(2);
-                        if (i.children && i.children.length > 0) {
-                            data.children = format(i.children);
-                        }
-
-                        return data;
-                    })
-                );
-
-                this.dataSource = format(list);
             },
         }
     }

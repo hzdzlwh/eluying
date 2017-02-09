@@ -58,6 +58,7 @@
     import {mapState} from 'vuex';
     import AJAXService from '../../common/AJAXService';
     import util from '../../common/util';
+    import { getTableData } from '../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
     export default{
         data() {
@@ -114,76 +115,16 @@
                         this.roomFee = res.data.summary.roomFee;
                         this.consumeAmount = res.data.summary.consumeAmount;
                         this.roomNights = res.data.summary.roomNights;
-                        this.setTable(res.data.roomFeeDetail);
+                        const tableData = getTableData({
+                            list: res.data.roomFeeDetail,
+                            firstTitle: '房间名称',
+                            secondTitle: '合计',
+                            foot: true
+                        });
+                        this.dataSource = tableData.dataSource;
+                        this.columns = tableData.columns;
                     }
                 })
-            },
-            setTable(list) {
-                const width = 1000 / 9;
-                this.columns = [
-                    {
-                        title: '房间名称',
-                        fixed: true,
-                        dataIndex: 'name',
-                        width: width
-                    },
-                    {
-                        title: '合计',
-                        fixed: true,
-                        dataIndex: 'total',
-                        width: width,
-                        className: 'text-right'
-                    }
-                ];
-                const startDate = new Date(this.date.startDate);
-                const endDate = new Date(this.date.endDate);
-
-                const dates = util.getDateBetween(startDate, endDate);
-                dates.map(date => {
-                    this.columns.push({
-                        title: util.dateFormatWithoutYear(date),
-                        dataIndex: util.dateFormat(date),
-                        width: width,
-                        className: 'text-right'
-                    });
-                });
-
-                list.push({
-                    name: '综合合计',
-                    dateValues: dates.map((d, i) => {
-                        const value = list.reduce((a, b) => {
-                            return a + b.dateValues[i].value
-                        }, 0);
-
-                        return {
-                            date: util.dateFormat(d),
-                            value: value.toFixed(2) == value ? value : Number(value.toFixed(2))
-                        };
-                    })
-                });
-
-                const format = (list) => (
-                    list.map(i => {
-                        const data = {
-                            name: i.name
-                        };
-                        const total = i.dateValues.reduce((a, b) => {
-                            data[b.date] = b.value;
-                            return a + b.value;
-                        }, 0);
-                        data.total = total.toFixed(2) == total ? total : total.toFixed(2);
-                        if (i.children && i.children.length > 0) {
-                            data.children = format(i.children);
-                        }
-
-                        return data;
-                    })
-                );
-
-
-                this.dataSource = format(list);
-
-                this.dataSource[this.dataSource.length - 1].foot = true;
             },
             setLine(data) {
                 const chart = echarts.init(document.getElementById('line'));
@@ -200,7 +141,7 @@
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{b}{a}: {c}"
+                        formatter: "{b}  {a}: {c}"
                     },
                     xAxis: {
                         boundaryGap: false,

@@ -3,7 +3,7 @@
         <LeftMenu></LeftMenu>
         <div class="view-container">
             <div class="date-select-container">
-                <DateSelect @change="handleDateChange"></DateSelect>
+                <DateSelect></DateSelect>
             </div>
             <router-view></router-view>
         </div>
@@ -60,11 +60,6 @@
         data() {
             return{
                 msg:'hello vue'
-            }
-        },
-        methods: {
-            handleDateChange(date) {
-                console.log(date);
             }
         },
         components:{
