@@ -134,48 +134,6 @@
                 const pa = AJAXService.getDataWithToken(paramsObj);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
-            },
-            setBar(salesStat) {
-                const chart = echarts.init(document.getElementById('bar'));
-                chart.setOption({
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: '{b}: {c}'
-                    },
-                    dataZoom: [{
-                        type: 'slider',
-                        filterMode: 'filter'
-                    },],
-                    xAxis: {
-                        type: 'category',
-                        data: salesStat.items.map(i => i.date.substr(5, 5))
-                    },
-                    yAxis: {
-                        type: 'value',
-                        name: '金额（元）'
-                    },
-                    series: [{
-                        type: 'bar',
-                        data: salesStat.items.map(i => i.value),
-                        itemStyle: {
-                            normal: {
-                                color: '#82beff',
-                                barBorderRadius: 2
-                            }
-                        },
-                        barWidth: 16,
-                        label: {
-                            normal: {
-                                formatter: '{c}',
-                                show: true,
-                                position: 'top',
-                                textStyle: {
-                                    color: '#000'
-                                }
-                            }
-                        }
-                    }]
-                });
             }
         }
     }
