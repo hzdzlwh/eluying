@@ -127,7 +127,7 @@
                     valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== '' });
                 }
                 if (!valid) {
-                    modal.somethingAlert('违约信息填写有误，请核对！');
+                    modal.somethingAlert('请输入违约金！');
                     return false;
                 }
                 if (this.penalty && this.order.orderType !== -1) {

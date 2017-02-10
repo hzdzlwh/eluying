@@ -7,7 +7,18 @@
             </div>
         </div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
-            <p>销售记录<i>（{{date.startDate}}~{{date.endDate}}）</i></p>
+            <div style="display: flex"><span>销售记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
+                <div style="width: 120px;margin-right: 10px">
+                    <dd-select v-model="createrId">
+                        <dd-option v-for="employee in employeeList" :value="employee.employeeId" :label="employee.realName"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="width: 120px">
+                    <dd-select v-model="originId">
+                        <dd-option v-for="origin in origins" :value="origin.id" :label="origin.name"></dd-option>
+                    </dd-select>
+                </div>
+            </div>
             <dd-dropdown text="导出明细" trigger="click">
                 <dd-dropdown-item><span><a :href="exportUrl(1)" download>导出PDF</a></span></dd-dropdown-item>
                 <dd-dropdown-item><span><a :href="exportUrl(0)" download>导出Excel</a></span></dd-dropdown-item>
@@ -29,7 +40,7 @@
     import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
-    import { DdTable, DdPagination, DdDropdown, DdDropdownItem } from 'dd-vue-component';
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import { setBar } from '../../utils/chartHelper';
     export default{
         data() {
@@ -67,7 +78,25 @@
                 page: 1,
                 pages: undefined,
                 totalPrice: undefined,
-                orderSize: undefined
+                orderSize: undefined,
+                employeeList: [
+                    {
+                        realName: '全部创建人',
+                        employeeId: 'ALL'
+                    }
+                ],
+                createrId: 'ALL',
+                originId: 'ALL',
+                origins: [
+                    {
+                        name: '全部渠道',
+                        id: 'ALL'
+                    },
+                    {
+                        name: '散客',
+                        id: -1
+                    }
+                ]
             }
         },
         computed: {
@@ -76,11 +105,21 @@
         created() {
             this.getSaleStatistics();
             this.getSalesRecordList();
+            this.getEmployeeList();
+            this.getChannels();
         },
         watch: {
             date() {
                 this.page = 1;
                 this.getSaleStatistics();
+                this.getSalesRecordList();
+            },
+            createrId() {
+                this.page = 1;
+                this.getSalesRecordList();
+            },
+            originId() {
+                this.page = 1;
                 this.getSalesRecordList();
             }
         },
@@ -88,7 +127,9 @@
             DdTable,
             DdPagination,
             DdDropdown,
-            DdDropdownItem
+            DdDropdownItem,
+            DdSelect,
+            DdOption
         },
         methods: {
             getSaleStatistics() {
@@ -110,7 +151,9 @@
                 AJAXService.ajaxWithToken('get', '/stat/getSalesRecordList', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
-                    page: this.page
+                    page: this.page,
+                    createrId: this.createrId === 'ALL' ? '' : this.createrId,
+                    originId: this.originId === 'ALL' ? '' : this.originId
                 })
                     .then(res => {
                         if (res.code === 1) {
@@ -120,6 +163,22 @@
                             this.pages = Math.ceil(this.orderSize / 30);
                         }
                     });
+            },
+            getEmployeeList() {
+                AJAXService.ajaxWithToken('get', '/user/getEmployeeList', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.employeeList = [...this.employeeList, ...res.data.list];
+                        }
+                })
+            },
+            getChannels() {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.origins = [...this.origins, ...res.data.list];
+                        }
+                })
             },
             exportUrl(type) {
                 const paramsObj = {
