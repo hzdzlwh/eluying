@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <p>
-                        <small><i>消费人次</i></small>
+                        <small><i>消费次数</i></small>
                     </p>
                     <h4>{{consumeCount}}</h4>
                 </div>
