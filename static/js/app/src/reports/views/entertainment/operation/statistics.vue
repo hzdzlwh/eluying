@@ -28,12 +28,12 @@
                     </p>
                     <h4>{{consumeCount}}</h4>
                 </div>
-                <div>
+                <!--<div>
                     <p>
                         <small><i>均次消费</i></small>
                     </p>
                     <h4>¥{{avgConsume}}</h4>
-                </div>
+                </div>-->
             </div>
             <div class="card" style="flex: 1">
                 <h5 class="card-title"><b>娱乐运营分析</b></h5>
@@ -127,11 +127,11 @@
                                 type: 'line',
                                 data: data.consumeCount.map(i => i.value)
                             },
-                            {
+                            /*{
                                 name: '均次消费(元)',
                                 type: 'line',
                                 data: data.avgConsume.map(i => i.value)
-                            }
+                            }*/
                         ],
                             data.orderFee.map(i => i.date.substr(5, 5)),
                             '',
