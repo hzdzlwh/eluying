@@ -155,67 +155,6 @@
                     }
                 })
             },
-            setLine(data) {
-                const chart = echarts.init(document.getElementById('line'));
-                chart.setOption({
-                    dataZoom: [
-                        {
-                            type: 'slider',
-                            filterMode: 'filter'
-                        },
-                    ],
-                    legend: {
-                        selectedMode: 'single',
-                        data: ['订单金额(元)', '订单数(个)', '消费次数(次)', '均次消费(元)']
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}  {a}: {c}"
-                    },
-                    xAxis: {
-                        boundaryGap: false,
-                        type: 'category',
-                        data: data.orderFee.map(i => i.date.substr(5, 5))
-                    },
-                    yAxis: {
-                        type: 'value',
-                        splitArea: {
-                            show: true
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        }
-                    },
-                    series: [
-                        {
-                            name: '订单金额(元)',
-                            type: 'line',
-                            data: data.orderFee.map(i => i.value)
-                        },
-                        {
-                            name: '订单数(个)',
-                            type: 'line',
-                            data: data.orderCount.map(i => i.value)
-                        },
-                        {
-                            name: '消费次数(次)',
-                            type: 'line',
-                            data: data.consumeCount.map(i => i.value)
-                        },
-                        {
-                            name: '均次消费(元)',
-                            type: 'line',
-                            data: data.avgConsume.map(i => i.value)
-                        }
-                    ]
-                });
-            }
         }
     }
 </script>

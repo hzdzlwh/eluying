@@ -142,6 +142,11 @@
                         this.roomFee = res.data.summary.roomFee;
                         this.consumeAmount = res.data.summary.consumeAmount;
                         this.roomNights = res.data.summary.roomNights;
+                        const penalty = {
+                            name: '违约金',
+                            dateValues: res.data.penaltys
+                        };
+                        res.data.roomFeeDetail.push(penalty);
                         const tableData = getTableData({
                             list: res.data.roomFeeDetail,
                             firstTitle: '房间名称',
@@ -152,67 +157,6 @@
                         this.columns = tableData.columns;
                     }
                 })
-            },
-            setLine(data) {
-                const chart = echarts.init(document.getElementById('line'));
-                chart.setOption({
-                    dataZoom: [
-                        {
-                            type: 'slider',
-                            filterMode: 'filter'
-                        }
-                    ],
-                    legend: {
-                        selectedMode: 'single',
-                        data: ['房费(元)', '间夜量(间夜)', '入住率(％)', '平均房价(元)']
-                    },
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{b}  {a}: {c}"
-                    },
-                    xAxis: {
-                        boundaryGap: false,
-                        type: 'category',
-                        data: data.avgPrice.map(i => i.date.substr(5, 5))
-                    },
-                    yAxis: {
-                        type: 'value',
-                        splitArea: {
-                            show: true
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        }
-                    },
-                    series: [
-                        {
-                            name: '房费(元)',
-                            type: 'line',
-                            data: data.roomFee.map(i => i.value)
-                        },
-                        {
-                            name: '间夜量(间夜)',
-                            type: 'line',
-                            data: data.roomNights.map(i => i.value)
-                        },
-                        {
-                            name: '入住率(％)',
-                            type: 'line',
-                            data: data.occupancyRate.map(i => i.value * 100)
-                        },
-                        {
-                            name: '平均房价(元)',
-                            type: 'line',
-                            data: data.avgPrice.map(i => i.value)
-                        }
-                    ]
-                });
             }
         }
     }
