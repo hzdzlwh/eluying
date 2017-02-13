@@ -123,7 +123,7 @@
                                 data: data.orderCount.map(i => i.value)
                             },
                             {
-                                name: '就餐人次(个)',
+                                name: '就餐人次(人)',
                                 type: 'line',
                                 data: data.peopleCount.map(i => i.value)
                             },
