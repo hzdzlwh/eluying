@@ -171,8 +171,8 @@
                     endDate: this.date.endDate,
                     page: this.page,
                     channelId: this.channelId === 'ALL' ? '' : this.channelId,
+                    operaterId: operatorId,
                     cashierType,
-                    operatorId
                 })
                     .then(res => {
                         if (res.code === 1) {
