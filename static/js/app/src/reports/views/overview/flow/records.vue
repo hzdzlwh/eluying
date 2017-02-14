@@ -150,7 +150,7 @@
 
                 let cashierType, operatorId;
                 switch (this.operatorId) {
-                    case 'all':
+                    case 'ALL':
                         break;
                     case 'ONE':
                         cashierType = 1;
