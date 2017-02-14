@@ -1,7 +1,19 @@
 <template>
     <div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
-            <p>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></p>
+            <div style="display: flex">
+                <span>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
+                <div style="width: 120px;margin-right: 10px">
+                    <dd-select v-model="operatorId">
+                        <dd-option v-for="employee in employeeList" :value="employee.employeeId" :label="employee.realName"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="width: 120px">
+                    <dd-select v-model="channelId">
+                        <dd-option v-for="channel in channels" :value="channel.id" :label="channel.name"></dd-option>
+                    </dd-select>
+                </div>
+            </div>
             <dd-dropdown text="导出明细" trigger="click">
                 <dd-dropdown-item><span><a :href="exportUrl(1)" download>导出PDF</a></span></dd-dropdown-item>
                 <dd-dropdown-item><span><a :href="exportUrl(0)" download>导出Excel</a></span></dd-dropdown-item>
@@ -16,7 +28,7 @@
 </template>
 <script>
     import { mapState } from 'vuex';
-    import { DdTable, DdPagination, DdDropdown, DdDropdownItem } from 'dd-vue-component';
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
     export default{
@@ -27,16 +39,28 @@
             date() {
                 this.page = 1;
                 this.queryCashierInfo();
+            },
+            channelId() {
+                this.page = 1;
+                this.queryCashierInfo();
+            },
+            operatorId() {
+                this.page = 1;
+                this.queryCashierInfo();
             }
         },
         created() {
             this.queryCashierInfo();
+            this.getEmployeeList();
+            this.getChannels();
         },
         components: {
             DdTable,
             DdPagination,
             DdDropdown,
-            DdDropdownItem
+            DdDropdownItem,
+            DdSelect,
+            DdOption
         },
         data() {
             return {
@@ -92,7 +116,28 @@
                 dataSource: [],
                 num: undefined,
                 totalPrice: undefined,
-                pages: undefined
+                pages: undefined,
+                employeeList: [
+                    {
+                        realName: '全部操作人',
+                        employeeId: 'ALL'
+                    },
+                    {
+                        realName: '一码通自助充值',
+                        employeeId: 'ONE'
+                    },
+                    {
+                        realName: '游客线上付款',
+                        employeeId: 'VISITOR'
+                    },
+                    {
+                        realName: '全部员工',
+                        employeeId: 'EMPLOYEE'
+                    }
+                ],
+                operatorId: 'ALL',
+                channels: [{id: 'ALL', name: '全部收款方式'}],
+                channelId: 'ALL'
             }
         },
         methods: {
@@ -103,10 +148,31 @@
 
                 this.page = page ? page : this.page;
 
+                let cashierType, operatorId;
+                switch (this.operatorId) {
+                    case 'all':
+                        break;
+                    case 'ONE':
+                        cashierType = 1;
+                        break;
+                    case 'VISITOR':
+                        cashierType = 3;
+                        break;
+                    case 'EMPLOYEE':
+                        operatorId = -1;
+                        break;
+                    default:
+                        operatorId = this.operatorId;
+                        break;
+                }
+
                 AJAXService.ajaxWithToken('get', '/stat/queryCashierInfoPC', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
-                    page: this.page
+                    page: this.page,
+                    channelId: this.channelId === 'ALL' ? '' : this.channelId,
+                    operaterId: operatorId,
+                    cashierType,
                 })
                     .then(res => {
                         if (res.code === 1) {
@@ -116,6 +182,22 @@
                             this.pages = Math.ceil(res.data.num / 30);
                         }
                     });
+            },
+            getEmployeeList() {
+                AJAXService.ajaxWithToken('get', '/user/getEmployeeList', {})
+                    .then(res => {
+                            if (res.code === 1) {
+                                this.employeeList = [...this.employeeList, ...res.data.list]
+                            }
+                        })
+            },
+            getChannels() {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 1, isAll: true })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.channels = [...this.channels, ...res.data.list]
+                        }
+                    })
             },
             exportUrl(type) {
                 const paramsObj = {
