@@ -32,7 +32,7 @@
                     <p>
                         <small>平均入住率</small>
                     </p>
-                    <h4 v-if="occupancyRate !== 'undefined'">{{occupancyRate * 100}}%</h4>
+                    <h4 v-if="occupancyRate !== 'undefined'">{{(occupancyRate * 100).toFixed(2)}}%</h4>
                 </div>
             </div>
             <div class="card" style="flex: 1">
