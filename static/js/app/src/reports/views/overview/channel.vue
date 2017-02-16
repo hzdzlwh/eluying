@@ -18,7 +18,7 @@
     import AJAXService from '../../../common/AJAXService';
     import echarts from 'echarts';
     import { setPie, setLine } from '../../utils/chartHelper';
-
+    import util from '../../../common/util';
     export default{
         computed: {
             ...mapState(['date'])
@@ -40,6 +40,10 @@
                 })
                 .then(res => {
                     if (res.code === 1) {
+                        const startDate = util.stringToDate(this.date.startDate);
+                        const endDate = util.stringToDate(this.date.endDate);
+
+                        const days = util.getDateBetween(startDate, endDate);
                         const { channelIncome, channelsStatByDate } = res.data;
                         setPie(channelIncome.items);
                         setLine(channelsStatByDate.map(i => ({
@@ -47,7 +51,7 @@
                             type: 'line',
                             data: i.channelsStatByDate.map(i => i.value)
                         })),
-                            channelsStatByDate[0].channelsStatByDate.map(i => i.date.substr(5, 5)),
+                            days.map(d => util.dateFormatWithoutYear(d)),
                             '金额（元）')
                     }
                 })
