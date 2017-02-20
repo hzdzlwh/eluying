@@ -17,13 +17,16 @@ var gulp = require('gulp'),
     webpackConf = require('./webpack.conf'),
     url = require('url'),
     fileInclude = require('gulp-file-include');
+    config = require('./config');
 
+// 开发服务
 gulp.task('browser-sync', function () {
     browserSync.init({
         server: {
             baseDir: './',
             index: 'login.html',
             https: true,
+            // 统计报表单页
             middleware: function(req, res, next) {
                 if (req.url.indexOf('/view/reports') > -1) {
                     req.url = '/view/reports/index.html';
@@ -34,8 +37,9 @@ gulp.task('browser-sync', function () {
     });
 });
 
+// 首页模板拼接
 gulp.task('file-include', function() {
-    gulp.src(['./static/tpl/feature.html'])
+    gulp.src(config.html)
         .pipe(fileInclude())
         .pipe(gulp.dest('./view/home'));
     gulp.src(['./static/tpl/login.html'])
@@ -48,6 +52,7 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
+// hash缓存
 function revHash() {
     gulp.src('static/css/**/*.css')
         .pipe(rev())
@@ -101,7 +106,7 @@ gulp.task('rev', function () {
 
 
 gulp.task('styles', function () {
-    return sass(['static/sass/main.scss', 'static/sass/ordersManage/orders/orders.scss'], {style: 'compressed'})
+    return sass(config.css, {style: 'compressed'})
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('static/css'))

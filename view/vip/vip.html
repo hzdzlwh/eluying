@@ -14,6 +14,14 @@
 </head>
 <body ng-controller="itemsCtrl">
     <div class="container-manageVip">
+        <ul class="restaurant-head-nav" style="margin-top: 20px">
+            <li>
+                <a class="active" href="/view/vip/vip.html">会员列表</a>
+            </li>
+            <li>
+                <a href="/view/vip/setting.html">会员设置</a>
+            </li>
+        </ul>
         <div class="vip-top">
             <img class="filter-img" ng-click="search()" src="//static.dingdandao.com/vipSearch.png">
             <span class="vip-left">共<span ng-bind="vipUserCount"></span>个会员</span>
@@ -30,11 +38,6 @@
                         <th style="width: 79px;">姓名</th>
                         <th style="width: 102px;">手机号</th>
                         <th style="width: 186px;">证件号</th>
-                        <th style="width: 150px;">邮箱</th>
-                        <th style="width: 60px;">性别</th>
-                        <th style="width: 127px;">生日</th>
-                        <th style="width: 121px;">地区</th>
-                        <th style="width: 116px;">备注</th>
                         <th style="width: 99px;">操作</th>
                     </tr>
                 </thead>
@@ -44,22 +47,6 @@
                         <td ng-bind="item.vipName"></td>
                         <td ng-bind="item.phone"></td>
                         <td>{{item.idCardNum}}<span class="idType" ng-if="item.idCardNum && (item.idCardType || item.idCardType ===0) ">{{getIdCardIcon(item.idCardType)}}</span></td>
-                        <td>
-                            <p class="tow-line-ellipsis" ng-bind="item.email"></p>
-                        </td>
-                        <td><span ng-if="item.gender === 0">男</span><span ng-if="item.gender === 1">女</span></td>
-                        <td style="text-align: center;padding-left: 0" ng-bind="item.birthday"></td>
-                        <td>
-                            <p class="tow-line-ellipsis" ng-bind="item.province + item.city + item.county"></p>
-                        </td>
-                        <td ng-class="{'remark': $index !== 0, 'remark-first': $index === 0}"><p class="tow-line-ellipsis" ng-bind="item.remark"></p>
-                            <div ng-if="item.remark!=='' && $index !== 0">{{item.remark}}
-                                <span><img src="//static.dingdandao.com/vip_arrow_down.jpg" alt=""></span>
-                            </div>
-                            <div ng-if="item.remark!=='' && $index === 0">{{item.remark}}
-                                <span><img src="//static.dingdandao.com/vip_arrow_up.jpg" alt=""></span>
-                            </div>
-                        </td>
                         <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
                     </tr>
                 </tbody>
