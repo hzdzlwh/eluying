@@ -1,4 +1,45 @@
+@import '../../../node_modules/dd-common-css/src/variables';
+
 .vip-container {
   padding-top: 88px;
-  max-width: 1000px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  i {
+    color: #999;
+    font-style: normal;
+  }
+
+  .help-button {
+    color: #178ce6;
+    cursor: pointer;
+  }
+  #helpModal {
+    .modal-content {
+      padding: 10px;
+    }
+  }
+  .modal-content {
+    background: #fafafa;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
+    border-radius: 2px;
+    width:632px;
+    border-top: 4px solid #178ce6;
+    padding: 20px;
+  }
+  #settingModal {
+    label {
+      width: 98px;
+      text-align: right;
+    }
+    .form-row {
+      margin-bottom: 15px;
+    }
+    .line {
+      width: 484px;
+      height: 1px;
+      background: #e6e6e6;
+      margin: 15px -20px;
+    }
+  }
 }
