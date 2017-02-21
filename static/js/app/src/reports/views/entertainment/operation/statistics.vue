@@ -42,7 +42,7 @@
         </div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
             <p>娱乐消费统计
-                <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
+                <small><i>({{date.startDate}}~{{date.endDate}})  违约金=取消订单违约金+其他收费</i></small>
             </p>
             <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
         </div>
