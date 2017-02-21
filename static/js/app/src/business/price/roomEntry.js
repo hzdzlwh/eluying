@@ -13,15 +13,13 @@ require("validate");
 require("validation");
 var trToggle = require("trToggle");
 var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+    topMenu: true
+});
 
 $(function(){
-    //初始化界面
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    topMenu.showTopMenu();
-    util.mainContainer();
-    modal.modalInit();
     $(".campName").html(localStorage.getItem("campName"));
 
 //初始化日历
@@ -58,10 +56,6 @@ $(function(){
             $(".editSalePrice").addClass("hide");
             $(".editNetPrice").addClass("hide");
         },
-        "resize window": util.mainContainer,
-        "show.bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
-
 
     };
     util.bindDomAction(events);

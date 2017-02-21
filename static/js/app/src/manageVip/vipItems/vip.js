@@ -2,7 +2,6 @@
  * Created by zhaoyongsheng on 16/6/2.
  */
 var AJAXService = require("AJAXService");
-var header = require("header");
 var util = require("util");
 var modal = require("modal");
 require("angular");
@@ -15,18 +14,14 @@ require('../../common/ngPagination');
 var itemsCtrl = require('./controller/mainAppCtrl');
 var createVipCtrl = require('./controller/createVipCtrl');
 var auth = require('../../common/auth');
-auth.checkAuth(auth.VIP_ID, auth.NO_AUTH_FOR_VIP_URL);
+import init from '../../common/init';
 
+init({
+    id: auth.VIP_ID,
+    noAuthUrl: auth.NO_AUTH_FOR_VIP_URL,
+    leftMenu: false
+});
 $(function() {
-    //初始化界面
-    header.showHeader();
-    //高亮"会员管理"
-    $(".ordersManageEntry").removeClass("selected");
-    $(".settingsEntry").removeClass("selected");
-    $(".accomodationEntry").removeClass("selected");
-    $(".manageVipEntry").addClass("selected");
-    modal.modalInit();
-    modal.centerModals();
     var events = {
         /*"click .outPut-excel": function(ev){
             ev.stopPropagation();

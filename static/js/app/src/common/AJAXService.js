@@ -126,6 +126,12 @@ var AJAXService = {
             error: errorCallback
         });
     },
+    get(path, data) {
+        return this.ajaxWithToken('GET', path, data);
+    },
+    post(path, data) {
+        return this.ajaxWithToken('POST', path, data);
+    },
     ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
         data.campId = localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");

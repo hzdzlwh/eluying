@@ -2,28 +2,22 @@
  * Created by zhaoyongsheng on 16/9/22.
  */
 import Vue from 'vue';
-import header from 'header';
 import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
 import auth from '../../common/auth';
 import NoAuth from '../../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
-
+import init from '../../common/init';
+init({
+    leftMenu: false
+});
 require("bootstrap");
 require("validation");
 
 $(function(){
-    //初始化界面
-    header.showHeader();
-    //高亮"订单管理"
-    $(".manageVipEntry").removeClass("selected");
-    $(".settingsEntry").removeClass("selected");
-    $(".accomodationEntry").removeClass("selected");
-    $(".ordersManageEntry").addClass("selected");
     var events = {
 
-        "resize window": util.mainContainer,
         "click .orders-tr": function(ev){
             ev.stopPropagation();
             $(".orders-tr").removeClass("dd-tr-selected");

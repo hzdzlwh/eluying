@@ -2,8 +2,6 @@
  * Created by lingchenxuan on 16/6/16.
  */
 var Vue = require('vue1');
-var header = require("header");
-var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var AJAXService = require('AJAXService');
@@ -11,16 +9,14 @@ require("bootstrap");
 require("validation");
 require("jqueryui");
 var auth = require('../../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../../common/init';
+init({
+    id: auth.BUSINESS_ID
+});
 
 
 $(function(){
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.centerModals();
     var events = {
-        "resize window": util.mainContainer,
         "mouseover .imgss":function() {
             $(this).next().show();
         },

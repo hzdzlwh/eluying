@@ -4,13 +4,17 @@
 import Vue from 'vue';
 import App from './App';
 import 'bootstrap';
-import header from 'header';
 import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
 import store from './store';
+import init from '../common/init';
 
-auth.checkAuth(auth.ACCOMMODATION_ID, auth.NO_AUTH_FOR_A_URL);
+init({
+    leftMenu: false,
+    id: auth.ACCOMMODATION_ID,
+    noAuthUrl: auth.NO_AUTH_FOR_A_URL
+});
 
 const app = new Vue({
     store,
@@ -18,8 +22,6 @@ const app = new Vue({
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    header.showHeader();
-    modal.modalInit();
 
     const events = {
         // hover高亮时间和房间
@@ -73,6 +75,4 @@ document.addEventListener('DOMContentLoaded', () => {
     util.bindDomAction(events);
 
     app.$mount('#app');
-
-    modal.centerModals();
 });
