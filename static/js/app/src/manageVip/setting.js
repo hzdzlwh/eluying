@@ -17,7 +17,7 @@ $(function() {
     const main = new Vue({
         el: '.vip-container',
         created: function() {
-
+            console.log('hi')
         }
     })
 });
