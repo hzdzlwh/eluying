@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 2017/2/9.
  */
-import echarts from 'echarts';
+import echarts from 'echarts/dist/echarts.common.min';
 const color = ['#4ec0e6', '#e86d6d', '#6c96ff', '#7bd769', '#fbd400', '#ffbb53', '#f68633', '#6f68b4'];
 const tooltip = {
     trigger: 'item',

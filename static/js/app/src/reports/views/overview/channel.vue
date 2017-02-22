@@ -25,7 +25,6 @@
 <script>
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
-    import echarts from 'echarts';
     import { setPie, setLine } from '../../utils/chartHelper';
     import { getTableData } from '../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';

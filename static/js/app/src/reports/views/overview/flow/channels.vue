@@ -28,7 +28,6 @@
     import { DdTable } from 'dd-vue-component';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
-    import echarts from 'echarts';
     import { getTableData } from '../../../utils/tableHelper';
     import { setPie } from '../../../utils/chartHelper';
     export default{

@@ -49,7 +49,6 @@
 <style>
 </style>
 <script>
-    import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
     import { setPie, setLine } from '../../utils/chartHelper';

@@ -54,7 +54,6 @@
 <style>
 </style>
 <script>
-    import echarts from 'echarts';
     import {mapState} from 'vuex';
     import AJAXService from '../../common/AJAXService';
     import util from '../../common/util';
