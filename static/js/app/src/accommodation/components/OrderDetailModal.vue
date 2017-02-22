@@ -4,13 +4,13 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <div class="header-container">
+                        <div class="header-container" v-if="order.orderState">
                             <span class="header-text">订单详情</span>
-                            <span class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
+                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}" v-text="ORDER_STATUS_ICON[order.orderState]['text']"></span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" @click="openPrint(order)">打印</span>
+                            <span class="header-tools" v-if="order.orderState !== -1" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
@@ -146,7 +146,7 @@
                                                     </p>
                                                 </div>
                                                 <div class="operator-container">
-                                                    <p>订单状态:{{FOOD_STATE[item.detail.orderState]}}</p>
+                                                    <p>订单状态:{{item.detail.orderState === -1 ? '待付款' : FOOD_STATE[item.detail.orderState]}}</p>
                                                     <p>预订时间:{{item.detail.creationTime}}</p>
                                                     <p>操作员:{{item.detail.reserveName}}</p>
                                                 </div>
@@ -274,7 +274,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="roomModals-footer">
+                    <div class="roomModals-footer" v-if="order.orderState !== -1">
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
@@ -562,7 +562,7 @@
 <script>
     import AJAXService from 'AJAXService';
     import util from 'util';
-    import { ID_CARD_TYPE, FOOD_STATE } from '../const';
+    import { ID_CARD_TYPE, FOOD_STATE, ORDER_STATUS_ICON } from '../const';
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
@@ -579,7 +579,8 @@
         data(){
             return{
                 ID_CARD_TYPE,
-                FOOD_STATE
+                FOOD_STATE,
+                ORDER_STATUS_ICON
             }
         },
         computed: {
@@ -628,20 +629,6 @@
             hideModal() {
                 this.$emit('hideOrderDetail');
                 $("#orderDetail").modal("hide");
-            },
-            getOrderState(state){
-                switch(state){
-                    case 2:
-                        return {text: '已预订', borderColor: '#ffffff #ffba75', backgroundColor: '#ffba75'};
-                    case 3:
-                        return {text: '进行中', borderColor: '#ffffff #82beff', backgroundColor: '#82beff'};
-                    case 4:
-                        return {text: '已取消', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    case 5:
-                        return {text: '已完成', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    default:
-                        return {};
-                }
             },
             /**根据状态获取对应的图标
              * 0-餐, 3-住
