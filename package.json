@@ -9,6 +9,7 @@
     "dd-vue-component": "^0.4.2",
     "dot": "^1.0.3",
     "echarts": "^3.3.2",
+    "jquery": "1.12.4",
     "md5": "^2.1.0",
     "vue": "^2.0.1",
     "vue-router": "^2.1.1",

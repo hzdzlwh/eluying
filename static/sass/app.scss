@@ -226,6 +226,10 @@
         color: white;
       }
     }
+    .network-list {
+      height: 336px;
+      overflow-y: auto;
+    }
     dl {
       position: absolute;
       top: 68px;

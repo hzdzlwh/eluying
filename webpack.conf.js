@@ -66,7 +66,6 @@ var webpackConf =  {
             vue1: path.join(__dirname, './static/js/lib/vue.1.0.26.js'),
             vue: 'vue/dist/vue.js',
             cookie: path.join(__dirname, './static/js/lib/jquery.cookie.js'),
-            jquery: path.join(__dirname, './static/js/lib/jquery.min.js'),
             jqueryui: path.join(__dirname, './static/js/lib/jquery-ui.min.js'),
             'datepicker-zh': path.join(__dirname, './static/js/lib/datepicker-zh-CN.js'),
             bootstrap: path.join(__dirname, './static/js/lib/bootstrap.min.js'),
