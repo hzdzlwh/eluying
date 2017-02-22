@@ -134,7 +134,7 @@
                 }
                 let roomPersonValid = true;
                 selectedRoom.forEach(item => {
-                    if (item.idCardList.length > 0) {
+                    if (item.idCardList && item.idCardList.length > 0) {
                         item.idCardList.forEach(person => {
                             if (person.idCardNum === '' || person.name === '') {
                                 roomPersonValid = false;
