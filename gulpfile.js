@@ -110,6 +110,7 @@ gulp.task('styles', function () {
 });
 
 gulp.task('webpack-prod', function () {
+    delete webpackConf.devtool;
     webpackConf.plugins.push(
         new webpack.DefinePlugin({
             'process.env': {
@@ -127,6 +128,7 @@ gulp.task('webpack-prod', function () {
             comments: false
         })
     );
+    webpackConf.resolve.alias.vue = 'vue/dist/vue.min.js';
     return gulp.src('static/js/app/src/entry.js')
         .pipe(gulpWebpack(webpackConf, null, function (err, stats) {
             if (err) throw new gutil.PluginError('webpack', err);

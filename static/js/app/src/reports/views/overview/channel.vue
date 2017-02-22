@@ -8,6 +8,15 @@
                 <div id="line" style="width: 60%; height: 336px"></div>
             </div>
         </div>
+        <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
+            <p>渠道来源明细
+                <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
+            </p>
+            <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
+        </div>
+        <div>
+            <dd-Table :columns="columns" :data-source="dataSource" :bordered="true" size="small"></dd-Table>
+        </div>
     </div>
 </template>
 <style>
@@ -16,12 +25,27 @@
 <script>
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
-    import echarts from 'echarts';
     import { setPie, setLine } from '../../utils/chartHelper';
+    import { getTableData } from '../../utils/tableHelper';
+    import { DdTable } from 'dd-vue-component';
     import util from '../../../common/util';
     export default{
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            exportUrl() {
+                const paramsObj = {
+                    exportType: 0,
+                    reportType: 11,
+                    params: {
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    }
+                };
+                const host = AJAXService.getUrl2('/stat/exportReport');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                const params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
+            }
         },
         watch: {
             date() {
@@ -30,6 +54,15 @@
         },
         created() {
             this.getChannelStatistics();
+        },
+        data() {
+            return {
+                columns: [],
+                dataSource: []
+            }
+        },
+        components: {
+            DdTable
         },
         methods: {
             getChannelStatistics() {
@@ -53,6 +86,14 @@
                         })),
                             days.map(d => util.dateFormatWithoutYear(d)),
                             '金额（元）')
+                        const tableData = getTableData({
+                            list: channelsStatByDate.map(i => ({ ...i, dateValues: i.channelsStatByDate })),
+                            firstTitle: '客源渠道',
+                            secondTitle: '合计',
+                            foot: true
+                        });
+                        this.dataSource = tableData.dataSource;
+                        this.columns = tableData.columns;
                     }
                 })
             }
