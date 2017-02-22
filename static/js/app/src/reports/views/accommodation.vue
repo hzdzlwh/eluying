@@ -79,7 +79,7 @@
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 2,
