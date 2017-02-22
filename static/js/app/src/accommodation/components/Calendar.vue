@@ -54,10 +54,17 @@
                     <tbody>
                         <template v-for="room in finalRoomStatus">
                             <tr class="calendar-status-row" v-if="room.selected && !room.folded">
-                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr">
+                                <td class="calendar-status"
+                                    v-for="(status, index) in room.st"
+                                    :key="room.i + status.dateStr"
+                                    :room="room.i"
+                                    :date="status.dateStr"
+                                    @contextmenu="openAction(status, $event)"
+                                >
                                     <div
                                         v-if="status.s === -1"
                                         class="calendar-status-inner"
+                                        :key="room.i + status.dateStr"
                                         :class="{'selected': status.selected}"
                                         @click="selectStatus(status)"
                                     >
@@ -72,7 +79,8 @@
                                     </div>
                                     <div
                                         class="calendar-status-action"
-                                        @click="openOrCloseStatus(room, status)"
+                                        @click.stop="openOrCloseStatus(room, status)"
+                                        v-if="status.actionVisible"
                                     >
                                         {{status.s === 100 ? '打开房间' : '关闭房间'}}
                                     </div>
@@ -379,7 +387,6 @@
         text-align: center;
     }
     .calendar-status-action {
-        display: none;
         background: #fafafa;
         box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
         width: 88px;
@@ -528,7 +535,8 @@
             return {
                 scrollTicking: false,
                 lastScrollTop: 0,
-                lastScrollLeft: 0
+                lastScrollLeft: 0,
+                currentAction: undefined
             }
         },
         components: {
@@ -646,15 +654,14 @@
         },
         methods: {
             handleStatusScroll(ev) {
-                this.lastScrollTop = ev.target.scrollTop;
-                this.lastScrollLeft = ev.target.scrollLeft;
                 if (!this.scrollTicking) {
+                    this.$refs.calendarLeftHeader.scrollTop = ev.target.scrollTop;
+                    this.$refs.calendarHeader.scrollLeft = ev.target.scrollLeft;
                     window.requestAnimationFrame(() => {
-                        this.$refs.calendarLeftHeader.scrollTop = this.lastScrollTop;
-                        this.$refs.calendarHeader.scrollLeft = this.lastScrollLeft;
                         this.scrollTicking = false;
                     })
                 }
+
                 this.scrollTicking = true;
             },
             handleDateChange(date) {
@@ -695,6 +702,13 @@
             showOrder(id){
                 this.$emit('showOrder', id);
             },
+            openAction(status, ev) {
+                ev.preventDefault();
+                this.currentAction && (this.currentAction.actionVisible = false);
+                this.$set(status, 'actionVisible', true);
+                this.currentAction = status;
+                return false;
+            },
             setDirtyRoom(room) {
                 AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {
                     actionType: !room.isDirty,
@@ -711,6 +725,11 @@
         },
         directives: {
             Clickoutside
+        },
+        created: function() {
+            document.body.addEventListener('click', () => {
+                this.currentAction && (this.currentAction.actionVisible = false);
+            });
         }
     }
 </script>
