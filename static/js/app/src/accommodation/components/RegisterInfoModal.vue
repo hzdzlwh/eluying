@@ -16,8 +16,15 @@
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
+                                    <div class="userVip-list" v-if="vipListShow">
+                                        <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
+                                            <span class="vip-level">[<span class="vip-level-text">{{ vip.level }}</span>]</span>
+                                            <span class="vip-name">{{ vip.name }}</span>
+                                            <span class="vip-phone">{{ vip.phone }}</span>
+                                        </p>
+                                    </div>
                                     <label for="name">联系人</label>
-                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name">
+                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name" @input="getVipList">
                                 </div>
                                 <div class="userInfo-item userInfo-phone">
                                     <label for="phone">手机号</label>
@@ -49,7 +56,7 @@
                                                 </dd-option>
                                             </dd-select>
                                             <div class="room-category">
-                                                <dd-select v-model="item.roomType" placeholder="请选择房型" @input="modifyRoom(item)">
+                                                <dd-select v-model="item.roomType" placeholder="请选择房型" @input="modifyRoom(item, false)">
                                                     <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :label="room.name">
                                                     </dd-option>
                                                 </dd-select>
@@ -58,11 +65,11 @@
                                                 <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">该房间的入住时间必需为今日！</span>
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())" :disabled="item.state === 1"/>
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item, true)" :disabled-date="disabledStartDate(new Date())" :disabled="item.state === 1"/>
                                                 </div>
                                                 <span>~</span>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" @input="modifyRoom(item)" :disabled-date="disabledEndDate(item.room.startDate)"/>
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" @input="modifyRoom(item, true)" :disabled-date="disabledEndDate(item.room.startDate)"/>
                                                 </div>
                                                 <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
                                             </div>
@@ -82,6 +89,10 @@
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
+                                        <span class="discount-info">
+                                            <span>原价<span class="origin-price">¥600</span></span>
+                                            <span class="discount-num">会员7折</span>
+                                        </span>
                                     </div>
                                     <CheckInPerson
                                             :personsObj="{id: index, persons: item.idCardList}"
@@ -306,11 +317,49 @@
             cursor: pointer;
         }
         .userInfo-items {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
             div:last-child {
                 margin-right: 16px;
+            }
+        }
+        .userVip-list {
+            position: absolute;
+            background:#fafafa;
+            box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
+            border-radius:2px;
+            width:261px;
+            max-height:120px;
+            overflow: scroll;
+            top: 26px;
+            left: 42px;
+            z-index: 100;
+        }
+        .userVip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666666;
+            font-size: 12px;
+            height: 24px;
+            padding: 0 8px;
+            cursor: pointer;
+            &:hover {
+                background: #e1effa;
+            }
+            .vip-level {
+                display: inline-flex;
+                align-items: center;
+                width: 80px;
+            }
+            .vip-level-text {
+                display: inline-block;
+                max-width: 70px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
         .userInfo-phone {
@@ -345,6 +394,26 @@
         .registerInfoModal-roomPrice {
             display: flex;
             align-items: center;
+        }
+        .discount-info {
+            display: inline-flex;
+            position: absolute;
+            font-size: 12px;
+            color: #999999;
+            top: 30px;
+            right: 0;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .origin-price {
+            text-decoration: line-through;
+        }
+        .discount-num {
+            display: inline-flex;
+            padding: 3px 5px;
+            color: #ffffff;
+            background: #f5a623;
+            border-radius: 2px;
         }
         .registerInfoModal-roomPriceList {
             display: flex;
@@ -404,6 +473,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         .registerRoom-container {
             display: flex;
@@ -567,7 +637,14 @@
                 shopGoodsItems: [],
                 registerRooms: [],
                 showOrder: false,
-                lastModifyRoomTime: 0
+                lastModifyRoomTime: 0,
+                vipListShow: false,
+                vipList: [{level: '白金', name: 'xys', phone: '18039672561'},
+                          {level: '白金', name: 'xys', phone: '18039672561'},
+                          {level: '白金', name: 'xys', phone: '18039672561'},
+                          {level: '白金', name: 'xys', phone: '18039672561'},
+                          {level: '白金', name: 'xys', phone: '18039672561'},
+                          {level: '白金', name: 'xys', phone: '18039672561'}]
             }
         },
 
@@ -650,16 +727,20 @@
                     }
                 });
                 AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, (res) =>{
-                    res.data.list.forEach((d) => {
-                        d.gList.forEach((dd) => {
-                            this.shopList.push({
-                                id: dd.i,
-                                price: dd.p,
-                                name: dd.n,
-                                type: 3
+                    if (res.code ===1) {
+                        res.data.list.forEach((d) => {
+                            d.gList.forEach((dd) => {
+                                this.shopList.push({
+                                    id: dd.i,
+                                    price: dd.p,
+                                    name: dd.n,
+                                    type: 3
+                                });
                             });
                         });
-                    });
+                    } else {
+                        modal.somethingAlert(res.msg);
+                    }
                 });
                 AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
                         .then(res => {
@@ -686,6 +767,23 @@
                     default:
                         return {};
                 }
+            },
+            getVipList() {
+                if (this.name.length === 3 || this.phone.length === 4) {
+                    let params = this.name === 3 ? { name: this.name } : { phone: this.phone };
+                    AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
+                        .then(res => {
+                            if (res.code === 1) {
+
+                            }
+                        });
+                    this.vipListShow = true;
+                }
+            },
+            setUserInfo(obj) {
+                this.name = obj.name;
+                this.phone = obj.phone;
+                this.vipListShow = false;
             },
             checkIsToday(date) {
                  return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
@@ -1115,7 +1213,7 @@
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
-            modifyRoom(item) {
+            modifyRoom(item, boolean) {
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
@@ -1139,7 +1237,7 @@
                             res.data.rs.status.forEach((option,index) => {
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
                             });
-                            if (item.datePriceList.length > 0) {
+                            if (item.datePriceList.length > 0 && boolean) {
                                 datePriceList.forEach(newDate => {
                                     item.datePriceList.forEach(oldDate => {
                                         if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
@@ -1153,7 +1251,6 @@
                             });
                             item.price = Number(price.toFixed(2));
                             item.datePriceList = datePriceList;
-
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
@@ -1188,7 +1285,7 @@
             changeRoomType(item) {
                 this.$nextTick(function() {
                     item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.modifyRoom(item);
+                    this.modifyRoom(item, false);
                 });
             }
         },
