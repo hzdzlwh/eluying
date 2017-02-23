@@ -69,7 +69,7 @@ $(function() {
                                     },
                                     {
                                         title: '操作',
-                                        render: (h, row) => (<span></span>),
+                                        render: (h, row) => (<span className="list-action"><span>编辑</span>/<span>删除</span></span>),
                                         width: 93
                                     },
                                 ];
