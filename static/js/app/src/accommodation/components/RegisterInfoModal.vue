@@ -75,7 +75,10 @@
                                             </div>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
                                                 <label class="label-text">房费</label>
-                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" @blur="setFirstDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
+                                                <p class="fee-container">
+                                                    <span class="fee-symbol">¥</span>
+                                                    <input class="dd-input fee-input" v-model="item.price" @input="setDateFee(item.price, item)" @blur="setFirstDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
+                                                </p>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
@@ -141,7 +144,10 @@
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}}</span>
+                                                <p class="fee-container">
+                                                    <span class="fee-symbol">¥</span>
+                                                    <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice" />
+                                                </p>
                                             </p>
                                         </div>
                                     </div>
@@ -394,6 +400,19 @@
         .registerInfoModal-roomPrice {
             display: flex;
             align-items: center;
+        }
+        .fee-container {
+            position: relative;
+            display: inline-block;
+        }
+        .fee-symbol {
+            position: absolute;
+            left: 8px;
+            top: 3px;
+            z-index: 10;
+        }
+        .fee-input {
+            padding-left: 16px;
         }
         .discount-info {
             display: inline-flex;
@@ -682,7 +701,7 @@
                 if (this.enterItems.length > 0) {
                     this.enterItems.forEach(enter => {
                         if (enter.id) {
-                            let enterPrice = (this.getItemInfo(enter.type, enter.id)['price'] * enter.count * enter.timeAmount).toFixed(2);
+                            let enterPrice = enter.totalPrice;
                             totalPrice += Number(enterPrice);
                         }
                     });
@@ -868,7 +887,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
+                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0, totalPrice: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -1045,6 +1064,7 @@
                     enter.timeAmount = item.timeAmount;
                     enter.date = item.date;
                     enter.categoryId = item.id;
+                    enter.totalPrice = item.totalPrice;
                     this.enterList.forEach(option => {
                         if (option.id === item.id) {
                             enter.categoryName = option.name;
@@ -1128,9 +1148,15 @@
                 if (type === 3) {
                     this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
                 } else if (type === 2) {
-                    this.enterItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                    this.enterItems.forEach((item, index) => {
+                        item.count = (index === tag) ? num : item.count;
+                        item.totalPrice = (this.getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2);
+                    });
                 } else if (type === -2) {
-                    this.enterItems.forEach((item, index) => {item.timeAmount = (index === tag) ? num : item.timeAmount;});
+                    this.enterItems.forEach((item, index) => {
+                        item.timeAmount = (index === tag) ? num : item.timeAmount;
+                        item.totalPrice = (this.getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2);
+                    });
                 }
             },
 
@@ -1275,6 +1301,7 @@
                         .then(res => {
                             if (res.code === 1) {
                                 item.inventory = res.data.inventory;
+                                item.totalPrice = (this.getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -1345,6 +1372,7 @@
                         enter.selfInventory = item.amount;
                         enter.type = 2;
                         enter.inventory = undefined;
+                        enter.totalPrice = (item.price * item.count * (item.timeAmount ? item.timeAmount : 1)).toFixed(2);
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
