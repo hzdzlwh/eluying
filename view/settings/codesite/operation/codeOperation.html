@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="//www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——一码通网站设置</title>
+    <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/codesite/operation.js"></script>
+</head>
+<body>
+<div class="mainContainer clearfloat">
+    <div class="content clearfloat">
+        <div class="codesite-operation-success">
+            <div class="successbox">
+                <div class="hr"></div>
+                <div class="formrow website">
+                    <div class="clabel">网址：</div>
+                    <div class="ctext"><a id="campUrl" :href="onepassUrl" v-text="onepassUrl"></a></div>
+                    <div class="cbtn" @click="copyText">复制网址</div>
+                    <div class="copy-success"><span class="copy-success-img"><img src="//static.dingdandao.com/success-copy.png" alt=""></span><span class="copy-success-tip">复制成功!</span></div>
+                </div>
+                <div class="formrow erweima">
+                    <div class="clabel">二维码:</div>
+                    <img class="erweimapic" alt="营地二维码" :src="onepassQrCode"/>
+                    <div class="c-btn"><a :href="onepassQrCode" download>下载二维码</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="codesite-operation-status">
+            <div class="statusbox">
+                <div class="hr"></div>
+                <div class="table-box">
+                    <table>
+                        <tr>
+                            <td style="width: 184px;"><div class="c-text">自助充值功能</div></td>
+                            <td><div class="dot-{{ selfRechargeTypeStyle }} dot"></div><div class="c-status" v-text="selfRechargeTypeStr"></div></td>
+                            <td style="width: 350px; text-align: right;">
+                                <div class="c-btn" v-if="!wapPayStatus" v-text="wapPayTypeStr" @click="modifySelfChargeStatus"></div>
+                                <div class="cbtn-grey" v-if="wapPayStatus">启用
+                                    <div class="tips">请先<a href="/view/settings/payment/method/method.html">开启手机网站支付</a></div>
+                                    <span class="tips-arrow"><img src="//static.dingdandao.com/csite-arrow.jpg" alt=""></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

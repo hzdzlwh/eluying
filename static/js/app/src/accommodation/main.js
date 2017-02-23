@@ -5,7 +5,6 @@ import Vue from 'vue';
 import App from './App';
 import 'bootstrap';
 import header from 'header';
-import topMenu from "../common/topMenu";
 import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
@@ -20,14 +19,7 @@ const app = new Vue({
 
 document.addEventListener('DOMContentLoaded', () => {
     header.showHeader();
-    //高亮"前台录入"
-    $(".ordersManageEntry").removeClass("selected");
-    $(".settingsEntry").removeClass("selected");
-    $(".manageVipEntry").removeClass("selected");
-    $(".accomodationEntry").addClass("selected");
-    topMenu.showTopMenu();
     modal.modalInit();
-    modal.centerModals();
 
     const events = {
         // hover高亮时间和房间
@@ -58,27 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         "mouseleave body .calendar-glyph": function(ev){
             $(this).find(".calendar-glyph-detail").hide();
-        },
-        // 开关房按钮
-        "contextmenu body .calendar-status": function(ev){
-            $(".calendar-status-action").hide();
-            $(this).find(".calendar-status-action").show();
-            return false;
-        },
-        "contextmenu body .calendar-status-close": function(ev){
-            $(".calendar-status-action").hide();
-            $(this).siblings(".calendar-status-action").show();
-            return false;
-        },
-        "mousedown body .calendar-status-action": function(ev){
-            ev.stopPropagation();
-        },
-        //
-        "click body": function(ev){
-            $(".calendar-status-action").hide();
-        },
+        }
     };
     util.bindDomAction(events);
 
     app.$mount('#app');
+
+    modal.centerModals();
 });

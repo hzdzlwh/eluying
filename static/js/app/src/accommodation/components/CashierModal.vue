@@ -18,7 +18,7 @@
                             </div>
                             <div class="cashier-getMoney-container">
                                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
-                                    <div class="cashier-getMoney-channel" v-for="(payment, index) in payments">
+                                    <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
                                         <span>金额:</span>
                                         <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
@@ -155,7 +155,8 @@
                 depositPayChannel: undefined,
                 deposit: undefined,
                 orderPayment: {},
-                disabledBtn: false
+                disabledBtn: false,
+                uniqueId: 0
             }
         },
         computed:{
@@ -353,7 +354,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2 });
+                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId++ });
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -431,18 +432,18 @@
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
-                        payments: [{ fee: this.business.penalty, type: 4 }]
+                        subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
                     };
-                    if (this.business.penalty) {
+                    /*if (this.business.penalty) {
                         payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
-                    }
+                    }*/
                     params = {
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(businessJson)
                     }
-                }else {
+                } else {
                     params = {
                         orderId: this.orderDetail.orderId,
                         orderType: -1,

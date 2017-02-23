@@ -1,0 +1,17 @@
+<ul class='leftMenu'>
+    {{~it :item}}
+    <li class="leftMenu-item">
+        <a id={{=item.name}} class="{{=item.actived ? 'active' : ''}}"  href={{=item.path}}>{{=item.title}}</a>
+        {{? item.actived}}
+        <ul id="leftMenu-children">
+            {{~item.children : child}}
+            <li id="{{=child.name}}">
+                <a href="{{=child.path}}" class="{{=child.actived ? 'active' : ''}}">{{=child.title}}</a>
+            </li>
+            {{~}}
+        </ul>
+        {{?}}
+    </li>
+    {{~}}
+</ul>
+
