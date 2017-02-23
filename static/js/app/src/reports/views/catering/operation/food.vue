@@ -92,7 +92,7 @@
                         const tableData = getTableData({
                             list: res.data.classifyList,
                             firstTitle: '菜品名称',
-                            secondTitle: '合计',
+                            secondTitle: '数量合计',
                             foot: false
                         });
                         this.dataSource = tableData.dataSource;
