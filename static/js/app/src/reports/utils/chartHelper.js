@@ -102,7 +102,6 @@ export function setBar(data, yAxisName, xAxisData, id = 'bar') {
             filterMode: 'filter'
         },],
         xAxis: {
-            boundaryGap: false,
             type: 'category',
             splitLine: {
                 show: false
