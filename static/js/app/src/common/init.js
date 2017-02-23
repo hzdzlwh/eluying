@@ -31,8 +31,8 @@ export default function (option) {
         option.centerModals && modal.centerModals();
         const events = {
             "resize window": util.mainContainer,
-            "show.bs.modal .modal": modal.centerModals,
-            "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
+            "show.bs.modal body .modal": modal.centerModals,
+            "click body .btn-cancel": function(){var that = this; modal.clearModal(that);}
         };
 
         util.bindDomAction(events);

@@ -156,7 +156,7 @@ var AJAXService = {
         data.campId = data.campId || localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");
         data.terminal = 1;
-        data.version = data.version || 15;
+        data.version = data.version || 17;
         var array = [];
         for(var key in data){
             array.push(data[key]);

@@ -133,3 +133,4 @@ exports.modalInit = modalInit;
 exports.somethingAlert = somethingAlert;
 exports.confirmDialog = confirmDialog;
 exports.ajaxWaiting = ajaxWaiting;
+exports.alert = somethingAlert;
