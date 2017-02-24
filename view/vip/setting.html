@@ -22,16 +22,17 @@
                 <a href="/view/vip/setting.html">会员设置</a>
             </li>
         </ul>
-        <div style="margin: 23px 0 6px" class="clearfix" v-if="settings.length > 0">
+        <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
             <i>会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i>最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button class="dd-btn dd-btn-primary" style="float: right" data-toggle="modal" data-target="#settingModal">新增</button>
+            <button class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
+            <div style="margin-top:6px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
+                <dd-Table :columns="columns" :data-source="settings"></dd-Table>
+            </div>
         </div>
-        <div style="box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
-            <dd-Table :columns="columns" :data-source="settings"></dd-Table>
-        </div>
-        <div style="text-align: center; margin-top: 87px" v-if="settings.length === 0">
+
+        <div style="text-align: center; margin-top: 87px" v-if="settings && settings.length === 0">
             <img src="//static.dingdandao.com/ordersManage_noOrders.png" alt="">
             <p style="margin: 10px 0 20px"><i>您目前还没有会员体系</i><span class="help-button" data-toggle="modal" data-target="#helpModal">&nbsp;&nbsp;帮助</span></p>
             <button class="dd-btn dd-btn-primary" data-toggle="modal" data-target="#system">创建会员体系</button>
@@ -135,7 +136,7 @@
                     </div>
                     <div style="margin-left: 105px">
                         <button class="dd-btn dd-btn-primary dd-btn-sm" @click="createLevel">确定</button>
-                        <button class="dd-btn dd-btn-ghost dd-btn-sm">取消</button>
+                        <button class="dd-btn dd-btn-ghost dd-btn-sm" data-dismiss="modal">取消</button>
                     </div>
                 </div>
             </div>

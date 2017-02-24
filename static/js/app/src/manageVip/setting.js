@@ -15,7 +15,6 @@ init({
 });
 
 $(function() {
-
     const main = new Vue({
         el: '.vip-container',
         created: function() {
@@ -23,13 +22,14 @@ $(function() {
         },
         data() {
             return {
-                settings: [],
+                settings: undefined,
                 autoUpgrade: undefined,
                 levelName: undefined,
                 thresholdFee: undefined,
                 consume: [],
                 discount: [],
                 columns: [],
+                id: undefined
             }
         },
         components: {
@@ -69,7 +69,7 @@ $(function() {
                                     },
                                     {
                                         title: '操作',
-                                        render: (h, row) => (<span className="list-action"><span>编辑</span>/<span>删除</span></span>),
+                                        render: (h, row) => (<span class="list-action"><span onClick={() => this.openEdit(row)}>编辑</span>/<span>删除</span></span>),
                                         width: 93
                                     },
                                 ];
@@ -85,7 +85,7 @@ $(function() {
                                         {
                                             title: '消费累计项目',
                                             render: (h, row) => {
-                                                return <span>{row.consumeItems.join('、')}</span>
+                                                return <span>{row.consumeItems.map(i => i.nodeName).join('、')}</span>
                                             },
                                             width: 390
                                         }
@@ -97,13 +97,47 @@ $(function() {
                         }
                     });
             },
+            openCreate() {
+                this.levelName = undefined;
+                this.id = undefined;
+                this.thresholdFee = undefined;
+                this.consume = [];
+                this.discount = [];
+                $('#settingModal').modal('show');
+            },
+            openEdit(item) {
+                this.levelName = item.levelName;
+                this.id = item.vipLevelSettingId;
+                this.thresholdFee = item.thresholdFee;
+                this.consume = item.consumeItems;
+                this.discount = item.discountInfoList;
+                $('#settingModal').modal('show');
+            },
             createLevel() {
+                for (let i = 0; i < this.discount.length; i ++) {
+                    if (!/^0\.[1-9]|~[1-9]\.[0.9]|^[1-9]/.test(this.discount[i].discount)) {
+                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
+                }
+
+                if (!this.levelName) {
+                    modal.alert('请填写会员等级名称');
+                    return false;
+                }
+
+                if (!this.thresholdFee) {
+                    modal.alert('请输入升级条件');
+                    return false;
+                }
+
                 const url = this.autoUpgrade == 1 ?'/vipUser/createEditVipLevel' : '/vipUser/createEditVipLevelNotAuto';
                 http.post(url, {
                     levelName: this.levelName,
                     thresholdFee: this.thresholdFee,
                     consumeListReq: JSON.stringify(this.consume),
-                    discountListReq: JSON.stringify(this.discount)
+                    discountListReq: JSON.stringify(this.discount),
+                    id: this.id
                 })
                     .then(res => {
                         if (res.code === 1) {
