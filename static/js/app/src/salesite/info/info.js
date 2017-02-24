@@ -122,7 +122,7 @@ $(function() {
                 })
             },
             fileUpload(callback) {
-                $('#detail').fileupload({
+                $('#saleSite-uploadBtn').fileupload({
                     url: AJAXService.getUrl2("uploadImageUrl"),
                     done: (e, data) => {
                         var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
@@ -139,7 +139,7 @@ $(function() {
                 this.fileUpload(url => {
                     this.imgUrls.push(url);
                 });
-                $('#detail').click();
+                $('#saleSite-uploadBtn').click();
             },
             remove(index) {
                 this.imgUrls.splice(index, 1);
@@ -148,7 +148,7 @@ $(function() {
                 this.fileUpload(url => {
                     this.imgUrls.splice(index, 1, url);
                 });
-                $('#detail').click();
+                $('#saleSite-uploadBtn').click();
             },
             search() {
                 const addressStr = `${this.provinceItems[this.provinceType].name}${this.cityItems[this.cityType].name}${this.countyItems[this.countyType].name}${this.address}`;
