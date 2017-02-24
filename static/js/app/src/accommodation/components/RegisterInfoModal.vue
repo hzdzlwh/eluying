@@ -1349,7 +1349,14 @@
                                         datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p, showInput: false});
                                         price += option.p;
                                     });
-                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: Number(price.toFixed(2)), room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
+                                    this.registerRooms.push({ categoryType: id,
+                                                              roomType: item.roomId,
+                                                              price: Number(price.toFixed(2)),
+                                                              originPrice: Number(price.toFixed(2)),
+                                                              room: item, idCardList: [],
+                                                              showPriceList: false,
+                                                              datePriceList: datePriceList,
+                                                              showTip: false });
                                 }
                             });
                     });
