@@ -69,7 +69,12 @@ $(function() {
                                     },
                                     {
                                         title: '操作',
-                                        render: (h, row) => (<span class="list-action"><span onClick={() => this.openEdit(row)}>编辑</span>/<span>删除</span></span>),
+                                        render: (h, row) => (
+                                            <span class="list-action">
+                                                <span onClick={() => this.openEdit(row)}>编辑</span>/
+                                                <span onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
+                                            </span>
+                                        ),
                                         width: 93
                                     },
                                 ];
@@ -96,6 +101,20 @@ $(function() {
 
                         }
                     });
+            },
+            deleteLevel(id) {
+                modal.confirmDialog({
+                    message: '删除该会员等级后，该等级的会员降底一等级，确认删除么？'
+                }, () => {
+                    http.post('/vipUser/removeVipLevel', { vipLevelId: id })
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.getLevelList();
+                            } else {
+                                modal.alert(res.msg);
+                            }
+                        })
+                });
             },
             openCreate() {
                 this.levelName = undefined;

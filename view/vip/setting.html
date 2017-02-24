@@ -16,18 +16,18 @@
     <div class="vip-container">
         <ul class="restaurant-head-nav" style="margin-top: 20px">
             <li>
-                <a class="active" href="/view/vip/vip.html">会员列表</a>
+                <a href="/view/vip/vip.html">会员列表</a>
             </li>
             <li>
-                <a href="/view/vip/setting.html">会员设置</a>
+                <a class="active"  href="/view/vip/setting.html">会员设置</a>
             </li>
         </ul>
         <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
             <i>会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i>最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
-            <div style="margin-top:6px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
+            <button v-if="settings && settings.length < 5" class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
+            <div style="margin-top:12px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
                 <dd-Table :columns="columns" :data-source="settings"></dd-Table>
             </div>
         </div>
