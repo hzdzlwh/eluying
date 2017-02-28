@@ -11,13 +11,6 @@ var itemsCtrl = function(app){
     getItemsService(app);
     app.controller("itemsCtrl",['$rootScope', '$scope', 'getItemsService',
         function(rootScope, scope, getItemsService){
-            /*AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
-                pageNo: 1,
-                pageSize: 20
-            }, function(result){
-                scope.dataItems = result.data.list;
-                scope.$apply();
-            });*/
             rootScope.outPutExcel = function(){
                 var campId = localStorage.getItem("campId");
                 var uid = localStorage.getItem("uid");
@@ -28,6 +21,9 @@ var itemsCtrl = function(app){
             };
             rootScope.addNewVip = function(){
                 rootScope.modify = false;
+                $("#newVipModal").modal("show");
+            };
+            rootScope.openDetail = function(item) {
                 $("#newVipModal").modal("show");
             };
             rootScope.modifyVip = function(item){
@@ -48,14 +44,12 @@ var itemsCtrl = function(app){
                         }
                     });
             };
-            rootScope.pageSize = 15;
+            rootScope.pageSize = 30;
             rootScope.searchText = '';
             rootScope.currentPage = 1;
+            rootScope.vip = {};
             var flag;
             scope.filterSearch = function() {
-                /*if (ev.keyCode === 13) {
-                    scope.search();
-                }*/
                 clearTimeout(flag);
                 flag = setTimeout(function(){
                     scope.search();
@@ -74,7 +68,10 @@ var itemsCtrl = function(app){
                 getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
                 getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };
+
             getItemsService.getVipUserCount(rootScope);
+            getItemsService.getVipLevels(rootScope);
+
             scope.getPageCount = function() {
                 return !!scope.vipUserCount && Math.ceil(scope.vipUserCount / rootScope.pageSize);
             };

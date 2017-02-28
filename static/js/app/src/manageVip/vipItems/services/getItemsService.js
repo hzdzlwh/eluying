@@ -8,14 +8,24 @@ require("angular");
 var getItemsService = function(app){
     app.service("getItemsService",[function(){
         this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
-            AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
+            AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserList', {
                 pageNo: pageNo,
-                pageSize: pageSize,
                 searchPattern: searchPattern
             }, function(result){
-                rootScope.dataItems = result.data.list;
+                rootScope.dataItems = result.data.vipUserList;
                 rootScope.$apply();
             });
+        };
+        this.getVipLevels = function(rootScope) {
+            AJAXService.get('/vipUser/getVipLevels')
+                .then(res => {
+                    rootScope.levels = res.data.list;
+                    rootScope.levels.push({
+                        vipLevelId: '',
+                        vipLevelName: '—'
+                    });
+                    rootScope.$apply();
+                })
         };
         this.getVipUserCount = function(rootScope) {
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: rootScope.searchText},
@@ -25,27 +35,6 @@ var getItemsService = function(app){
                     rootScope.$apply();
                 }
             })
-        };
-        this.getIdList = function(callback){
-            var idList = [
-                {key: '0', label: '身份证'},
-                {key: '1', label: '军官证'},
-                {key: '2', label: '通行证'},
-                {key: '3', label: '护照'},
-                {key: '4', label: '其他'},
-            ];
-            callback({
-                idList: idList
-            });
-        };
-        this.getGender = function(callback){
-            var genderList = [
-                {key: 'first', gender: '男'},
-                {key: 'second', gender: '女'}
-            ];
-            callback({
-                genderList: genderList
-            });
         };
     }]);
 };

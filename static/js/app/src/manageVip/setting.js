@@ -156,7 +156,7 @@ $(function() {
                     thresholdFee: this.thresholdFee,
                     consumeListReq: JSON.stringify(this.consume),
                     discountListReq: JSON.stringify(this.discount),
-                    id: this.id
+                    vipLevelSettingId: this.id
                 })
                     .then(res => {
                         if (res.code === 1) {

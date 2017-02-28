@@ -10,7 +10,6 @@ var createVipCtrl = function(app) {
     app.controller('createVipCtrl', ['$rootScope', '$scope', 'createVipService',
         function(rootScope, scope, createVipService) {
             scope.mailFilter = /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/;
-            scope.newVip = {name: '', phone: '', idCardType: 0};
             scope.genderList = [
                 { key:0, label: '男' },
                 { key:1, label: '女' }
@@ -25,7 +24,7 @@ var createVipCtrl = function(app) {
                 scope.selectedDistrict = 0;
                 scope.cityItems = dsy.Items[0 + '_' + scope.selectedProvince];
                 scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
-                scope.newVip.province = scope.provinceItems[scope.selectedProvince];
+                rootScope.vip.province = scope.provinceItems[scope.selectedProvince];
                 if(rootScope.item){
                     rootScope.item.province = scope.provinceItems[scope.selectedProvince];
                 }
@@ -35,7 +34,7 @@ var createVipCtrl = function(app) {
                 scope.selectedCity = index;
                 scope.selectedDistrict = 0;
                 scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
-                scope.newVip.city = scope.cityItems[scope.selectedCity];
+                rootScope.vip.city = scope.cityItems[scope.selectedCity];
                 if(rootScope.item){
                     rootScope.item.city = scope.cityItems[scope.selectedCity];
                 }
@@ -43,7 +42,7 @@ var createVipCtrl = function(app) {
             scope.selectedDistrict = 0;
             scope.selectDistrict = function(index){
                 scope.selectedDistrict = index;
-                scope.newVip.county = scope.districtItems[scope.selectedDistrict];
+                rootScope.vip.county = scope.districtItems[scope.selectedDistrict];
                 if(rootScope.item){
                     rootScope.item.county = scope.districtItems[scope.selectedDistrict];
                 }
@@ -53,10 +52,12 @@ var createVipCtrl = function(app) {
             scope.districtItems = dsy.Items[0 + '_' + scope.selectedProvince + '_' + scope.selectedCity];
 
             scope.changeGender = function(key, label) {
-                scope.newVip.gender = key;
-                if(rootScope.item){
-                    rootScope.item.gender = key;
-                }
+                rootScope.vip.gender = key;
+                $(".select1_options").hide();
+            };
+            scope.changeLevel = function(id, name) {
+                rootScope.vip.level = id;
+                rootScope.vip.levelName = name;
                 $(".select1_options").hide();
             };
             rootScope.idCardList = [
@@ -67,21 +68,18 @@ var createVipCtrl = function(app) {
                 {key: '4', label: '其他'},
             ];
             scope.changeIdCard = function(key, label) {
-                scope.newVip.idCardType = key;
-                if(rootScope.item){
-                    rootScope.item.idCardType = key;
-                }
+                scope.vip.idCardType = key;
                 $(".select1_options").hide();
             };
             scope.hasSubmit = false;
             rootScope.createVip = function() {
                 scope.hasSubmit = true;
-                if (scope.newVip.name.length < 2 || scope.newVip.phone.length !== 11 || (scope.newVip.email && !scope.mailFilter.test(scope.newVip.email))) {
+                if (rootScope.vip.name.length < 2 || rootScope.vip.phone.length !== 11 || (rootScope.vip.email && !scope.mailFilter.test(rootScope.vip.email))) {
                     return
                 }
-                createVipService.createVip(scope.newVip, rootScope);
+                createVipService.addEditVip(rootScope.vip, rootScope);
                 scope.hasSubmit = false;
-                scope.newVip = {name: '', phone: '', idCardType: 0};
+                rootScope.vip = {name: '', phone: '', idCardType: 0};
             };
             scope.editVip = function(){
                 scope.hasSubmit = true;

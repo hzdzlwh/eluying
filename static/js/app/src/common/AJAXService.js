@@ -107,6 +107,10 @@ var AJAXService = {
         return url;
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
+        if (!data) {
+            data = {};
+        }
+
         if(path !== 'loginUrl'){
             data = this.getDataWithToken(data);
         }

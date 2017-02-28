@@ -99,7 +99,8 @@
             <div class="modal-dialog"  style="width: 486px">
                 <div class="modal-content">
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    <h2 style="margin-bottom: 15px;height: 40px;line-height: 40px">添加会员等级</h2>
+                    <h2 v-if="!id" style="margin-bottom: 15px;height: 40px;line-height: 40px">添加会员等级</h2>
+                    <h2 v-if="id" style="margin-bottom: 15px;height: 40px;line-height: 40px">编辑会员等级</h2>
                     <div class="form-row">
                         <label for="levelName">会员等级名称：</label>
                         <input id="levelName" maxlength="8" v-model="levelName" style="width: 208px" class="dd-input" type="text">
