@@ -23,36 +23,42 @@
             </li>
         </ul>
         <div class="vip-top">
+            <input style="width: 256px" type="text" class="vip-right dd-input" ng-model="$root.searchText" ng-keyup="filterSearch()" placeholder="搜索姓名/手机号/证件号/会员卡号">
             <img class="filter-img" ng-click="search()" src="//static.dingdandao.com/vipSearch.png">
-            <span class="vip-left">共<span ng-bind="vipUserCount"></span>个会员</span>
-            <input type="text" class="vip-right search" ng-model="$root.searchText" ng-keyup="filterSearch()" placeholder="搜索客户姓名/手机号/证件号">
-            <span class="vip-right add-newVip" ng-click="addNewVip()"><img src="//static.dingdandao.com/vipAdditional.png">新增会员</span>
-            <span class="vip-right outPut-excel"><a ng-href="{{outPutExcel()}}"><img src="//static.dingdandao.com/vipOutput.png">导出</a></span>
+        </div>
+        <div style="display: flex;flex-direction: row-reverse; margin-top: 19px">
+            <button style="margin-left: 6px" class="dd-btn dd-btn-primary" ng-click="addNewVip()">新增会员</button>
+            <a ng-href="{{outPutExcel()}}"><button class="dd-btn dd-btn-primary">导出明细</button></a>
         </div>
         <div class="clearboth"></div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 109px;">加入时间</th>
-                        <th style="width: 79px;">姓名</th>
-                        <th style="width: 102px;">手机号</th>
-                        <th style="width: 186px;">证件号</th>
-                        <th style="width: 99px;">操作</th>
+                        <th style="width: 98px">姓名</th>
+                        <th style="width: 130px">会员等级</th>
+                        <th style="width: 216px">会员卡号</th>
+                        <th style="width: 134px">手机号</th>
+                        <th style="width: 152px">消费金额</th>
+                        <th>证件号</th>
+                        <th style="width: 146px">加入时间</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in dataItems">
-                        <td ng-bind="item.createTime.split(' ')[0]"></td>
-                        <td ng-bind="item.vipName"></td>
+                    <tr ng-click="openDetail(item)" ng-repeat="item in dataItems">
+                        <td ng-bind="item.name"></td>
+                        <td ng-bind="item.levelName"></td>
+                        <td ng-bind="item.vipCardNum"></td>
                         <td ng-bind="item.phone"></td>
+                        <td ng-bind="item.totalConsume"></td>
                         <td>{{item.idCardNum}}<span class="idType" ng-if="item.idCardNum && (item.idCardType || item.idCardType ===0) ">{{getIdCardIcon(item.idCardType)}}</span></td>
-                        <td><span class="operation opt-modify" ng-click="modifyVip(item)">修改</span>/<span class="operation opt-remove" ng-click="removeVipModal(item)">删除</span></td>
+                        <td ng-bind="item.createTime.split(' ')[0]"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="pagination-container">
+            <span class="vip-left"><small>共计&nbsp;</small><span ng-bind="vipUserCount"></span>个会员</span>
             <pager page-count="getPageCount()" current-page="$root.currentPage" on-page-change="onPageChange()"></pager>
         </div>
     </div>
@@ -64,24 +70,47 @@
                 </div>
                 <div class="add-container">
                     <div class="vip-info">
-                        <p class="dialog-mainTitle" ng-if="!modify">新增会员</p>
-                        <p class="dialog-mainTitle" ng-if="modify">修改会员信息</p>
+                        <p class="dialog-mainTitle" ng-if="!vip.vipUserId">新增会员</p>
+                        <p class="dialog-mainTitle" ng-if="vip.modify">编辑会员</p>
+                        <p class="dialog-mainTitle" ng-if="vip.detail">会员详情</p>
                         <p class="dialog-subTitle">基本信息</p>
                         <div class="vipInfo">
-                            <p><span class="newVip"><img ng-if="!modify" src="//static.dingdandao.com/start.png">姓名</span><input ng-model="newVip.name" ng-if="!modify" type="text" maxlength="16" ><span class="modifyVip" ng-bind="item.vipName" ng-if="modify"></span></p>
-                            <span ng-if="!modify && hasSubmit && newVip.name.length === 0" class="tip-name">必填字段</span>
-                            <span ng-if="!modify && hasSubmit && newVip.name.length === 1" class="tip-name">格式错误</span>
-                            <p><span class="newVip"><img ng-if="!modify" src="//static.dingdandao.com/start.png">手机号</span><input ng-model="newVip.phone" ng-if="!modify" type="text" maxlength="11" ><span class="modifyVip" ng-bind="item.phone" ng-if="modify"></span></p>
-                            <!--<p><span class="newVip">证件号</span><input ng-model="newVip.idCardNum" ng-if="!modify" type="text" minlength="2"  ><input ng-model="item.idCardNum" ng-if="modify" type="text" minlength="2" >-->
-                            <span ng-if="!modify && hasSubmit && newVip.phone.length === 0" class="tip-phone">必填字段</span>
-                            <span ng-if="!modify && hasSubmit && newVip.phone.length > 0 && newVip.phone.length !== 11" class="tip-phone">格式错误</span>
+                            <p>
+                                <span class="newVip">
+                                    <img ng-if="!vip.detail" src="//static.dingdandao.com/start.png">姓名</span>
+                                <input ng-model="vip.name" ng-if="!vip.detail" type="text" maxlength="16" >
+                                <span class="modifyVip" ng-bind="vip.name" ng-if="vip.detail"></span>
+                            </p>
+                            <span ng-if="!modify && hasSubmit && vip.name.length === 0" class="tip-name">必填字段</span>
+                            <span ng-if="!modify && hasSubmit && vip.name.length === 1" class="tip-name">格式错误</span>
+                            <p>
+                                <span class="newVip"><img ng-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号</span>
+                                <input ng-model="vip.phone" ng-if="!vip.vipUserId" type="text" maxlength="11" >
+                                <span class="modifyVip" ng-bind="vip.phone" ng-if="vip.vipUserId"></span>
+                            </p>
+                            <span ng-if="!modify && hasSubmit && vip.phone.length === 0" class="tip-phone">必填字段</span>
+                            <span ng-if="!modify && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
                             <table class="single-line">
+                                <tr>
+                                    <td>
+                                        <label><img ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
+                                        <div ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
+                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''" ng-if="!modify">{{vip.levelName  || '-会员等级-'}}</span>
+                                            <div class="select1_options">
+                                                <div class="oitem"
+                                                     ng-click="changeLevel(level.vipLevelId, level.vipLevelName);$event.stopPropagation();"
+                                                     ng-repeat="level in levels">{{level.vipLevelName}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" ng-bind="vip.levelName"></span>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="identification">
                                         <label>证件号</label>
-                                        <div class="select1 idcard-select">
-                                            <span ng-if="!modify">{{idCardList[newVip.idCardType].label  || '身份证'}}</span>
-                                            <span ng-if="modify">{{idCardList[item.idCardType].label  || '身份证'}}</span>
+                                        <div ng-if="!vip.detail" class="select1 idcard-select">
+                                            <span>{{idCardList[vip.idCardType].label  || '身份证'}}</span>
                                             <div class="select1_options">
                                                 <div class="oitem"
                                                      ng-click="changeIdCard(idCard.key, idCard.label);$event.stopPropagation();"
@@ -89,19 +118,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input ng-model="newVip.idCardNum" ng-if="!modify" type="text" minlength="2" maxlength="18">
-                                        <input ng-model="item.idCardNum" ng-if="modify" type="text" minlength="2" maxlength="18" >
+                                        <input ng-if="!vip.detail" ng-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
+                                        <span ng-if="vip.detail" ng-bind="vip.idCardNum"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="birthday">
-                                        <label>生日</label><div ng-if="!modify" style="display: inline-block;"><datepicker placeholder="-年 月 日-" format-selected-date="newVip.birthday"></datepicker></div><div ng-if="modify" style="display: inline-block;"><datepicker placeholder="-年 月 日-" format-selected-date="item.birthday"></datepicker></div>
+                                        <label>生日</label>
+                                        <div ng-if="!vip.detail" style="display: inline-block;">
+                                            <datepicker placeholder="-年 月 日-" format-selected-date="vip.birthday"></datepicker>
+                                        </div>
+                                        <span ng-if="vip.detail" ng-bind="vip.birthday"></span>
                                     </td>
                                     <td class="gender">
                                         <label>性别</label>
-                                        <div class="select1 gender-select">
-                                            <span ng-style="!genderList[newVip.gender] ? {color:'#ccc'} : ''" ng-if="!modify">{{genderList[newVip.gender].label  || '-性别-'}}</span>
-                                            <span ng-style="!genderList[item.gender] ? {color:'#ccc'} : ''" ng-if="modify">{{genderList[item.gender].label  || '-性别-'}}</span>
+                                        <div ng-if="!vip.detail" class="select1 gender-select">
+                                            <span ng-style="!genderList[vip.gender] ? {color:'#ccc'} : ''" ng-if="!modify">{{genderList[vip.gender].label  || '-性别-'}}</span>
                                             <div class="select1_options">
                                                 <div class="oitem"
                                                      ng-click="changeGender(gender.key, gender.label);$event.stopPropagation();"
@@ -109,43 +141,32 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <span ng-if="vip.detail" ng-bind="genderList[vip.gender].label"></span>
                                     </td>
                                 </tr>
                             </table>
-                            <!--<p><span class="newVip">地区</span><input type="text" placeholder="-省 市 区-" ></p>-->
-
                             <div class="formrow clearfloat">
                                 <div class="slabel">地区</div>
-                                <div class="scontent">
+                                <div class="scontent" ng-if="!vip.detail">
                                     <div class="selectBox small">
-                                        <div ng-style="!item.province ? {color:'#ccc'}: ''" class="item selected" style="border-right: none;" ng-if="modify">
-                                            {{ item.province || '-省'}}
-                                        </div>
-                                        <div ng-style="!newVip.province ? {color:'#ccc'}: ''" class="item selected" style="border-right: none;" ng-if="!modify">
-                                            {{ newVip.province || '-省'}}
+                                        <div ng-style="!vip.province ? {color:'#ccc'}: ''" class="item selected" style="border-right: none;">
+                                            {{ vip.province || '-省'}}
                                         </div>
                                         <div class="toselect-container toselect-first">
                                             <div class="item toselect" ng-click="selectProvince($index)" ng-repeat="n in provinceItems">{{n}}</div>
                                         </div>
                                     </div>
                                     <div class="selectBox small">
-                                        <div ng-style="!item.city ? {color:'#ccc'}: ''" class="item selected" style="border-right: none; border-left: none;" ng-if="modify">
-                                            {{ item.city || '市'}}
-                                        </div>
-                                        <div ng-style="!newVip.city ? {color:'#ccc'}: ''" class="item selected" style="border-right: none; border-left: none;" ng-if="!modify">
-                                            {{ newVip.city || '市'}}
+                                        <div ng-style="!vip.city ? {color:'#ccc'}: ''" class="item selected" style="border-right: none; border-left: none;">
+                                            {{ vip.city || '市'}}
                                         </div>
                                         <div class="toselect-container">
                                             <div class="item toselect" ng-click="selectCity($index)" ng-repeat="n in cityItems">{{n}}</div>
                                         </div>
                                     </div>
                                     <div class="selectBox small">
-                                        <div ng-style="!item.county ? {color:'#ccc'}: ''" class="item selected" style="border-left: none;" ng-if="modify">
-                                            {{ item.county || '区-'}}
-                                            <span class="triangle"></span>
-                                        </div>
-                                        <div ng-style="!newVip.county ? {color:'#ccc'}: ''" class="item selected" style="border-left: none;" ng-if="!modify">
-                                            {{ newVip.county || '区-'}}
+                                        <div ng-style="!vip.county ? {color:'#ccc'}: ''" class="item selected" style="border-left: none;">
+                                            {{ vip.county || '区-'}}
                                             <span class="triangle"></span>
                                         </div>
                                         <div class="toselect-container toselect-last">
@@ -153,37 +174,40 @@
                                         </div>
                                     </div>
                                 </div>
+                                <span ng-if="!vip.detail" ng-bind="vip.province+vip.city+vip.county"></span>
                             </div>
-
-
-                            <p><span class="newVip">邮箱</span><input ng-if="!modify" ng-model="newVip.email" type="text" minlength="2" maxlength="50" ><input ng-model="item.email" ng-if="modify" type="text" minlength="2" maxlength="50">
+                            <p>
+                                <span class="newVip">邮箱</span>
+                                <input ng-if="!vip.detail" ng-model="vip.email" type="text" minlength="2" maxlength="50" >
+                                <span ng-if="vip.detail" ng-bind="vip.email"></span>
                             </p>
-                            <span ng-if="newVip.email && !mailFilter.test(newVip.email) && hasSubmit && !modify" class="tip-email">邮箱格式错误</span>
-                            <span ng-if="item.email && !mailFilter.test(item.email) && hasSubmit && modify" class="tip-email-modify">邮箱格式错误</span>
-                            <p><span class="newVip">备注</span><textarea ng-if="!modify" ng-model="newVip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea><textarea ng-model="item.remark" ng-if="modify" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea></p>
+                            <span ng-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && !modify" class="tip-email">邮箱格式错误</span>
+                            <p ng-if="vip.detail">
+                                <span class="newVip">加入时间</span>
+                                <span ng-bind="vip.creationTime"></span>
+                            </p>
+                            <p ng-if="vip.detail">
+                                <span class="newVip">创建人</span>
+                                <span ng-bind="vip.operatorName"></span>
+                            </p>
+                            <p>
+                                <span class="newVip">创建渠道</span>
+                                <input ng-if="!vip.detail" ng-model="vip.vipChannel" type="text" minlength="2" maxlength="50" >
+                                <span ng-if="vip.detail" ng-bind="vip.vipChannel"></span>
+                            </p>
+                            <p>
+                                <span class="newVip">备注</span>
+                                <textarea ng-if="!vip.detail" ng-model="vip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea>
+                                <span ng-if="vip.detail" ng-bind="vip.remark"></span>
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="dialog-foot">
-                    <button ng-if="!modify" class="vip-confirm" ng-click="createVip()">确定</button>
-                    <button ng-if="modify" class="vip-confirm" ng-click="editVip()">确定</button>
-                    <button class="vip-cancel btn-cancel" ng-click="close()">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="removeVipModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="top-fixed">
-                    <span class="dialog-close">&times;</span>
-                </div>
-                <div class="remove-container">
-                    删除会员之后不可找回,您确定要删除吗?
-                </div>
-                <div class="foot-remove">
-                    <button class="remove-confirm" ng-click="removeVip()">确定</button>
-                    <button class="remove-cancel btn-cancel">取消</button>
+                    <button ng-if="!vip.detail" class="vip-confirm" ng-click="createVip()">确定</button>
+                    <button ng-if="vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" ng-click="modify()">编辑</button>
+                    <button ng-if="vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" ng-click="removeVip()">删除</button>
+                    <button ng-if="!vip.detail" class="vip-cancel btn-cancel" ng-click="close()">取消</button>
                 </div>
             </div>
         </div>

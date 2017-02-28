@@ -107,6 +107,10 @@ var AJAXService = {
         return url;
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
+        if (!data) {
+            data = {};
+        }
+
         if(path !== 'loginUrl'){
             data = this.getDataWithToken(data);
         }
@@ -125,6 +129,12 @@ var AJAXService = {
             success: callback,
             error: errorCallback
         });
+    },
+    get(path, data) {
+        return this.ajaxWithToken('GET', path, data);
+    },
+    post(path, data) {
+        return this.ajaxWithToken('POST', path, data);
     },
     ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
         data.campId = localStorage.getItem("campId");
@@ -150,7 +160,7 @@ var AJAXService = {
         data.campId = data.campId || localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");
         data.terminal = 1;
-        data.version = data.version || 15;
+        data.version = data.version || 17;
         var array = [];
         for(var key in data){
             array.push(data[key]);

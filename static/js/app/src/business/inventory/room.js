@@ -3,16 +3,17 @@
  */
 var AJAXService = require("AJAXService");
 var util = require("util");
-var leftMenu = require("leftMenu");
-var header = require("header");
-var topMenu = require("../../common/topMenu");
 var trToggle = require("trToggle");
 require("jqueryui");
 require("datepicker-zh");
 require("bootstrap");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+    topMenu: true
+});
 
 var IVENTORY = {
     data: null,
@@ -656,14 +657,6 @@ var operateTop;
 var operateLeft;
 
 $(document).ready(function(){
-    /*
-    initialize public modules
-     */
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    topMenu.showTopMenu();
-    util.mainContainer();
-
     //初始化日历
     $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
     $(".dateContainer").datepicker({

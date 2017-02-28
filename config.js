@@ -28,7 +28,6 @@ module.exports = {
         'tips/upgrade': './static/js/app/src/tips/upgrade.js',
         'tips/expired': './static/js/app/src/tips/expired.js',
         'ordersManage/orders': './static/js/app/src/ordersManage/orderForms/orders.js',
-        'accommodation/calender': './static/js/app/src/accommodation/calender/calender.js',
         'accommodation': './static/js/app/src/accommodation/main.js',
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
