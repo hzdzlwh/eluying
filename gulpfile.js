@@ -109,7 +109,7 @@ gulp.task('styles', function () {
     return sass(config.css, {style: 'compressed'})
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('static/css'))
+        .pipe(gulp.dest('static/css/dist'))
         //.pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
         .pipe(reload({stream: true}));
 });
