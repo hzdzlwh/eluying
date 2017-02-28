@@ -24,7 +24,7 @@
                                         </p>
                                     </div>
                                     <label for="name">联系人</label>
-                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name" @input="getVipList">
+                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name">
                                 </div>
                                 <div class="userInfo-item userInfo-phone">
                                     <label for="phone">手机号</label>
@@ -92,7 +92,7 @@
                                         </div>
                                         <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
-                                        <span class="discount-info">
+                                        <span class="discount-info" v-if="vipDiscountDetail.isVip">
                                             <span>原价<span class="origin-price">¥600</span></span>
                                             <span class="discount-num">会员7折</span>
                                         </span>
@@ -656,6 +656,7 @@
                 shopGoodsItems: [],
                 registerRooms: [],
                 showOrder: false,
+                vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
                 vipListShow: false,
                 vipList: [{level: '白金', name: 'xys', phone: '18039672561'},
@@ -742,7 +743,7 @@
                         this.userOrigins.unshift({ id: -1, name: '散客' });
                         this.userOriginType = this.userOrigins[0].id;
                     } else {
-                        modal.somethingAlert(result.msg);
+                        modal.somethingAlert(res.msg);
                     }
                 });
                 AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, (res) =>{
@@ -770,6 +771,8 @@
                                     el.type = 2;
                                     this.enterList.push(el)
                                 });
+                            } else {
+                                modal.somethingAlert(res.msg);
                             }
                         });
             },
@@ -787,22 +790,48 @@
                         return {};
                 }
             },
-            getVipList() {
-                if (this.name.length === 3 || this.phone.length === 4) {
-                    let params = this.name === 3 ? { name: this.name } : { phone: this.phone };
-                    AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
-                        .then(res => {
-                            if (res.code === 1) {
-
-                            }
-                        });
-                    this.vipListShow = true;
-                }
+            getVipList(params) {
+                AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipList = res.data.list;
+                            this.vipListShow = res.data && res.data.length > 0;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             },
             setUserInfo(obj) {
                 this.name = obj.name;
                 this.phone = obj.phone;
                 this.vipListShow = false;
+            },
+            getVipDiscount(params) {
+                AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipDiscountDetail = {...res.data};
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            /**
+             * 获取单个项目的优惠信息
+             **/
+            getItemDiscountInfo(nodeId, nodeType, obj) {
+                let item = { discount: 1 };
+                if (obj.isVip && obj.vipDetail.discountList.length > 0) {
+                    obj.vipDetail.discountList.forEach(list => {
+                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0) {
+                            item = {...list};
+                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                            item = {...list};
+                        }
+                    });
+                }
+
+                return item;
             },
             checkIsToday(date) {
                  return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
@@ -1327,6 +1356,21 @@
             CheckInPerson
         },
         watch: {
+            name(newVal) {
+                if (newVal.length === 1) {
+                    const params = { name: newVal };
+                    this.getVipList(params);
+                }
+            },
+            phone(newVal) {
+                const params = { phone: newVal };
+
+                if (newVal.length === 4) {
+                    this.getVipList(params);
+                } else if (newVal.length === 11) {
+                    this.getVipDiscount(params);
+                }
+            },
             registerInfoShow(newVal) {
                 if (newVal && this.checkState !== 'editOrder') {
                     this.roomsItems.forEach(item => {
