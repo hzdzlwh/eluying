@@ -36,6 +36,19 @@ var getItemsService = function(app){
                 }
             })
         };
+        this.getVipUser = function(id, rootScope) {
+            AJAXService.get('/vipUser/getVipUserDetailInfo', { vipUserId: id })
+                .then(res => {
+                    if (res.code === 1) {
+                        rootScope.vip = res.data.vipUserDetailInfoResp;
+                        Object.assign(rootScope.vip, res.data);
+                        rootScope.vip.detail = true;
+                        delete rootScope.vip.vipUserDetailInfoResp;
+                        rootScope.$apply();
+                        $("#newVipModal").modal("show");
+                    }
+                })
+        }
     }]);
 };
 module.exports = getItemsService;

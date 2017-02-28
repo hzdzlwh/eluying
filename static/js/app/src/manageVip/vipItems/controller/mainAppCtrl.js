@@ -3,7 +3,7 @@
  */
 var AJAXService = require("AJAXService");
 var util = require("util");
-var modal = require("modal");
+var modal = require("../../../common/modal");
 require("angular");
 var getItemsService = require("../services/getItemsService");
 
@@ -20,29 +20,33 @@ var itemsCtrl = function(app){
                 // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
             rootScope.addNewVip = function(){
-                rootScope.modify = false;
+                rootScope.vip = { idCardType: 0 };
                 $("#newVipModal").modal("show");
             };
             rootScope.openDetail = function(item) {
-                $("#newVipModal").modal("show");
+                getItemsService.getVipUser(item.vipUserId, rootScope);
             };
-            rootScope.modifyVip = function(item){
-                rootScope.modify = true;
-                $("#newVipModal").modal("show");
-                rootScope.item = Object.assign({}, item);
+            rootScope.modify = function() {
+                rootScope.vip.modify = true;
+                rootScope.vip.detail = false;
             };
             rootScope.removeVipModal = function(item){
                 $("#removeVipModal").modal("show");
                 rootScope.item = item;
             };
             rootScope.removeVip = function(){
-                AJAXService.ajaxWithToken('GET', '/vipUser/removeVipUserPC', {vipId: rootScope.item.vipId},
-                    function(result){
-                        if (result.code === 1) {
-                            $("#removeVipModal").modal("hide");
-                            scope.search();
-                        }
-                    });
+                modal.confirmDialog({
+                    message: '删除会员之后不可找回，您确定要删除吗？'
+                },
+                function () {
+                    AJAXService.ajaxWithToken('GET', '/vipUser/removeVip', {vipUserId: rootScope.vip.vipUserId},
+                        function(result){
+                            if (result.code === 1) {
+                                $("#newVipModal").modal("hide");
+                                scope.search();
+                            }
+                        });
+                });
             };
             rootScope.pageSize = 30;
             rootScope.searchText = '';
