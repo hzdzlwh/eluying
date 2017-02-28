@@ -80,13 +80,13 @@ $(function() {
             $(".select1_options").hide();
             $(this).siblings(".select1_options").show();
             ev.stopPropagation();
+        },
+        "click body .toselect-last": function() {
+            e.stopPropagation();
+            $(".selectBox .toselect-container").hide();
         }
     };
     util.bindDomAction(events);
-    document.querySelector('.toselect-last').addEventListener('click', function(e){
-        e.stopPropagation();
-        $(".selectBox .toselect-container").hide();
-    });
 
     var app = angular.module('vipApp', ['ng-pagination', 'ng-datepicker']);
     itemsCtrl(app);
