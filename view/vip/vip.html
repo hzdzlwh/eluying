@@ -90,12 +90,23 @@
                             </p>
                             <span ng-if="!modify && hasSubmit && vip.phone.length === 0" class="tip-phone">必填字段</span>
                             <span ng-if="!modify && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
+                            <div ng-if="vip.detail" style="position: relative">
+                                <span>消费金额</span>
+                                <span ng-bind="'¥' + vip.totalConsume"></span>
+                                <img ng-if="vip.isAutoUpgrade && vip.upgradeFee !==0" src="../../static/image/modal/room_modal_info.png" >
+                                <span>成为会员后，对相关业态</span>
+                                <span>累计消费金额（不含违约金）</span>
+                                <div style="position: absolute">
+                                    <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
+                                    <div>{{vip.vipConsumeList.join('、')}}</div>
+                                </div>
+                            </div>
                             <table class="single-line">
                                 <tr>
                                     <td>
                                         <label><img ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
                                         <div ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
-                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''" ng-if="!modify">{{vip.levelName  || '-会员等级-'}}</span>
+                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''">{{vip.levelName  || '-会员等级-'}}</span>
                                             <div class="select1_options">
                                                 <div class="oitem"
                                                      ng-click="changeLevel(level.vipLevelId, level.vipLevelName);$event.stopPropagation();"
@@ -103,7 +114,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <span ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" ng-bind="vip.levelName"></span>
+                                        <span ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" ng-bind="vip.levelName">
+                                            <img src="../../static/image/modal/room_modal_info.png" >
+                                        </span>
+                                        <div>
+                                            <div>
+                                                {{vip.levelName}}
+                                            </div>
+                                            <div>
+                                                <p ng-repeat="item in consumeAndDiscount">
+                                                    <span>{{item.name}}</span>
+                                                    <span>{{item.discount}}</span>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -133,7 +157,7 @@
                                     <td class="gender">
                                         <label>性别</label>
                                         <div ng-if="!vip.detail" class="select1 gender-select">
-                                            <span ng-style="!genderList[vip.gender] ? {color:'#ccc'} : ''" ng-if="!modify">{{genderList[vip.gender].label  || '-性别-'}}</span>
+                                            <span ng-style="!genderList[vip.gender] ? {color:'#ccc'} : ''">{{genderList[vip.gender].label  || '-性别-'}}</span>
                                             <div class="select1_options">
                                                 <div class="oitem"
                                                      ng-click="changeGender(gender.key, gender.label);$event.stopPropagation();"
@@ -174,7 +198,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span ng-if="!vip.detail" ng-bind="vip.province+vip.city+vip.county"></span>
+                                <span ng-if="vip.detail" ng-bind="vip.province+vip.city+vip.county"></span>
                             </div>
                             <p>
                                 <span class="newVip">邮箱</span>

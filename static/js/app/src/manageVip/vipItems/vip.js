@@ -70,7 +70,7 @@ $(function() {
             ev.stopPropagation();
             $(this).children("div").hide();
         },
-        "click .scontent": function(ev){
+        "click body .scontent": function(ev){
             ev.stopPropagation();
             $(".selectBox .toselect-container").show();
             $(".toselect").removeClass("selected-area");
