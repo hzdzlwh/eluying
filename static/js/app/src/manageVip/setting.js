@@ -59,7 +59,7 @@ $(function() {
                                                         'justify-content': 'space-between',
                                                         width: '190px'}}
                                                     >
-                                                        <span>{i.nodeName}</span>
+                                                        <span>{i.nodeName || (i.nodeType === 0 ? '住宿' : '商超')}</span>
                                                         <span>{i.discount}折</span>
                                                     </p>
                                                 );
@@ -90,7 +90,7 @@ $(function() {
                                         {
                                             title: '消费累计项目',
                                             render: (h, row) => {
-                                                return <span>{row.consumeItems.map(i => i.nodeName).join('、')}</span>
+                                                return <span>{row.consumeItems.map(i => i.nodeName || (i.nodeType === 0 ? '住宿' : '商超')).join('、')}</span>
                                             },
                                             width: 390
                                         }
