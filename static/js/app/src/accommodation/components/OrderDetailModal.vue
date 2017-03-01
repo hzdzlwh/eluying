@@ -4,10 +4,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <div class="header-container">
+                        <div class="header-container" v-if="order.orderState">
                             <span class="header-text">订单详情</span>
-                            <span class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
+                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}" v-text="ORDER_STATUS_ICON[order.orderState]['text']"></span>
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
@@ -562,7 +562,7 @@
 <script>
     import AJAXService from 'AJAXService';
     import util from 'util';
-    import { ID_CARD_TYPE, FOOD_STATE } from '../const';
+    import { ID_CARD_TYPE, FOOD_STATE, ORDER_STATUS_ICON } from '../const';
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
@@ -579,7 +579,8 @@
         data(){
             return{
                 ID_CARD_TYPE,
-                FOOD_STATE
+                FOOD_STATE,
+                ORDER_STATUS_ICON
             }
         },
         computed: {
@@ -628,20 +629,6 @@
             hideModal() {
                 this.$emit('hideOrderDetail');
                 $("#orderDetail").modal("hide");
-            },
-            getOrderState(state){
-                switch(state){
-                    case 2:
-                        return {text: '已预订', borderColor: '#ffffff #ffba75', backgroundColor: '#ffba75'};
-                    case 3:
-                        return {text: '进行中', borderColor: '#ffffff #82beff', backgroundColor: '#82beff'};
-                    case 4:
-                        return {text: '已取消', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    case 5:
-                        return {text: '已完成', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    default:
-                        return {};
-                }
             },
             /**根据状态获取对应的图标
              * 0-餐, 3-住

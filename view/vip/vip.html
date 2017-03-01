@@ -81,24 +81,32 @@
                                 <input ng-model="vip.name" ng-if="!vip.detail" type="text" maxlength="16" >
                                 <span class="modifyVip" ng-bind="vip.name" ng-if="vip.detail"></span>
                             </p>
-                            <span ng-if="!modify && hasSubmit && vip.name.length === 0" class="tip-name">必填字段</span>
-                            <span ng-if="!modify && hasSubmit && vip.name.length === 1" class="tip-name">格式错误</span>
+                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.name.length === 0 || !vip.name)" class="tip-name">必填字段</span>
+                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.name.length === 1" class="tip-name">格式错误</span>
                             <p>
                                 <span class="newVip"><img ng-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号</span>
                                 <input ng-model="vip.phone" ng-if="!vip.vipUserId" type="text" maxlength="11" >
                                 <span class="modifyVip" ng-bind="vip.phone" ng-if="vip.vipUserId"></span>
                             </p>
-                            <span ng-if="!modify && hasSubmit && vip.phone.length === 0" class="tip-phone">必填字段</span>
-                            <span ng-if="!modify && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
-                            <div ng-if="vip.detail" style="position: relative">
-                                <span>消费金额</span>
-                                <span ng-bind="'¥' + vip.totalConsume"></span>
-                                <img ng-if="vip.isAutoUpgrade && vip.upgradeFee !==0" src="../../static/image/modal/room_modal_info.png" >
-                                <span>成为会员后，对相关业态</span>
-                                <span>累计消费金额（不含违约金）</span>
-                                <div style="position: absolute">
-                                    <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
-                                    <div>{{vip.vipConsumeList.join('、')}}</div>
+                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="tip-phone">必填字段</span>
+                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
+                            <div ng-if="vip.detail" class="consume-container">
+                                <label>消费金额</label>
+                                <div class="consume-tips">
+                                    <div class="consume-money">
+                                        <span ng-bind="'¥' + vip.totalConsume"></span>
+                                        <div class="tip-img-container"><!--ng-if="vip.isAutoUpgrade && vip.upgradeFee !==0"-->
+                                            <div class="tip-img-subContainer consume-subContainer">
+                                                <img src="../../static/image/modal/room_modal_info.png" >
+                                                <div class="vip-leavelUpgrade-tip">
+                                                    <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
+                                                    <div>{{vip.vipConsumeList.join('、')}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="consum-text">成为会员后，对相关业态</div>
+                                    <div class="consum-text">累计消费金额（不含违约金）</div>
                                 </div>
                             </div>
                             <table class="single-line">
@@ -106,7 +114,7 @@
                                     <td>
                                         <label><img ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
                                         <div ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
-                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''">{{vip.levelName  || '-会员等级-'}}</span>
+                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''">{{vip.levelName  || '-会员等级－'}}</span>
                                             <div class="select1_options">
                                                 <div class="oitem"
                                                      ng-click="changeLevel(level.vipLevelId, level.vipLevelName);$event.stopPropagation();"
@@ -114,18 +122,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <span ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" ng-bind="vip.levelName">
-                                            <img src="../../static/image/modal/room_modal_info.png" >
-                                        </span>
-                                        <div>
-                                            <div>
-                                                {{vip.levelName}}
-                                            </div>
-                                            <div>
-                                                <p ng-repeat="item in consumeAndDiscount">
-                                                    <span>{{item.name}}</span>
-                                                    <span>{{item.discount}}</span>
-                                                </p>
+                                        <div ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" class="vipLeave-text-container">
+                                            <span ng-bind="vip.levelName"></span>
+                                            <div class="tip-img-container" ng-if="vip.levelName">
+                                                <div class="tip-img-subContainer level-detail-subContainer">
+                                                    <img src="../../static/image/modal/room_modal_info.png" >
+                                                    <div ng-if="vip.detail" class="vip-level-detail">
+                                                        <div>
+                                                            {{vip.levelName}}
+                                                        </div>
+                                                        <div>
+                                                            <p ng-repeat="item in consumeAndDiscount" class="discount-item">
+                                                                <span>{{item.name}}</span>
+                                                                <span>{{item.discount}}</span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -143,7 +156,7 @@
                                             </div>
                                         </div>
                                         <input ng-if="!vip.detail" ng-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
-                                        <span ng-if="vip.detail" ng-bind="vip.idCardNum"></span>
+                                        <span ng-if="vip.detail" ng-bind="vip.idCardNum" class="idcard-num"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -152,7 +165,7 @@
                                         <div ng-if="!vip.detail" style="display: inline-block;">
                                             <datepicker placeholder="-年 月 日-" format-selected-date="vip.birthday"></datepicker>
                                         </div>
-                                        <span ng-if="vip.detail" ng-bind="vip.birthday"></span>
+                                        <span ng-if="vip.detail" ng-bind="vip.birthday" class="birthday-content"></span>
                                     </td>
                                     <td class="gender">
                                         <label>性别</label>
@@ -165,7 +178,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <span ng-if="vip.detail" ng-bind="genderList[vip.gender].label"></span>
+                                        <span class="gender-content" ng-if="vip.detail" ng-bind="genderList[vip.gender].label"></span>
                                     </td>
                                 </tr>
                             </table>

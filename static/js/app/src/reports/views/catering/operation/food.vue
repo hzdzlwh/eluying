@@ -71,7 +71,7 @@
         },
         methods: {
             getRestaurantList() {
-                AJAXService.ajaxWithToken('get', '/restaurant/list', {})
+                AJAXService.ajaxWithToken('get', '/restaurant/listSimple', {})
                     .then(res => {
                         if (res.code === 1) {
                             this.restaurantList = res.data.list;

@@ -74,7 +74,7 @@ var createVipCtrl = function(app) {
             scope.hasSubmit = false;
             rootScope.createVip = function() {
                 scope.hasSubmit = true;
-                if (rootScope.vip.name.length < 2 || rootScope.vip.phone.length !== 11 || (rootScope.vip.email && !scope.mailFilter.test(rootScope.vip.email))) {
+                if (!rootScope.vip.phone || !rootScope.vip.name || rootScope.vip.name.length < 2 || rootScope.vip.phone.length !== 11 || (rootScope.vip.email && !scope.mailFilter.test(rootScope.vip.email))) {
                     return
                 }
                 createVipService.addEditVip(rootScope.vip, rootScope);

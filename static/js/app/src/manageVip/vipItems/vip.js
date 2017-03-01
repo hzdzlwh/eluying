@@ -35,8 +35,7 @@ $(function() {
         "click body .dialog-close": function(){
             $(this).parents(".modal").modal("hide");
         },
-        "click .scontent .toselect-container>.toselect": function(ev){
-            ev.stopPropagation();
+        "click body .toselect-container>.toselect": function(ev){
             $(this).siblings(".toselect").removeClass("selected-area");
             $(this).addClass("selected-area");
         },
@@ -73,7 +72,6 @@ $(function() {
         "click body .scontent": function(ev){
             ev.stopPropagation();
             $(".selectBox .toselect-container").show();
-            $(".toselect").removeClass("selected-area");
             // $(this).siblings(".toselect-container").show();
         },
         "click body .select1>span": function(ev){
@@ -81,9 +79,10 @@ $(function() {
             $(this).siblings(".select1_options").show();
             ev.stopPropagation();
         },
-        "click body .toselect-last": function() {
+        "click body .toselect-last": function(e) {
             e.stopPropagation();
             $(".selectBox .toselect-container").hide();
+            $(".toselect").removeClass("selected-area");
         }
     };
     util.bindDomAction(events);
