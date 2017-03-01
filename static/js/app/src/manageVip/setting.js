@@ -103,7 +103,7 @@ $(function() {
                     });
             },
             deleteLevel(id) {
-                const message = this.autoUpgrade ? '删除该会员等级后，该等级的会员降底一等级，确认删除么？' : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
+                const message = this.autoUpgrade == 1 ? '删除该会员等级后，该等级的会员降底一等级，确认删除么？' : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
                 modal.confirmDialog({
                     message
                 }, () => {
@@ -139,12 +139,12 @@ $(function() {
                     return false;
                 }
 
-                if (this.autoUpgrade && !this.thresholdFee) {
+                if (this.autoUpgrade == 1 && !this.thresholdFee) {
                     modal.alert('请输入升级条件');
                     return false;
                 }
 
-                if (this.autoUpgrade && this.consume.length === 0) {
+                if (this.autoUpgrade == 1 && this.consume.length === 0) {
                     modal.alert('请选择消费累计项目');
                     return false;
                 }
