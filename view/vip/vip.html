@@ -36,12 +36,30 @@
                 <thead>
                     <tr>
                         <th style="width: 98px">姓名</th>
-                        <th style="width: 130px">会员等级</th>
+                        <th style="width: 130px" >
+                            会员等级
+                            <span class="sorter">
+                                <div class="sort-up" ng-class="{sorted: sortColumn === 0 && sortType === 0}" ng-click="sort(0, 0)"></div>
+                                <div ng-class="{sorted: sortColumn === 0 && sortType === 1}" class="sort-down" ng-click="sort(0, 1)"></div>
+                            </span>
+                        </th>
                         <th style="width: 216px">会员卡号</th>
                         <th style="width: 134px">手机号</th>
-                        <th style="width: 152px">消费金额</th>
+                        <th style="width: 152px">
+                            消费金额
+                            <span class="sorter">
+                                <div class="sort-up" ng-class="{sorted: sortColumn === 1 && sortType === 0}" ng-click="sort(1, 0)"></div>
+                                <div class="sort-down" ng-class="{sorted: sortColumn === 1 && sortType === 1}" ng-click="sort(1, 1)"></div>
+                            </span>
+                        </th>
                         <th>证件号</th>
-                        <th style="width: 146px">加入时间</th>
+                        <th style="width: 146px">
+                            加入时间
+                            <span class="sorter">
+                                <div class="sort-up" ng-class="{sorted: sortColumn === 2 && sortType === 0}" ng-click="sort(2, 0)"></div>
+                                <div class="sort-down" ng-class="{sorted: sortColumn === 2 && sortType === 1}" ng-click="sort(2, 1)"></div>
+                            </span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

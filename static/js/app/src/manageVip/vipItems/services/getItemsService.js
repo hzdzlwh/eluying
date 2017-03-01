@@ -7,10 +7,12 @@ require("angular");
 
 var getItemsService = function(app){
     app.service("getItemsService",[function(){
-        this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
+        this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope) {
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
                 pageNo: pageNo,
-                searchPattern: searchPattern
+                searchPattern: searchPattern,
+                sortColumn: rootScope.sortColumn,
+                sortType: rootScope.sortType
             }, function(result){
                 rootScope.dataItems = result.data.vipUserList;
                 rootScope.$apply();
@@ -37,7 +39,7 @@ var getItemsService = function(app){
             })
         };
         this.getVipUser = function(id, rootScope) {
-            AJAXService.get('/vipUser/getVipUserDetailInfo', { vipUserId: id })
+            AJAXService.get('/vipUser/getVipUserDetailInfoPC', { vipUserId: id })
                 .then(res => {
                     if (res.code === 1) {
                         rootScope.vip = res.data.vipUserDetailInfoResp;

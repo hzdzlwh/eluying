@@ -16,7 +16,8 @@ export default function (option) {
         id: undefined, // 模块id
         noAuthUrl: undefined,
         mainContainer: true,
-        centerModals: true
+        centerModals: true,
+        clearModal: false
     };
     option = { ...defaultOption, ...option};
 
@@ -32,8 +33,11 @@ export default function (option) {
         const events = {
             "resize window": util.mainContainer,
             "show.bs.modal body .modal": modal.centerModals,
-            "click body .btn-cancel": function(){var that = this; modal.clearModal(that);}
         };
+
+        if (option.clearModal) {
+            events["click body .btn-cancel"] = function(){var that = this; modal.clearModal(that);}
+        }
 
         util.bindDomAction(events);
     })

@@ -18,6 +18,7 @@ require("validation");
 import init from '../../../common/init';
 init({
     id: auth.BUSINESS_ID,
+    clearModal: true
 });
 
 Vue.prototype.$isNull = function(text) {
