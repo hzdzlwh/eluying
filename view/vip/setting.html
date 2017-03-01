@@ -123,11 +123,13 @@
                     <div class="form-row" style="display: flex">
                         <label>优惠折扣：</label>
                         <div>
-                            <div style="margin-bottom: 3px" v-for="item in discount">
-                                <span style="display: inline-block;width: 132px">{{item.nodeName}}</span>
-                                <input style="width: 56px;" type="text" class="dd-input" v-model="item.discount">
-                                <i style="margin: 0 16px 0 8px">折</i>
-                                <img style="cursor: pointer" src="/static/image/modal/room_modal_delete.png" alt="" @click="deleteNode(item)">
+                            <div style="max-height: 78px;overflow: auto">
+                                <div style="margin-bottom: 3px" v-for="item in discount">
+                                    <span style="display: inline-block;width: 132px">{{item.nodeName}}</span>
+                                    <input style="width: 56px;" type="text" class="dd-input" v-model="item.discount">
+                                    <i style="margin: 0 16px 0 8px">折</i>
+                                    <img style="cursor: pointer" src="/static/image/modal/room_modal_delete.png" alt="" @click="deleteNode(item)">
+                                </div>
                             </div>
                             <div>
                                 <span @click="openSelectNode('discount', discount)" class="select-button">选择项目</span>

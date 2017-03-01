@@ -79,7 +79,6 @@ var createVipCtrl = function(app) {
                 }
                 createVipService.addEditVip(rootScope.vip, rootScope);
                 scope.hasSubmit = false;
-                rootScope.vip = {name: '', phone: '', idCardType: 0};
             };
             scope.editVip = function(){
                 scope.hasSubmit = true;
