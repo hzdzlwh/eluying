@@ -224,17 +224,17 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
     margin: 16px 0 18px;
 
     .formrow{
-      width: 300px;
+      width: 308px;
       height: 24px;
       margin: 0 auto 16px;
       color: #666666;
       .slabel{
-        width: 52px;
+        width: 56px;
         height: 24px;
         line-height: 24px;
         float: left;
         text-align: right;
-        margin-right: 8px;
+        margin-right: 12px;
         .require{
           position: relative;
           top: -1px;
@@ -365,9 +365,9 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
           margin-right: 4px;
         }
       }
-      .modifyVip {
-        margin-left: 16px;
-      }
+      /*.modifyVip {
+        margin-left: 4px;
+      }*/
       input {
         width: 240px;
         height: 24px;
@@ -401,9 +401,36 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
       .select1 {
         margin-left: 8px;
       }
+      .vipLeave-text-container {
+        display: inline-block;
+        width: 240px;
+        .vip-level-detail {
+          display: none;
+          position: absolute;
+          background: #fafafa;
+          box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
+          border-radius: 2px;
+          width: 100%;
+          div:first-child {
+            padding: 8px 16px;
+            color: #666666;
+            font-size: 16px;
+            border-bottom: 1px solid #e6e6e6;
+            margin-bottom: 8px;
+          }
+          .discount-item {
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999999;
+            font-size: 14px;
+          }
+        }
+      }
       .gender {
         label {
-          width: 52px;
+          width: 48px;
           line-height: 24px;
           height: 24px;
         }
@@ -431,6 +458,10 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
           border-radius: 0px;
           border-right: none;
         }
+        .idcard-num {
+          display: inline-block;
+          width: 240px;
+        }
         span {
           width: 100%;
           padding-right: 15px;
@@ -447,16 +478,86 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
       .birthday {
         float: left;
         label {
+          height: 24px;
+          line-height: 24px;
           width: 75px;
         }
         input {
           width: 110px;
+          margin-left: 4px;
+        }
+        .birthday-content {
+          display: inline-block;
+          width: 94px;
           margin-left: 8px;
         }
       }
     }
     input, textarea {
       padding: 0 8px;
+      resize: none;
+    }
+    .consume-container {
+      margin-bottom: 8px;
+      label {
+        font-size: 14px;
+        color: #666666;
+        text-align: right;
+        width: 75px;
+        vertical-align: top;
+      }
+      .consume-money {
+        margin-bottom: 11px;
+      }
+      .consume-tips {
+        display: inline-block;
+      }
+      .consum-text {
+        font-size: 12px;
+        color: #999999;
+      }
+      .vip-leavelUpgrade-tip {
+        position: absolute;
+        display: none;
+        width: 100%;
+        background:#fafafa;
+        box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius:2px;
+        div:first-child {
+          padding: 8px 16px;
+          color: #666666;
+          font-size: 16px;
+          border-bottom: 1px solid #e6e6e6;
+        }
+        div:last-child {
+          padding: 8px 16px;
+          font-size: 14px;
+          color: #999999;
+        }
+      }
+    }
+    .tip-img-container {
+      display: inline-block;
+      width: 200px;
+      height: 16px;
+      position: relative;
+      img {
+        cursor: pointer;
+      }
+      .tip-img-subContainer {
+        width: 16px;
+        height: 16px;
+      }
+      .consume-subContainer:hover {
+        .vip-leavelUpgrade-tip {
+          display: block;
+        }
+      }
+      .level-detail-subContainer:hover {
+        .vip-level-detail {
+          display: block;
+        }
+      }
     }
   }
   .dialog-foot {
