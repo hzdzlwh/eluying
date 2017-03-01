@@ -39,7 +39,7 @@ var getItemsService = function(app){
             })
         };
         this.getVipUser = function(id, rootScope) {
-            AJAXService.get('/vipUser/getVipUserDetailInfo', { vipUserId: id })
+            AJAXService.get('/vipUser/getVipUserDetailInfoPC', { vipUserId: id })
                 .then(res => {
                     if (res.code === 1) {
                         rootScope.vip = res.data.vipUserDetailInfoResp;
