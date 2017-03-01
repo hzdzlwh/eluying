@@ -16,7 +16,8 @@ var auth = require('../../common/auth');
 import init from '../../common/init';
 init({
     id: auth.BUSINESS_ID,
-    topMenu: true
+    topMenu: true,
+    clearModal: true
 });
 
 $(function(){
