@@ -59,6 +59,13 @@ var itemsCtrl = function(app){
                     scope.search();
                 }, 1000);
             };
+            scope.sort = function(col ,type) {
+                rootScope.currentPage = 1;
+                rootScope.sortColumn = col;
+                rootScope.sortType = type;
+                getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
+                getItemsService.getVipUserCount(rootScope, scope.searchPattern);
+            };
             scope.getIdCardIcon = function(num) {
                 return rootScope.idCardList[num].label.substring(0 ,1);
             };

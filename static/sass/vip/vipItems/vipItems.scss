@@ -14,12 +14,43 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
   width:100%;
   height:4px;
 }
+@mixin sort($type) {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  cursor: pointer;
+  &.sorted {
+    @if $type == up {
+      border-bottom-color: #178ce6;
+    } @else {
+      border-top-color: #178ce6;
+    }
+  }
+}
 
 .container-manageVip {
   width: 1149px;
   margin: 0 auto;
   position: relative;
   top: 68px;
+  .sorter {
+    margin-left: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    .sort-up {
+      @include sort(up);
+      border-top: none;
+      border-bottom: 5px solid #ccc;
+      margin-bottom: 3px;
+    }
+    .sort-down {
+      @include sort(down);
+      border-top: 5px solid #ccc;
+      border-bottom: none;
+    }
+  }
+
+
   .select1 {
     @include select1();
     float: right;
@@ -99,6 +130,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
           text-align: center;
           color: #666;
           word-wrap: break-word;
+          position: relative;
         }
       }
       tbody>tr {
