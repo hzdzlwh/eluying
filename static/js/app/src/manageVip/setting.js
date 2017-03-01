@@ -59,7 +59,7 @@ $(function() {
                                                         'justify-content': 'space-between',
                                                         width: '190px'}}
                                                     >
-                                                        <span>{i.nodeName || (i.nodeType === 0 ? '住宿' : '商超')}</span>
+                                                        <span>{i.nodeName}</span>
                                                         <span>{i.discount}折</span>
                                                     </p>
                                                 );
@@ -90,7 +90,7 @@ $(function() {
                                         {
                                             title: '消费累计项目',
                                             render: (h, row) => {
-                                                return <span>{row.consumeItems.map(i => i.nodeName || (i.nodeType === 0 ? '住宿' : '商超')).join('、')}</span>
+                                                return <span>{row.consumeItems.map(i => i.nodeName).join('、')}</span>
                                             },
                                             width: 390
                                         }
@@ -103,8 +103,9 @@ $(function() {
                     });
             },
             deleteLevel(id) {
+                const message = this.autoUpgrade ? '删除该会员等级后，该等级的会员降底一等级，确认删除么？' : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
                 modal.confirmDialog({
-                    message: '删除该会员等级后，该等级的会员降底一等级，确认删除么？'
+                    message
                 }, () => {
                     http.post('/vipUser/removeVipLevel', { vipLevelId: id })
                         .then(res => {
@@ -133,21 +134,26 @@ $(function() {
                 $('#settingModal').modal('show');
             },
             createLevel() {
-                for (let i = 0; i < this.discount.length; i ++) {
-                    if (!/^0\.[1-9]|~[1-9]\.[0.9]|^[1-9]/.test(this.discount[i].discount)) {
-                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
-                        return false;
-                    }
-                }
-
                 if (!this.levelName) {
                     modal.alert('请填写会员等级名称');
                     return false;
                 }
 
-                if (!this.thresholdFee) {
+                if (this.autoUpgrade && !this.thresholdFee) {
                     modal.alert('请输入升级条件');
                     return false;
+                }
+
+                if (this.autoUpgrade && this.consume.length === 0) {
+                    modal.alert('请选择消费累计项目');
+                    return false;
+                }
+
+                for (let i = 0; i < this.discount.length; i ++) {
+                    if (!/^0\.[1-9]|~[1-9]\.[0.9]|^[1-9]/.test(this.discount[i].discount)) {
+                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
                 }
 
                 const url = this.autoUpgrade == 1 ?'/vipUser/createEditVipLevel' : '/vipUser/createEditVipLevelNotAuto';
