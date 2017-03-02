@@ -3,7 +3,7 @@
  */
 var AJAXService = require("AJAXService");
 var util = require("util");
-var leftMenu = require("leftMenu");
+var leftMenu = require("../../common/leftMenu");
 var topMenu = require("../../common/topMenu");
 var header = require("header");
 require("jqueryui");
@@ -11,7 +11,10 @@ require("datepicker-zh");
 require("bootstrap");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+});
 
 var IVENTORY = {
     data: null,
@@ -469,19 +472,10 @@ var events = {
         }else{
             util.somethingAlert("请先选择至少一天！");
         }
-    },
-    "resize window": util.mainContainer,
-    "show.bs.modal .modal": modal.centerModals
+    }
 };
 
 $(document).ready(function(){
-    /*
-     initialize public modules
-     */
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    topMenu.showTopMenu();
-    util.mainContainer();
 
     //trToggle();
 

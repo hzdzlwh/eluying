@@ -7,15 +7,27 @@ require("angular");
 
 var getItemsService = function(app){
     app.service("getItemsService",[function(){
-        this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope){
+        this.getVipItems = function(pageNo, pageSize, searchPattern, rootScope) {
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserListPC', {
                 pageNo: pageNo,
-                pageSize: pageSize,
-                searchPattern: searchPattern
+                searchPattern: searchPattern,
+                sortColumn: rootScope.sortColumn,
+                sortType: rootScope.sortType
             }, function(result){
-                rootScope.dataItems = result.data.list;
+                rootScope.dataItems = result.data.vipUserList;
                 rootScope.$apply();
             });
+        };
+        this.getVipLevels = function(rootScope) {
+            AJAXService.get('/vipUser/getVipLevels')
+                .then(res => {
+                    rootScope.levels = res.data.list;
+                    rootScope.levels.push({
+                        vipLevelId: '',
+                        vipLevelName: '—'
+                    });
+                    rootScope.$apply();
+                })
         };
         this.getVipUserCount = function(rootScope) {
             AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: rootScope.searchText},
@@ -26,27 +38,19 @@ var getItemsService = function(app){
                 }
             })
         };
-        this.getIdList = function(callback){
-            var idList = [
-                {key: '0', label: '身份证'},
-                {key: '1', label: '军官证'},
-                {key: '2', label: '通行证'},
-                {key: '3', label: '护照'},
-                {key: '4', label: '其他'},
-            ];
-            callback({
-                idList: idList
-            });
-        };
-        this.getGender = function(callback){
-            var genderList = [
-                {key: 'first', gender: '男'},
-                {key: 'second', gender: '女'}
-            ];
-            callback({
-                genderList: genderList
-            });
-        };
+        this.getVipUser = function(id, rootScope) {
+            AJAXService.get('/vipUser/getVipUserDetailInfoPC', { vipUserId: id })
+                .then(res => {
+                    if (res.code === 1) {
+                        rootScope.vip = res.data.vipUserDetailInfoResp;
+                        Object.assign(rootScope.vip, res.data);
+                        rootScope.vip.detail = true;
+                        delete rootScope.vip.vipUserDetailInfoResp;
+                        rootScope.$apply();
+                        $("#newVipModal").modal("show");
+                    }
+                })
+        }
     }]);
 };
 module.exports = getItemsService;

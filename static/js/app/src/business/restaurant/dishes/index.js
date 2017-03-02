@@ -3,8 +3,6 @@
  */
 
 var Vue = require('vue1');
-var header = require("header");
-var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var AJAXService = require('AJAXService');
@@ -16,25 +14,20 @@ require("jqueryui");
 require("fileupload");
 
 var auth = require('../../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+});
 Vue.prototype.$isNull = function(text) {
     var result = typeof (text) === 'undefined' || text === '';
     return result;
 };
 
 $(function() {
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    restaurantMenu.render();
-    util.mainContainer();
-    modal.centerModals();
-    modal.modalInit();
 
-    window.addEventListener('resize', util.mainContainer);
+    restaurantMenu.render();
 
     var events = {
-        "show.bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click .dishesShow": function() {
             $('#uploadDishesPicture').click();
         },

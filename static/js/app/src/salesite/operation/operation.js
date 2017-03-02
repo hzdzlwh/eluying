@@ -4,8 +4,10 @@ var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
-
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+});
 require("angular");
 
 require("bootstrap");
@@ -21,19 +23,8 @@ var pics = {
 };
 
 $(function(){
-    //检测IE
-    util.checkExplorer();
-    //初始化界面
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.modalInit();
-
 
     var events = {
-        "resize window": util.mainContainer,
-        "show .bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click .cancel": function(){
             $("#announcement").modal("hide");
         },

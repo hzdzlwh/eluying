@@ -6,7 +6,7 @@ var modal = require('modal');
 var headerHtml = require('./header.html');
 var dot = require('dot');
 var header = {
-    showHeader: function () {
+    render: function () {
         var that = this;
         var data = {
             campName: localStorage.getItem('campName'),

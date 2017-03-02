@@ -4,7 +4,7 @@
 var topMenuHtml = require('./topMenu.html');
 var dot = require('dot');
 var topMenu = {
-    showTopMenu: function(option){
+    render: function(option){
         var pathArray = window.location.pathname.split('/');
         var menu = pathArray[4];
         var path = pathArray[5].split(".")[0];

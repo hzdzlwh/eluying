@@ -3,25 +3,21 @@
  */
 
 var Vue = require('vue1');
-var header = require('header');
-var leftMenu = require('leftMenu');
 var util = require('util');
 var modal = require('modal');
 var AJAXService= require('AJAXService');
 var auth = require('../../common/auth');
 auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+});
 
 require("bootstrap");
 require("validation");
 
 $(function(){
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.modalInit();
     var events = {
-
-        "resize window": util.mainContainer,
         "mouseenter .cbtn-grey": function(){
             $(".tips").show();
             $(".tips-arrow").show();

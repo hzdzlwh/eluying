@@ -10,30 +10,17 @@ var createShop = require('./createShop');
 var editShop = require('./editShop');
 
 var auth = require('../../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
+import init from '../../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+    clearModal: true
+});
 
 $(function() {
-    //初始化界面
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.modalInit();
-    modal.centerModals();
     $(".campName").html(localStorage.getItem("campName"));
 
     shopList.loadShopList();
     shopList.loadShopCategory();
-
-    var events = {
-
-        "resize window": util.mainContainer,
-        "show.bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
-
-
-    };
-
-    util.bindDomAction(events);
 
     util.bindDomAction(shopList.events);
 
