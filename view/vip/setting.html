@@ -107,7 +107,7 @@
                     </div>
                     <div v-if="autoUpgrade == 1" class="form-row">
                         <label for="thresholdFee">升级条件：</label>
-                        <span>消费金额满</span>
+                        <span>累计金额满</span>
                         <input id="thresholdFee" v-model="thresholdFee" maxlength="10" class="dd-input" style="width: 110px;margin: 0 8px" type="text">
                         <span>元</span>
                     </div>
@@ -152,7 +152,9 @@
                         <div style="margin-bottom: 22px">
                             <input type="radio" class="dd-radio" name="system" v-model="autoUpgrade" value="1">
                             <span>自动升级体系</span>
-                            <p style="margin-left: 21px"><i><small>会员根据自身的消费累计金额，在达到一定的升级条件之后自动进行等级升级</small></i></p>
+                            <p style="margin-left: 21px">
+                                <i><small>会员根据自身的消费累计金额，在达到一定的升级条件之后自动进行等级升级</small></i>
+                            </p>
                         </div>
                         <div style="margin-bottom: 22px">
                             <input type="radio" class="dd-radio" name="system" v-model="autoUpgrade" value="0">
@@ -179,7 +181,8 @@
                     <div class="select-category">
                         <span class="select-category-name"><input type="checkbox" class="dd-checkbox" v-model="food">餐饮</span>
                         <span class="select-category-nodes">
-                            <span class="select-category-node" v-for="node in restNodeList"><input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
+                            <span class="select-category-node" v-for="node in restNodeList">
+                                <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
                         </span>
                     </div>
                     <div class="select-category">
@@ -187,10 +190,13 @@
                         <input type="checkbox" class="dd-checkbox" v-model="et">娱乐
                     </span>
                         <span class="select-category-nodes">
-                        <span class="select-category-node" v-for="node in enterNodeList"><input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
+                        <span class="select-category-node" v-for="node in enterNodeList">
+                            <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
                     </span>
                     </div>
-                    <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="shop"><span>商超</span></div>
+                    <div class="select-category">
+                        <input type="checkbox" class="dd-checkbox" v-model="shop"><span>商超</span>
+                    </div>
                     <div>
                         <button class="dd-btn dd-btn-primary dd-btn-sm" @click="confirmSelect">确定</button>
                         <button class="dd-btn dd-btn-ghost dd-btn-sm" @click="close">取消</button>
