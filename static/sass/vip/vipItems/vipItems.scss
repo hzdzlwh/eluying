@@ -452,8 +452,10 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
             margin-bottom: 8px;
           }
           .discount-item {
+            width: 100%;
             padding: 0 16px;
-            display: flex;
+            margin-bottom: 11px;
+            display: inline-flex;
             justify-content: space-between;
             align-items: center;
             color: #999999;

@@ -150,10 +150,10 @@
                                                             {{vip.levelName}}
                                                         </div>
                                                         <div>
-                                                            <p ng-repeat="item in consumeAndDiscount" class="discount-item">
+                                                            <span ng-repeat="item in vip.consumeAndDiscount" class="discount-item">
                                                                 <span>{{item.name}}</span>
-                                                                <span>{{item.discount}}</span>
-                                                            </p>
+                                                                <span>{{item.discount}}折</span>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>

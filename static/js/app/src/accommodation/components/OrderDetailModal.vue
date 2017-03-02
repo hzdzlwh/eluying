@@ -7,7 +7,9 @@
                         <div class="header-container" v-if="order.orderState">
                             <span class="header-text">订单详情</span>
                             <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
-                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}" v-text="ORDER_STATUS_ICON[order.orderState]['text']"></span>
+                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
+                                  v-text="ORDER_STATUS_ICON[order.orderState]['text']">
+                            </span>
                         </div>
                         <div class="header-container">
                             <span class="header-tools" @click="openPrint(order)">打印</span>
@@ -27,6 +29,10 @@
                                 <div class="userInfo-item">
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
+                                    <span class="vip-level-container" v-if="order.isVip">
+                                        <span class="vip-level-img"></span>
+                                        <span>{{ order.vipLevel }}</span>
+                                    </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
                                     <label class="label-text">客源渠道</label>
@@ -42,7 +48,9 @@
                                         <div class="room-name">
                                             <span class="room-icon"></span>
                                             <span>{{item.serialNum}}({{item.name}})</span>
-                                            <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
+                                            <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">
+                                                {{getRoomOrFoodState(3, item.state).text}}
+                                            </span>
                                         </div>
                                         <div class="room-date">
                                             <label class="label-text">入住</label>
@@ -61,6 +69,12 @@
                                                 </dl>
                                             </div>
                                         </div>
+                                        <span class="discount-info" v-if="order.isVip" style="top: 14px">
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                            <span class="discount-num">
+                                                会员{{ item.vipShowDiscount }}
+                                            </span>
+                                        </span>
                                     </div>
                                     <div class="room-user" v-for="user in item.idCardList">
                                         <span class="user-icon"></span>
@@ -82,7 +96,10 @@
                                         <div class="item-content">
                                             <div class="item-name">
                                                 <span class="item-name">{{item.restName}}</span>
-                                                <span class="food-state-icon" :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">{{getRoomOrFoodState(0, item.foodState).text}}</span>
+                                                <span class="food-state-icon"
+                                                      :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
+                                                    {{getRoomOrFoodState(0, item.foodState).text}}
+                                                </span>
                                             </div>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
@@ -100,12 +117,17 @@
                                         <div class="info-icon" @mouseenter="getFoodDetail(item)" @mouseleave="setInfoContentVisible(item)">
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
                                                 <p class="info-title">{{item.detail.restName}}</p>
-                                                <p class="deskNum"><span>桌号:{{ item.detail.boardDetailResps ? item.detail.boardDetailResps.join(',') : '' }}</span><span>人数:{{item.detail.peopleNum}}</span></p>
+                                                <p class="deskNum">
+                                                    <span>桌号:{{ item.detail.boardDetailResps ? item.detail.boardDetailResps.join(',') : '' }}</span>
+                                                    <span>人数:{{item.detail.peopleNum}}</span>
+                                                </p>
                                                 <p class="foodTime">就餐时间:{{ item.detail.orderTime ? item.detail.orderTime.slice(0, 16) : ''}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
                                                         <p class="food-sub-item" v-for="dish in food.dishItemResp">
-                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">{{dish.categoryName}}</span>
+                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
+                                                                {{dish.categoryName}}
+                                                            </span>
                                                             <span class="dish-numAndPrice">
                                                                 <span>x{{dish.bookNum}}</span>
                                                                 <span>¥{{dish.price}}</span>
@@ -163,7 +185,9 @@
                                     <div class="play-item">
                                         <span class="enter-icon"></span>
                                         <div class="item-content">
-                                            <span class="item-name">{{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}</span>
+                                            <span class="item-name">
+                                                {{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}
+                                            </span>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
                                                 <span>{{item.date.slice(5)}}</span>
@@ -262,11 +286,36 @@
                                 </div>
                             </div>
                             <div class="footer-price">
-                                <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
-                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}<span class="order-price-num grey">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span></span>
-                                <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
+                                <span class="order-price-text">
+                                    订单金额:
+                                    <span class="order-price-num grey">
+                                    ¥{{findTypePrice(order.payments, 13)}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">
+                                    违约金:
+                                    <span class="order-price-num grey">
+                                        ¥{{findTypePrice(order.payments, 4)}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    {{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}
+                                    <span class="order-price-num grey">
+                                        ¥{{Math.abs(findTypePrice(order.payments, 14))}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    {{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}
+                                    <span class="order-price-num red">
+                                        ¥{{Math.abs(findTypePrice(order.payments, 15))}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    需退押金:
+                                    <span class="order-price-num green">
+                                        ¥{{findTypePrice(order.payments, 16)}}
+                                    </span>
+                                </span>
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum}}</span>
@@ -277,10 +326,22 @@
                     <div class="roomModals-footer">
                         <div style="width: 100%;">
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
+                                     @click="checkInOrCheckOut(0)">
+                                    办理入住
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
+                                     v-if="getRoomsState.checkOutAdAble">
+                                    提前退房
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
+                                     v-if="getRoomsState.checkOutAble">
+                                    办理退房
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
+                                     v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
+                                    收银
+                                </div>
                             </div>
                         </div>
                     </div>
