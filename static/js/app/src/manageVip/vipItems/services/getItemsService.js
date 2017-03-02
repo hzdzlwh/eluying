@@ -15,6 +15,7 @@ var getItemsService = function(app){
                 sortType: rootScope.sortType
             }, function(result){
                 rootScope.dataItems = result.data.vipUserList;
+                rootScope.vipUserCount = result.data.vipUserListSize;
                 rootScope.$apply();
             });
         };
@@ -28,15 +29,6 @@ var getItemsService = function(app){
                     });
                     rootScope.$apply();
                 })
-        };
-        this.getVipUserCount = function(rootScope) {
-            AJAXService.ajaxWithToken('GET', '/vipUser/getVipUserCount', {searchPattern: rootScope.searchText},
-            function(result) {
-                if (result.code === 1) {
-                    rootScope.vipUserCount = result.data;
-                    rootScope.$apply();
-                }
-            })
         };
         this.getVipUser = function(id, rootScope) {
             AJAXService.get('/vipUser/getVipUserDetailInfoPC', { vipUserId: id })
