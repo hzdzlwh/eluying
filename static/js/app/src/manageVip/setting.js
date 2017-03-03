@@ -147,7 +147,7 @@ $(function() {
                 }
 
                 if (this.autoUpgrade == 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
-                    modal.alert('升级条件为10为整数');
+                    modal.alert('升级条件只能为整数');
                     return false;
                 }
 
