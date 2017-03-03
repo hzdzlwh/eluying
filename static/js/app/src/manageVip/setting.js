@@ -146,13 +146,18 @@ $(function() {
                     return false;
                 }
 
+                if (this.autoUpgrade == 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
+                    modal.alert('升级条件为10为整数');
+                    return false;
+                }
+
                 if (this.autoUpgrade == 1 && this.consume.length === 0) {
                     modal.alert('请选择消费累计项目');
                     return false;
                 }
 
                 for (let i = 0; i < this.discount.length; i ++) {
-                    if (!/^0\.[1-9]|~[1-9]\.[0.9]|^[1-9]/.test(this.discount[i].discount)) {
+                    if (!/^0\.[1-9]$|^[1-9]\.[0.9]$|^[1-9]$/.test(this.discount[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
