@@ -146,6 +146,11 @@ $(function() {
                     return false;
                 }
 
+                if (this.autoUpgrade == 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
+                    modal.alert('升级条件为10为整数');
+                    return false;
+                }
+
                 if (this.autoUpgrade == 1 && this.consume.length === 0) {
                     modal.alert('请选择消费累计项目');
                     return false;
