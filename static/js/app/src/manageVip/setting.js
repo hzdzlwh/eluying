@@ -131,8 +131,8 @@ $(function() {
                 this.levelName = item.levelName;
                 this.id = item.vipLevelSettingId;
                 this.thresholdFee = item.thresholdFee;
-                this.consume = item.consumeItems;
-                this.discount = item.discountInfoList;
+                this.consume = item.consumeItems.map(i => ({ ...i }));
+                this.discount = item.discountInfoList.map(i => ({ ...i }));;
                 $('#settingModal').modal('show');
             },
             createLevel() {
@@ -315,7 +315,18 @@ $(function() {
                     })
                 }
 
+                if (this.type === 'discount') {
+                    main.discount.map( i => {
+                        const node = list.find(j => {
+                            return j.id === i.id && j.nodeType === i.nodeType;
+                        });
+
+                        node.discount = i.discount;
+                    })
+                }
+
                 main[this.type] = list;
+
                 this.close();
             },
             close() {
