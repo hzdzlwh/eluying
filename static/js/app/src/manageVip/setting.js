@@ -157,7 +157,7 @@ $(function() {
                 }
 
                 for (let i = 0; i < this.discount.length; i ++) {
-                    if (!/^0\.[1-9]$|^[1-9]\.[0.9]$|^[1-9]$/.test(this.discount[i].discount)) {
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
