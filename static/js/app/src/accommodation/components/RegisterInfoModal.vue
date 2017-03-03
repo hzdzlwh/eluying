@@ -36,15 +36,16 @@
                                            @focus="setVipListPosition(1)"
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                 </div>
-                                <div class="userInfo-item userInfo-phone">
+                                <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
                                            @blur="checkPhone" v-model="phone"
                                            @focus="setVipListPosition(2)"
                                            :disabled="checkState === 'editOrder' && order.isVip">
-                                    <span class="vip-level-container" v-if="vipDiscountDetail.isVip">
-                                        <span class="vip-level-img"></span>
-                                        <span>{{ vipDiscountDetail.vipDetail.level }}</span>
+                                    <span v-if="vipDiscountDetail.isVip">
+                                        <span class="vip-level-img">
+                                            <span class="vip-level-text">{{ vipDiscountDetail.vipDetail.level }}</span>
+                                        </span>
                                     </span>
                                     <span class="error-phone-tip" v-show="!phoneValid">
                                         <span style="vertical-align: text-bottom">&uarr;</span>
@@ -252,20 +253,33 @@
                                 </span>
                             </p>
                             <div v-if="order.orderState && showOrder" class="items">
-                                <div class="shop-item" :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''" style="align-items: stretch; flex-direction: column" v-for="item in filterShopList">
+                                <div class="shop-item"
+                                     :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
+                                     style="align-items: stretch;
+                                     flex-direction: column"
+                                     v-for="item in filterShopList">
                                     <div class="orderDetailModal-shop-item">
                                         <span class="shop-icon"></span>
                                         <div class="item-content">
                                             <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>{{`¥${getTotalPrice(item['items'])}`}}</span>
+                                                <span>¥{{getTotalPrice(item['items'], true)}}</span>
+                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                    <span>
+                                                        原价
+                                                        <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
+                                                    </span>
+                                                    <span class="discount-num">
+                                                        {{ item.items[0].vipShowDiscount }}
+                                                    </span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="item-content" v-for="option in item['items']">
                                         <span style="padding-left: 32px; width: 120px;">{{option.name}}</span>
-                                        <span>{{`x${option.amount}`}}</span>
+                                        <span>x{{option.amount}}</span>
                                         <span style="margin-right: 304px;width: 120px; text-align: right">{{`¥${(option.price * option.amount).toFixed(2)}`}}</span>
                                     </div>
                                 </div>
@@ -443,6 +457,23 @@
             background: url("../../../../../image/modal/vip_level_img.png");
             background-size: contain;
             vertical-align: text-bottom;
+            &:hover .vip-level-text {
+                display: inline-flex;
+            }
+        }
+        .vip-level-container {
+            position: relative;
+        }
+        .vip-level-text {
+            display: none;
+            position: absolute;
+            right: -33px;
+            background:#fafafa;
+            box-shadow:0px 0px 5px 0px rgba(0,0,0,0.15);
+            width:33px;
+            height:19px;
+            justify-content: center;
+            align-items: center;
         }
         .userInfo-items {
             position: relative;
@@ -1227,6 +1258,7 @@
                             enter.price = Number((option.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
                         }
                     });
+                    enter.totalPrice = Number((enter.price * enter.amount * enter.timeAmount).toFixed(2));
                     if (this.checkState === 'editOrder' && item.playOrderId) {
                         enter.playOrderId = item.playOrderId;
                     }
@@ -1322,11 +1354,11 @@
                 }
             },
 
-            getTotalPrice(arr) {
+            getTotalPrice(arr, dis) {
                 let price = 0;
                 if (arr) {
                     arr.forEach(item => {
-                        price += item.price * item.amount;
+                        price += (dis ? item.price : item.originPrice) * item.amount;
                     });
                 }
                 return price.toFixed(2);
