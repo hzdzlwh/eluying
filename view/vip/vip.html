@@ -144,7 +144,7 @@
                                             <span ng-bind="vip.levelName"></span>
                                             <div class="tip-img-container" ng-if="vip.levelName">
                                                 <div class="tip-img-subContainer level-detail-subContainer">
-                                                    <img src="../../static/image/modal/room_modal_info.png" >
+                                                    <img ng-if="vip.levelName !== '—' && vip.vipConsumeList.length > 0" src="../../static/image/modal/room_modal_info.png" >
                                                     <div ng-if="vip.detail" class="vip-level-detail">
                                                         <div>
                                                             {{vip.levelName}}
