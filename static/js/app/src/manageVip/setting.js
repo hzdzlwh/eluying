@@ -104,7 +104,7 @@ $(function() {
             },
             deleteLevel(id) {
                 const message = this.autoUpgrade == 1
-                    ? '删除该会员等级后，该等级的会员降底一等级，确认删除么？'
+                    ? '删除该会员等级后，该等级的会员降低一等级，确认删除么？'
                     : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
                 modal.confirmDialog({
                     message
@@ -157,7 +157,7 @@ $(function() {
                 }
 
                 for (let i = 0; i < this.discount.length; i ++) {
-                    if (!/^0\.[1-9]$|^[1-9]\.[0.9]$|^[1-9]$/.test(this.discount[i].discount)) {
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
