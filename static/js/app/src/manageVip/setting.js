@@ -104,7 +104,7 @@ $(function() {
             },
             deleteLevel(id) {
                 const message = this.autoUpgrade == 1
-                    ? '删除该会员等级后，该等级的会员降底一等级，确认删除么？'
+                    ? '删除该会员等级后，该等级的会员降低一等级，确认删除么？'
                     : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
                 modal.confirmDialog({
                     message
