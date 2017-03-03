@@ -26,12 +26,13 @@
                                     <label class="label-text">联系人</label>
                                     <span>{{ order.customerName }}</span>
                                 </div>
-                                <div class="userInfo-item">
+                                <div class="userInfo-item vip-level-container">
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
-                                    <span class="vip-level-container" v-if="order.isVip">
-                                        <span class="vip-level-img"></span>
-                                        <span>{{ order.vipLevel }}</span>
+                                    <span v-if="order.isVip">
+                                        <span class="vip-level-img">
+                                            <span class="vip-level-text">{{ order.vipLevel }}</span>
+                                        </span>
                                     </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
@@ -69,10 +70,10 @@
                                                 </dl>
                                             </div>
                                         </div>
-                                        <span class="discount-info" v-if="order.isVip" style="top: 14px">
+                                        <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num">
-                                                会员{{ item.vipShowDiscount }}
+                                                {{ item.vipShowDiscount }}
                                             </span>
                                         </span>
                                     </div>
@@ -113,6 +114,12 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                                <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                                <span class="discount-num">
+                                                    {{ item.vipShowDiscount }}
+                                                </span>
+                                            </span>
                                         </div>
                                         <div class="info-icon" @mouseenter="getFoodDetail(item)" @mouseleave="setInfoContentVisible(item)">
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
@@ -200,6 +207,12 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.totalPrice}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                            <span>原价<span class="origin-price">¥{{(item.originPrice * item.amount * item.timeAmount).toFixed(2) }}</span></span>
+                                            <span class="discount-num">
+                                                {{ item.vipShowDiscount }}
+                                            </span>
+                                        </span>
                                         </div>
                                         <span></span>
                                     </div>
@@ -216,8 +229,14 @@
                                             <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>¥{{getTotalPrice(item['items'])}}</span>
+                                                <span>¥{{getTotalPrice(item['items'], true)}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span>原价<span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span></span>
+                                                <span class="discount-num">
+                                                    {{ item.items[0].vipShowDiscount }}
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="item-content" v-for="option in item['items']">
@@ -419,6 +438,7 @@
             flex-grow: 1;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         .user-name {
             width: 124px;
@@ -765,11 +785,11 @@
                 }
                 return newPayMents;
             },
-            getTotalPrice(arr) {
+            getTotalPrice(arr, dis) {
                 let price = 0;
                 if (arr) {
                     arr.forEach(item => {
-                        price += item.price * item.amount;
+                        price += (dis ? item.price : item.originPrice) * item.amount;
                     });
                 }
                 return price.toFixed(2);

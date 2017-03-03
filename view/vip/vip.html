@@ -106,10 +106,10 @@
                                 <input ng-model="vip.phone" ng-if="!vip.vipUserId" type="text" maxlength="11" >
                                 <span class="modifyVip" ng-bind="vip.phone" ng-if="vip.vipUserId"></span>
                             </p>
-                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="tip-phone">必填字段</span>
+                            <span ng-if="!vip.vipUserId && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="tip-phone">必填字段</span>
                             <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
                             <div ng-if="vip.detail" class="consume-container">
-                                <label>消费金额</label>
+                                <label>累计金额</label>
                                 <div class="consume-tips">
                                     <div class="consume-money">
                                         <span ng-bind="'¥' + vip.totalConsume"></span>
@@ -159,6 +159,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>会员卡号</label>
+                                        <input style="width: 240px;margin-left: 4px;height: 24px;" ng-if="!vip.detail" ng-model="vip.vipCardNum" type="text" maxlength="18" >
+                                        <span ng-if="vip.detail" ng-bind="vip.vipCardNum"></span>
                                     </td>
                                 </tr>
                                 <tr>
