@@ -8,12 +8,17 @@ require('angular');
 var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function(getItemsService) {
         this.addEditVip = function(vip, rootScope) {
+            const data = {
+                ...vip,
+                vipLevelId: vip.level
+            };
             if (vip.vipUserId) {
-                delete vip.phone;
+                delete data.phone
             }
 
-            vip.vipLevelId = vip.level;
-            AJAXService.ajaxWithToken('POST', '/vipUser/addEditVip', vip,
+            AJAXService.ajaxWithToken('POST',
+                '/vipUser/addEditVip',
+                data,
                 function(result) {
                     if (result.code === 1) {
                         $("#newVipModal").modal("hide");
