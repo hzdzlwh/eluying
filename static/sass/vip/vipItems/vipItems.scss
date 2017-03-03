@@ -127,7 +127,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         background: #fafafa;
         border-bottom: 1px solid #ededed;
         th {
-          text-align: center;
+          padding-left: 16px;
           color: #666;
           word-wrap: break-word;
           position: relative;
@@ -188,9 +188,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
           &:nth-child(6) {
             padding-right: 16px;
           }
-          &:nth-child(3) {
-            padding: 0;
-          }
+
           &:nth-child(2) {
             padding-right: 16px;
           }
