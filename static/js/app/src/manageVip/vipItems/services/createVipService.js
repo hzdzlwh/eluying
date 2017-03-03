@@ -8,6 +8,10 @@ require('angular');
 var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function(getItemsService) {
         this.addEditVip = function(vip, rootScope) {
+            if (vip.vipUserId) {
+                delete vip.phone;
+            }
+
             vip.vipLevelId = vip.level;
             AJAXService.ajaxWithToken('POST', '/vipUser/addEditVip', vip,
                 function(result) {
