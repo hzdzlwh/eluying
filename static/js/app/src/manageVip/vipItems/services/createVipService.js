@@ -15,7 +15,6 @@ var createVipService = function(app){
                         $("#newVipModal").modal("hide");
                         vip = {name: '', phone: '', idCardType: 0};
                         getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, rootScope.searchText, rootScope);
-                        getItemsService.getVipUserCount(rootScope);
                     } else {
                         modal.somethingAlert(result.msg);
                     }

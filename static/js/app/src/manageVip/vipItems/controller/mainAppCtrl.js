@@ -64,7 +64,6 @@ var itemsCtrl = function(app){
                 rootScope.sortColumn = col;
                 rootScope.sortType = type;
                 getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
-                getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };
             scope.getIdCardIcon = function(num) {
                 return rootScope.idCardList[num].label.substring(0 ,1);
@@ -77,10 +76,8 @@ var itemsCtrl = function(app){
                 scope.searchPattern = rootScope.searchText;
                 rootScope.currentPage = 1;
                 getItemsService.getVipItems(rootScope.currentPage, rootScope.pageSize, scope.searchPattern, rootScope);
-                getItemsService.getVipUserCount(rootScope, scope.searchPattern);
             };
 
-            getItemsService.getVipUserCount(rootScope);
             getItemsService.getVipLevels(rootScope);
 
             scope.getPageCount = function() {
