@@ -240,7 +240,7 @@
                             </div>
                             <p>
                                 <span class="newVip">邮箱</span>
-                                <input ng-if="!vip.detail" ng-model="vip.email" type="text" minlength="2" maxlength="50" >
+                                <input ng-if="!vip.detail" ng-model="vip.email" type="text" minlength="2" maxlength="30" >
                                 <span ng-if="vip.detail" ng-bind="vip.email"></span>
                             </p>
                             <span ng-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && !modify" class="tip-email">邮箱格式错误</span>
@@ -254,7 +254,7 @@
                             </p>
                             <p>
                                 <span class="newVip">创建渠道</span>
-                                <input ng-if="!vip.detail" ng-model="vip.vipChannel" type="text" minlength="2" maxlength="50" >
+                                <input ng-if="!vip.detail" ng-model="vip.vipChannel" type="text" minlength="2" maxlength="20" >
                                 <span ng-if="vip.detail" ng-bind="vip.vipChannel"></span>
                             </p>
                             <p>

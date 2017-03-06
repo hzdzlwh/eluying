@@ -132,7 +132,7 @@ $(function() {
                 this.id = item.vipLevelSettingId;
                 this.thresholdFee = item.thresholdFee;
                 this.consume = item.consumeItems.map(i => ({ ...i }));
-                this.discount = item.discountInfoList.map(i => ({ ...i }));;
+                this.discount = item.discountInfoList.map(i => ({ ...i }));
                 $('#settingModal').modal('show');
             },
             createLevel() {
@@ -141,7 +141,7 @@ $(function() {
                     return false;
                 }
 
-                if (this.autoUpgrade == 1 && !this.thresholdFee) {
+                if (this.autoUpgrade == 1 && this.thresholdFee === undefined) {
                     modal.alert('请输入升级条件');
                     return false;
                 }
