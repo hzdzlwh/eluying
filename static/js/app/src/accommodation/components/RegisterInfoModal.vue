@@ -467,10 +467,11 @@
         .vip-level-text {
             display: none;
             position: absolute;
-            right: -33px;
+            right: 0;
+            padding: 0 2px;
+            transform: translateX(100%);
             background:#fafafa;
             box-shadow:0px 0px 5px 0px rgba(0,0,0,0.15);
-            width:33px;
             height:19px;
             justify-content: center;
             align-items: center;
