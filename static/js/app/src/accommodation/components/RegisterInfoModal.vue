@@ -25,7 +25,12 @@
                                 <div class="userInfo-item">
                                     <div class="userVip-list" v-if="vipListShow">
                                         <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
-                                            <span class="vip-level">[<span class="vip-level-text">{{ vip.level }}</span>]</span>
+                                            <span class="vip-level" v-if="vip.level">
+                                                [
+                                                <span class="vip-level-text">{{ vip.level }}</span>
+                                                ]
+                                            </span>
+                                            <span class="vip-level" v-if="!vip.level"></span>
                                             <span class="vip-name">{{ vip.name }}</span>
                                             <span class="vip-phone">{{ vip.phone }}</span>
                                         </p>
@@ -44,7 +49,7 @@
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                     <span v-if="vipDiscountDetail.isVip">
                                         <span class="vip-level-img">
-                                            <span class="vip-level-text">{{ vipDiscountDetail.vipDetail.level }}</span>
+                                            <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
                                         </span>
                                     </span>
                                     <span class="error-phone-tip" v-show="!phoneValid">
@@ -457,14 +462,14 @@
             background: url("../../../../../image/modal/vip_level_img.png");
             background-size: contain;
             vertical-align: text-bottom;
-            &:hover .vip-level-text {
+            &:hover .vip-level-tip {
                 display: inline-flex;
             }
         }
         .vip-level-container {
             position: relative;
         }
-        .vip-level-text {
+        .vip-level-tip {
             display: none;
             position: absolute;
             right: 0;
@@ -503,8 +508,7 @@
             align-items: center;
             color: #666666;
             font-size: 12px;
-            height: 24px;
-            padding: 0 8px;
+            padding: 2px 8px;
             cursor: pointer;
             &:hover {
                 background: #e1effa;
