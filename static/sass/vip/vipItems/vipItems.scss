@@ -213,7 +213,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
     border-top: 4px solid #178ce6;
     box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: visible;
     position: relative;
     .top-fixed{
       width: 100%;
@@ -440,7 +440,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
           background: #fafafa;
           box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
           border-radius: 2px;
-          width: 100%;
+          width: 200px;
           z-index: 10;
           div:first-child {
             padding: 8px 16px;
@@ -552,7 +552,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
       .vip-leavelUpgrade-tip {
         position: absolute;
         display: none;
-        width: 100%;
+        width: 200px;
         background:#fafafa;
         box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
         border-radius:2px;
@@ -572,7 +572,6 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
     }
     .tip-img-container {
       display: inline-block;
-      width: 200px;
       height: 16px;
       position: relative;
       img {
