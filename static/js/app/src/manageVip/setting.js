@@ -321,7 +321,7 @@ $(function() {
                             return j.id === i.id && j.nodeType === i.nodeType;
                         });
 
-                        node.discount = i.discount;
+                        node && (node.discount = i.discount);
                     })
                 }
 
