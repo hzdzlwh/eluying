@@ -152,7 +152,7 @@
                                               && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num">
-                                                会员{{ Math.floor(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10) }}折
+                                                会员{{ getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10 }}折
                                             </span>
                                         </span>
                                     </div>
