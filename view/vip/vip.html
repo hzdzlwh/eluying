@@ -113,9 +113,9 @@
                                 <div class="consume-tips">
                                     <div class="consume-money">
                                         <span ng-bind="'¥' + vip.totalConsume"></span>
-                                        <div class="tip-img-container"><!--ng-if="vip.isAutoUpgrade && vip.upgradeFee !==0"-->
+                                        <div class="tip-img-container">
                                             <div class="tip-img-subContainer consume-subContainer">
-                                                <img src="../../static/image/modal/room_modal_info.png" >
+                                                <img v-if="vip.isAutoUpgrade === 1" src="../../static/image/modal/room_modal_info.png" >
                                                 <div class="vip-leavelUpgrade-tip">
                                                     <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
                                                     <div>{{vip.vipConsumeList.join('、')}}</div>
