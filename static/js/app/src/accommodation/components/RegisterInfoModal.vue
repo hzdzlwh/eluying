@@ -151,7 +151,7 @@
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
                                                   v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
-                                                会员{{ getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10 }}折
+                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(2) }}折
                                             </span>
                                         </span>
                                     </div>
@@ -242,7 +242,7 @@
                                                   v-if="Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
                                                                          * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
-                                                会员{{ getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10 }}折
+                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(2) }}折
                                             </span>
                                     </span>
                                 </div>
@@ -325,7 +325,7 @@
                                                 </span>
                                             </span>
                                             <span class="discount-num">
-                                                会员{{ getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10 }}折
+                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(2) }}折
                                             </span>
                                     </span>
                                 </div>
