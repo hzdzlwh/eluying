@@ -1064,6 +1064,7 @@
                 this.shopGoodsItems = [];
                 this.registerRooms = [];
                 this.vipDiscountDetail = {};
+                this.phoneValid = true;
             },
             hideModal(e){
                 e.stopPropagation();
