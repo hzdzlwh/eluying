@@ -15,6 +15,10 @@ import detail from './views/entertainment/operation/detail.vue';
 import retail from './views/retail.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
+import insurance from './views/insurance.vue';
+import { checkSwitch, INSURANCE_ID } from '../common/auth';
+
+const insuranceAuth = checkSwitch(INSURANCE_ID);
 
 export const routes = [
     {
@@ -160,6 +164,14 @@ export const routes = [
             name: '商超'
         },
         component: retail
+    },
+    {
+        path: '/insurance',
+        meta: {
+            name: '保险',
+            invisible: !insuranceAuth
+        },
+        component: insurance
     }
 ];
 
