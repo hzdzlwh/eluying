@@ -1278,7 +1278,7 @@
                             enter.price = Number((option.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
                         }
                     });
-                    enter.totalPrice = Number((enter.price * enter.amount * enter.timeAmount).toFixed(2));
+                    enter.totalPrice = Number(item.totalPrice);
                     if (this.checkState === 'editOrder' && item.playOrderId) {
                         enter.playOrderId = item.playOrderId;
                     }

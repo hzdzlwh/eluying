@@ -30,9 +30,8 @@
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
                                     <span v-if="order.isVip">
-                                        <span class="vip-level-img">
-                                            <span class="vip-level-text">{{ order.vipLevel }}</span>
-                                        </span>
+                                        <span class="vip-level-img" style="top: 0;"></span>
+                                        <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
                                     </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
