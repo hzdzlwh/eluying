@@ -23,9 +23,14 @@
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
-                                    <div class="userVip-list" v-if="vipListShow">
+                                    <div class="userVip-list" v-show="vipListShow" @click.stop="stopPropagation">
                                         <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
-                                            <span class="vip-level">[<span class="vip-level-text">{{ vip.level }}</span>]</span>
+                                            <span class="vip-level" v-if="vip.level">
+                                                [
+                                                <span class="vip-level-text">{{ vip.level }}</span>
+                                                ]
+                                            </span>
+                                            <span class="vip-level" v-if="!vip.level"></span>
                                             <span class="vip-name">{{ vip.name }}</span>
                                             <span class="vip-phone">{{ vip.phone }}</span>
                                         </p>
@@ -33,19 +38,20 @@
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
                                            v-model="name"
-                                           @focus="setVipListPosition(1)"
+                                           @input="changeVipList(1)"
+                                           @click.stop="stopPropagation"
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
-                                           @blur="checkPhone" v-model="phone"
-                                           @focus="setVipListPosition(2)"
+                                           v-model="phone"
+                                           @input="changeVipList(2)"
+                                           @click.stop="stopPropagation"
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                     <span v-if="vipDiscountDetail.isVip">
-                                        <span class="vip-level-img">
-                                            <span class="vip-level-text">{{ vipDiscountDetail.vipDetail.level }}</span>
-                                        </span>
+                                        <span class="vip-level-img"></span>
+                                        <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
                                     </span>
                                     <span class="error-phone-tip" v-show="!phoneValid">
                                         <span style="vertical-align: text-bottom">&uarr;</span>
@@ -143,11 +149,11 @@
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
                                         <span class="discount-info"
                                               v-if="vipDiscountDetail.isVip
-                                              && Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))
                                               && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                                            <span class="discount-num">
-                                                会员{{ Math.floor(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10) }}折
+                                            <span class="discount-num"
+                                                  v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
+                                                会员{{ getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10 }}折
                                             </span>
                                         </span>
                                     </div>
@@ -232,12 +238,12 @@
                                     <span class="discount-info"
                                           style="top: 28px"
                                           v-if="vipDiscountDetail.isVip
-                                          && Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
-                                                                         * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
-                                                                         * item.count * item.timeAmount).toFixed(2))
                                           && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                                            <span class="discount-num">
+                                            <span class="discount-num"
+                                                  v-if="Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
+                                                                         * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
+                                                                         * item.count * item.timeAmount).toFixed(2))">
                                                 会员{{ Math.floor(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10) }}折
                                             </span>
                                     </span>
@@ -454,20 +460,24 @@
             display: inline-block;
             height: 15px;
             width: 17px;
+            position: absolute;
+            right: 0;
+            top: 4px;
+            transform: translateX(100%);
             background: url("../../../../../image/modal/vip_level_img.png");
             background-size: contain;
-            vertical-align: text-bottom;
-            &:hover .vip-level-text {
+            &:hover + .vip-level-tip {
                 display: inline-flex;
             }
         }
         .vip-level-container {
             position: relative;
         }
-        .vip-level-text {
+        .vip-level-tip {
             display: none;
             position: absolute;
-            right: 0;
+            top: 4px;
+            right: -17px;
             padding: 0 2px;
             transform: translateX(100%);
             background:#fafafa;
@@ -494,7 +504,6 @@
             max-height:120px;
             overflow: scroll;
             top: 26px;
-            left: 42px;
             z-index: 100;
         }
         .userVip-item {
@@ -503,8 +512,7 @@
             align-items: center;
             color: #666666;
             font-size: 12px;
-            height: 24px;
-            padding: 0 8px;
+            padding: 2px 8px;
             cursor: pointer;
             &:hover {
                 background: #e1effa;
@@ -575,7 +583,8 @@
             color: #999999;
             top: 30px;
             right: 0;
-            justify-content: space-between;
+            min-width: 104px;
+            justify-content: flex-start;
             align-items: center;
         }
         .origin-price {
@@ -814,7 +823,8 @@
                 vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
                 vipListShow: false,
-                vipList: []
+                vipList: [],
+                timeCount: 0,
             }
         },
 
@@ -940,21 +950,30 @@
                         return {};
                 }
             },
-            getVipList(params) {
+            getVipList(params, position) {
                 AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.vipList = res.data.list;
                             this.vipListShow = res.data.list && res.data.list.length > 0;
+                            this.setVipListPosition(position);
                         } else {
                             modal.somethingAlert(res.msg);
                         }
                     });
             },
-            setVipListPosition(num) {
+            changeVipList(num) {
+                let params = num === 1 ? { name: this.name } : { phone: this.phone };
+                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
+                if (search && ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4))) {
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
+                }
+            },
+            setVipListPosition(position) {
                 const vipList = document.querySelector('.userVip-list');
                 if (vipList) {
-                    vipList.style.left = num === 1 ? 42 + 'px' : 312 + 'px';
+                    vipList.style.left = position === 1 ? 46 + 'px' : 312 + 'px';
                 }
             },
             setUserInfo(obj) {
@@ -1045,6 +1064,7 @@
                 this.shopGoodsItems = [];
                 this.registerRooms = [];
                 this.vipDiscountDetail = {};
+                this.phoneValid = true;
             },
             hideModal(e){
                 e.stopPropagation();
@@ -1259,7 +1279,7 @@
                             enter.price = Number((option.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
                         }
                     });
-                    enter.totalPrice = Number((enter.price * enter.amount * enter.timeAmount).toFixed(2));
+                    enter.totalPrice = Number(item.totalPrice);
                     if (this.checkState === 'editOrder' && item.playOrderId) {
                         enter.playOrderId = item.playOrderId;
                     }
@@ -1402,6 +1422,8 @@
                         date.showInput = false;
                     });
                 });
+                this.vipListShow = false;
+                this.vipList = [];
             },
             changShowInput(item, option) {
                 item.datePriceList.forEach(datePrice => {
@@ -1541,21 +1563,26 @@
             CheckInPerson
         },
         watch: {
-            name(newVal) {
-                let search = newVal.length === 1
+            /*name(newVal) {
+                let search = newVal.length >= 1
                     && (this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip));
                 if (search) {
                     const params = { name: newVal };
-                    this.getVipList(params);
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, 1); }, 500);
                 }
-            },
+            },*/
             phone(newVal) {
                 const params = { phone: newVal };
                 let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
-                if (newVal.length === 4 && search) {
-                    this.getVipList(params);
+                if (newVal.length >= 4 && newVal.length < 11 && search) {
+                    //clearTimeout(this.timeCount);
+                    //this.timeCount = setTimeout(() => { this.getVipList(params, 2); }, 500)
                 } else if (newVal.length === 11 && search) {
+                    this.checkPhone();
                     this.getVipDiscount(params);
+                } else if (newVal !== 11) {
+                    this.vipDiscountDetail = {};
                 }
             },
             vipDiscountDetail(newVal) {
