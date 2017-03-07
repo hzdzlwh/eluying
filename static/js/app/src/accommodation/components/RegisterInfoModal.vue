@@ -39,7 +39,6 @@
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
                                            v-model="name"
                                            @input="changeVipList(1)"
-                                           @click.stop="stopPropagation"
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
@@ -47,7 +46,6 @@
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
                                            v-model="phone"
                                            @input="changeVipList(2)"
-                                           @click.stop="stopPropagation"
                                            :disabled="checkState === 'editOrder' && order.isVip">
                                     <span v-if="vipDiscountDetail.isVip">
                                         <span class="vip-level-img"></span>
