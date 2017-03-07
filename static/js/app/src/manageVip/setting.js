@@ -104,7 +104,9 @@ $(function() {
             },
             deleteLevel(id) {
                 const message = this.autoUpgrade == 1
-                    ? '删除该会员等级后，该等级的会员降低一等级，确认删除么？'
+                    ? (this.settings.length === 1
+                        ? '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？'
+                        : '删除该会员等级后，该等级的会员降低一等级，确认删除么？')
                     : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
                 modal.confirmDialog({
                     message
@@ -132,7 +134,7 @@ $(function() {
                 this.id = item.vipLevelSettingId;
                 this.thresholdFee = item.thresholdFee;
                 this.consume = item.consumeItems.map(i => ({ ...i }));
-                this.discount = item.discountInfoList.map(i => ({ ...i }));;
+                this.discount = item.discountInfoList.map(i => ({ ...i }));
                 $('#settingModal').modal('show');
             },
             createLevel() {
@@ -141,7 +143,7 @@ $(function() {
                     return false;
                 }
 
-                if (this.autoUpgrade == 1 && !this.thresholdFee) {
+                if (this.autoUpgrade == 1 && this.thresholdFee === undefined) {
                     modal.alert('请输入升级条件');
                     return false;
                 }
@@ -321,7 +323,7 @@ $(function() {
                             return j.id === i.id && j.nodeType === i.nodeType;
                         });
 
-                        node.discount = i.discount;
+                        node && (node.discount = i.discount);
                     })
                 }
 
