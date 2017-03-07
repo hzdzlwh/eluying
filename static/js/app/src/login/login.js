@@ -369,6 +369,7 @@ $(document).ready(function(){
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
+                version: 17,
                 password: password,
                 phone: loginName
             }, function(data){

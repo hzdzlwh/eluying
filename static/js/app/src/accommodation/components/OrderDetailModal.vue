@@ -1,5 +1,21 @@
 <template>
     <div>
+        <div class="modal fade" role="dialog" id="insuranceDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <div class="roomModals-header">
+                        保险详情
+                    </div>
+                    <div>
+                        <dd-table :columns="columns" :dataSource="order.insuranceInfoList"></dd-table>
+                    </div>
+                    <div class="roomModals-footer">
+                        <span>共{{order.insuranceInfoList.length}}条保单记录，保费{{order.insuranceTotalPremium}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -12,6 +28,7 @@
                             </span>
                         </div>
                         <div class="header-container">
+                            <span class="header-tools" v-if="order.insuranceInfoList.length > 0" @click="openInsurance">查看保险({{order.insuranceInfoList.length}})</span>
                             <span class="header-tools" v-if="order.orderState !== -1" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
@@ -647,6 +664,7 @@
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
+    import { DdTable } from 'dd-vue-component';
     export default{
         props: {
             orderId: {
@@ -661,7 +679,41 @@
             return{
                 ID_CARD_TYPE,
                 FOOD_STATE,
-                ORDER_STATUS_ICON
+                ORDER_STATUS_ICON,
+                columns: [
+                    {
+                        title: '被保人姓名',
+                        dataIndex: 'insurantsName'
+                    },
+                    {
+                        title: '手机号',
+                        dataIndex: 'insurantsMobile'
+                    },
+                    {
+                        title: '性别',
+                        render: (h, row) => (<span>{['','男','女'][row.insurantsSex]}</span>),
+                    },
+                    {
+                        title: '年龄',
+                        dataIndex: 'insurantsAge'
+                    },
+                    {
+                        title: '投保日期',
+                        dataIndex: 'startDate'
+                    },
+                    {
+                        title: '终保日期',
+                        dataIndex: 'endDate'
+                    },
+                    {
+                        title: '保单号',
+                        dataIndex: 'proposalNo'
+                    },
+                    {
+                        title: '创建时间',
+                        dataIndex: 'date'
+                    }
+                ]
             }
         },
         computed: {
@@ -825,9 +877,14 @@
             editOrder() {
                 this.hideModal();
                 this.$emit('editOrder', 'editOrder', this.order);
+            },
+            openInsurance() {
+                $('#insuranceDialog').modal('show');
             }
         },
-        components:{},
+        components:{
+            DdTable
+        },
         watch: {
             orderDetailShow(newVal, oldVal) {
                 if(newVal && !oldVal){
