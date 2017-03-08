@@ -898,7 +898,7 @@
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
                     if (res.code === 1) {
                         this.userOrigins = res.data.list;
-                        this.userOrigins.unshift({ id: -1, name: '散客' });
+                        this.userOrigins.unshift({ id: -1, name: '自来客' });
                         this.userOriginType = this.userOrigins[0].id;
                     } else {
                         modal.somethingAlert(res.msg);

@@ -16,9 +16,9 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="hr"></div>
-            <div class="stitle">新增客源</div>
+            <div class="stitle">新增来源</div>
             <div class="maintext">
-                <div class="slabel">客源名称</div>
+                <div class="slabel">来源名称</div>
                 <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest" maxlength="16"/></div>
                 <div class="errorTips" ng-show="errorTipsShow">
                     必填字段
@@ -54,10 +54,6 @@
         <div class="guest-container">
             <div class="stitle">
                 <div class="stext">自定义客源</div>
-                <div class="snew" data-toggle="modal" data-target="#newGuest">
-                    <img src="//static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="">
-                    新增客源
-                </div>
             </div>
             <div class="sbox">
                 <div class="hr"></div>
@@ -68,14 +64,35 @@
                 </div>
                 <div class="hr1"></div>
                 <div class="srow fit">
-                    <div class="col1">散客</div>
+                    <div class="col1">自来客</div>
                     <div class="col2"><div class="hr2"></div></div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="hr1" ng-if="guestList.length > 0"></div>
-
+                <div class="hr1"></div>
+                <div class="srow fit">
+                    <div class="col1">会员</div>
+                    <div class="col2"><div class="hr2"></div></div>
+                    <div class="clearfloat"></div>
+                </div>
+                <div class="hr1"></div>
+                <div class="srow fit">
+                    <div class="col1">企业</div>
+                    <div class="col2"><div class="hr2"></div></div>
+                    <div class="clearfloat"></div>
+                </div>
+                <div class="hr1"></div>
+                <div class="srow">
+                    <div class="col1">其他</div>
+                    <div class="col2">
+                        <div class="snew" data-toggle="modal" data-target="#newGuest">
+                            <img src="//static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="">
+                            新增来源
+                        </div>
+                    </div>
+                    <div class="clearfloat"></div>
+                </div>
                 <div class="srow" ng-repeat="guest in guestList">
-                    <div class="col1">{{guest.name}}</div>
+                    <div class="col1 col-other-guest">{{guest.name}}</div>
                     <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest" ng-click="toDeleteGuest(guest.id)">删除</div>
                     <div class="clearfloat"></div>
                 </div>
