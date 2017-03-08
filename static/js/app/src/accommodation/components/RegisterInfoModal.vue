@@ -1455,8 +1455,10 @@
             },
 
             modifyRoom(item, boolean) {
-                if (item.roomOrderId && item.changeTimes < 3) {
+                if (item.roomOrderId) {
                     item.changeTimes++;
+                }
+                if (item.roomOrderId && item.changeTimes < 4) {
                     return false;
                 }
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
@@ -1523,8 +1525,10 @@
             },
 
             modifyEnter(item) {
-                if (item.playOrderId && item.changeTimes < 1) {
+                if (item.playOrderId) {
                     item.changeTimes++;
+                }
+                if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
                 this.enterList.forEach(enter => {
@@ -1596,7 +1600,7 @@
                     if (this.checkState === 'editOrder') {
                         this.modifyRoom(room, true);
                     }
-                    if (!room.roomOrderId || (room.roomOrderId && room.changeTimes === 3)) {
+                    if (!room.roomOrderId || (room.roomOrderId && room.changeTimes > 3)) {
                         room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
                         this.setDateFee(room.price, room);
                         this.setFirstDateFee(room.price, room);
@@ -1604,7 +1608,7 @@
                 });
 
                 this.enterItems.forEach(enter => {
-                    if ((enter.playOrderId && enter.changeTimes === 1) || !enter.playOrderId) {
+                    if ((enter.playOrderId && enter.changeTimes > 1) || !enter.playOrderId) {
                         enter.totalPrice = (Number(enter.originPrice) * this.getItemDiscountInfo(enter.nodeId, enter.type, newVal).discount).toFixed(2);
                     }
                 });
