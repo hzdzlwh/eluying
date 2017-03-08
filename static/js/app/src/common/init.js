@@ -17,7 +17,7 @@ export default function (option) {
         noAuthUrl: undefined,
         mainContainer: true,
         centerModals: true,
-        clearModal: false
+        clearModal: true
     };
     option = { ...defaultOption, ...option};
 
