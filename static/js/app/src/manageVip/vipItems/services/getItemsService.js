@@ -27,7 +27,6 @@ var getItemsService = function(app){
                         vipLevelName: '—'
                     }];
                     rootScope.levels.concat(res.data.list);
-                    rootScope.levels = res.data.list;
                     rootScope.$apply();
                 })
         };
