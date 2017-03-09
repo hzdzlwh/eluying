@@ -19,9 +19,14 @@
             <div class="stitle">新增来源</div>
             <div class="maintext">
                 <div class="slabel">来源名称</div>
-                <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest" maxlength="16"/></div>
+                <div class="scontent">
+                    <input type="text" id="newGuest-input" required="required" ng-model="newGuest" ng-keyup="hideRepeatTips()" maxlength="16"/>
+                </div>
                 <div class="errorTips" ng-show="errorTipsShow">
                     必填字段
+                </div>
+                <div class="errorTips" ng-show="repeatTipsShow">
+                    已有该客源渠道了，请重新输入
                 </div>
             </div>
             <div class="btns clearfloat">
@@ -75,12 +80,12 @@
                     <div class="clearfloat"></div>
                 </div>
                 <div class="hr1"></div>
-                <div class="srow fit">
+                <div class="srow fit" ng-if="companyStatus">
                     <div class="col1">企业</div>
                     <div class="col2"><div class="hr2"></div></div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="hr1"></div>
+                <div class="hr1" ng-if="companyStatus"></div>
                 <div class="srow">
                     <div class="col1">其他</div>
                     <div class="col2">

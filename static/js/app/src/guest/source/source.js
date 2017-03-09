@@ -19,30 +19,45 @@ $(function(){
         scope.guestList = [];
         scope.guestToDelete = null;
         scope.newGuest = '';
+        scope.companyStatus = 0;
+        scope.repeatTipsShow = false;
         scope.errorTipsShow = false;
         AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
             type: 2
         }, function(result){
             scope.guestList = result.data.list;
+            scope.companyStatus = result.data.companyStatus;
             scope.$apply();
         });
+        scope.hideRepeatTips = function() {
+            scope.repeatTipsShow = false;
+        };
         scope.addGuest = function(){
             if(!scope.newGuest){
                 scope.errorTipsShow = true;
+                return false;
+            }
+            if (scope.repeatTipsShow) {
                 return false;
             }
             AJAXService.ajaxWithToken('GET', 'addChannelUrl', {
                 type: 2,
                 channelName: scope.newGuest
             }, function(result){
-                AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                    type: 2
-                }, function(result){
-                    scope.guestList = result.data.list;
-                    scope.newGuest = '';
-                    $(".modal").modal("hide");
+                if (result.code === 5) {
+                    scope.repeatTipsShow = true;
                     scope.$apply();
-                });
+                } else if (result.code === 1) {
+                    AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
+                        type: 2
+                    }, function(result){
+                        scope.guestList = result.data.list;
+                        scope.companyStatus = result.data.companyStatus;
+                        scope.newGuest = '';
+                        $(".modal").modal("hide");
+                        scope.$apply();
+                    });
+                }
             });
         };
         scope.deleteGuest = function(){
@@ -54,6 +69,7 @@ $(function(){
                     type: 2
                 }, function(result){
                     scope.guestList = result.data.list;
+                    scope.companyStatus = result.data.companyStatus;
                     $(".modal").modal("hide");
                     scope.$apply();
                 });
