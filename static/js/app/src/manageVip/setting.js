@@ -195,7 +195,7 @@ $(function() {
                 }
 
                 $('#system').modal('hide');
-                $('#settingModal').modal('show');
+                this.openCreate()
             },
             openSelectNode(type, data) {
                 $('#selectModal').modal('show');
