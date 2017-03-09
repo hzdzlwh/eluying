@@ -22,11 +22,12 @@ var getItemsService = function(app){
         this.getVipLevels = function(rootScope) {
             AJAXService.get('/vipUser/getVipLevels')
                 .then(res => {
-                    rootScope.levels = res.data.list;
-                    rootScope.levels.push({
+                    rootScope.levels = [{
                         vipLevelId: '',
                         vipLevelName: '—'
-                    });
+                    }];
+                    rootScope.levels.concat(res.data.list);
+                    rootScope.levels = res.data.list;
                     rootScope.$apply();
                 })
         };
