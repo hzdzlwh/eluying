@@ -114,7 +114,7 @@
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
                                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                                <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                                 <span class="discount-num">
                                                     {{ item.vipShowDiscount }}
                                                 </span>
