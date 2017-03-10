@@ -361,6 +361,7 @@
         position: absolute;
         font-size: $font-size-sm;
         color: #999999;
+        right: 140px;
     }
     .error {
         position: absolute;
@@ -1536,18 +1537,20 @@
                         item.nodeId = enter.nodeId;
                     }
                 });
+                if (item.id) {
+                    const price = this.getItemInfo(item.type, item.id)['price'];
+                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                }
 
                 if (item.id && item.date) {
                     let date = util.dateFormat(new Date(item.date));
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
                         .then(res => {
                             if (res.code === 1) {
-                                const price = this.getItemInfo(item.type, item.id)['price'];
-                                const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                                 item.inventory = res.data.inventory;
                                 item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
-                                item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
-                                item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
