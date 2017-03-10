@@ -1360,7 +1360,7 @@
                         const price = this.getItemInfo(item.type, item.id)['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.count = (index === tag) ? num : item.count;
-                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
                 } else if (type === -2) {
@@ -1368,7 +1368,7 @@
                         const price = this.getItemInfo(item.type, item.id)['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.timeAmount = (index === tag) ? num : item.timeAmount;
-                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
                 }
@@ -1489,7 +1489,7 @@
                             let price = 0;
                             let originPrice = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                const fee = Number((option.p * discount).toFixed(2));
+                                const fee = option.p * discount;
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: fee, originDateFee: option.p, showInput: false});
                             });
                             /*if (item.datePriceList.length > 0 && boolean) {
@@ -1540,7 +1540,7 @@
                 if (item.id) {
                     const price = this.getItemInfo(item.type, item.id)['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                 }
 
