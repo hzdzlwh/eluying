@@ -501,9 +501,12 @@
             border-radius:2px;
             width:261px;
             max-height:120px;
-            overflow: scroll;
+            overflow-y: scroll;
             top: 26px;
             z-index: 100;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
         }
         .userVip-item {
             display: flex;
@@ -1360,7 +1363,7 @@
                         const price = this.getItemInfo(item.type, item.id)['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.count = (index === tag) ? num : item.count;
-                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
                 } else if (type === -2) {
@@ -1368,7 +1371,7 @@
                         const price = this.getItemInfo(item.type, item.id)['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.timeAmount = (index === tag) ? num : item.timeAmount;
-                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
                 }
@@ -1445,14 +1448,14 @@
                     return item.dateFee / totalPrice;
                 });
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = +((num * countArr[index]).toFixed(2));
+                    item.dateFee = +((num * countArr[index]).toFixed(3));
                 });
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
             setFirstDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
+                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(3));
             },
 
             modifyRoom(item, boolean) {
@@ -1489,7 +1492,7 @@
                             let price = 0;
                             let originPrice = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                const fee = Number((option.p * discount).toFixed(2));
+                                const fee = Number((option.p * discount).toFixed(3));
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: fee, originDateFee: option.p, showInput: false});
                             });
                             /*if (item.datePriceList.length > 0 && boolean) {
@@ -1540,7 +1543,7 @@
                 if (item.id) {
                     const price = this.getItemInfo(item.type, item.id)['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.totalPrice = (price * discount * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                 }
 
