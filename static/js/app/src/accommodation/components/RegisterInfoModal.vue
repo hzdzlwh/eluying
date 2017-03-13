@@ -1448,7 +1448,7 @@
                     return item.dateFee / totalPrice;
                 });
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = +((num * countArr[index]).toFixed(3));
+                    item.dateFee = +((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
@@ -1456,7 +1456,7 @@
             },
             setFirstDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(3));
+                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
             modifyRoom(item) {
@@ -1493,26 +1493,16 @@
                             let price = 0;
                             let originPrice = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                const fee = Number((option.p * discount).toFixed(3));
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: fee, originDateFee: option.p, showInput: false});
+                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
                             });
-                            /*if (item.datePriceList.length > 0 && boolean) {
-                                datePriceList.forEach(newDate => {
-                                    item.datePriceList.forEach(oldDate => {
-                                        if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
-                                            newDate.dateFee = oldDate.dateFee;
-                                        }
-                                    })
-                                });
-                            }*/
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
                             });
-                            item.price = Number(price.toFixed(2));
+                            item.price = Number((price * discount).toFixed(2));
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
-                            this.setFirstDateFee(item.price, item);
+                            this.setDateFee(item.price, item);
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
