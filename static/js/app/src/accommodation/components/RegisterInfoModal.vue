@@ -57,7 +57,7 @@
                                     </span>
                                 </div>
                                 <div class="userInfo-item">
-                                    <label>客源渠道</label>
+                                    <label>客户来源</label>
                                     <dd-select v-model="userOriginType" placeholder="">
                                         <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
                                         </dd-option>

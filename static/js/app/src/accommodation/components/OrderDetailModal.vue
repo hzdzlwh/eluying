@@ -35,7 +35,7 @@
                                     </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
-                                    <label class="label-text">客源渠道</label>
+                                    <label class="label-text">客户来源</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
                             </div>
