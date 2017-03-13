@@ -51,7 +51,7 @@
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">{{`${ (totalPrice + (penalty || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
-                                <span class="order-price-num" :class="(totalPrice + (penalty || 0) - payed) >= 0 ? 'red' : 'green'">¥{{Math.abs(totalPrice + (penalty || 0) - payed)}}</span>
+                                <span class="order-price-num" :class="(totalPrice + (penalty || 0) - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice + (penalty || 0) - payed)).toFixed(2)}}</span>
                             </span>
                             <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span>
                         </div>
