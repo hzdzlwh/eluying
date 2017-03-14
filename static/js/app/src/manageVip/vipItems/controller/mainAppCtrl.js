@@ -20,7 +20,7 @@ var itemsCtrl = function(app){
                 // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
             rootScope.addNewVip = function(){
-                rootScope.vip = { idCardType: 0, levelName: '—', level: '' };
+                rootScope.vip = { idCardType: 0, levelName: '—', vipLevelId: '' };
                 $("#newVipModal").modal("show");
             };
             rootScope.openDetail = function(item) {

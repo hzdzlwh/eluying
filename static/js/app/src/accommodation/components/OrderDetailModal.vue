@@ -47,9 +47,8 @@
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
                                     <span v-if="order.isVip">
-                                        <span class="vip-level-img">
-                                            <span class="vip-level-text">{{ order.vipLevel }}</span>
-                                        </span>
+                                        <span class="vip-level-img" style="top: 0;"></span>
+                                        <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
                                     </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
@@ -132,7 +131,7 @@
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
                                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                                <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                                 <span class="discount-num">
                                                     {{ item.vipShowDiscount }}
                                                 </span>
