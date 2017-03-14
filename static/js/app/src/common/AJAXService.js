@@ -161,6 +161,7 @@ var AJAXService = {
         data.uid = localStorage.getItem("uid");
         data.terminal = 1;
         data.version = data.version || 17;
+        data.kick = true;
         var array = [];
         for(var key in data){
             array.push(data[key]);
