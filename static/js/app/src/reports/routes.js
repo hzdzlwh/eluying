@@ -16,10 +16,9 @@ import retail from './views/retail.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
 import insurance from './views/insurance.vue';
-import { checkSwitch, INSURANCE_ID } from '../common/auth';
+import auth from '../common/auth';
 
-const insuranceAuth = checkSwitch(INSURANCE_ID);
-
+const insuranceAuth = auth.checkSwitch(auth.INSURANCE_ID);
 export const routes = [
     {
         path: '/',

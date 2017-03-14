@@ -17,7 +17,7 @@ const NO_AUTH_FOR_A_URL = '/view/tips/noauthfora.html';
 const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
 const EXPIRED_URL = '/view/tips/expired.html';
 const UPGRADE_URL = '/view/tips/upgrade.html';
-export const INSURANCE_ID = 1;
+const INSURANCE_ID = 1;
 
 const camps = JSON.parse(localStorage.getItem('camps'));
 const bottom = JSON.parse(localStorage.getItem('bottom'));
@@ -128,7 +128,7 @@ function checkAccess(moduleId) {
     }
 }
 
-export function checkSwitch(id) {
+function checkSwitch(id) {
     const switchStatus = switches.find(i => i.id === id);
     return switchStatus && !!switchStatus.status;
 }
@@ -148,3 +148,5 @@ exports.EXPIRED_URL = EXPIRED_URL;
 exports.UPGRADE_URL = UPGRADE_URL;
 exports.ORDER_ID = ORDER_ID;
 exports.REPORT_ID = REPORT_ID;
+exports.checkSwitch = checkSwitch;
+exports.INSURANCE_ID = INSURANCE_ID;
