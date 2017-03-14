@@ -44,7 +44,7 @@ $(function(){
                 type: 2,
                 channelName: scope.newGuest
             }, function(result){
-                if (result.code === 5) {
+                if (result.code === 2) {
                     scope.repeatTipsShow = true;
                     scope.$apply();
                 } else if (result.code === 1) {
@@ -74,6 +74,10 @@ $(function(){
                     scope.$apply();
                 });
             });
+        };
+        scope.cancelAdd = function() {
+            scope.repeatTipsShow = false;
+            scope.$apply();
         };
         scope.toDeleteGuest = function(id){
             scope.guestToDelete = id;
