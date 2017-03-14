@@ -14,6 +14,7 @@ var createVipService = function(app){
             if (vip.vipUserId) {
                 delete data.phone;
                 delete data.consumeAndDiscount;
+                delete data.vipConsumeList;
             }
 
             AJAXService.ajaxWithToken('POST',
