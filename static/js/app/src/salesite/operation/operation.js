@@ -4,8 +4,10 @@ var leftMenu = require("leftMenu");
 var util = require("util");
 var modal = require("modal");
 var auth = require('../../common/auth');
-auth.checkAuth(auth.BUSINESS_ID);
-
+import init from '../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+});
 require("angular");
 
 require("bootstrap");
@@ -21,19 +23,8 @@ var pics = {
 };
 
 $(function(){
-    //检测IE
-    util.checkExplorer();
-    //初始化界面
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.modalInit();
-
 
     var events = {
-        "resize window": util.mainContainer,
-        "show .bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);},
         "click .cancel": function(){
             $("#announcement").modal("hide");
         },
@@ -46,7 +37,7 @@ $(function(){
         scope.status = {
             isOnlinePay: {
                 status: false,
-                href: '/view/setting/method/method.html',
+                href: '/view/settings/payment/method/method.html',
                 yesUrl: pics['pay-yes'],
                 yesText: '启用手机网站支付',
                 noUrl: pics['pay-no'],
@@ -54,7 +45,7 @@ $(function(){
             },
             campBasicInfo: {
                 status: false,
-                href: '/view/salesite/info/info.html',
+                href: '/view/settings/salesite/info/info.html',
                 yesUrl: pics['info-yes'],
                 yesText: '网站基本信息填写完整',
                 noUrl: pics['info-no'],

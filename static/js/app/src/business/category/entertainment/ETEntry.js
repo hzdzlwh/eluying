@@ -13,9 +13,13 @@ var showInfo = require("./showInfo");
 var auth = require('../../../common/auth');
 var AJAXService = require('../../../common/AJAXService');
 
-auth.checkAuth(auth.BUSINESS_ID);
 require("bootstrap");
 require("validation");
+import init from '../../../common/init';
+init({
+    id: auth.BUSINESS_ID,
+    clearModal: true
+});
 
 Vue.prototype.$isNull = function(text) {
     var result = typeof (text) === 'undefined' || text === '';
@@ -24,23 +28,6 @@ Vue.prototype.$isNull = function(text) {
 
 
 $(function(){
-    //初始化界面
-    header.showHeader();
-    leftMenu.showLeftMenu();
-    util.mainContainer();
-    modal.modalInit();
-
-
-    // ETCategoryList.loadETCategoryList();
-
-
-    var events = {
-        "resize window": util.mainContainer,
-        "show.bs.modal .modal": modal.centerModals,
-        "click .btn-cancel": function(){var that = this; modal.clearModal(that);}
-    };
-
-    util.bindDomAction(events);
 
     util.bindDomAction(showInfo.events);
 
