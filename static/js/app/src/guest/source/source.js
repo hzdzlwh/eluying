@@ -76,8 +76,7 @@ $(function(){
             });
         };
         scope.cancelAdd = function() {
-            scope.repeatTipsShow = false;
-            scope.$apply();
+            scope.hideRepeatTips();
         };
         scope.toDeleteGuest = function(id){
             scope.guestToDelete = id;
