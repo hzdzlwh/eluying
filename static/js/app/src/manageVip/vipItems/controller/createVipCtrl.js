@@ -56,7 +56,7 @@ var createVipCtrl = function(app) {
                 $(".select1_options").hide();
             };
             scope.changeLevel = function(id, name) {
-                rootScope.vip.level = id;
+                rootScope.vip.vipLevelId = id;
                 rootScope.vip.levelName = name;
                 $(".select1_options").hide();
             };
