@@ -67,99 +67,99 @@
                     {
                         title: '保单号',
                         dataIndex: 'proposalNo',
-                        width: 103
+                        width: 230
                     },
                     {
                         title: '被保险人姓名',
                         dataIndex: 'insurantsName',
-                        width: 115
+                        width: 104
                     },
                     {
                         title: '性别',
                         render: (h, row) => (<span>{sexMap[row.insurantsSex]}</span>),
-                        width: 139
+                        width: 46
                     },
                     {
                         title: '年龄',
                         dataIndex: 'insurantsAge',
-                        width: 103
+                        width: 60
                     },
                     {
                         title: '出生日期',
                         dataIndex: 'insurantsBirthday',
-                        width: 91
+                        width: 123
                     },
                     {
                         title: '国籍',
                         render: (h, row) => (<span>{fieldAVMap[row.fieldAV]}</span>),
-                        width: 122
+                        width: 60
                     },
                     {
                         title: '证件类型',
                         dataIndex: 'insurantsCidType',
                         render: (h, row) => (<span>{cidTypeMap[row.insurantsCidType]}</span>),
-                        width: 122
+                        width: 104
                     },
                     {
                         title: '证件号',
                         dataIndex: 'insurantsCidNumber',
-                        width: 191
+                        width: 188
                     },
                     {
                         title: '手机号码',
                         dataIndex: 'insurantsMobile',
-                        width: 191
+                        width: 123
                     },
                     {
                         title: '电子邮箱',
                         dataIndex: 'insurantsEmail',
-                        width: 191
+                        width: 123
                     },
                     {
                         title: '起保日期',
                         dataIndex: 'startDate',
-                        width: 191
+                        width: 123
                     },
                     {
                         title: '终保日期',
                         dataIndex: 'endDate',
-                        width: 191
+                        width: 123
                     },
                     {
                         title: '与投保人关系',
                         dataIndex: 'related',
                         render: (h, row) => (<span>{relatedMap[row.related]}</span>),
-                        width: 191
+                        width: 104
                     },
                     {
                         title: '投保人姓名',
                         dataIndex: 'holderName',
-                        width: 191
+                        width: 104
                     },
                     {
                         title: '性别',
                         render: (h, row) => (<span>{sexMap[row.insurantsHolderSex]}</span>),
-                        width: 191
+                        width: 46
                     },
                     {
                         title: '出生日期',
                         dataIndex: 'holderBirthday',
-                        width: 191
+                        width: 123
                     },
                     {
                         title: '证件类型',
                         render: (h, row) => (<span>{cidTypeMap[row.holderCidType]}</span>),
-                        width: 191
+                        width: 104
                     },
                     {
                         title: '证件号',
                         dataIndex: 'holderCidNumber',
-                        width: 191
+                        width: 188
                     },
                     {
                         title: '手机号码',
                         dataIndex: 'holderMobile',
-                        width: 191
+                        width: 123
                     }
                 ],
                 dataSource: [],

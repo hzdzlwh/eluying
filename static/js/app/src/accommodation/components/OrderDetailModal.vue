@@ -1,21 +1,5 @@
 <template>
     <div>
-        <div class="modal fade" role="dialog" id="insuranceDialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    <div class="roomModals-header">
-                        保险详情
-                    </div>
-                    <div>
-                        <dd-table :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
-                    </div>
-                    <div class="roomModals-footer">
-                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费{{order.insuranceTotalPremium}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -383,6 +367,22 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade roomModals" role="dialog" id="insuranceDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="roomModals-header">
+                        保险详情
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div style="padding: 20px 24px; max-height: 485px">
+                        <dd-table :bordered="true" :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
+                    </div>
+                    <div class="roomModals-footer">
+                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/scss">
@@ -682,27 +682,33 @@
                 columns: [
                     {
                         title: '被保人姓名',
-                        dataIndex: 'insurantsName'
+                        dataIndex: 'insurantsName',
+                        width: 80
                     },
                     {
                         title: '手机号',
-                        dataIndex: 'insurantsMobile'
+                        dataIndex: 'insurantsMobile',
+                        width: 105
                     },
                     {
                         title: '性别',
                         render: (h, row) => (<span>{['','男','女'][row.insurantsSex]}</span>),
+                        width: 38
                     },
                     {
                         title: '年龄',
-                        dataIndex: 'insurantsAge'
+                        dataIndex: 'insurantsAge',
+                        width: 38
                     },
                     {
                         title: '投保日期',
-                        dataIndex: 'startDate'
+                        dataIndex: 'startDate',
+                        width: 90
                     },
                     {
                         title: '终保日期',
-                        dataIndex: 'endDate'
+                        dataIndex: 'endDate',
+                        width: 90
                     },
                     {
                         title: '保单号',
@@ -710,7 +716,8 @@
                     },
                     {
                         title: '创建时间',
-                        dataIndex: 'date'
+                        dataIndex: 'date',
+                        width: 155
                     }
                 ]
             }
