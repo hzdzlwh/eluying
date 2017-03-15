@@ -107,6 +107,8 @@ var AJAXService = {
         if(path !== 'loginUrl'){
             data = this.getDataWithToken(data);
         }
+
+        const url = baseUrl ? baseUrl + path : AJAXService.getUrl2(path);
         return $.ajax({
             type: method,
             url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
@@ -118,7 +120,8 @@ var AJAXService = {
                     Raven.captureMessage('ajax error', {
                         extra: {
                             data: data,
-                            res: result
+                            res: result,
+                            url: url
                         }
                     })
                 }
@@ -132,11 +135,12 @@ var AJAXService = {
                 }
 
                 Raven.captureBreadcrumb({
-                    message: 'ajax',
+                    message: 'related ajax',
                     category: 'ajax',
                     data: {
                         data: data,
-                        res: result
+                        res: result,
+                        url: url
                     }
                 });
                 return res;
@@ -146,7 +150,8 @@ var AJAXService = {
                 Raven.captureMessage('ajax fail', {
                     extra: {
                         data: data,
-                        e: e
+                        e: e,
+                        url: url
                     }
                 });
 
