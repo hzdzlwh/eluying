@@ -1,18 +1,11 @@
 require("cookie");
+import Raven from 'raven-js';
+import modal from './modal';
 var md5 = require("md5");
 var AJAXService = {
     urls: {
-        //正式服务器 http://120.26.83.168:8081/mg
-        //测试服 http://121.41.109.105:8081/mg
-        //宪伟服务器 http://192.168.0.2:8082/mg
-        //var host = "http://121.41.109.105:8081/mg";
-        //浩南服务器 http://192.168.0.118:8087
         host: process.env.NODE_ENV === 'production' ? "/mg" : (process.env.serverUrl + "/mg"),
         host2: process.env.NODE_ENV === 'production' ? "/ws" : (process.env.serverUrl + "/ws"),
-        // host2: "http://192.168.0.124:8081/ws", //勉之测试服
-        //host: "/mg",
-        //host: "http://120.26.83.168:8081/mg",
-        //var host = "/mg";
         loginUrl: "/user/login",
         getRoomCategoryListUrl: "/category/getRoomCategoryList",
         addAccommodationUrl: "/category/addAccommodation",
@@ -119,15 +112,46 @@ var AJAXService = {
             url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
             async: asy,
             data: data,
-            dataFilter: function(data){
-                if(JSON.parse(data).code == 5){
-                    window.localStorage.clear();
-                    window.location.href = "/login.html";
+            dataFilter: function(res) {
+                const result = JSON.parse(res);
+                if (result.code != 1) {
+                    Raven.captureMessage('ajax error', {
+                        extra: {
+                            data: data,
+                            res: result
+                        }
+                    })
                 }
-                return data;
+
+                if (result.code == 5) {
+                    window.localStorage.clear();
+                    modal.alert('账号在别处登录。');
+                    setTimeout(() => {
+                        window.location.href = "/login.html";
+                    }, 3000);
+                }
+
+                Raven.captureBreadcrumb({
+                    message: 'ajax',
+                    category: 'ajax',
+                    data: {
+                        data: data,
+                        res: result
+                    }
+                });
+                return res;
             },
             success: callback,
-            error: errorCallback
+            error: function(e) {
+                Raven.captureMessage('ajax fail', {
+                    extra: {
+                        data: data,
+                        e: e
+                    }
+                });
+
+                errorCallback(e);
+            }
         });
     },
     get(path, data) {
@@ -136,23 +160,8 @@ var AJAXService = {
     post(path, data) {
         return this.ajaxWithToken('POST', path, data);
     },
-    ajaxWithTokenAngular: function($http, method, path, data, callback, errorCallback){
-        data.campId = localStorage.getItem("campId");
-        data.uid = localStorage.getItem("uid");
-        data.token = localStorage.getItem("token");
-        if(method === 'GET' || method === 'get'){
-            $http.get(AJAXService.getUrl2(path), {
-                params: data
-            }).success(callback);
-        }else if(method === 'POST' || method === 'post'){
-            //TODO
-        }
-    },
     sessionValidate: function(data){
         data = JSON.parse(data);
-        //if (data.code == 11002) {
-        //    location.href = "/login.html";
-        //}
         return JSON.stringify(data);
     },
     getDataWithToken: function(data) {
