@@ -46,7 +46,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(finalPrice)}}</span></span>
+                            <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{(Math.abs(finalPrice)).toFixed(2)}}</span></span>
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="finishCheckIn">去收银</div>
                     </div>
