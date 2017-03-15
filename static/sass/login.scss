@@ -503,7 +503,7 @@
       margin-top: 20px;
     }
     .featureone {
-      background-image: url("../image/login-feature1.png");
+      background-image: url("/static/image/login-feature1.png");
       height: 504px;
       padding-top: 70px;
       width: 1200px;
@@ -511,7 +511,7 @@
       .feature-directorone {
         width: 204px;
         height: 60px;
-        background-image: url("../image/feature-director.png");
+        background-image: url("/static/image/feature-director.png");
         background-repeat: no-repeat;
         background-size: cover;
         overflow: hidden;
@@ -546,13 +546,13 @@
       .featuretwos {
         width: 1200px;
         margin: auto;
-        background-image: url("../image/login-feature2.png");
+        background-image: url("/static/image/login-feature2.png");
         height: 700px;
         padding-top: 140px;
         .feature-directortwo {
           width: 204px;
           height: 60px;
-          background-image: url("../image/feature-director.png");
+          background-image: url("/static/image/feature-director.png");
           background-repeat: no-repeat;
           background-size: cover;
           overflow: hidden;
@@ -583,7 +583,7 @@
       }
     }
     .featurethree {
-      background-image: url("../image/login-feature3.png");
+      background-image: url("../../image/login-feature3.png");
       height: 605px;
       padding-top: 140px;
       width: 1200px;
@@ -591,7 +591,7 @@
       .feature-directorthree {
         width: 204px;
         height: 60px;
-        background-image: url("../image/feature-director.png");
+        background-image: url("/static/image/feature-director.png");
         background-repeat: no-repeat;
         background-size: cover;
         overflow: hidden;
