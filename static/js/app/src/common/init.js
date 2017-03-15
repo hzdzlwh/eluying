@@ -27,8 +27,10 @@ export default function (option) {
             .install();
         Raven.setUserContext({
             uid: localStorage.getItem('uid'),
-            userName: localStorage.getItem('userName')
-        })
+            userName: localStorage.getItem('userName'),
+            campName: localStorage.getItem('campName'),
+            campId: localStorage.getItem('campId')
+        });
     }
 
     option = { ...defaultOption, ...option};
