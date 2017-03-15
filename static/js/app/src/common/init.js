@@ -25,6 +25,10 @@ export default function (option) {
         Raven
             .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237')
             .install();
+        Raven.setUserContext({
+            uid: localStorage.getItem('uid'),
+            userName: localStorage.getItem('userName')
+        })
     }
 
     option = { ...defaultOption, ...option};
