@@ -9,7 +9,7 @@ var baseUrl = AJAXService.urls.host;
 var networkAction = require("networkAction");
 require('bootstrap');
 require('cookie');
-var init = require('../common/init');
+import init from '../common/init';
 
 init({
     header: false,
