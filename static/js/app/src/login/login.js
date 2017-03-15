@@ -9,8 +9,16 @@ var baseUrl = AJAXService.urls.host;
 var networkAction = require("networkAction");
 require('bootstrap');
 require('cookie');
+var init = require('../common/init');
 
-
+init({
+    header: false,
+    leftMenu: false,
+    topMenu: false,
+    mainContainer: false,
+    centerModals: false,
+    clearModal: false
+});
 var resposiveWindow = function(){
     $("html").css({
         "font-size": parseFloat($(window).width()) / 1920 * 20 + 'px'

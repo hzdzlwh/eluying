@@ -7,6 +7,7 @@ import Header from '../common/header';
 import auth from '../common/auth';
 import util from '../common/util';
 import modal from '../common/modal';
+import Raven from 'raven-js';
 
 export default function (option) {
     const defaultOption = {
@@ -19,6 +20,13 @@ export default function (option) {
         centerModals: true,
         clearModal: false
     };
+    // 错误检测
+    if (process.env.NODE_ENV === 'production') {
+        Raven
+            .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237')
+            .install();
+    }
+
     option = { ...defaultOption, ...option};
 
     option.id && auth.checkAuth(option.id, option.noAuthUrl);
