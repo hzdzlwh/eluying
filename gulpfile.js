@@ -27,13 +27,14 @@ gulp.task('browser-sync', function () {
             index: 'login.html',
             https: true,
             // 统计报表单页
-            middleware: function(req, res, next) {
+            middleware: function (req, res, next) {
                 if (req.url.indexOf('/view/reports') > -1) {
                     req.url = '/view/reports/index.html';
                 }
                 return next();
             }
-        }
+        },
+        port: gutil.env.port || config.port
     });
 });
 
@@ -120,7 +121,8 @@ gulp.task('webpack-prod', function () {
         new webpack.DefinePlugin({
             'process.env': {
                 ENV: JSON.stringify('production'),
-                NODE_ENV: JSON.stringify('production')
+                NODE_ENV: JSON.stringify('production'),
+                serverUrl: gutil.env.server || (gutil.env.test ? config.testServer : config.devServer)
             }
         }),
         new webpack.optimize.UglifyJsPlugin({
@@ -150,7 +152,8 @@ gulp.task('webpack-dev', function () {
                 new webpack.DefinePlugin({
                     'process.env': {
                         ENV: JSON.stringify('development'),
-                        NODE_ENV: JSON.stringify('development')
+                        NODE_ENV: JSON.stringify('development'),
+                        serverUrl: JSON.stringify(gutil.env.server || (gutil.env.test ? config.testServer : config.devServer))
                     }
                 })));
         return gulp.src('static/js/app/src/entry.js')

@@ -17,11 +17,13 @@ const NO_AUTH_FOR_A_URL = '/view/tips/noauthfora.html';
 const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
 const EXPIRED_URL = '/view/tips/expired.html';
 const UPGRADE_URL = '/view/tips/upgrade.html';
+const INSURANCE_ID = 1;
 
 const camps = JSON.parse(localStorage.getItem('camps'));
 const bottom = JSON.parse(localStorage.getItem('bottom'));
 const top = JSON.parse(localStorage.getItem('top'));
 const campId = localStorage.getItem('campId');
+const switches = JSON.parse(localStorage.getItem('switches'));
 
 const maintenanceHost =  process.env.NODE_ENV === 'production' ? "/mt" : "//www.dingdandao.com:1443/mt";
 
@@ -126,6 +128,11 @@ function checkAccess(moduleId) {
     }
 }
 
+function checkSwitch(id) {
+    const switchStatus = switches.find(i => i.id === id);
+    return switchStatus && !!switchStatus.status;
+}
+
 exports.checkAuth = checkAuth;
 exports.checkAccess = checkAccess;
 exports.ACCOMMODATION_ID = ACCOMMODATION_ID;
@@ -141,3 +148,5 @@ exports.EXPIRED_URL = EXPIRED_URL;
 exports.UPGRADE_URL = UPGRADE_URL;
 exports.ORDER_ID = ORDER_ID;
 exports.REPORT_ID = REPORT_ID;
+exports.checkSwitch = checkSwitch;
+exports.INSURANCE_ID = INSURANCE_ID;

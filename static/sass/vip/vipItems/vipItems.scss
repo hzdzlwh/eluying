@@ -264,7 +264,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         line-height: 24px;
         float: left;
         text-align: right;
-        margin-right: 12px;
+        margin-right: 4px;
         .require{
           position: relative;
           top: -1px;
@@ -426,7 +426,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         color:#666666;
         text-align:right;
         margin-bottom: 0;
-        width: 75px;
+        width: 72px;
       }
       .select1 {
         margin-left: 8px;
@@ -479,7 +479,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
       }
       .identification {
         label {
-          width: 75px;
+          width: 72px;
           float: left;
           display: inline-block;
         }
@@ -494,6 +494,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         .idcard-num {
           display: inline-block;
           width: 240px;
+          margin-left: 4px;
         }
         span {
           width: 100%;
@@ -513,7 +514,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         label {
           height: 24px;
           line-height: 24px;
-          width: 75px;
+          width: 72px;
         }
         input {
           width: 110px;
@@ -536,11 +537,9 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
         font-size: 14px;
         color: #666666;
         text-align: right;
-        width: 75px;
+        width: 72px;
         vertical-align: top;
-      }
-      .consume-money {
-        margin-bottom: 11px;
+        margin: 0;
       }
       .consume-tips {
         display: inline-block;
@@ -548,6 +547,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
       .consum-text {
         font-size: 12px;
         color: #999999;
+        padding-left: 16px;
       }
       .vip-leavelUpgrade-tip {
         position: absolute;
@@ -732,7 +732,7 @@ $trash_blue: url("//static.dingdandao.com/trash-blueF8B3073F-50F3-4E68-B3CA-9052
 .tip-email {
   position: absolute;
   left: 80px;
-  top: 307px;
+  top: 395px;
   font-size:12px;
   color:#f24949;
 }

@@ -7,8 +7,8 @@ var AJAXService = {
         //宪伟服务器 http://192.168.0.2:8082/mg
         //var host = "http://121.41.109.105:8081/mg";
         //浩南服务器 http://192.168.0.118:8087
-        host: process.env.NODE_ENV === 'production' ? "/mg" : "//www.dingdandao.com:3443/mg",
-        host2: process.env.NODE_ENV === 'production' ? "/ws" : "//www.dingdandao.com:3443/ws",
+        host: process.env.NODE_ENV === 'production' ? "/mg" : (process.env.serverUrl + "/mg"),
+        host2: process.env.NODE_ENV === 'production' ? "/ws" : (process.env.serverUrl + "/ws"),
         // host2: "http://192.168.0.124:8081/ws", //勉之测试服
         //host: "/mg",
         //host: "http://120.26.83.168:8081/mg",
@@ -161,6 +161,7 @@ var AJAXService = {
         data.uid = localStorage.getItem("uid");
         data.terminal = 1;
         data.version = data.version || 17;
+        data.kick = true;
         var array = [];
         for(var key in data){
             array.push(data[key]);

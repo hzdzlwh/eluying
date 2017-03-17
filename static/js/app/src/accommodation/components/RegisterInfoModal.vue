@@ -87,7 +87,7 @@
                                             </dd-select>
                                             <div class="room-category">
                                                 <dd-select v-model="item.roomType" placeholder="请选择房型"
-                                                           @input="modifyRoom(item, false)">
+                                                           @input="modifyRoom(item)">
                                                     <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
                                                                :label="room.name">
                                                     </dd-option>
@@ -101,14 +101,14 @@
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
                                                     <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
-                                                                   @input="modifyRoom(item, true)"
+                                                                   @input="modifyRoom(item)"
                                                                    :disabled-date="disabledStartDate(new Date())"
                                                                    :disabled="item.state === 1"/>
                                                 </div>
                                                 <span>~</span>
                                                 <div class="enterDate">
                                                     <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
-                                                                   @input="modifyRoom(item, true)"
+                                                                   @input="modifyRoom(item)"
                                                                    :disabled-date="disabledEndDate(item.room.startDate)"/>
                                                 </div>
                                                 <label class="label-text">
@@ -151,7 +151,7 @@
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
                                                   v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(2) }}折
+                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1) }}折
                                             </span>
                                         </span>
                                     </div>
@@ -242,7 +242,7 @@
                                                   v-if="Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
                                                                          * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(2) }}折
+                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
                                             </span>
                                     </span>
                                 </div>
@@ -325,7 +325,7 @@
                                                 </span>
                                             </span>
                                             <span class="discount-num">
-                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(2) }}折
+                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
                                             </span>
                                     </span>
                                 </div>
@@ -361,6 +361,7 @@
         position: absolute;
         font-size: $font-size-sm;
         color: #999999;
+        right: 140px;
     }
     .error {
         position: absolute;
@@ -500,9 +501,12 @@
             border-radius:2px;
             width:261px;
             max-height:120px;
-            overflow: scroll;
+            overflow-y: scroll;
             top: 26px;
             z-index: 100;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
         }
         .userVip-item {
             display: flex;
@@ -868,7 +872,7 @@
                 if (this.shopGoodsItems.length > 0) {
                     this.shopGoodsItems.forEach(good => {
                         if (good.id) {
-                            let goodPrice = (this.getItemInfo(good.type, good.id)['price'] * good.count * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2);
+                            let goodPrice = ((this.getItemInfo(good.type, good.id)['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
                             totalPrice += Number(goodPrice);
                         }
                     });
@@ -1386,7 +1390,7 @@
             getDateDiff(date1, date2) {
                 let dateStart = new Date(date1);
                 let dateEnd = new Date(date2);
-                let duration = util.DateDiff(dateStart, dateEnd);
+                let duration = Math.floor((dateEnd.valueOf() - dateStart.valueOf())/24/60/60/1000);
                 return duration;
             },
 
@@ -1446,6 +1450,7 @@
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = +((num * countArr[index]).toFixed(2));
                 });
+                this.setFirstDateFee(num, obj);
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
@@ -1454,7 +1459,7 @@
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
-            modifyRoom(item, boolean) {
+            modifyRoom(item) {
                 if (item.roomOrderId) {
                     item.changeTimes++;
                 }
@@ -1488,25 +1493,16 @@
                             let price = 0;
                             let originPrice = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                const fee = Number((option.p * discount).toFixed(2));
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: fee, originDateFee: option.p, showInput: false});
+                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
                             });
-                            /*if (item.datePriceList.length > 0 && boolean) {
-                                datePriceList.forEach(newDate => {
-                                    item.datePriceList.forEach(oldDate => {
-                                        if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
-                                            newDate.dateFee = oldDate.dateFee;
-                                        }
-                                    })
-                                });
-                            }*/
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
                             });
-                            item.price = Number(price.toFixed(2));
+                            item.price = Number((price * discount).toFixed(2));
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
+                            this.setDateFee(item.price, item);
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
@@ -1536,18 +1532,20 @@
                         item.nodeId = enter.nodeId;
                     }
                 });
+                if (item.id) {
+                    const price = this.getItemInfo(item.type, item.id)['price'];
+                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                }
 
                 if (item.id && item.date) {
                     let date = util.dateFormat(new Date(item.date));
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
                         .then(res => {
                             if (res.code === 1) {
-                                const price = this.getItemInfo(item.type, item.id)['price'];
-                                const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                                 item.inventory = res.data.inventory;
                                 item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
-                                item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
-                                item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -1558,7 +1556,7 @@
             changeRoomType(item) {
                 this.$nextTick(function() {
                     item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.modifyRoom(item, false);
+                    this.modifyRoom(item);
                 });
             }
         },
@@ -1598,7 +1596,7 @@
             vipDiscountDetail(newVal) {
                 this.registerRooms.forEach(room => {
                     if (this.checkState === 'editOrder') {
-                        this.modifyRoom(room, true);
+                        this.modifyRoom(room);
                     }
                     if (!room.roomOrderId || (room.roomOrderId && room.changeTimes > 3)) {
                         room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);

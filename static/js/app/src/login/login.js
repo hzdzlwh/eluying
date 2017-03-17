@@ -369,7 +369,7 @@ $(document).ready(function(){
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
-                version: 4,
+                version: 17,
                 password: password,
                 phone: loginName
             }, function(data){
@@ -396,6 +396,7 @@ $(document).ready(function(){
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);
                     localStorage.setItem("token", data.data.user.token);
+                    localStorage.setItem('switches', JSON.stringify(data.data.switches));
                     localStorage.removeItem('maintenanceClosed');
                     //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();

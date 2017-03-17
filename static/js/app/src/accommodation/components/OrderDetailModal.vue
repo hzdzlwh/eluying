@@ -12,6 +12,7 @@
                             </span>
                         </div>
                         <div class="header-container">
+                            <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保险({{order.insuranceInfoList.length}})</span>
                             <span class="header-tools" v-if="order.orderState !== -1" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
@@ -114,7 +115,7 @@
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
                                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                                <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                                 <span class="discount-num">
                                                     {{ item.vipShowDiscount }}
                                                 </span>
@@ -362,6 +363,22 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade roomModals" role="dialog" id="insuranceDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="roomModals-header">
+                        保险详情
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div style="padding: 20px 24px; max-height: 485px">
+                        <dd-table :bordered="true" :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
+                    </div>
+                    <div class="roomModals-footer">
+                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}</span>
                     </div>
                 </div>
             </div>
@@ -646,6 +663,7 @@
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
+    import { DdTable } from 'dd-vue-component';
     export default{
         props: {
             orderId: {
@@ -660,7 +678,48 @@
             return{
                 ID_CARD_TYPE,
                 FOOD_STATE,
-                ORDER_STATUS_ICON
+                ORDER_STATUS_ICON,
+                columns: [
+                    {
+                        title: '被保人姓名',
+                        dataIndex: 'insurantsName',
+                        width: 80
+                    },
+                    {
+                        title: '手机号',
+                        dataIndex: 'insurantsMobile',
+                        width: 105
+                    },
+                    {
+                        title: '性别',
+                        render: (h, row) => (<span>{['','男','女'][row.insurantsSex]}</span>),
+                        width: 38
+                    },
+                    {
+                        title: '年龄',
+                        dataIndex: 'insurantsAge',
+                        width: 38
+                    },
+                    {
+                        title: '投保日期',
+                        dataIndex: 'startDate',
+                        width: 90
+                    },
+                    {
+                        title: '终保日期',
+                        dataIndex: 'endDate',
+                        width: 90
+                    },
+                    {
+                        title: '保单号',
+                        dataIndex: 'proposalNo'
+                    },
+                    {
+                        title: '创建时间',
+                        dataIndex: 'date',
+                        width: 155
+                    }
+                ]
             }
         },
         computed: {
@@ -824,9 +883,14 @@
             editOrder() {
                 this.hideModal();
                 this.$emit('editOrder', 'editOrder', this.order);
+            },
+            openInsurance() {
+                $('#insuranceDialog').modal('show');
             }
         },
-        components:{},
+        components:{
+            DdTable
+        },
         watch: {
             orderDetailShow(newVal, oldVal) {
                 if(newVal && !oldVal){
