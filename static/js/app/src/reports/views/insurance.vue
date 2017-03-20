@@ -1,5 +1,6 @@
 <template>
-    <div style="top: 33px;position: relative;">
+    <div style="top: 2px;position: relative;">
+        <p>按保单生成时间统计</p>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
                 <span>保单记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
