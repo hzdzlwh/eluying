@@ -188,9 +188,26 @@
             show(val) {
                 if (val) {
                     this.getOrderPayment();
+                    if (this.orderState) {
+                        this.payChannels = [{channelId: 10000, name: '企业挂帐'}, {channelId: 10001, name: '企业扣费'}, ...this.payChannels];
+                    } else {
+                        this.payChannels = [{channelId: 10002, name: '退款至企业'}, ...this.payChannels];
+                    }
                     $('#cashier').modal({backdrop: 'static'});
                 } else {
+                    if (this.orderState) {
+                        this.payChannels = this.payChannels.slice(2);
+                    } else {
+                        this.payChannels = this.payChannels.slice(1);
+                    }
                     $('#cashier').modal('hide');
+                }
+            },
+            orderState(val) {
+                if (val) {
+                    this.payChannels = [{channelId: 10000, name: '企业挂帐'}, {channelId: 10001, name: '企业扣费'}, ...this.payChannels];
+                } else {
+                    this.payChannels = [{channelId: 10002, name: '退款至企业'}, ...this.payChannels];
                 }
             }
         },
@@ -331,7 +348,7 @@
                     let params = {
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType
-                    }
+                    };
                     AJAXService.ajaxWithToken('get', '/order/cancel', params)
                         .then(res => {
                             if (res.code !== 1) {

@@ -1233,7 +1233,7 @@
                 this.isLoading = true;
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
                 if (this.vipDiscountDetail.isVip) {
-                    params.vipId = this.vipDiscountDetail.vipDetail.vipId;
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
                 }
                 if (this.checkState === 'ing') {
                     params.type = 0;
