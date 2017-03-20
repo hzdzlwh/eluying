@@ -26,11 +26,13 @@ gulp.task('browser-sync', function () {
             baseDir: './',
             index: 'login.html',
             https: true,
-            // 统计报表单页
+            // 单页
             middleware: function (req, res, next) {
-                if (req.url.indexOf('/view/reports') > -1) {
-                    req.url = '/view/reports/index.html';
+                const goal = config.SPA.find( i => req.url.indexOf(i.url) > -1);
+                if (goal) {
+                    req.url = goal.path;
                 }
+
                 return next();
             }
         },
