@@ -37,7 +37,7 @@
     const relatedMap = {
         '20': '儿子',
         '30': '女儿',
-        '99': '成人'
+        '99': '其他'
     };
     export default{
         computed: {
