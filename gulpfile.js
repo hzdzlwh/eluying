@@ -171,11 +171,11 @@ gulp.task('webpack-dev', function () {
 
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    //gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    //gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']);
+    gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
+    gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
     //gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
-    gulp.watch('**/*.html').on('change', reload);
-    gulp.watch('./static/tpl/*.html', ['file-include']);
+    // gulp.watch('**/*.html').on('change', reload);
+    // gulp.watch('./static/tpl/*.html', ['file-include']);
 });
 
 gulp.task('default', function () {
