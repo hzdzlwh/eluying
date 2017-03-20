@@ -6,8 +6,15 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{modalTitleOrBtn.title}}</span>
-                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span v-if="order.orderState && checkState === 'editOrder'" class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span v-if="order.orderState && checkState === 'editOrder'"
+                                  class="order-state-angle"
+                                  :style="{ borderColor: getOrderState(order.orderState)['borderColor']}">
+                            </span>
+                            <span v-if="order.orderState && checkState === 'editOrder'"
+                                  class="order-state"
+                                  :style="{ background: getOrderState(order.orderState)['backgroundColor']}"
+                                  v-text="getOrderState(order.orderState)['text']">
+                            </span>
                         </div>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
@@ -16,13 +23,38 @@
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
+                                    <div class="userVip-list" v-show="vipListShow" @click.stop="stopPropagation">
+                                        <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
+                                            <span class="vip-level" v-if="vip.level">
+                                                [
+                                                <span class="vip-level-text">{{ vip.level }}</span>
+                                                ]
+                                            </span>
+                                            <span class="vip-level" v-if="!vip.level"></span>
+                                            <span class="vip-name">{{ vip.name }}</span>
+                                            <span class="vip-phone">{{ vip.phone }}</span>
+                                        </p>
+                                    </div>
                                     <label for="name">联系人</label>
-                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" v-model="name">
+                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
+                                           v-model="name"
+                                           @input="changeVipList(1)"
+                                           :disabled="checkState === 'editOrder' && order.isVip">
                                 </div>
-                                <div class="userInfo-item userInfo-phone">
+                                <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号" @blur="checkPhone" v-model="phone">
-                                    <span class="error-phone-tip" v-show="!phoneValid"><span style="vertical-align: text-bottom">&uarr;</span>请输入正确的手机号</span>
+                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                           v-model="phone"
+                                           @input="changeVipList(2)"
+                                           :disabled="checkState === 'editOrder' && order.isVip">
+                                    <span v-if="vipDiscountDetail.isVip">
+                                        <span class="vip-level-img"></span>
+                                        <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
+                                    </span>
+                                    <span class="error-phone-tip" v-show="!phoneValid">
+                                        <span style="vertical-align: text-bottom">&uarr;</span>
+                                        请输入正确的手机号
+                                    </span>
                                 </div>
                                 <div class="userInfo-item">
                                     <label>客源渠道</label>
@@ -36,7 +68,10 @@
                         <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
                             <p class="content-item-title">
                                 <span>房间信息</span>
-                                <span class="increase-container" @click="addItem(0)"><span class="increase-icon"></span>添加房间</span>
+                                <span class="increase-container" @click="addItem(0)">
+                                    <span class="increase-icon"></span>
+                                    添加房间
+                                </span>
                             </p>
                             <div class="registerRoom-items">
                                 <div class="registerRoom-container" v-for="(item,index) in registerRooms">
@@ -44,57 +79,96 @@
                                         <span class="room-icon"></span>
                                         <div class="shop-item-content">
                                             <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
-                                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
-                                                <dd-option v-for="category in categoryList" :value="category.id" :label="category.name">
+                                            <dd-select v-model="item.categoryType" placeholder="请选择房型"
+                                                       @input="changeRoomType(item)">
+                                                <dd-option v-for="category in categoryList" :value="category.id"
+                                                           :label="category.name">
                                                 </dd-option>
                                             </dd-select>
                                             <div class="room-category">
-                                                <dd-select v-model="item.roomType" placeholder="请选择房型" @input="modifyRoom(item)">
-                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :label="room.name">
+                                                <dd-select v-model="item.roomType" placeholder="请选择房型"
+                                                           @input="modifyRoom(item)">
+                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
+                                                               :label="room.name">
                                                     </dd-option>
                                                 </dd-select>
                                             </div>
                                             <div class="room-date" style="display: inline-block; position: relative;">
-                                                <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">该房间的入住时间必需为今日！</span>
+                                                <span class="useless-tip error" style="left: 28px;"
+                                                      v-if="checkIsToday(item.room.startDate)">
+                                                    该房间的入住时间必需为今日！
+                                                </span>
                                                 <label class="label-text">入住</label>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate" @input="modifyRoom(item)" :disabled-date="disabledStartDate(new Date())" :disabled="item.state === 1"/>
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
+                                                                   @input="modifyRoom(item)"
+                                                                   :disabled-date="disabledStartDate(new Date())"
+                                                                   :disabled="item.state === 1"/>
                                                 </div>
                                                 <span>~</span>
                                                 <div class="enterDate">
-                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate" @input="modifyRoom(item)" :disabled-date="disabledEndDate(item.room.startDate)"/>
+                                                    <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
+                                                                   @input="modifyRoom(item)"
+                                                                   :disabled-date="disabledEndDate(item.room.startDate)"/>
                                                 </div>
-                                                <label class="label-text">共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚</label>
+                                                <label class="label-text">
+                                                    共{{getDateDiff(item.room.startDate, item.room.endDate)}}晚
+                                                </label>
                                             </div>
                                             <div class="registerInfoModal-roomPrice" @click.stop="stopPropagation">
                                                 <label class="label-text">房费</label>
-                                                <input class="dd-input" v-model="item.price" @input="setDateFee(item.price, item)" @blur="setFirstDateFee(item.price, item)" style="width: 80px" type="number" @click.stop="showPriceList(index)"/>
+                                                <p class="fee-container">
+                                                    <span class="fee-symbol">¥</span>
+                                                    <input class="dd-input fee-input" v-model="item.price"
+                                                           @input="setDateFee(item.price, item)"
+                                                           @blur="setFirstDateFee(item.price, item)"
+                                                           style="width: 80px" type="number"
+                                                           @click.stop="showPriceList(index)"/>
+                                                </p>
                                                 <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
                                                         <dl class="price-item" v-for="priceItem in item.datePriceList">
                                                             <dt>{{priceItem.date.slice(5)}}</dt>
-                                                            <dd v-show="!priceItem.showInput" @click="changShowInput(item, priceItem)">¥{{priceItem.dateFee}}</dd>
+                                                            <dd v-show="!priceItem.showInput"
+                                                                @click="changShowInput(item, priceItem)">
+                                                                ¥{{priceItem.dateFee}}
+                                                            </dd>
                                                             <dd v-show="priceItem.showInput">
-                                                                <input class="dd-input" style="width: 60px;" type="number" v-model="priceItem.dateFee" @input="setTotalPrice(item)">
+                                                                <input class="dd-input" style="width: 60px;" type="number"
+                                                                       v-model="priceItem.dateFee"
+                                                                       @input="setTotalPrice(item)">
                                                             </dd>
                                                         </dl>
                                                 </div>
                                             </div>
                                         </div>
-                                        <span class="delete-icon" @click="deleteItem(0, index)" v-if="!item.state || item.state !== 1"></span>
+                                        <span class="delete-icon" @click="deleteItem(0, index)"
+                                              v-if="!item.state || item.state !== 1">
+                                        </span>
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
+                                        <span class="discount-info"
+                                              v-if="vipDiscountDetail.isVip
+                                              && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                            <span class="discount-num"
+                                                  v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
+                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                            </span>
+                                        </span>
                                     </div>
                                     <CheckInPerson
                                             :personsObj="{id: index, persons: item.idCardList}"
                                             @addPerson="addPerson"
-                                            @deletePerson="deletePerson"
-                                    />
+                                            @deletePerson="deletePerson"/>
                                 </div>
                             </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title">
                                 <span>娱乐信息</span>
-                                <span class="increase-container" @click="addItem(2)"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(2)">
+                                    <span class="increase-icon"></span>
+                                    添加项目
+                                </span>
                             </p>
                             <div class="shop-items">
                                 <div class="shop-item" v-for="(item, index) in enterItems">
@@ -107,16 +181,28 @@
                                             </dd-select>
                                         </div>
                                         <span v-if = "item.usedAmount > 0">{{item.name}}</span>
-                                        <div class="time-container" style="width: 145px" v-if="!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0"></div>
+                                        <div class="time-container" style="width: 145px"
+                                             v-if="!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
+                                        </div>
                                         <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
                                             <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
-                                            <counter @numChange="handleNumChange" :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']" :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']"></counter>
+                                            <counter @numChange="handleNumChange"
+                                                     :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']"
+                                                     :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']">
+                                            </counter>
                                         </div>
-                                        <span v-if = "item.usedAmount > 0 && item.chargeUnit" style="position: absolute; right: 466px;">{{`时长(${item.chargeUnit})`}}<span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span></span>
+                                        <span v-if = "item.usedAmount > 0 && item.chargeUnit"
+                                              style="position: absolute; right: 466px;">
+                                            {{`时长(${item.chargeUnit})`}}
+                                            <span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span>
+                                        </span>
                                         <div class="enterDate-container">
                                             <label>时间</label>
                                             <div class="enterDate">
-                                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" :disabled="item.usedAmount > 0"/>
+                                                <dd-datepicker placeholder="选择时间" v-model="item.date"
+                                                               @input="modifyEnter(item)"
+                                                               :disabled-date="disabledEndDate(new Date())"
+                                                               :disabled="item.usedAmount > 0"/>
                                             </div>
                                         </div>
                                         <div class="shop-item-count">
@@ -126,39 +212,78 @@
                                                      :id="index" :type="2"
                                                      :min="item.usedAmount >=1 ? item.usedAmount : 1"
                                                      :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999">
-                                                <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余{{item.inventory + item.selfInventory}}</p>
+                                                <p class="valid"
+                                                   v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'"
+                                                   :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
+                                                    <span style="vertical-align: text-bottom">&uarr;</span>
+                                                    服务上限剩余{{item.inventory + item.selfInventory}}
+                                                </p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count * item.timeAmount).toFixed(2)}}</span>
+                                                <p class="fee-container">
+                                                    <span class="fee-symbol">¥</span>
+                                                    <input type="number" class="dd-input fee-input" style="width: 80px"
+                                                           v-model="item.totalPrice" />
+                                                </p>
                                             </p>
                                         </div>
                                     </div>
-                                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0"></span>
+                                    <span class="delete-icon" @click="deleteItem(item.type, index)"
+                                          v-if="item.usedAmount <= 0">
+                                    </span>
                                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
+                                    <span class="discount-info"
+                                          style="top: 28px"
+                                          v-if="vipDiscountDetail.isVip
+                                          && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                            <span class="discount-num"
+                                                  v-if="Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
+                                                                         * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
+                                                                         * item.count * item.timeAmount).toFixed(2))">
+                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                            </span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title">
                                 <span>商超信息</span>
-                                <span class="increase-container" @click="addItem(3)"><span class="increase-icon"></span>添加项目</span>
+                                <span class="increase-container" @click="addItem(3)">
+                                    <span class="increase-icon"></span>
+                                    添加项目
+                                </span>
                             </p>
                             <div v-if="order.orderState && showOrder" class="items">
-                                <div class="shop-item" :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''" style="align-items: stretch; flex-direction: column" v-for="item in filterShopList">
+                                <div class="shop-item"
+                                     :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
+                                     style="align-items: stretch;
+                                     flex-direction: column"
+                                     v-for="item in filterShopList">
                                     <div class="orderDetailModal-shop-item">
                                         <span class="shop-icon"></span>
                                         <div class="item-content">
                                             <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>{{`¥${getTotalPrice(item['items'])}`}}</span>
+                                                <span>¥{{getTotalPrice(item['items'], true)}}</span>
+                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                    <span>
+                                                        原价
+                                                        <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
+                                                    </span>
+                                                    <span class="discount-num">
+                                                        {{ item.items[0].vipShowDiscount }}
+                                                    </span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="item-content" v-for="option in item['items']">
                                         <span style="padding-left: 32px; width: 120px;">{{option.name}}</span>
-                                        <span>{{`x${option.amount}`}}</span>
+                                        <span>x{{option.amount}}</span>
                                         <span style="margin-right: 304px;width: 120px; text-align: right">{{`¥${(option.price * option.amount).toFixed(2)}`}}</span>
                                     </div>
                                 </div>
@@ -168,29 +293,53 @@
                                     <span class="shop-icon"></span>
                                     <div class="shop-item-content">
                                         <dd-select v-model="item.id" placeholder="选择商超项目">
-                                            <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name" :key="shop.id+shop.name">
+                                            <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name"
+                                                       :key="shop.id+shop.name">
                                             </dd-option>
                                         </dd-select>
                                         <div class="shop-item-count">
                                             <label>数量</label>
                                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="3">
-                                                <p class="valid" v-if="false"><span style="vertical-align: text-bottom">&uarr;</span>服务上限剩余10</p>
+                                                <p class="valid" v-if="false">
+                                                    <span style="vertical-align: text-bottom">&uarr;</span>
+                                                    服务上限剩余10
+                                                </p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
-                                                <span>¥{{(getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2)}}</span>
+                                                <span>
+                                                    ¥{{((getItemInfo(item.type, item.id)['price'] * getItemDiscountInfo(0, item.type, vipDiscountDetail).discount).toFixed(2) * item.count).toFixed(2)}}
+                                                </span>
                                             </p>
                                         </div>
                                     </div>
                                     <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
+                                    <span class="discount-info"
+                                          style="top:24px"
+                                          v-if="vipDiscountDetail.isVip
+                                          && getItemDiscountInfo(0, item.type, vipDiscountDetail).discount < 1">
+                                            <span>
+                                                原价
+                                                <span class="origin-price">
+                                                    ¥{{ (getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2) }}
+                                                </span>
+                                            </span>
+                                            <span class="discount-num">
+                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                            </span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
-                                <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark" class="dd-input"></textarea>
-                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">{{remark.length}}/140</span>
+                                <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark"
+                                          class="dd-input">
+                                </textarea>
+                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
+                                    {{remark.length}}/140
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -212,6 +361,7 @@
         position: absolute;
         font-size: $font-size-sm;
         color: #999999;
+        right: 140px;
     }
     .error {
         position: absolute;
@@ -305,12 +455,81 @@
             margin-right: 4px;
             cursor: pointer;
         }
+        .vip-level-img {
+            display: inline-block;
+            height: 15px;
+            width: 17px;
+            position: absolute;
+            right: 0;
+            top: 4px;
+            transform: translateX(100%);
+            background: url("../../../../../image/modal/vip_level_img.png");
+            background-size: contain;
+            &:hover + .vip-level-tip {
+                display: inline-flex;
+            }
+        }
+        .vip-level-container {
+            position: relative;
+        }
+        .vip-level-tip {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: -17px;
+            padding: 0 2px;
+            transform: translateX(100%);
+            background:#fafafa;
+            box-shadow:0px 0px 5px 0px rgba(0,0,0,0.15);
+            height:19px;
+            justify-content: center;
+            align-items: center;
+        }
         .userInfo-items {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
             div:last-child {
                 margin-right: 16px;
+            }
+        }
+        .userVip-list {
+            position: absolute;
+            background:#fafafa;
+            box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
+            border-radius:2px;
+            width:261px;
+            max-height:120px;
+            overflow-y: scroll;
+            top: 26px;
+            z-index: 100;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
+        }
+        .userVip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666666;
+            font-size: 12px;
+            padding: 2px 8px;
+            cursor: pointer;
+            &:hover {
+                background: #e1effa;
+            }
+            .vip-level {
+                display: inline-flex;
+                align-items: center;
+                width: 80px;
+            }
+            .vip-level-text {
+                display: inline-block;
+                max-width: 70px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
         .userInfo-phone {
@@ -346,6 +565,40 @@
             display: flex;
             align-items: center;
         }
+        .fee-container {
+            position: relative;
+            display: inline-block;
+        }
+        .fee-symbol {
+            position: absolute;
+            left: 8px;
+            top: 3px;
+            z-index: 10;
+        }
+        .fee-input {
+            padding-left: 16px;
+        }
+        .discount-info {
+            display: inline-flex;
+            position: absolute;
+            font-size: 12px;
+            color: #999999;
+            top: 30px;
+            right: 0;
+            min-width: 104px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .origin-price {
+            text-decoration: line-through;
+        }
+        .discount-num {
+            display: inline-flex;
+            padding: 0 5px;
+            color: #ffffff;
+            background: #f5a623;
+            border-radius: 2px;
+        }
         .registerInfoModal-roomPriceList {
             display: flex;
             flex-wrap: wrap;
@@ -359,7 +612,7 @@
             border-radius: 2px;
             max-height: 100px;
             overflow-y: auto;
-            z-index: 9;
+            z-index:11;
             &:before {
                 display: table;
                 content: " ";
@@ -394,6 +647,7 @@
             justify-content: space-between;
             align-items: center;
             padding-left: 13px;
+            position: relative;
             &:not(:last-child) {
                 padding-bottom: 15px;
                 margin-bottom: 16px;
@@ -404,6 +658,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         .registerRoom-container {
             display: flex;
@@ -567,7 +822,11 @@
                 shopGoodsItems: [],
                 registerRooms: [],
                 showOrder: false,
-                lastModifyRoomTime: 0
+                vipDiscountDetail: {},
+                lastModifyRoomTime: 0,
+                vipListShow: false,
+                vipList: [],
+                timeCount: 0,
             }
         },
 
@@ -605,7 +864,7 @@
                 if (this.enterItems.length > 0) {
                     this.enterItems.forEach(enter => {
                         if (enter.id) {
-                            let enterPrice = (this.getItemInfo(enter.type, enter.id)['price'] * enter.count * enter.timeAmount).toFixed(2);
+                            let enterPrice = enter.totalPrice;
                             totalPrice += Number(enterPrice);
                         }
                     });
@@ -613,7 +872,7 @@
                 if (this.shopGoodsItems.length > 0) {
                     this.shopGoodsItems.forEach(good => {
                         if (good.id) {
-                            let goodPrice = (this.getItemInfo(good.type, good.id)['price'] * good.count).toFixed(2);
+                            let goodPrice = ((this.getItemInfo(good.type, good.id)['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
                             totalPrice += Number(goodPrice);
                         }
                     });
@@ -646,30 +905,36 @@
                         this.userOrigins.unshift({ id: -1, name: '散客' });
                         this.userOriginType = this.userOrigins[0].id;
                     } else {
-                        modal.somethingAlert(result.msg);
+                        modal.somethingAlert(res.msg);
                     }
                 });
                 AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, (res) =>{
-                    res.data.list.forEach((d) => {
-                        d.gList.forEach((dd) => {
-                            this.shopList.push({
-                                id: dd.i,
-                                price: dd.p,
-                                name: dd.n,
-                                type: 3
+                    if (res.code ===1) {
+                        res.data.list.forEach((d) => {
+                            d.gList.forEach((dd) => {
+                                this.shopList.push({
+                                    id: dd.i,
+                                    price: dd.p,
+                                    name: dd.n,
+                                    type: 3
+                                });
                             });
                         });
-                    });
+                    } else {
+                        modal.somethingAlert(res.msg);
+                    }
                 });
                 AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
                         .then(res => {
                             if (res.code === 1) {
                                 res.data.list.map(el => {
                                     el.id = el.categoryId;
-                                    el.itemId = el.categoryId;
+                                    el.nodeId = el.enterId;
                                     el.type = 2;
                                     this.enterList.push(el)
                                 });
+                            } else {
+                                modal.somethingAlert(res.msg);
                             }
                         });
             },
@@ -686,6 +951,64 @@
                     default:
                         return {};
                 }
+            },
+            getVipList(params, position) {
+                AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipList = res.data.list;
+                            this.vipListShow = res.data.list && res.data.list.length > 0;
+                            this.setVipListPosition(position);
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            changeVipList(num) {
+                let params = num === 1 ? { name: this.name } : { phone: this.phone };
+                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
+                if (search && ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4))) {
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
+                }
+            },
+            setVipListPosition(position) {
+                const vipList = document.querySelector('.userVip-list');
+                if (vipList) {
+                    vipList.style.left = position === 1 ? 46 + 'px' : 312 + 'px';
+                }
+            },
+            setUserInfo(obj) {
+                this.name = obj.name;
+                this.phone = obj.phone;
+                this.vipListShow = false;
+            },
+            getVipDiscount(params) {
+                AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipDiscountDetail = {...res.data};
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            /**
+             * 获取单个项目的优惠信息
+             **/
+            getItemDiscountInfo(nodeId, nodeType, obj) {
+                let item = { discount: 1 };
+                if (obj.isVip && obj.vipDetail.discountList.length > 0) {
+                    obj.vipDetail.discountList.forEach(list => {
+                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
+                            item = {...list};
+                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                            item = {...list};
+                        }
+                    });
+                }
+
+                return item;
             },
             checkIsToday(date) {
                  return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
@@ -742,6 +1065,8 @@
                 this.enterItems = [];
                 this.shopGoodsItems = [];
                 this.registerRooms = [];
+                this.vipDiscountDetail = {};
+                this.phoneValid = true;
             },
             hideModal(e){
                 e.stopPropagation();
@@ -770,7 +1095,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
-                    this.enterItems.push({ id: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0 });
+                    this.enterItems.push({ id: undefined, nodeId: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0, totalPrice: 0, originPrice: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -903,6 +1228,9 @@
                     return false;
                 }
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
+                if (this.vipDiscountDetail.isVip) {
+                    params.vipId = this.vipDiscountDetail.vipDetail.vipId;
+                }
                 if (this.checkState === 'ing') {
                     params.type = 0;
                 } else if (this.checkState === 'finish') {
@@ -950,9 +1278,10 @@
                     this.enterList.forEach(option => {
                         if (option.id === item.id) {
                             enter.categoryName = option.name;
-                            enter.price = option.price;
+                            enter.price = Number((option.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
                         }
                     });
+                    enter.totalPrice = Number(item.totalPrice);
                     if (this.checkState === 'editOrder' && item.playOrderId) {
                         enter.playOrderId = item.playOrderId;
                     }
@@ -975,7 +1304,7 @@
                     this.shopList.forEach(shop => {
                        if (shop.id === item.id) {
                            good.name = shop.name;
-                           good.price = shop.price;
+                           good.price = Number((shop.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2));;
                        }
                     });
 
@@ -1030,17 +1359,29 @@
                 if (type === 3) {
                     this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
                 } else if (type === 2) {
-                    this.enterItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                    this.enterItems.forEach((item, index) => {
+                        const price = this.getItemInfo(item.type, item.id)['price'];
+                        const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                        item.count = (index === tag) ? num : item.count;
+                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                    });
                 } else if (type === -2) {
-                    this.enterItems.forEach((item, index) => {item.timeAmount = (index === tag) ? num : item.timeAmount;});
+                    this.enterItems.forEach((item, index) => {
+                        const price = this.getItemInfo(item.type, item.id)['price'];
+                        const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                        item.timeAmount = (index === tag) ? num : item.timeAmount;
+                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                    });
                 }
             },
 
-            getTotalPrice(arr) {
+            getTotalPrice(arr, dis) {
                 let price = 0;
                 if (arr) {
                     arr.forEach(item => {
-                        price += item.price * item.amount;
+                        price += (dis ? item.price : item.originPrice) * item.amount;
                     });
                 }
                 return price.toFixed(2);
@@ -1049,7 +1390,7 @@
             getDateDiff(date1, date2) {
                 let dateStart = new Date(date1);
                 let dateEnd = new Date(date2);
-                let duration = util.DateDiff(dateStart, dateEnd);
+                let duration = Math.floor((dateEnd.valueOf() - dateStart.valueOf())/24/60/60/1000);
                 return duration;
             },
 
@@ -1083,6 +1424,8 @@
                         date.showInput = false;
                     });
                 });
+                this.vipListShow = false;
+                this.vipList = [];
             },
             changShowInput(item, option) {
                 item.datePriceList.forEach(datePrice => {
@@ -1107,6 +1450,7 @@
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = +((num * countArr[index]).toFixed(2));
                 });
+                this.setFirstDateFee(num, obj);
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
@@ -1116,6 +1460,12 @@
             },
 
             modifyRoom(item) {
+                if (item.roomOrderId) {
+                    item.changeTimes++;
+                }
+                if (item.roomOrderId && item.changeTimes < 4) {
+                    return false;
+                }
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
@@ -1131,29 +1481,28 @@
                  }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
-                AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration })
+                const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
+                AJAXService.ajaxWithToken('get', '/room/getRoomStaus',
+                    { id: item.roomType,
+                        date: startDate,
+                        days: duration < 1 ? 1 : duration
+                    })
                     .then(res => {
                         if (res.code === 1) {
                             let datePriceList = [];
                             let price = 0;
+                            let originPrice = 0;
                             res.data.rs.status.forEach((option,index) => {
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, showInput: false});
+                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
                             });
-                            if (item.datePriceList.length > 0) {
-                                datePriceList.forEach(newDate => {
-                                    item.datePriceList.forEach(oldDate => {
-                                        if (util.isSameDay(new Date(newDate.date), new Date(oldDate.date))) {
-                                            newDate.dateFee = oldDate.dateFee;
-                                        }
-                                    })
-                                });
-                            }
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
+                                originPrice += date.originDateFee;
                             });
-                            item.price = Number(price.toFixed(2));
+                            item.price = Number((price * discount).toFixed(2));
+                            item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
-
+                            this.setDateFee(item.price, item);
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
@@ -1172,12 +1521,31 @@
             },
 
             modifyEnter(item) {
+                if (item.playOrderId) {
+                    item.changeTimes++;
+                }
+                if (item.playOrderId && item.changeTimes < 2) {
+                    return false;
+                }
+                this.enterList.forEach(enter => {
+                    if (enter.id === item.id) {
+                        item.nodeId = enter.nodeId;
+                    }
+                });
+                if (item.id) {
+                    const price = this.getItemInfo(item.type, item.id)['price'];
+                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                }
+
                 if (item.id && item.date) {
                     let date = util.dateFormat(new Date(item.date));
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
                         .then(res => {
                             if (res.code === 1) {
                                 item.inventory = res.data.inventory;
+                                item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -1203,6 +1571,46 @@
             CheckInPerson
         },
         watch: {
+            /*name(newVal) {
+                let search = newVal.length >= 1
+                    && (this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip));
+                if (search) {
+                    const params = { name: newVal };
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, 1); }, 500);
+                }
+            },*/
+            phone(newVal) {
+                const params = { phone: newVal };
+                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
+                if (newVal.length >= 4 && newVal.length < 11 && search) {
+                    //clearTimeout(this.timeCount);
+                    //this.timeCount = setTimeout(() => { this.getVipList(params, 2); }, 500)
+                } else if (newVal.length === 11 && search) {
+                    this.checkPhone();
+                    this.getVipDiscount(params);
+                } else if (newVal !== 11) {
+                    this.vipDiscountDetail = {};
+                }
+            },
+            vipDiscountDetail(newVal) {
+                this.registerRooms.forEach(room => {
+                    if (this.checkState === 'editOrder') {
+                        this.modifyRoom(room);
+                    }
+                    if (!room.roomOrderId || (room.roomOrderId && room.changeTimes > 3)) {
+                        room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
+                        this.setDateFee(room.price, room);
+                        this.setFirstDateFee(room.price, room);
+                    }
+                });
+
+                this.enterItems.forEach(enter => {
+                    if ((enter.playOrderId && enter.changeTimes > 1) || !enter.playOrderId) {
+                        enter.totalPrice = (Number(enter.originPrice) * this.getItemDiscountInfo(enter.nodeId, enter.type, newVal).discount).toFixed(2);
+                    }
+                });
+            },
             registerInfoShow(newVal) {
                 if (newVal && this.checkState !== 'editOrder') {
                     this.roomsItems.forEach(item => {
@@ -1216,16 +1624,26 @@
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
                         let duration = this.getDateDiff(item.startDate, item.endDate);
-                        AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId, date: util.dateFormat(item.startDate), days: duration })
+                        AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId,
+                            date: util.dateFormat(item.startDate),
+                            days: duration })
                             .then(res => {
                                 if (res.code === 1) {
                                     let datePriceList = [];
                                     let price = 0;
                                     res.data.rs.status.forEach((option,index) => {
-                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: option.p, showInput: false});
+                                        const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
+                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false});
                                         price += option.p;
                                     });
-                                    this.registerRooms.push({ categoryType: id, roomType: item.roomId, price: Number(price.toFixed(2)), room: item, idCardList: [], showPriceList: false, datePriceList: datePriceList, showTip: false });
+                                    this.registerRooms.push({ categoryType: id,
+                                                              roomType: item.roomId,
+                                                              price: Number((price * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2)),
+                                                              originPrice: Number(price.toFixed(2)),
+                                                              room: item, idCardList: [],
+                                                              showPriceList: false,
+                                                              datePriceList: datePriceList,
+                                                              showTip: false });
                                 }
                             });
                     });
@@ -1243,11 +1661,13 @@
                     });
                     filterEnters.forEach(item => {
                         const enter = {...item};
+                        enter.changeTimes = 0;
                         enter.id = item.categoryId;
                         enter.count = item.amount;
                         enter.selfInventory = item.amount;
                         enter.type = 2;
                         enter.inventory = undefined;
+                        enter.totalPrice = item.totalPrice;
                         enterItems.push(enter);
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
@@ -1268,6 +1688,7 @@
                         });
                         room.categoryType = id;
                         room.roomType = item.roomId;
+                        room.originPrice = item.originPrice;
                         room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
@@ -1282,6 +1703,7 @@
                         room.showTip = false;
                         room.state = item.state;
                         room.roomOrderId = item.serviceId;
+                        room.changeTimes = 0;
                         registerRooms.push(room);
                     });
                     this.registerRooms = registerRooms;

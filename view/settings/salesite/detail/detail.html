@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——微官网设置</title>
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/static/css/dist/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/salesite/detail.js"></script>
+</head>
+<body>
+    <div class="mainContainer clearfloat">
+        <div class="content clearfloat">
+            <div class="detail-head">基本信息用于在微官网上展示给客户，请确保基本信息的真实和完整</div>
+            <div class="detail-content">
+                <div class="detail-tips"></div>
+                <div class="detail-title clearfloat">
+                    <div class="detail-remind">详情介绍小于1000字</div>
+                    <div class="detail-upload">
+                        <div class="detail-upload-btn" @click="uploadImg">
+                            <img src="//static.dingdandao.com/eluyun4BF1D477-3E1F-4785-92E5-FB8DD2D51460@1x.png" alt="" style="cursor: pointer;">
+                            <span class="detail-add">添加图片</span>
+                        </div>
+                        <span class="detail-num">{{imgNum}}/10</span>
+                    </div>
+                    <input id="upload" type="file" name="file" accept="image/*" />
+                    <div class="detail-message">
+                        <label class="editor-placeholder" for="editor">可在此编辑您的店铺详情、店铺特色、详细地址等</label>
+                        <div id="editor">
+                        </div>
+                    </div>
+                    <span class="detail-textNum">{{textNum}}/1000</span>
+                    <button class="dd-btn dd-btn-ghost detail-btn" @click="cancel">取消</button>
+                    <button class="dd-btn dd-btn-primary detail-btn detail-confirm" @click="saveData">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

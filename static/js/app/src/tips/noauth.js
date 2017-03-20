@@ -1,10 +1,4 @@
-var header = require("header");
-var util = require("util");
-
-require("bootstrap");
-
-$(function(){
-    util.checkExplorer();
-    header.showHeader();
-    // $(".header .accomodationEntry").hide();
+import init from '../common/init';
+init({
+    leftMenu: false
 });

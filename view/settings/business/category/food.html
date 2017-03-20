@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+  <title>订单来了——品类管理</title>
+  <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/dist/main.min.css">
+  <script src="/static/js/app/dist/common.js"></script>
+  <script src="/static/js/app/dist/category/foodEntry.js"></script>
+</head>
+<body>
+  <!-- 新增餐饮 -->
+  <div class="modal fade" role="dialog" id="createFood">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="createFood clearfloat">
+          <form class="inputFiled">
+            <h1>新增餐饮</h1>
+            <h2>基本信息</h2>
+            <ul>
+              <li>
+                <label for="createFoodName">餐饮名称</label>
+                <input maxlength="16" type="text" class="text required" id="createFoodName" name="createFoodName" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="createFoodShortName">简称</label>
+                <input maxlength="6" type="text" class="text required" id="createFoodShortName" name="createFoodShortName" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="createFoodUnit">单位</label>
+                <input maxlength="8" type="text" class="text required" id="createFoodUnit" name="createFoodUnit" placeholder="请填写单位">
+              </li>
+              <li>
+                <label for="createFoodFitNum">适用人数</label>
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="createFoodFitNum" name="createFoodFitNum" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="createFoodInventory">默认库存</label>
+                <input maxlength="8" range="[1,99999999]" digits="true" type="text" class="text required" id="createFoodInventory" name="createFoodInventory" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="createFoodPrice">单价</label>
+                <input maxlength="8" range="[0,99999999]" type="text" class="text required" id="createFoodPrice" name="createFoodPrice" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="createFoodDescription">描述</label>
+                <textarea maxlength="140" name="description" id="createFoodDescription" name="createFoodDescription" placeholder="请填写描述"></textarea>
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok" id="createFoodOk">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑基本信息 -->
+  <div class="modal fade" role="dialog" id="editFood">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editFood clearfloat">
+          <form class="inputFiled">
+            <h1>编辑餐饮</h1>
+            <h2>基本信息</h2>
+            <ul>
+              <li>
+                <label for="editFoodName">餐饮名称</label>
+                <input maxlength="16" id="editFoodName" type="text" class="text required" name="editFoodName" placeholder="用于展示给客户">
+              </li>
+              <li>
+                <label for="editFoodShortName">简称</label>
+                <input maxlength="6" id="editFoodShortName" type="text" class="text required" name="editFoodShortName" placeholder="用于自己管理">
+              </li>
+              <li>
+                <label for="editFoodUnit">单位</label>
+                <input maxlength="8" id="editFoodUnit" type="text" class="text required" name="editFoodUnit" placeholder="请填写单位">
+              </li>
+              <li>
+                <label for="editFoodFitNum">适用人数</label>
+                <input maxlength="8" range="[1,99999999]" digits="true" id="editFoodFitNum" type="text" class="text required" name="editFoodFitNum" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="editFoodInventory">默认库存</label>
+                <input maxlength="8" range="[1,99999999]" digits="true" id="editFoodInventory" type="text" class="text required" name="editFoodInventory" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="editFoodPrice">单价</label>
+                <input maxlength="8" range="[0,99999999]" id="editFoodPrice" type="text" class="text required" name="editFoodPrice" placeholder="请填写纯数字">
+              </li>
+              <li>
+                <label for="editFoodDescription">描述</label>
+                <textarea maxlength="140" id="editFoodDescription" name="description" name="editFoodDescription" placeholder="请填写描述"></textarea>
+              </li>
+            </ul>
+          </form>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok" id="editFoodOk">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 编辑展示信息 -->
+  <div class="modal fade" role="dialog" id="editDisplayInfo">
+    <div class="modal-dialog modal-w626">
+      <div class="modal-content clearfloat">
+        <div class="editDisplayInfo clearfloat">
+          <h1>编辑展示信息-烧烤</h1>
+          <p class="tip">这些信息会出现在微官网上，更详细的信息会帮助你吸引来更多客人哦</p>
+          <div class="clearfloat">
+            <div class="photo">
+              <h2>图片管理</h2>
+              <div class="cover">
+                <div class="title clearfloat">
+                  <span>封面</span>
+                  <div class="create">
+                    <img src="/static/image/icon_xinjian.png" alt="新增">
+                    <span>上传图片</span>
+                  </div>
+                  <input id="cover" type="file" name="file" accept="image/*"/>
+                </div>
+                <div class="photoContainer photoCon1"></div>
+                <p class="coverError hide">请上传封面<p>
+              </div>
+              <div class="detail">
+                <div class="title clearfloat">
+                  <span>详细图片</span>
+                  <div class="create">
+                    <img src="/static/image/icon_xinjian.png" alt="新增">
+                    <span>上传图片</span>
+                  </div>
+                  <input id="detail" type="file" name="file" accept="image/*" />
+                </div>
+                <div class="photoContainer"></div>
+                <p class="detailError hide">请上传详细图片<p>
+              </div>
+            </div>
+            <div class="operate">
+              <div class="first">
+                <div class="operateItem hide">
+                  <div id="replaceCover" class="clickDiv">
+                    <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                    <p>替换图片</p>
+                  </div>
+                </div>
+                <div class="operateItem hide">
+                  <div id="deleteCover" class="clickDiv">
+                    <img src="/static/image/icon_shanchu.png" alt="">
+                    <p>删除</p>
+                  </div>
+                </div>
+              </div>
+              <div class="second">
+                <div class="operateItem hide">
+                  <div id="replaceDetail" class="clickDiv">
+                    <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+                    <p>替换图片</p>
+                  </div>
+                  <input type="file" accept="image/*" name="file" id="replaceDetailImg" />
+                </div>
+                <div class="operateItem hide">
+                  <div id="deleteDetail" class="clickDiv">
+                    <img src="/static/image/icon_shanchu.png" alt="">
+                    <p>删除</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <button class="btn-cancel">取消</button>
+            <button class="btn-ok" id="editFoodShowOk">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--页面主体 -->
+  <div class="mainContainer">
+    <div class="content">
+      <div class="title topMenu">
+        <span class="campName"></span>
+        <div class="create" data-toggle="modal" data-target="#createFood">
+          <img src="/static/image/icon_xinjian.png" alt="新增">
+          <span>新增餐饮</span>
+        </div>
+      </div>
+      <div class="categoryGrid">
+        <table>
+          <thead>
+          <tr class="head">
+            <th>餐饮</th>
+            <th>简称</th>
+            <th>单位</th>
+            <th>适用人数</th>
+            <th>默认库存</th>
+            <th>单价</th>
+            <th>描述</th>
+            <th>微官网</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="operate mainOperate">
+        <div class="first clearfloat">
+          <div class="operateItem hide">
+            <div class="clickDiv" id="editFoodButton" data-toggle="modal" data-target="#editFood">
+              <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑基本信息</p>
+            </div>
+          </div>
+          <div class="operateItem hide">
+            <div class="clickDiv" id="deleteFoodButton">
+              <img src="/static/image/icon_shanchu.png" alt="">
+              <p>删除</p>
+            </div>
+          </div>
+        </div>
+        <div class="second clearfloat hide">
+          <div class="operateItem hide">
+            <div class="clickDiv" id="editFoodShowInfoButton" data-toggle="modal" data-target="#editDisplayInfo">
+              <img src="/static/image/icon_bianjijibenxinxi.png" alt="">
+              <p>编辑展示信息</p>
+            </div>
+          </div>
+          <div class="operateItem hide shangjia">
+            <div class="clickDiv modifyStateButton">
+              <img src="/static/image/icon_shangjia.png" alt="">
+              <p>上架到微官网</p>
+            </div>
+            <!--<p class="putaway">目前未上架</p>-->
+          </div>
+          <div class="operateItem hide xiajia">
+            <div class="clickDiv modifyStateButton">
+              <img src="/static/image/icon_xiajia.png" alt="">
+              <p>下架</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

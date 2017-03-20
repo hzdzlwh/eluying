@@ -15,20 +15,32 @@ var gulp = require('gulp'),
     rev = require('gulp-rev'),
     revCollector = require('gulp-rev-collector'),
     webpackConf = require('./webpack.conf'),
+    url = require('url'),
     fileInclude = require('gulp-file-include');
+    config = require('./config');
 
+// 开发服务
 gulp.task('browser-sync', function () {
     browserSync.init({
         server: {
             baseDir: './',
             index: 'login.html',
-            https: true
-        }
+            https: true,
+            // 统计报表单页
+            middleware: function (req, res, next) {
+                if (req.url.indexOf('/view/reports') > -1) {
+                    req.url = '/view/reports/index.html';
+                }
+                return next();
+            }
+        },
+        port: gutil.env.port || config.port
     });
 });
 
+// 首页模板拼接
 gulp.task('file-include', function() {
-    gulp.src(['./static/tpl/feature.html'])
+    gulp.src(config.html)
         .pipe(fileInclude())
         .pipe(gulp.dest('./view/home'));
     gulp.src(['./static/tpl/login.html'])
@@ -41,6 +53,7 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
+// hash缓存
 function revHash() {
     gulp.src('static/css/**/*.css')
         .pipe(rev())
@@ -94,20 +107,22 @@ gulp.task('rev', function () {
 
 
 gulp.task('styles', function () {
-    return sass(['static/sass/main.scss', 'static/sass/ordersManage/orders/orders.scss'], {style: 'compressed'})
+    return sass(config.css, {style: 'compressed'})
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('static/css'))
+        .pipe(gulp.dest('static/css/dist'))
         //.pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
         .pipe(reload({stream: true}));
 });
 
 gulp.task('webpack-prod', function () {
+    delete webpackConf.devtool;
     webpackConf.plugins.push(
         new webpack.DefinePlugin({
             'process.env': {
                 ENV: JSON.stringify('production'),
-                NODE_ENV: JSON.stringify('production')
+                NODE_ENV: JSON.stringify('production'),
+                serverUrl: gutil.env.server || (gutil.env.test ? config.testServer : config.devServer)
             }
         }),
         new webpack.optimize.UglifyJsPlugin({
@@ -120,6 +135,7 @@ gulp.task('webpack-prod', function () {
             comments: false
         })
     );
+    webpackConf.resolve.alias.vue = 'vue/dist/vue.min.js';
     return gulp.src('static/js/app/src/entry.js')
         .pipe(gulpWebpack(webpackConf, null, function (err, stats) {
             if (err) throw new gutil.PluginError('webpack', err);
@@ -129,23 +145,26 @@ gulp.task('webpack-prod', function () {
 });
 
 gulp.task('webpack-dev', function () {
-    var webpackDevConf = Object.assign({},
-        webpackConf, {watch: true},
-        webpackConf.plugins.push(
-            new webpack.DefinePlugin({
-                'process.env': {
-                    ENV: JSON.stringify('development'),
-                    NODE_ENV: JSON.stringify('development')
-            }
-    })));
-    return gulp.src('static/js/app/src/entry.js')
-        .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
-            if (err) throw new gutil.PluginError('webpack', err);
-            gutil.log('[webpack]', stats.toString({}));
-        }, webpack))
-        .pipe(gulp.dest('static/js/app/dist/'))
-        .pipe(reload({stream: true}));
-        //.pipe(notify({title: '好棒啊！', message: '<%= file.relative %>编译完成，站起来活动活动'}));
+    try {
+        var webpackDevConf = Object.assign({},
+            webpackConf, {watch: true},
+            webpackConf.plugins.push(
+                new webpack.DefinePlugin({
+                    'process.env': {
+                        ENV: JSON.stringify('development'),
+                        NODE_ENV: JSON.stringify('development'),
+                        serverUrl: JSON.stringify(gutil.env.server || (gutil.env.test ? config.testServer : config.devServer))
+                    }
+                })));
+        return gulp.src('static/js/app/src/entry.js')
+            .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
+                gutil.log('[webpack]', stats.toString({}));
+            }, webpack))
+            .pipe(gulp.dest('static/js/app/dist/'))
+            .pipe(reload({stream: true}));
+    } catch (e) {
+
+    }
 });
 
 gulp.task('watch', function () {

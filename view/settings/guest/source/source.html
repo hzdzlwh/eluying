@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="guestApp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>订单来了——客源设置</title>
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/static/css/dist/main.min.css">
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/guest/source.js"></script>
+</head>
+<body ng-controller="guestCtrl">
+<div class="modal fade" role="dialog" id="newGuest">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">新增客源</div>
+            <div class="maintext">
+                <div class="slabel">客源名称</div>
+                <div class="scontent"><input type="text" id="newGuest-input" required="required" ng-model="newGuest" maxlength="16"/></div>
+                <div class="errorTips" ng-show="errorTipsShow">
+                    必填字段
+                </div>
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
+                <div class="btn-ok sbtn sbtn-ok confirm" ng-click="addGuest()">确定</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" role="dialog" id="deleteGuest">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="hr"></div>
+            <div class="stitle">
+                提示
+            </div>
+            <div class="stext">
+                删除之后将不能选择此种客源，您确定要删除吗？
+            </div>
+            <div class="btns clearfloat">
+                <div class="btn-cancel sbtn sbtn-cancel cancel" ng-click="resetGuest()">取消</div>
+                <div class="btn-ok sbtn sbtn-ok confirm" ng-click="deleteGuest()">确定</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="mainContainer clearfloat">
+    <div class="content clearfloat">
+        <div class="guest-container">
+            <div class="stitle">
+                <div class="stext">自定义客源</div>
+                <div class="snew" data-toggle="modal" data-target="#newGuest">
+                    <img src="//static.dingdandao.com/F91A688D-9293-46DC-BE3A-4C89312DF1D6@1x.png" alt="">
+                    新增客源
+                </div>
+            </div>
+            <div class="sbox">
+                <div class="hr"></div>
+                <div class="sheader">
+                    <div class="col1">客源</div>
+                    <div class="col2">操作</div>
+                    <div class="clearfloat"></div>
+                </div>
+                <div class="hr1"></div>
+                <div class="srow fit">
+                    <div class="col1">散客</div>
+                    <div class="col2"><div class="hr2"></div></div>
+                    <div class="clearfloat"></div>
+                </div>
+                <div class="hr1" ng-if="guestList.length > 0"></div>
+
+                <div class="srow" ng-repeat="guest in guestList">
+                    <div class="col1">{{guest.name}}</div>
+                    <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest" ng-click="toDeleteGuest(guest.id)">删除</div>
+                    <div class="clearfloat"></div>
+                </div>
+                <!--<div class="srow">-->
+                    <!--<div class="col1">俱乐部</div>-->
+                    <!--<div class="col2 delete" data-toggle="modal" data-target="#deleteGuest">删除</div>-->
+                    <!--<div class="clearfloat"></div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

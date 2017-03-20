@@ -4,13 +4,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <div class="header-container">
+                        <div class="header-container" v-if="order.orderState">
                             <span class="header-text">订单详情</span>
-                            <span class="order-state-angle" :style="{ borderColor: getOrderState(order.orderState)['borderColor']}"></span>
-                            <span class="order-state" :style="{ background: getOrderState(order.orderState)['backgroundColor']}" v-text="getOrderState(order.orderState)['text']"></span>
+                            <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
+                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
+                                  v-text="ORDER_STATUS_ICON[order.orderState]['text']">
+                            </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" @click="openPrint(order)">打印</span>
+                            <span class="header-tools" v-if="order.orderState !== -1" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
@@ -24,9 +26,13 @@
                                     <label class="label-text">联系人</label>
                                     <span>{{ order.customerName }}</span>
                                 </div>
-                                <div class="userInfo-item">
+                                <div class="userInfo-item vip-level-container">
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
+                                    <span v-if="order.isVip">
+                                        <span class="vip-level-img" style="top: 0;"></span>
+                                        <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
+                                    </span>
                                 </div>
                                 <div class="userInfo-item" style="margin-right: 115px">
                                     <label class="label-text">客源渠道</label>
@@ -42,7 +48,9 @@
                                         <div class="room-name">
                                             <span class="room-icon"></span>
                                             <span>{{item.serialNum}}({{item.name}})</span>
-                                            <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">{{getRoomOrFoodState(3, item.state).text}}</span>
+                                            <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, item.state).backgroundColor}">
+                                                {{getRoomOrFoodState(3, item.state).text}}
+                                            </span>
                                         </div>
                                         <div class="room-date">
                                             <label class="label-text">入住</label>
@@ -61,6 +69,12 @@
                                                 </dl>
                                             </div>
                                         </div>
+                                        <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                            <span class="discount-num">
+                                                {{ item.vipShowDiscount }}
+                                            </span>
+                                        </span>
                                     </div>
                                     <div class="room-user" v-for="user in item.idCardList">
                                         <span class="user-icon"></span>
@@ -82,7 +96,10 @@
                                         <div class="item-content">
                                             <div class="item-name">
                                                 <span class="item-name">{{item.restName}}</span>
-                                                <span class="food-state-icon" :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">{{getRoomOrFoodState(0, item.foodState).text}}</span>
+                                                <span class="food-state-icon"
+                                                      :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
+                                                    {{getRoomOrFoodState(0, item.foodState).text}}
+                                                </span>
                                             </div>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
@@ -96,16 +113,27 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
+                                                <span class="discount-num">
+                                                    {{ item.vipShowDiscount }}
+                                                </span>
+                                            </span>
                                         </div>
                                         <div class="info-icon" @mouseenter="getFoodDetail(item)" @mouseleave="setInfoContentVisible(item)">
                                             <div class="info-content" v-if="item.visible" style="left: 0;">
                                                 <p class="info-title">{{item.detail.restName}}</p>
-                                                <p class="deskNum"><span>桌号:{{ item.detail.boardDetailResps ? item.detail.boardDetailResps.join(',') : '' }}</span><span>人数:{{item.detail.peopleNum}}</span></p>
+                                                <p class="deskNum">
+                                                    <span>桌号:{{ item.detail.boardDetailResps ? item.detail.boardDetailResps.join(',') : '' }}</span>
+                                                    <span>人数:{{item.detail.peopleNum}}</span>
+                                                </p>
                                                 <p class="foodTime">就餐时间:{{ item.detail.orderTime ? item.detail.orderTime.slice(0, 16) : ''}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
                                                         <p class="food-sub-item" v-for="dish in food.dishItemResp">
-                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">{{dish.categoryName}}</span>
+                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
+                                                                {{dish.categoryName}}
+                                                            </span>
                                                             <span class="dish-numAndPrice">
                                                                 <span>x{{dish.bookNum}}</span>
                                                                 <span>¥{{dish.price}}</span>
@@ -146,7 +174,7 @@
                                                     </p>
                                                 </div>
                                                 <div class="operator-container">
-                                                    <p>订单状态:{{FOOD_STATE[item.detail.orderState]}}</p>
+                                                    <p>订单状态:{{item.detail.orderState === -1 ? '待付款' : FOOD_STATE[item.detail.orderState]}}</p>
                                                     <p>预订时间:{{item.detail.creationTime}}</p>
                                                     <p>操作员:{{item.detail.reserveName}}</p>
                                                 </div>
@@ -163,7 +191,9 @@
                                     <div class="play-item">
                                         <span class="enter-icon"></span>
                                         <div class="item-content">
-                                            <span class="item-name">{{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}</span>
+                                            <span class="item-name">
+                                                {{item.name}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}
+                                            </span>
                                             <div class="item-date">
                                                 <label class="label-text">时间</label>
                                                 <span>{{item.date.slice(5)}}</span>
@@ -176,6 +206,12 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.totalPrice}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                            <span>原价<span class="origin-price">¥{{(item.originPrice * item.amount * item.timeAmount).toFixed(2) }}</span></span>
+                                            <span class="discount-num">
+                                                {{ item.vipShowDiscount }}
+                                            </span>
+                                        </span>
                                         </div>
                                         <span></span>
                                     </div>
@@ -192,8 +228,14 @@
                                             <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
-                                                <span>¥{{getTotalPrice(item['items'])}}</span>
+                                                <span>¥{{getTotalPrice(item['items'], true)}}</span>
                                             </div>
+                                            <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span>原价<span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span></span>
+                                                <span class="discount-num">
+                                                    {{ item.items[0].vipShowDiscount }}
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="item-content" v-for="option in item['items']">
@@ -262,11 +304,36 @@
                                 </div>
                             </div>
                             <div class="footer-price">
-                                <span class="order-price-text">订单金额:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 13)}}</span></span>
-                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">违约金:<span class="order-price-num grey">¥{{findTypePrice(order.payments, 4)}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}<span class="order-price-num grey">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span></span>
-                                <span class="order-price-text">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span></span>
-                                <span class="order-price-text">需退押金:<span class="order-price-num green">¥{{findTypePrice(order.payments, 16)}}</span></span>
+                                <span class="order-price-text">
+                                    订单金额:
+                                    <span class="order-price-num grey">
+                                    ¥{{findTypePrice(order.payments, 13)}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text" v-if="findTypePrice(order.payments, 4) > 0">
+                                    违约金:
+                                    <span class="order-price-num grey">
+                                        ¥{{findTypePrice(order.payments, 4)}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    {{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}
+                                    <span class="order-price-num grey">
+                                        ¥{{Math.abs(findTypePrice(order.payments, 14))}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    {{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}
+                                    <span class="order-price-num red">
+                                        ¥{{Math.abs(findTypePrice(order.payments, 15))}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text">
+                                    需退押金:
+                                    <span class="order-price-num green">
+                                        ¥{{findTypePrice(order.payments, 16)}}
+                                    </span>
+                                </span>
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum}}</span>
@@ -274,13 +341,25 @@
                             </p>
                         </div>
                     </div>
-                    <div class="roomModals-footer">
+                    <div class="roomModals-footer" v-if="order.orderState !== -1">
                         <div style="width: 100%;">
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble" @click="checkInOrCheckOut(0)">办理入住</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)" v-if="getRoomsState.checkOutAdAble">提前退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)" v-if="getRoomsState.checkOutAble">办理退房</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier" v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">收银</div>
+                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
+                                     @click="checkInOrCheckOut(0)">
+                                    办理入住
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
+                                     v-if="getRoomsState.checkOutAdAble">
+                                    提前退房
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
+                                     v-if="getRoomsState.checkOutAble">
+                                    办理退房
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
+                                     v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
+                                    收银
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -358,6 +437,7 @@
             flex-grow: 1;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         .user-name {
             width: 124px;
@@ -562,7 +642,7 @@
 <script>
     import AJAXService from 'AJAXService';
     import util from 'util';
-    import { ID_CARD_TYPE, FOOD_STATE } from '../const';
+    import { ID_CARD_TYPE, FOOD_STATE, ORDER_STATUS_ICON } from '../const';
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
@@ -579,7 +659,8 @@
         data(){
             return{
                 ID_CARD_TYPE,
-                FOOD_STATE
+                FOOD_STATE,
+                ORDER_STATUS_ICON
             }
         },
         computed: {
@@ -628,20 +709,6 @@
             hideModal() {
                 this.$emit('hideOrderDetail');
                 $("#orderDetail").modal("hide");
-            },
-            getOrderState(state){
-                switch(state){
-                    case 2:
-                        return {text: '已预订', borderColor: '#ffffff #ffba75', backgroundColor: '#ffba75'};
-                    case 3:
-                        return {text: '进行中', borderColor: '#ffffff #82beff', backgroundColor: '#82beff'};
-                    case 4:
-                        return {text: '已取消', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    case 5:
-                        return {text: '已完成', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'};
-                    default:
-                        return {};
-                }
             },
             /**根据状态获取对应的图标
              * 0-餐, 3-住
@@ -704,7 +771,7 @@
                         }
                     });
                 }
-                return Math.abs(price.toFixed(2));
+                return Number(price.toFixed(2));
             },
             filterPayMents(arr, type1,type2) {
                 let newPayMents = [];
@@ -717,11 +784,11 @@
                 }
                 return newPayMents;
             },
-            getTotalPrice(arr) {
+            getTotalPrice(arr, dis) {
                 let price = 0;
                 if (arr) {
                     arr.forEach(item => {
-                        price += item.price * item.amount;
+                        price += (dis ? item.price : item.originPrice) * item.amount;
                     });
                 }
                 return price.toFixed(2);

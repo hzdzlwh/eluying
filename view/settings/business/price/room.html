@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>订单来了——价格维护</title>
+  <link rel="Shortcut Icon" href="/static/image/favicon.ico">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+  <link rel="stylesheet" href="/static/css/dist/main.min.css">
+  <script src="/static/js/app/dist/common.js"></script>
+  <script src="/static/js/app/dist/price/roomEntry.js"></script>
+</head>
+<body>
+<!--修改淡旺季-->
+<div class="modal fade" role="dialog" id="editSeason">
+  <div class="modal-dialog modal-w1050">
+    <div class="modal-content clearfloat">
+      <div class="editPrices editSeason clearfloat">
+        <h1 class="seasonCategory">淡旺季管理</h1>
+
+        <h2>数据来源</h2>
+        <ul class='nav nav-tabs clearfloat' role='tablist'></ul>
+        <div class="tab-content clearfloat">
+        </div>
+        <div class="busySeason">
+          <h1>旺季</h1>
+
+          <div>从
+            <!-- 我怎么会写这么蠢的东西 -->
+            <select class="monthSelect" id="busyStartMonth" name="busyStartMonth">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>月
+            <select id="busyStartDay" name="busyStartDay">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>日
+            到<select class="monthSelect" id="busyEndMonth" name="busyEndMonth">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>月
+            <select id="busyEndDay" name="busyEndDay">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>日
+
+          </div>
+        </div>
+        <div class="slackSeason">
+          <h1>淡季</h1>
+
+          <div>从
+            <select class="monthSelect" id="slackStartMonth" name="slackStartMonth">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>月
+            <select id="slackStartDay" name="slackStartDay">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>日
+            到<select class="monthSelect" id="slackEndMonth" name="slackEndMonth">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>月
+            <select id="slackEndDay" name="slackEndDay">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>日
+          </div>
+        </div>
+
+        <div class="seasonOperate operate busy-operate">
+          <div class="first">
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
+                   data-target="#editSeasonSalePrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="seasonOperate operate slack-operate" style="position:absolute;top: 633px;right: 0px;">
+          <div class="first">
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonSalePriceButton" data-toggle="modal"
+                   data-target="#editSeasonSalePrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+            <div class="operateItem hide">
+              <div class="clickDiv editSeasonNetPriceButton" data-toggle="modal" data-target="#editSeasonNetPrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="seasonFooter footer">
+          <button class="btn-ok" id="editSeasonOk">确认修改</button>
+          <button class="cancel" id="editSeasonCancel">取消修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--按月份修改-->
+<div class="modal fade" role="dialog" id="editMonth">
+  <div class="modal-dialog modal-w1050">
+    <div class="modal-content clearfloat">
+      <div class="editPrices editMonth clearfloat">
+        <h1 class="monthCategory">月份管理</h1>
+
+        <h2>数据来源</h2>
+        <ul class='nav nav-tabs clearfloat' role='tablist'></ul>
+
+        <h1 class="month"></h1>
+
+        <div class="changeMonth">
+          <button id="prevMonth" class="hide">&lt前一月</button>
+          <button id="nextMonth">后一月&gt</button>
+        </div>
+        <div class="tab-content clearfloat">
+        </div>
+
+        <div class="operate">
+          <div class="first">
+            <div class="operateItem hide">
+              <div class="clickDiv" id="editMonthSalePriceButton" data-toggle="modal" data-target="#editMonthSalePrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+            <div class="operateItem hide">
+              <div class="clickDiv" id="editMonthNetPriceButton" data-toggle="modal" data-target="#editMonthNetPrice">
+                <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+                <p>修改价格</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer clearfloat">
+          <button class="btn-ok" id="editMonthOk">确认修改</button>
+          <button class="cancel" id="editMonthCancel">取消修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改月份零售价格-->
+<div class="modal fade" role="dialog" id="editMonthSalePrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改零售价</h1>
+          <ul>
+            <li>
+              <label for="retailPrice">零售价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required floatNumber"
+                     id="monthRetailPrice" name="monthRetailPrice"/>
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editMonthSalePriceOk">确认</button>
+          <button class="btn-cancel" id="editMonthSalePriceCancel">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改月份网络协议价格-->
+<div class="modal fade" role="dialog" id="editMonthNetPrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改微官网价</h1>
+          <ul>
+            <!--<li>
+              <label for="seasonCommissionPrice">协议价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
+                     id="monthCommissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
+            </li>-->
+            <li>
+              <label for="seasonNetPrice">微官网价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
+                     id="monthNetPrice" name="netPrice"/>
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editMonthNetPriceOk">确认</button>
+          <button class="btn-cancel" id="editMonthNetPriceCancel">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改季度网络价-->
+<div class="modal fade" role="dialog" id="editSeasonNetPrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改微官网价</h1>
+          <ul>
+            <!--<li>
+              <label for="seasonCommissionPrice">协议价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
+                     id="seasonCommissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
+            </li>-->
+            <li>
+              <label for="seasonNetPrice">微官网价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
+                     id="seasonNetPrice" name="netPrice"/>
+            </li>
+
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editSeasonNetPriceOk">确认</button>
+          <button class="btn-cancel" id="editSeasonNetPriceCancel">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改季度零售价-->
+<div class="modal fade" role="dialog" id="editSeasonSalePrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改零售价</h1>
+          <ul>
+            <li>
+              <label for="retailPrice">零售价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required floatNumber"
+                     id="seasonRetailPrice" name="seasonRetailPrice"/>
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editSeasonSalePriceOk">确认</button>
+          <button class="btn-cancel" id="editSeasonPriceCancel">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改零售价-->
+<div class="modal fade" role="dialog" id="editSalePrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改零售价</h1>
+          <ul>
+            <li>
+              <label for="retailPrice">零售价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required floatNumber" id="retailPrice"
+                     name="retailPrice"/>
+            </li>
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editSalePriceOk">确认修改</button>
+          <button class="btn-cancel" id="editPriceCancel">取消修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--修改网络价和协议价-->
+<div class="modal fade" role="dialog" id="editNetPrice">
+  <div class="modal-dialog modal-w626">
+    <div class="modal-content clearfloat">
+      <div class="editPrice clearfloat">
+        <form class="inputFiled">
+          <h1>修改微官网价</h1>
+          <ul>
+            <!--<li>
+              <label for="commissionPrice">协议价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required"
+                     id="commissionPrice" name="commissionPrice" placeholder="网络渠道实际赚取底价＝网络价－佣金"/>
+            </li>-->
+            <li>
+              <label for="netPrice">微官网价</label>
+              <input maxlength="8" number="true" range="[0,99999999]" type="text" class="text required" id="netPrice"
+                     name="netPrice"/>
+            </li>
+
+          </ul>
+        </form>
+        <div class="footer">
+          <button class="btn-ok" id="editNetPriceOk">确认修改</button>
+          <button class="btn-cancel" id="editNetPriceCancel">取消修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--页面主体 -->
+<div class="mainContainer clearfloat">
+  <div class="content clearfloat">
+    <div class="title clearfloat topMenu">
+      <span class="campName"></span>
+
+      <div class="datePick">
+        <button class="prevWeek">&lt前一周</button>
+        <input type="text" class="dateContainer" id="datePicker"/>
+        <label class="calender" for="datePicker"></label>
+        <button class="nextWeek">后一周&gt</button>
+        <p class="tip">今天以前（包括今天）的价格不能修改！</p>
+      </div>
+    </div>
+    <div class="priceGrid">
+
+    </div>
+    <div class="operate priceOperate" style="margin-top: 54px;">
+      <div class="first">
+        <div class="operateItem hide editSalePrice">
+          <div class="clickDiv" id="editSalePriceButton" data-toggle="modal" data-target="#editSalePrice">
+            <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改零售价">
+
+            <p>修改零售价</p>
+          </div>
+        </div>
+        <div class="operateItem hide editNetPrice">
+          <div class="clickDiv" id="editNetPriceButton" data-toggle="modal" data-target="#editNetPrice">
+            <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改价格">
+
+            <p>修改微官网价</p>
+          </div>
+        </div>
+      </div>
+      <div class="second hide">
+        <div class="operateItem">
+          <div class="clickDiv" id="editSeasonButton" data-toggle="modal" data-target="#editSeason">
+            <img src="/static/image/icon_ji.png" alt="淡旺季管理">
+
+            <p>淡旺季管理</p>
+          </div>
+        </div>
+        <div class="operateItem">
+          <div class="clickDiv" id="editMonthButton" data-toggle="modal" data-target="#editMonth">
+            <img src="/static/image/icon_yue.png" alt="月份管理">
+
+            <p>月份管理</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
