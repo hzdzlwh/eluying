@@ -58,10 +58,12 @@
                                 </div>
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
-                                    <dd-select v-model="userOriginType" placeholder="">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
-                                        </dd-option>
-                                    </dd-select>
+                                    <div class="select-component-container">
+                                        <dd-select v-model="userOriginType" placeholder="">
+                                            <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
+                                            </dd-option>
+                                        </dd-select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -489,8 +491,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            div:last-child {
+            .userInfo-item:last-child,.select-component-container {
                 margin-right: 16px;
+                display: inline-block;
             }
         }
         .userVip-list {
@@ -823,6 +826,7 @@
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
+                isLoading: false
             }
         },
 
@@ -1223,6 +1227,10 @@
                     modal.somethingAlert("请完善商超信息！");
                     return false;
                 }
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
                 if (this.vipDiscountDetail.isVip) {
                     params.vipId = this.vipDiscountDetail.vipDetail.vipId;
@@ -1318,6 +1326,7 @@
                 if (this.checkState === "editOrder") {
                     AJAXService.ajaxWithToken('get', '/order/modify', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 this.$emit('refreshView');
@@ -1329,6 +1338,7 @@
                 } else {
                     AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 if(this.checkState === 'ing' || this.checkState === 'finish') {

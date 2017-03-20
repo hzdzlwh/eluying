@@ -660,7 +660,8 @@
             return{
                 ID_CARD_TYPE,
                 FOOD_STATE,
-                ORDER_STATUS_ICON
+                ORDER_STATUS_ICON,
+                isLoading: false
             }
         },
         computed: {
@@ -797,6 +798,10 @@
                 return util.timeFormat(date);
             },
             checkInOrCheckOut(type) {
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
@@ -812,10 +817,13 @@
                         } else {
                             $('#checkOut').modal({backdrop: 'static'});
                         }
-
+                        this.isLoading = false;
                         this.hideModal();
                     })
-                    .catch(res => modal.somethingAlert(res.msg));
+                    .catch(res => {
+                        modal.somethingAlert(res.msg);
+                        this.isLoading = false;
+                    });
             },
             showCashier() {
                 this.hideModal();
