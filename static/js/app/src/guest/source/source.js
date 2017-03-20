@@ -30,6 +30,7 @@ $(function(){
             scope.$apply();
         });
         scope.hideRepeatTips = function() {
+            scope.errorTipsShow = false;
             scope.repeatTipsShow = false;
         };
         scope.addGuest = function(){
