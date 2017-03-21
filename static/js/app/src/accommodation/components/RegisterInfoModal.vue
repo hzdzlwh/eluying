@@ -271,13 +271,13 @@
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
                                                     <span>
                                                         原价
                                                         <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
                                                     </span>
                                                     <span class="discount-num">
-                                                        {{ item.items[0].vipShowDiscount }}
+                                                        {{ item.items[0].showDiscount }}
                                                     </span>
                                                 </span>
                                             </div>
