@@ -687,7 +687,7 @@
                     },
                     {
                         title: '手机号',
-                        dataIndex: 'insurantsMobile',
+                        render: (h, row) => (<span>{row.holderMobile || row.insurantsMobile}</span>),
                         width: 105
                     },
                     {
