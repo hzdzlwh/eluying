@@ -204,7 +204,7 @@ var network = {
 							localStorage.setItem("userName", data.data.user.realName);
 							localStorage.setItem("userType", data.data.user.userType);
 							localStorage.setItem("uid", data.data.user.uid);
-                            localStorage.setItem('switches', JSON.stringify(data.data.switches));
+                            data.data.switches && localStorage.setItem('switches', JSON.stringify(data.data.switches));
                             // localStorage.setItem("token", data.data.user.token);
 							window.location.href = "/view/accommodation/calender/calender.html";
 						}
