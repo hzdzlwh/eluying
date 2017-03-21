@@ -108,7 +108,7 @@
                     },
                     {
                         title: '手机号码',
-                        dataIndex: 'insurantsMobile',
+                        render: (h, row) => (<span>{row.holderMobile || row.insurantsMobile}</span>),
                         width: 123
                     },
                     {
@@ -139,7 +139,7 @@
                     },
                     {
                         title: '性别',
-                        render: (h, row) => (<span>{sexMap[row.insurantsHolderSex]}</span>),
+                        render: (h, row) => (<span>{sexMap[row.holderSex]}</span>),
                         width: 46
                     },
                     {
