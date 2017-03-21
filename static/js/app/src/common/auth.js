@@ -3,6 +3,7 @@
  */
 
 var $ajax = require('./AJAXService');
+import modal from './modal';
 
 const ACCOMMODATION_ID = 2;
 const VIP_ID = 11;
@@ -98,39 +99,56 @@ function checkMaintenance() {
     // showMaintenance('为了提供更快速、便捷的服务，订单来了将于2016-06-03（周一）14:00~16:00进行系统升级，届时网站与APP将无法访问，请您提前安排好工作。因此给您造成的不便，敬请谅解！');
 }
 
+/**
+ * 维护跳转，版本跳转，返回模块权限
+ * @param moduleId
+ * @returns {boolean}
+ */
+function checkAccess(moduleId) {
+    try {
+        const maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
+        !maintenanceClosed && checkMaintenance();
+        const version = checkVersion();
+        const moduleAuth = checkModule(moduleId);
+        if (version && version.update) {
+            location.href = UPGRADE_URL;
+        } else if (version && version.expired) {
+            location.href = EXPIRED_URL;
+        } else {
+            return moduleAuth;
+        }
+    } catch (e) {
+        modal.alert('请重新登录');
+        setTimeout(() => {
+            location.href = '/';
+        }, 3000)
+    }
+}
+
+/**
+ * 维护跳转，版本跳转，模块权限跳转
+ * @param moduleId
+ * @param url
+ */
 function checkAuth(moduleId, url) {
-    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
-    !maintenanceClosed && checkMaintenance();
-    url = url || '/view/tips/noauth.html';
-    var version = checkVersion();
-    var moduleAuth = checkModule(moduleId);
-    if (version && version.update) {
-        location.href = UPGRADE_URL;
-    } else if (version && version.expired) {
-        location.href = EXPIRED_URL;
-    } else if (!moduleAuth) {
+    const access = checkAccess(moduleId);
+    if (!access) {
+        url = url || '/view/tips/noauth.html';
         location.href = url;
     }
 }
 
-function checkAccess(moduleId) {
-    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
-    !maintenanceClosed && checkMaintenance();
-    var version = checkVersion();
-    var moduleAuth = checkModule(moduleId);
-
-    if (version && version.update) {
-        location.href = UPGRADE_URL;
-    } else if (version && version.expired) {
-        location.href = EXPIRED_URL;
-    } else {
-        return moduleAuth;
-    }
-}
-
 function checkSwitch(id) {
-    const switchStatus = switches.find(i => i.id === id);
-    return switchStatus && !!switchStatus.status;
+    try {
+        const switchStatus = switches.find(i => i.id === id);
+        return switchStatus && !!switchStatus.status;
+    } catch (e) {
+        modal.alert('请重新登录');
+        setTimeout(() => {
+            location.href = '/';
+        }, 3000);
+    }
+
 }
 
 exports.checkAuth = checkAuth;
