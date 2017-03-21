@@ -17,19 +17,16 @@ export const routes = [
         path: '/vip',
         redirect: '/vip/list',
         component: vip,
-        meta: {
-            step: 1
-        },
         children: [
             {
                 path: '/vip/list',
                 component: list
-            }
-            // ,
-            // {
-            //     path: '/vip/setting',
-            //     component: setting
-            // },
+
+            },
+            {
+                path: '/vip/setting',
+                //component: setting
+            },
         ]
     },
     {
@@ -38,7 +35,6 @@ export const routes = [
         meta: {
             step: 2
         }
-
     },
     {
         path: '/non-vip',
