@@ -155,7 +155,7 @@ var AJAXService = {
                     }
                 });
 
-                errorCallback(e);
+                errorCallback && errorCallback(e);
             }
         });
     },
@@ -174,7 +174,7 @@ var AJAXService = {
         data.campId = data.campId || localStorage.getItem("campId");
         data.uid = localStorage.getItem("uid");
         data.terminal = 1;
-        data.version = data.version || 17;
+        data.version = data.version || 18;
         data.kick = true;
         var array = [];
         for(var key in data){
