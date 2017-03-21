@@ -58,10 +58,12 @@
                                 </div>
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
-                                    <dd-select v-model="userOriginType" placeholder="">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
-                                        </dd-option>
-                                    </dd-select>
+                                    <div class="select-component-container">
+                                        <dd-select v-model="userOriginType" placeholder="">
+                                            <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
+                                            </dd-option>
+                                        </dd-select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -269,13 +271,13 @@
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
                                                     <span>
                                                         原价
                                                         <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
                                                     </span>
                                                     <span class="discount-num">
-                                                        {{ item.items[0].vipShowDiscount }}
+                                                        {{ item.items[0].showDiscount }}
                                                     </span>
                                                 </span>
                                             </div>
@@ -490,8 +492,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            div:last-child {
+            .userInfo-item:last-child,.select-component-container {
                 margin-right: 16px;
+                display: inline-block;
             }
         }
         .userVip-list {
@@ -814,6 +817,8 @@
                 phone: '',
                 userOriginType: -1,
                 userOrigins: [],
+                userSelfOrigins: [],
+                userGroupOrigins: [],
                 phoneValid: true,
                 remark: '',
                 enterList: [],
@@ -827,6 +832,7 @@
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
+                isLoading: false
             }
         },
 
@@ -899,11 +905,22 @@
         },
         methods:{
             getData(){
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true }, (res) => {
                     if (res.code === 1) {
-                        this.userOrigins = res.data.list;
-                        this.userOrigins.unshift({ id: -1, name: '自来客' });
+                        const originsList = res.data.list;
+                        let otherOrigins = [];
+                        this.userOrigins = originsList;
                         this.userOriginType = this.userOrigins[0].id;
+                        originsList.forEach(origin => {
+                            if (origin.id === -1 || origin.id === -4) {
+                                this.userSelfOrigins.push(origin);
+                            } else if(origin.id === -5) {
+                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                            } else if(origin.id > 0) {
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -1227,9 +1244,13 @@
                     modal.somethingAlert("请完善商超信息！");
                     return false;
                 }
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
                 if (this.vipDiscountDetail.isVip) {
-                    params.vipId = this.vipDiscountDetail.vipDetail.vipId;
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
                 }
                 if (this.checkState === 'ing') {
                     params.type = 0;
@@ -1322,6 +1343,7 @@
                 if (this.checkState === "editOrder") {
                     AJAXService.ajaxWithToken('get', '/order/modify', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 this.$emit('refreshView');
@@ -1333,6 +1355,7 @@
                 } else {
                     AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 if(this.checkState === 'ing' || this.checkState === 'finish') {
