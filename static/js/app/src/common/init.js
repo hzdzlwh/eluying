@@ -23,7 +23,9 @@ export default function (option) {
     // 错误检测
     if (process.env.NODE_ENV === 'production') {
         Raven
-            .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237')
+            .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237', {
+                ignoreUrls: [/dingdandao\.com:\d+/]
+            })
             .install();
         Raven.setUserContext({
             uid: localStorage.getItem('uid'),
