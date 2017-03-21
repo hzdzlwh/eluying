@@ -24,11 +24,12 @@ export const routes = [
             {
                 path: '/vip/list',
                 component: list
-            },
-            {
-                path: '/vip/setting',
-                component: setting
-            },
+            }
+            // ,
+            // {
+            //     path: '/vip/setting',
+            //     component: setting
+            // },
         ]
     },
     {
@@ -36,15 +37,15 @@ export const routes = [
         component: company,
         meta: {
             step: 2
-        },
+        }
 
     },
     {
-        path: '／non-vip',
+        path: '/non-vip',
         component: nonVip,
         meta: {
             step: 3
-        },
+        }
     }
 ];
 
