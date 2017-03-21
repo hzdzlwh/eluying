@@ -27,13 +27,19 @@ $(function(){
             isAll: true
         }, function(result){
             scope.guestList = result.data.list;
-            //scope.companyStatus = result.data.list.companyList.length > 0;
+            scope.companyStatus = result.data.companyStatus;
             scope.$apply();
         });
         scope.hideRepeatTips = function() {
             scope.errorTipsShow = false;
             scope.repeatTipsShow = false;
         };
+        scope.positiveFilter = function(item) {
+            return item.id > 0;
+        }
+        scope.negativeFilter = function(item) {
+            return item.id < 0;
+        }
         scope.addGuest = function(){
             if(!scope.newGuest){
                 scope.errorTipsShow = true;
@@ -55,7 +61,7 @@ $(function(){
                         isAll: true
                     }, function(result){
                         scope.guestList = result.data.list;
-                        //scope.companyStatus = result.data.list.companyList.length > 0;
+                        scope.companyStatus = result.data.companyStatus;
                         scope.newGuest = '';
                         $(".modal").modal("hide");
                         scope.$apply();
@@ -73,7 +79,7 @@ $(function(){
                     isAll: true
                 }, function(result){
                     scope.guestList = result.data.list;
-                    //scope.companyStatus = result.data.list.companyList.length > 0;
+                    scope.companyStatus = result.data.companyStatus;
                     $(".modal").modal("hide");
                     scope.$apply();
                 });
