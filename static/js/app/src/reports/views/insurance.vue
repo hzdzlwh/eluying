@@ -1,5 +1,5 @@
 <template>
-    <div style="top: 2px;position: relative;">
+    <div>
         <p>按保单生成时间统计</p>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
