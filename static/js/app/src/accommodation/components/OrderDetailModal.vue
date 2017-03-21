@@ -378,7 +378,7 @@
                         <dd-table :bordered="true" :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
                     </div>
                     <div class="roomModals-footer">
-                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}</span>
+                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}，已付款¥{{order.insuranceTotalPremium}}</span>
                     </div>
                 </div>
             </div>

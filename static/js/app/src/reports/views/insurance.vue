@@ -24,7 +24,7 @@
         '2': '女'
     };
     const fieldAVMap = {
-        '0': '中国',
+        '0': '中籍',
         '1': '外籍'
     };
     const cidTypeMap = {
