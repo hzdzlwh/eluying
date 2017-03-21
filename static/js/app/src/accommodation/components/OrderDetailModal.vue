@@ -378,7 +378,7 @@
                         <dd-table :bordered="true" :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
                     </div>
                     <div class="roomModals-footer">
-                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}</span>
+                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}，已付款¥{{order.insuranceTotalPremium}}</span>
                     </div>
                 </div>
             </div>
@@ -692,7 +692,7 @@
                     },
                     {
                         title: '性别',
-                        render: (h, row) => (<span>{['','男','女'][row.holderSex || row.insurantsSex]}</span>),
+                        render: (h, row) => (<span>{['','男','女'][row.insurantsSex]}</span>),
                         width: 38
                     },
                     {

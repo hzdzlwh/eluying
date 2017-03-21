@@ -1,5 +1,5 @@
 <template>
-    <div style="top: 2px;position: relative;">
+    <div>
         <p>按保单生成时间统计</p>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
@@ -24,7 +24,7 @@
         '2': '女'
     };
     const fieldAVMap = {
-        '0': '中国',
+        '0': '中籍',
         '1': '外籍'
     };
     const cidTypeMap = {
