@@ -27,7 +27,7 @@ export const routes = [
             },
             {
                 path: '/vip/setting',
-                component: setting
+                //component: setting
             },
         ]
     },
@@ -40,7 +40,7 @@ export const routes = [
 
     },
     {
-        path: '／non-vip',
+        path: '/non-vip',
         component: nonVip,
         meta: {
             step: 3
