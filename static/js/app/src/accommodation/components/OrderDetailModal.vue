@@ -692,7 +692,7 @@
                     },
                     {
                         title: '性别',
-                        render: (h, row) => (<span>{['','男','女'][row.insurantsSex]}</span>),
+                        render: (h, row) => (<span>{['','男','女'][row.holderSex || row.insurantsSex]}</span>),
                         width: 38
                     },
                     {
