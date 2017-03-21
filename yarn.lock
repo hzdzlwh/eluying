@@ -1521,9 +1521,9 @@ dd-common-css@0.2.1:
   version "0.2.1"
   resolved "http://registry.npm.taobao.org/dd-common-css/download/dd-common-css-0.2.1.tgz#56af5f79ebec2584a2b58c3de1e81a67f307f4db"
 
-dd-vue-component@^0.4.2:
-  version "0.4.2"
-  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.4.2.tgz#cf872d13bea425ee8c7815450672d5fcbf0dab5b"
+dd-vue-component@^0.5.0:
+  version "0.5.0"
+  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.5.0.tgz#c37e77cf7b0d4668ec46011d60988972f0122641"
   dependencies:
     dd-common-css "0.2.1"
     vue "^2.0.1"
@@ -2746,7 +2746,7 @@ json-schema@0.2.3:
   version "0.2.3"
   resolved "http://registry.npm.taobao.org/json-schema/download/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
 
-json-stringify-safe@~5.0.1:
+json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "http://registry.npm.taobao.org/json-stringify-safe/download/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
@@ -4118,6 +4118,12 @@ randomatic@^1.1.3:
 range-parser@~1.2.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/range-parser/download/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
+
+raven-js@^3.12.1:
+  version "3.12.1"
+  resolved "http://registry.npm.taobao.org/raven-js/download/raven-js-3.12.1.tgz#bec1aebbc0b14fbfe651ffff4c5692931065d418"
+  dependencies:
+    json-stringify-safe "^5.0.1"
 
 raw-loader@^0.5.1:
   version "0.5.1"

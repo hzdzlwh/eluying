@@ -37,7 +37,7 @@ $(function(){
         scope.status = {
             isOnlinePay: {
                 status: false,
-                href: '/view/setting/method/method.html',
+                href: '/view/settings/payment/method/method.html',
                 yesUrl: pics['pay-yes'],
                 yesText: '启用手机网站支付',
                 noUrl: pics['pay-no'],
@@ -45,7 +45,7 @@ $(function(){
             },
             campBasicInfo: {
                 status: false,
-                href: '/view/salesite/info/info.html',
+                href: '/view/settings/salesite/info/info.html',
                 yesUrl: pics['info-yes'],
                 yesText: '网站基本信息填写完整',
                 noUrl: pics['info-no'],

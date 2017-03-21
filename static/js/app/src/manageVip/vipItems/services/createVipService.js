@@ -9,11 +9,12 @@ var createVipService = function(app){
     app.service('createVipService', ['getItemsService', function(getItemsService) {
         this.addEditVip = function(vip, rootScope) {
             const data = {
-                ...vip,
-                vipLevelId: vip.level
+                ...vip
             };
             if (vip.vipUserId) {
-                delete data.phone
+                delete data.phone;
+                delete data.consumeAndDiscount;
+                delete data.vipConsumeList;
             }
 
             AJAXService.ajaxWithToken('POST',

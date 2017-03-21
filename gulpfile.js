@@ -26,14 +26,17 @@ gulp.task('browser-sync', function () {
             baseDir: './',
             index: 'login.html',
             https: true,
-            // 统计报表单页
-            middleware: function(req, res, next) {
-                if (req.url.indexOf('/view/reports') > -1) {
-                    req.url = '/view/reports/index.html';
+            // 单页
+            middleware: function (req, res, next) {
+                const goal = config.SPA.find( i => req.url.indexOf(i.url) > -1);
+                if (goal) {
+                    req.url = goal.path;
                 }
+
                 return next();
             }
-        }
+        },
+        port: gutil.env.port || config.port
     });
 });
 
@@ -120,7 +123,8 @@ gulp.task('webpack-prod', function () {
         new webpack.DefinePlugin({
             'process.env': {
                 ENV: JSON.stringify('production'),
-                NODE_ENV: JSON.stringify('production')
+                NODE_ENV: JSON.stringify('production'),
+                serverUrl: gutil.env.server || (gutil.env.test ? config.testServer : config.devServer)
             }
         }),
         new webpack.optimize.UglifyJsPlugin({
@@ -150,7 +154,8 @@ gulp.task('webpack-dev', function () {
                 new webpack.DefinePlugin({
                     'process.env': {
                         ENV: JSON.stringify('development'),
-                        NODE_ENV: JSON.stringify('development')
+                        NODE_ENV: JSON.stringify('development'),
+                        serverUrl: JSON.stringify(gutil.env.server || (gutil.env.test ? config.testServer : config.devServer))
                     }
                 })));
         return gulp.src('static/js/app/src/entry.js')
@@ -166,11 +171,11 @@ gulp.task('webpack-dev', function () {
 
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    //gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    //gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']);
+    gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
+    gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
     //gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
-    gulp.watch('**/*.html').on('change', reload);
-    gulp.watch('./static/tpl/*.html', ['file-include']);
+    // gulp.watch('**/*.html').on('change', reload);
+    // gulp.watch('./static/tpl/*.html', ['file-include']);
 });
 
 gulp.task('default', function () {

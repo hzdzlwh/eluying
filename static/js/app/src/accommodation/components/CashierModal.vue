@@ -443,8 +443,11 @@
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
-                        subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
+                        //subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
                     };
+                    if (this.business.subOrderPenaltys) {
+                        businessJson.subOrderPenaltys =  JSON.parse(this.business.subOrderPenaltys);
+                    }
                     /*if (this.business.penalty) {
                         payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
                     }*/

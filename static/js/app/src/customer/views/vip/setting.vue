@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>订单来了-会员设置</title>
-    <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/dist/main.min.css">
-    <link rel="stylesheet" href="/static/css/dist/setting.min.css">
-    <script src="/static/js/app/dist/common.js"></script>
-    <script src="/static/js/app/dist/manageVip/setting.js"></script>
-</head>
-<body>
+<template>
     <div class="vip-container">
         <ul class="restaurant-head-nav" style="margin-top: 20px">
             <li>
@@ -205,5 +191,18 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</template>
+<style>
+</style>
+<script>
+    export default{
+        data() {
+            return {
+               
+            }
+        },
+        methods: {
+        
+        }
+    }
+</script>

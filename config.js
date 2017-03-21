@@ -37,7 +37,15 @@ module.exports = {
         'linesite/operation': './static/js/app/src/linesite/operation/operation.js',
         'salesite/detail': './static/js/app/src/salesite/detail/detail.js',
         'reports/reports': './static/js/app/src/reports/main.js',
-        'manageVip/setting': './static/js/app/src/manageVip/setting.js'
+        'manageVip/setting': './static/js/app/src/manageVip/setting.js',
+        'customer/customer': './static/js/app/src/customer/main.js'
     },
-    html: ['./static/tpl/feature.html']
+    html: ['./static/tpl/feature.html'],
+    port: 3000,
+    devServer: '//www.dingdandao.com:3443',
+    testServer: '//www.dingdandao.com:1443',
+    SPA: [
+        { url: '/view/reports', path: '/view/reports/index.html' },
+        { url: '/view/customer', path: '/view/customer/index.html' }
+    ]
 };

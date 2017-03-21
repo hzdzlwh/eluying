@@ -9,8 +9,16 @@ var baseUrl = AJAXService.urls.host;
 var networkAction = require("networkAction");
 require('bootstrap');
 require('cookie');
+import init from '../common/init';
 
-
+init({
+    header: false,
+    leftMenu: false,
+    topMenu: false,
+    mainContainer: false,
+    centerModals: false,
+    clearModal: false
+});
 var resposiveWindow = function(){
     $("html").css({
         "font-size": parseFloat($(window).width()) / 1920 * 20 + 'px'
@@ -369,7 +377,7 @@ $(document).ready(function(){
         if(result === true){
             AJAXService.ajaxWithToken("POST", "loginUrl", {
                 terminal: 1,
-                version: 4,
+                version: 17,
                 password: password,
                 phone: loginName
             }, function(data){
@@ -396,6 +404,7 @@ $(document).ready(function(){
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);
                     localStorage.setItem("token", data.data.user.token);
+                    localStorage.setItem('switches', JSON.stringify(data.data.switches));
                     localStorage.removeItem('maintenanceClosed');
                     //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();
