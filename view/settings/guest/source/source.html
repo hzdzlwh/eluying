@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="btns clearfloat">
-                <div class="btn-cancel sbtn sbtn-cancel cancel">取消</div>
+                <div class="btn-cancel sbtn sbtn-cancel cancel" ng-click="cancelAdd()">取消</div>
                 <div class="btn-ok sbtn sbtn-ok confirm" ng-click="addGuest()">确定</div>
             </div>
         </div><!-- /.modal-content -->
@@ -67,23 +67,13 @@
                     <div class="col2">操作</div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="hr1"></div>
-                <div class="srow fit">
-                    <div class="col1">自来客</div>
-                    <div class="col2"><div class="hr2"></div></div>
-                    <div class="clearfloat"></div>
-                </div>
-                <div class="hr1"></div>
-                <div class="srow fit">
-                    <div class="col1">会员</div>
-                    <div class="col2"><div class="hr2"></div></div>
-                    <div class="clearfloat"></div>
-                </div>
-                <div class="hr1"></div>
-                <div class="srow fit" ng-if="companyStatus">
-                    <div class="col1">企业</div>
-                    <div class="col2"><div class="hr2"></div></div>
-                    <div class="clearfloat"></div>
+                <div ng-repeat="guest in guestList | filter: negativeFilter">
+                    <div class="hr1"></div>
+                    <div class="srow fit">
+                        <div class="col1">{{guest.name}}</div>
+                        <div class="col2"><div class="hr2"></div></div>
+                        <div class="clearfloat"></div>
+                    </div>
                 </div>
                 <div class="hr1" ng-if="companyStatus"></div>
                 <div class="srow">
@@ -96,7 +86,7 @@
                     </div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="srow" ng-repeat="guest in guestList">
+                <div class="srow" ng-repeat="guest in guestList | filter: positiveFilter">
                     <div class="col1 col-other-guest">{{guest.name}}</div>
                     <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest" ng-click="toDeleteGuest(guest.id)">删除</div>
                     <div class="clearfloat"></div>

@@ -30,7 +30,7 @@
                                 <div class="userInfo-item vip-level-container">
                                     <label class="label-text">手机号</label>
                                     <span>{{ order.customerPhone }}</span>
-                                    <span v-if="order.isVip">
+                                    <span v-if="order.discountChannel === 1">
                                         <span class="vip-level-img" style="top: 0;"></span>
                                         <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
                                     </span>
@@ -70,10 +70,10 @@
                                                 </dl>
                                             </div>
                                         </div>
-                                        <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                        <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num">
-                                                {{ item.vipShowDiscount }}
+                                                {{ item.showDiscount }}
                                             </span>
                                         </span>
                                     </div>
@@ -114,10 +114,10 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.foodPrice}}</span>
                                             </div>
-                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
+                                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
+                                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                                 <span class="discount-num">
-                                                    {{ item.vipShowDiscount }}
+                                                    {{ item.showDiscount }}
                                                 </span>
                                             </span>
                                         </div>
@@ -207,10 +207,10 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{item.totalPrice}}</span>
                                             </div>
-                                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
                                             <span>原价<span class="origin-price">¥{{(item.originPrice * item.amount * item.timeAmount).toFixed(2) }}</span></span>
                                             <span class="discount-num">
-                                                {{ item.vipShowDiscount }}
+                                                {{ item.showDiscount }}
                                             </span>
                                         </span>
                                         </div>
@@ -231,10 +231,10 @@
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{getTotalPrice(item['items'], true)}}</span>
                                             </div>
-                                            <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                            <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
                                                 <span>原价<span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span></span>
                                                 <span class="discount-num">
-                                                    {{ item.items[0].vipShowDiscount }}
+                                                    {{ item.items[0].showDiscount }}
                                                 </span>
                                             </span>
                                         </div>
@@ -679,6 +679,7 @@
                 ID_CARD_TYPE,
                 FOOD_STATE,
                 ORDER_STATUS_ICON,
+                isLoading: false,
                 columns: [
                     {
                         title: '被保人姓名',
@@ -856,6 +857,10 @@
                 return util.timeFormat(date);
             },
             checkInOrCheckOut(type) {
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
@@ -871,10 +876,13 @@
                         } else {
                             $('#checkOut').modal({backdrop: 'static'});
                         }
-
+                        this.isLoading = false;
                         this.hideModal();
                     })
-                    .catch(res => modal.somethingAlert(res.msg));
+                    .catch(res => {
+                        modal.somethingAlert(res.msg);
+                        this.isLoading = false;
+                    });
             },
             showCashier() {
                 this.hideModal();

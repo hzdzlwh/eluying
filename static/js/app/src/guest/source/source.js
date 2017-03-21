@@ -23,15 +23,23 @@ $(function(){
         scope.repeatTipsShow = false;
         scope.errorTipsShow = false;
         AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-            type: 2
+            type: 2,
+            isAll: true
         }, function(result){
             scope.guestList = result.data.list;
             scope.companyStatus = result.data.companyStatus;
             scope.$apply();
         });
         scope.hideRepeatTips = function() {
+            scope.errorTipsShow = false;
             scope.repeatTipsShow = false;
         };
+        scope.positiveFilter = function(item) {
+            return item.id > 0;
+        }
+        scope.negativeFilter = function(item) {
+            return item.id < 0;
+        }
         scope.addGuest = function(){
             if(!scope.newGuest){
                 scope.errorTipsShow = true;
@@ -44,12 +52,13 @@ $(function(){
                 type: 2,
                 channelName: scope.newGuest
             }, function(result){
-                if (result.code === 5) {
+                if (result.code === 2) {
                     scope.repeatTipsShow = true;
                     scope.$apply();
                 } else if (result.code === 1) {
                     AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                        type: 2
+                        type: 2,
+                        isAll: true
                     }, function(result){
                         scope.guestList = result.data.list;
                         scope.companyStatus = result.data.companyStatus;
@@ -66,7 +75,8 @@ $(function(){
                 channelId: scope.guestToDelete
             }, function(result){
                 AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                    type: 2
+                    type: 2,
+                    isAll: true
                 }, function(result){
                     scope.guestList = result.data.list;
                     scope.companyStatus = result.data.companyStatus;
@@ -74,6 +84,9 @@ $(function(){
                     scope.$apply();
                 });
             });
+        };
+        scope.cancelAdd = function() {
+            scope.hideRepeatTips();
         };
         scope.toDeleteGuest = function(id){
             scope.guestToDelete = id;
