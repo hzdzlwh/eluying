@@ -23,10 +23,11 @@ $(function(){
         scope.repeatTipsShow = false;
         scope.errorTipsShow = false;
         AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-            type: 2
+            type: 2,
+            isAll: true
         }, function(result){
             scope.guestList = result.data.list;
-            scope.companyStatus = result.data.companyStatus;
+            //scope.companyStatus = result.data.list.companyList.length > 0;
             scope.$apply();
         });
         scope.hideRepeatTips = function() {
@@ -50,10 +51,11 @@ $(function(){
                     scope.$apply();
                 } else if (result.code === 1) {
                     AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                        type: 2
+                        type: 2,
+                        isAll: true
                     }, function(result){
                         scope.guestList = result.data.list;
-                        scope.companyStatus = result.data.companyStatus;
+                        //scope.companyStatus = result.data.list.companyList.length > 0;
                         scope.newGuest = '';
                         $(".modal").modal("hide");
                         scope.$apply();
@@ -67,10 +69,11 @@ $(function(){
                 channelId: scope.guestToDelete
             }, function(result){
                 AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                    type: 2
+                    type: 2,
+                    isAll: true
                 }, function(result){
                     scope.guestList = result.data.list;
-                    scope.companyStatus = result.data.companyStatus;
+                    //scope.companyStatus = result.data.list.companyList.length > 0;
                     $(".modal").modal("hide");
                     scope.$apply();
                 });

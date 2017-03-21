@@ -96,7 +96,7 @@
                     </div>
                     <div class="clearfloat"></div>
                 </div>
-                <div class="srow" ng-repeat="guest in guestList">
+                <div class="srow" ng-repeat="guest in guestList.slice(3)">
                     <div class="col1 col-other-guest">{{guest.name}}</div>
                     <div class="col2 delete" data-toggle="modal" data-target="#deleteGuest" ng-click="toDeleteGuest(guest.id)">删除</div>
                     <div class="clearfloat"></div>
