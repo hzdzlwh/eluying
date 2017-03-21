@@ -813,6 +813,8 @@
                 phone: '',
                 userOriginType: -1,
                 userOrigins: [],
+                userSelfOrigins: [],
+                userGroupOrigins: [],
                 phoneValid: true,
                 remark: '',
                 enterList: [],
@@ -899,11 +901,22 @@
         },
         methods:{
             getData(){
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true }, (res) => {
                     if (res.code === 1) {
-                        this.userOrigins = res.data.list;
-                        this.userOrigins.unshift({ id: -1, name: '自来客' });
+                        const originsList = res.data.list;
+                        let otherOrigins = [];
+                        this.userOrigins = originsList;
                         this.userOriginType = this.userOrigins[0].id;
+                        originsList.forEach(origin => {
+                            if (origin.id === -1 || origin.id === -4) {
+                                this.userSelfOrigins.push(origin);
+                            } else if(origin.id === -5) {
+                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                            } else if(origin.id > 0) {
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
                     } else {
                         modal.somethingAlert(res.msg);
                     }
