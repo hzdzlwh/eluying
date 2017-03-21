@@ -18,7 +18,7 @@
 </template>
 <style  lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
-    .reports-container {
+    .customer-container {
         padding-top: 89px;
         padding-left: 244px;
         padding-bottom: 50px;
