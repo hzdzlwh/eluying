@@ -1,38 +1,13 @@
 <template>
-<<<<<<< HEAD
-    <div class="vip-contain">
-        <ul class="leftMenu">
-            <!---->
-            <li class="leftMenu-item">
-                <a href="/view/customer/vip" :class="{ active: step ===1 }" @click='changestep(1)'>会员客户</a>
-            </li>
-            <li class="leftMenu-item">
-                <a href="/view/customer/company" :class="{ active: step ===2 }" @click='changestep(2)'>企业客户</a>
-            </li>
-            <li class="leftMenu-item">
-                <a href="/view/customer/non-vip" :class="{ active: step ===3 }" @click='changestep(3)'>非会员客户</a>
-            </li>
-        </ul>
-        <router-view></router-view>
-    </div>
-</template>
-<style>
-.vip-contain {
-    padding-top: 89px;
-    padding-left: 144px;
-    padding-bottom: 50px;
-    position: relative;
-}
-=======
 <div class="customer-container">
     <ul class="leftMenu">
-        <li class="leftMenu-item">
+        <li class="leftMenu-item" @click='changestep(1)'>
             <router-link to="/vip">会员客户</router-link>
         </li>
-        <li class="leftMenu-item">
+        <li class="leftMenu-item" @click='changestep(2)'>
             <router-link to="/company">企业客户</router-link>
         </li>
-        <li class="leftMenu-item">
+        <li class="leftMenu-item" @click='changestep(3)'>
             <router-link to="/non-vip">非会员客户</router-link>
         </li>
     </ul>
@@ -70,13 +45,11 @@
     .dd-dropdown-menu {
         z-index: 1;
     }
->>>>>>> 42823151d611066ee46636734b3a4595b7a4afc4
 </style>
 <script>
 export default {
     data() {
             return {
-<<<<<<< HEAD
                 step: 1
             }
         },
@@ -90,9 +63,6 @@ export default {
         },
         created() {
             this.changestep()
-=======
-            }
->>>>>>> 42823151d611066ee46636734b3a4595b7a4afc4
         }
 }
 </script>
