@@ -11,7 +11,7 @@
             <router-link to="/non-vip">非会员客户</router-link>
         </li>
     </ul>
-<router-view></router-view>
+    <router-view></router-view>
 </div>
 </template>
 <style>
