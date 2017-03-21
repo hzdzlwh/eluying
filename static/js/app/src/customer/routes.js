@@ -17,9 +17,6 @@ export const routes = [
         path: '/vip',
         redirect: '/vip/list',
         component: vip,
-        meta: {
-            step: 1
-        },
         children: [
             {
                 path: '/vip/list',
@@ -34,17 +31,10 @@ export const routes = [
     {
         path: '/company',
         component: company,
-        meta: {
-            step: 2
-        },
-
     },
     {
         path: '/non-vip',
         component: nonVip,
-        meta: {
-            step: 3
-        },
     }
 ];
 
