@@ -16,7 +16,7 @@
     </div>
 </div>
 </template>
-<style  lang="sass" rel="stylesheet/scss">
+<style lang="sass" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .customer-container {
         padding-top: 89px;
@@ -29,7 +29,7 @@
     }
     .view-container {
         position: relative;
-        width: 1000px;
+        width: 1073px;
         margin: 0 auto;
     }
     h5 {
