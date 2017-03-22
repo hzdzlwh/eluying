@@ -4,11 +4,12 @@
 import Vue from 'vue';
 import 'bootstrap';
 import App from './App';
-import {router} from './routes';
+import { router } from './routes';
 import Router from 'vue-router';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
+
 init({
     leftMenu: false
 });

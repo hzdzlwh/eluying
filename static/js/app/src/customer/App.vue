@@ -1,14 +1,14 @@
 <template>
 <div class="customer-container">
     <ul class="leftMenu">
-        <li class="leftMenu-item" @click='changestep(1)'>
+        <li class="leftMenu-item">
             <router-link to="/vip">会员客户</router-link>
         </li>
-        <li class="leftMenu-item" @click='changestep(2)'>
+        <li class="leftMenu-item">
             <router-link to="/company">企业客户</router-link>
         </li>
-        <li class="leftMenu-item" @click='changestep(3)'>
-            <router-link to="/non-vip">非会员客户</router-link>
+        <li class="leftMenu-item">
+            <router-link to="/non-vip">非会员客户13</router-link>
         </li>
     </ul>
     <div class="view-container">
@@ -48,21 +48,5 @@
 </style>
 <script>
 export default {
-    data() {
-            return {
-                step: 1
-            }
-        },
-        methods: {
-            changestep: function(step) {
-                this.step = this.$route.meta.step
-            }
-        },
-        watch: {
-            '$route': 'changestep'
-        },
-        created() {
-            this.changestep()
-        }
-}
+};
 </script>

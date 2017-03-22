@@ -29,7 +29,7 @@
                                     <td>
                                         <label><img v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
                                         <div v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
-                                            <dd-select placeholder="-会员等级－">
+                                            <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
                                                 <dd-option v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
                                             </dd-select>
                                         </div>
@@ -45,7 +45,7 @@
                                     <td class="identification">
                                         <label>证件号</label>
                                         <div v-if="!vip.detail" class="select1 idcard-select">
-                                            <dd-select>
+                                            <dd-select v-model="vip.idCardType">
                                                 <dd-option v-for="type in idCardType" :value="type.key" :label="type.name"></dd-option>
                                             </dd-select>
                                         </div>
@@ -62,7 +62,7 @@
                                     <td class="gender">
                                         <label>性别</label>
                                         <div v-if="!vip.detail" class="select1 gender-select">
-                                            <dd-select>
+                                            <dd-select v-model="vip.gender">
                                                 <dd-option value="0" label="男"></dd-option>
                                                 <dd-option value="1" label="女"></dd-option>
                                             </dd-select>
@@ -72,8 +72,19 @@
                             </table>
                             <div class="formrow clearfloat">
                                 <div class="slabel">地区</div>
-                                <div class="scontent" v-if="!vip.detail">
-
+                                <div class="scontent">
+                                    <dd-select v-model="vip.provinceType" placeholder="省">
+                                        <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
+                                        </dd-option>
+                                    </dd-select>
+                                    <dd-select v-model="vip.cityType" placeholder="市">
+                                        <dd-option  v-for="option in cityItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'city'">
+                                        </dd-option>
+                                    </dd-select>
+                                    <dd-select v-model="vip.countyType" placeholder="区">
+                                        <dd-option  v-for="option in countyItems"  :value="option.id" :label="option.name" :key="option.id+option.name">
+                                        </dd-option>
+                                    </dd-select>
                                 </div>
                             </div>
                             <p>
@@ -89,15 +100,14 @@
                     </div>
                 </div>
                 <div class="dialog-foot">
-                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" ng-click="createVip()">确定</button>
-                    <button v-if="vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" ng-click="modify()">编辑</button>
+                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" @click="addEditVip">确定</button>
                     <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-ghost" ng-click="close()">取消</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" scoped>
+<style lang="sass" rel="stylesheet/scss">
 .modal-dialog {
     width: 340px;
 }
@@ -171,6 +181,11 @@
             line-height: 24px;
             float: left;
             text-align: left;
+            display: flex;
+            .dd-select-menu {
+                max-height: 300px;
+                overflow-y: scroll;
+            }
             .selectBox{
                 display: block;
                 width: 85%;
@@ -509,6 +524,9 @@
 <script>
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import http from '../../common/AJAXService';
+    import { dsyForComponent } from '../../common/dsy';
+    import modal from '../../common/modal';
+
     export default{
         props: {
             visible: Boolean
@@ -521,13 +539,19 @@
                     vipLevelName: '—'
                 }],
                 idCardType: [
-                    {key: '0', name: '身份证'},
-                    {key: '1', name: '军官证'},
-                    {key: '2', name: '通行证'},
-                    {key: '3', name: '护照'},
-                    {key: '4', name: '其他'},
-                ]
-            }
+                    { key: '0', name: '身份证' },
+                    { key: '1', name: '军官证' },
+                    { key: '2', name: '通行证' },
+                    { key: '3', name: '护照' },
+                    { key: '4', name: '其他' }
+                ],
+                provinceType: undefined,
+                cityType: undefined,
+                countyType: undefined,
+                provinceItems: dsyForComponent['0'],
+                cityItems: [],
+                countyItems: []
+            };
         },
         watch: {
             visible(val) {
@@ -536,6 +560,16 @@
                 } else {
                     $('#vipForm').modal('hide');
                 }
+            },
+            provinceType(newVal) {
+                this.cityItems = dsyForComponent[`0_${newVal}`];
+                this.cityType = 0;
+                this.countyItems = dsyForComponent[`0_${this.provinceType}_${this.cityType}`];
+                this.countyType = 0;
+            },
+            cityType(newVal) {
+                this.countyItems = dsyForComponent[`0_${this.provinceType}_${newVal}`];
+                this.countyType = 0;
             }
         },
         created() {
@@ -547,6 +581,31 @@
                     .then(res => {
                         this.levels = this.levels.concat(res.data.list);
                     });
+            },
+            addEditVip() {
+                const vip = this.vip;
+                const data = {
+                    ...vip,
+                    province: vip.provinceType && this.provinceItems[vip.provinceType].name,
+                    city: vip.cityType && this.cityItems[vip.cityType].name,
+                    county: vip.countyType && this.countyItems[vip.countyType].name
+                };
+
+                if (vip.vipUserId) {
+                    delete data.phone;
+                    delete data.consumeAndDiscount;
+                    delete data.vipConsumeList;
+                }
+
+                http.post('/vipUser/addEditVip', data)
+                    .then(res => {
+                        if (res.code === 1) {
+                            $('#vipForm').modal('hide');
+                            this.vip = { name: '', phone: '', idCardType: 0 };
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
             }
         },
         components: {
@@ -554,5 +613,5 @@
             DdOption,
             DdDatepicker
         }
-    }
+    };
 </script>

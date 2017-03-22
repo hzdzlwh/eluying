@@ -13,7 +13,7 @@
             <span><small>共计</small> {{count}}位会员</span>
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
-        <vip-form :visible="vipFormVisible"/>
+        <vip-form :vip="vip" />
     </div>
 </template>
 <style scoped>
@@ -39,14 +39,16 @@
         top: 6px;
     }
 </style>
-<script>
+<script type="text/babel">
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from '../../../common/AJAXService';
     import vipForm from '../../components/vipForm.vue';
+
     export default{
         data() {
             return {
                 vips: [],
+                vip: {},
                 pages: 0,
                 count: 0,
                 pageNo: 1,
@@ -87,18 +89,18 @@
                     },
                     {
                         title: '操作',
-                        render: (h, row) => <span>查单</span>,
+                        render: (h) => <span>查单</span>,
                         width: 60
                     }
                 ]
-            }
+            };
         },
         created() {
             this.getVips();
         },
         methods: {
             getVips(page) {
-                this.pageNo = page ? page : this.page;
+                this.pageNo = page || this.page;
                 http.get('/vipUser/getVipUserListPC', {
                     pageNo: this.pageNo,
                     searchPattern: this.searchPattern,
@@ -111,10 +113,10 @@
                             this.count = res.data.vipUserListSize;
                             this.pages = Math.ceil(res.data.vipUserListSize / 30);
                         }
-                    })
+                    });
             },
             openVipForm() {
-                this.vipFormVisible = true;
+                $('#vipForm').modal('show');
             }
         },
         components: {
@@ -122,5 +124,5 @@
             DdPagination,
             vipForm
         }
-    }
+    };
 </script>

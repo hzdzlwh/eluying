@@ -113,7 +113,6 @@ gulp.task('styles', function () {
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('static/css/dist'))
-        //.pipe(notify({title: '好棒啊！', message: 'css编译完成，站起来活动活动'}))
         .pipe(reload({stream: true}));
 });
 
@@ -147,7 +146,7 @@ gulp.task('webpack-prod', function () {
 });
 
 gulp.task('webpack-dev', function () {
-    try {
+
         var webpackDevConf = Object.assign({},
             webpackConf, {watch: true},
             webpackConf.plugins.push(
@@ -163,16 +162,17 @@ gulp.task('webpack-dev', function () {
                 gutil.log('[webpack]', stats.toString({}));
             }, webpack))
             .pipe(gulp.dest('static/js/app/dist/'))
+            .on('error', function handleError() {
+                this.emit('end'); // Recover from errors
+            })
             .pipe(reload({stream: true}));
-    } catch (e) {
 
-    }
 });
 
 gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
+    // gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
+    // gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
     gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
     gulp.watch('./static/tpl/*.html', ['file-include']);

@@ -24,31 +24,25 @@ export const routes = [
 
             },
             {
-                path: '/vip/setting',
-                //component: setting
-            },
+                path: '/vip/setting'
+                // component: setting
+            }
         ]
     },
     {
         path: '/company',
-        component: company,
-        meta: {
-            step: 2
-        }
+        component: company
     },
     {
         path: '/non-vip',
-        component: nonVip,
-        meta: {
-            step: 3
-        }
+        component: nonVip
     }
 ];
 
 export const router = new Router({
     mode: 'history',
-    scrollBehavior (to, from, savedPosition) {
-        return savedPosition ? savedPosition : { x: 0, y: 0 };
+    scrollBehavior(to, from, savedPosition) {
+        return savedPosition || { x: 0, y: 0 };
     },
     base: '/view/customer/',
     linkActiveClass: 'active',
