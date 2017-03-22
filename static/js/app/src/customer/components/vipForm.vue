@@ -7,147 +7,107 @@
                 </div>
                 <div class="add-container">
                     <div class="vip-info">
-                        <p class="dialog-mainTitle" ng-if="!vip.vipUserId">新增会员</p>
-                        <p class="dialog-mainTitle" ng-if="vip.modify">编辑会员</p>
+                        <p class="dialog-mainTitle" v-if="!vip.vipUserId">新增会员</p>
+                        <p class="dialog-mainTitle" v-if="vip.vipUserId">编辑会员</p>
                         <p class="dialog-subTitle">基本信息</p>
                         <div class="vipInfo">
                             <p>
                                 <span class="newVip">
-                                    <img ng-if="!vip.detail" src="//static.dingdandao.com/start.png">姓名</span>
-                                <input ng-model="vip.name" ng-if="!vip.detail" type="text" maxlength="16" >
-                                <span class="modifyVip" ng-bind="vip.name" ng-if="vip.detail"></span>
+                                    <img v-if="!vip.detail" src="//static.dingdandao.com/start.png">姓名</span>
+                                <input v-model="vip.name" type="text" maxlength="16" >
                             </p>
-                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.name.length === 0 || !vip.name)" class="tip-name">必填字段</span>
-                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.name.length === 1" class="tip-name">格式错误</span>
+                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.name.length === 0 || !vip.name)" class="tip-name">必填字段</span>
+                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.name.length === 1" class="tip-name">格式错误</span>
                             <p>
-                                <span class="newVip"><img ng-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号</span>
-                                <input ng-model="vip.phone" ng-if="!vip.vipUserId" type="text" maxlength="11" >
-                                <span class="modifyVip" ng-bind="vip.phone" ng-if="vip.vipUserId"></span>
+                                <span class="newVip"><img v-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号</span>
+                                <input v-model="vip.phone" type="text" maxlength="11" >
                             </p>
-                            <span ng-if="!vip.vipUserId && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="tip-phone">必填字段</span>
-                            <span ng-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
-                            <div ng-if="vip.detail" class="consume-container">
-                                <label>累计金额</label>
-                                <div class="consume-tips">
-                                    <div class="consume-money">
-                                        <span ng-bind="'¥' + vip.totalConsume"></span>
-                                        <div class="tip-img-container">
-                                            <div ng-if="vip.isAutoUpgrade === 1 && vip.nextVipLevelName" class="tip-img-subContainer consume-subContainer">
-                                                <img src="/static/image/modal/room_modal_info.png" >
-                                                <div class="vip-leavelUpgrade-tip">
-                                                    <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
-                                                    <div>{{vip.vipConsumeList && vip.vipConsumeList.join('、')}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="consum-text">成为会员后，对相关业态累计消费金额（不含违约金）</div>
-                            </div>
+                            <span v-if="!vip.vipUserId && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="tip-phone">必填字段</span>
+                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="tip-phone">格式错误</span>
                             <table class="single-line">
                                 <tr>
                                     <td>
-                                        <label><img ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
-                                        <div ng-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
-                                            <span ng-style="!vip.levelName ? {color:'#ccc'} : ''">{{vip.levelName  || '-会员等级－'}}</span>
-                                        </div>
-                                        <div ng-if="vip.detail || (vip.modify && vip.isAutoUpgrade)" class="vipLeave-text-container">
-                                            <span ng-bind="vip.levelName"></span>
-                                            <div class="tip-img-container" ng-if="vip.levelName">
-                                                <div ng-if="vip.detail && vip.levelName !== '—' && vip.consumeAndDiscount.length > 0" class="tip-img-subContainer level-detail-subContainer">
-                                                    <img src="/static/image/modal/room_modal_info.png" >
-                                                    <div ng-if="vip.detail" class="vip-level-detail">
-                                                        <div>
-                                                            {{vip.levelName}}
-                                                        </div>
-                                                        <div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <label><img v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
+                                        <div v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
+                                            <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
+                                                <dd-option v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
+                                            </dd-select>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>会员卡号</label>
-                                        <input style="width: 240px;margin-left: 4px;height: 24px;" ng-if="!vip.detail" ng-model="vip.vipCardNum" type="text" maxlength="18" >
-                                        <span ng-if="vip.detail" ng-bind="vip.vipCardNum"></span>
+                                        <input style="width: 240px;margin-left: 4px;height: 24px;" v-if="!vip.detail" v-model="vip.vipCardNum" type="text" maxlength="18" >
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="identification">
                                         <label>证件号</label>
-                                        <div ng-if="!vip.detail" class="select1 idcard-select">
-                                            <div class="select1_options">
-
-                                            </div>
+                                        <div v-if="!vip.detail" class="select1 idcard-select">
+                                            <dd-select v-model="vip.idCardType">
+                                                <dd-option v-for="type in idCardType" :value="type.key" :label="type.name"></dd-option>
+                                            </dd-select>
                                         </div>
-                                        <input ng-if="!vip.detail" ng-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
-                                        <span ng-if="vip.detail" ng-bind="vip.idCardNum" class="idcard-num"></span>
+                                        <input v-if="!vip.detail" v-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="birthday">
                                         <label>生日</label>
-                                        <div ng-if="!vip.detail" style="display: inline-block;">
+                                        <div v-if="!vip.detail" style="display: inline-block;width: 115px">
+                                            <dd-datepicker></dd-datepicker>
                                         </div>
-                                        <span ng-if="vip.detail" ng-bind="vip.birthday" class="birthday-content"></span>
                                     </td>
                                     <td class="gender">
                                         <label>性别</label>
-                                        <div ng-if="!vip.detail" class="select1 gender-select">
-
+                                        <div v-if="!vip.detail" class="select1 gender-select">
+                                            <dd-select v-model="vip.gender">
+                                                <dd-option value="0" label="男"></dd-option>
+                                                <dd-option value="1" label="女"></dd-option>
+                                            </dd-select>
                                         </div>
-                                        <span class="gender-content" ng-if="vip.detail" ng-bind="genderList[vip.gender].label"></span>
                                     </td>
                                 </tr>
                             </table>
                             <div class="formrow clearfloat">
                                 <div class="slabel">地区</div>
-                                <div class="scontent" ng-if="!vip.detail">
-
+                                <div class="scontent">
+                                    <dd-select v-model="vip.provinceType" placeholder="省">
+                                        <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
+                                        </dd-option>
+                                    </dd-select>
+                                    <dd-select v-model="vip.cityType" placeholder="市">
+                                        <dd-option  v-for="option in cityItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'city'">
+                                        </dd-option>
+                                    </dd-select>
+                                    <dd-select v-model="vip.countyType" placeholder="区">
+                                        <dd-option  v-for="option in countyItems"  :value="option.id" :label="option.name" :key="option.id+option.name">
+                                        </dd-option>
+                                    </dd-select>
                                 </div>
-                                <span ng-if="vip.detail" ng-bind="vip.province+vip.city+vip.county || ''"></span>
                             </div>
                             <p>
                                 <span class="newVip">邮箱</span>
-                                <input ng-if="!vip.detail" ng-model="vip.email" type="text" minlength="2" maxlength="30" >
-                                <span ng-if="vip.detail" ng-bind="vip.email"></span>
+                                <input v-model="vip.email" type="text" minlength="2" maxlength="30" >
                             </p>
-                            <span ng-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="tip-email">邮箱格式错误</span>
-                            <p ng-if="vip.detail">
-                                <span class="newVip">加入日期</span>
-                                <span ng-bind="vip.creationTime"></span>
-                            </p>
-                            <p ng-if="vip.detail">
-                                <span class="newVip">创建人</span>
-                                <span ng-bind="vip.operatorName"></span>
-                            </p>
-                            <p>
-                                <span class="newVip">创建渠道</span>
-                                <input ng-if="!vip.detail" ng-model="vip.vipChannel" type="text" minlength="2" maxlength="20" >
-                                <span ng-if="vip.detail" ng-bind="vip.vipChannel"></span>
-                            </p>
+                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="tip-email">邮箱格式错误</span>
                             <p>
                                 <span class="newVip">备注</span>
-                                <textarea ng-if="!vip.detail" ng-model="vip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea>
-                                <span ng-if="vip.detail" ng-bind="vip.remark"></span>
+                                <textarea v-model="vip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="dialog-foot">
-                    <button ng-if="!vip.detail" class="dd-btn dd-btn-primary" ng-click="createVip()">确定</button>
-                    <button ng-if="vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" ng-click="modify()">编辑</button>
-                    <button ng-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-ghost" ng-click="close()">取消</button>
+                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" @click="addEditVip">确定</button>
+                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-ghost" ng-click="close()">取消</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" scoped>
+<style lang="sass" rel="stylesheet/scss">
 .modal-dialog {
     width: 340px;
 }
@@ -221,6 +181,11 @@
             line-height: 24px;
             float: left;
             text-align: left;
+            display: flex;
+            .dd-select-menu {
+                max-height: 300px;
+                overflow-y: scroll;
+            }
             .selectBox{
                 display: block;
                 width: 85%;
@@ -374,6 +339,7 @@
         }
         .select1 {
             margin-left: 8px;
+            display: inline-block;
         }
         .vipLeave-text-container {
             display: inline-block;
@@ -556,14 +522,36 @@
 }
 </style>
 <script>
+    import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
+    import http from '../../common/AJAXService';
+    import { dsyForComponent } from '../../common/dsy';
+    import modal from '../../common/modal';
+
     export default{
         props: {
             visible: Boolean
         },
         data() {
             return {
-                vip: {}
-            }
+                vip: {},
+                levels: [{
+                    vipLevelId: '',
+                    vipLevelName: '—'
+                }],
+                idCardType: [
+                    { key: '0', name: '身份证' },
+                    { key: '1', name: '军官证' },
+                    { key: '2', name: '通行证' },
+                    { key: '3', name: '护照' },
+                    { key: '4', name: '其他' }
+                ],
+                provinceType: undefined,
+                cityType: undefined,
+                countyType: undefined,
+                provinceItems: dsyForComponent['0'],
+                cityItems: [],
+                countyItems: []
+            };
         },
         watch: {
             visible(val) {
@@ -572,10 +560,58 @@
                 } else {
                     $('#vipForm').modal('hide');
                 }
+            },
+            provinceType(newVal) {
+                this.cityItems = dsyForComponent[`0_${newVal}`];
+                this.cityType = 0;
+                this.countyItems = dsyForComponent[`0_${this.provinceType}_${this.cityType}`];
+                this.countyType = 0;
+            },
+            cityType(newVal) {
+                this.countyItems = dsyForComponent[`0_${this.provinceType}_${newVal}`];
+                this.countyType = 0;
             }
         },
+        created() {
+            this.getVipLevels();
+        },
         methods: {
-        
+            getVipLevels() {
+                http.get('/vipUser/getVipLevels')
+                    .then(res => {
+                        this.levels = this.levels.concat(res.data.list);
+                    });
+            },
+            addEditVip() {
+                const vip = this.vip;
+                const data = {
+                    ...vip,
+                    province: vip.provinceType && this.provinceItems[vip.provinceType].name,
+                    city: vip.cityType && this.cityItems[vip.cityType].name,
+                    county: vip.countyType && this.countyItems[vip.countyType].name
+                };
+
+                if (vip.vipUserId) {
+                    delete data.phone;
+                    delete data.consumeAndDiscount;
+                    delete data.vipConsumeList;
+                }
+
+                http.post('/vipUser/addEditVip', data)
+                    .then(res => {
+                        if (res.code === 1) {
+                            $('#vipForm').modal('hide');
+                            this.vip = { name: '', phone: '', idCardType: 0 };
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            }
+        },
+        components: {
+            DdSelect,
+            DdOption,
+            DdDatepicker
         }
-    }
+    };
 </script>
