@@ -137,7 +137,7 @@ import {
     DdTable
 } from 'dd-vue-component'
 import http from '../../../common/AJAXService'
-import company from '../../components/companyForm'
+// import company from '../../components/companyForm'
 export default {
     data() {
         return {
@@ -293,7 +293,7 @@ export default {
         "dd-dropdown-item": DdDropdownItem,
         DdOption,
         DdTable,
-        company
+        // company
     }
 }
 </script>

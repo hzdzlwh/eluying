@@ -6,7 +6,7 @@ import company from './views/company/index.vue';
 import nonVip from './views/non-vip/index.vue';
 import Router from 'vue-router';
 import list from './views/vip/list.vue';
-// import setting from './views/vip/setting.vue';
+import setting from './views/vip/setting.vue';
 
 export const routes = [
     {
@@ -24,8 +24,8 @@ export const routes = [
 
             },
             {
-                path: '/vip/setting'
-                // component: setting
+                path: '/vip/setting',
+                component: setting
             }
         ]
     },

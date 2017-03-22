@@ -20,14 +20,14 @@ var gulp = require('gulp'),
     config = require('./config');
 
 // 开发服务
-gulp.task('browser-sync', function () {
+gulp.task('browser-sync', function() {
     browserSync.init({
         server: {
             baseDir: './',
             index: 'login.html',
             https: true,
             // 单页
-            middleware: function (req, res, next) {
+            middleware: function(req, res, next) {
                 const goal = config.SPA.find( i => req.url.indexOf(i.url) > -1);
                 if (goal) {
                     req.url = goal.path;
@@ -50,7 +50,7 @@ gulp.task('file-include', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', function() {
     gulp.src(['./build', './.sass-cache'])
         .pipe(clean({force: true}));
 });
@@ -87,36 +87,37 @@ gulp.task('build:prod', ['file-include', 'styles', 'webpack-prod', 'clean'], rev
 
 gulp.task('build:dev', ['file-include', 'styles', 'webpack-dev', 'clean'], revHash);
 
-//压缩成.war
-gulp.task('zip', function () {
+// 压缩成.war
+gulp.task('zip', function() {
     gulp.src('./build/**')
         .pipe(zip('eluyun.war'))
         .pipe(gulp.dest('./'));
 });
 
-//hash版本控制
-gulp.task('rev', function () {
+// hash版本控制
+gulp.task('rev', function() {
     gulp.src(['rev/**/*.json', 'build/**/*.html'])
-        .pipe( revCollector())
-        .pipe( gulp.dest('build') );
+        .pipe(revCollector())
+        .pipe(gulp.dest('build'));
     gulp.src(['rev/**/*.json', 'build/static/js/app/dist/**/*.js'])
-        .pipe( revCollector())
-        .pipe( gulp.dest('build/static/js/app/dist') );
+        .pipe(revCollector())
+        .pipe(gulp.dest('build/static/js/app/dist'));
     gulp.src(['rev/**/*.json', 'build/static/css/**/*.css'])
-        .pipe( revCollector())
-        .pipe( gulp.dest('build/static/css') );
+        .pipe(revCollector())
+        .pipe(gulp.dest('build/static/css'));
 });
 
 
 gulp.task('styles', function () {
-    return sass(config.css, {style: 'compressed'})
+    return sass(config.css, { style: 'compressed' })
         .pipe(autoprefixer('last 3 version'))
-        .pipe(rename({suffix: '.min'}))
+        .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('static/css/dist'))
-        .pipe(reload({stream: true}));
+        .pipe(reload({ stream: true }));
 });
 
-gulp.task('webpack-prod', function () {
+// 生产环境webpack配置
+gulp.task('webpack-prod', function() {
     delete webpackConf.devtool;
     webpackConf.plugins.push(
         new webpack.DefinePlugin({
@@ -145,37 +146,37 @@ gulp.task('webpack-prod', function () {
         .pipe(gulp.dest('static/js/app/dist/'));
 });
 
-// 开发配置
-gulp.task('webpack-dev', function () {
-        var webpackDevConf = Object.assign({},
-            webpackConf, {watch: true},
-            webpackConf.plugins.push(
-                new webpack.DefinePlugin({
-                    'process.env': {
-                        ENV: JSON.stringify('development'),
-                        NODE_ENV: JSON.stringify('development'),
-                        serverUrl: JSON.stringify(gutil.env.server || (gutil.env.test ? config.testServer : config.devServer))
-                    }
-                })));
-        return gulp.src('static/js/app/src/entry.js')
-            .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
-                gutil.log('[webpack]', stats.toString({}));
-            }, webpack))
-            .pipe(gulp.dest('static/js/app/dist/'))
-            .pipe(reload({stream: true}));
+// 开发webpack配置
+gulp.task('webpack-dev', function() {
+    const webpackDevConf = Object.assign({},
+        webpackConf,
+        { watch: true },
+        webpackConf.plugins.push(
+            new webpack.DefinePlugin({
+                'process.env': {
+                    ENV: JSON.stringify('development'),
+                    NODE_ENV: JSON.stringify('development'),
+                    serverUrl: JSON.stringify(gutil.env.server || (gutil.env.test ? config.testServer : config.devServer))
+                }
+            }))
+    );
+
+    return gulp.src('static/js/app/src/entry.js')
+        .pipe(gulpWebpack(webpackDevConf, null, function(err, stats) {
+            gutil.log('[webpack]', stats.toString({ chunks: false }));
+        }, webpack))
+        .pipe(gulp.dest('static/js/app/dist/'))
+        .pipe(reload({ stream: true }));
 
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch('static/sass/**/*.scss', ['styles']);
-    // gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
-    // gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
-    gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
     gulp.watch('./static/tpl/*.html', ['file-include']);
 });
 
-gulp.task('default', function () {
+gulp.task('default', function() {
     gulp.start('browser-sync');
     gulp.start('file-include');
     gulp.start('styles');
