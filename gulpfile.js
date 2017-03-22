@@ -160,11 +160,11 @@ gulp.task('webpack-dev', function () {
         return gulp.src('static/js/app/src/entry.js')
             .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
                 gutil.log('[webpack]', stats.toString({}));
-            }, webpack))
+            }, webpack)
+                .on('error', function handleError() {
+                    this.emit('end'); // Recover from errors
+                }))
             .pipe(gulp.dest('static/js/app/dist/'))
-            .on('error', function handleError() {
-                this.emit('end'); // Recover from errors
-            })
             .pipe(reload({stream: true}));
 
 });
@@ -173,7 +173,7 @@ gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
     // gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
     // gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
-    gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
+    // gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
     gulp.watch('./static/tpl/*.html', ['file-include']);
 });
