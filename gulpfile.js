@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     notify = require('gulp-notify'),
     webpack = require('webpack'),
-    gulpWebpack = require('webpack-stream'),
+    gulpWebpack = require('webpack-stream-fixed'),
     path = require('path'),
     gutil = require('gulp-util'),
     browserSync = require('browser-sync').create(),
@@ -16,7 +16,7 @@ var gulp = require('gulp'),
     revCollector = require('gulp-rev-collector'),
     webpackConf = require('./webpack.conf'),
     url = require('url'),
-    fileInclude = require('gulp-file-include');
+    fileInclude = require('gulp-file-include'),
     config = require('./config');
 
 // 开发服务
@@ -145,8 +145,8 @@ gulp.task('webpack-prod', function () {
         .pipe(gulp.dest('static/js/app/dist/'));
 });
 
+// 开发配置
 gulp.task('webpack-dev', function () {
-
         var webpackDevConf = Object.assign({},
             webpackConf, {watch: true},
             webpackConf.plugins.push(
@@ -160,10 +160,7 @@ gulp.task('webpack-dev', function () {
         return gulp.src('static/js/app/src/entry.js')
             .pipe(gulpWebpack(webpackDevConf, null, function (err, stats) {
                 gutil.log('[webpack]', stats.toString({}));
-            }, webpack)
-                .on('error', function handleError() {
-                    this.emit('end'); // Recover from errors
-                }))
+            }, webpack))
             .pipe(gulp.dest('static/js/app/dist/'))
             .pipe(reload({stream: true}));
 
@@ -173,7 +170,7 @@ gulp.task('watch', function () {
     gulp.watch('static/sass/**/*.scss', ['styles']);
     // gulp.watch('static/js/app/src/**/*.js', ['webpack-dev']);
     // gulp.watch('static/js/app/src/**/*.vue', ['webpack-dev']).on('change', reload);
-    // gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
+    gulp.watch('static/js/app/src/common/*.html', ['webpack-dev']);
     gulp.watch('**/*.html').on('change', reload);
     gulp.watch('./static/tpl/*.html', ['file-include']);
 });
