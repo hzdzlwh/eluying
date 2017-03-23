@@ -1663,9 +1663,9 @@ dd-common-css@0.2.1:
   version "0.2.1"
   resolved "http://registry.npm.taobao.org/dd-common-css/download/dd-common-css-0.2.1.tgz#56af5f79ebec2584a2b58c3de1e81a67f307f4db"
 
-dd-vue-component@^0.5.0:
-  version "0.5.0"
-  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.5.0.tgz#c37e77cf7b0d4668ec46011d60988972f0122641"
+dd-vue-component@^0.5.1:
+  version "0.5.1"
+  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.5.1.tgz#83b0b69b62fb694cd837fe86c585a257cc0d8cd4"
   dependencies:
     dd-common-css "0.2.1"
     vue "^2.0.1"
@@ -5944,18 +5944,6 @@ webpack-core@~0.6.9:
 webpack-stream-fixed@^3.2.2:
   version "3.2.2"
   resolved "http://registry.npm.taobao.org/webpack-stream-fixed/download/webpack-stream-fixed-3.2.2.tgz#681057f1eb3061343dc8092c728fe7f984b0985c"
-  dependencies:
-    gulp-util "^3.0.7"
-    lodash.clone "^4.3.2"
-    lodash.some "^4.2.2"
-    memory-fs "^0.3.0"
-    through "^2.3.8"
-    vinyl "^1.1.0"
-    webpack "^1.12.9"
-
-webpack-stream@^3.2.0:
-  version "3.2.0"
-  resolved "http://registry.npm.taobao.org/webpack-stream/download/webpack-stream-3.2.0.tgz#3a1d160fb11d41727b7ce6f32f722464f98b2186"
   dependencies:
     gulp-util "^3.0.7"
     lodash.clone "^4.3.2"
