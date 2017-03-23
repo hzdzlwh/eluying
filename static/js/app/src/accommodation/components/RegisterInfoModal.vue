@@ -784,6 +784,8 @@
     import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
+    import types from '../store/types';
+    import { mapActions, mapState } from 'vuex';
     import util from 'util';
     export default{
         props: {
@@ -816,9 +818,7 @@
                 userOrigins: [],
                 phoneValid: true,
                 remark: '',
-                enterList: [],
                 enterItems: [],
-                shopList: [],
                 shopGoodsItems: [],
                 registerRooms: [],
                 showOrder: false,
@@ -834,6 +834,7 @@
             this.getData();
         },
         computed:{
+            ...mapState({ shopList: 'shopList', enterList: 'enterList' }),
             modalTitleOrBtn() {
                 if (this.checkState === 'ing') {
                     return { title: '直接入住', btn: '入住并收银' }
@@ -898,6 +899,10 @@
             }
         },
         methods:{
+            ...mapActions([
+                types.LOAD_SHOP_LIST,
+                types.LOAD_ENTER_LIST
+            ]),
             getData(){
                 AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
                     if (res.code === 1) {
@@ -908,35 +913,8 @@
                         modal.somethingAlert(res.msg);
                     }
                 });
-                AJAXService.ajaxWithToken('GET', 'shopListUrl', {}, (res) =>{
-                    if (res.code ===1) {
-                        res.data.list.forEach((d) => {
-                            d.gList.forEach((dd) => {
-                                this.shopList.push({
-                                    id: dd.i,
-                                    price: dd.p,
-                                    name: dd.n,
-                                    type: 3
-                                });
-                            });
-                        });
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                });
-                AJAXService.ajaxWithToken('GET', '/entertainment/getCategoryList', {})
-                        .then(res => {
-                            if (res.code === 1) {
-                                res.data.list.map(el => {
-                                    el.id = el.categoryId;
-                                    el.nodeId = el.enterId;
-                                    el.type = 2;
-                                    this.enterList.push(el)
-                                });
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                        });
+                this[types.LOAD_SHOP_LIST]().catch(e => { modal.somethingAlert(e.msg) });
+                this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg) });
             },
             getOrderState(state){
                 switch(state){
