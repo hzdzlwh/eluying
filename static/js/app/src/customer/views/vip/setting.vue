@@ -1,13 +1,5 @@
 <template>
     <div class="vip-container">
-        <ul class="restaurant-head-nav" style="margin-top: 20px">
-            <li>
-                <a href="/view/vip/vip.html">会员列表</a>
-            </li>
-            <li>
-                <a class="active"  href="/view/vip/setting.html">会员设置</a>
-            </li>
-        </ul>
         <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
@@ -155,54 +147,336 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" role="dialog" id="selectModal">
-        <div class="modal-dialog" style="width: 400px">
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                <h2 style="margin-bottom: 21px">{{type === 'consume' ? '选择消费累计项目' : '选择优惠项目'}}</h2>
-                <div style="padding-left: 21px">
-                    <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="all"><span>全部</span></div>
-                    <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="room"><span>住宿</span></div>
-                    <div class="select-category" v-if="restNodeList.length > 0">
-                        <span class="select-category-name"><input type="checkbox" class="dd-checkbox" v-model="food">餐饮</span>
-                        <span class="select-category-nodes">
-                            <span class="select-category-node" v-for="node in restNodeList">
-                                <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
-                        </span>
-                    </div>
-                    <div class="select-category" v-if="enterNodeList.length > 0">
-                    <span class="select-category-name">
-                        <input type="checkbox" class="dd-checkbox" v-model="et">娱乐
-                    </span>
-                        <span class="select-category-nodes">
-                        <span class="select-category-node" v-for="node in enterNodeList">
-                            <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
-                    </span>
-                    </div>
-                    <div class="select-category">
-                        <input type="checkbox" class="dd-checkbox" v-model="shop"><span>商超</span>
-                    </div>
-                    <div>
-                        <button class="dd-btn dd-btn-primary dd-btn-sm" @click="confirmSelect">确定</button>
-                        <button class="dd-btn dd-btn-ghost dd-btn-sm" @click="close">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
-<style>
+<style lang="sass" rel="stylesheet/scss">
+    @import '~dd-common-css/src/variables';
+
+    .vip-container {
+        margin: 0 auto;
+    .list-action {
+        color: $blue;
+        cursor: pointer;
+    }
+    i {
+        color: #999;
+        font-style: normal;
+    }
+
+    .help-button {
+        color: $blue;
+        cursor: pointer;
+    }
+    #helpModal {
+    .modal-content {
+        padding: 10px;
+    }
+    }
+
+    #settingModal {
+    label {
+        width: 98px;
+        text-align: right;
+    }
+    .form-row {
+        margin-bottom: 15px;
+    }
+    .line {
+        width: 484px;
+        height: 1px;
+        background: #e6e6e6;
+        margin: 15px -20px;
+    }
+    }
+    }
+    .modal-content {
+        background: #fafafa;
+        box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius: 2px;
+        border-top: 4px solid #178ce6;
+        padding: 20px;
+    }
+    .select-category {
+        display: flex;
+    input[type=checkbox] {
+        margin-right: 6px;
+    &:focus {
+         outline: 0;
+     }
+    }
+    span {
+        margin-bottom: 19px;
+    }
+    .select-category-nodes {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    span {
+        margin-right: 6px;
+    }
+    }
+    }
+    .select-category-name {
+        width: 62px;
+    }
+
+    .select-category-node {
+        display: flex;
+    }
+    #settingModal {
+    .select-button {
+        cursor: pointer;
+        color: $blue;
+    }
+    }
+    td {
+        vertical-align: top !important;
+    }
+
 </style>
 <script>
+    import modal from '../../../common/modal';
+    import http from '../../../common/AJAXService';
+    import { DdTable } from 'dd-vue-component';
+    import categorySelect from '../../components/categorySelect.vue';
+
     export default{
         data() {
             return {
-               
+                settings: undefined,
+                autoUpgrade: undefined,
+                levelName: undefined,
+                thresholdFee: undefined,
+                consume: [],
+                discount: [],
+                columns: [],
+                id: undefined,
+                selectType: undefined
+            };
+        },
+        created() {
+            this.getLevelList();
+        },
+        computed: {
+            nodes() {
+                return this.selectType === 'consume' ? this.consume : this.discount;
             }
         },
+        components: {
+            DdTable,
+            categorySelect
+        },
         methods: {
-        
+            getLevelList() {
+                http.get('/vipUser/getVipSettings', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.settings = res.data.vipSettingItemList;
+                            if (this.settings.length > 0) {
+                                this.autoUpgrade = res.data.autoUpgrade;
+                                this.columns = [
+                                    {
+                                        title: '会员等级',
+                                        dataIndex: 'levelName',
+                                        width: 152
+                                    },
+                                    {
+                                        title: '优惠折扣',
+                                        render: (h, row) => {
+                                            return row.discountInfoList.map(i => {
+                                                return (
+                                                    <p
+                                                        style={{
+                                                            display: 'flex',
+                                                            'justify-content': 'space-between',
+                                                            width: '190px'
+                                                        }}
+                                                    >
+                                                        <span>{i.nodeName}</span>
+                                                        <span>{i.discount}折</span>
+                                                    </p>
+                                                );
+                                            });
+                                        },
+                                        width: 252
+                                    },
+                                    {
+                                        title: '操作',
+                                        render: (h, row) => (
+                                            <span class="list-action">
+                                                <span onClick={() => this.openEdit(row)}>编辑</span>/
+                                                <span onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
+                                            </span>
+                                        ),
+                                        width: 93
+                                    }
+                                ];
+                                if (this.autoUpgrade === 1) {
+                                    this.columns.splice(2, 0,
+                                        {
+                                            title: '升级条件',
+                                            render: (h, row) => {
+                                                return <span>消费满¥{row.thresholdFee}</span>;
+                                            },
+                                            width: 186
+                                        },
+                                        {
+                                            title: '消费累计项目',
+                                            render: (h, row) => {
+                                                return <span>{row.consumeItems.map(i => i.nodeName).join('、')}</span>;
+                                            },
+                                            width: 390
+                                        }
+                                    );
+                                }
+                            }
+                        }
+                    });
+            },
+            deleteLevel(id) {
+                const message = Number(this.autoUpgrade) === 1
+                    ? (this.settings.length === 1
+                        ? '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？'
+                        : '删除该会员等级后，该等级的会员降低一等级，确认删除么？')
+                    : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
+                modal.confirmDialog({
+                    message
+                }, () => {
+                    http.post('/vipUser/removeVipLevel', { vipLevelId: id })
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.getLevelList();
+                            } else {
+                                modal.alert(res.msg);
+                            }
+                        });
+                });
+            },
+            openCreate() {
+                this.levelName = undefined;
+                this.id = undefined;
+                this.thresholdFee = undefined;
+                this.consume = [];
+                this.discount = [];
+                $('#settingModal').modal('show');
+            },
+            openEdit(item) {
+                this.levelName = item.levelName;
+                this.id = item.vipLevelSettingId;
+                this.thresholdFee = item.thresholdFee;
+                this.consume = item.consumeItems.map(i => ({ ...i }));
+                this.discount = item.discountInfoList.map(i => ({ ...i }));
+                $('#settingModal').modal('show');
+            },
+            createLevel() {
+                if (!this.levelName) {
+                    modal.alert('请填写会员等级名称');
+                    return false;
+                }
+
+                if (Number(this.autoUpgrade) === 1 && this.thresholdFee === undefined) {
+                    modal.alert('请输入升级条件');
+                    return false;
+                }
+
+                if (Number(this.autoUpgrade) === 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
+                    modal.alert('升级条件只能为整数');
+                    return false;
+                }
+
+                if (Number(this.autoUpgrade) === 1 && this.consume.length === 0) {
+                    modal.alert('请选择消费累计项目');
+                    return false;
+                }
+
+                for (let i = 0; i < this.discount.length; i ++) {
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
+                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
+                }
+
+                const url = Number(this.autoUpgrade) === 1
+                    ? '/vipUser/createEditVipLevel'
+                    : '/vipUser/createEditVipLevelNotAuto';
+                http.post(url, {
+                    levelName: this.levelName,
+                    thresholdFee: this.thresholdFee,
+                    consumeListReq: JSON.stringify(this.consume),
+                    discountListReq: JSON.stringify(this.discount),
+                    vipLevelSettingId: this.id
+                })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.getLevelList();
+                            $('#settingModal').modal('hide');
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
+            deleteNode(item) {
+                const index = this.discount.indexOf(item);
+                this.discount.splice(index, 1);
+            },
+            selectSystem() {
+                if (typeof this.autoUpgrade === 'undefined') {
+                    return false;
+                }
+
+                $('#system').modal('hide');
+                this.openCreate();
+            },
+            handleCategorySelect(list) {
+                if (this.selectType === 'consume') {
+                    this.consume = list;
+                } else {
+                    const newList = [];
+                    list.map(item => {
+                        const result = this.discount.find(i => i.id === item.id);
+                        if (result) {
+                            if (item.selected) {
+                                newList.push({ ...result });
+                            }
+                        } else {
+                            newList.push({ ...item });
+                        }
+                    });
+                    this.discount = newList;
+                }
+            },
+            openSelectNode(type, data) {
+                $('#categorySelectModal').modal('show');
+                this.selectType = type;
+                /* select.type = type;
+                data.map(item => {
+                    if (item.nodeType === 0) {
+                        select.room = true;
+                    }
+
+                    if (item.nodeType === 3) {
+                        select.shop = true;
+                    }
+
+                    if (item.nodeType === 1) {
+                        select.restNodeList.map(i => {
+                            if (i.id === item.id) {
+                                i.selected = true;
+                            }
+                        });
+                    }
+
+                    if (item.nodeType === 2) {
+                        select.enterNodeList.map(i => {
+                            if (i.id === item.id) {
+                                i.selected = true;
+                            }
+                        });
+                    }
+                });*/
+            }
         }
-    }
+    };
 </script>

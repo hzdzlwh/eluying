@@ -2050,6 +2050,10 @@ eslint-config-airbnb@^14.1.0:
   dependencies:
     eslint-config-airbnb-base "^11.1.0"
 
+eslint-config-vue@^2.0.2:
+  version "2.0.2"
+  resolved "http://registry.npm.taobao.org/eslint-config-vue/download/eslint-config-vue-2.0.2.tgz#a3ab1004899e49327a94c63e24d47a396b2f4848"
+
 eslint-import-resolver-node@^0.2.0:
   version "0.2.3"
   resolved "http://registry.npm.taobao.org/eslint-import-resolver-node/download/eslint-import-resolver-node-0.2.3.tgz#5add8106e8c928db2cba232bcd9efa846e3da16c"
