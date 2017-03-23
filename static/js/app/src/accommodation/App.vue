@@ -1,12 +1,12 @@
 <template>
     <div class="acc-container">
-    <SelectGoods :show=false
+    <SelectGoods :show='show'
             :goodsDate='goodsdate'
             @selectProjectDate='selectProjectDate'
             @Modalclose='goosdClose'
             ></SelectGoods>
             <SelectProject 
-            :show='show'
+            :show=false
             :selectDate='selectDate'
             @close='ProjectClose'
             @selectProjectDate='selectProjectDate'
