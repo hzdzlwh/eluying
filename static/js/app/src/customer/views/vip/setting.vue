@@ -102,7 +102,7 @@
                         <label>优惠折扣：</label>
                         <div style="width: 285px">
                             <div style="max-height: 78px;overflow: auto">
-                                <div style="margin-bottom: 3px" v-for="item in discount">
+                                <div style="margin-bottom: 3px" v-for="item in discount" :key="item.id">
                                     <span style="display: inline-block;width: 132px">{{item.nodeName}}</span>
                                     <input style="width: 56px;" type="text" class="dd-input" v-model="item.discount">
                                     <i style="margin: 0 16px 0 8px">折</i>

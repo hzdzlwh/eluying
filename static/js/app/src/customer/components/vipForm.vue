@@ -30,7 +30,12 @@
                                         <label><img v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" src="//static.dingdandao.com/start.png">会员等级</label>
                                         <div v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="select1 gender-select">
                                             <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
-                                                <dd-option v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
+                                                <dd-option
+                                                    v-for="level in levels"
+                                                    :value="level.vipLevelId"
+                                                    :label="level.vipLevelName"
+                                                    :key="level.vipLevelId"
+                                                />
                                             </dd-select>
                                         </div>
                                     </td>
@@ -46,7 +51,12 @@
                                         <label>证件号</label>
                                         <div v-if="!vip.detail" class="select1 idcard-select">
                                             <dd-select v-model="vip.idCardType">
-                                                <dd-option v-for="type in idCardType" :value="type.key" :label="type.name"></dd-option>
+                                                <dd-option
+                                                    v-for="type in idCardType"
+                                                    :value="type.key"
+                                                    :label="type.name"
+                                                    :key="type.key"
+                                                />
                                             </dd-select>
                                         </div>
                                         <input v-if="!vip.detail" v-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
@@ -74,7 +84,12 @@
                                 <div class="slabel">地区</div>
                                 <div class="scontent">
                                     <dd-select v-model="vip.provinceType" placeholder="省">
-                                        <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
+                                        <dd-option
+                                            v-for="option in provinceItems"
+                                            :value="option.id"
+                                            :label="option.name"
+                                            :key="option.id"
+                                        >
                                         </dd-option>
                                     </dd-select>
                                     <dd-select v-model="vip.cityType" placeholder="市">
