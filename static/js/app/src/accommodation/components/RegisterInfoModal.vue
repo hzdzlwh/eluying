@@ -38,15 +38,13 @@
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
                                            v-model="name"
-                                           @input="changeVipList(1)"
-                                           :disabled="checkState === 'editOrder' && order.isVip">
+                                           @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
                                            v-model="phone"
-                                           @input="changeVipList(2)"
-                                           :disabled="checkState === 'editOrder' && order.isVip">
+                                           @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
                                         <span class="vip-level-img"></span>
                                         <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
@@ -1095,7 +1093,7 @@
             },
             changeVipList(num) {
                 let params = num === 1 ? { name: this.name } : { phone: this.phone };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
+                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (search && ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4))) {
                     clearTimeout(this.timeCount);
                     this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
@@ -1738,15 +1736,6 @@
             CheckInPerson
         },
         watch: {
-            /*name(newVal) {
-                let search = newVal.length >= 1
-                    && (this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip));
-                if (search) {
-                    const params = { name: newVal };
-                    clearTimeout(this.timeCount);
-                    this.timeCount = setTimeout(() => { this.getVipList(params, 1); }, 500);
-                }
-            },*/
             userOriginType(newVal) {
                 const originType = Number(newVal.split('~')[1]);
                 const originId = Number(newVal.split('~')[0]);
@@ -1755,12 +1744,11 @@
                 }
             },
             phone(newVal) {
-                const params = { phone: newVal };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
-                if (newVal.length >= 4 && newVal.length < 11 && search) {
-                    //clearTimeout(this.timeCount);
-                    //this.timeCount = setTimeout(() => { this.getVipList(params, 2); }, 500)
-                } else if (newVal.length === 11 && search) {
+                const params = this.checkState === 'editOrder'
+                               ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                               : { phone: newVal };
+                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
                 } else if (newVal !== 11) {
