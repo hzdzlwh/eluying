@@ -24,7 +24,6 @@ Vue.prototype.$isNull = function(text) {
 };
 
 $(function() {
-    var spin = new modal.Spin();
     restaurantMenu.render();
 
     var events = {

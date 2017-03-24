@@ -2,16 +2,17 @@
     <div class="acc-container">
     <SelectGoods :show='show'
             :goodsDate='goodsdate'
-            @selectProjectDate='selectProjectDate'
+            @selectGoodsDate='selectGoodsDate'
             @Modalclose='goosdClose'
             ></SelectGoods>
             <SelectProject 
-            :show=false
+            :show='proshow'
             :selectDate='selectDate'
             @close='ProjectClose'
             @selectProjectDate='selectProjectDate'
             ></SelectProject>
-            <a @click='show = true'>aaaaa</a>
+            <a @click='showmod("show")'>aaaaa</a>
+            <a @click='showmod("proshow")'>bbbbb</a>
         <Search @showOrder="showOrder" />
         <Calendar
             @dateChange="handleDateChange"
@@ -135,6 +136,7 @@
         },
         data() {
             return {
+                proshow:false,
                 show:false,
                 goodsdate:[{
                     cName: '酒水最多十六个字最多就三行十六字',
@@ -178,36 +180,36 @@
                 selectDate:[{
                     entertainmentName:'水上最多十六 个字最多就三 行十六字',
                     entertainmentId:1,
-                    entertainmentCategoryList:[
+                    categoryList:[
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:11
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:11
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:12
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:12
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:13
                     }
                     ]
                 },
                 {
                     entertainmentName:'水上最多',
                     entertainmentId:2,
-                    entertainmentCategoryList:[
+                    categoryList:[
                     {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:11
+                        name: '水上',
+                        enterId:11
                     },
                     {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:12
+                        name: '水上',
+                        enterId:12
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:13
                     }
                     ]
                 }
@@ -262,17 +264,20 @@
             }
         },
         methods: {
-            selectProjectDate(data) {
-                // this.data = data
+            selectGoodsDate(data) {
+                window.console.log(data)
             },
             selectProjectDate(data) {
-                // this.data = data
+               window.console.log(data)
             },
             ProjectClose(){
-                this.show = false
+                this.proshow = false
             },
             goosdClose(){
                 this.show = false
+            },
+            showmod(type){
+                this[type] = true
             },
             getRoomAndStatus() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomsAndStaus', {
