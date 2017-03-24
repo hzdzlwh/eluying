@@ -1,0 +1,56 @@
+.spin-container {
+  z-index: 100000;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+  }
+  .spin-loading {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/png;base64,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");
+    animation: spinRotate 1.2s infinite linear;
+  }
+}
+.spin-mask {
+  width: 100%;
+  height: 100%;
+  opacity: .7;
+  -webkit-filter: blur(.5px);
+  filter: blur(0.5px);
+  -webkit-filter: progid\:DXImageTransform\.Microsoft\.Blur(PixelRadius\=1,MakeShadow\=false);
+  filter: progid\:DXImageTransform\.Microsoft\.Blur(PixelRadius\=1,MakeShadow\=false);
+  -webkit-transform: translateZ(0);
+  transition: all .3s cubic-bezier(.645,.045,.355,1);
+  -webkit-transition: all .3s cubic-bezier(.645,.045,.355,1);
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff;
+    opacity: .3;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+  }
+}
+@keyframes spinRotate  {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

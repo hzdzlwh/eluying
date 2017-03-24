@@ -252,7 +252,7 @@ export default {
             this.gIdActive = list
         },
         hideModal() {
-            
+            this.$emit('Modalclose')
             $('#goodsModal').modal('hide')
         },
         goodsprogram(item) {
@@ -269,14 +269,6 @@ export default {
                     this.bill[item.i].num--
                 }
             }
-        }
-    },
-    filters: {
-        getprice: function(item) {
-            if (item) {
-                return parseInt(item.p) * item.num
-            }
-            return 0
         }
     },
     watch: {
