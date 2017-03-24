@@ -258,7 +258,7 @@ export default {
         goodsprogram(item) {
             let data = this.gIdActive
             data.list = item
-            this.$emit('selectGoodsDate', bill)
+            this.$emit('selectGoodsDate', this.bill)
             this.hideModal()
         },
         changebill(item, type) {
