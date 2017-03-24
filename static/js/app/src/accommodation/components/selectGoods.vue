@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade " id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade " id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal">
         <div class="modal-dialog goodsdialog">
             <div class="modal-content">
                 <div class="goodsModals-header">
@@ -35,7 +35,7 @@
 </template>
 <style scoped lang="sass" rel="stylesheet/scss">
 @import "~dd-common-css/src/variables";
-.goodsModal {
+#goodsModal {
     z-index: 1051;
 }
 
@@ -157,10 +157,10 @@
 }
 
 .goodsModal-foot {
-	clear:both;
-	overflow:auto;
-	border-top: 1px solid #e6e6e6;
-	background:#fafafa;
+    clear: both;
+    overflow: auto;
+    border-top: 1px solid #e6e6e6;
+    background: #fafafa;
     .goodsTotal {
         width: 330px;
         padding-left: 20px;
@@ -169,21 +169,22 @@
         color: #4a90e2;
         display: inline-block;
         box-sizing: border-box;
-            float: left;
+        float: left;
         .goodsCount {
             font-size: 14px;
             color: #999;
         }
     }
     .goodsSub {
-    	    float: left;
+        float: left;
         display: inline-block;
         width: 100px;
         box-sizing: border-box;
         background: #4a90e2;
         line-height: 40px;
         text-align: center;
-        color:#fff;
+        color: #fff;
+        cursor: pointer;
     }
 }
 </style>
@@ -273,7 +274,11 @@ export default {
     },
     watch: {
         show(val) {
+
             if (val) {
+                $('#goodsModal').modal({
+                    backdrop: 'static'
+                })
                 $('#goodsModal').modal('show');
             } else {
                 $('#goodsModal').modal('hide');

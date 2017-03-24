@@ -11,8 +11,8 @@
             @close='ProjectClose'
             @selectProjectDate='selectProjectDate'
             ></SelectProject>
-            <a @click='show = true'>aaaaa</a>
-            <a @click='proshow = true'>bbbbb</a>
+            <a @click='showmod("show")'>aaaaa</a>
+            <a @click='showmod("proshow")'>bbbbb</a>
         <Search @showOrder="showOrder" />
         <Calendar
             @dateChange="handleDateChange"
@@ -180,36 +180,36 @@
                 selectDate:[{
                     entertainmentName:'水上最多十六 个字最多就三 行十六字',
                     entertainmentId:1,
-                    entertainmentCategoryList:[
+                    categoryList:[
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:11
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:11
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:12
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:12
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:13
                     }
                     ]
                 },
                 {
                     entertainmentName:'水上最多',
                     entertainmentId:2,
-                    entertainmentCategoryList:[
+                    categoryList:[
                     {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:11
+                        name: '水上',
+                        enterId:11
                     },
                     {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:12
+                        name: '水上',
+                        enterId:12
                     },
                     {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
+                        name: '水上最多十六 个字最多就三 行十六字',
+                        enterId:13
                     }
                     ]
                 }
@@ -271,10 +271,13 @@
                window.console.log(data)
             },
             ProjectClose(){
-                this.show = false
+                this.proshow = false
             },
             goosdClose(){
                 this.show = false
+            },
+            showmod(type){
+                this[type] = true
             },
             getRoomAndStatus() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomsAndStaus', {
