@@ -243,10 +243,10 @@ export default {
             selectType: undefined,
             formCustomerType: [{
                 name: "可挂帐",
-                value: 0
+                value: 1
             }, {
                 name: "不可挂帐",
-                value: 1
+                value: 0
             }],
         }
     },
@@ -286,9 +286,11 @@ export default {
                     this.encontactName = res.data.contactName
                     this.encontactPhone = res.data.contactPhone
                     this.encontractNum = res.data.contractNum
-                    this.discounts = res.data.discounts
+                    this.discount = res.data.discounts
                     this.enremark = res.data.remark
                 })
+            } else {
+                this.discount = []
             }
         },
         customerDate: function() {
@@ -337,7 +339,7 @@ export default {
                     this.discounts = []
                     this.enremark = ''
 
-                } else {en
+                } else {
                     modal.somethingAlert(res.msg)
                 }
             })
