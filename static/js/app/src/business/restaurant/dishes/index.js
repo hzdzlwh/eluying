@@ -24,7 +24,6 @@ Vue.prototype.$isNull = function(text) {
 };
 
 $(function() {
-
     restaurantMenu.render();
 
     var events = {
