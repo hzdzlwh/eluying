@@ -150,7 +150,7 @@
         <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="sass" scoped>
     @import '~dd-common-css/src/variables';
 
     .vip-container {
@@ -197,34 +197,7 @@
         border-top: 4px solid #178ce6;
         padding: 20px;
     }
-    .select-category {
-        display: flex;
-    input[type=checkbox] {
-        margin-right: 6px;
-    &:focus {
-         outline: 0;
-     }
-    }
-    span {
-        margin-bottom: 19px;
-    }
-    .select-category-nodes {
-        flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 0;
-    span {
-        margin-right: 6px;
-    }
-    }
-    }
-    .select-category-name {
-        width: 62px;
-    }
 
-    .select-category-node {
-        display: flex;
-    }
     #settingModal {
     .select-button {
         cursor: pointer;

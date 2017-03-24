@@ -13,7 +13,7 @@
             <span><small>共计</small> {{count}}位会员</span>
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
-        <vip-form :vip="vip" />
+        <vip-form :vip="vip" @onSuccess="getVips" />
     </div>
 </template>
 <style scoped>

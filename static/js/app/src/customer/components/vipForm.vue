@@ -292,7 +292,8 @@
                 countyType: undefined,
                 provinceItems: dsyForComponent['0'],
                 cityItems: [],
-                countyItems: []
+                countyItems: [],
+                hasSubmit: false
             };
         },
         watch: {
@@ -344,6 +345,7 @@
                         if (res.code === 1) {
                             $('#vipForm').modal('hide');
                             this.vip = { name: '', phone: '', idCardType: 0 };
+                            this.$emit('onSuccess');
                         } else {
                             modal.alert(res.msg);
                         }
