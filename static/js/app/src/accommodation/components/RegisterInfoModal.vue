@@ -175,20 +175,17 @@
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
                                         <div v-if = "item.usedAmount <= 0">
-                                            <dd-select v-model="item.id" placeholder="选择娱乐项目" @input="modifyEnter(item)">
-                                                <dd-option v-for="enter in enterList" :value="enter.id" :label="enter.name">
-                                                </dd-option>
-                                            </dd-select>
+                                            <input class="dd-input" :value="item.name" @click="showEnterSelectModal(index)" />
                                         </div>
                                         <span v-if = "item.usedAmount > 0">{{item.name}}</span>
                                         <div class="time-container" style="width: 145px"
-                                             v-if="!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
+                                             v-if="!item['unitTime'] && item.usedAmount <= 0">
                                         </div>
-                                        <div class="time-container" v-if="!!getItemInfo(item.type, item.id)['unitTime'] && item.usedAmount <= 0">
-                                            <label>时长({{getItemInfo(item.type, item.id)['timeUnit']}}）</label>
+                                        <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
+                                            <label>时长({{item['timeUnit']}}）</label>
                                             <counter @numChange="handleNumChange"
-                                                     :num="item.timeAmount * getItemInfo(item.type, item.id)['unitTime']"
-                                                     :id="index" :type="-2" :step="getItemInfo(item.type, item.id)['unitTime']">
+                                                     :num="item.timeAmount * item['unitTime']"
+                                                     :id="index" :type="-2" :step="item['unitTime']">
                                             </counter>
                                         </div>
                                         <span v-if = "item.usedAmount > 0 && item.chargeUnit"
@@ -239,7 +236,7 @@
                                           && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
-                                                  v-if="Number(item.totalPrice) === Number(((getItemInfo(item.type, item.id)['price']
+                                                  v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
                                                 会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
@@ -292,18 +289,14 @@
                                 <div class="shop-item" v-for="(item, index) in shopGoodsItems">
                                     <span class="shop-icon"></span>
                                     <div class="shop-item-content">
-                                        <dd-select v-model="item.id" placeholder="选择商超项目">
+                                        <!--<dd-select v-model="item.id" placeholder="选择商超项目">
                                             <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name"
                                                        :key="shop.id+shop.name">
                                             </dd-option>
-                                        </dd-select>
+                                        </dd-select>-->
                                         <div class="shop-item-count">
                                             <label>数量</label>
                                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="3">
-                                                <p class="valid" v-if="false">
-                                                    <span style="vertical-align: text-bottom">&uarr;</span>
-                                                    服务上限剩余10
-                                                </p>
                                             </counter>
                                             <p class="shop-item-price">
                                                 <label>小计</label>
@@ -360,13 +353,13 @@
                     @close="closeEnterSelectModal"
                     @selectProjectDate="setEnterItems"/>
         </div>
-        <!--<div v-if="shopList.length > 0">-->
-            <!--<selectGoods-->
-                    <!--:show="goodsSelectModalShow"-->
-                    <!--:goodsDate="shopList"-->
-                    <!--@selectProjectDate="setShopGoodsItems"-->
-                    <!--@Modalclose="closeShopSelectModal"/>-->
-        <!--</div>-->
+        <div v-if="shopList.length > 0">
+            <selectGoods
+                    :show="goodsSelectModalShow"
+                    :goodsDate="shopList"
+                    @selectGoodsDate="setShopGoodsItems"
+                    @Modalclose="closeShopSelectModal"/>
+        </div>
     </div>
 </template>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
@@ -844,7 +837,8 @@
                 vipList: [],
                 timeCount: 0,
                 goodsSelectModalShow: false,
-                enterSelectModalShow: false
+                enterSelectModalShow: false,
+                modifyEnterOrShopIndex: -1
             }
         },
 
@@ -1085,14 +1079,14 @@
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
-                    this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
+                    //this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
+                    this.goodsSelectModalShow = true;
                 } else if (type === 2) {
                     if (this.enterItems.length >= 99) {
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
                     this.enterSelectModalShow = true;
-                    this.enterItems.push({ id: undefined, nodeId: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0, totalPrice: 0, originPrice: 0 });
                 } else {
                     let len = this.registerRooms.length;
                     if (len >= 99) {
@@ -1272,12 +1266,8 @@
                     enter.timeAmount = item.timeAmount;
                     enter.date = item.date;
                     enter.categoryId = item.id;
-                    this.enterList.forEach(option => {
-                        if (option.id === item.id) {
-                            enter.categoryName = option.name;
-                            enter.price = Number((option.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
-                        }
-                    });
+                    enter.categoryName = item.name;
+                    enter.price = Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
                     enter.totalPrice = Number(item.totalPrice);
                     if (this.checkState === 'editOrder' && item.playOrderId) {
                         enter.playOrderId = item.playOrderId;
@@ -1357,7 +1347,7 @@
                     this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
                 } else if (type === 2) {
                     this.enterItems.forEach((item, index) => {
-                        const price = this.getItemInfo(item.type, item.id)['price'];
+                        const price = item['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.count = (index === tag) ? num : item.count;
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
@@ -1365,7 +1355,7 @@
                     });
                 } else if (type === -2) {
                     this.enterItems.forEach((item, index) => {
-                        const price = this.getItemInfo(item.type, item.id)['price'];
+                        const price = item['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                         item.timeAmount = (index === tag) ? num : item.timeAmount;
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
@@ -1524,13 +1514,8 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                this.enterList.forEach(enter => {
-                    if (enter.id === item.id) {
-                        item.nodeId = enter.nodeId;
-                    }
-                });
                 if (item.id) {
-                    const price = this.getItemInfo(item.type, item.id)['price'];
+                    const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
@@ -1556,14 +1541,42 @@
                     this.modifyRoom(item);
                 });
             },
+            showEnterSelectModal(index) {
+                this.modifyEnterOrShopIndex = index;
+                this.enterSelectModalShow = true;
+            },
             closeEnterSelectModal(value) {
-                console.log(value);
+                this.modifyEnterOrShopIndex = -1;
                 this.enterSelectModalShow = value;
             },
             setEnterItems(data) {
-                console.log(data);
+                if (this.modifyEnterOrShopIndex === -1) {
+                    this.enterItems.push({ count: 1, date: undefined, timeAmount: 1 ,
+                                            inventory: undefined, usedAmount: 0,
+                                            selfInventory: 0, totalPrice: 0, originPrice: 0,
+                                            ...data });
+                } else {
+                    let index = this.modifyEnterOrShopIndex;
+                    this.enterItems[index] = { count: 1, date: undefined, timeAmount: 1 ,
+                                                inventory: undefined, usedAmount: 0,
+                                                selfInventory: 0, totalPrice: 0, originPrice: 0,
+                                                ...data };
+                    /*const item = this.enterItems[index];
+                    const newItem = {};
+                    newItem.count = item.count;
+                    newItem.date = item.date;
+                    newItem.timeAmount = item.timeAmount;
+                    newItem.inventory = item.inventory;
+                    newItem.usedAmount = item.usedAmount;
+                    newItem.selfInventory = item.selfInventory;
+                    newItem.totalPrice = item.totalPrice;
+                    newItem.originPrice = item.originPrice;
+                    this.enterItems[index] = {...newItem, ...data};
+                    this.modifyEnter(this.enterItems[index]);*/
+                }
             },
             closeShopSelectModal() {
+                this.modifyEnterOrShopIndex = -1;
                 this.goodsSelectModalShow = false;
             },
             setShopGoodsItems(data) {

@@ -40,13 +40,12 @@ const store = new Vuex.Store({
                             let shopList = [];
                             res.data.list.forEach((d) => {
                                 d.gList.forEach((dd) => {
-                                    shopList.push({
-                                        id: dd.i,
-                                        price: dd.p,
-                                        name: dd.n,
-                                        type: 3
-                                    });
+                                    dd.id = dd.i;
+                                    dd.price = dd.p;
+                                    dd.name = dd.n;
+                                    dd.type = 3;
                                 });
+                                shopList.push(d);
                             });
                             commit(types.SET_SHOP_LIST, { shopList });
                             resolve(res);
