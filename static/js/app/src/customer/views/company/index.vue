@@ -137,7 +137,7 @@ import {
     DdTable
 } from 'dd-vue-component'
 import http from '../../../common/AJAXService'
-// import company from '../../components/companyForm'
+import company from '../../components/companyForm'
 export default {
     data() {
         return {
@@ -177,7 +177,7 @@ export default {
                         return item.nodeName + '-' + item.discount + '折'
                     }).join('\n')
                 } > {
-                    row.discounts.length ? row.discounts[0].nodeType + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
+                    row.discounts.length ? row.discounts[0].nodeName + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
                 } < /span>
             }, {
                 title: '充值余额',
@@ -256,16 +256,17 @@ export default {
             this.selecttype = value
         },
         fetchDate: function(argument) {
-            const dataObject = {
+            let dataObject = {
                 isConsumeFeeDesc: this.isConsumeFeeDesc,
                 isCreationTimeDesc: this.isCreationTimeDesc,
                 isLedgerFeeDesc: this.isLedgerFeeDesc,
                 isRechargeFeeDesc: this.isRechargeFeeDesc,
                 keyword: this.search,
-                page: this.currentPage
+                page: this.currentPage,
+                companyType: this.CustomerStatus
             }
-            if (this.CustomerStatus !== 2) {
-                dataobject.companyType = this.companyType
+            if (this.CustomerStatus === 2) {
+                dataObject.companyType = undefined
             }
             http.get('/contractCompany/getList', dataObject).then(res => {
                 if (res.code === 1) {
@@ -293,7 +294,7 @@ export default {
         "dd-dropdown-item": DdDropdownItem,
         DdOption,
         DdTable,
-        // company
+        company
     }
 }
 </script>
