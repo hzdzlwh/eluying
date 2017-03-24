@@ -10,18 +10,17 @@ import util from '../common/util';
 import store from './store';
 import init from '../common/init';
 
-init({
-    leftMenu: false,
-    id: auth.ACCOMMODATION_ID,
-    noAuthUrl: auth.NO_AUTH_FOR_A_URL
-});
-
-const app = new Vue({
-    store,
-    ...App
-});
-
 document.addEventListener('DOMContentLoaded', () => {
+    init({
+        leftMenu: false,
+        id: auth.ACCOMMODATION_ID,
+        noAuthUrl: auth.NO_AUTH_FOR_A_URL
+    });
+
+    const app = new Vue({
+        store,
+        ...App
+    });
 
     const events = {
         // hover高亮时间和房间

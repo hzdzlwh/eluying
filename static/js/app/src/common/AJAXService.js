@@ -2,6 +2,8 @@ require("cookie");
 import Raven from 'raven-js';
 import modal from './modal';
 var md5 = require("md5");
+
+const spin = new modal.Spin();
 var AJAXService = {
     urls: {
         host: process.env.NODE_ENV === 'production' ? "/mg" : (process.env.serverUrl + "/mg"),
@@ -108,6 +110,8 @@ var AJAXService = {
             data = this.getDataWithToken(data);
         }
 
+        spin.addPending();
+
         const url = baseUrl ? baseUrl + path : AJAXService.getUrl2(path);
         return $.ajax({
             type: method,
@@ -157,7 +161,10 @@ var AJAXService = {
 
                 errorCallback(e);
             }
-        });
+        })
+            .always(() => {
+                spin.removePending();
+            });
     },
     get(path, data) {
         return this.ajaxWithToken('GET', path, data);
