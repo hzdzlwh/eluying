@@ -353,6 +353,13 @@
                 </div>
             </div>
         </div>
+        <div v-if="enterList.length > 0">
+            <selectProject
+                    :show="enterSelectModalShow"
+                    :selectDate="enterList"
+                    @close="closeEnterSelectModal"
+                    @selectProjectDate="setEnterItems"/>
+        </div>
     </div>
 </template>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
@@ -781,6 +788,8 @@
 <script>
     import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
     import CheckInPerson from './CheckInPerson.vue';
+    import SelectGoods from './selectGoods.vue';
+    import SelectProject from './selectProject.vue';
     import counter from '../../common/components/counter.vue';
     import AJAXService from 'AJAXService';
     import modal from 'modal';
@@ -827,6 +836,8 @@
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
+                goodsSelectModalShow: false,
+                enterSelectModalShow: false
             }
         },
 
@@ -1073,6 +1084,7 @@
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
+                    this.enterSelectModalShow = true;
                     this.enterItems.push({ id: undefined, nodeId: undefined, count: 1, type: 2, date: undefined, timeAmount: 1 , inventory: undefined, usedAmount: 0, selfInventory: 0, totalPrice: 0, originPrice: 0 });
                 } else {
                     let len = this.registerRooms.length;
@@ -1536,6 +1548,13 @@
                     item.roomType = this.getRoomsList(item.categoryType)[0].id;
                     this.modifyRoom(item);
                 });
+            },
+            closeEnterSelectModal(value) {
+                console.log(value);
+                this.enterSelectModalShow = value;
+            },
+            setEnterItems(data) {
+                console.log(data);
             }
         },
         components:{
@@ -1546,28 +1565,18 @@
             DdSelect,
             DdOption,
             counter,
-            CheckInPerson
+            CheckInPerson,
+            SelectGoods,
+            SelectProject
         },
         watch: {
-            /*name(newVal) {
-                let search = newVal.length >= 1
-                    && (this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip));
-                if (search) {
-                    const params = { name: newVal };
-                    clearTimeout(this.timeCount);
-                    this.timeCount = setTimeout(() => { this.getVipList(params, 1); }, 500);
-                }
-            },*/
             phone(newVal) {
                 const params = { phone: newVal };
                 let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
-                if (newVal.length >= 4 && newVal.length < 11 && search) {
-                    //clearTimeout(this.timeCount);
-                    //this.timeCount = setTimeout(() => { this.getVipList(params, 2); }, 500)
-                } else if (newVal.length === 11 && search) {
+                if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
-                } else if (newVal !== 11) {
+                } else if (newVal.length !== 11) {
                     this.vipDiscountDetail = {};
                 }
             },
