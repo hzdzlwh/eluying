@@ -165,6 +165,11 @@
             <p class="rest-tips">
                 <span v-if="$isNull(dishes.unitPrice) && submitted">↑必填字段</span>
             </p>
+            <label for="">允许打折</label>
+            <input type="radio" class="dd-radio" name="dishesDiscount" v-model="dishes.discountable" value="1"><span>是</span>
+            <input type="radio" class="dd-radio" name="dishesDiscount" v-model="dishes.discountable" value="0"><span>否</span>
+            <p class="rest-tips">
+            </p>
             <label for="">菜品图片</label>
             <div class="uploadContainer" >
                 <div class="uploadBtn">
@@ -229,6 +234,10 @@
                     ↑必填字段
                 </span>
             </p>
+            <label for="">允许打折</label>
+            <input type="radio" class="dd-radio" name="packageDiscount" v-model="packageModel.discountable" value="1"><span>是</span>
+            <input type="radio" class="dd-radio" name="packageDiscount" v-model="packageModel.discountable" value="0"><span>否</span>
+            <p class="rest-tips">
             <label for="">包含菜品</label>
             <input class="dishes-num" type="text" disabled :value="getDishesNum()">
             <button class="editDishesInPackage" @click="openPackageSelectDialog">编辑菜品</button>
