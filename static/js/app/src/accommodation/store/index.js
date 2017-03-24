@@ -63,10 +63,14 @@ const store = new Vuex.Store({
                         if (res.code === 1) {
                             let enterList = [];
                             res.data.list.map(el => {
-                                el.id = el.categoryId;
-                                el.nodeId = el.enterId;
-                                el.type = 2;
-                                enterList.push(el);
+                                if (el.categoryList && el.categoryList.length > 0) {
+                                    el.categoryList.map(item => {
+                                        item.id = item.categoryId;
+                                        item.nodeId = item.enterId;
+                                        item.type = 2;
+                                    });
+                                    enterList.push(el);
+                                }
                             });
                             commit(types.SET_ENTER_LIST, { enterList });
                             resolve(res);

@@ -360,6 +360,13 @@
                     @close="closeEnterSelectModal"
                     @selectProjectDate="setEnterItems"/>
         </div>
+        <!--<div v-if="shopList.length > 0">-->
+            <!--<selectGoods-->
+                    <!--:show="goodsSelectModalShow"-->
+                    <!--:goodsDate="shopList"-->
+                    <!--@selectProjectDate="setShopGoodsItems"-->
+                    <!--@Modalclose="closeShopSelectModal"/>-->
+        <!--</div>-->
     </div>
 </template>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
@@ -1554,6 +1561,12 @@
                 this.enterSelectModalShow = value;
             },
             setEnterItems(data) {
+                console.log(data);
+            },
+            closeShopSelectModal() {
+                this.goodsSelectModalShow = false;
+            },
+            setShopGoodsItems(data) {
                 console.log(data);
             }
         },
