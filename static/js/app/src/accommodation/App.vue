@@ -5,12 +5,12 @@
             @selectGoodsDate='selectGoodsDate'
             @Modalclose='goosdClose'
             ></SelectGoods>
-            <SelectProject 
-            :show='proshow'
-            :selectDate='selectDate'
-            @close='ProjectClose'
-            @selectProjectDate='selectProjectDate'
-            ></SelectProject>
+            <!--<SelectProject -->
+            <!--:show='proshow'-->
+            <!--:selectDate='selectDate'-->
+            <!--@close='ProjectClose'-->
+            <!--@selectProjectDate='selectProjectDate'-->
+            <!--&gt;</SelectProject>-->
             <a @click='showmod("show")'>aaaaa</a>
             <a @click='showmod("proshow")'>bbbbb</a>
         <Search @showOrder="showOrder" />

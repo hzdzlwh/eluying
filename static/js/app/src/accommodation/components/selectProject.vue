@@ -145,8 +145,8 @@ export default {
         },
         selectprogram(item) {
             let data = this.entertainmentIdActive
-            data.list = item
-            this.$emit('selectProjectDate', data)
+            data.categoryList = item
+            this.$emit('selectProjectDate', item)
             this.hideModal()
         }
     },
