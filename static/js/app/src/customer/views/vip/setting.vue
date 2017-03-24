@@ -150,15 +150,17 @@
         <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
+<style>
+    .list-action {
+        color: #178ce6;
+        cursor: pointer;
+    }
+</style>
 <style lang="sass" scoped>
     @import '~dd-common-css/src/variables';
 
     .vip-container {
         margin: 0 auto;
-    .list-action {
-        color: $blue;
-        cursor: pointer;
-    }
     i {
         color: #999;
         font-style: normal;

@@ -45,6 +45,18 @@
     .dd-dropdown-menu {
         z-index: 1;
     }
+    .idcard-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        background: #bfbfbf;
+        border-radius: 2px;
+        margin-left: 2px;
+        text-align: center;
+        line-height: 16px;
+        color: #fff;
+        font-size: 12px;
+    }
 </style>
 <script>
 export default {
