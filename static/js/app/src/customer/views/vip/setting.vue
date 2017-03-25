@@ -102,7 +102,7 @@
                         <label>优惠折扣：</label>
                         <div style="width: 285px">
                             <div style="max-height: 78px;overflow: auto">
-                                <div style="margin-bottom: 3px" v-for="item in discount">
+                                <div style="margin-bottom: 3px" v-for="item in discount" :key="item.id">
                                     <span style="display: inline-block;width: 132px">{{item.nodeName}}</span>
                                     <input style="width: 56px;" type="text" class="dd-input" v-model="item.discount">
                                     <i style="margin: 0 16px 0 8px">折</i>
@@ -150,15 +150,17 @@
         <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style>
+    .list-action {
+        color: #178ce6;
+        cursor: pointer;
+    }
+</style>
+<style lang="scss" scoped>
     @import '~dd-common-css/src/variables';
 
     .vip-container {
         margin: 0 auto;
-    .list-action {
-        color: $blue;
-        cursor: pointer;
-    }
     i {
         color: #999;
         font-style: normal;
@@ -197,34 +199,7 @@
         border-top: 4px solid #178ce6;
         padding: 20px;
     }
-    .select-category {
-        display: flex;
-    input[type=checkbox] {
-        margin-right: 6px;
-    &:focus {
-         outline: 0;
-     }
-    }
-    span {
-        margin-bottom: 19px;
-    }
-    .select-category-nodes {
-        flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 0;
-    span {
-        margin-right: 6px;
-    }
-    }
-    }
-    .select-category-name {
-        width: 62px;
-    }
 
-    .select-category-node {
-        display: flex;
-    }
     #settingModal {
     .select-button {
         cursor: pointer;

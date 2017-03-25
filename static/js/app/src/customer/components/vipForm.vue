@@ -4,7 +4,7 @@
             <div class="modal-content vipForm-modal-content">
                 <div class="vipForm-modal-header">
                     <span></span>
-                    <span class="vipForm-closeBtn" ng-click="close()">&times;</span>
+                    <span class="vipForm-closeBtn" @click="close()">&times;</span>
                 </div>
                 <div class="vipForm-modal-body">
                     <p class="body-mainTitle" v-if="!vip.vipUserId">新增会员</p>
@@ -26,7 +26,8 @@
                                 <span class="vipInfo-item-label">
                                     <img v-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号
                                 </span>
-                                <input v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
+                                <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
+                                <span v-if="vip.vipUserId">{{vip.phone}}</span>
                             </div>
                             <span v-if="!vip.vipUserId && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="error-tips">必填字段</span>
                             <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
@@ -40,6 +41,7 @@
                                     <dd-option v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
                                 </dd-select>
                             </div>
+                            <span v-if="vip.vipUserId">{{vip.vipLevelName}}</span>
                         </div>
                         <div class="vipInfo-item">
                             <span class="vipInfo-item-label">会员卡号</span>
@@ -77,19 +79,24 @@
                             <span class="vipInfo-item-label">地区</span>
                             <div class="vipInfo-item-content">
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.provinceType" placeholder="省">
-                                        <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
+                                    <dd-select v-model="provinceType" placeholder="省">
+                                        <dd-option
+                                            v-for="option in provinceItems"
+                                            :value="option.id"
+                                            :label="option.name"
+                                            :key="option.id"
+                                        >
                                         </dd-option>
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.cityType" placeholder="市">
+                                    <dd-select v-model="cityType" placeholder="市">
                                         <dd-option  v-for="option in cityItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'city'">
                                         </dd-option>
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.countyType" placeholder="区">
+                                    <dd-select v-model="countyType" placeholder="区">
                                         <dd-option  v-for="option in countyItems"  :value="option.id" :label="option.name" :key="option.id+option.name">
                                         </dd-option>
                                     </dd-select>
@@ -117,9 +124,13 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
 .vipForm-modal-dialog {
     width: 340px;
+    .dd-select-menu {
+        max-height: 300px;
+        overflow: auto;
+    }
 }
 .vipForm-modal-content {
     background: #fafafa;
@@ -287,7 +298,8 @@
                 countyType: undefined,
                 provinceItems: dsyForComponent['0'],
                 cityItems: [],
-                countyItems: []
+                countyItems: [],
+                hasSubmit: false
             };
         },
         watch: {
@@ -319,8 +331,21 @@
                         this.levels = this.levels.concat(res.data.list);
                     });
             },
+            close() {
+                $('#vipForm').modal('hide');
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: undefined };
+            },
             addEditVip() {
                 const vip = this.vip;
+                this.hasSubmit = true;
+                if (!vip.phone ||
+                    !vip.name ||
+                    vip.name.length < 2 ||
+                    vip.phone.length !== 11) {
+                    return false;
+                }
+
+                this.hasSubmit = false;
                 const data = {
                     ...vip,
                     province: vip.provinceType && this.provinceItems[vip.provinceType].name,
@@ -337,8 +362,8 @@
                 http.post('/vipUser/addEditVip', data)
                     .then(res => {
                         if (res.code === 1) {
-                            $('#vipForm').modal('hide');
-                            this.vip = { name: '', phone: '', idCardType: 0 };
+                            this.close();
+                            this.$emit('onSuccess');
                         } else {
                             modal.alert(res.msg);
                         }

@@ -35,7 +35,42 @@
         </div>
     </div>
 </template>
-<style>
+<style lang="scss" scoped>
+    .select-category {
+        display: flex;
+    input[type=checkbox] {
+        margin-right: 6px;
+    &:focus {
+         outline: 0;
+     }
+    }
+    span {
+        margin-bottom: 19px;
+    }
+    .select-category-nodes {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    span {
+        margin-right: 6px;
+    }
+    }
+    }
+    .select-category-name {
+        width: 62px;
+    }
+
+    .select-category-node {
+        display: flex;
+    }
+    .modal-content {
+        background: #fafafa;
+        box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius: 2px;
+        border-top: 4px solid #178ce6;
+        padding: 20px;
+    }
 </style>
 <script>
     import modal from '../../common/modal';

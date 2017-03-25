@@ -36,6 +36,11 @@ var webpackConf =  {
             {test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000'}
         ]
     },
+    vue: {
+        loaders: {
+            scss: 'vue-style-loader!css-loader!sass-loader'
+        }
+    },
     resolve: {
         extensions: ['.js', '.vue', ''],
         alias: {

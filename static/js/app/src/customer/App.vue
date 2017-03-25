@@ -16,7 +16,7 @@
     </div>
 </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .customer-container {
         padding-top: 89px;
@@ -44,6 +44,22 @@
     }
     .dd-dropdown-menu {
         z-index: 1;
+    }
+    .idcard-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        background: #bfbfbf;
+        border-radius: 2px;
+        margin-left: 2px;
+        text-align: center;
+        line-height: 16px;
+        color: #fff;
+        font-size: 12px;
+    }
+    .list-action-button {
+        color: $blue;
+        cursor: pointer;
     }
 </style>
 <script>
