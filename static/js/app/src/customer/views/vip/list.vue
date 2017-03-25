@@ -14,6 +14,9 @@
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
         <vip-form :vip="vip" @onSuccess="getVips" />
+        <detail :tab="detailTab" :id="detailId" type="vip" :title="detailTitle">
+            <div></div>
+        </detail>
     </div>
 </template>
 <style scoped>
@@ -44,7 +47,7 @@
     import http from '../../../common/AJAXService';
     import vipForm from '../../components/vipForm.vue';
     import util from '../../../common/util';
-
+    import detail from '../../components/detail.vue';
     const idCardType = [
         '身', '军', '通', '护', '其'
     ];
@@ -99,10 +102,13 @@
                     },
                     {
                         title: '操作',
-                        render: (h) => <span>查单</span>,
+                        render: (h, row) => <span class="list-action-button" onClick={() => this.openDetailDialog(row, 2)}>查单</span>,
                         width: 60
                     }
-                ]
+                ],
+                detailTab: undefined,
+                detailId: undefined,
+                detailTitle: undefined
             };
         },
         created() {
@@ -110,7 +116,7 @@
         },
         methods: {
             getVips(page) {
-                this.pageNo = page || this.page;
+                this.pageNo = page || this.pageNo;
                 http.get('/vipUser/getVipUserListPC', {
                     pageNo: this.pageNo,
                     searchPattern: this.searchPattern,
@@ -137,23 +143,30 @@
             },
             search() {
                 this.searchPattern = this.$refs.searchInput.value;
-                this.page = 1;
+                this.pageNo = 1;
                 this.getVips();
             },
             handleTableChange(data) {
-                this.page = 1;
+                this.pageNo = 1;
                 this.sortColumn = data.sortField;
                 this.sortType = data.sortType;
                 this.getVips();
             },
             getIdCardIcon(num) {
                 return this.idCardList[num].label.substring(0, 1);
+            },
+            openDetailDialog(vip, tab) {
+                this.detailTab = tab;
+                this.detailId = vip.vipUserId;
+                this.detailTitle = vip.name;
+                $('#detailModal').modal('show');
             }
         },
         components: {
             DdTable,
             DdPagination,
-            vipForm
+            vipForm,
+            detail
         }
     };
 </script>

@@ -104,7 +104,7 @@ var AJAXService = {
             data = {};
         }
 
-        if(path !== 'loginUrl'){
+        if (path !== 'loginUrl') {
             data = this.getDataWithToken(data);
         }
 
@@ -116,21 +116,21 @@ var AJAXService = {
             data: data,
             dataFilter: function(res) {
                 const result = JSON.parse(res);
-                if (result.code != 1) {
+                if (result.code !== 1) {
                     Raven.captureMessage('ajax error', {
                         extra: {
                             data: data,
                             res: result,
                             url: url
                         }
-                    })
+                    });
                 }
 
-                if (result.code == 5) {
+                if (result.code === 5) {
                     window.localStorage.clear();
                     modal.alert('账号在别处登录。');
                     setTimeout(() => {
-                        window.location.href = "/login.html";
+                        window.location.href = '/login.html';
                     }, 3000);
                 }
 
@@ -193,7 +193,7 @@ var AJAXService = {
         for (const name in params) {
             if (params.hasOwnProperty(name)) {
                 let str = '';
-                if (params[name] !== null) {
+                if (params[name] !== null && params[name] !== undefined) {
                     str = JSON.stringify(params[name]);
                 }
                 if (str.substring(0, 1) === '\"' && str.substring(str.length - 1) === '\"') {

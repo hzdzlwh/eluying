@@ -57,6 +57,10 @@
         color: #fff;
         font-size: 12px;
     }
+    .list-action-button {
+        color: $blue;
+        cursor: pointer;
+    }
 </style>
 <script>
 export default {
