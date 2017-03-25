@@ -1,17 +1,5 @@
 <template>
     <div class="acc-container">
-    <SelectGoods :show='show'
-            :goodsDate='goodsdate'
-            @selectProjectDate='selectProjectDate'
-            @Modalclose='goosdClose'
-            ></SelectGoods>
-            <SelectProject 
-            :show=false
-            :selectDate='selectDate'
-            @close='ProjectClose'
-            @selectProjectDate='selectProjectDate'
-            ></SelectProject>
-            <a @click='show = true'>aaaaa</a>
         <Search @showOrder="showOrder" />
         <Calendar
             @dateChange="handleDateChange"
@@ -102,8 +90,6 @@
 }
 </style>
 <script>
-    import SelectGoods from './components/selectGoods.vue';
-    import SelectProject from './components/selectProject.vue';
     import Calendar from './components/Calendar.vue';
     import ShopCart from './components/ShopCart.vue';
     import Search from './components/Search.vue';
@@ -135,83 +121,6 @@
         },
         data() {
             return {
-                show:false,
-                goodsdate:[{
-                    cName: '酒水最多十六个字最多就三行十六字',
-                    gList:[{
-                        i:11,
-                        n:11,
-                        p:11,
-                    },
-                    {
-                        i:111,
-                        n:111,
-                        p:111,
-                    },
-                    {
-                        i:1111,
-                        n:1111,
-                        p:1111,
-                    }
-                    ]
-                },
-                {
-                    cName: '2',
-                    gList:[{
-                        i:22,
-                        n:22,
-                        p:22,
-                    },
-                    {
-                        i:222,
-                        n:222,
-                        p:222,
-                    },
-                    {
-                        i:2222,
-                        n:2222,
-                        p:2222,
-                    }
-                    ]
-                }
-                ],
-                selectDate:[{
-                    entertainmentName:'水上最多十六 个字最多就三 行十六字',
-                    entertainmentId:1,
-                    entertainmentCategoryList:[
-                    {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:11
-                    },
-                    {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:12
-                    },
-                    {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
-                    }
-                    ]
-                },
-                {
-                    entertainmentName:'水上最多',
-                    entertainmentId:2,
-                    entertainmentCategoryList:[
-                    {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:11
-                    },
-                    {
-                        entertainmentCategoryName: '水上',
-                        entertainmentId:12
-                    },
-                    {
-                        entertainmentCategoryName: '水上最多十六 个字最多就三 行十六字',
-                        entertainmentId:13
-                    }
-                    ]
-                }
-                ],
                 categories: [],
                 holidays: [],
                 roomStatus: [],
@@ -262,18 +171,6 @@
             }
         },
         methods: {
-            selectProjectDate(data) {
-                // this.data = data
-            },
-            selectProjectDate(data) {
-                // this.data = data
-            },
-            ProjectClose(){
-                this.show = false
-            },
-            goosdClose(){
-                this.show = false
-            },
             getRoomAndStatus() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomsAndStaus', {
                     date: this.startDateStr,
@@ -409,9 +306,7 @@
             CheckInModal,
             CashierModal,
             CancelOrderModal,
-            GetMoneyWithCode,
-            SelectProject,
-            SelectGoods
+            GetMoneyWithCode
         }
     }
 </script>

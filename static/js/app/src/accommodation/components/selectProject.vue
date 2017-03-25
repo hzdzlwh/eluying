@@ -10,12 +10,12 @@
                 </div>
                 <div class="selectModal-body">
                     <div class="selectLeft">
-                    <div class="selectLeft-item" v-for='item in selectDate' :class='{selectActive: item.entertainmentId === entertainmentIdActive.entertainmentId}'  @click='changelist(item)'>{{item.entertainmentName}}
+                        <div class="selectLeft-item" v-for='item in selectDate' :class='{selectActive: item.entertainmentId === entertainmentIdActive.entertainmentId}' @click='changelist(item)'>{{item.entertainmentName}}
                         </div>
                     </div>
                     <div class="selectright">
-                        <div class="selectright-item" v-for='item in entertainmentListActive' @click='selectprogram(item)'>
-                            <div>{{item.entertainmentCategoryName}}</div>
+                        <div class="selectright-item" v-for='it in entertainmentListActive' @click='selectprogram(it)'>
+                            <div>{{it.name}}</div>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
 </template>
 <style scoped lang="sass" rel="stylesheet/scss">
 @import "~dd-common-css/src/variables";
-.selectModal {
+#selectModal {
     z-index: 1051;
 }
 
@@ -98,7 +98,7 @@
         overflow-y: auto;
         max-height: 320px;
         .selectright-item {
-          background:#fff;
+            background: #fff;
             padding: 0 20px;
             &:hover {
                 background: #e1effa;
@@ -120,40 +120,42 @@ export default {
             type: Boolean,
             default: false
         },
-        selectDate:{
+        selectDate: {
             type: Array,
-            default: function () {
-              return []
+            default: function() {
+                return []
             }
         }
     },
     data() {
-      return {
-        entertainmentIdActive: this.selectDate[0],
-        entertainmentListActive: this.selectDate[0].entertainmentCategoryList
-      }
+        return {
+            entertainmentIdActive: this.selectDate[0],
+            entertainmentListActive: this.selectDate[0].categoryList
+        }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
         changelist(list) {
-          this.entertainmentListActive = list.entertainmentCategoryList
-          this.entertainmentIdActive = list
+            this.entertainmentListActive = list.categoryList
+            this.entertainmentIdActive = list
         },
         hideModal() {
-          this.$emit('close', false)
-          $('#selectModal').modal('hide');
+            this.$emit('close', false)
+            $('#selectModal').modal('hide');
         },
         selectprogram(item) {
-          let data = this.entertainmentIdActive
-          data.list = item
-          this.$emit('selectProjectDate', data)
-          this.hideModal()
+            // let data = this.entertainmentIdActive
+            // data.categoryList = item
+            this.$emit('selectProjectDate', item)
+            this.hideModal()
         }
     },
     watch: {
         show(val) {
             if (val) {
+                $('#selectModal').modal({
+                    backdrop: 'static'
+                })
                 $('#selectModal').modal('show');
             } else {
                 $('#selectModal').modal('hide');
