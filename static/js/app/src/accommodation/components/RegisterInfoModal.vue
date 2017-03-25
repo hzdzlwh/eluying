@@ -1691,6 +1691,7 @@
                         enter.selfInventory = item.amount;
                         enter.type = 2;
                         enter.inventory = undefined;
+                        enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                         enter.totalPrice = item.totalPrice;
                         enterItems.push(enter);
                     });

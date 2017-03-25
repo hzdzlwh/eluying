@@ -159,6 +159,8 @@ var AJAXService = {
                     }
                 });
 
+                modal.alert('网络请求失败');
+
                 errorCallback(e);
             }
         })
