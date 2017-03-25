@@ -381,7 +381,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
     @import "~dd-common-css/src/variables";
     .valid {
         position: absolute;

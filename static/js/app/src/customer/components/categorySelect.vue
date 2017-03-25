@@ -35,7 +35,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
     .select-category {
         display: flex;
     input[type=checkbox] {

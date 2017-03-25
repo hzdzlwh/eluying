@@ -71,7 +71,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/scss">
+<style lang="scss" type="text/css" rel="stylesheet/scss">
     .cashier-money-text {
         margin-right: 24px;
     }

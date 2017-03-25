@@ -1,5 +1,5 @@
 <template>
-    <div id="detailModal" role="dialog" id="categorySelectModal">
+    <div id="detailModal" role="dialog">
         <div class="modal-dialog" style="width: 400px">
             <div class="modal-content">
                 <div class="detail-header">
@@ -42,7 +42,7 @@
                             </dd-dropdown>
                         </div>
                         <div>
-                            <dd-table></dd-table>
+                            <dd-table :columns="col" :dataSource=""></dd-table>
                         </div>
                         <div>
                             <span>
@@ -73,61 +73,89 @@
         DdSelect,
         DdDropdown,
         DdDropdownItem } from 'dd-vue-component';
+    import http from '../../common/AJAXService';
+
     const vipCol = [
         {
-            title: '订单号'
+            title: '订单号',
+            dateIndex: 'orderNum'
         },
         {
-            title: '订单业态'
+            title: '订单业态',
+            dateIndex: 'orderTypes'
         },
         {
-            title: '订单金额￥'
+            title: '订单金额￥',
+            dateIndex: 'totalPrice'
         },
         {
-            title: '使用时间'
+            title: '使用时间',
+            dateIndex: 'startTime'
         },
         {
-            title: '操作人'
+            title: '操作人',
+            dateIndex: 'operator'
         },
         {
-            title: '订单状态'
+            title: '订单状态',
+            dateIndex: 'state'
         }
     ];
     const companyCol = [
         {
-            title: '订单号'
+            title: '订单号',
+            dateIndex: 'orderNum'
         },
         {
-            title: '订单业态'
+            title: '订单业态',
+            dateIndex: 'orderTypes'
         },
         {
-            title: '联系人'
+            title: '联系人',
+            dateIndex: 'name'
         },
         {
-            title: '联系号码'
+            title: '联系号码',
+            dateIndex: 'phone'
         },
         {
-            title: '订单金额￥'
+            title: '订单金额￥',
+            dateIndex: 'orderNum'
         },
         {
-            title: '挂账金额￥'
+            title: '挂账金额￥',
+            dateIndex: 'totalPrice'
         },
         {
-            title: '使用时间'
+            title: '使用时间',
+            dateIndex: 'startTime'
         },
         {
-            title: '收银方式'
+            title: '收银方式',
+            dateIndex: 'payTypes'
         }
     ];
+    const getOrdersUrls = {
+        vip: '/vipUser/getVipUserOrders',
+        company: '/contractCompany/getCompanyOrderList',
+        nonvip: '/customer/getCustomerList'
+    };
+
     export default{
         props: {
-            type: String,
+            type: String, // vip, company, nonvip
             id: Number,
+            tab: Number, // 1-detail, 2-orders
             onDelete: Function,
             onEdit: Function
         },
         data() {
             return {};
+        },
+        computed: {
+            col() {
+                return this.type === 'company' ? companyCol : vipCol;
+            }
         },
         components: {
             DdTable,
@@ -136,6 +164,10 @@
             DdDropdown,
             DdDropdownItem
         },
-        methods: {}
+        methods: {
+            getList() {
+                http.get(getOrdersUrls[this.type]);
+            }
+        }
     };
 </script>

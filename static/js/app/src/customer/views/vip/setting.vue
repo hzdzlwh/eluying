@@ -156,7 +156,7 @@
         cursor: pointer;
     }
 </style>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
     @import '~dd-common-css/src/variables';
 
     .vip-container {

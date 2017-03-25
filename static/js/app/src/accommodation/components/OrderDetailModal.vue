@@ -385,7 +385,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/scss">
+<style lang="scss" type="text/css" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     #orderDetail {
         .label-text {

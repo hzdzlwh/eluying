@@ -124,7 +124,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
 .vipForm-modal-dialog {
     width: 340px;
     .dd-select-menu {

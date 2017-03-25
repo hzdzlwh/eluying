@@ -16,7 +16,7 @@
     </div>
 </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .customer-container {
         padding-top: 89px;
