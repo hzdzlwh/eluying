@@ -289,11 +289,7 @@
                                 <div class="shop-item" v-for="(item, index) in shopGoodsItems">
                                     <span class="shop-icon"></span>
                                     <div class="shop-item-content">
-                                        <!--<dd-select v-model="item.id" placeholder="选择商超项目">
-                                            <dd-option v-for="shop in shopList" :value="shop.id" :label="shop.name"
-                                                       :key="shop.id+shop.name">
-                                            </dd-option>
-                                        </dd-select>-->
+                                        <input class="dd-input" :value="item.name" disabled />
                                         <div class="shop-item-count">
                                             <label>数量</label>
                                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="3">
@@ -301,7 +297,7 @@
                                             <p class="shop-item-price">
                                                 <label>小计</label>
                                                 <span>
-                                                    ¥{{((getItemInfo(item.type, item.id)['price'] * getItemDiscountInfo(0, item.type, vipDiscountDetail).discount).toFixed(2) * item.count).toFixed(2)}}
+                                                    ¥{{((item['price'] * getItemDiscountInfo(0, item.type, vipDiscountDetail).discount).toFixed(2) * item.count).toFixed(2)}}
                                                 </span>
                                             </p>
                                         </div>
@@ -314,7 +310,7 @@
                                             <span>
                                                 原价
                                                 <span class="origin-price">
-                                                    ¥{{ (getItemInfo(item.type, item.id)['price'] * item.count).toFixed(2) }}
+                                                    ¥{{ (item['price'] * item.count).toFixed(2) }}
                                                 </span>
                                             </span>
                                             <span class="discount-num">
@@ -885,7 +881,7 @@
                 if (this.shopGoodsItems.length > 0) {
                     this.shopGoodsItems.forEach(good => {
                         if (good.id) {
-                            let goodPrice = ((this.getItemInfo(good.type, good.id)['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
+                            let goodPrice = ((good['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
                             totalPrice += Number(goodPrice);
                         }
                     });
@@ -1288,12 +1284,8 @@
                     good.type = 3;
                     good.priceId = 0;
                     good.date = util.dateFormat(new Date());
-                    this.shopList.forEach(shop => {
-                       if (shop.id === item.id) {
-                           good.name = shop.name;
-                           good.price = Number((shop.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2));;
-                       }
-                    });
+                    good.name = item.name;
+                    good.price = Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2));
 
                     items.push(good);
                 });
@@ -1580,7 +1572,14 @@
                 this.goodsSelectModalShow = false;
             },
             setShopGoodsItems(data) {
-                console.log(data);
+                const goodsList = data;
+                goodsList.forEach(good => {
+                    good.type = 3;
+                    good.price = good.p;
+                    good.name = good.n;
+                    good.count = good.num;
+                });
+                this.shopGoodsItems = this.shopGoodsItems.concat(goodsList)
             }
         },
         components:{
@@ -1606,7 +1605,8 @@
                     this.vipDiscountDetail = {};
                 }
             },
-            vipDiscountDetail(newVal) {
+            vipDiscountDetail(newVal, oldVal) {
+                if (!newVal.vipDetail && !oldVal.vipDetail) { return false ;}
                 this.registerRooms.forEach(room => {
                     if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
@@ -1667,6 +1667,7 @@
                     this.userOriginType = this.order.originId;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
+                    this.getVipDiscount({ phone: this.phone });
 
                     let enterItems = [];
                     let filterEnters = this.order.playItems.filter(enter => {

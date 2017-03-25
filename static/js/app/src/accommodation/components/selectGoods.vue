@@ -27,7 +27,7 @@
                 </div>
                 <div class="goodsModal-foot">
                     <span class="goodsTotal">￥{{totalbill.total}} <span class="goodsCount">（共{{totalbill.count}}件商品）</span></span>
-                    <span @click='goodsprogram(item)' class='goodsSub'>确定</span>
+                    <span @click='goodsprogram' class='goodsSub'>确定</span>
                 </div>
             </div>
         </div>
@@ -256,10 +256,14 @@ export default {
             this.$emit('Modalclose')
             $('#goodsModal').modal('hide')
         },
-        goodsprogram(item) {
-            let data = this.gIdActive
-            data.list = item
-            this.$emit('selectGoodsDate', this.bill)
+        goodsprogram() {
+            let data = []
+            for (let item in this.bill) {
+                if (this.bill[item].num > 0){
+                    data.push(Object.assign({id:item}, this.bill[item]))
+                }
+            }
+            this.$emit('selectGoodsDate', data)
             this.hideModal()
         },
         changebill(item, type) {

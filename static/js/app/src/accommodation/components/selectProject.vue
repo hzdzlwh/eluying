@@ -14,8 +14,8 @@
                         </div>
                     </div>
                     <div class="selectright">
-                        <div class="selectright-item" v-for='item in entertainmentListActive' @click='selectprogram(item)'>
-                            <div>{{item.name}}</div>
+                        <div class="selectright-item" v-for='it in entertainmentListActive' @click='selectprogram(it)'>
+                            <div>{{it.name}}</div>
                         </div>
                     </div>
                 </div>
@@ -144,8 +144,8 @@ export default {
             $('#selectModal').modal('hide');
         },
         selectprogram(item) {
-            let data = this.entertainmentIdActive
-            data.categoryList = item
+            // let data = this.entertainmentIdActive
+            // data.categoryList = item
             this.$emit('selectProjectDate', item)
             this.hideModal()
         }

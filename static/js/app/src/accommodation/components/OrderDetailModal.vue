@@ -130,15 +130,18 @@
                                                 <p class="foodTime">就餐时间:{{ item.detail.orderTime ? item.detail.orderTime.slice(0, 16) : ''}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
-                                                        <p class="food-sub-item" v-for="dish in food.dishItemResp">
-                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
-                                                                {{dish.categoryName}}
-                                                            </span>
+                                                        <div class="food-sub-item" v-for="dish in food.dishItemResp">
+                                                            <p class="dish-name-container">
+                                                                <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
+                                                                    {{dish.categoryName}}
+                                                                </span>
+                                                                <span class="dish-discount-icon" v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
+                                                            </p>
                                                             <span class="dish-numAndPrice">
                                                                 <span>x{{dish.bookNum}}</span>
                                                                 <span>¥{{dish.price}}</span>
                                                             </span>
-                                                        </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="money-container">
@@ -255,52 +258,52 @@
                                 <span style="margin-right: 4px">收银信息</span>
                                 <div class="info-icon">
                                     <div class="info-content" style="right: 0;transform: translateX(100%)">
-                                        <p class="info-title">收银信息</p>
-                                        <p class="money-item">
-                                            <span class="money-type">订单金额</span>
-                                            <span class="money-num">¥{{findTypePrice(order.payments, 13)}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item">
-                                            <span class="money-type">商品总价</span>
-                                            <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 5) > 0">
-                                            <span class="money-type">优惠</span>
-                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 5))}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
-                                            <span class="money-type">取消订单</span>
-                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 11))}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
-                                            <span class="money-type">{{item.payChannel}}</span>
-                                            <span class="money-num">¥{{item.fee}}</span>
-                                        </p>
-                                        <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
-                                            <span class="money-type">违约金</span>
-                                            <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
-                                        </p>
-                                        <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额' : '已退金额'}}</span>
-                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
-                                            <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
-                                        </p>
-                                        <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额' : '需退金额'}}</span>
-                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span>
-                                        </p>
-                                        <p class="money-item money-type-border">
-                                            <span class="money-type">需退押金</span>
-                                            <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
-                                            <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 3 ? '-' : ''}¥${item.fee}`}}</span>
-                                        </p>
-                                    </div>
+                                            <p class="info-title">收银信息</p>
+                                            <p class="money-item">
+                                                <span class="money-type">订单金额</span>
+                                                <span class="money-num">¥{{findTypePrice(order.payments, 13)}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item">
+                                                <span class="money-type">商品总价</span>
+                                                <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 5) > 0">
+                                                <span class="money-type">优惠</span>
+                                                <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 5))}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
+                                                <span class="money-type">取消订单</span>
+                                                <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 11))}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
+                                                <span class="money-type">{{item.payChannel}}</span>
+                                                <span class="money-num">¥{{item.fee}}</span>
+                                            </p>
+                                            <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
+                                                <span class="money-type">违约金</span>
+                                                <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
+                                            </p>
+                                            <p class="money-item money-type-border">
+                                                <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额' : '已退金额'}}</span>
+                                                <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
+                                                <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
+                                                <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
+                                            </p>
+                                            <p class="money-item money-type-border">
+                                                <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额' : '需退金额'}}</span>
+                                                <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span>
+                                            </p>
+                                            <p class="money-item money-type-border">
+                                                <span class="money-type">需退押金</span>
+                                                <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
+                                            </p>
+                                            <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
+                                                <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
+                                                <span class="money-num">{{`${item.type === 3 ? '-' : ''}¥${item.fee}`}}</span>
+                                            </p>
+                                        </div>
                                 </div>
                             </div>
                             <div class="footer-price">
@@ -531,22 +534,38 @@
         }
         .info-content {
             @extend .normal-font;
+            width: 274px;
+            margin: 0;
+            position: absolute;
+            bottom: 0;
+            transform: translateX(-100%);
             max-height: 230px;
             overflow-y: scroll;
             background: #fafafa;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            width: 274px;
-            position: absolute;
-            bottom: 0;
-            margin: 0;
             padding: 8px;
-            transform: translateX(-100%);
             &::-webkit-scrollbar {
                 width: 0;
             }
             .item-indent {
                 padding-left: 16px;
+            }
+            .dish-discount-icon {
+                font-size: 10px;
+                color: #ffffff;
+                display: inline-flex;
+                background:#ffba75;
+                border-radius:2px;
+                width:17px;
+                height:16px;
+                align-items: center;
+                justify-content: center;
+            }
+            dish-name-container {
+                width: 170px;
+                display: inline-flex;
+                justify-content: space-between;
             }
             .dish-name {
                 width: 140px;
@@ -555,6 +574,7 @@
                 text-overflow: ellipsis;
             }
             .dish-numAndPrice {
+                margin-left: 30px;
                 flex-grow: 1;
                 display: inline-flex;
                 justify-content: space-between;
@@ -750,6 +770,7 @@
                     if (res.code === 1) {
                         food.detail = res.data;
                         food.detail.boardDetailResps = res.data.boardDetailResps.reduce((a,b) => { return a.concat(b.boardName) }, []);
+                        delete food.visible;
                         this.$set(food, 'visible', true);
                     }
                 }.bind(this));
