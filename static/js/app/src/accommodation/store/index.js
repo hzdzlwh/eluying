@@ -10,11 +10,19 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
+        shopList: [],
+        enterList: [],
         orderDetail: {},
         roomBusinessInfo: {}
     },
 
     mutations: {
+        [types.SET_SHOP_LIST](state, { shopList }) {
+            state.shopList = shopList;
+        },
+        [types.SET_ENTER_LIST](state, { enterList }) {
+            state.enterList = enterList;
+        },
         [types.SET_ORDER_DETAIL](state, { orderDetail }) {
             state.orderDetail = orderDetail;
         },
@@ -24,6 +32,47 @@ const store = new Vuex.Store({
     },
 
     actions: {
+        [types.LOAD_SHOP_LIST]({ commit }) {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/shop/list', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            let shopList = [];
+                            res.data.list.forEach((d) => {
+                                shopList.push(d);
+                            });
+                            commit(types.SET_SHOP_LIST, { shopList });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
+        },
+        [types.LOAD_ENTER_LIST]({ commit }) {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryList' , {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            let enterList = [];
+                            res.data.list.map(el => {
+                                if (el.categoryList && el.categoryList.length > 0) {
+                                    el.categoryList.map(item => {
+                                        item.id = item.categoryId;
+                                        item.nodeId = item.enterId;
+                                        item.type = 2;
+                                    });
+                                    enterList.push(el);
+                                }
+                            });
+                            commit(types.SET_ENTER_LIST, { enterList });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
+        },
         [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
                 AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId })

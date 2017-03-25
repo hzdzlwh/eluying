@@ -24,7 +24,6 @@ Vue.prototype.$isNull = function(text) {
 };
 
 $(function() {
-
     restaurantMenu.render();
 
     var events = {
@@ -176,7 +175,9 @@ $(function() {
     var dishes = new Vue({
         el: '#dishesDialog',
         data: {
-            dishes: {},
+            dishes: {
+                discountable: 1
+            },
             dishesClassifyList: [],
             submitted: false,
             source: ''
@@ -227,7 +228,9 @@ $(function() {
                 }.bind(this));
             },
             cancel: function() {
-                this.dishes = {};
+                this.dishes = {
+                    discountable: 1
+                };
                 this.submitted = false;
                 $('#dishesDialog').modal('hide');
             },
@@ -424,6 +427,7 @@ $(function() {
         el: '#packageDialog',
         data: {
             packageModel: {
+                discountable: 1,
                 dishesNum: undefined,
                 dishesReq: []
             },
@@ -480,7 +484,7 @@ $(function() {
                 packageSelect.dishesListGroupByClassify = {};
                 packageSelect.dishesInClassify = [];
                 $('#packageDialog').modal('hide');
-                this.packageModel = { dishesNum: undefined };
+                this.packageModel = { dishesNum: undefined, discountable: 1 };
             },
             closePackageModelShow: function(item) {
                 item.imgUrl = '';
