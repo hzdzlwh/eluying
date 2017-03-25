@@ -171,7 +171,7 @@
                                 </span>
                             </p>
                             <div class="shop-items">
-                                <div class="shop-item" v-for="(item, index) in enterItems">
+                                <div class="shop-item" v-for="(item, index) in enterItems" :key="index">
                                     <span class="enter-icon"></span>
                                     <div class="shop-item-content">
                                         <div v-if = "item.usedAmount <= 0">
@@ -834,7 +834,10 @@
                 timeCount: 0,
                 goodsSelectModalShow: false,
                 enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1
+                modifyEnterOrShopIndex: -1,
+                roomStatusRequest: 0,
+                lastRoomItem: {},
+                lastEnterItem: {}
             }
         },
 
@@ -1439,10 +1442,8 @@
             },
 
             modifyRoom(item) {
-                if (item.roomOrderId) {
-                    item.changeTimes++;
-                }
-                if (item.roomOrderId && item.changeTimes < 4) {
+                item.changeTimes++;
+                if (item.changeTimes <= 4) {
                     return false;
                 }
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
@@ -1460,6 +1461,13 @@
                  }
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
+                let lastItem = this.lastRoomItem;
+                if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
+                    return false;
+                }
+                this.lastRoomItem.startDate = startDate;
+                this.lastRoomItem.endDate = endDate;
+                this.lastRoomItem.roomType = item.roomType;
                 const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus',
                     { id: item.roomType,
@@ -1506,20 +1514,30 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                if (item.id) {
+                /*if (item.id) {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
-                }
+                }*/
 
                 if (item.id && item.date) {
                     let date = util.dateFormat(new Date(item.date));
+                    let lastItem = this.lastEnterItem;
+                    if (lastItem.id === item.id && lastItem.date === date) {
+                        return false;
+                    }
+                    this.lastEnterItem.id = item.id;
+                    this.lastEnterItem.date = item.date;
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
                         .then(res => {
                             if (res.code === 1) {
+                                const price = item['price'];
+                                const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                                 item.inventory = res.data.inventory;
                                 item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
+                                item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                                item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -1549,22 +1567,13 @@
                                             ...data });
                 } else {
                     let index = this.modifyEnterOrShopIndex;
-                    this.enterItems[index] = { count: 1, date: undefined, timeAmount: 1 ,
-                                                inventory: undefined, usedAmount: 0,
-                                                selfInventory: 0, totalPrice: 0, originPrice: 0,
-                                                ...data };
-                    /*const item = this.enterItems[index];
-                    const newItem = {};
-                    newItem.count = item.count;
-                    newItem.date = item.date;
-                    newItem.timeAmount = item.timeAmount;
-                    newItem.inventory = item.inventory;
-                    newItem.usedAmount = item.usedAmount;
-                    newItem.selfInventory = item.selfInventory;
-                    newItem.totalPrice = item.totalPrice;
-                    newItem.originPrice = item.originPrice;
-                    this.enterItems[index] = {...newItem, ...data};
-                    this.modifyEnter(this.enterItems[index]);*/
+                    for(let key in data) {
+                        this.enterItems[index][key] = data[key];
+                    }
+                    if (this.enterItems[index].count === 0) {
+                        this.enterItems[index].count = 1;
+                    }
+                    this.modifyEnter(this.enterItems[index]);
                 }
             },
             closeShopSelectModal() {
@@ -1654,6 +1663,7 @@
                                                               price: Number((price * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2)),
                                                               originPrice: Number(price.toFixed(2)),
                                                               room: item, idCardList: [],
+                                                              changeTimes: 0,
                                                               showPriceList: false,
                                                               datePriceList: datePriceList,
                                                               showTip: false });

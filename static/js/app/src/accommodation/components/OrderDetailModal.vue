@@ -566,6 +566,7 @@
                 width: 170px;
                 display: inline-flex;
                 justify-content: space-between;
+                align-items: center;
             }
             .dish-name {
                 width: 140px;

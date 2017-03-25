@@ -156,7 +156,6 @@ export default {
                 $('#selectModal').modal({
                     backdrop: 'static'
                 })
-                $('#selectModal').modal('show');
             } else {
                 $('#selectModal').modal('hide');
             }
