@@ -1078,7 +1078,6 @@
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
-                    //this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
                     this.goodsSelectModalShow = true;
                 } else if (type === 2) {
                     if (this.enterItems.length >= 99) {
