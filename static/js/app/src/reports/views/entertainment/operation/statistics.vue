@@ -42,7 +42,7 @@
         </div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
             <p>娱乐消费统计
-                <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
+                <small><i>({{date.startDate}}~{{date.endDate}})  违约金=取消订单违约金+其他收费</i></small>
             </p>
             <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
         </div>
@@ -54,7 +54,6 @@
 <style>
 </style>
 <script>
-    import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
@@ -84,13 +83,14 @@
                 const paramsObj = {
                     exportType: 0,
                     reportType: 5,
-                    params: {
+                    params: JSON.stringify({
                         startDate: this.date.startDate,
                         endDate: this.date.endDate
-                    }
+                    })
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }

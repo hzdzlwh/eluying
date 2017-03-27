@@ -3,6 +3,7 @@
  */
 
 var $ajax = require('./AJAXService');
+import modal from './modal';
 
 const ACCOMMODATION_ID = 2;
 const VIP_ID = 11;
@@ -17,11 +18,13 @@ const NO_AUTH_FOR_A_URL = '/view/tips/noauthfora.html';
 const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
 const EXPIRED_URL = '/view/tips/expired.html';
 const UPGRADE_URL = '/view/tips/upgrade.html';
+const INSURANCE_ID = 1;
 
 const camps = JSON.parse(localStorage.getItem('camps'));
 const bottom = JSON.parse(localStorage.getItem('bottom'));
 const top = JSON.parse(localStorage.getItem('top'));
 const campId = localStorage.getItem('campId');
+const switches = JSON.parse(localStorage.getItem('switches'));
 
 const maintenanceHost =  process.env.NODE_ENV === 'production' ? "/mt" : "//www.dingdandao.com:1443/mt";
 
@@ -96,34 +99,56 @@ function checkMaintenance() {
     // showMaintenance('为了提供更快速、便捷的服务，订单来了将于2016-06-03（周一）14:00~16:00进行系统升级，届时网站与APP将无法访问，请您提前安排好工作。因此给您造成的不便，敬请谅解！');
 }
 
+/**
+ * 维护跳转，版本跳转，返回模块权限
+ * @param moduleId
+ * @returns {boolean}
+ */
+function checkAccess(moduleId) {
+    try {
+        const maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
+        !maintenanceClosed && checkMaintenance();
+        const version = checkVersion();
+        const moduleAuth = checkModule(moduleId);
+        if (version && version.update) {
+            location.href = UPGRADE_URL;
+        } else if (version && version.expired) {
+            location.href = EXPIRED_URL;
+        } else {
+            return moduleAuth;
+        }
+    } catch (e) {
+        modal.alert('请重新登录');
+        setTimeout(() => {
+            location.href = '/';
+        }, 3000)
+    }
+}
+
+/**
+ * 维护跳转，版本跳转，模块权限跳转
+ * @param moduleId
+ * @param url
+ */
 function checkAuth(moduleId, url) {
-    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
-    !maintenanceClosed && checkMaintenance();
-    url = url || '/view/tips/noauth.html';
-    var version = checkVersion();
-    var moduleAuth = checkModule(moduleId);
-    if (version && version.update) {
-        location.href = UPGRADE_URL;
-    } else if (version && version.expired) {
-        location.href = EXPIRED_URL;
-    } else if (!moduleAuth) {
+    const access = checkAccess(moduleId);
+    if (!access) {
+        url = url || '/view/tips/noauth.html';
         location.href = url;
     }
 }
 
-function checkAccess(moduleId) {
-    var maintenanceClosed = window.localStorage.getItem('maintenanceClosed');
-    !maintenanceClosed && checkMaintenance();
-    var version = checkVersion();
-    var moduleAuth = checkModule(moduleId);
-
-    if (version && version.update) {
-        location.href = UPGRADE_URL;
-    } else if (version && version.expired) {
-        location.href = EXPIRED_URL;
-    } else {
-        return moduleAuth;
+function checkSwitch(id) {
+    try {
+        const switchStatus = switches.find(i => i.id === id);
+        return switchStatus && !!switchStatus.status;
+    } catch (e) {
+        modal.alert('请重新登录');
+        setTimeout(() => {
+            location.href = '/';
+        }, 3000);
     }
+
 }
 
 exports.checkAuth = checkAuth;
@@ -141,3 +166,5 @@ exports.EXPIRED_URL = EXPIRED_URL;
 exports.UPGRADE_URL = UPGRADE_URL;
 exports.ORDER_ID = ORDER_ID;
 exports.REPORT_ID = REPORT_ID;
+exports.checkSwitch = checkSwitch;
+exports.INSURANCE_ID = INSURANCE_ID;

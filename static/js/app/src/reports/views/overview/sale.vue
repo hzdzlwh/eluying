@@ -37,7 +37,6 @@
 
 </style>
 <script>
-    import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
@@ -184,13 +183,14 @@
                 const paramsObj = {
                     exportType: type,
                     reportType: 1,
-                    params: {
+                    params: JSON.stringify({
                         startDate: this.date.startDate,
                         endDate: this.date.endDate
-                    }
+                    })
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }
