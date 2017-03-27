@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" role="dialog" id="categorySelectModal">
+    <div class="modal fade" role="dialog" id="categorySelectModal" data-backdrop="static">
         <div class="modal-dialog" style="width: 400px">
             <div class="modal-content">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
