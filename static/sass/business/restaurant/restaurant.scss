@@ -90,56 +90,33 @@
     position: absolute;
     z-index: 5;
   }
-  th {
-    width: 116px;
-    text-align: center;
-    font-weight: bolder;
-  }
   th>img {
     margin-left: 5px;
   }
-  tr {
-    height: 48px;
-    line-height: 48px;
-    border: 1px solid #ededed;
-  }
   thead {
     background: #fafafa;
-    height: 48px;
   }
   tbody {
-    td:nth-child(1) {
-      padding-left: 16px;
-    }
     td:nth-child(2), td:nth-child(3) {
-      padding-left: 44px;
       color: #178ce6;
     }
     td:nth-child(4) {
-      text-align:center;
     }
     td:nth-child(5) {
-      padding-left: 16px;
-      position: relative;
-      max-height: 40px;
+    }
+    .rest-announcement {
       overflow: hidden;
+      white-space: nowrap;
       text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
+      width: 80px;
     }
     .bkWord {
-      font-family: MicrosoftYaHei;
-      font-size: 14px;
       color: #666666;
     }
     .gyWord {
-      font-family: MicrosoftYaHei;
-      font-size: 14px;
       color: #cccccc;
     }
     td:nth-child(6) {
-      padding-left: 27px;
       color:#178ce6;
       span {
         cursor: pointer;
