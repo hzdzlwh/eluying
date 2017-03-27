@@ -577,13 +577,14 @@
                 border-radius:2px;
                 width:17px;
                 height:16px;
+                margin-left: 5px;
                 align-items: center;
                 justify-content: center;
             }
             dish-name-container {
                 width: 170px;
                 display: inline-flex;
-                justify-content: space-between;
+                justify-content: flex-start;
                 align-items: center;
             }
             .dish-name {
@@ -594,7 +595,6 @@
                 text-overflow: ellipsis;
             }
             .dish-numAndPrice {
-                margin-left: 30px;
                 flex-grow: 1;
                 display: inline-flex;
                 justify-content: space-between;
