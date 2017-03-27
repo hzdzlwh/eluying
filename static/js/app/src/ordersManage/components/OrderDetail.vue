@@ -5,7 +5,7 @@
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container" v-if="order.orderState">
-                            <span class="header-text">订单详情</span>
+                            <span class="header-text">{{title}}</span>
                             <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
                             <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
                                   v-text="ORDER_STATUS_ICON[order.orderState]['text']">
@@ -162,12 +162,34 @@
 <style>
 </style>
 <script>
+    import { ORDER_TYPE } from '../constant';
     export default{
         data() {
             return {};
         },
+        computed: {
+            title() {
+                switch (this.order.orderType) {
+                    case ORDER_TYPE.ACCOMMODATION:
+                        return '住宿订单';
+                    case ORDER_TYPE.CATERING:
+                        return '餐饮订单';
+                    case ORDER_TYPE.COMBINATION:
+                        return '组合订单';
+                    case ORDER_TYPE.RETAIL:
+                        return '商超订单';
+                    case ORDER_TYPE.ENTERTAINMENT:
+                        return '娱乐订单';
+                    default:
+                        return '订单详情';
+                }
+            }
+        },
         props: {
-            readOnly: Boolean
+            readOnly: Boolean,
+            order: Object,
+            default: {},
+            type: String
         },
         methods: {}
     };
