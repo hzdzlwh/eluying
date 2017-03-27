@@ -1078,13 +1078,24 @@
                         modal.somethingAlert('一次最多添加99个商超项目!');
                         return false;
                     }
-                    //this.shopGoodsItems.push({ id: undefined, count: 1, type: 3 });
+
+                    if (this.shopList.length <= 0) {
+                        modal.somethingAlert('请到"网络设置－业务设置"中添加商超项目！');
+                        return false;
+                    }
+
                     this.goodsSelectModalShow = true;
                 } else if (type === 2) {
                     if (this.enterItems.length >= 99) {
                         modal.somethingAlert('一次做多添加99个娱乐项目!');
                         return false;
                     }
+
+                    if (this.enterList.length <= 0) {
+                        modal.somethingAlert('请到"网络设置－业务设置"中添加商超项目！');
+                        return false;
+                    }
+
                     this.enterSelectModalShow = true;
                 } else {
                     let len = this.registerRooms.length;

@@ -51,7 +51,7 @@ const store = new Vuex.Store({
         },
         [types.LOAD_ENTER_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryList' , {})
+                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryListPC' , {})
                     .then(res => {
                         if (res.code === 1) {
                             let enterList = [];
