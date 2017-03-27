@@ -204,34 +204,34 @@ export default {
     },
     data() {
         return {
-            bill: function(data) {
-                let billobjecct = Object.assign(data.map(function(el) {
-                    let bill = {}
-                    el.gList.map(function(ob) {
-                        let object = {}
-                        object[ob.i] = {
-                                n: ob.n,
-                                p: ob.p,
-                                num: 0
-                            }
-                            // window.console.log(bill)
-                        Object.assign(bill, object)
-                    })
-                    return bill
-
-                }))
-                let bill = {}
-                let item
-                for (item in billobjecct) {
-                    Object.assign(bill, billobjecct[item])
-                }
-                return bill
-            }(this.goodsDate),
             gIdActive: this.goodsDate[0],
             gListActive: this.goodsDate[0].gList
         }
     },
     computed: {
+        bill() {
+            let billobjecct = Object.assign(this.goodsDate.map(function(el) {
+                let bill = {}
+                el.gList.map(function(ob) {
+                    let object = {}
+                    object[ob.i] = {
+                            n: ob.n,
+                            p: ob.p,
+                            num: 0
+                        }
+                        // window.console.log(bill)
+                    Object.assign(bill, object)
+                })
+                return bill
+
+            }))
+            let bill = {}
+            let item
+            for (item in billobjecct) {
+                Object.assign(bill, billobjecct[item])
+            }
+            return bill
+        },
         totalbill() {
             let total = {
                 count: 0,
@@ -259,8 +259,10 @@ export default {
         goodsprogram() {
             let data = []
             for (let item in this.bill) {
-                if (this.bill[item].num > 0){
-                    data.push(Object.assign({id:item}, this.bill[item]))
+                if (this.bill[item].num > 0) {
+                    data.push(Object.assign({
+                        id: item
+                    }, this.bill[item]))
                 }
             }
             this.$emit('selectGoodsDate', data)
