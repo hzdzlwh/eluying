@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade " id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal">
-        <div class="modal-dialog goodsdialog">
+        <div class="modal-dialog goodsdialog" v-if='bill'>
             <div class="modal-content">
                 <div class="goodsModals-header">
                     <div class="header-container">
@@ -41,7 +41,13 @@
 
 .goodsdialog {
     width: 430px;
-    height: 430px
+    height: 430px;
+    margin-top: 0!important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%)!important;
+    transform: translate(-50%, -50%)!important;
 }
 
 .modal-content {
@@ -204,29 +210,7 @@ export default {
     },
     data() {
         return {
-            bill: function(data) {
-                let billobjecct = Object.assign(data.map(function(el) {
-                    let bill = {}
-                    el.gList.map(function(ob) {
-                        let object = {}
-                        object[ob.i] = {
-                                n: ob.n,
-                                p: ob.p,
-                                num: 0
-                            }
-                            // window.console.log(bill)
-                        Object.assign(bill, object)
-                    })
-                    return bill
-
-                }))
-                let bill = {}
-                let item
-                for (item in billobjecct) {
-                    Object.assign(bill, billobjecct[item])
-                }
-                return bill
-            }(this.goodsDate),
+            bill: undefined,
             gIdActive: this.goodsDate[0],
             gListActive: this.goodsDate[0].gList
         }
@@ -239,8 +223,8 @@ export default {
             }
             for (let item in this.bill) {
                 if (this.bill[item].num) {
-                    total.count++
-                        total.total += parseInt(this.bill[item].num) * this.bill[item].p
+                    total.count += this.bill[item].num
+                    total.total += parseInt(this.bill[item].num) * this.bill[item].p
                 }
             }
             total.total = window.Math.floor(total.total * 100) / 100
@@ -254,17 +238,42 @@ export default {
         },
         hideModal() {
             this.$emit('Modalclose')
+            this.bill = this.getDefoult()
             $('#goodsModal').modal('hide')
         },
         goodsprogram() {
             let data = []
             for (let item in this.bill) {
-                if (this.bill[item].num > 0){
-                    data.push(Object.assign({id:item}, this.bill[item]))
+                if (this.bill[item].num > 0) {
+                    data.push(Object.assign({
+                        id: item
+                    }, this.bill[item]))
                 }
             }
+            this.bill = this.getDefoult()
             this.$emit('selectGoodsDate', data)
             this.hideModal()
+        },
+        getDefoult(){
+            let billobjecct = Object.assign(this.goodsDate.map(function(el) {
+            let bill = {}
+            el.gList.map(function(ob) {
+                let object = {}
+                object[ob.i] = {
+                    n: ob.n,
+                    p: ob.p,
+                    num: 0
+                }
+                Object.assign(bill, object)
+            })
+            return bill
+        }))
+        let bill = {}
+        let item
+        for (item in billobjecct) {
+            Object.assign(bill, billobjecct[item])
+        }
+        return bill
         },
         changebill(item, type) {
             if (type) {
@@ -276,9 +285,11 @@ export default {
             }
         }
     },
+    created() {
+        this.bill = this.getDefoult()
+    },
     watch: {
         show(val) {
-
             if (val) {
                 $('#goodsModal').modal({
                     backdrop: 'static'

@@ -140,7 +140,7 @@
                                                             </p>
                                                             <span class="dish-numAndPrice">
                                                                 <span>x{{dish.bookNum}}</span>
-                                                                <span>¥{{dish.price}}</span>
+                                                                <span>¥{{(dish.price * dish.bookNum).toFixed(2)}}</span>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -555,6 +555,7 @@
             margin: 0;
             position: absolute;
             bottom: 0;
+            display: none;
             transform: translateX(-100%);
             max-height: 230px;
             overflow-y: scroll;
@@ -586,6 +587,7 @@
                 align-items: center;
             }
             .dish-name {
+                display: inline-block;
                 width: 140px;
                 overflow: hidden;
                 white-space: nowrap;
@@ -670,9 +672,6 @@
                         display: block;
                     }
                 }
-            }
-            .info-content {
-                display: none;
             }
         }
     }

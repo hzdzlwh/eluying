@@ -31,7 +31,13 @@
 
 .selectdialog {
     width: 390px;
-    height: 390px
+    height: 390px;
+    margin-top: 0!important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%)!important;
+    transform: translate(-50%,-50%)!important;
 }
 
 .modal-content {
