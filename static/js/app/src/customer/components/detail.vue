@@ -5,7 +5,7 @@
                 <div class="detail-header">
                     <div class="detail-header-title">
                         <h4>{{title}}</h4>
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <button type="button" class="close" @click="onClose"><span>&times;</span></button>
                     </div>
                     <div class="detail-header-action" v-if="type !== 'novip'">
                         <ul class="restaurant-head-nav">
@@ -262,7 +262,9 @@
             onDelete: Function,
             onEdit: Function,
             phone: String,
-            title: String
+            title: String,
+            visible: Boolean,
+            onClose: Function
         },
         data() {
             return {
@@ -287,8 +289,12 @@
             }
         },
         watch: {
-            tab(val) {
-                this.innerTab = this.tab;
+            visible(val) {
+                if (val) {
+                    this.show();
+                } else {
+                    this.hide();
+                }
             },
             state() {
                 this.getOrders();
@@ -367,6 +373,13 @@
                 this.keyword = this.$refs.searchInput.value;
                 this.pageNo = 1;
                 this.geOrders();
+            },
+            show() {
+                this.innerTab = this.tab;
+                $('#detailModal').modal('show');
+            },
+            hide() {
+                $('#detailModal').modal('hide');
             }
         }
     };
