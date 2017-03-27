@@ -1,5 +1,5 @@
 <template>
-    <div class="vip-container">
+    <div class="vip-setting-container">
         <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
@@ -150,16 +150,21 @@
         <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
-<style>
+<style lang="scss">
     .list-action {
         color: #178ce6;
         cursor: pointer;
+    }
+    .vip-setting-container {
+        td {
+            vertical-align: top !important;
+        }
     }
 </style>
 <style lang="scss" scoped>
     @import '~dd-common-css/src/variables';
 
-    .vip-container {
+    .vip-setting-container {
         margin: 0 auto;
     i {
         color: #999;
@@ -280,12 +285,12 @@
                                     {
                                         title: '操作',
                                         render: (h, row) => (
-                                            <span class="list-action">
-                                                <span onClick={() => this.openEdit(row)}>编辑</span>/
-                                                <span onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
+                                            <span>
+                                                <span class="list-action" onClick={() => this.openEdit(row)}>编辑</span>／
+                                                <span class="list-action" onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
                                             </span>
                                         ),
-                                        width: 93
+                                        width: 100
                                     }
                                 ];
                                 if (this.autoUpgrade === 1) {
@@ -294,8 +299,7 @@
                                             title: '升级条件',
                                             render: (h, row) => {
                                                 return <span>消费满¥{row.thresholdFee}</span>;
-                                            },
-                                            width: 186
+                                            }
                                         },
                                         {
                                             title: '消费累计项目',

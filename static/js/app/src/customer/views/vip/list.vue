@@ -100,7 +100,7 @@
                     </div>
                     <div class="vip-detail-row">
                         <span class="vip-detail-filed">备注</span>
-                        <span>{{vip.remark}}</span>
+                        <span style="flex: 1">{{vip.remark}}</span>
                     </div>
                 </div>
             </div>
@@ -161,6 +161,9 @@
                 color: #999999;
             }
             .discount-item {
+                padding: 8px 16px;
+                font-size: 14px;
+                color: #999999;
                 display: flex;
                 justify-content: space-between;
             }
