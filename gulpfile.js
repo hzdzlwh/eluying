@@ -78,7 +78,6 @@ function revHash() {
         .pipe(rev.manifest())
         .pipe(gulp.dest('rev/image'));
     gulp.src('static/js/app/dist/**/*.map')
-        .pipe(rev())
         .pipe(gulp.dest('build/static/js/app/dist'));
 }
 
