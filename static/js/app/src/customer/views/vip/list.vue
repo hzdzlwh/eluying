@@ -14,8 +14,15 @@
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
         <vip-form :vip="vip" @onSuccess="getVips" />
-        <detail :tab="detailTab" :id="detailId" type="vip" :title="detailTitle">
-            <div></div>
+        <detail
+            :tab="detailTab"
+            :id="detailId"
+            type="vip"
+            :title="detailTitle"
+            :visible="detailVisible"
+            :onClose="handleDetailClose"
+        >
+            <div>hello</div>
         </detail>
     </div>
 </template>
@@ -62,6 +69,7 @@
                 pageNo: 1,
                 vipFormVisible: false,
                 searchPattern: undefined,
+                detailVisible: false,
                 col: [
                     {
                         title: '姓名',
@@ -102,8 +110,12 @@
                     },
                     {
                         title: '操作',
-                        render: (h, row) => <span class="list-action-button" onClick={() => this.openDetailDialog(row, 2)}>查单</span>,
-                        width: 60
+                        render: (h, row) =>
+                            <span>
+                                <span class="list-action-button" onClick={() => this.openDetailDialog(row, 1)}>详情</span>／
+                                <span class="list-action-button" onClick={() => this.openDetailDialog(row, 2)}>查单</span>
+                            </span>,
+                        width: 100
                     }
                 ],
                 detailTab: undefined,
@@ -159,7 +171,10 @@
                 this.detailTab = tab;
                 this.detailId = vip.vipUserId;
                 this.detailTitle = vip.name;
-                $('#detailModal').modal('show');
+                this.detailVisible = true;
+            },
+            handleDetailClose() {
+                this.detailVisible = false;
             }
         },
         components: {
