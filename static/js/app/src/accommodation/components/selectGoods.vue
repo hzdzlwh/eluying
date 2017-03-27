@@ -58,6 +58,7 @@
     margin-top: 0 !important;
     background: #fafafa;
     box-sizing: content-box;
+    border-top: 4px solid #178ce6;
 }
 
 .goodsModals-header {
@@ -113,7 +114,7 @@
         overflow-y: auto;
         max-height: 320px;
         .goodsright-item {
-            padding: 0 20px;
+            padding: 0 15px;
             background: #fff;
             &:hover {
                 background: #e1effa;
