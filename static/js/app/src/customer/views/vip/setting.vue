@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" role="dialog" id="settingModal">
+        <div class="modal fade" role="dialog" id="settingModal" data-backdrop="static">
             <div class="modal-dialog"  style="width: 486px">
                 <div class="modal-content">
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" role="dialog" id="system">
+        <div class="modal fade" role="dialog" id="system" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 496px">
                     <h2 style="margin-bottom: 24px">选择会员体系</h2>

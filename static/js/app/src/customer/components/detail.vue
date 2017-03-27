@@ -1,5 +1,5 @@
 <template>
-    <div id="detailModal" class="modal fade" role="dialog">
+    <div id="detailModal" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog" style="width: 942px">
             <div class="modal-content">
                 <div class="detail-header">

@@ -1,5 +1,5 @@
 <template>
-    <div id="vipForm" class="modal fade" role="dialog">
+    <div id="vipForm" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog vipForm-modal-dialog">
             <div class="modal-content vipForm-modal-content">
                 <div class="vipForm-modal-header">
@@ -277,7 +277,8 @@
 
     export default{
         props: {
-            visible: Boolean
+            visible: Boolean,
+            vipProps: Object
         },
         data() {
             return {
@@ -303,6 +304,9 @@
             };
         },
         watch: {
+            vipProps(val) {
+                this.vip = val;
+            },
             visible(val) {
                 if (val) {
                     $('#vipForm').modal('show');
