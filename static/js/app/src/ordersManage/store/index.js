@@ -143,7 +143,7 @@ const store = new Vuex.Store({
         },
         [types.GET_ROOM_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getRoomOrderDetail', { orderId })
+                AJAXService.ajaxWithToken('get', '/order/getRoomOrderDetail', { serviceId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });

@@ -4,17 +4,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <div class="header-container" v-if="order.orderState">
+                        <div class="header-container">
+                            <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" alt="">
+                            <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="" alt="">
+                            <img v-if="order.orderType === ORDER_TYPE.CATERING" src="" alt="">
+                            <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" alt="">
                             <span class="header-text">{{title}}</span>
-                            <span class="order-state-angle"
-                                  :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
-                            <span class="order-state"
-                                  :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
-                                  v-text="ORDER_STATUS_ICON[order.orderState]['text']">
+                            <span v-if="order.orderState">
+                                <span class="order-state-angle"
+                                      :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
+                                <span class="order-state"
+                                      :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
+                                      v-text="ORDER_STATUS_ICON[order.orderState]['text']">
+                                </span>
                             </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" v-if="order.orderType !== ORDER_TYPE.COMBINATION"
+                            <span class="header-tools" v-if="order.combinationOrderId"
                                   @click="showCombinationOrder">查看组合订单</span>
                             <span class="header-tools" @click="openPrint(order)">打印</span>
                             <span class="header-tools"
@@ -974,7 +980,11 @@
                 return newPayMents;
             },
             showCombinationOrder() {
-                event.$emit('onShowDetail', { orderId: this.order.combinationOrderId, orderType: ORDER_TYPE.COMBINATION })
+                event.$emit('onShowDetail',
+                    {
+                        orderId: this.order.combinationOrderId,
+                        orderType: ORDER_TYPE.COMBINATION
+                    });
             },
             dateFormat(date) {
                 return util.timeFormat(date);
