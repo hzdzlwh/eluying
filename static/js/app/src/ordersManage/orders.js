@@ -91,7 +91,7 @@ $(function(){
 
         created() {
             event.$on('onClose', this.hideDetail);
-
+            event.$on('onShowDetail', this.showOrderDetail);
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
@@ -110,6 +110,7 @@ $(function(){
         },
         beforeDestroy: function () {
             event.$off('onClose', this.hideDetail);
+            event.$off('onShowDetail', this.showOrderDetail);
         },
         computed: {
             orderParams() {
