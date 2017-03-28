@@ -1,15 +1,15 @@
 <template>
     <order-container :type="type" :order="order">
-        <AccommodationOrder :order="order" />
-        <EntertainmentOrder :order="order" />
-        <CaterOrder :order="order" />
-        <ShopOrder :order="order" />
+        <AccommodationOrder :order="order" v-if="order.rooms && order.rooms.length > 0" />
+        <CaterOrder :order="order" v-if="order.foodItems && order.foodItems.length > 0" />
+        <EntertainmentOrder :order="order" v-if="order.playItems && order.playItems.length > 0" />
+        <ShopOrder :order="order" v-if="order.pcGoodItems && order.pcGoodItems.length > 0" />
     </order-container>
 </template>
 <style>
 </style>
 <script>
-    import CombinationOrder from './CombinationOrder.vue';
+    import OrderContainer from './OrderContainer.vue';
     import { ORDER_TYPE } from '../constant';
     import { mapActions, mapState } from 'vuex';
     import types from '../store/types';
@@ -25,7 +25,11 @@
             };
         },
         components: {
-            CombinationOrder
+            OrderContainer,
+            CaterOrder,
+            ShopOrder,
+            EntertainmentOrder,
+            AccommodationOrder
         },
         props: {
             type: Number,
