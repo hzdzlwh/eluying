@@ -1717,6 +1717,7 @@
                     });
                     filterEnters.forEach(item => {
                         const enter = {...item};
+                        enter.price = item.originPrice;
                         enter.changeTimes = 0;
                         enter.id = item.categoryId;
                         enter.count = item.amount;
