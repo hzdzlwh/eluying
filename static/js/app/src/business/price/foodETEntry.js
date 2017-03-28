@@ -10,6 +10,8 @@ auth.checkAuth(auth.BUSINESS_ID);
 var AJAXService = require('../../common/AJAXService');
 import init from '../../common/init';
 
+var location = window.location.pathname.split("/")[5].split(".")[0];
+
 init({
     id: auth.BUSINESS_ID,
     clearModal: true,
@@ -17,8 +19,6 @@ init({
 });
 
 $(function(){
-    var location = window.location.pathname.split("/")[5].split(".")[0];
-
     var restId = window.location.search.split('=')[1];
     if (location === 'food') {
         restaurantMenu.render({ menuActive: 'dishes' });
