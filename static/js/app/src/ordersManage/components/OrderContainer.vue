@@ -11,6 +11,7 @@
                             </span>
                         </div>
                         <div class="header-container">
+                            <span class="header-tools" v-if="order.orderType !== ORDER_TYPE.COMBINATION" @click="showCombinationOrder">查看组合订单</span>
                             <span class="header-tools" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="!readOnly && (order.orderState === 2 || order.orderState === 3)" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="!readOnly && order.orderState === 2" @click="cancelOrder">取消订单</span>
@@ -884,7 +885,8 @@
         data() {
             return {
                 readOnly: true,
-                ORDER_STATUS_ICON
+                ORDER_STATUS_ICON,
+                ORDER_TYPE
             };
         },
         props: {
@@ -942,6 +944,9 @@
                 }
                 return newPayMents;
             },
+            showCombinationOrder() {
+                event.$emit('', { orderId: this.order.combinationOrderId, orderType: this.combinationOrderId })
+            }
         }
     };
 </script>
