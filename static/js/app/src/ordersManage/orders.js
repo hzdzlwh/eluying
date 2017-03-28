@@ -26,37 +26,45 @@ $(function(){
             isLoading: true,
             currentPage: 1,
             orderItems: [],
-            optionsSubOrderType: { '-1': [{id: -1, name: '全部业态'}], '2': [{id: -1, name: '全部商超' }] },
             searchContent: '',
             sort: null,
-            optionsParentOrderType: [{
-                id: -1,
-                name: '全部业态'
-                },
+            optionsParentOrderType: [
                 {
-                    id: 0,
-                    name: '餐饮'
-                },
-                {
-                    id: 1,
-                    name: '娱乐'
-                },
-                {
-                    id: 2,
-                    name: '商超'
+                    id: -1,
+                    name: '全部业态'
                 },
                 {
                     id: 3,
-                    name: '住宿'
-                }
+                    name: '住宿订单'
+                },
+                {
+                    id: 0,
+                    name: '餐饮订单'
+                },
+                {
+                    id: 1,
+                    name: '娱乐订单'
+                },
+                {
+                    id: 2,
+                    name: '商超订单'
+                },
             ],
             orderType: -1,
             orderStatus: '-1',
             orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
-            orderTypeItem: [-1],
-            optionsOrderState: [{
-                id: '-1',
-                name: '全部订单状态'
+            optionsOrderState: [
+                {
+                    id: '-1',
+                    name: '全部订单状态'
+                },
+                {
+                    id: '0',
+                    name: '待处理'
+                },
+                {
+                    id: '1',
+                    name: '已拒绝'
                 },
                 {
                     id: '2',
@@ -91,15 +99,6 @@ $(function(){
             }
        
             this.getOrdersList({}, false);
-            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, result => {
-                this.optionsSubOrderType = Object.assign(this.optionsSubOrderType, result.data);
-                this.optionsSubOrderType['0'] = this.optionsSubOrderType['0'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['1'] = this.optionsSubOrderType['1'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['3'] = this.optionsSubOrderType['3'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['0'].unshift({id: -1, name: '全部餐厅', show: true });
-                this.optionsSubOrderType['1'].unshift({id: -1, name: '全部娱乐', show: true });
-                this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
-            });
         },
 
         computed: {
@@ -157,16 +156,14 @@ $(function(){
                 paramsObj.type = num;
                 const host = AJAXService.getUrl2('/order/listOrderListToText');
                 const pa = AJAXService.getDataWithToken(paramsObj);
-                pa.map = JSON.parse(pa.map);
                 let params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             },
 
             getParams() {
-                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent, sort: this.sort };
-                let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
-                            orderType: this.orderType};
-                return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
+                let obj = { endDate: this.endDate, startDate: this.startDate,
+                            keyword: this.searchContent, sort: this.sort, orderType: this.orderType };
+                return Object.assign({}, obj, this.orderParams);
             },
             /**
              * 为各订单项添加showSub假数据
@@ -250,7 +247,7 @@ $(function(){
                 this.getOrdersList(Object.assign({}, obj, { page: msg }), true);
             },
 
-            changeOrderTypeItem(item) {
+            /*changeOrderTypeItem(item) {
                 if (item.id === -1 && item.show) {
                     this.optionsSubOrderType[this.orderType].forEach(function(el){
                         el.show = false;
@@ -303,7 +300,7 @@ $(function(){
                         }
                     });
                 }
-            },
+            },*/
 
             disableEndDate(date) {
                 if (this.startDate !== '') {
@@ -325,24 +322,21 @@ $(function(){
         },
 
         watch: {
-            orderType: function(newVal, oldVal) {
-                this.orderTypeItem = [];
-                this.orderTypeItem = this.optionsSubOrderType[newVal].map(el => el.id);
+            orderType: function() {
                 const obj = this.getParams();
                 this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
             },
 
-            orderParams: function(newVal, oldVal) {
+            orderParams: function(newVal) {
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
                               sort: this.sort,
-                              map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
-                                                    orderType: this.orderType})};
+                              orderType: this.orderType};
                 this.getOrdersList(Object.assign({}, newVal, obj), false);
             },
 
-            startDate: function(newVal, oldVal) {
+            startDate: function(newVal) {
                 let newValTime = new Date(newVal);
                 let endDateTime = new Date(this.endDate);
                 if (newVal !== '' && (this.endDate === '' || newValTime.getTime() > endDateTime.getTime())) {
@@ -350,7 +344,7 @@ $(function(){
                 }
             },
 
-            endDate: function(newVal, oldVal) {
+            endDate: function(newVal) {
                 let newValTime = new Date(newVal);
                 let startDateTime = new Date(this.startDate);
                 if (newVal !== '' && (this.startDate === '' || startDateTime.getTime() > newValTime.getTime())) {
@@ -377,7 +371,7 @@ $(function(){
             let endTime = new Date(this.endDate);
             return { minusTime: endTime.getTime() - startTime.getTime() };
         },
-        function(newVal, oldVal) {
+        function(newVal) {
             if (newVal.minusTime >= 0) {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);

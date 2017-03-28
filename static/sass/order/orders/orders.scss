@@ -11,13 +11,13 @@
     height: 40px;
     padding-top: 16px;
     .dd-select-ordertype {
+      margin-left: 12px;
       width: 88px;
       display: inline-block;
     }
     .dd-select-orderstate {
       width: 136px;
       display: inline-block;
-      margin-left: 12px;
     }
     .orders-state {
       width: 116px;
@@ -69,7 +69,7 @@
       position: relative;
     }
     .order-search {
-      min-width: 216px;
+      min-width: 260px;
       &::-webkit-input-placeholder{
         color: $gary;
       }
