@@ -1,19 +1,25 @@
 <template>
     <div>
+        <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container" v-if="order.orderState">
                             <span class="header-text">{{title}}</span>
-                            <span class="order-state-angle" :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
-                            <span class="order-state" :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
+                            <span class="order-state-angle"
+                                  :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
+                            <span class="order-state"
+                                  :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
                                   v-text="ORDER_STATUS_ICON[order.orderState]['text']">
                             </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" v-if="order.orderType !== ORDER_TYPE.COMBINATION" @click="showCombinationOrder">查看组合订单</span>
+                            <span class="header-tools" v-if="order.orderType !== ORDER_TYPE.COMBINATION"
+                                  @click="showCombinationOrder">查看组合订单</span>
                             <span class="header-tools" @click="openPrint(order)">打印</span>
-                            <span class="header-tools" v-if="!readOnly && (order.orderState === 2 || order.orderState === 3)" @click="editOrder">编辑订单</span>
+                            <span class="header-tools"
+                                  v-if="!readOnly && (order.orderState === 2 || order.orderState === 3)"
+                                  @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="!readOnly && order.orderState === 2" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
@@ -55,41 +61,57 @@
                                             <span class="money-type">商品总价</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
                                         </p>
-                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 5) > 0">
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-if="findTypePrice(order.payments, 5) > 0">
                                             <span class="money-type">优惠</span>
-                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 5))}}</span>
+                                            <span class="money-num">-¥{{Math.abs(
+                                                findTypePrice(order.payments, 5))}}</span>
                                         </p>
-                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 11) > 0">
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-if="findTypePrice(order.payments, 11) > 0">
                                             <span class="money-type">取消订单</span>
-                                            <span class="money-num">-¥{{Math.abs(findTypePrice(order.payments, 11))}}</span>
+                                            <span class="money-num">-¥{{Math.abs(
+                                                findTypePrice(order.payments, 11))}}</span>
                                         </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 12, 12)">
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-for="item in filterPayMents(order.payments, 12, 12)">
                                             <span class="money-type">{{item.payChannel}}</span>
                                             <span class="money-num">¥{{item.fee}}</span>
                                         </p>
-                                        <p class="money-item money-type-border" v-if="findTypePrice(order.payments, 4) > 0">
+                                        <p class="money-item money-type-border"
+                                           v-if="findTypePrice(order.payments, 4) > 0">
                                             <span class="money-type">违约金</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额' : '已退金额'}}</span>
-                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 14))}}</span>
+                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额'
+                                                : '已退金额'}}</span>
+                                            <span class="money-num">¥{{Math.abs(
+                                                findTypePrice(order.payments, 14))}}</span>
                                         </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 0, 2)">
-                                            <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 2 ? '-' : ''}¥${item.fee}`}}</span>
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-for="item in filterPayMents(order.payments, 0, 2)">
+                                            <span class="money-type">{{`${dateFormat(
+                                                item.creationTime)} ${item.payChannel}`}}</span>
+                                            <span class="money-num">{{`${item.type === 2 ? '-'
+                                                : ''}¥${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额' : '需退金额'}}</span>
-                                            <span class="money-num">¥{{Math.abs(findTypePrice(order.payments, 15))}}</span>
+                                            <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额'
+                                                : '需退金额'}}</span>
+                                            <span class="money-num">¥{{Math.abs(
+                                                findTypePrice(order.payments, 15))}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
                                         </p>
-                                        <p class="money-item item-indent money-sub-item" v-for="item in filterPayMents(order.payments, 1, 3)">
-                                            <span class="money-type">{{`${dateFormat(item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 3 ? '-' : ''}¥${item.fee}`}}</span>
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-for="item in filterPayMents(order.payments, 1, 3)">
+                                            <span class="money-type">{{`${dateFormat(
+                                                item.creationTime)} ${item.payChannel}`}}</span>
+                                            <span class="money-num">{{`${item.type === 3 ? '-'
+                                                : ''}¥${item.fee}`}}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -128,7 +150,8 @@
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum}}</span>
-                                <span class="order-info-operator" style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
+                                <span class="order-info-operator"
+                                      style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
                             </p>
                         </div>
                     </div>
@@ -138,18 +161,22 @@
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                      @click="checkInOrCheckOut(0)">
                                     办理入住
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
                                      v-if="getRoomsState.checkOutAdAble">
                                     提前退房
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
                                      v-if="getRoomsState.checkOutAble">
                                     办理退房
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     收银
+
                                 </div>
                             </div>
                         </div>
@@ -157,6 +184,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </template>
 <style lang="scss">
     @import "~dd-common-css/src/variables";

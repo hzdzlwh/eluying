@@ -1,7 +1,8 @@
 <template>
-    <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
-        <combination-order v-if="type === ORDER_TYPE.COMBINATION" :order="order"/>
-    </div>
+    <order-container :type="type" :order="order">
+        <AccommodationOrder />
+        <EntertainmentOrder />
+    </order-container>
 </template>
 <style>
 </style>
@@ -10,6 +11,10 @@
     import { ORDER_TYPE } from '../constant';
     import { mapActions, mapState } from 'vuex';
     import types from '../store/types';
+    import caterOrder from './caterOrder.vue';
+    import shopOrder from './shopOrder.vue';
+    import EntertainmentOrder from './EntertainmentOrder.vue';
+    import AccommodationOrder from './AccommodationOrder.vue';
 
     export default{
         data() {
