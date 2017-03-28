@@ -1092,7 +1092,7 @@
                     }
 
                     if (this.enterList.length <= 0) {
-                        modal.somethingAlert('请到"网络设置－业务设置"中添加商超项目！');
+                        modal.somethingAlert('请到"网络设置－业务设置"中添加娱乐项目！');
                         return false;
                     }
 
