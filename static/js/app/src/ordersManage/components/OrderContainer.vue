@@ -6,8 +6,8 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.CATERING" src="" alt="">
+                            <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" alt="">
+                            <img v-if="order.orderType === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" alt="">
                             <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" alt="">
                             <span class="header-text">{{title}}</span>
                             <span v-if="order.orderState">
