@@ -9,6 +9,7 @@ import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 import init from '../common/init';
+import OrderDetail from './components/OrderDetail.vue';
 init({
     leftMenu: false
 });
@@ -199,6 +200,10 @@ $(function(){
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             },
+
+            showOrderDetail(order) {
+
+            },
             
             handleClickTr(item, event) {
                 item.showSub = !item.showSub;
@@ -207,6 +212,8 @@ $(function(){
                     event.stopPropagation();
                     $(event.currentTarget).addClass('dd-tr-selected');
                 }
+
+                this.showOrderDetail(item);
             },
 
             changeListByDate() {
@@ -357,7 +364,8 @@ $(function(){
             DdOption,
             DdSelect,
             DdDatepicker,
-            NoAuth
+            NoAuth,
+            OrderDetail
         }
     });
 
@@ -374,6 +382,4 @@ $(function(){
             }
         }
     );
-
-    util.bindDomAction(events);
 });

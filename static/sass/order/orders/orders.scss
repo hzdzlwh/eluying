@@ -123,6 +123,10 @@
     background: $gary-lightest !important;
   }
 
+  .orders-tr {
+    cursor: pointer;
+  }
+
   .dd-orderArrow {
     position: absolute;
     width: 0;
