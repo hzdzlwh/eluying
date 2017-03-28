@@ -1,7 +1,9 @@
 <template>
     <order-container :type="type" :order="order">
-        <AccommodationOrder />
-        <EntertainmentOrder />
+        <AccommodationOrder :order="order" />
+        <EntertainmentOrder :order="order" />
+        <CaterOrder :order="order" />
+        <ShopOrder :order="order" />
     </order-container>
 </template>
 <style>
@@ -11,8 +13,8 @@
     import { ORDER_TYPE } from '../constant';
     import { mapActions, mapState } from 'vuex';
     import types from '../store/types';
-    import caterOrder from './caterOrder.vue';
-    import shopOrder from './shopOrder.vue';
+    import CaterOrder from './CaterOrder.vue';
+    import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
 
