@@ -10,6 +10,7 @@ import NoAuth from '../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
+import store from './store';
 init({
     leftMenu: false
 });
@@ -19,6 +20,7 @@ require("validation");
 $(function(){
     const orderManage = new Vue({
         el: ".orderManage-rootContainer",
+        store: store,
         data: {
             hasAuth: false,
             isLoading: true,

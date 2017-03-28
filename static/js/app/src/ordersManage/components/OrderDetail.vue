@@ -187,9 +187,21 @@
         },
         props: {
             readOnly: Boolean,
-            order: Object,
-            default: {},
-            type: String
+            order: {
+                type: Object,
+                default: {}
+            },
+            type: String,
+            visible: Boolean
+        },
+        watch: {
+            visible(val) {
+                if (val) {
+                    $('#orderDetail').modal('show');
+                } else {
+                    $('#orderDetail').modal('hide');
+                }
+            }
         },
         methods: {}
     };
