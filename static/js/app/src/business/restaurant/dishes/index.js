@@ -93,6 +93,7 @@ $(function() {
             },
 
             openEditDialog: function() {
+                $('.mainContainer .mainActive').click();
                 if (this.dishesSelected) {
                     dishes.dishes = Object.assign({}, this.dishesSelected);
                     $('#dishesDialog').modal('show');
