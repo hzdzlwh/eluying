@@ -16,17 +16,7 @@ require("bootstrap");
 require("validation");
 
 $(function(){
-    var events = {
-
-        "click .orders-tr": function(ev){
-            ev.stopPropagation();
-            $(".orders-tr").removeClass("dd-tr-selected");
-            $(this).addClass("dd-tr-selected");
-        }
-
-    };
-    
-    let orderManage = new Vue({
+    const orderManage = new Vue({
         el: ".orderManage-rootContainer",
         data: {
             hasAuth: false,
