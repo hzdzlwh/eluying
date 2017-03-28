@@ -5,10 +5,10 @@ import Vue from 'vue';
 import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
-import auth from '../../common/auth';
-import NoAuth from '../../common/components/noAuth.vue';
+import auth from '../common/auth';
+import NoAuth from '../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
-import init from '../../common/init';
+import init from '../common/init';
 init({
     leftMenu: false
 });
