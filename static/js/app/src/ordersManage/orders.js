@@ -11,7 +11,7 @@ import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOpt
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
 import store from './store';
-import { ORDER_TYPE } from './constant';
+
 init({
     leftMenu: false
 });
@@ -83,7 +83,9 @@ $(function(){
             showTopArrow: true,
             showDownArrow: true,
             searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png',
-            visible: false
+            detailVisible: false,
+            detailId: undefined,
+            detailType: undefined
         },
 
         created() {
@@ -206,10 +208,9 @@ $(function(){
             },
 
             showOrderDetail(order) {
-                const type = order.oderType;
-                if (type === ORDER_TYPE.COMBINATION) {
-
-                }
+                this.detailType = order.orderType;
+                this.detailId = order.orderId;
+                this.detailVisible = true;
             },
             
             handleClickTr(item, event) {

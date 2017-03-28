@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" data-backdrop="static" :id="type" class="orderDetail" role="dialog">
+        <div class="modal fade roomModals" data-backdrop="static" id="orderDetail" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                         </div>
-                        <solt></solt>
+                        <slot></slot>
                         <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
                                 <span style="margin-right: 4px">收银信息</span>
@@ -132,7 +132,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="roomModals-footer">
+                    <div class="roomModals-footer" v-if="!readOnly">
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
@@ -165,17 +165,15 @@
     import { ORDER_TYPE } from '../constant';
     export default{
         data() {
-            return {};
+            return {
+                readOnly: true
+            };
         },
         props: {
-            readOnly: {
-                type: Boolean,
-                default: true
-            },
-            type: String
+            type: Number,
+            order: Object
         },
         computed: {
-            ...mapState({ order: 'orderDetail' }),
             title() {
                 switch (this.order.orderType) {
                     case ORDER_TYPE.ACCOMMODATION:
@@ -194,18 +192,38 @@
             }
         },
         watch: {
-            visible(val) {
-                if (val) {
-                    $('#orderDetail').modal('show');
-                } else {
-                    $('#orderDetail').modal('hide');
-                }
-            }
         },
         methods: {
             hideModal() {
                 this.$emit('onClose');
-            }
+            },
+            /**
+             * 计算各种类型的收费金额
+             * @param type
+             * @returns {number}
+             */
+            findTypePrice(arr, type) {
+                let price = 0;
+                if (arr) {
+                    arr.forEach(item => {
+                        if (item.type === type) {
+                            price += item.fee;
+                        }
+                    });
+                }
+                return Math.abs(price.toFixed(2));
+            },
+            filterPayMents(arr, type1,type2) {
+                let newPayMents = [];
+                if (arr) {
+                    arr.forEach(item => {
+                        if (item.type === type1 || item.type === type2) {
+                            newPayMents.push(item);
+                        }
+                    });
+                }
+                return newPayMents;
+            },
         }
     };
 </script>
