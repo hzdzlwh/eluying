@@ -581,15 +581,15 @@
                 align-items: center;
                 justify-content: center;
             }
-            dish-name-container {
+            .dish-name-container {
                 width: 170px;
-                display: inline-flex;
+                display: flex;
                 justify-content: flex-start;
                 align-items: center;
             }
             .dish-name {
-                display: inline-block;
-                width: 140px;
+                display: block;
+                max-width: 140px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;

@@ -148,16 +148,12 @@ export default {
         hideModal() {
             this.$emit('close', false)
             $('#selectModal').modal('hide');
-            this.resteActive()
         },
         selectprogram(item) {
+            // let data = this.entertainmentIdActive
+            // data.categoryList = item
             this.$emit('selectProjectDate', item)
             this.hideModal()
-            this.resteActive()
-        },
-        resteActive() {
-            this.entertainmentIdActive = this.selectDate[0],
-            this.entertainmentListActive = this.selectDate[0].categoryList
         }
     },
     watch: {
