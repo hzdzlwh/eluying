@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div class="modal fade roomModals" data-backdrop="static" id="orderDetail" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -157,16 +156,302 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
-<style>
+<style lang="sass" type="text/css" rel="stylesheet/scss">
+    @import "~dd-common-css/src/variables";
+    #orderDetail {
+    .label-text {
+        color: #999999;
+    }
+    }
+    .small-font {
+        font-size: $font-size-sm;
+        color: $gary-dark;
+    }
+    .normal-font {
+        font-size: $font-size-base;
+        color: $gary-daker;
+        font-weight: normal;
+    }
+    .roomModals {
+    .grey {
+        color: #666666;
+    }
+    .green {
+        color: #00af10;
+    }
+    .red {
+        color: #f24949;
+    }
+    .header-container {
+        display: flex;
+        align-items: center;
+    }
+    .order-state-angle {
+        margin-left: 16px;
+        border-right: 12px solid;
+        border-top: 11px solid;
+        border-bottom: 11px solid;
+    }
+    .order-state {
+        color: #ffffff;
+        font-size: $font-size-sm;
+        display: inline-flex;
+        width: 40px;
+        height: 22px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1px;
+        padding-right: 3px;
+    }
+    .header-tools {
+        color: $blue;
+        font-size: $font-size-sm;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+    .item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 13px;
+    &:not(:last-child) {
+         padding-bottom: 15px;
+         margin-bottom: 16px;
+         border-bottom: 1px dotted #e6e6e6;
+     }
+    }
+    .item-content {
+        display: flex;
+        flex-grow: 1;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+    .user-name {
+        width: 124px;
+    }
+    .room-date {
+    .startDate, .endDate {
+        margin: 0 14px;
+    }
+    }
+    .room-info {
+        justify-content: space-between;
+        position: relative;
+    }
+    .room-info, .room-name, .room-user, .play-item, .food-item {
+        display: flex;
+        align-items: center;
+    }
+    .room-user {
+        margin-top: 12px;
+    }
+    .room-state-icon, .food-state-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: #ffffff;
+        font-size: 10px;
+        border-radius: 2px;
+        margin-left: 4px;
+    }
+    .orderDetailModal-shop-item {
+        display: flex;
+    }
+    .room-fee:hover{
+    .orderDetailModal-roomPriceList {
+        display: flex;
+    }
+    }
+    .orderDetailModal-roomPriceList {
+        display: none;
+        flex-wrap: wrap;
+        position: absolute;
+        max-width: 491px;
+        right: 81px;
+        padding: 8px 8px 8px 0;
+        background: #fafafa;
+        box-shadow: 0 0 5px 0;
+        border-radius: 2px;
+        max-height: 100px;
+        overflow-y: auto;
+        z-index: 9;
+    &:before {
+         display: table;
+         content: " ";
+         line-height: 0;
+     }
+    .price-item {
+        width: 60px;
+        margin-left: 8px;
+    dt {
+        color: #999999;
+        font-size: 12px;
+    }
+    dd {
+        height: 24px;
+    }
+    }
+    }
+    .user-icon {
+        width: 16px;
+        height: 15px;
+        background: url("../../../../../image/modal/room_modal_user.png");
+        background-size: contain;
+        margin-right: 25px;
+    }
+    .food-icon {
+        width: 14px;
+        height: 18px;
+        background: url("../../../../../image/modal/room_modal_food.png");
+        background-size: contain;
+        margin-right: 25px;
+    }
+    .info-icon {
+        position: relative;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        background: url("../../../../../image/modal/room_modal_info.png");
+        background-size: contain;
+    }
+    .info-content {
+    @extend .normal-font;
+        width: 274px;
+        margin: 0;
+        position: absolute;
+        bottom: 0;
+        display: none;
+        transform: translateX(-100%);
+        max-height: 230px;
+        overflow-y: scroll;
+        background: #fafafa;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0;
+        padding: 8px;
+    &::-webkit-scrollbar {
+         width: 0;
+     }
+    .item-indent {
+        padding-left: 16px;
+    }
+    .dish-discount-icon {
+        font-size: 10px;
+        color: #ffffff;
+        display: inline-flex;
+        background:#ffba75;
+        border-radius:2px;
+        width:17px;
+        height:16px;
+        margin-left: 5px;
+        align-items: center;
+        justify-content: center;
+    }
+    dish-name-container {
+        width: 170px;
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .dish-name {
+        display: inline-block;
+        width: 140px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .dish-numAndPrice {
+        flex-grow: 1;
+        display: inline-flex;
+        justify-content: space-between;
+    }
+    .info-title {
+    @extend .normal-font;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    .food-sub-item {
+        display: flex;
+    }
+    .money-item {
+        display: flex;
+        justify-content: space-between;
+    }
+    .money-sub-item {
+        color: #999999;
+    }
+    .deskNum {
+    @extend .small-font;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+    .foodTime {
+    @extend .small-font;
+        margin-bottom: 8px;
+    }
+    .food-container {
+        padding: 8px 0;
+        border-top: 1px solid #e6e6e6;
+    }
+    .money-container {
+        padding: 8px 0;
+        border-top: 1px solid #e6e6e6;
+    }
+    .money-type-border {
+        border-top: 1px solid #e6e6e6;
+    }
+    .operator-container {
+    @extend .small-font;
+        padding-top: 8px;
+        border-top: 1px solid #e6e6e6;
+    }
+    }
+    .order-price-text {
+        color: $gary-daker;
+        font-size: $font-size-base;
+        margin-right: 24px;
+    }
+    .order-price-num {
+        font-size: $font-size-lg;
+        font-weight: bold;
+        margin-left: 4px;
+    }
+    .order-btns {
+        display: flex;
+        justify-content: flex-end;
+    .order-btn {
+        margin-left: 24px;
+    }
+    }
+    .content-item {
+    .order-info {
+        color: #999999;
+        font-size: $font-size-sm;
+        margin-bottom: 16px;
+    }
+    .info-icon {
+    &:hover {
+    .info-content {
+        display: block;
+    }
+    }
+    }
+    }
+    }
 </style>
 <script>
-    import { ORDER_TYPE } from '../constant';
+    import { ORDER_TYPE, ORDER_STATUS_ICON } from '../constant';
     export default{
         data() {
             return {
-                readOnly: true
+                readOnly: true,
+                ORDER_STATUS_ICON
             };
         },
         props: {

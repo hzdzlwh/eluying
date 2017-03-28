@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
         <combination-order v-if="type === ORDER_TYPE.COMBINATION" :order="order" />
     </div>
 </template>
