@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" data-backdrop="static" id="orderDetail" role="dialog">
+        <div class="modal fade roomModals" data-backdrop="static" :id="type" class="orderDetail" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -167,7 +167,15 @@
         data() {
             return {};
         },
+        props: {
+            readOnly: {
+                type: Boolean,
+                default: true
+            },
+            type: String
+        },
         computed: {
+            ...mapState({ order: 'orderDetail' }),
             title() {
                 switch (this.order.orderType) {
                     case ORDER_TYPE.ACCOMMODATION:
@@ -185,15 +193,6 @@
                 }
             }
         },
-        props: {
-            readOnly: Boolean,
-            order: {
-                type: Object,
-                default: {}
-            },
-            type: String,
-            visible: Boolean
-        },
         watch: {
             visible(val) {
                 if (val) {
@@ -203,6 +202,10 @@
                 }
             }
         },
-        methods: {}
+        methods: {
+            hideModal() {
+                this.$emit('onClose');
+            }
+        }
     };
 </script>
