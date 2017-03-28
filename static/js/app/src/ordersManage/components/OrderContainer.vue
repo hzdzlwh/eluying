@@ -14,7 +14,7 @@
                             </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" v-if="order.orderType !== ORDER_TYPE.COMBINATION"
+                            <span class="header-tools" v-if="order.combinationOrderId"
                                   @click="showCombinationOrder">查看组合订单</span>
                             <span class="header-tools" @click="openPrint(order)">打印</span>
                             <span class="header-tools"
@@ -973,7 +973,11 @@
                 return newPayMents;
             },
             showCombinationOrder() {
-                event.$emit('onShowDetail', { orderId: this.order.combinationOrderId, orderType: ORDER_TYPE.COMBINATION })
+                event.$emit('onShowDetail',
+                    {
+                        orderId: this.order.combinationOrderId,
+                        orderType: ORDER_TYPE.COMBINATION
+                    });
             }
         }
     };
