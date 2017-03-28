@@ -13,5 +13,6 @@ export default {
     'GET_ROOM_ORDER_DETAIL': 'getRoomOrderDetail',
     'GET_GOODS_ORDER_DETAIL': 'getGoodsOrderDetail',
     'GET_ENTER_ORDER_DETAIL': 'getEnterOrderDetail',
-    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail'
+    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail',
+    'GET_ORDER_DETAIL': 'getOrderDetail'
 }

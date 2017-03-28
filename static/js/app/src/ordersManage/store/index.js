@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import Vue from 'vue';
 import AJAXService from '../../common/AJAXService';
 import types from './types';
+import { ORDER_TYPE } from '../constant';
 
 Vue.use(Vuex);
 
@@ -151,6 +152,20 @@ const store = new Vuex.Store({
                         }
                     });
             })
+        },
+        [types.GET_ORDER_DETAIL]({ commit }, { orderId, orderType }) {
+            switch (orderType) {
+                case ORDER_TYPE.COMBINATION:
+                    return commit(types.LOAD_ORDER_DETAIL, { orderId });
+                case ORDER_TYPE.ACCOMMODATION:
+                    return commit(types.GET_ROOM_ORDER_DETAIL, { orderId });
+                case ORDER_TYPE.ENTERTAINMENT:
+                    return commit(types.GET_ENTER_ORDER_DETAIL, { orderId });
+                case ORDER_TYPE.CATERING:
+                    return commit(types.GET_CATER_ORDER_DETAIL, { orderId });
+                case ORDER_TYPE.RETAIL:
+                    return commit(types.GET_GOODS_ORDER_DETAIL, { orderId });
+            }
         }
     }
 });

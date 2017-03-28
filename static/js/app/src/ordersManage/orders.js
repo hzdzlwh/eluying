@@ -83,7 +83,9 @@ $(function(){
             showTopArrow: true,
             showDownArrow: true,
             searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png',
-            visible: false
+            detailVisible: false,
+            detailId: undefined,
+            detailType: undefined
         },
 
         created() {
@@ -206,10 +208,9 @@ $(function(){
             },
 
             showOrderDetail(order) {
-                const type = order.oderType;
-                if (type === ORDER_TYPE.COMBINATION) {
-
-                }
+                this.detailType = order.oderType;
+                this.detailId = order.orderId;
+                this.detailVisible = true;
             },
             
             handleClickTr(item, event) {
