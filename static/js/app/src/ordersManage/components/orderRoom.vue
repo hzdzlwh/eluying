@@ -45,12 +45,6 @@
         </div>
     </div>
 </template>
-<style type="text/css" scoped>
-	.roomDashed{
-		    border-bottom: 1px dashed #eee;
-    padding-bottom: 10px;
-	}
-</style>
 <script>
 import {
     ID_CARD_TYPE
