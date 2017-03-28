@@ -17,6 +17,7 @@ var auth = require('../../../common/auth');
 import init from '../../../common/init';
 init({
     id: auth.BUSINESS_ID,
+    clearModal: true
 });
 Vue.prototype.$isNull = function(text) {
     var result = typeof (text) === 'undefined' || text === '';

@@ -57,14 +57,15 @@
                 const paramsObj = {
                     exportType: 0,
                     reportType: 4,
-                    params: {
+                    params: JSON.stringify({
                         startDate: this.date.startDate,
                         endDate: this.date.endDate,
                         nodeId: this.restaurantId
-                    }
+                    })
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }
@@ -92,7 +93,7 @@
                         const tableData = getTableData({
                             list: res.data.classifyList,
                             firstTitle: '菜品名称',
-                            secondTitle: '合计',
+                            secondTitle: '数量合计',
                             foot: false
                         });
                         this.dataSource = tableData.dataSource;

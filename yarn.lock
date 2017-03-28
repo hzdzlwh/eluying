@@ -1101,8 +1101,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.3.0"
 
 caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000640"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000640.tgz#7b7fd3cf13c0d9d41f8754b577b202113e2be7ca"
+  version "1.0.30000641"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000641.tgz#4810fc75fbb3f5b3bd75c2d6a94d894a7c709873"
 
 cardinal@^1.0.0:
   version "1.0.0"
@@ -2231,7 +2231,7 @@ gulp-rename@^1.2.2:
 
 gulp-rev-collector@1.1.1:
   version "1.1.1"
-  resolved "http://registry.npm.taobao.org/gulp-rev-collector/download/gulp-rev-collector-1.1.1.tgz#2dd19038fec4e248e4bf52aeee6830ce08e271ed"
+  resolved "https://registry.yarnpkg.com/gulp-rev-collector/-/gulp-rev-collector-1.1.1.tgz#2dd19038fec4e248e4bf52aeee6830ce08e271ed"
   dependencies:
     gulp-util "^3.0.0"
     through2 ">=0.5.1"
@@ -2725,6 +2725,10 @@ jodid25519@^1.0.0:
   resolved "https://registry.yarnpkg.com/jodid25519/-/jodid25519-1.0.2.tgz#06d4912255093419477d425633606e0e90782967"
   dependencies:
     jsbn "~0.1.0"
+
+jquery@1.12.4:
+  version "1.12.4"
+  resolved "http://registry.npm.taobao.org/jquery/download/jquery-1.12.4.tgz#01e1dfba290fe73deba77ceeacb0f9ba2fec9e0c"
 
 jquery@^2.2.3:
   version "2.2.4"
@@ -5000,9 +5004,13 @@ unc-path-regex@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
 
-underscore@1.7.x, underscore@^1.6.0:
+underscore@1.7.x:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.7.0.tgz#6bbaf0877500d36be34ecaa584e0db9fef035209"
+
+underscore@^1.6.0:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
 
 uniq@^1.0.1:
   version "1.0.1"

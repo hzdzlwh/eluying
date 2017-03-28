@@ -10,9 +10,6 @@ var header = {
         var that = this;
         var data = {
             campName: localStorage.getItem('campName'),
-            joinNet: "加入新网络",
-            creatNet: "创建新网络",
-            logOut: "退出账户",
             avatar: localStorage.getItem('avatar')
         };
         var temp = dot.template(headerHtml);
@@ -55,7 +52,7 @@ var header = {
                     object.joined = "<dt>我加入的</dt>" + object.joined + "<hr>";
                 }
             }
-            $("#headerSwitchCamp").prepend(object.created + object.joined);
+            $("#headerSwitchCamp .network-list").html(object.created + object.joined);
             $("#headerSwitchCamp .networkButton").click(function () {
                 var campId = $(this).attr("data-campId");
                 var campName = $(this).attr("data-campName");
@@ -88,13 +85,17 @@ var header = {
             $('.logout').toggle();
         },
         "click body": function () {
+            var headerSwitchCamp = $('#headerSwitchCamp');
+            var logout = $('.logout');
             $('.userName').removeClass('userName-active');
-            if ($('#headerSwitchCamp').css('display') === 'block') {
-                $('#headerSwitchCamp').slideUp('normal', function () {
+            if (headerSwitchCamp.css('display') === 'block') {
+                headerSwitchCamp.slideUp('normal', function () {
                     $(".headerSwitch").removeClass("switchCampActive");
                 });
             }
-            $('.logout').hide();
+            if (logout.css('display') === 'block') {
+                logout.hide();
+            }
         },
         "click #headerJoinNewNetwork": function () {
             networkAction.init("joinStep1", {}).modal("show");
