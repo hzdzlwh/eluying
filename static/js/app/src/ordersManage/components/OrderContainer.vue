@@ -157,292 +157,724 @@
             </div>
         </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/scss">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
+
     #orderDetail {
-    .label-text {
-        color: #999999;
+        .label-text {
+            color: #999999;
+        }
     }
-    }
+
     .small-font {
         font-size: $font-size-sm;
         color: $gary-dark;
     }
+
     .normal-font {
         font-size: $font-size-base;
         color: $gary-daker;
         font-weight: normal;
     }
+
     .roomModals {
-    .grey {
-        color: #666666;
+        .grey {
+            color: #666666;
+        }
+        .green {
+            color: #00af10;
+        }
+        .red {
+            color: #f24949;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+        }
+        .order-state-angle {
+            margin-left: 16px;
+            border-right: 12px solid;
+            border-top: 11px solid;
+            border-bottom: 11px solid;
+        }
+        .order-state {
+            color: #ffffff;
+            font-size: $font-size-sm;
+            display: inline-flex;
+            width: 40px;
+            height: 22px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1px;
+            padding-right: 3px;
+        }
+        .header-tools {
+            color: $blue;
+            font-size: $font-size-sm;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+        .item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-left: 13px;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+        }
+        .item-content {
+            display: flex;
+            flex-grow: 1;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .user-name {
+            width: 124px;
+        }
+        .room-date {
+            .startDate, .endDate {
+                margin: 0 14px;
+            }
+        }
+        .room-info {
+            justify-content: space-between;
+            position: relative;
+        }
+        .room-info, .room-name, .room-user, .play-item, .food-item {
+            display: flex;
+            align-items: center;
+        }
+        .room-user {
+            margin-top: 12px;
+        }
+        .room-state-icon, .food-state-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 10px;
+            border-radius: 2px;
+            margin-left: 4px;
+        }
+        .orderDetailModal-shop-item {
+            display: flex;
+        }
+        .room-fee:hover {
+            .orderDetailModal-roomPriceList {
+                display: flex;
+            }
+        }
+        .orderDetailModal-roomPriceList {
+            display: none;
+            flex-wrap: wrap;
+            position: absolute;
+            max-width: 491px;
+            right: 81px;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: auto;
+            z-index: 9;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                margin-left: 8px;
+                dt {
+                    color: #999999;
+                    font-size: 12px;
+                }
+                dd {
+                    height: 24px;
+                }
+            }
+        }
+        .user-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_user.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .food-icon {
+            width: 14px;
+            height: 18px;
+            background: url("../../../../../image/modal/room_modal_food.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .info-icon {
+            position: relative;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            background: url("../../../../../image/modal/room_modal_info.png");
+            background-size: contain;
+        }
+        .info-content {
+            @extend .normal-font;
+            width: 274px;
+            margin: 0;
+            position: absolute;
+            bottom: 0;
+            display: none;
+            transform: translateX(-100%);
+            max-height: 230px;
+            overflow-y: scroll;
+            background: #fafafa;
+            border-radius: 2px;
+            box-shadow: 0 0 5px 0;
+            padding: 8px;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
+            .item-indent {
+                padding-left: 16px;
+            }
+            .dish-discount-icon {
+                font-size: 10px;
+                color: #ffffff;
+                display: inline-flex;
+                background: #ffba75;
+                border-radius: 2px;
+                width: 17px;
+                height: 16px;
+                margin-left: 5px;
+                align-items: center;
+                justify-content: center;
+            }
+            .dish-name-container {
+                width: 170px;
+                display: inline-flex;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            .dish-name {
+                display: inline-block;
+                width: 140px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            .dish-numAndPrice {
+                flex-grow: 1;
+                display: inline-flex;
+                justify-content: space-between;
+            }
+            .info-title {
+                @extend .normal-font;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .food-sub-item {
+                display: flex;
+            }
+            .money-item {
+                display: flex;
+                justify-content: space-between;
+            }
+            .money-sub-item {
+                color: #999999;
+            }
+            .deskNum {
+                @extend .small-font;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+            .foodTime {
+                @extend .small-font;
+                margin-bottom: 8px;
+            }
+            .food-container {
+                padding: 8px 0;
+                border-top: 1px solid #e6e6e6;
+            }
+            .money-container {
+                padding: 8px 0;
+                border-top: 1px solid #e6e6e6;
+            }
+            .money-type-border {
+                border-top: 1px solid #e6e6e6;
+            }
+            .operator-container {
+                @extend .small-font;
+                padding-top: 8px;
+                border-top: 1px solid #e6e6e6;
+            }
+        }
+        .order-price-text {
+            color: $gary-daker;
+            font-size: $font-size-base;
+            margin-right: 24px;
+        }
+        .order-price-num {
+            font-size: $font-size-lg;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+        .order-btns {
+            display: flex;
+            justify-content: flex-end;
+            .order-btn {
+                margin-left: 24px;
+            }
+        }
+        .content-item {
+            .order-info {
+                color: #999999;
+                font-size: $font-size-sm;
+                margin-bottom: 16px;
+            }
+            .info-icon {
+                &:hover {
+                    .info-content {
+                        display: block;
+                    }
+                }
+            }
+        }
     }
-    .green {
-        color: #00af10;
+
+    .valid {
+        position: absolute;
+        font-size: $font-size-sm;
+        color: #999999;
+        right: 140px;
     }
-    .red {
+
+    .error {
+        position: absolute;
+        font-size: $font-size-sm;
         color: #f24949;
     }
-    .header-container {
-        display: flex;
-        align-items: center;
+
+    .shopItem-border-style {
+        padding-bottom: 15px;
+        margin-bottom: 16px;
+        border-bottom: 1px dotted #e6e6e6;
     }
-    .order-state-angle {
-        margin-left: 16px;
-        border-right: 12px solid;
-        border-top: 11px solid;
-        border-bottom: 11px solid;
-    }
-    .order-state {
-        color: #ffffff;
-        font-size: $font-size-sm;
-        display: inline-flex;
-        width: 40px;
-        height: 22px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 1px;
-        padding-right: 3px;
-    }
-    .header-tools {
-        color: $blue;
-        font-size: $font-size-sm;
-        cursor: pointer;
-        margin-right: 16px;
-    }
-    .item {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-left: 13px;
-    &:not(:last-child) {
-         padding-bottom: 15px;
-         margin-bottom: 16px;
-         border-bottom: 1px dotted #e6e6e6;
-     }
-    }
-    .item-content {
-        display: flex;
-        flex-grow: 1;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-    }
-    .user-name {
-        width: 124px;
-    }
-    .room-date {
-    .startDate, .endDate {
-        margin: 0 14px;
-    }
-    }
-    .room-info {
-        justify-content: space-between;
-        position: relative;
-    }
-    .room-info, .room-name, .room-user, .play-item, .food-item {
-        display: flex;
-        align-items: center;
-    }
-    .room-user {
-        margin-top: 12px;
-    }
-    .room-state-icon, .food-state-icon {
-        width: 16px;
-        height: 16px;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        color: #ffffff;
-        font-size: 10px;
-        border-radius: 2px;
-        margin-left: 4px;
-    }
-    .orderDetailModal-shop-item {
-        display: flex;
-    }
-    .room-fee:hover{
-    .orderDetailModal-roomPriceList {
-        display: flex;
-    }
-    }
-    .orderDetailModal-roomPriceList {
-        display: none;
-        flex-wrap: wrap;
-        position: absolute;
-        max-width: 491px;
-        right: 81px;
-        padding: 8px 8px 8px 0;
-        background: #fafafa;
-        box-shadow: 0 0 5px 0;
-        border-radius: 2px;
-        max-height: 100px;
-        overflow-y: auto;
-        z-index: 9;
-    &:before {
-         display: table;
-         content: " ";
-         line-height: 0;
-     }
-    .price-item {
-        width: 60px;
-        margin-left: 8px;
-    dt {
-        color: #999999;
-        font-size: 12px;
-    }
-    dd {
-        height: 24px;
-    }
-    }
-    }
-    .user-icon {
-        width: 16px;
-        height: 15px;
-        background: url("../../../../../image/modal/room_modal_user.png");
-        background-size: contain;
-        margin-right: 25px;
-    }
-    .food-icon {
-        width: 14px;
-        height: 18px;
-        background: url("../../../../../image/modal/room_modal_food.png");
-        background-size: contain;
-        margin-right: 25px;
-    }
-    .info-icon {
-        position: relative;
-        cursor: pointer;
-        width: 16px;
-        height: 16px;
-        background: url("../../../../../image/modal/room_modal_info.png");
-        background-size: contain;
-    }
-    .info-content {
-    @extend .normal-font;
-        width: 274px;
-        margin: 0;
-        position: absolute;
-        bottom: 0;
-        display: none;
-        transform: translateX(-100%);
-        max-height: 230px;
-        overflow-y: scroll;
-        background: #fafafa;
-        border-radius: 2px;
-        box-shadow: 0 0 5px 0;
-        padding: 8px;
-    &::-webkit-scrollbar {
-         width: 0;
-     }
-    .item-indent {
-        padding-left: 16px;
-    }
-    .dish-discount-icon {
-        font-size: 10px;
-        color: #ffffff;
-        display: inline-flex;
-        background:#ffba75;
-        border-radius:2px;
-        width:17px;
-        height:16px;
-        margin-left: 5px;
-        align-items: center;
-        justify-content: center;
-    }
-    dish-name-container {
-        width: 170px;
-        display: inline-flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-    .dish-name {
-        display: inline-block;
-        width: 140px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-    .dish-numAndPrice {
-        flex-grow: 1;
-        display: inline-flex;
-        justify-content: space-between;
-    }
-    .info-title {
-    @extend .normal-font;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 8px;
-    }
-    .food-sub-item {
-        display: flex;
-    }
-    .money-item {
-        display: flex;
-        justify-content: space-between;
-    }
-    .money-sub-item {
-        color: #999999;
-    }
-    .deskNum {
-    @extend .small-font;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4px;
-    }
-    .foodTime {
-    @extend .small-font;
-        margin-bottom: 8px;
-    }
-    .food-container {
-        padding: 8px 0;
-        border-top: 1px solid #e6e6e6;
-    }
-    .money-container {
-        padding: 8px 0;
-        border-top: 1px solid #e6e6e6;
-    }
-    .money-type-border {
-        border-top: 1px solid #e6e6e6;
-    }
-    .operator-container {
-    @extend .small-font;
-        padding-top: 8px;
-        border-top: 1px solid #e6e6e6;
-    }
-    }
-    .order-price-text {
-        color: $gary-daker;
+
+    .roomModals {
+        box-sizing: border-box;
         font-size: $font-size-base;
-        margin-right: 24px;
+        color: $gary-daker;
+        .modal-dialog {
+            width: 794px;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%) !important;
+            -ms-transform: translate(-50%, -50%) !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        .modal-content {
+            width: 794px;
+            border-top: 4px solid #178ce6;
+            border-radius: 2px;
+            box-shadow: 0 0 5px 0;
+            padding: 0 0 56px 0;
+            margin-top: 0 !important;
+        }
     }
-    .order-price-num {
-        font-size: $font-size-lg;
-        font-weight: bold;
-        margin-left: 4px;
-    }
-    .order-btns {
+
+    .roomModals-header {
+        width: 100%;
+        height: 53px;
         display: flex;
-        justify-content: flex-end;
-    .order-btn {
-        margin-left: 24px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 24px;
+        .close-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: url("../../../../../image/modal/room_modal_close.png");
+            background-size: contain;
+            cursor: pointer;
+        }
+        .header-text {
+            font-size: $font-size-lg;
+            color: $gary-daker;
+            font-weight: bold;
+        }
     }
+
+    .roomModals-body {
+        width: 100%;
+        max-height: 485px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        label {
+            margin: 0;
+        }
+        input {
+            width: 120px;
+        }
+        .room-category {
+            width: 60px;
+            display: inline-block;
+            input {
+                width: 100%;
+            }
+        }
+        .content-item {
+            padding: 16px 24px;
+            border-top: 1px solid $gary-light;
+        }
+        .increase-container {
+            font-size: $font-size-base;
+            font-weight: normal;
+            color: $blue;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .increase-icon {
+            height: 16px;
+            width: 16px;
+            background: url("../../../../../image/modal/room_modal_incre.png");
+            background-size: contain;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+        .vip-level-img {
+            display: inline-block;
+            height: 15px;
+            width: 17px;
+            position: absolute;
+            right: 0;
+            top: 4px;
+            transform: translateX(100%);
+            background: url("../../../../../image/modal/vip_level_img.png");
+            background-size: contain;
+            &:hover + .vip-level-tip {
+                display: inline-flex;
+            }
+        }
+        .vip-level-container {
+            position: relative;
+        }
+        .vip-level-tip {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: -17px;
+            padding: 0 2px;
+            transform: translateX(100%);
+            background: #fafafa;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+            height: 19px;
+            justify-content: center;
+            align-items: center;
+        }
+        .userInfo-items {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            div:last-child {
+                margin-right: 16px;
+            }
+        }
+        .userVip-list {
+            position: absolute;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
+            border-radius: 2px;
+            width: 261px;
+            max-height: 120px;
+            overflow-y: scroll;
+            top: 26px;
+            z-index: 100;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
+        }
+        .userVip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666666;
+            font-size: 12px;
+            padding: 2px 8px;
+            cursor: pointer;
+            &:hover {
+                background: #e1effa;
+            }
+            .vip-level {
+                display: inline-flex;
+                align-items: center;
+                width: 80px;
+            }
+            .vip-level-text {
+                display: inline-block;
+                max-width: 70px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+        .userInfo-phone {
+            position: relative;
+        }
+        .enter-icon {
+            width: 18px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_enter.png");
+            background-size: contain;
+            margin-right: 14px;
+        }
+        .enterDate-container {
+            input {
+                width: 110px;
+            }
+        }
+        .room-select-icon {
+            width: 16px;
+            height: 16px;
+            background-size: contain;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+        .room-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_home.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
+        .registerInfoModal-roomPrice {
+            display: flex;
+            align-items: center;
+        }
+        .fee-container {
+            position: relative;
+            display: inline-block;
+        }
+        .fee-symbol {
+            position: absolute;
+            left: 8px;
+            top: 3px;
+            z-index: 10;
+        }
+        .fee-input {
+            padding-left: 16px;
+        }
+        .discount-info {
+            display: inline-flex;
+            position: absolute;
+            font-size: 12px;
+            color: #999999;
+            top: 30px;
+            right: 0;
+            min-width: 104px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .origin-price {
+            text-decoration: line-through;
+        }
+        .discount-num {
+            display: inline-flex;
+            padding: 0 5px;
+            color: #ffffff;
+            background: #f5a623;
+            border-radius: 2px;
+        }
+        .registerInfoModal-roomPriceList {
+            display: flex;
+            flex-wrap: wrap;
+            position: absolute;
+            max-width: 491px;
+            right: 0;
+            top: 30px;
+            padding: 8px 8px 8px 0;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0;
+            border-radius: 2px;
+            max-height: 100px;
+            overflow-y: auto;
+            z-index: 11;
+            &:before {
+                display: table;
+                content: " ";
+                line-height: 0;
+            }
+            .price-item {
+                width: 60px;
+                margin-left: 8px;
+                dt {
+                    color: #999999;
+                    font-size: 12px;
+                }
+                dd {
+                    height: 24px;
+                }
+            }
+        }
+        .selected-icon {
+            background: url("../../../../../image/modal/room_modal_selected.png");
+        }
+        .notSelect-icon {
+            background: url("../../../../../image/modal/room_modal_notSelect.png");
+        }
+        .time-container {
+            margin-left: 2px;
+        }
+        .time-container, .enterDate-container, .enterDate {
+            display: inline-block;
+        }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 13px;
+            position: relative;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+        }
+        .registerRoom-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .registerRoom-container {
+            display: flex;
+            flex-direction: column;
+            padding-left: 13px;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+                margin-bottom: 16px;
+                border-bottom: 1px dotted #e6e6e6;
+            }
+            .checkInPerson-person {
+                padding-left: 0;
+                .checkInPerson-person-icon {
+                    margin-right: 25px;
+                }
+            }
+            .checkInPerson-btns {
+                padding-left: 41px;
+            }
+        }
+        .shop-icon {
+            width: 16px;
+            height: 15px;
+            background: url("../../../../../image/modal/room_modal_cart.png");
+            background-size: contain;
+            margin-right: 16px;
+        }
+        .shop-item-content {
+            padding-top: 3px;
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            .useless-tip {
+                bottom: -16px;
+            }
+        }
+        .shop-item-count {
+            width: 240px;
+        }
+        .shop-item-price {
+            display: inline-block;
+            margin-left: 24px;
+        }
+        .delete-icon {
+            margin-left: 16px;
+            width: 16px;
+            height: 16px;
+            background: url("../../../../../image/modal/room_modal_delete.png");
+            background-size: contain;
+            cursor: pointer;
+        }
+        .delete-icon-like {
+            margin-left: 16px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+        .remark-items {
+            position: relative;
+            textarea {
+                width: 100%;
+                height: 65px;
+                resize: none;
+            }
+        }
+        .valid-remark-tip {
+            @extend .valid;
+            right: 0;
+        }
+        .error-phone-tip {
+            @extend .error;
+            left: 45px;
+        }
+        .dd-select {
+            display: inline-block;
+        }
+        .dd-select-menu {
+            overflow-y: auto;
+            max-height: 120px;
+            .dd-select-option {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
     }
-    .content-item {
-    .order-info {
-        color: #999999;
+
+    .content-item-title {
+        display: flex;
+        justify-content: space-between;
         font-size: $font-size-sm;
+        color: $gary-daker;
+        font-weight: bold;
         margin-bottom: 16px;
     }
-    .info-icon {
-    &:hover {
-    .info-content {
-        display: block;
-    }
-    }
-    }
-    }
+
+    .roomModals-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 56px;
+        background: #ebebeb;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .footer-label {
+            font-size: $font-size-sm;
+            color: $gary-daker;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .footer-price {
+            font-size: $font-size-lg;
+            color: $blue;
+            font-weight: bold;
+        }
     }
 </style>
 <script>
