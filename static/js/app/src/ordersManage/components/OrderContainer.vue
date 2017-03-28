@@ -878,6 +878,7 @@
     }
 </style>
 <script>
+    import event from '../event';
     import { ORDER_TYPE, ORDER_STATUS_ICON } from '../constant';
     export default{
         data() {
@@ -912,7 +913,7 @@
         },
         methods: {
             hideModal() {
-                this.$emit('onClose');
+                event.$emit('onClose');
             },
             /**
              * 计算各种类型的收费金额
