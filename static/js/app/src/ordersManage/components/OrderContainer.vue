@@ -908,6 +908,7 @@
 </style>
 <script>
     import event from '../event';
+    import util from 'util';
     import { ORDER_TYPE, ORDER_STATUS_ICON } from '../constant';
     export default{
         data() {
@@ -974,7 +975,10 @@
             },
             showCombinationOrder() {
                 event.$emit('onShowDetail', { orderId: this.order.combinationOrderId, orderType: ORDER_TYPE.COMBINATION })
-            }
+            },
+            dateFormat(date) {
+                return util.timeFormat(date);
+            },
         }
     };
 </script>
