@@ -76,8 +76,10 @@
                 if (this.entertainmentId !== -1) {
                     paramsObj.params.nodeId = this.entertainmentId;
                 }
+                paramsObj.params = JSON.stringify(paramsObj.params);
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }

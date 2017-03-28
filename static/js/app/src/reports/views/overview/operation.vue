@@ -35,15 +35,25 @@
                 </div>
             </div>
         </div>
+        <div style="margin: 20px 0 10px;display: flex;justify-content: space-between">
+            <p>运营明细
+                <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
+            </p>
+            <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
+        </div>
+        <div>
+            <dd-Table :columns="columns" :data-source="dataSource" :bordered="true" size="small"></dd-Table>
+        </div>
     </div>
 </template>
 <style>
 </style>
 <script>
-    import echarts from 'echarts';
     import { mapState } from 'vuex';
     import AJAXService from '../../../common/AJAXService';
     import { setPie, setLine } from '../../utils/chartHelper';
+    import { getTableData } from '../../utils/tableHelper';
+    import { DdTable } from 'dd-vue-component';
     export default{
         props: {
             startDate: String,
@@ -55,11 +65,31 @@
                 caterTotalAmount: undefined,
                 playTotalAmount: undefined,
                 goodsTotalAmount: undefined,
-                allTotalAmount: undefined
+                allTotalAmount: undefined,
+                columns: [],
+                dataSource: []
             }
         },
+        components: {
+            DdTable
+        },
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            exportUrl() {
+                const paramsObj = {
+                    exportType: 0,
+                    reportType: 10,
+                    params: JSON.stringify({
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    })
+                };
+                const host = AJAXService.getUrl2('/stat/exportReport');
+                const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = AJAXService.paramsToString(pa);
+                return `${host}?${params}`;
+            }
         },
         watch: {
             date() {
@@ -115,6 +145,31 @@
                                 operationStat.roomStat.items.map(i => i.date.substr(5, 5)),
                                 '金额（元）'
                             );
+                            const tableData = getTableData({
+                                list: [
+                                    {
+                                        name: '住宿',
+                                        dateValues: operationStat.roomStat.items
+                                    },
+                                    {
+                                        name: '餐饮',
+                                        dateValues: operationStat.caterStat.items
+                                    },
+                                    {
+                                        name: '娱乐',
+                                        dateValues: operationStat.playStat.items
+                                    },
+                                    {
+                                        name: '商超',
+                                        dateValues: operationStat.goodsStat.items
+                                    }
+                                ],
+                                firstTitle: '',
+                                secondTitle: '合计',
+                                foot: true
+                            });
+                            this.dataSource = tableData.dataSource;
+                            this.columns = tableData.columns;
                         }
                     })
             },

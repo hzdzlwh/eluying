@@ -28,7 +28,6 @@
     import { DdTable } from 'dd-vue-component';
     import AJAXService from '../../../../common/AJAXService';
     import util from '../../../../common/util';
-    import echarts from 'echarts';
     import { getTableData } from '../../../utils/tableHelper';
     import { setPie } from '../../../utils/chartHelper';
     export default{
@@ -38,13 +37,14 @@
                 const paramsObj = {
                     exportType: 0,
                     reportType: 8,
-                    params: {
+                    params: JSON.stringify({
                         startDate: this.date.startDate,
                         endDate: this.date.endDate
-                    }
+                    })
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }

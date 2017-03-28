@@ -4,7 +4,6 @@
 import Vue from 'vue';
 import App from './App';
 import 'bootstrap';
-import modal from 'modal';
 import auth from '../common/auth';
 import util from '../common/util';
 import store from './store';
@@ -51,25 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         "mouseleave body .calendar-glyph": function(ev){
             $(this).find(".calendar-glyph-detail").hide();
-        },
-        // 开关房按钮
-        "contextmenu body .calendar-status": function(ev){
-            $(".calendar-status-action").hide();
-            $(this).find(".calendar-status-action").show();
-            return false;
-        },
-        "contextmenu body .calendar-status-close": function(ev){
-            $(".calendar-status-action").hide();
-            $(this).siblings(".calendar-status-action").show();
-            return false;
-        },
-        "mousedown body .calendar-status-action": function(ev){
-            ev.stopPropagation();
-        },
-        //
-        "click body": function(ev){
-            $(".calendar-status-action").hide();
-        },
+        }
     };
     util.bindDomAction(events);
 

@@ -54,7 +54,6 @@
 <style>
 </style>
 <script>
-    import echarts from 'echarts';
     import {mapState} from 'vuex';
     import AJAXService from '../../common/AJAXService';
     import util from '../../common/util';
@@ -79,17 +78,18 @@
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 2,
-                    params: {
+                    params: JSON.stringify({
                         startDate: this.date.startDate,
                         endDate: this.date.endDate
-                    }
+                    })
                 };
                 const host = AJAXService.getUrl2('/stat/exportReport');
                 const pa = AJAXService.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             }

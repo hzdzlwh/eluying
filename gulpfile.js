@@ -113,6 +113,7 @@ gulp.task('styles', function () {
 });
 
 gulp.task('webpack-prod', function () {
+    delete webpackConf.devtool;
     webpackConf.plugins.push(
         new webpack.DefinePlugin({
             'process.env': {
