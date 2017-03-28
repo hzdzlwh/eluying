@@ -973,7 +973,7 @@
                 return newPayMents;
             },
             showCombinationOrder() {
-                event.$emit('', { orderId: this.order.combinationOrderId, orderType: this.combinationOrderId })
+                event.$emit('onShowDetail', { orderId: this.order.combinationOrderId, orderType: ORDER_TYPE.COMBINATION })
             }
         }
     };
