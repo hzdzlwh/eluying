@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CombinationOrder v-if="type === ORDER_TYPE.COMBINATION" :order="order" />
+        <combination-order v-if="type === ORDER_TYPE.COMBINATION" :order="order" />
     </div>
 </template>
 <style>
@@ -17,16 +17,12 @@
                 ORDER_TYPE
             };
         },
+        components: {
+            CombinationOrder
+        },
         props: {
             type: Number,
-            order: {
-                Object
-            },
             visible: Boolean,
-            readOnly: {
-                type: Boolean,
-                default: true
-            },
             id: Number
         },
         watch: {
@@ -37,8 +33,8 @@
                     $('#orderDetail').modal('hide');
                 }
             },
-            id(orderID) {
-                this[types.GET_ORDER_DETAIL]({ orderID, orderType: this.type });
+            id(orderId) {
+                this[types.GET_ORDER_DETAIL]({ orderId, orderType: this.type });
             }
         },
         computed: {

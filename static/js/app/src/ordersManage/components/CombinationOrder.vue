@@ -1,21 +1,20 @@
 <template>
-    <OrderContanier :type="type">
-        <solt>
-
-        </solt>
-    </OrderContanier>
+    <order-container :type="type" :order="order">
+        <div>hellow</div>
+    </order-container>
 </template>
 <style>
 </style>
 <script>
-    import OrderContanier from './OrderContanier.vue';
+    import OrderContainer from './OrderContainer.vue';
     import { ORDER_TYPE } from '../constant';
     export default{
         components: {
-            OrderDetail
+            OrderContainer
         },
         props: {
-            visible: Boolean
+            visible: Boolean,
+            order: Object
         },
         data() {
             return {

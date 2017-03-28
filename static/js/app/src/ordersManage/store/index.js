@@ -153,18 +153,18 @@ const store = new Vuex.Store({
                     });
             })
         },
-        [types.GET_ORDER_DETAIL]({ commit }, { orderId, orderType }) {
+        [types.GET_ORDER_DETAIL]({ dispatch }, { orderId, orderType }) {
             switch (orderType) {
                 case ORDER_TYPE.COMBINATION:
-                    return commit(types.LOAD_ORDER_DETAIL, { orderId });
+                    return dispatch(types.LOAD_ORDER_DETAIL, { orderId });
                 case ORDER_TYPE.ACCOMMODATION:
-                    return commit(types.GET_ROOM_ORDER_DETAIL, { orderId });
+                    return dispatch(types.GET_ROOM_ORDER_DETAIL, { orderId });
                 case ORDER_TYPE.ENTERTAINMENT:
-                    return commit(types.GET_ENTER_ORDER_DETAIL, { orderId });
+                    return dispatch(types.GET_ENTER_ORDER_DETAIL, { orderId });
                 case ORDER_TYPE.CATERING:
-                    return commit(types.GET_CATER_ORDER_DETAIL, { orderId });
+                    return dispatch(types.GET_CATER_ORDER_DETAIL, { orderId });
                 case ORDER_TYPE.RETAIL:
-                    return commit(types.GET_GOODS_ORDER_DETAIL, { orderId });
+                    return dispatch(types.GET_GOODS_ORDER_DETAIL, { orderId });
             }
         }
     }

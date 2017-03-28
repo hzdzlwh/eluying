@@ -11,7 +11,7 @@ import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOpt
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
 import store from './store';
-import { ORDER_TYPE } from './constant';
+
 init({
     leftMenu: false
 });
@@ -208,7 +208,7 @@ $(function(){
             },
 
             showOrderDetail(order) {
-                this.detailType = order.oderType;
+                this.detailType = order.orderType;
                 this.detailId = order.orderId;
                 this.detailVisible = true;
             },
