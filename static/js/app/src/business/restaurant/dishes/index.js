@@ -220,9 +220,7 @@ $(function() {
                 AJAXService.ajaxWithToken('POST', url, params, function(result) {
                     if (result.code === 1) {
                         main.getPackagesAndDishesFromRestaurant();
-                        this.dishes = {};
-                        this.submitted = false;
-                        $('#dishesDialog').modal('hide');
+                        this.cancel();
                     } else {
                         modal.somethingAlert(result.msg);
                     }
@@ -470,11 +468,8 @@ $(function() {
                     { restId: restId, packageId: this.packageModel.categoryId, dishesReq: JSON.stringify(this.packageModel.dishesReq) });
                 AJAXService.ajaxWithToken('POST', url, param, function(res) {
                     if (res.code === 1) {
-                        $('#packageDialog').modal('hide');
-                        packageSelect.dishesListGroupByClassify = {};
                         main.getPackagesAndDishesFromRestaurant();
-                        this.packageModel = {};
-                        this.submitted = false;
+                        this.cancel();
                     } else {
                         modal.somethingAlert(res.msg);
                     }
