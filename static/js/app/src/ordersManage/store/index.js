@@ -102,7 +102,7 @@ const store = new Vuex.Store({
                     });
             })
         },
-        [types.GET_CATER_ORDER_DETAIL]() {
+        [types.GET_CATER_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
                 AJAXService.ajaxWithToken('get', '/catering/getCaterOrderDetail', { orderId })
                     .then((res) => {
@@ -130,7 +130,7 @@ const store = new Vuex.Store({
         },
         [types.GET_GOODS_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getGoodsOrderDetail', { orderId })
+                AJAXService.ajaxWithToken('get', '/order/getGoodsOrderDetail', { goodsOrderId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
