@@ -1606,7 +1606,7 @@
                             goodsList.splice(index, 1);
                         }
                     })
-                })
+                });
                 this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
             }
         },
