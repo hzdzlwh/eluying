@@ -1593,26 +1593,21 @@
             },
             setShopGoodsItems(data) {
                 const goodsList = data;
-                let newGoodIds = [];
                 goodsList.forEach(good => {
                     good.type = 3;
                     good.price = good.p;
                     good.name = good.n;
                     good.count = good.num;
-                    newGoodIds.push(good.id);
                 });
-
-                let nowGoodIds = [];
-                this.shopGoodsItems.forEach(good => {
-                    nowGoodIds.push(good.id);
-                });
-                let finalGoodIds = Array.from(new Set(newGoodIds.concat(nowGoodIds)));
-
-                if (finalGoodIds.length !== newGoodIds.length + nowGoodIds.length) {
-                    modal.somethingAlert('本次添加的项目包含已添加项目，请核对！');
-                } else {
-                    this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
-                }
+                this.shopGoodsItems.forEach(item => {
+                    goodsList.forEach((good, index) => {
+                        if (good.id === item.id) {
+                            item.count += good.count;
+                            goodsList.splice(index, 1);
+                        }
+                    })
+                })
+                this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
             }
         },
         components:{
