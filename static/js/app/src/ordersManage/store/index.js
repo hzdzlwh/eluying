@@ -14,7 +14,8 @@ const store = new Vuex.Store({
         shopList: [],
         enterList: [],
         orderDetail: {},
-        roomBusinessInfo: {}
+        roomBusinessInfo: {},
+        detailVisible: false
     },
 
     mutations: {

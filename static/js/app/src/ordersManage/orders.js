@@ -11,6 +11,7 @@ import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOpt
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
 import store from './store';
+import event from './event';
 
 init({
     leftMenu: false
@@ -89,6 +90,8 @@ $(function(){
         },
 
         created() {
+            event.$on('onClose', this.hideDetail);
+
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
@@ -105,7 +108,9 @@ $(function(){
                 this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
             });
         },
-
+        beforeDestroy: function () {
+            event.$off('onClose', this.hideDetail);
+        },
         computed: {
             orderParams() {
                 if (this.orderStatus === '-1') {
@@ -212,7 +217,9 @@ $(function(){
                 this.detailId = order.orderId;
                 this.detailVisible = true;
             },
-            
+            hideDetail() {
+                this.detailVisible = false;
+            },
             handleClickTr(item, event) {
                 item.showSub = !item.showSub;
                 $('.orders-tr').removeClass('dd-tr-selected');

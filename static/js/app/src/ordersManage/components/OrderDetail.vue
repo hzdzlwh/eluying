@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static" @on-show-order="handleShowOrder">
-        <combination-order v-if="type === ORDER_TYPE.COMBINATION" :order="order" />
+        <combination-order v-if="type === ORDER_TYPE.COMBINATION" :order="order" @onClose.capture="hi"/>
     </div>
 </template>
 <style>
@@ -47,6 +47,9 @@
             ]),
             handleShowOrder() {
                 
+            },
+            hi() {
+                console.log('hi')
             }
         }
     };

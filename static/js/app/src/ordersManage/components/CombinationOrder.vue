@@ -30,6 +30,10 @@
                 }
             }
         },
-        methods: {}
+        methods: {
+            hi() {
+                console.log('qwe')
+            }
+        }
     };
 </script>
