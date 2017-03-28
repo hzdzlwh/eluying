@@ -4,7 +4,7 @@
 module.exports = {
     css: [
         'static/sass/main.scss',
-        'static/sass/ordersManage/orders/orders.scss',
+        'static/sass/order/orders/orders.scss',
         'static/sass/vip/setting.scss'
     ],
     js: {
