@@ -1572,18 +1572,10 @@
             },
             setEnterItems(data) {
                 if (this.modifyEnterOrShopIndex === -1) {
-                    const hasIt = this.enterItems.find(enter => {
-                        return enter.id === data.id;
-                    });
-
-                    if (!hasIt) {
-                        this.enterItems.push({ count: 1, date: undefined, timeAmount: 1 ,
-                                               inventory: undefined, usedAmount: 0,
-                                               selfInventory: 0, totalPrice: 0, originPrice: 0,
-                                               ...data });
-                    } else {
-                        modal.somethingAlert('您已添加过该项目！');
-                    }
+                    this.enterItems.push({ count: 1, date: undefined, timeAmount: 1 ,
+                                           inventory: undefined, usedAmount: 0,
+                                           selfInventory: 0, totalPrice: 0, originPrice: 0,
+                                           ...data });
                 } else {
                     let index = this.modifyEnterOrShopIndex;
                     for(let key in data) {
