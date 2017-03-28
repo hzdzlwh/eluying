@@ -1,9 +1,9 @@
 <template>
     <order-container :type="type" :order="order">
         <AccommodationOrder :order="order" v-if="order.rooms && order.rooms.length > 0" />
-        <CaterOrder :order="order" v-if="order.foodItems && order.foodItems.length > 0" />
+        <CateOrder :order="order" v-if="order.foodItems && order.foodItems.length > 0" />
         <EntertainmentOrder :order="order" v-if="order.playItems && order.playItems.length > 0" />
-        <ShopOrder :order="order" v-if="order.pcGoodItems && order.pcGoodItems.length > 0" />
+        <ShopOrder :order="order" v-if="order.pcGoodsItems && order.pcGoodsItems.length > 0" />
     </order-container>
 </template>
 <style>
@@ -13,7 +13,7 @@
     import { ORDER_TYPE } from '../constant';
     import { mapActions, mapState } from 'vuex';
     import types from '../store/types';
-    import CaterOrder from './CaterOrder.vue';
+    import CateOrder from './CateOrder.vue';
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
@@ -26,7 +26,7 @@
         },
         components: {
             OrderContainer,
-            CaterOrder,
+            CateOrder,
             ShopOrder,
             EntertainmentOrder,
             AccommodationOrder
