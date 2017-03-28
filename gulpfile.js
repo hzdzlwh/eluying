@@ -73,10 +73,7 @@ function revHash() {
     gulp.src('./*.html')
         .pipe(gulp.dest('build'));
     gulp.src('static/image/**/*')
-        .pipe(rev())
-        .pipe(gulp.dest('build/static/image'))
-        .pipe(rev.manifest())
-        .pipe(gulp.dest('rev/image'));
+        .pipe(gulp.dest('build/static/image'));
     gulp.src('static/js/app/dist/**/*.map')
         .pipe(gulp.dest('build/static/js/app/dist'));
 }
