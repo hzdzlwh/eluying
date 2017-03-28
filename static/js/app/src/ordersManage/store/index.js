@@ -99,6 +99,58 @@ const store = new Vuex.Store({
                         }
                     });
             })
+        },
+        [types.GET_CATER_ORDER_DETAIL]() {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/catering/getCaterOrderDetail', { orderId })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
+        },
+        [types.GET_ENTER_ORDER_DETAIL]({ commit }, { orderId }) {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/order/getEnterOrderDetail', { orderId })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
+        },
+        [types.GET_GOODS_ORDER_DETAIL]({ commit }, { orderId }) {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/order/getGoodsOrderDetail', { orderId })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
+        },
+        [types.GET_ROOM_ORDER_DETAIL]({ commit }, { orderId }) {
+            return new Promise((resolve, reject) => {
+                AJAXService.ajaxWithToken('get', '/order/getRoomOrderDetail', { orderId })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            })
         }
     }
 });

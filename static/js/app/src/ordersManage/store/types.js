@@ -9,5 +9,9 @@ export default {
     'SET_SHOP_LIST': 'setShopList',
     'LOAD_SHOP_LIST': 'loadShopList',
     'SET_ENTER_LIST': 'setEnterList',
-    'LOAD_ENTER_LIST': 'loadEnterList'
+    'LOAD_ENTER_LIST': 'loadEnterList',
+    'GET_ROOM_ORDER_DETAIL': 'getRoomOrderDetail',
+    'GET_GOODS_ORDER_DETAIL': 'getGoodsOrderDetail',
+    'GET_ENTER_ORDER_DETAIL': 'getEnterOrderDetail',
+    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail'
 }

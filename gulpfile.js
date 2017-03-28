@@ -53,7 +53,7 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
-// hash缓存
+// hash缓存和移动文件
 function revHash() {
     gulp.src('static/css/**/*.css')
         .pipe(rev())
@@ -72,13 +72,13 @@ function revHash() {
         .pipe(gulp.dest('build/view'));
     gulp.src('./*.html')
         .pipe(gulp.dest('build'));
-    gulp.src('WEB-INF/web.xml')
-        .pipe(gulp.dest('build/WEB-INF'));
     gulp.src('static/image/**/*')
         .pipe(rev())
         .pipe(gulp.dest('build/static/image'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('rev/image'));
+    gulp.src('static/js/app/dist/**/*.map')
+        .pipe(gulp.dest('build/static/js/app/dist'));
 }
 
 gulp.task('build:prod', ['file-include', 'styles', 'webpack-prod', 'clean'], revHash);
@@ -136,6 +136,7 @@ gulp.task('webpack-prod', function () {
         })
     );
     webpackConf.resolve.alias.vue = 'vue/dist/vue.min.js';
+    webpackConf.devtool = 'source-map';
     return gulp.src('static/js/app/src/entry.js')
         .pipe(gulpWebpack(webpackConf, null, function (err, stats) {
             if (err) throw new gutil.PluginError('webpack', err);

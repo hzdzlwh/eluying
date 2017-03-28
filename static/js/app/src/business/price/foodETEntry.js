@@ -9,14 +9,15 @@ var restaurantMenu = require('../restaurant/restaurantMenu');
 auth.checkAuth(auth.BUSINESS_ID);
 var AJAXService = require('../../common/AJAXService');
 import init from '../../common/init';
+
+init({
+    id: auth.BUSINESS_ID,
+    clearModal: true,
+    topMenu: location === 'food' ? {showInventory: false} : false
+});
+
 $(function(){
     var location = window.location.pathname.split("/")[5].split(".")[0];
-
-    init({
-        id: auth.BUSINESS_ID,
-        clearModal: true,
-        topMenu: location === 'food' ? {showInventory: false} : false
-    });
 
     var restId = window.location.search.split('=')[1];
     if (location === 'food') {

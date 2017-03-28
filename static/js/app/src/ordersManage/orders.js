@@ -5,10 +5,12 @@ import Vue from 'vue';
 import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
-import auth from '../../common/auth';
-import NoAuth from '../../common/components/noAuth.vue';
+import auth from '../common/auth';
+import NoAuth from '../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
-import init from '../../common/init';
+import init from '../common/init';
+import OrderDetail from './components/OrderDetail.vue';
+import store from './store';
 init({
     leftMenu: false
 });
@@ -16,18 +18,9 @@ require("bootstrap");
 require("validation");
 
 $(function(){
-    var events = {
-
-        "click .orders-tr": function(ev){
-            ev.stopPropagation();
-            $(".orders-tr").removeClass("dd-tr-selected");
-            $(this).addClass("dd-tr-selected");
-        }
-
-    };
-    
-    let orderManage = new Vue({
+    const orderManage = new Vue({
         el: ".orderManage-rootContainer",
+        store: store,
         data: {
             hasAuth: false,
             isLoading: true,
@@ -209,6 +202,10 @@ $(function(){
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             },
+
+            showOrderDetail(order) {
+
+            },
             
             handleClickTr(item, event) {
                 item.showSub = !item.showSub;
@@ -217,6 +214,8 @@ $(function(){
                     event.stopPropagation();
                     $(event.currentTarget).addClass('dd-tr-selected');
                 }
+
+                this.showOrderDetail(item);
             },
 
             changeListByDate() {
@@ -367,7 +366,8 @@ $(function(){
             DdOption,
             DdSelect,
             DdDatepicker,
-            NoAuth
+            NoAuth,
+            OrderDetail
         }
     });
 
@@ -384,6 +384,4 @@ $(function(){
             }
         }
     );
-
-    util.bindDomAction(events);
 });
