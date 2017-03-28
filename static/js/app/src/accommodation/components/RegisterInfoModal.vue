@@ -1572,10 +1572,18 @@
             },
             setEnterItems(data) {
                 if (this.modifyEnterOrShopIndex === -1) {
-                    this.enterItems.push({ count: 1, date: undefined, timeAmount: 1 ,
-                                            inventory: undefined, usedAmount: 0,
-                                            selfInventory: 0, totalPrice: 0, originPrice: 0,
-                                            ...data });
+                    const hasIt = this.enterItems.find(enter => {
+                        return enter.id === data.id;
+                    });
+
+                    if (!hasIt) {
+                        this.enterItems.push({ count: 1, date: undefined, timeAmount: 1 ,
+                                               inventory: undefined, usedAmount: 0,
+                                               selfInventory: 0, totalPrice: 0, originPrice: 0,
+                                               ...data });
+                    } else {
+                        modal.somethingAlert('您已添加过该项目！');
+                    }
                 } else {
                     let index = this.modifyEnterOrShopIndex;
                     for(let key in data) {
@@ -1593,13 +1601,26 @@
             },
             setShopGoodsItems(data) {
                 const goodsList = data;
+                let newGoodIds = [];
                 goodsList.forEach(good => {
                     good.type = 3;
                     good.price = good.p;
                     good.name = good.n;
                     good.count = good.num;
+                    newGoodIds.push(good.id);
                 });
-                this.shopGoodsItems = this.shopGoodsItems.concat(goodsList)
+
+                let nowGoodIds = [];
+                this.shopGoodsItems.forEach(good => {
+                    nowGoodIds.push(good.id);
+                });
+                let finalGoodIds = Array.from(new Set(newGoodIds.concat(nowGoodIds)));
+
+                if (finalGoodIds.length !== newGoodIds.length + nowGoodIds.length) {
+                    modal.somethingAlert('本次添加的项目包含已添加项目，请核对！');
+                } else {
+                    this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
+                }
             }
         },
         components:{
