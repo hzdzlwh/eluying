@@ -1,6 +1,6 @@
 <template>
     <div>
-        <entainment :order='order' :showMoadl=false></entainment>
+        <EntertainmentOrder :order='order' :showMoadl=false></EntertainmentOrder>
         <div class="content-item" v-if="order.enterItems">
             <p class="content-item-title"><span>项目详情</span></p>
             <div class="enterTableHead">
@@ -34,7 +34,7 @@
                             <p class="info-title">操作记录</p>
                             <div class="money-item" v-for='it in item.dateList'>
                                 <span>{{type[it.dateStatus]}}:{{it.date}}</span>
-                                <span>{{it.name}}</span>
+                                <span class="enterDidName">{{it.name}}</span>
                             </div>
             </div>
         </div>
@@ -45,6 +45,19 @@
     </div>
 </template>
 <style scoped>
+.enterDidName{
+    max-width: 60px;
+    display:block;
+    white-space:nowrap; 
+    overflow:hidden; 
+    text-overflow:ellipsis;
+}
+.enterTableHead{
+    padding-bottom: 10px;
+}
+.enteritem, .enterTableHead{
+margin-bottom: 10px;
+}
 .enterTableHead {
     color: #999;
     border-bottom: 1px dotted #999;
@@ -52,20 +65,27 @@
 
 .enterTableid {
     width: 50px;
+    display: inline-block;
 }
 
 .enterTableState,
 .enterTableGet {
     width: 190px;
     text-align: center;
+    display: inline-block;
 }
 
 .enterTableHis {
     width: 110px;
+    display: inline-block;
+    text-align: center;
+}
+.enterTableHis .info-icon{
+    display: inline-block;
 }
 </style>
 <script>
-import entainment from './entainmentOrder.vue'
+import EntertainmentOrder from './EntertainmentOrder.vue'
 export default {
     props: {
         order: {
@@ -81,8 +101,7 @@ export default {
         }
     },
     components: {
-        entainment
+        EntertainmentOrder
     }
-}
 }
 </script>

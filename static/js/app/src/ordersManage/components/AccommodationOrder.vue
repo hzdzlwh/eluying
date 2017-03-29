@@ -36,7 +36,7 @@
                     </span>
                     <div v-if='showMoadl' class="showModal" @click='modalShow(item.serviceId)'>查看</div>
                 </div>
-                <div class="room-user" v-for="user in item.idCardList">
+                <div class="room-user" v-for="user in (item.idCardList || item.idCardsList)">
                     <span class="user-icon"></span>
                     <span class="user-name">{{user.name}}</span>
                     <div class="card-type">

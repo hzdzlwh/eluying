@@ -1,8 +1,9 @@
 <template>
     <order-container :type="type" :order="order">
-        <AccommodationOrder :order="order" v-if="order.rooms && order.rooms.length > 0" />
+        <AccommodationOrder :order="order" v-if="(order.rooms && order.rooms.length > 0) || order.roomInfo" :showMoadl='order.roomInfo ? false : true' />
         <CateOrder :order="order" v-if="order.foodItems && order.foodItems.length > 0" />
         <EntertainmentOrder :order="order" v-if="order.playItems && order.playItems.length > 0" />
+        <EntertainmentOrderDetail :order="order" v-if="order.enterItems && order.enterItems.length > 0" />
         <ShopOrder :order="order" v-if="order.pcGoodsItems && order.pcGoodsItems.length > 0" />
     </order-container>
 </template>
@@ -16,6 +17,7 @@
     import CateOrder from './CateOrder.vue';
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
+    import EntertainmentOrderDetail from './EntertainmentOrderDetail.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
 
     export default{
@@ -29,7 +31,8 @@
             CateOrder,
             ShopOrder,
             EntertainmentOrder,
-            AccommodationOrder
+            AccommodationOrder,
+            EntertainmentOrderDetail
         },
         props: {
             type: Number,
