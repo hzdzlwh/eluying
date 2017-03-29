@@ -157,7 +157,9 @@
                                       style="margin-left: 24px">办理员工:{{order.operatorName || order.operator}}</span>
                             </p>
                             <p class="order-info">
-                                <span v-for="">{{name}}:{{date}}</span>
+                                <template v-for="item in orderDates">
+                                    <span v-if="item.date" style="margin-right: 24px">{{item.name}}:{{item.date}}</span>
+                                </template>
                             </p>
                         </div>
                     </div>
@@ -492,7 +494,6 @@
             .order-info {
                 color: #999999;
                 font-size: $font-size-sm;
-                margin-bottom: 16px;
             }
             .info-icon {
                 &:hover {
@@ -542,7 +543,7 @@
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            padding: 0 0 56px 0;
+            padding: 0;
             margin-top: 0 !important;
         }
     }
@@ -972,6 +973,49 @@
             orderStateColor() {
                 const { orderType, orderState } = this.order;
                 return ORDER_STATE_TEXT[orderType][orderState].color;
+            },
+            orderDates() {
+                switch(this.order.orderType) {
+                    case ORDER_TYPE.ACCOMMODATION:
+                        return [
+                            {
+                                name: '预订时间',
+                                date: this.order.reservedDate
+                            },
+                            {
+                                name: '入住时间',
+                                date: this.order.roomInfo.checkInDate
+                            },
+                            {
+                                name: '退房时间',
+                                date: this.order.roomInfo.checkOutDate
+                            }
+                        ];
+                    case ORDER_TYPE.CATERING:
+                        return [
+                            {
+                                name: '预订时间',
+                                date: this.order.orderTime
+                            },
+                            {
+                                name: '开台时间',
+                                date: this.order.operatorDate
+                            },
+                            {
+                                name: '撤台时间',
+                                date: this.order.colseBoardTime
+                            }
+                        ];
+                    case ORDER_TYPE.COMBINATION:
+                    case ORDER_TYPE.RETAIL:
+                    case ORDER_TYPE.ENTERTAINMENT:
+                        return [
+                            {
+                                name: '创建时间',
+                                date: this.order.creationTime
+                            }
+                        ];
+                }
             }
         },
         watch: {
