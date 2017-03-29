@@ -5,18 +5,15 @@
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
-                            <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.CATERING" src="" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" alt="">
-                            <span class="header-text">{{title}}</span>
-                            <span v-if="order.orderState">
-                                <span class="order-state-angle"
-                                      :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
-                                <span class="order-state"
-                                      :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
-                                      v-text="ORDER_STATUS_ICON[order.orderState]['text']">
-                                </span>
+                            <span style="margin-right: 10px" v-if="order.orderType !== ORDER_TYPE.COMBINATION">
+                                <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
+                            </span>
+                                <span class="header-text">{{title}}</span>
+                            <span v-if="order.orderState" class="order-state" :class="orderStateColor">
+                                {{orderStateText}}
                             </span>
                         </div>
                         <div class="header-container">
@@ -155,9 +152,14 @@
                                 </span>
                             </div>
                             <p class="order-info">
-                                <span class="order-info-text">订单号:{{order.orderNum}}</span>
+                                <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
-                                      style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
+                                      style="margin-left: 24px">办理员工:{{order.operatorName || order.operator}}</span>
+                            </p>
+                            <p class="order-info">
+                                <template v-for="item in orderDates">
+                                    <span v-if="item.date" style="margin-right: 24px">{{item.name}}:{{item.date}}</span>
+                                </template>
                             </p>
                         </div>
                     </div>
@@ -167,22 +169,18 @@
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                      @click="checkInOrCheckOut(0)">
                                     办理入住
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
                                      v-if="getRoomsState.checkOutAdAble">
                                     提前退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
                                      v-if="getRoomsState.checkOutAble">
                                     办理退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     收银
-
                                 </div>
                             </div>
                         </div>
@@ -226,12 +224,6 @@
             display: flex;
             align-items: center;
         }
-        .order-state-angle {
-            margin-left: 16px;
-            border-right: 12px solid;
-            border-top: 11px solid;
-            border-bottom: 11px solid;
-        }
         .order-state {
             color: #ffffff;
             font-size: $font-size-sm;
@@ -242,6 +234,36 @@
             align-items: center;
             border-radius: 1px;
             padding-right: 3px;
+            position: relative;
+            margin-left: 32px;
+            &::before {
+                position: absolute;
+                content: '';
+                display: inline-block;
+                border-right: 12px solid;
+                border-top: 11px solid transparent;
+                border-bottom: 11px solid transparent;
+                border-left: 0;
+                left: -12px;
+            }
+            &.yellow {
+                background: #ffba75;
+                &::before {
+                    border-right-color: #ffba75;
+                }
+            }
+            &.grey {
+                background: #bfbfbf;
+                &::before {
+                    border-right-color: #bfbfbf;
+                }
+            }
+            &.blue {
+                background: #82beff;
+                &::before {
+                    border-right-color: #82beff;
+                }
+            }
         }
         .header-tools {
             color: $blue;
@@ -472,7 +494,6 @@
             .order-info {
                 color: #999999;
                 font-size: $font-size-sm;
-                margin-bottom: 16px;
             }
             .info-icon {
                 &:hover {
@@ -522,7 +543,7 @@
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            padding: 0 0 56px 0;
+            padding: 0;
             margin-top: 0 !important;
         }
     }
@@ -915,7 +936,7 @@
 <script>
     import event from '../event';
     import util from 'util';
-    import { ORDER_TYPE, ORDER_STATUS_ICON } from '../constant';
+    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
     export default{
         data() {
             return {
@@ -943,6 +964,57 @@
                         return '娱乐订单';
                     default:
                         return '订单详情';
+                }
+            },
+            orderStateText() {
+                const { orderType, orderState } = this.order;
+                return ORDER_STATE_TEXT[orderType][orderState].text;
+            },
+            orderStateColor() {
+                const { orderType, orderState } = this.order;
+                return ORDER_STATE_TEXT[orderType][orderState].color;
+            },
+            orderDates() {
+                switch(this.order.orderType) {
+                    case ORDER_TYPE.ACCOMMODATION:
+                        return [
+                            {
+                                name: '预订时间',
+                                date: this.order.reservedDate
+                            },
+                            {
+                                name: '入住时间',
+                                date: this.order.roomInfo.checkInDate
+                            },
+                            {
+                                name: '退房时间',
+                                date: this.order.roomInfo.checkOutDate
+                            }
+                        ];
+                    case ORDER_TYPE.CATERING:
+                        return [
+                            {
+                                name: '预订时间',
+                                date: this.order.orderTime
+                            },
+                            {
+                                name: '开台时间',
+                                date: this.order.operatorDate
+                            },
+                            {
+                                name: '撤台时间',
+                                date: this.order.colseBoardTime
+                            }
+                        ];
+                    case ORDER_TYPE.COMBINATION:
+                    case ORDER_TYPE.RETAIL:
+                    case ORDER_TYPE.ENTERTAINMENT:
+                        return [
+                            {
+                                name: '创建时间',
+                                date: this.order.creationTime
+                            }
+                        ];
                 }
             }
         },
