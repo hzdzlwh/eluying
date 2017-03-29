@@ -3,31 +3,40 @@
         <div class="content-item">
             <p class="content-item-title"><span>餐饮信息</span></p>
             <div class="items">
-                <div class="item" v-for="item in order.foodItems">
+                <div class="item" v-for="item in getFoodItems()">
                     <div class="food-item">
                         <span class="food-icon"></span>
                         <div class="item-content">
                             <div class="item-name">
                                 <span class="item-name">{{item.restName}}</span>
-                                <span class="food-state-icon"
+                                <span class="food-state-icon" v-if="!order.caterOrderId"
                                       :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
-                                                    {{getRoomOrFoodState(0, item.foodState).text}}
+                                    {{getRoomOrFoodState(0, item.foodState).text}}
                                 </span>
                             </div>
-                            <div class="item-date">
-                                <label class="label-text">时间</label>
-                                <span>{{item.date.slice(5)}}</span>
+                            <div class="item-desks">
+                                <label class="label-text">桌号</label>
+                                <span>{{ getDesks(item) }}</span>
                             </div>
                             <div class="item-count">
                                 <label class="label-text">人数</label>
                                 <span>{{item.peopleNum}}</span>
                             </div>
-                            <div class="item-price" style="margin-right: 81px">
+                            <div class="item-date">
+                                <label class="label-text">时间</label>
+                                <span>{{item.date.slice(0, 16)}}</span>
+                            </div>
+                            <div class="item-price">
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
+                                <span class="cateOrder-check-btn"
+                                      v-text="!order.caterOrderId ? '查看': ''"
+                                      :class="!order.caterOrderId ? 'cursor' : ''"
+                                      @click="showSingleOrder(item)">
+                                </span>
                             </div>
                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
+                                <span v-if="!order.caterOrderId">原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                 <span class="discount-num">
                                     {{ item.vipShowDiscount }}
                                 </span>
@@ -105,18 +114,125 @@
         <div class="content-item" v-if="order.caterOrderId">
             <p class="content-item-title"><span>菜单详情</span></p>
             <div class="items">
-                <div class="item"></div>
+                <div class="cateOrder-item" v-for="item in order.itemsMap">
+                    <p class="cateOrder-operation-info">
+                        <span>{{ item.operatorDate.slice(11, 16) }}</span>
+                        <span>{{ item.operatorName }}</span>
+                    </p>
+                    <div class="cateOrder-dishes-container">
+                        <div class="cateOrder-dish food-sub-item" v-for="dish in item.dishItemResp">
+                            <p class="dish-name-container">
+                                <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0 }" class="dish-name">
+                                    {{dish.categoryName}}
+                                </span>
+                                <span class="dish-discount-icon" v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
+                            </p>
+                            <span class="dish-numAndPrice">
+                                <span>x{{dish.bookNum}}</span>
+                                <span>¥{{(dish.price * dish.bookNum).toFixed(2)}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <p class="cateOrder-item-remark">
+                        菜品备注： {{ item.remark && item.remark !== '' ? item.remark : '无' }}
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId && order.remark && order.remark !== ''">
+        <div class="content-item" v-if="order.caterOrderId">
             <p class="content-item-title"><span>备注信息</span></p>
-            <div>{{order.remark}}</div>
+            <div>{{ order.remark && order.remark !== '' ? order.remark : '无' }}</div>
         </div>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
+    .cateOrder-check-btn {
+        width: 30px;
+        height: 19px;
+        margin-left: 51px;
+        display: inline-flex;
+        align-items: center;
+        font-size: 14px;
+        color: #178ce6;
+    }
+    .cursor {
+        cursor: pointer;
+    }
+    .cateOrder-operation-info {
+        padding-right: 40%;
+        margin-bottom: 10px;
+        color: #999999;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cateOrder-dishes-container {
+        padding-top: 7px;
+        padding-right: 40%;
+        border-top: 1px solid #e6e6e6;
+    }
+    .cateOrder-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .cateOrder-item:not(:last-child) {
+        padding-bottom: 15px;
+        margin-bottom: 16px;
+        border-bottom: 1px dotted #e6e6e6;
+    }
+    .cateOrder-dish {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .item-indent {
+            padding-left: 16px;
+        }
+        .dish-discount-icon {
+            font-size: 10px;
+            color: #ffffff;
+            display: inline-flex;
+            background:#ffba75;
+            border-radius:2px;
+            width:17px;
+            height:16px;
+            margin-left: 5px;
+            align-items: center;
+            justify-content: center;
+        }
+        .dish-name-container {
+            width: 170px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .dish-name {
+            display: block;
+            max-width: 140px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .dish-numAndPrice {
+            flex-grow: 1;
+            display: inline-flex;
+            justify-content: space-between;
+        }
+    }
+    .cateOrder-dish:not(:last-child) {
+        margin-bottom: 10px;
+    }
+    .cateOrder-item-remark {
+        font-size: 12px;
+        color: #999999;
+        margin-top: 10px;
+        padding-top: 15px;
+        border-top: 1px dotted #e6e6e6;
+    }
 </style>
 <script>
+    import event from '../event.js';
     export default{
         props: {
             order: Object
@@ -138,6 +254,44 @@
                         return {text: '消', backgroundColor: '#bfbfbf'};
                     default:
                         return {};
+                }
+            },
+            getDesks(item) {
+                let desksStr = '';
+                if (this.order.caterOrderId) {
+                    desksStr = item.boardDetailResps ? item.boardDetailResps.join('、') : '';
+                } else {
+                    desksStr = item.boardList ? item.boardList.join('、') : '';
+                }
+
+                return desksStr;
+            },
+            getFoodItems() {
+                let foodItems = [];
+                if (this.order.caterOrderId) {
+                    let obj = {};
+                    obj.restName = this.order.restName;
+                    obj.boardDetailResps = this.order.boardDetailResps;
+                    obj.peopleNum = this.order.peopleNum;
+                    obj.date = this.order.creationTime;
+                    obj.foodPrice = this.order.totalPrice;
+                    obj.vipShowDiscount = this.order.vipShowDiscount;
+                    foodItems[0] = obj;
+                } else {
+                    foodItems = this.order.foodItems;
+                }
+
+                return foodItems;
+            },
+            showSingleOrder(order) {
+                if (!this.order.caterOrderId) {
+                    event.$emit('onShowDetail',
+                        {
+                            orderId: order.foodOrderId,
+                            orderType: 0
+                        });
+                } else {
+                    return false;
                 }
             }
         }

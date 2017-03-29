@@ -6,13 +6,13 @@
                 <div class="orderDetailModal-shop-item">
                     <span class="shop-icon"></span>
                     <div class="item-content">
-                        <span class="shop-time small-font">{{item.time}}</span>
+                        <span class="shop-time small-font">{{item.time.slice(0, 16)}}</span>
                         <div>
                             <label class="label-text">小计</label>
                             <span>¥{{getTotalPrice(item['items'], true)}}</span>
                             <span class="shopOrder-check-btn"
-                                  v-text="order.orderType === -1 ? '查看': ''"
-                                  :class="order.orderType === -1 ? 'cursor' : ''"
+                                  v-text="!order.goodsOrderId ? '查看': ''"
+                                  :class="!order.goodsOrderId ? 'cursor' : ''"
                                   @click="showSingleOrder(item['items'][0])">
                             </span>
                         </div>
@@ -92,7 +92,7 @@
                 return price.toFixed(2);
             },
             showSingleOrder(order) {
-                if (this.order.orderType === -1) {
+                if (!this.order.goodsOrderId) {
                     event.$emit('onShowDetail',
                         {
                             orderId: order.goodsOrderId,
