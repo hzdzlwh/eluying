@@ -158,6 +158,10 @@
     .cursor {
         cursor: pointer;
     }
+    .item-price {
+        display: inline-flex;
+        align-items: center;
+    }
     .cateOrder-operation-info {
         padding-right: 40%;
         margin-bottom: 10px;

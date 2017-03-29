@@ -7,7 +7,7 @@
                     <span class="shop-icon"></span>
                     <div class="item-content">
                         <span class="shop-time small-font">{{item.time.slice(0, 16)}}</span>
-                        <div>
+                        <div style="display: inline-flex; align-items: center;">
                             <label class="label-text">小计</label>
                             <span>¥{{getTotalPrice(item['items'], true)}}</span>
                             <span class="shopOrder-check-btn"
