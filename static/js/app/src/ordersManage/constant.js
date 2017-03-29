@@ -28,3 +28,28 @@ export const ORDER_STATUS_ICON = {
     '4': {text: '已取消', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'},
     '5': {text: '已完成', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf'}
 };
+
+export const ORDER_STATE_TEXT = {
+    [ORDER_TYPE.COMBINATION]: {
+        '-1': {text: '待付款', color: 'yellow'},
+        '2': {text: '已预订', color: 'yellow'},
+        '3': {text: '进行中', color: 'blue'},
+        '4': {text: '已取消', color: 'grey'},
+        '5': {text: '已完成', color: 'grey'}
+    },
+    [ORDER_TYPE.ACCOMMODATION]: {
+        '0': {text: '已预订', color: 'yellow'},
+        '1': {text: '已入住', color: 'blue'},
+        '2': {text: '已退房', color: 'grey'},
+        '3': {text: '已取消', color: 'grey'}
+    },
+    [ORDER_TYPE.CATERING]: {
+        '0': {text: '已预订', color: 'yellow'},
+        '1': {text: '就餐中', color: 'blue'},
+        '2': {text: '已结束', color: 'grey'},
+        '3': {text: '已取消', color: 'grey'}
+    },
+    [ORDER_TYPE.ENTERTAINMENT]: {
+
+    }
+};

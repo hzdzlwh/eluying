@@ -5,18 +5,15 @@
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
-                            <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" alt="">
-                            <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" alt="">
-                            <span class="header-text">{{title}}</span>
-                            <span v-if="order.orderState">
-                                <span class="order-state-angle"
-                                      :style="{ borderColor: ORDER_STATUS_ICON[order.orderState]['borderColor']}"></span>
-                                <span class="order-state"
-                                      :style="{ background: ORDER_STATUS_ICON[order.orderState]['backgroundColor']}"
-                                      v-text="ORDER_STATUS_ICON[order.orderState]['text']">
-                                </span>
+                            <span style="margin-right: 10px" v-if="order.orderType !== ORDER_TYPE.COMBINATION">
+                                <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" >
+                                <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
+                            </span>
+                                <span class="header-text">{{title}}</span>
+                            <span v-if="order.orderState" class="order-state" :class="orderStateColor">
+                                {{orderStateText}}
                             </span>
                         </div>
                         <div class="header-container">
@@ -226,12 +223,6 @@
             display: flex;
             align-items: center;
         }
-        .order-state-angle {
-            margin-left: 16px;
-            border-right: 12px solid;
-            border-top: 11px solid;
-            border-bottom: 11px solid;
-        }
         .order-state {
             color: #ffffff;
             font-size: $font-size-sm;
@@ -242,6 +233,36 @@
             align-items: center;
             border-radius: 1px;
             padding-right: 3px;
+            position: relative;
+            margin-left: 32px;
+            &::before {
+                position: absolute;
+                content: '';
+                display: inline-block;
+                border-right: 12px solid;
+                border-top: 11px solid transparent;
+                border-bottom: 11px solid transparent;
+                border-left: 0;
+                left: -12px;
+            }
+            &.yellow {
+                background: #ffba75;
+                &::before {
+                    border-right-color: #ffba75;
+                }
+            }
+            &.grey {
+                background: #bfbfbf;
+                &::before {
+                    border-right-color: #bfbfbf;
+                }
+            }
+            &.blue {
+                background: #82beff;
+                &::before {
+                    border-right-color: #82beff;
+                }
+            }
         }
         .header-tools {
             color: $blue;
@@ -915,7 +936,7 @@
 <script>
     import event from '../event';
     import util from 'util';
-    import { ORDER_TYPE, ORDER_STATUS_ICON } from '../constant';
+    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
     export default{
         data() {
             return {
@@ -944,6 +965,14 @@
                     default:
                         return '订单详情';
                 }
+            },
+            orderStateText() {
+                const { orderType, orderState } = this.order;
+                return ORDER_STATE_TEXT[orderType][orderState].text;
+            },
+            orderStateColor() {
+                const { orderType, orderState } = this.order;
+                return ORDER_STATE_TEXT[orderType][orderState].color;
             }
         },
         watch: {
