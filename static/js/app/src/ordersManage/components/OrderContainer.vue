@@ -154,7 +154,7 @@
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
-                                      style="margin-left: 24px">办理员工:{{order.operatorName || order.operator}}</span>
+                                      style="margin-left: 24px">办理员工:{{order.operatorName || order.operator || order.reserveName}}</span>
                             </p>
                             <p class="order-info">
                                 <template v-for="item in orderDates">
