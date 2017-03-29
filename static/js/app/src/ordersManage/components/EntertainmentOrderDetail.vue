@@ -1,7 +1,7 @@
 <template>
     <div>
         <entainment :order='order' :showMoadl=false></entainment>
-        <div class="content-item" v-if="order.playItems.lenght">
+        <div class="content-item" v-if="order.enterItems">
             <p class="content-item-title"><span>项目详情</span></p>
             <div class="enterTableHead">
                 <span class="enterTableid">
@@ -18,21 +18,24 @@
                 </span>
             </div>
             <div class="enterTableBody">
-                <div class="enteritem" v-for='item in order.playItems.enterItems'>
+                <div class="enteritem" v-for='item in order.enterItems'>
                     <span class="enterTableid">
                     {{item.itemSequence}}
                 </span>
                     <span class="enterTableState">
-                    {{item.state}}
+                    {{stateType[item.state]}}
                 </span>
                     <span class="enterTableGet">
-                    {{item.queueState}}
+                    {{queueStateType[item.queueState + 1]}}
                 </span>
                     <span class="enterTableHis">
                     <div class="info-icon">
-                        <div class="enterTableHover">
-                            <div class="enterTableHoverTitle">操作记录</div>
-                            <div class="enterTableHoverItem" v-for='it in item.dateList'>{{type[it.dateStatus]}}:{{it.date}}<span class="enterTableHoverName">{{it.name}}</span></div>
+                        <div class="info-content">
+                            <p class="info-title">操作记录</p>
+                            <div class="money-item" v-for='it in item.dateList'>
+                                <span>{{type[it.dateStatus]}}:{{it.date}}</span>
+                                <span>{{it.name}}</span>
+                            </div>
             </div>
         </div>
         </span>
@@ -42,32 +45,6 @@
     </div>
 </template>
 <style scoped>
-.enterTableHoverTitle {
-    text-align: center;
-}
-
-.enterTableHoverItem {
-    margin-bottom: 10px
-}
-
-.enterTableHoverName {
-    margin-left: 15px;
-}
-
-.enterTableHover {
-    position: absolute;
-    padding: 8px;
-    color: #999;
-    margin-bottom: 10px;
-    bottom: 0;
-    left: 16px;
-    display: none;
-}
-
-.info-icon:hover .enterTableHover {
-    display: block;
-}
-
 .enterTableHead {
     color: #999;
     border-bottom: 1px dotted #999;
@@ -92,18 +69,15 @@ import entainment from './entainmentOrder.vue'
 export default {
     props: {
         order: {
-            type: Array,
-            default: []
-        },
-        showMoadl: {
-            type: Boolean,
-            default: false
+            type: Object,
+            default: undefined
         }
     },
     data() {
         return {
-            type:['预定时间', '开始时间', '结束时间', '使用时间']
-            list: this.order.
+            type:['预定时间', '开始时间', '结束时间', '使用时间'],
+            stateType:['已预订', '进行中', '已结束', '已取消'],
+            queueStateType:['未排队', '排队中', '轮到', '离开排队', '过号顺延', '过号', '结束排队']
         }
     },
     components: {
