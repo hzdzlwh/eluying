@@ -152,9 +152,12 @@
                                 </span>
                             </div>
                             <p class="order-info">
-                                <span class="order-info-text">订单号:{{order.orderNum}}</span>
+                                <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
-                                      style="margin-left: 24px">办理员工:{{order.operatorName}}</span>
+                                      style="margin-left: 24px">办理员工:{{order.operatorName || order.operator}}</span>
+                            </p>
+                            <p class="order-info">
+                                <span v-for="">{{name}}:{{date}}</span>
                             </p>
                         </div>
                     </div>
@@ -164,22 +167,18 @@
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                      @click="checkInOrCheckOut(0)">
                                     办理入住
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
                                      v-if="getRoomsState.checkOutAdAble">
                                     提前退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
                                      v-if="getRoomsState.checkOutAble">
                                     办理退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     收银
-
                                 </div>
                             </div>
                         </div>
