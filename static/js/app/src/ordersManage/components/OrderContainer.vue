@@ -1007,7 +1007,7 @@
                         return [
                             {
                                 name: '预订时间',
-                                date: this.order.orderTime
+                                date: this.order.creationTime
                             },
                             {
                                 name: '开台时间',
