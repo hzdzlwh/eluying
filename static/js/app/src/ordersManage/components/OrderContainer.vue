@@ -264,6 +264,18 @@
                     border-right-color: #82beff;
                 }
             }
+            &.red {
+                background: #82beff;
+                &::before {
+                    border-right-color: #f27979;
+                }
+            }
+            &.green {
+                background: #82beff;
+                &::before {
+                    border-right-color: #62d99d;
+                }
+            }
         }
         .header-tools {
             color: $blue;
