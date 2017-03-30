@@ -57,11 +57,37 @@
                                     </span>
                                 </div>
                                 <div class="userInfo-item">
-                                    <label>客源渠道</label>
-                                    <dd-select v-model="userOriginType" placeholder="">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
-                                        </dd-option>
-                                    </dd-select>
+                                    <label>客户来源</label>
+                                    <div class="select-component-container">
+                                        <dd-select v-model="userOriginType">
+                                            <dd-option v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                            </dd-option>
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label">
+                                                <dd-option v-for="origin in item.origins" :value="origin.originType" :label="origin.name">
+                                                    <div class="user-group-origin">
+                                                        <span>{{ origin.name }}</span>
+                                                        <span class="user-group-img" v-if="!origin.type"></span>
+                                                        <div class="user-group-tips" v-if="!origin.type">
+                                                            <p class="user-company-title">{{ origin.companyName }}</p>
+                                                            <p class="user-company-item">
+                                                                <span>{{ origin.contractNum }}</span>
+                                                                <span>{{ origin.companyType ? '可挂帐' : '不可挂帐' }}</span>
+                                                            </p>
+                                                            <p class="user-company-item">
+                                                                <span>{{ origin.contactName }}</span>
+                                                                <span>{{ origin.contactPhone }}</span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </dd-option>
+                                            </dd-group-option>
+                                        </dd-select>
+                                    </div>
+                                    <span class="company-origin-tipLike" v-show="!showCompanyOriginTip"></span>
+                                    <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
+                                    <div class="company-origin-tips">
+                                        变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +172,7 @@
                                         </span>
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
                                         <span class="discount-info"
-                                              v-if="vipDiscountDetail.isVip
+                                              v-if="vipDiscountDetail.vipDetail
                                               && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
@@ -232,7 +258,7 @@
                                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                                     <span class="discount-info"
                                           style="top: 28px"
-                                          v-if="vipDiscountDetail.isVip
+                                          v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
@@ -266,13 +292,13 @@
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
                                                     <span>
                                                         原价
                                                         <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
                                                     </span>
                                                     <span class="discount-num">
-                                                        {{ item.items[0].vipShowDiscount }}
+                                                        {{ item.items[0].showDiscount }}
                                                     </span>
                                                 </span>
                                             </div>
@@ -305,7 +331,7 @@
                                     <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
                                     <span class="discount-info"
                                           style="top:24px"
-                                          v-if="vipDiscountDetail.isVip
+                                          v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(0, item.type, vipDiscountDetail).discount < 1">
                                             <span>
                                                 原价
@@ -358,7 +384,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
     @import "~dd-common-css/src/variables";
     .valid {
         position: absolute;
@@ -493,8 +519,87 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            div:last-child {
-                margin-right: 16px;
+            .userInfo-item:last-child,.select-component-container {
+                display: inline-block;
+            }
+            .user-group-origin {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-right: 4px;
+                position: relative;
+            }
+            .company-origin-tipImg {
+                display: inline-block;
+                vertical-align: sub;
+                cursor: pointer;
+                width: 16px;
+                height: 16px;
+                margin-left: 12px;
+                background: url("../../../../../image/modal/room_modal_info.png");
+                background-size: contain;
+            }
+            .company-origin-tipLike {
+                display: inline-block;
+                margin-left: 12px;
+                width: 16px;
+                height: 16px;
+            }
+            .company-origin-tipImg:hover + .company-origin-tips {
+                display: block;
+            }
+            .company-origin-tips {
+                display: none;
+                background:#fafafa;
+                box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+                border-radius:2px;
+                width:188px;
+                font-size: 12px;
+                padding: 8px 16px;
+                position: absolute;
+                right: 0;
+            }
+            .user-group-img {
+                display: inline-block;
+                cursor: pointer;
+                width: 16px;
+                height: 16px;
+                background: url("../../../../../image/modal/room_modal_info.png");
+                background-size: contain;
+            }
+            .dd-select-option {
+                overflow: visible !important;
+            }
+            .user-group-img:hover + .user-group-tips {
+                display: block;
+            }
+            .user-group-tips {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 4px;
+                transform: translateY(-100%);
+                background: #fafafa;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+                border-radius: 2px;
+                width: 256px;
+                padding-bottom: 10px;
+                z-index: 1090;
+            }
+            .user-company-title {
+                font-size: 14px;
+                color: #666666;
+                padding: 8px 16px;
+                border-bottom: 1px solid #e6e6e6;
+            }
+            .user-company-item {
+                display: flex;
+                padding: 0 16px;
+                margin-top: 8px;
+                font-size: 12px;
+                color: #999999;
+                justify-content: space-between;
+                align-items: center;
             }
         }
         .userVip-list {
@@ -782,7 +887,7 @@
     }
 </style>
 <script>
-    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdGroupOption, DdOption } from 'dd-vue-component';
     import CheckInPerson from './CheckInPerson.vue';
     import SelectGoods from './selectGoods.vue';
     import SelectProject from './selectProject.vue';
@@ -819,11 +924,15 @@
             return {
                 name: '',
                 phone: '',
-                userOriginType: -1,
+                userOriginType: '-1~-1',
                 userOrigins: [],
+                userSelfOrigins: [],
+                userGroupOrigins: [],
                 phoneValid: true,
                 remark: '',
+                enterList: [],
                 enterItems: [],
+                shopList: [],
                 shopGoodsItems: [],
                 registerRooms: [],
                 showOrder: false,
@@ -837,7 +946,8 @@
                 modifyEnterOrShopIndex: -1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
-                lastEnterItem: {}
+                lastEnterItem: {},
+                isLoading: false
             }
         },
 
@@ -907,6 +1017,10 @@
                     });
                 }
                 return shopList;
+            },
+            showCompanyOriginTip() {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                return originType === -5;
             }
         },
         methods:{
@@ -915,11 +1029,28 @@
                 types.LOAD_ENTER_LIST
             ]),
             getData(){
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true }, (res) => {
                     if (res.code === 1) {
-                        this.userOrigins = res.data.list;
-                        this.userOrigins.unshift({ id: -1, name: '散客' });
-                        this.userOriginType = this.userOrigins[0].id;
+                        const originsList = res.data.list;
+                        let otherOrigins = [];
+                        this.userOrigins = originsList;
+                        originsList.forEach(origin => {
+                            if (origin.id === -1 || origin.id === -4) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if(origin.id === -5) {
+                                origin.companyList.forEach(company => {
+                                    company.name = company.companyName;
+                                    company.originType = `${company.id}~${origin.id}`;
+                                });
+                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                            } else if(origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        this.userOriginType = this.userSelfOrigins[0].originType;
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -971,12 +1102,30 @@
                 this.name = obj.name;
                 this.phone = obj.phone;
                 this.vipListShow = false;
+                this.userOriginType = '-4~-4';
             },
             getVipDiscount(params) {
                 AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.vipDiscountDetail = {...res.data};
+                            if (!this.vipDiscountDetail.isVip) {
+                                this.userOriginType = '-1~-1';
+                            } else {
+                                this.userOriginType = '-4~-4';
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            getCompanyDiscount(params) {
+                AJAXService.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const discountList = res.data;
+                            this.vipDiscountDetail.isVip = false;
+                            this.vipDiscountDetail.vipDetail = discountList;
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -987,7 +1136,7 @@
              **/
             getItemDiscountInfo(nodeId, nodeType, obj) {
                 let item = { discount: 1 };
-                if (obj.isVip && obj.vipDetail.discountList.length > 0) {
+                if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
                     obj.vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
                             item = {...list};
@@ -1049,7 +1198,7 @@
             refreshData(){
                 this.name = '';
                 this.phone = '';
-                this.userOriginType =  -1;
+                this.userOriginType = '-1~-1';
                 this.remark = '';
                 this.enterItems = [];
                 this.shopGoodsItems = [];
@@ -1228,10 +1377,23 @@
                     modal.somethingAlert("请完善商超信息！");
                     return false;
                 }
-                const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
-                if (this.vipDiscountDetail.isVip) {
-                    params.vipId = this.vipDiscountDetail.vipDetail.vipId;
+                if (this.isLoading) {
+                    return false;
                 }
+                this.isLoading = true;
+                const params = { name: this.name, phone: this.phone, remark: this.remark };
+
+                if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.originId = -5;
+                    params.discountRelatedId = Number(this.userOriginType.split('~')[0]);
+                } else {
+                    params.originId = Number(this.userOriginType.split('~')[0]);
+                }
+
+                if (this.vipDiscountDetail.isVip) {
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                }
+
                 if (this.checkState === 'ing') {
                     params.type = 0;
                 } else if (this.checkState === 'finish') {
@@ -1241,15 +1403,19 @@
                 } else {
                     params.orderId = this.order.orderId;
                 }
-                if (this.userOriginType === -3) {
+
+                if (Number(this.userOriginType.split('~')[0]) === -3) {
                     params.origin = '微官网';
-                } else {
+                } else if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.origin = '企业';
+                }else {
                     this.userOrigins.forEach(origin => {
-                        if (origin.id === this.userOriginType) {
+                        if (origin.id === Number(this.userOriginType.split('~')[0])) {
                             params.origin = origin.name;
                         }
                     });
                 }
+
                 let rooms = [];
                 this.registerRooms.forEach(item => {
                     const room = {};
@@ -1315,6 +1481,7 @@
                 if (this.checkState === "editOrder") {
                     AJAXService.ajaxWithToken('post', '/order/modify', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 this.$emit('refreshView');
@@ -1326,6 +1493,7 @@
                 } else {
                     AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 if(this.checkState === 'ing' || this.checkState === 'finish') {
@@ -1616,6 +1784,7 @@
             DdPagination,
             DdDatepicker,
             DdSelect,
+            DdGroupOption,
             DdOption,
             counter,
             CheckInPerson,
@@ -1623,6 +1792,22 @@
             SelectProject
         },
         watch: {
+            /*name(newVal) {
+                let search = newVal.length >= 1
+                    && (this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip));
+                if (search) {
+                    const params = { name: newVal };
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, 1); }, 500);
+                }
+            },*/
+            userOriginType(newVal) {
+                const originType = Number(newVal.split('~')[1]);
+                const originId = Number(newVal.split('~')[0]);
+                if (originType === -5) {
+                    this.getCompanyDiscount({ contractCompanyId: originId });
+                }
+            },
             phone(newVal) {
                 const params = { phone: newVal };
                 let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
@@ -1693,10 +1878,15 @@
                 } else if (newVal && this.checkState === 'editOrder') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
-                    this.userOriginType = this.order.originId;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
                     this.getVipDiscount({ phone: this.phone });
+
+                    if (this.order.originId === -5) {
+                        this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                    } else {
+                        this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                    }
 
                     let enterItems = [];
                     let filterEnters = this.order.playItems.filter(enter => {

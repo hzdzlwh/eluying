@@ -4,7 +4,6 @@
 var webpack = require('webpack'),
     config = require('./config'),
     path = require('path');
-    // HappyPack = require('happypack');
 var webpackConf =  {
     devtool: 'inline-source-map',
     plugins: [
@@ -13,14 +12,21 @@ var webpackConf =  {
             'jQuery': 'jquery'
         }),
         new webpack.optimize.CommonsChunkPlugin('common.js'),
-        // new HappyPack({ id: 'js', threads: 4 })
     ],
     entry: config.js,
     output: {
         filename: '[name].js',
         publicPath: './dist/'
     },
+    eslint: {
+        failOnWarning: false,
+        failOnError: false
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, loader: 'eslint', include: path.join(__dirname, './static/js/app/src/customer') },
+            { test: /\.vue$/, loader: 'eslint', include: path.join(__dirname, './static/js/app/src/customer') }
+        ],
         loaders: [
             {test: /\.js$/, loader: 'babel', include: [path.join(__dirname, './static/js/app/src'), path.join(__dirname, './node_modules/dd-vue-component/src')]},
             {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] },
@@ -29,6 +35,11 @@ var webpackConf =  {
             {test: /\.css$/, loaders: ['style', 'css']},
             {test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000'}
         ]
+    },
+    vue: {
+        loaders: {
+            scss: 'vue-style-loader!css-loader!sass-loader'
+        }
     },
     resolve: {
         extensions: ['.js', '.vue', ''],

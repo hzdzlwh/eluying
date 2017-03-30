@@ -68,7 +68,8 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: []
+                subOrders: [],
+                isLoading: false
             }
         },
         computed: {
@@ -149,6 +150,10 @@
 
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
                     AJAXService.ajaxWithToken('get', '/order/cancel', business)
                         .then(res => {
@@ -160,12 +165,14 @@
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
+                            this.isLoading = false;
                         })
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
                     this.hideModal();
                     this.$emit('showCashier', { type: 'cancel', business });
+                    this.isLoading = false;
                 }
             }
         },
