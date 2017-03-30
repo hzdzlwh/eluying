@@ -5,11 +5,11 @@
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
-                            <span style="margin-right: 10px" v-if="order.orderType !== ORDER_TYPE.COMBINATION">
-                                <img v-if="order.orderType === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" >
-                                <img v-if="order.orderType === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" >
-                                <img v-if="order.orderType === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" >
-                                <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
+                            <span style="margin-right: 10px" v-if="type !== ORDER_TYPE.COMBINATION">
+                                <img v-if="type === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" >
+                                <img v-if="type === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" >
+                                <img v-if="type === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" >
+                                <img v-if="type === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
                             </span>
                                 <span class="header-text">{{title}}</span>
                             <span v-if="order.orderState !== undefined" class="order-state" :class="orderStateColor">
