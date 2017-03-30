@@ -1313,7 +1313,7 @@
                 }
 
                 if (this.checkState === "editOrder") {
-                    AJAXService.ajaxWithToken('get', '/order/modify', params)
+                    AJAXService.ajaxWithToken('post', '/order/modify', params)
                         .then(res => {
                             if (res.code === 1) {
                                 this.hideModal(e);
