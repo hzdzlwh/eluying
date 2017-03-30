@@ -6,10 +6,15 @@
                 <div class="orderDetailModal-shop-item">
                     <span class="shop-icon"></span>
                     <div class="item-content">
-                        <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
-                        <div style="margin-right: 81px">
+                        <span class="shop-time small-font">{{item.time.slice(0, 16)}}</span>
+                        <div style="display: inline-flex; align-items: center;">
                             <label class="label-text">小计</label>
                             <span>¥{{getTotalPrice(item['items'], true)}}</span>
+                            <span class="shopOrder-check-btn"
+                                  v-text="!order.goodsOrderId ? '查看': ''"
+                                  :class="!order.goodsOrderId ? 'cursor' : ''"
+                                  @click="showSingleOrder(item['items'][0])">
+                            </span>
                         </div>
                         <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
                             <span>原价<span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span></span>
@@ -29,8 +34,21 @@
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
+    .shopOrder-check-btn {
+        width: 30px;
+        height: 19px;
+        margin-left: 51px;
+        display: inline-flex;
+        align-items: center;
+        font-size: 14px;
+        color: #178ce6;
+    }
+    .cursor {
+        cursor: pointer;
+    }
 </style>
 <script>
+    import event from '../event.js';
     export default{
         props: {
             order: Object
@@ -53,6 +71,12 @@
                             shopList[item.goodsOrderId]['items'].push(item);
                         }
                     });
+                } else if (this.order.goodsOrderId) {
+                    const orderId = this.order.goodsOrderId;
+                    shopList[orderId] = {};
+                    shopList[orderId]['time'] = this.order.creationTime;
+                    shopList[orderId]['items'] = this.order.itemList;
+                    shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
                 return shopList;
             },
@@ -66,6 +90,17 @@
                     });
                 }
                 return price.toFixed(2);
+            },
+            showSingleOrder(order) {
+                if (!this.order.goodsOrderId) {
+                    event.$emit('onShowDetail',
+                        {
+                            orderId: order.goodsOrderId,
+                            orderType: 2
+                        });
+                } else {
+                    return false;
+                }
             }
         }
     };
