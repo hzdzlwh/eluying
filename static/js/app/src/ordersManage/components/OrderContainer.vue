@@ -12,7 +12,7 @@
                                 <img v-if="order.orderType === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
                             </span>
                                 <span class="header-text">{{title}}</span>
-                            <span v-if="order.orderState" class="order-state" :class="orderStateColor">
+                            <span v-if="order.orderState !== undefined" class="order-state" :class="orderStateColor">
                                 {{orderStateText}}
                             </span>
                         </div>
@@ -949,6 +949,8 @@
     import event from '../event';
     import util from 'util';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
+    import { mapMutations } from 'vuex';
+    import type from '../store/types';
     export default{
         data() {
             return {
@@ -963,7 +965,7 @@
         },
         computed: {
             title() {
-                switch (this.order.orderType) {
+                switch (this.type) {
                     case ORDER_TYPE.ACCOMMODATION:
                         return '住宿订单';
                     case ORDER_TYPE.CATERING:
@@ -979,12 +981,16 @@
                 }
             },
             orderStateText() {
-                const { orderState } = this.order;
-                return ORDER_STATE_TEXT[this.type][orderState].text;
+                if (!ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                    return '';
+                }
+                return ORDER_STATE_TEXT[this.type][this.order.orderState].text;
             },
             orderStateColor() {
-                const { orderType, orderState } = this.order;
-                return ORDER_STATE_TEXT[this.type][orderState].color;
+                if (!ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                    return '';
+                }
+                return ORDER_STATE_TEXT[this.type][this.order.orderState].color;
             },
             orderDates() {
                 switch(this.order.orderType) {
@@ -1030,11 +1036,11 @@
                 }
             }
         },
-        watch: {
-        },
         methods: {
+            ...mapMutations([type.SET_ORDER_DETAIL]),
             hideModal() {
                 event.$emit('onClose');
+                this[type.SET_ORDER_DETAIL]({orderDetail: {}});
             },
             /**
              * 计算各种类型的收费金额
