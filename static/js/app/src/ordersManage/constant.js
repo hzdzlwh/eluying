@@ -61,3 +61,31 @@ export const ORDER_STATE_TEXT = {
         '2': {text: '已结束', color: 'grey'}
     }
 };
+
+export const ORDER_STATE_LIST = {
+    '-1': [{id: '-1', name: '全部状态'},
+           {id: '0', name: '待处理'},
+           {id: '1', name: '已拒绝'},
+           {id: '2', name: '已预订'},
+           {id: '3', name: '进行中'},
+           {id: '5', name: '已结束'}],
+    '3': [{id: '-1', name: '全部状态'},
+          {id: '2', name:'已预订'},
+          {id: '3', name: '进行中'},
+          {id: '5', name: '已结束'},
+          {id: '6', name: '过期未入住'},
+          {id: '7', name: '过期未退房'}],
+    '0': [{id: '-1', name: '全部状态'},
+          {id: '0', name: '待处理'},
+          {id: '2', name: '已预订'},
+          {id: '3', name: '进行中'},
+          {id: '5', name: '已结束'},
+          {id: '6', name: '过期未入厨'}],
+    '1': [{id: '-1', name: '全部状态'},
+          {id: '2', name:'已预订'},
+          {id: '3', name: '进行中'},
+          {id: '5', name: '已结束'},
+          {id: '6', name: '过期未使用'},
+          {id: '7', name: '过期未结束'}],
+    '2': [{id: '5', name: '已结束'}]
+}

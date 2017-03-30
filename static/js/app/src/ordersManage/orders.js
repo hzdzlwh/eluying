@@ -12,6 +12,7 @@ import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
 import store from './store';
 import event from './event';
+import { ORDER_STATE_LIST } from './constant';
 
 init({
     leftMenu: false
@@ -55,32 +56,7 @@ $(function(){
             orderType: -1,
             orderStatus: '-1',
             orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
-            optionsOrderState: [
-                {
-                    id: '-1',
-                    name: '全部订单状态'
-                },
-                {
-                    id: '0',
-                    name: '待处理'
-                },
-                {
-                    id: '1',
-                    name: '已拒绝'
-                },
-                {
-                    id: '2',
-                    name: '已预订'
-                },
-                {
-                    id: '3',
-                    name: '进行中'
-                },
-                {
-                    id: '5',
-                    name: '已结束'
-                }
-            ],
+            optionsOrderState: ORDER_STATE_LIST,
             startDate: '',
             endDate: '',
             orderNum: 0,
@@ -94,7 +70,8 @@ $(function(){
             searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png',
             detailVisible: false,
             detailId: undefined,
-            detailType: undefined
+            detailType: undefined,
+            lastParamsObj: ''
         },
 
         created() {
@@ -129,6 +106,11 @@ $(function(){
              * @param obj
              */
             getOrdersList(obj, pageChange) {
+                const objStr = JSON.stringify(obj);
+                if (this.lastParamsObj === objStr) {
+                    return false;
+                }
+                this.lastParamsObj = objStr;
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
                 this.isLoading = true;
@@ -205,6 +187,16 @@ $(function(){
                 return typeArr;
             },
 
+            getOrderStatusText(item) {
+                const typeArr = this.getOrderType(item);
+                const isShopOrder = item.orderType === 2 || (typeArr.length === 1 && typeArr[0] === 2);
+                if (isShopOrder) {
+                    return '已结束';
+                } else {
+                    return this.orderStatusText[item.orderState];
+                }
+            },
+
             searchOrders() {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
@@ -261,61 +253,6 @@ $(function(){
                 this.getOrdersList(Object.assign({}, obj, { page: msg }), true);
             },
 
-            /*changeOrderTypeItem(item) {
-                if (item.id === -1 && item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        el.show = false;
-                    });
-                    this.$nextTick(function() {
-                        this.orderTypeItem = [];
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id === -1 && !item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        el.show = true;
-                    });
-                    this.$nextTick(function() {
-                        this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id !== -1 && item.show) {
-                    this.optionsSubOrderType[this.orderType][0].show = false;
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        if (el.id === item.id) {
-                            item.show = false;
-                        }
-                    });
-                    this.$nextTick(function() {
-                        if (this.orderTypeItem[0] === -1) {
-                            this.orderTypeItem.splice(0, 1);
-                        }
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id !== -1 && !item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        if(el.id === item.id) {
-                            item.show = true;
-                        }
-                    });
-                    this.$nextTick(function() {
-                        if(this.optionsSubOrderType[this.orderType].length - this.orderTypeItem.length === 1) {
-                            this.optionsSubOrderType[this.orderType][0].show = true;
-                            this.$nextTick(function(){
-                                this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
-                                const obj = this.getParams();
-                                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                            });
-                        } else {
-                            const obj = this.getParams();
-                            this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                        }
-                    });
-                }
-            },*/
-
             disableEndDate(date) {
                 if (this.startDate !== '') {
                     const arr = this.startDate.split('-');
@@ -336,9 +273,20 @@ $(function(){
         },
 
         watch: {
-            orderType: function() {
-                const obj = this.getParams();
-                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+            orderType: function(newVal) {
+                if (newVal === 2) {
+                    this.$nextTick(() => {
+                        this.orderStatus = '5';
+                        const obj = this.getParams();
+                        this.getOrdersList(obj, false);
+                    });
+                } else {
+                    this.$nextTick(() => {
+                        this.orderStatus = '-1';
+                        const obj = this.getParams();
+                        this.getOrdersList(obj, false);
+                    })
+                }
             },
 
             orderParams: function(newVal) {
@@ -347,7 +295,7 @@ $(function(){
                               keyword: this.searchContent,
                               sort: this.sort,
                               orderType: this.orderType};
-                this.getOrdersList(Object.assign({}, newVal, obj), false);
+                this.getOrdersList(Object.assign({}, obj, newVal), false);
             },
 
             startDate: function(newVal) {
