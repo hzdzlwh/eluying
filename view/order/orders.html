@@ -28,15 +28,15 @@
                     </dd-option>
                 </dd-select>
             </div>-->
-            <div class="dd-select-orderstate orders-state">
-                <dd-select v-model="orderStatus">
-                    <dd-option v-for="option in optionsOrderState" :key="option.id" :value="option.id" :label="option.name">
-                    </dd-option>
-                </dd-select>
-            </div>
             <div class="dd-select-ordertype">
                 <dd-select v-model="orderType">
                     <dd-option v-for="option in optionsParentOrderType" :key="option.id" :value="option.id" :label="option.name">
+                    </dd-option>
+                </dd-select>
+            </div>
+            <div class="dd-select-orderstate orders-state">
+                <dd-select v-model="orderStatus">
+                    <dd-option v-for="option in optionsOrderState[orderType]" :key="option.id" :value="option.id" :label="option.name">
                     </dd-option>
                 </dd-select>
             </div>
@@ -121,7 +121,7 @@
                         <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                         <td v-text="item.customerPhone || '--'"></td>
                         <td v-text="item.date"></td>
-                        <td v-text="orderStatusText[item.orderState]"></td>
+                        <td v-text="getOrderStatusText(item)"></td>
                         <td v-text="!!item.operators && item.operators.length > 0
                                     ? item.operators.join('、') : '--'"
                             :title="!!item.operators && item.operators.length > 0
