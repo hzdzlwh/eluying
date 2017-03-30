@@ -979,12 +979,12 @@
                 }
             },
             orderStateText() {
-                const { orderType, orderState } = this.order;
-                return ORDER_STATE_TEXT[orderType][orderState].text;
+                const { orderState } = this.order;
+                return ORDER_STATE_TEXT[this.type][orderState].text;
             },
             orderStateColor() {
                 const { orderType, orderState } = this.order;
-                return ORDER_STATE_TEXT[orderType][orderState].color;
+                return ORDER_STATE_TEXT[this.type][orderState].color;
             },
             orderDates() {
                 switch(this.order.orderType) {
