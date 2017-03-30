@@ -16,9 +16,7 @@
                         <div class="item-count">
                             <label class="label-text">数量</label>
                             <span>
-                            {{item.amount || item.bookNum}}可使用{{item.enableAmount/(item.amount || item.bookNum)}}
-                            <!-- {{`${(item.amount || item.bookNum)}(可使用${item.enableAmount}/${(item.amount || item.bookNum)})`}} -->
-                                
+                            {{item.amount || item.bookNum}}(可使用{{item.enableAmount}}/{{(item.amount || item.bookNum)}})
                             </span>
                         </div>
                         <div>
