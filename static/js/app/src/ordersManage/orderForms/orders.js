@@ -61,9 +61,18 @@ $(function(){
             orderStatus: '-1',
             orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
             orderTypeItem: [-1],
-            optionsOrderState: [{
-                id: '-1',
-                name: '全部订单状态'
+            optionsOrderState: [
+                {
+                    id: '-1',
+                    name: '全部订单状态'
+                },
+                {
+                    id: '0',
+                    name: '待处理'
+                },
+                {
+                    id: '1',
+                    name: '已拒绝'
                 },
                 {
                     id: '2',
