@@ -60,8 +60,14 @@ var header = {
                     if (data.code == 1) {
                         localStorage.setItem("campId", campId);
                         localStorage.setItem("campName", campName);
+                        localStorage.setItem("camps", JSON.stringify(data.data.camps));
                         localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
                         localStorage.setItem("top", JSON.stringify(data.data.top));
+                        localStorage.setItem("avatar", data.data.user.avatar);
+                        localStorage.setItem("userName", data.data.user.realName);
+                        localStorage.setItem("userType", data.data.user.userType);
+                        localStorage.setItem("uid", data.data.user.uid);
+                        data.data.switches && localStorage.setItem('switches', JSON.stringify(data.data.switches));
                         window.location.href = '/view/accommodation/calender/calender.html';
                     } else if (data.code == 11002) {
                         modal.somethingAlert(data.msg);
