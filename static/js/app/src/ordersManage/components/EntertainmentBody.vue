@@ -19,14 +19,14 @@
             <div class="enterTableBody">
                 <div class="enteritem" v-for='(item, index) in order.enterItems'>
                     <span class="enterTableid">
-                    {{item.itemSequence}}
+                    #{{item.itemSequence}}
                     </span>
                     <span class="enterTableState">
                     {{stateType[item.state]}}
                     <span v-if='item.timer'>{{item.timer |gettime(item.state)}}</span>
                     </span>
                     <span class="enterTableGet">
-                    {{queueStateType[item.queueState + 1]}}
+                    {{ item.serialNum ? (item.serialNum + '(' + queueStateType[item.queueState + 1] + ')') : queueStateType[item.queueState + 1]}}
                     </span>
                     <span class="enterTableHis">
                     <div class="info-icon">
@@ -103,7 +103,7 @@ export default {
         return {
             type: ['预定时间', '开始时间', '结束时间', '使用时间'],
             stateType: ['已预订', '进行中', '已结束', '已取消'],
-            queueStateType: ['未排队', '排队中', '轮到', '离开排队', '过号顺延', '过号', '结束排队']
+            queueStateType: ['未排队', '排队中', '已轮到', '已取消', '过号顺延', '已过号', '已轮到']
         }
     },
     methods: {
@@ -121,7 +121,7 @@ export default {
                 const ht = parseInt(value / (1000 * 60 * 60))
                 const mt = parseInt((value / (1000 * 60)) % 60)
                 const st = parseInt((value / 1000) % 60)
-                return getNumSte(ht, 3) + ':' + getNumSte(mt, 2) + ':' + getNumSte(st, 2)
+                return getNumSte(ht, 2) + ':' + getNumSte(mt, 2) + ':' + getNumSte(st, 2)
             }
             return ''
         }
