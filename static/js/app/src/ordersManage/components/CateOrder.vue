@@ -36,7 +36,7 @@
                                 </span>
                             </div>
                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                <span v-if="!order.caterOrderId">原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
+                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                 <span class="discount-num">
                                     {{ item.vipShowDiscount }}
                                 </span>
