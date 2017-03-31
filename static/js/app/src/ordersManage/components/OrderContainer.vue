@@ -155,6 +155,7 @@
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
+                                      v-if="type !== ORDER_TYPE.ENTERTAINMENT"
                                       style="margin-left: 24px">办理员工:{{order.operatorName || order.operator || order.reserveName}}</span>
                             </p>
                             <p class="order-info">
@@ -221,6 +222,18 @@
         }
         .red {
             color: #f24949;
+        }
+        .single-order-btn {
+            width: 30px;
+            height: 19px;
+            margin-left: 51px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            color: #178ce6;
+        }
+        .cursor {
+            cursor: pointer;
         }
         .header-container {
             display: flex;
@@ -967,7 +980,8 @@
         },
         props: {
             type: Number,
-            order: Object
+            order: Object,
+            id: Number
         },
         computed: {
             title() {
@@ -987,11 +1001,11 @@
                 }
             },
             printUrl() {
-                if (!this.order.orderId) {
+                if (!this.id) {
                     return '';
                 }
 
-                let params = { orderId: this.order.orderId, orderType: this.type };
+                let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
                 return http.getUrl2('/printer/getOrderDetailJsp?') + params;
