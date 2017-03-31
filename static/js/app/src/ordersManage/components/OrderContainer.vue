@@ -223,6 +223,18 @@
         .red {
             color: #f24949;
         }
+        .single-order-btn {
+            width: 30px;
+            height: 19px;
+            margin-left: 51px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            color: #178ce6;
+        }
+        .cursor {
+            cursor: pointer;
+        }
         .header-container {
             display: flex;
             align-items: center;

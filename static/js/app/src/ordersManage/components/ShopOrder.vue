@@ -10,7 +10,7 @@
                         <div style="display: inline-flex; align-items: center;">
                             <label class="label-text">小计</label>
                             <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                            <span class="shopOrder-check-btn"
+                            <span class="single-order-btn"
                                   v-text="!order.goodsOrderId ? '查看': ''"
                                   :class="!order.goodsOrderId ? 'cursor' : ''"
                                   @click="showSingleOrder(item['items'][0])">
@@ -34,18 +34,6 @@
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
-    .shopOrder-check-btn {
-        width: 30px;
-        height: 19px;
-        margin-left: 51px;
-        display: inline-flex;
-        align-items: center;
-        font-size: 14px;
-        color: #178ce6;
-    }
-    .cursor {
-        cursor: pointer;
-    }
 </style>
 <script>
     import event from '../event.js';
