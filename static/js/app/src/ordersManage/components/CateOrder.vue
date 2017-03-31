@@ -136,10 +136,6 @@
                 </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId">
-            <p class="content-item-title"><span>备注信息</span></p>
-            <div>{{ order.remark && order.remark !== '' ? order.remark : '无' }}</div>
-        </div>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">

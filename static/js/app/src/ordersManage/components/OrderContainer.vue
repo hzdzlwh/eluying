@@ -290,7 +290,7 @@
                 }
             }
             &.green {
-                background: #82beff;
+                background: #62d99d;
                 &::before {
                     border-right-color: #62d99d;
                 }
