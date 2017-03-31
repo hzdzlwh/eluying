@@ -3,7 +3,7 @@
         <div class="content-item">
             <p class="content-item-title"><span>餐饮信息</span></p>
             <div class="items">
-                <div class="item" v-for="item in getFoodItems()">
+                <div class="item" v-for="item in foodItems">
                     <div class="food-item">
                         <span class="food-icon"></span>
                         <div class="item-content">
@@ -29,7 +29,7 @@
                             <div class="item-price">
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
-                                <span class="cateOrder-check-btn"
+                                <span class="single-order-btn"
                                       v-text="!order.caterOrderId ? '查看': ''"
                                       :class="!order.caterOrderId ? 'cursor' : ''"
                                       @click="showSingleOrder(item)">
@@ -146,18 +146,6 @@
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
-    .cateOrder-check-btn {
-        width: 30px;
-        height: 19px;
-        margin-left: 51px;
-        display: inline-flex;
-        align-items: center;
-        font-size: 14px;
-        color: #178ce6;
-    }
-    .cursor {
-        cursor: pointer;
-    }
     .item-price {
         display: inline-flex;
         align-items: center;
@@ -245,6 +233,27 @@
             return {
             };
         },
+        computed: {
+            foodItems() {
+                let foodItems = [];
+                if (this.order.caterOrderId) {
+                    let obj = {};
+                    obj.restName = this.order.restName;
+                    obj.boardDetailResps = this.order.boardDetailResps.map(board => {
+                        return board.boardName;
+                    });
+                    obj.peopleNum = this.order.peopleNum;
+                    obj.date = this.order.creationTime;
+                    obj.foodPrice = this.order.totalPrice;
+                    obj.vipShowDiscount = this.order.vipShowDiscount;
+                    foodItems[0] = obj;
+                } else {
+                    foodItems = this.order.foodItems;
+                }
+
+                return foodItems;
+            }
+        },
         methods: {
             getRoomOrFoodState(type, state){
                 switch(state){
@@ -269,23 +278,6 @@
                 }
 
                 return desksStr;
-            },
-            getFoodItems() {
-                let foodItems = [];
-                if (this.order.caterOrderId) {
-                    let obj = {};
-                    obj.restName = this.order.restName;
-                    obj.boardDetailResps = this.order.boardDetailResps;
-                    obj.peopleNum = this.order.peopleNum;
-                    obj.date = this.order.creationTime;
-                    obj.foodPrice = this.order.totalPrice;
-                    obj.vipShowDiscount = this.order.vipShowDiscount;
-                    foodItems[0] = obj;
-                } else {
-                    foodItems = this.order.foodItems;
-                }
-
-                return foodItems;
             },
             showSingleOrder(order) {
                 if (!this.order.caterOrderId) {
