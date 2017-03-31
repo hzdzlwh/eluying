@@ -1041,6 +1041,10 @@
                             {
                                 name: '退房时间',
                                 date: this.order.checkOutDate
+                            },
+                            {
+                                name: '取消时间',
+                                date: this.order.cancelDate
                             }
                         ];
                     case ORDER_TYPE.CATERING:
