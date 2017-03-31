@@ -1,6 +1,5 @@
 <template>
     <div>
-        <EntertainmentOrder :order='order' :showMoadl=false></EntertainmentOrder>
         <EntertainmentBody :order='order'></EntertainmentBody>
         <div class="content-item"><p class="content-item-title"><span>备注信息</span></p> <div>{{order.remark || "无"}}</div></div>
     </div>

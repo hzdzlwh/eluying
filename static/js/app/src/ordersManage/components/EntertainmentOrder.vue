@@ -30,7 +30,7 @@
                                                     {{ item.vipShowDiscount }}
                                                 </span>
                             </span>
-                            <div v-if='showMoadl' class="showModal" @click='modalShow(item.playOrderId)'>查看</div>
+                            <div v-if='showMoadl && !order.enterItems' class="showModal" @click='modalShow(item.playOrderId)'>查看</div>
                         </div>
                         <span></span>
                     </div>
