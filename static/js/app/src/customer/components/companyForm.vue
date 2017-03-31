@@ -186,9 +186,9 @@ import {
     DdSelect,
     DdOption
 } from 'dd-vue-component';
-import categorySelect from './categorySelect.vue'
+import categorySelect from './categorySelect.vue';
 import http from '../../common/AJAXService';
-import modal from '../../common/modal'
+import modal from '../../common/modal';
 export default {
     props: {
         id: {
@@ -221,7 +221,7 @@ export default {
         discounts: {
             type: Array,
             default: function() {
-                return []
+                return [];
             }
         },
         remark: {
@@ -242,13 +242,13 @@ export default {
             discount: this.discounts,
             selectType: undefined,
             formCustomerType: [{
-                name: "可挂帐",
+                name: '可挂帐',
                 value: 1
             }, {
-                name: "不可挂帐",
+                name: '不可挂帐',
                 value: 0
-            }],
-        }
+            }]
+        };
     },
     // watch: {
     //     visible(val) {
@@ -273,41 +273,41 @@ export default {
             this.selectType = type;
         },
         remove(index) {
-            this.discount.splice(index, 1)
+            this.discount.splice(index, 1);
         },
         getCompanyDate() {
             if (this.id) {
                 http.get('/contractCompany/getDetail', {
                     cid: this.id
                 }).then(res => {
-                    this.encompanyAddress = res.data.companyAddress
-                    this.encompanyName = res.data.companyName
-                    this.encompanyType = res.data.companyType
-                    this.encontactName = res.data.contactName
-                    this.encontactPhone = res.data.contactPhone
-                    this.encontractNum = res.data.contractNum
-                    this.discount = res.data.discounts
-                    this.enremark = res.data.remark
-                })
+                    this.encompanyAddress = res.data.companyAddress;
+                    this.encompanyName = res.data.companyName;
+                    this.encompanyType = res.data.companyType;
+                    this.encontactName = res.data.contactName;
+                    this.encontactPhone = res.data.contactPhone;
+                    this.encontractNum = res.data.contractNum;
+                    this.discount = res.data.discounts;
+                    this.enremark = res.data.remark;
+                });
             } else {
-                this.discount = []
+                this.discount = [];
             }
         },
         customerDate: function() {
             if (!this.encompanyName) {
                 modal.somethingAlert('请输入公司名');
-                return
+                return;
             }
             if (!this.encontactName) {
                 modal.somethingAlert('请输入联系人');
-                return
+                return;
             }
             if (!this.encontactPhone) {
                 modal.somethingAlert('请输入联系号码');
-                return
+                return;
             }
             for (let i = 0; i < this.discount.length; i ++) {
-                this.discount[i].discount = parseInt(this.discount[i].discount)
+                this.discount[i].discount = parseInt(this.discount[i].discount);
                 if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
                     modal.alert('请输入0.1-9.9之间正确的折扣数字');
                     return false;
@@ -322,27 +322,26 @@ export default {
                 contractNum: this.encontractNum,
                 discounts: JSON.stringify(this.discount),
                 remark: this.enremark
-            }
+            };
             if (this.id) {
-                data.id = this.id
+                data.id = this.id;
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
                 if (res.code === 1) {
-                    modal.somethingAlert('添加成功')
+                    modal.somethingAlert('添加成功');
                     $('#add').modal('hide');
-                    this.encompanyAddress = ''
-                    this.encompanyName = ''
-                    this.encompanyType = 0
-                    this.encontactName = ''
-                    this.encontactPhone = ''
-                    this.encontractNum = ''
-                    this.discounts = []
-                    this.enremark = ''
-
+                    this.encompanyAddress = '';
+                    this.encompanyName = '';
+                    this.encompanyType = 0;
+                    this.encontactName = '';
+                    this.encontactPhone = '';
+                    this.encontractNum = '';
+                    this.discounts = [];
+                    this.enremark = '';
                 } else {
-                    modal.somethingAlert(res.msg)
+                    modal.somethingAlert(res.msg);
                 }
-            })
+            });
         },
         handleCategorySelect(list) {
             if (this.selectType === 'consume') {
@@ -353,11 +352,11 @@ export default {
                     const result = this.discount.find(i => i.id === item.id);
                     if (result) {
                         if (item.selected) {
-                            newList.push({...result
+                            newList.push({ ...result
                             });
                         }
                     } else {
-                        newList.push({...item
+                        newList.push({ ...item
                         });
                     }
                 });
@@ -374,5 +373,5 @@ export default {
         DdOption,
         categorySelect
     }
-}
+};
 </script>

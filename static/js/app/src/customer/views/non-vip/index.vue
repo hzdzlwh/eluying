@@ -105,21 +105,21 @@ import {
     DdSelect,
     DdDropdown,
     DdDropdownItem
-} from 'dd-vue-component'
+} from 'dd-vue-component';
 export default {
     data() {
-            return {
-                type: 1,
-                selettype: '全部客户',
-                currentPage: 1
-            }
-        },
+        return {
+            type: 1,
+            selettype: '全部客户',
+            currentPage: 1
+        };
+    },
     methods: {
         handlePageChange: function(argument) {
-            return
+            return;
         },
         outPutText: function() {
-            return
+            return;
         }
     },
     components: {
@@ -127,7 +127,7 @@ export default {
         DdPagination,
         DdSelect,
         DdDropdown,
-        "dd-dropdown-item": DdDropdownItem
+        'dd-dropdown-item': DdDropdownItem
     }
-}
+};
 </script>
