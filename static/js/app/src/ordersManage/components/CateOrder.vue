@@ -36,7 +36,7 @@
                                 </span>
                             </div>
                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
-                                <span v-if="!order.caterOrderId">原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
+                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice  }}</span></span>
                                 <span class="discount-num">
                                     {{ item.vipShowDiscount }}
                                 </span>
@@ -236,7 +236,7 @@
                         return board.boardName;
                     });
                     obj.peopleNum = this.order.peopleNum;
-                    obj.date = this.order.creationTime;
+                    obj.date = this.order.expectStartTime;
                     obj.foodPrice = this.order.totalPrice;
                     obj.vipShowDiscount = this.order.vipShowDiscount;
                     foodItems[0] = obj;
