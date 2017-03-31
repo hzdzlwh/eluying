@@ -133,7 +133,6 @@ export default {
                 window.inter.push( window.setInterval(this.add, 1000, i))
             }
         }
-        event.$off
     },
     beforeDestroy() {
     	for (let i = window.inter.length - 1; i >= 0; i--) {
