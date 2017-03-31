@@ -41,6 +41,11 @@
         </div>
         <!--add new customer Modal -->
         <company> </company>
+<div>        <checkFromDio :visible="check.show" 
+                :type="check.type"
+                :checkType = "check.chekcType"
+                @close='checkFormClose'
+        ></checkFromDio></div>
     </div>
 </template>
 <style>
@@ -138,11 +143,11 @@ import {
 } from 'dd-vue-component'
 import http from '../../../common/AJAXService'
 import company from '../../components/companyForm.vue'
+import check from '../../components/check.vue'
 export default {
     data() {
             return {
-                sort: {
-                },
+                sort: {},
                 pages: 0,
                 cusDate: {
                     companyAddress: '',
@@ -202,7 +207,13 @@ export default {
                     sorter: true
                 }, {
                     title: '操作',
-                    render: (h, row) => < span > < span > 查单 < /span> / < span > 结算 < /span> < /span >
+                    render: (h, row) =>
+                        < span >
+                        < span onClick = {
+                            () => this.openDetailDialog(row, 0)
+                        } > 查单 < /span> / < span onClick = {
+                            () => this.openDetailDialog(row, 1)
+                        } > 结算 < /span> < /span >
                 }],
                 datalist: [],
                 count: 0,
@@ -233,11 +244,48 @@ export default {
                 }, {
                     name: "不可挂帐",
                     value: 0
-                }]
+                }],
+                check: {
+                    type: 0,
+                    chekcType: [],
+                    show: false
+                }
             }
         },
         methods: {
-            changeSort: function (value) {
+            checkFormClose: function () {
+                this.check.show = false
+            },
+            openDetailDialog: function(date, type) {
+                if (type) {
+                    let dataobject = {
+                        isAll: true,
+                        orderType: -1,
+                        type: 1
+                    }
+
+                    http.get('/user/getChannels', dataobject).then(res => {
+                        if (res.code === 1) {
+                            this.check.chekcType = res.data.list
+                            this.check.show = true
+                        } else {
+                            // modal.somethingAlert(res.msg)
+                        }
+                    })
+                    // this.check.show = true
+                    // this.check.chekcType = [{
+                    //     id:3,
+                    //     name: "111"
+                    //         },{
+                    //     id:32,
+                    //     name: "1121"
+                    //         },{
+                    //     id:34,
+                    //     name: "1141"
+                    //         }]
+                }
+            },
+            changeSort: function(value) {
                 this.sort = value
             },
             handlePageChange: function(internalCurrentPage) {
@@ -275,30 +323,10 @@ export default {
                     page: this.currentPage,
                     companyType: this.CustomerStatus
                 }
-                // if (this.sort.sortField) {
-                //     let fielt = ''
-                //     switch (this.sort.sortField) {
-                //         case 'rechargeFee':
-                //             fielt = 'isRechargeFeeDesc'
-                //             break;
-                //         case 'ledgerFee':
-                //             fielt = 'isLedgerFeeDesc'
-                //             break;
-                //         case 'consumeFee':
-                //             fielt = 'isRechargeFeeDesc'
-                //             break;
-                //         case 'creationTime':
-                //             fielt = 'isConsumeFeeDesc'
-                //             break;
-                //         default:
-                //             fielt = this.sort.sortField
-                //     }
-                //     dataObject[fielt] = this.sort.sortType
-                // }
                 if (this.CustomerStatus === 2) {
                     dataObject.companyType = undefined
                 }
-                Object.assign(dataObject,this.sort)
+                Object.assign(dataObject, this.sort)
                 http.get('/contractCompany/getList', dataObject).then(res => {
                     if (res.code === 1) {
                         this.pages = Math.ceil(res.data.count / 30);
@@ -317,7 +345,7 @@ export default {
             CustomerStatus: function() {
                 this.fetchDate()
             },
-            sort: function () {
+            sort: function() {
                 window.console.log('change')
                 this.fetchDate()
             }
@@ -329,7 +357,8 @@ export default {
             "dd-dropdown-item": DdDropdownItem,
             DdOption,
             DdTable,
-            company
+            company,
+            "checkFromDio": check
         }
 }
 </script>

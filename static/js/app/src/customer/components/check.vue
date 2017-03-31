@@ -1,22 +1,97 @@
 <template>
     <div id="checkForm" class="modal fade" role="dialog">
-        <div class="modal-dialog checkForm-modal-dialog">
-            <div class="modal-content checkForm-modal-content">
-                <div class="checkForm-modal-header">
-                    <span></span>
-                    <span class="checkForm-closeBtn" @click="close()">&times;</span>
+        <div class="modal-content checkForm-modal-content">
+            <span class="checkForm-closeBtn" @click="close()">&times;</span>
+            <div class="checkForm-modal-header">
+                <span>{{content[type].name}}</span>
+                <div class="comName"><span>企业名称：</span><span>成都棕榈世界房车露营</span></div>
+            </div>
+            <div class="checkForm-modal-body">
+                <div class="checkitem">
+                    <label for="">{{content[type].name1}}</label>
+                    <input v-model='num' type="text" class="dd-input" /><span class="CheckHave">可退余额￥13230000</span>
                 </div>
-                <div class="checkForm-modal-body">
+                <div class="checkitem">
+                    <label for="">{{content[type].name2}}</label>
+                    <dd-select v-model="select" class='checkSelect'>
+                        <dd-option v-for="type in checkType" :value="type.id" :label="type.name"></dd-option>
+                    </dd-select>
                 </div>
-                <div class="checkForm-modal-foot">
-                    <button class="dd-btn dd-btn-sm dd-btn-primary">确定</button>
-                    <button class="dd-btn dd-btn-sm dd-btn-ghost">取消</button>
-                </div>
+                <div class="checkitem checkBtn"><button class="dd-btn dd-btn-sm dd-btn-primary" @click='subCheck'>确定</button>
+                <button class="dd-btn dd-btn-sm dd-btn-ghost">取消</button>
+            </div>
             </div>
         </div>
     </div>
 </template>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
+.checkForm-modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    overflow-x: visible;
+    position: relative;
+    width: 410px;
+    height: 245px;
+    margin-top: 0!important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%)!important;
+    transform: translate(-50%, -50%)!important;
+    .checkForm-closeBtn {
+        float: right;
+        margin-right: 15px;
+        cursor: pointer;
+    }
+    .checkForm-modal-header {
+        font-size: 16px;
+        color: #178ce6;
+        text-align: left;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 25px 20px;
+        .comName {
+            padding: 20px 24px 0;
+            font-family: MicrosoftYaHei;
+            font-size: 14px;
+            color: #666666;
+        }
+    }
+    .checkForm-modal-body {
+        padding: 15px 0 15px 45px;
+        .checkitem{
+            padding-bottom:8px;
+            display:flex;
+                line-height: 24px;
+        }
+        label {
+            font-size: 14px;
+            color: #666;
+        }
+        .CheckHave{
+            color:#999;
+            margin-left:5px;
+        }
+        input {
+            background: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 2px;
+            width: 120px;
+            height: 24px;
+        }
+        .checkSelect{
+            width: 120px;
+        }
+        .checkBtn{
+                padding-left: 70px;
+        }
+        .dd-btn{
+            margin-right:18px;
+        }
+    }
+}
 </style>
 <script>
 import http from '../../common/AJAXService';
@@ -29,29 +104,65 @@ export default {
     props: {
         visible: Boolean,
         type: 0,
+        checkType: {
+            default: [],
+            type: Array
+        }
     },
     data() {
         return {
+            num:undefined,
             content: [{
                 name: '企业充值',
                 name1: '充值金额：',
-                name2: '支付方式：'
-            }]
+                name2: '支付方式：',
+                url: '/contractCompany/recharge'
+            }, {
+                name: '企业退款',
+                name1: '退款金额：',
+                name2: '退款方式：',
+                url: ' /contractCompany/refund'
+            }, {
+                name: '挂帐结算',
+                name1: '结算金额：',
+                name2: '支付方式：',
+                url: '/contractCompany/settle'
+            }, ],
+            select: undefined
         };
     },
     watch: {
         visible(val) {
             if (val) {
-                $('#vipForm').modal('show');
+                $('#checkForm').modal('show');
             } else {
-                $('#vipForm').modal('hide');
+                $('#checkForm').modal('hide');
             }
         }
     },
     created() {},
     methods: {
+        subCheck() {
+            http.get(this.content[this.type].url, data).then(res => {
+                if (res.code === 1) {
+                    modal.somethingAlert('添加成功')
+                    $('#add').modal('hide');
+                    this.encompanyAddress = ''
+                    this.encompanyName = ''
+                    this.encompanyType = 0
+                    this.encontactName = ''
+                    this.encontactPhone = ''
+                    this.encontractNum = ''
+                    this.discounts = []
+                    this.enremark = ''
+
+                } else {
+                    modal.somethingAlert(res.msg)
+                }
+            })
+        }
         close() {
-            $('#vipForm').modal('hide');
+            $('#checkForm').modal('hide');
             this.$emit('close');
         }
     },

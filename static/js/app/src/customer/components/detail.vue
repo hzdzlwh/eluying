@@ -380,6 +380,13 @@
             },
             hide() {
                 $('#detailModal').modal('hide');
+                this.pageNo = 1;
+                this.orderCount = 0;
+                this.ordersTotalPrice = 0;
+                this.ledgerFeeSum = 0;
+                this.startTime = '';
+                this.endTime = '';
+                this.state = '7';
             }
         }
     };
