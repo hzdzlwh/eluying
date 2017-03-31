@@ -1,4 +1,5 @@
 <template>
+<div>
     <div class="content-item">
         <p class="content-item-title"><span>房间信息</span></p>
         <div class="items">
@@ -6,7 +7,7 @@
                 <div class="room-info">
                     <div class="room-name">
                         <span class="room-icon"></span>
-                        <span>{{item.serialNum || (item.roomInfo && item.roomInfo.roomNum)}}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
+                        <span>{{(item.roomInfo && item.roomInfo.roomNum) ||item.serialNum }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
                         <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).backgroundColor}">
                                                 {{getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).text}}
                                             </span>
@@ -46,6 +47,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="content-item" v-if='!showMoadl'><p class="content-item-title"><span>备注信息</span></p> <div>{{order.remark || "无"}}</div></div>
+    </div>
     </div>
 </template>
 <style scoped>
@@ -87,16 +91,6 @@ export default {
                 return this.order.rooms;
             }
             return [this.order];
-        },
-        fee() {
-            if(!this.order.rooms) {
-                let count = 0;
-                for (let i = this.order.payments.length - 1; i >= 0; i--) {
-                    count += this.order.payments[i]
-                }
-                return count
-            }
-            return 0 
         }
     },
     methods: {
@@ -129,7 +123,7 @@ export default {
         modalShow(id) {
             event.$emit('onShowDetail', {
                 orderId: id,
-                orderType: ORDER_TYPE.ACCOMMODATION
+                orderType: 3
             })
         }
     }

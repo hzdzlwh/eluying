@@ -208,6 +208,7 @@ $(function(){
                 this.detailVisible = true;
             },
             hideDetail() {
+                this.detailId = undefined;
                 this.detailVisible = false;
             },
             handleClickTr(item, event) {

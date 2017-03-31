@@ -1,9 +1,8 @@
 <template>
     <order-container :type="type" :order="order">
-        <AccommodationOrder :order="order" v-if="(order.rooms && order.rooms.length > 0) || order.roomInfo" :showMoadl='order.roomInfo ? false : true' />
+        <AccommodationOrder :order="order" v-if="(order.rooms && order.rooms.length > 0) || order.roomInfo" :showMoadl='!order.roomInfo' />
         <CateOrder :order="order" v-if="showCateOrderComponent" />
-        <EntertainmentOrder :order="order" v-if="order.playItems && order.playItems.length > 0" />
-        <EntertainmentOrderDetail :order="order" v-if="order.enterItems && order.enterItems.length > 0" />
+        <EntertainmentOrder :order="order" v-if="(order.playItems && order.playItems.length > 0) || order.enterItems" />
         <ShopOrder :order="order" v-if="showShopOrderComponent" />
     </order-container>
 </template>
@@ -17,7 +16,6 @@
     import CateOrder from './CateOrder.vue';
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
-    import EntertainmentOrderDetail from './EntertainmentOrderDetail.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
 
     export default{
@@ -31,8 +29,7 @@
             CateOrder,
             ShopOrder,
             EntertainmentOrder,
-            AccommodationOrder,
-            EntertainmentOrderDetail
+            AccommodationOrder
         },
         props: {
             type: Number,
@@ -48,7 +45,9 @@
                 }
             },
             id(orderId) {
-                this[types.GET_ORDER_DETAIL]({ orderId, orderType: this.type });
+                if (orderId) {
+                    this[types.GET_ORDER_DETAIL]({ orderId, orderType: this.type });
+                }
             }
         },
         computed: {
