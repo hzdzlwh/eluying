@@ -5939,6 +5939,13 @@ vue-style-loader@^2.0.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
+vue-style-loader@^2.0.5:
+  version "2.0.5"
+  resolved "http://registry.npm.taobao.org/vue-style-loader/download/vue-style-loader-2.0.5.tgz#f0efac992febe3f12e493e334edb13cd235a3d22"
+  dependencies:
+    hash-sum "^1.0.2"
+    loader-utils "^1.0.2"
+
 vue-template-compiler@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.2.5.tgz#71b1366c3f716e8137a87f82591de9f816609b57"
