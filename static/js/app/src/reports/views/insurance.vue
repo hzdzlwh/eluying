@@ -1,5 +1,6 @@
 <template>
-    <div style="top: 33px;position: relative;">
+    <div>
+        <p>按保单生成时间统计</p>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
                 <span>保单记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
@@ -23,7 +24,7 @@
         '2': '女'
     };
     const fieldAVMap = {
-        '0': '中国',
+        '0': '中籍',
         '1': '外籍'
     };
     const cidTypeMap = {
@@ -36,7 +37,7 @@
     const relatedMap = {
         '20': '儿子',
         '30': '女儿',
-        '99': '成人'
+        '99': '其他'
     };
     export default{
         computed: {
@@ -107,7 +108,7 @@
                     },
                     {
                         title: '手机号码',
-                        dataIndex: 'insurantsMobile',
+                        render: (h, row) => (<span>{row.holderMobile || row.insurantsMobile}</span>),
                         width: 123
                     },
                     {
@@ -138,7 +139,7 @@
                     },
                     {
                         title: '性别',
-                        render: (h, row) => (<span>{sexMap[row.insurantsHolderSex]}</span>),
+                        render: (h, row) => (<span>{sexMap[row.holderSex]}</span>),
                         width: 46
                     },
                     {

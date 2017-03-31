@@ -1,14 +1,9 @@
 .dishes-table {
   border-radius: 2px;
-  width: 725px;
+  width: 785px;
   th {
     text-align: center;
     font-weight: bolder;
-  }
-  tr {
-    height: 48px;
-    line-height: 48px;
-    border: 1px solid #ededed;
   }
   thead {
     background: #fafafa;
@@ -19,7 +14,7 @@
   }
 }
 .dishes-box {
-  width: 725px;
+  width: 785px;
   overflow: hidden;
   border-radius: 2px;
   box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
@@ -67,7 +62,7 @@
   color: #178ce6;
   text-align: center;
   position: fixed;
-  margin-left: 775px;
+  margin-left: 825px;
   float: right;
 }
 .rest-operation-1 {
@@ -108,7 +103,7 @@
     padding-left: 8px;
     padding-right: 8px;
   }
-  input {
+  input[type=text] {
     width: 238px;
     height: 24px;
     border: 1px solid #cccccc;
@@ -291,9 +286,6 @@
   td:nth-child(2), td:nth-child(3), td:nth-child(4){
     color: #333!important;
   }
-  td:nth-child(2) {
-    padding-left: 18px!important;
-  }
   .mainActive {
     outline: 1px solid #178ce6!important;
     border: 1px solid #ededed!important;
@@ -349,11 +341,6 @@
   background: #fafafa;
   box-shadow: 0px -2px 4px 0px rgba(0,0,0,0.15);
   width: 688px;
-}
-.package-table {
-  td {
-    padding-left: 28px!important;
-  }
 }
 .uploadContainer {
   position: relative;

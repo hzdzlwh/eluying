@@ -1,5 +1,6 @@
 require("bootstrap");
 require("validate");
+var spinHtml = require('../../../../tpl/spin.html');
 function centerModals(){
     $('.modal').each(function(){
         var hasShown = $(this).css('display') === 'block';
@@ -128,7 +129,36 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
     });
 }
 
+class Spin {
+    constructor() {
+        this.pendingList = [];
+        this.el = '#spin';
+    }
 
+    show() {
+        $('body').prepend(spinHtml);
+    }
+
+    addPending() {
+        this.pendingList.push(true);
+        if (this.pendingList.length === 1) {
+            this.show();
+        }
+    }
+
+    removePending() {
+        this.pendingList.shift();
+        if (this.pendingList.length === 0) {
+            this.hide();
+        }
+    }
+
+    hide() {
+        $(this.el).remove();
+    }
+}
+
+exports.Spin = Spin;
 exports.centerModals =  centerModals;
 exports.clearModal = clearModal;
 exports.modalInit = modalInit;

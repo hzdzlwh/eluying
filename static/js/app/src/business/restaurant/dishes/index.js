@@ -17,6 +17,7 @@ var auth = require('../../../common/auth');
 import init from '../../../common/init';
 init({
     id: auth.BUSINESS_ID,
+    clearModal: true
 });
 Vue.prototype.$isNull = function(text) {
     var result = typeof (text) === 'undefined' || text === '';
@@ -24,7 +25,6 @@ Vue.prototype.$isNull = function(text) {
 };
 
 $(function() {
-
     restaurantMenu.render();
 
     var events = {
@@ -93,6 +93,7 @@ $(function() {
             },
 
             openEditDialog: function() {
+                $('.mainContainer .mainActive').click();
                 if (this.dishesSelected) {
                     dishes.dishes = Object.assign({}, this.dishesSelected);
                     $('#dishesDialog').modal('show');
@@ -176,7 +177,9 @@ $(function() {
     var dishes = new Vue({
         el: '#dishesDialog',
         data: {
-            dishes: {},
+            dishes: {
+                discountable: 1
+            },
             dishesClassifyList: [],
             submitted: false,
             source: ''
@@ -218,16 +221,16 @@ $(function() {
                 AJAXService.ajaxWithToken('POST', url, params, function(result) {
                     if (result.code === 1) {
                         main.getPackagesAndDishesFromRestaurant();
-                        this.dishes = {};
-                        this.submitted = false;
-                        $('#dishesDialog').modal('hide');
+                        this.cancel();
                     } else {
                         modal.somethingAlert(result.msg);
                     }
                 }.bind(this));
             },
             cancel: function() {
-                this.dishes = {};
+                this.dishes = {
+                    discountable: 1
+                };
                 this.submitted = false;
                 $('#dishesDialog').modal('hide');
             },
@@ -424,6 +427,7 @@ $(function() {
         el: '#packageDialog',
         data: {
             packageModel: {
+                discountable: 1,
                 dishesNum: undefined,
                 dishesReq: []
             },
@@ -465,11 +469,8 @@ $(function() {
                     { restId: restId, packageId: this.packageModel.categoryId, dishesReq: JSON.stringify(this.packageModel.dishesReq) });
                 AJAXService.ajaxWithToken('POST', url, param, function(res) {
                     if (res.code === 1) {
-                        $('#packageDialog').modal('hide');
-                        packageSelect.dishesListGroupByClassify = {};
                         main.getPackagesAndDishesFromRestaurant();
-                        this.packageModel = {};
-                        this.submitted = false;
+                        this.cancel();
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -480,7 +481,7 @@ $(function() {
                 packageSelect.dishesListGroupByClassify = {};
                 packageSelect.dishesInClassify = [];
                 $('#packageDialog').modal('hide');
-                this.packageModel = { dishesNum: undefined };
+                this.packageModel = { dishesNum: undefined, discountable: 1 };
             },
             closePackageModelShow: function(item) {
                 item.imgUrl = '';

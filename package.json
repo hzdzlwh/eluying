@@ -61,7 +61,7 @@
     "url-loader": "^0.5.7",
     "vue-hot-reload-api": "^2.0.6",
     "vue-loader": "11.3.2",
-    "vue-style-loader": "^2.0.4",
+    "vue-style-loader": "^2.0.5",
     "vue-template-compiler": "2.2.5",
     "webpack": "^1.13.2",
     "webpack-stream-fixed": "^3.2.2"

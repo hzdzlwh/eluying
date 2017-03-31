@@ -18,8 +18,7 @@
                 <span class="create-restaurant" v-on:click="openCreateDialog">新增餐厅</span>
             </div>
             <div class="restaurant-box">
-                <div class="hr"></div>
-                <table class="restaurant-table" style="table-layout: fixed">
+                <table class="restaurant-table dd-table">
                     <thead>
                     <tr>
                         <th>餐厅名称</th>
@@ -42,7 +41,7 @@
                         <td><a :href="`/view/settings/business/restaurant/dishes.html?restId=${restaurant.restId}`">{{restaurant.dishesSum}}</a></td>
                         <td><a :href="`/view/settings/business/restaurant/table.html?restId=${restaurant.restId}`">{{restaurant.boardSum}}</a></td>
                         <td><span class="code-btn back-{{restaurant.isOpenCaterScan === 1 ? 'open':'close'}}" @click="toggleStatus(restaurant)"></span></td>
-                        <td style="width:82px;" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
+                        <td class="rest-announcement" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
                         <td>
                             <span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
                         </td>

@@ -13,7 +13,7 @@
 <body>
     <div class="mainContainer clearfloat">
         <div class="restaurant-container clearfloat">
-            <div class="restaurant-head clearfloat" style="width: 725px">
+            <div class="restaurant-head clearfloat" style="width: 785px">
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <ul class="restaurant-head-nav">
                     <li class="restaurant-head-nav-selected"><a :href="`/view/settings/business/restaurant/dishes.html?restId=${restId}`">品类管理</a></li>
@@ -23,8 +23,7 @@
             </div>
             <div style="float: left">
                 <div class="dishes-box overflow-default">
-                    <div class="hr"></div>
-                    <table class="dishes-table package-table">
+                    <table class="dishes-table package-table dd-table">
                         <thead>
                         <tr>
                             <th>套餐</th>
@@ -32,6 +31,7 @@
                             <th>适用人数</th>
                             <th>单价</th>
                             <th>套餐图片</th>
+                            <th>允许打折</th>
                             <th>描述</th>
                             <th>微官网</th>
                         </tr>
@@ -42,44 +42,46 @@
                             <td class="ellipsis">{{packageModel.shortName}}</td>
                             <td>{{packageModel.fitNum}}</td>
                             <td>{{packageModel.unitPrice}}</td>
-                            <td style="padding-left:0px;text-align:center;"><img v-if="packageModel.imgUrl" :src="packageModel.imgUrl" alt="" class="twoCode" style="margin-right: 30px;" @click="openDishesPictureDialog(packageModel)"></td>
-                            <td class="ellipsis"><p class="ellipsis" style="width: 90.625px;">{{packageModel.description}}</p></td>
+                            <td><img v-if="packageModel.imgUrl" :src="packageModel.imgUrl" alt="" class="twoCode" style="margin-right: 30px;" @click="openDishesPictureDialog(packageModel)"></td>
+                            <td>{{packageModel.discountable == 1 ? '是' : '否'}}</td>
+                            <td>{{packageModel.description}}</td>
                             <td>{{packageModel.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
                             <input type="hidden" class="id" :value="packageModel.categoryId">
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="clearfloat" style="width: 725px;margin: 20px 0 20px 0">
+                <div class="clearfloat" style="width: 785px;margin: 20px 0 20px 0">
                     <span class="create-restaurant" @click="openCreateDishesDialog" style="color: #178ce6;margin-right: 230px;">新增菜品</span>
                 </div>
                 <div class="dishes-box overflow-default">
-                    <div class="hr"></div>
-                    <table class="restaurant-table dishes-table">
+                    <table class="restaurant-table dishes-table dd-table">
                         <thead>
                         <tr>
                             <th>菜品</th>
                             <th>简称</th>
-                            <th>单位</th>
+                            <th style="width: 40px;">单位</th>
                             <th>菜品分类</th>
-                            <th>适用人数</th>
-                            <th>单价</th>
-                            <th>菜品图片</th>
+                            <th style="width: 64px;">适用人数</th>
+                            <th style="width: 64px;">单价</th>
+                            <th style="width: 64px;">菜品图片</th>
+                            <th style="width: 64px;">允许打折</th>
                             <th>描述</th>
-                            <th>微官网</th>
+                            <th tyle="width: 60px;">微官网</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="dishes in dishesList" track-by="categoryId" @click="selectDishes(dishes)" v-bind:class="{'mainActive': dishesSelected && dishes.categoryId === dishesSelected.categoryId}">
                             <td class="ellipsis">{{dishes.name}}</td>
                             <td class="ellipsis">{{dishes.shortName}}</td>
-                            <td style="padding-left: 18px">{{dishes.unit}}</td>
+                            <td>{{dishes.unit}}</td>
                             <td class="ellipsis">{{dishes.dishesClassify}}</td>
-                            <td style="padding-left: 18px">{{dishes.fitNum}}</td>
-                            <td style="padding-left: 18px">{{dishes.unitPrice}}</td>
-                            <td style="text-align:center;padding-left:2px;"><span class="twoCode1"><img v-if="dishes.imgUrl" :src="dishes.imgUrl" alt="" style="margin-top: -3px; margin-left: 1px; width:24px; height:24px;" @click="openDishesDialog(dishes)"></span></td>
-                            <td style="padding-left: 18px"><p class="ellipsis" style="width: 90.625px;">{{dishes.description}}</p></td>
-                            <td style="text-align: center">{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
+                            <td>{{dishes.fitNum}}</td>
+                            <td>{{dishes.unitPrice}}</td>
+                            <td><span class="twoCode1"><img v-if="dishes.imgUrl" :src="dishes.imgUrl" alt="" style="margin-top: -3px; margin-left: 1px; width:24px; height:24px;" @click="openDishesDialog(dishes)"></span></td>
+                            <td tyle="text-align: center">{{dishes.discountable == 1 ? '是' : '否'}}</td>
+                            <td>{{dishes.description}}</td>
+                            <td>{{dishes.onDirectSaleState == 0 ? '未上架' : '已上架'}}</td>
                             <input type="hidden" class="id" :value="dishes.categoryId">
                         </tr>
                         </tbody>
@@ -165,6 +167,11 @@
             <p class="rest-tips">
                 <span v-if="$isNull(dishes.unitPrice) && submitted">↑必填字段</span>
             </p>
+            <label for="">允许打折</label>
+            <input type="radio" class="dd-radio" name="dishesDiscount" v-model="dishes.discountable" value="1"><span>是</span>
+            <input type="radio" class="dd-radio" name="dishesDiscount" v-model="dishes.discountable" value="0"><span>否</span>
+            <p class="rest-tips">
+            </p>
             <label for="">菜品图片</label>
             <div class="uploadContainer" >
                 <div class="uploadBtn">
@@ -229,6 +236,10 @@
                     ↑必填字段
                 </span>
             </p>
+            <label for="">允许打折</label>
+            <input type="radio" class="dd-radio" name="packageDiscount" v-model="packageModel.discountable" value="1"><span>是</span>
+            <input type="radio" class="dd-radio" name="packageDiscount" v-model="packageModel.discountable" value="0"><span>否</span>
+            <p class="rest-tips"></p>
             <label for="">包含菜品</label>
             <input class="dishes-num" type="text" disabled :value="getDishesNum()">
             <button class="editDishesInPackage" @click="openPackageSelectDialog">编辑菜品</button>

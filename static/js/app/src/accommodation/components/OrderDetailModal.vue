@@ -12,7 +12,7 @@
                             </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保险({{order.insuranceInfoList.length}})</span>
+                            <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保单({{order.insuranceInfoList.length}})</span>
                             <span class="header-tools" v-if="order.orderState !== -1" @click="openPrint(order)">打印</span>
                             <span class="header-tools" v-if="order.orderState === 2 || order.orderState === 3" @click="editOrder">编辑订单</span>
                             <span class="header-tools" v-if="order.orderState === 2" @click="cancelOrder">取消订单</span>
@@ -131,15 +131,18 @@
                                                 <p class="foodTime">就餐时间:{{ item.detail.orderTime ? item.detail.orderTime.slice(0, 16) : ''}}</p>
                                                 <div class="food-container">
                                                     <div v-for="food in item.detail.itemsMap">
-                                                        <p class="food-sub-item" v-for="dish in food.dishItemResp">
-                                                            <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
-                                                                {{dish.categoryName}}
-                                                            </span>
+                                                        <div class="food-sub-item" v-for="dish in food.dishItemResp">
+                                                            <p class="dish-name-container">
+                                                                <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0}" class="dish-name">
+                                                                    {{dish.categoryName}}
+                                                                </span>
+                                                                <span class="dish-discount-icon" v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
+                                                            </p>
                                                             <span class="dish-numAndPrice">
                                                                 <span>x{{dish.bookNum}}</span>
-                                                                <span>¥{{dish.price}}</span>
+                                                                <span>¥{{(dish.price * dish.bookNum).toFixed(2)}}</span>
                                                             </span>
-                                                        </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="money-container">
@@ -367,22 +370,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade roomModals" role="dialog" id="insuranceDialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="roomModals-header">
-                        保险详情
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    </div>
-                    <div style="padding: 20px 24px; max-height: 485px">
-                        <dd-table :bordered="true" :columns="columns" :dataSource="order.insuranceInfoList || []"></dd-table>
-                    </div>
-                    <div class="roomModals-footer">
-                        <span>共{{order.insuranceInfoList && order.insuranceInfoList.length}}条保单记录，保费¥{{order.insuranceTotalPremium}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Insurance :order="order" />
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -548,25 +536,45 @@
         }
         .info-content {
             @extend .normal-font;
+            width: 274px;
+            margin: 0;
+            position: absolute;
+            bottom: 0;
+            display: none;
+            transform: translateX(-100%);
             max-height: 230px;
             overflow-y: scroll;
             background: #fafafa;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            width: 274px;
-            position: absolute;
-            bottom: 0;
-            margin: 0;
             padding: 8px;
-            transform: translateX(-100%);
             &::-webkit-scrollbar {
                 width: 0;
             }
             .item-indent {
                 padding-left: 16px;
             }
+            .dish-discount-icon {
+                font-size: 10px;
+                color: #ffffff;
+                display: inline-flex;
+                background:#ffba75;
+                border-radius:2px;
+                width:17px;
+                height:16px;
+                margin-left: 5px;
+                align-items: center;
+                justify-content: center;
+            }
+            .dish-name-container {
+                width: 170px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+            }
             .dish-name {
-                width: 140px;
+                display: block;
+                max-width: 140px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -650,9 +658,6 @@
                     }
                 }
             }
-            .info-content {
-                display: none;
-            }
         }
     }
 </style>
@@ -664,6 +669,7 @@
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
     import { DdTable } from 'dd-vue-component';
+    import Insurance from './Insurance.vue';
     export default{
         props: {
             orderId: {
@@ -810,6 +816,7 @@
                     if (res.code === 1) {
                         food.detail = res.data;
                         food.detail.boardDetailResps = res.data.boardDetailResps.reduce((a,b) => { return a.concat(b.boardName) }, []);
+                        delete food.visible;
                         this.$set(food, 'visible', true);
                     }
                 }.bind(this));
@@ -897,7 +904,8 @@
             }
         },
         components:{
-            DdTable
+            DdTable,
+            Insurance
         },
         watch: {
             orderDetailShow(newVal, oldVal) {

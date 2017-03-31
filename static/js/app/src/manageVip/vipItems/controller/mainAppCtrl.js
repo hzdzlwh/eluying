@@ -16,7 +16,7 @@ var itemsCtrl = function(app){
                 var uid = localStorage.getItem("uid");
                 var host = AJAXService.getUrl2('/vipUser/vipUserListToExcel');
                 var url = host + '?' + 'campId='+ campId + '&uid='+ uid + '&terminal=1&version=10&timestamp=' + (new Date()).valueOf() + '&sign=' + util.getSign();
-                return url;
+                window.open(url);
                 // AJAXService.ajaxWithToken('GET', '/vipUser/vipUserListToExcel', {});
             };
             rootScope.addNewVip = function(){

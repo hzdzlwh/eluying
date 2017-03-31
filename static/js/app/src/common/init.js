@@ -33,6 +33,10 @@ export default function (option) {
             campName: localStorage.getItem('campName'),
             campId: localStorage.getItem('campId')
         });
+        Raven.setTagsContext({
+            userName: localStorage.getItem('userName'),
+            campName: localStorage.getItem('campName')
+        });
     }
 
     option = { ...defaultOption, ...option};
