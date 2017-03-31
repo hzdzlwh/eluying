@@ -7,7 +7,8 @@
                 <div class="room-info">
                     <div class="room-name">
                         <span class="room-icon"></span>
-                        <span>{{(item.roomInfo && item.roomInfo.roomNum) ||item.serialNum }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
+                        <span>{{(item.roomInfo
+ && item.roomInfo.roomNum) ||item.serialNum }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
                         <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).backgroundColor}">
                                                 {{getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).text}}
                                             </span>
@@ -19,7 +20,8 @@
                         <span class="endDate">{{item.endDate || item.roomInfo.checkOutDate}}</span>
                         <label class="label-text">共{{item.duration}}晚</label>
                     </div>
-                    <div class="room-fee">
+                    <div>
+                    <div class="room-fee room-fix">
                         <label class="label-text">房费</label>
                         <span>¥{{item.fee || item.roomInfo.totalPrice}}</span>
                         <div class="orderDetailModal-roomPriceList">
@@ -29,13 +31,17 @@
                             </dl>
                         </div>
                     </div>
+                    <span  class="single-order-btn" @click='modalShow(item.serviceId)' v-text="(showMoadl && !order.roonInfo) ? '查看': ''"
+                                :class="(showMoadl && !order.roonInfo) ? 'cursor' : ''"
+                                >查看</span>
+                    </div>
                     <span class="discount-info" v-if="(item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount))" style="top: 14px">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
                     <span class="discount-num">
                                                 {{ item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount)}}
                                             </span>
                     </span>
-                    <div v-if='showMoadl' class="showModal" @click='modalShow(item.serviceId)'>查看</div>
+                   
                 </div>
                 <div class="room-user" v-for="user in (item.idCardList || item.idCardsList)">
                     <span class="user-icon"></span>
@@ -53,12 +59,8 @@
     </div>
 </template>
 <style scoped>
-.room-info > div:last-child {
-    margin-right: 50px;
-}
-
-.showModal {
-    color: #178ce6;
+.room-fix{
+    display: inline-block;
     cursor: pointer;
 }
 </style>
