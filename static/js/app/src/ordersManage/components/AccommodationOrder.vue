@@ -56,21 +56,19 @@
     </div>
 </template>
 <style scoped>
-<<<<<<< HEAD
 .room-fix{
     display: inline-block;
     cursor: pointer;
 }
-=======
-    .room-info > div:last-child {
-        margin-right: 50px;
-    }
 
-    .showModal {
-        color: #178ce6;
-        cursor: pointer;
-    }
->>>>>>> 1d6394caab6e638f5a36415728ea4dd5bab9e121
+.room-info > div:last-child {
+    margin-right: 50px;
+}
+
+.showModal {
+    color: #178ce6;
+    cursor: pointer;
+}
 </style>
 <script>
     import {
