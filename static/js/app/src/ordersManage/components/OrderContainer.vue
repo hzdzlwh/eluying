@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
-            <div class="modal-dialog">
+            <div v-if="order.orderId" class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
@@ -17,9 +17,10 @@
                             </span>
                         </div>
                         <div class="header-container">
+                            <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保单({{order.insuranceInfoList.length}})</span>
                             <span class="header-tools" v-if="order.combinationOrderId"
                                   @click="showCombinationOrder">查看组合订单</span>
-                            <span class="header-tools" @click="openPrint(order)">打印</span>
+                            <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
                                   v-if="!readOnly && (order.orderState === 2 || order.orderState === 3)"
                                   @click="editOrder">编辑订单</span>
@@ -188,6 +189,7 @@
                 </div>
             </div>
         </div>
+        <Insurance :order="order" />
     </div>
 </template>
 <style lang="scss">
@@ -951,6 +953,8 @@
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
     import { mapMutations } from 'vuex';
     import type from '../store/types';
+    import http from '../../common/AJAXService';
+    import Insurance from '../../accommodation/components/Insurance.vue';
     export default{
         data() {
             return {
@@ -958,6 +962,9 @@
                 ORDER_STATUS_ICON,
                 ORDER_TYPE
             };
+        },
+        components:{
+            Insurance
         },
         props: {
             type: Number,
@@ -979,6 +986,16 @@
                     default:
                         return '订单详情';
                 }
+            },
+            printUrl() {
+                if (!this.order.orderId) {
+                    return '';
+                }
+
+                let params = { orderId: this.order.orderId };
+                params = http.getDataWithToken(params);
+                params = http.paramsToString(params);
+                return http.getUrl2('/printer/getOrderDetailJsp?') + params;
             },
             orderStateText() {
                 if (!ORDER_STATE_TEXT[this.type][this.order.orderState]) {
@@ -1079,6 +1096,9 @@
             dateFormat(date) {
                 return util.timeFormat(date);
             },
+            openInsurance() {
+                $('#insuranceDialog').modal('show');
+            }
         }
     };
 </script>
