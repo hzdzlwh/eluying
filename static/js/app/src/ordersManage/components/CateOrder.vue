@@ -243,7 +243,7 @@
                         return board.boardName;
                     });
                     obj.peopleNum = this.order.peopleNum;
-                    obj.date = this.order.creationTime;
+                    obj.date = this.order.expectStartTime;
                     obj.foodPrice = this.order.totalPrice;
                     obj.vipShowDiscount = this.order.vipShowDiscount;
                     foodItems[0] = obj;
