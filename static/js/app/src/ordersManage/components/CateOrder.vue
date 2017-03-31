@@ -133,15 +133,8 @@
                             </span>
                         </div>
                     </div>
-                    <p class="cateOrder-item-remark">
-                        菜品备注： {{ item.remark && item.remark !== '' ? item.remark : '无' }}
-                    </p>
                 </div>
             </div>
-        </div>
-        <div class="content-item" v-if="order.caterOrderId">
-            <p class="content-item-title"><span>备注信息</span></p>
-            <div>{{ order.remark && order.remark !== '' ? order.remark : '无' }}</div>
         </div>
     </div>
 </template>

@@ -18,7 +18,7 @@
                         </div>
                         <div class="header-container">
                             <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保单({{order.insuranceInfoList.length}})</span>
-                            <span class="header-tools" v-if="order.combinationOrderId"
+                            <span class="header-tools" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                   @click="showCombinationOrder">查看组合订单</span>
                             <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
@@ -51,6 +51,10 @@
                             </div>
                         </div>
                         <slot></slot>
+                        <div class="content-item" v-if="this.order.type !== ORDER_TYPE.RETAIL">
+                            <p class="content-item-title"><span>备注信息</span></p>
+                            <div>{{ order.remark || '无' }}</div>
+                        </div>
                         <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
                                 <span style="margin-right: 4px">收银信息</span>
@@ -286,7 +290,7 @@
                 }
             }
             &.green {
-                background: #82beff;
+                background: #62d99d;
                 &::before {
                     border-right-color: #62d99d;
                 }
@@ -985,7 +989,7 @@
         },
         computed: {
             title() {
-                switch (this.type) {
+                switch (this.order.type) {
                     case ORDER_TYPE.ACCOMMODATION:
                         return '住宿订单';
                     case ORDER_TYPE.CATERING:
@@ -1011,19 +1015,19 @@
                 return http.getUrl2('/printer/getOrderDetailJsp?') + params;
             },
             orderStateText() {
-                if (this.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                if (this.order.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.order.orderState]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.type][this.order.orderState].text;
+                return ORDER_STATE_TEXT[this.order.type][this.order.orderState].text;
             },
             orderStateColor() {
-                if (this.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                if (this.order.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.order.orderState]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.type][this.order.orderState].color;
+                return ORDER_STATE_TEXT[this.order.type][this.order.orderState].color;
             },
             orderDates() {
-                switch(this.type) {
+                switch(this.order.type) {
                     case ORDER_TYPE.ACCOMMODATION:
                         return [
                             {
@@ -1032,11 +1036,15 @@
                             },
                             {
                                 name: '入住时间',
-                                date: this.order.roomInfo.checkInDate
+                                date: this.order.checkInDate
                             },
                             {
                                 name: '退房时间',
-                                date: this.order.roomInfo.checkOutDate
+                                date: this.order.checkOutDate
+                            },
+                            {
+                                name: '取消时间',
+                                date: this.order.cancelDate
                             }
                         ];
                     case ORDER_TYPE.CATERING:
