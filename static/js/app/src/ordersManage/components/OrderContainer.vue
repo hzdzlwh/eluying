@@ -1023,7 +1023,7 @@
                 return ORDER_STATE_TEXT[this.type][this.order.orderState].color;
             },
             orderDates() {
-                switch(this.order.orderType) {
+                switch(this.type) {
                     case ORDER_TYPE.ACCOMMODATION:
                         return [
                             {
