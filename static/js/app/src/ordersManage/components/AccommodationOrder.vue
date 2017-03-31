@@ -3,14 +3,17 @@
         <div class="content-item">
             <p class="content-item-title"><span>房间信息</span></p>
             <div class="items">
-                <div class="item" v-for="item in rooms">
+                <div class="item" v-for="item in rooms" v-if='rooms'>
                     <div class="room-info">
                         <div class="room-name">
                             <span class="room-icon"></span>
                             <span>{{(item.roomInfo
  && item.roomInfo.roomNum) ||item.serialNum }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
-                            <span class="room-state-icon" :style="{background: getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).backgroundColor}">
-                                                {{getRoomOrFoodState(3, (item.state || (item.roonInfo && item.roonInfo.state))).text}}
+
+                            <span class="room-state-icon" 
+                           :style="{background: getRoomOrFoodState(3, item).backgroundColor}"
+                            >
+                                                {{getRoomOrFoodState(3, item).text}}
                                             </span>
                         </div>
                         <div class="room-date">
@@ -23,7 +26,7 @@
                         <div>
                             <div class="room-fee room-fix">
                                 <label class="label-text">房费</label>
-                                <span>¥{{item.fee || item.roomInfo.totalPrice}}</span>
+                                <span>¥{{item.fee === undefined ? item.roomInfo.totalPrice : item.fee }}</span>
                                 <div class="orderDetailModal-roomPriceList">
                                     <dl class="price-item" v-for="priceItem in (item.datePriceList || item.roomInfo.datePriceList)">
                                         <dt>{{priceItem.date.slice(5)}}</dt>
@@ -91,7 +94,13 @@ export default {
         }
     },
     methods: {
-        getRoomOrFoodState(type, state) {
+        getRoomOrFoodState(type, item) {
+            let state = undefined
+            if (item.roomInfo) {
+                state = item.roomInfo.state
+            } else {
+                state = item.state
+            }
             switch (state) {
                 case 0:
                     return {
