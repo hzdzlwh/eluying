@@ -37,11 +37,11 @@
                     </div>
                     <span class="discount-info" v-if="(item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount))" style="top: 14px">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
+
                     <span class="discount-num">
                                                 {{ item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount)}}
                                             </span>
-                    </span>
-                   
+                    </span>   
                 </div>
                 <div class="room-user" v-for="user in (item.idCardList || item.idCardsList)">
                     <span class="user-icon"></span>
@@ -54,80 +54,88 @@
             </div>
         </div>
     </div>
-    <div class="content-item" v-if='!showMoadl'><p class="content-item-title"><span>备注信息</span></p> <div>{{order.remark || "无"}}</div></div>
-    </div>
-    </div>
 </template>
 <style scoped>
+<<<<<<< HEAD
 .room-fix{
     display: inline-block;
     cursor: pointer;
 }
+=======
+    .room-info > div:last-child {
+        margin-right: 50px;
+    }
+
+    .showModal {
+        color: #178ce6;
+        cursor: pointer;
+    }
+>>>>>>> 1d6394caab6e638f5a36415728ea4dd5bab9e121
 </style>
 <script>
-import {
-    ID_CARD_TYPE,
-    ORDER_TYPE
-} from '../constant';
-import event from '../event'
-export default {
-    props: {
-        order: {
-            type: Object,
-            default: undefined
-        },
-        showMoadl: {
-            type: Boolean,
-            default: true
-        }
-    },
-    data() {
-        return {
-            ID_CARD_TYPE,
-            ORDER_TYPE
-        }
-    },
-    computed: {
-        rooms() {
-            if (this.order.rooms) {
-                return this.order.rooms;
-            }
-            return [this.order];
-        }
-    },
-    methods: {
-        getRoomOrFoodState(type, state) {
-            switch (state) {
-                case 0:
-                    return {
-                        text: '预',
-                        backgroundColor: '#ffba75'
-                    };
-                case 1:
-                    return {
-                        text: '住',
-                        backgroundColor: '#82beff'
-                    };
-                case 2:
-                    return {
-                        text: '退',
-                        backgroundColor: '#bfbfbf'
-                    };
-                case 3:
-                    return {
-                        text: '消',
-                        backgroundColor: '#bfbfbf'
-                    };
-                default:
-                    return {};
+    import {
+        ID_CARD_TYPE,
+        ORDER_TYPE
+    } from '../constant';
+    import event from '../event'
+    export default {
+        props: {
+            order: {
+                type: Object,
+                default: undefined
+            },
+            showMoadl: {
+                type: Boolean,
+                default: true
             }
         },
-        modalShow(id) {
-            event.$emit('onShowDetail', {
-                orderId: id,
-                orderType: 3
-            })
+        data() {
+            return {
+                ID_CARD_TYPE,
+                ORDER_TYPE
+            }
+        },
+        computed: {
+            rooms() {
+                if (this.order.rooms) {
+                    return this.order.rooms;
+                }
+                return [this.order];
+            }
+        },
+        methods: {
+            getRoomOrFoodState(type, state) {
+                switch (state) {
+                    case 0:
+                        return {
+                            text: '预',
+                            backgroundColor: '#ffba75'
+                        };
+                    case 1:
+                        return {
+                            text: '住',
+                            backgroundColor: '#82beff'
+                        };
+                    case 2:
+                        return {
+                            text: '退',
+                            backgroundColor: '#bfbfbf'
+                        };
+                    case 3:
+                        return {
+                            text: '消',
+                            backgroundColor: '#bfbfbf'
+                        };
+                    default:
+                        return {};
+                }
+            },
+            modalShow(id) {
+                event.$emit('onShowDetail', {
+                    orderId: id,
+                    orderType: 3
+                })
+            }
         }
     }
-}
 </script>

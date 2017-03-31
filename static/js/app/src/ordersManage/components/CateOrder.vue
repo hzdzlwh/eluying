@@ -133,9 +133,6 @@
                             </span>
                         </div>
                     </div>
-                    <p class="cateOrder-item-remark">
-                        菜品备注： {{ item.remark && item.remark !== '' ? item.remark : '无' }}
-                    </p>
                 </div>
             </div>
         </div>
