@@ -155,6 +155,7 @@
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
+                                      v-if="type !== ORDER_TYPE.ENTERTAINMENT"
                                       style="margin-left: 24px">办理员工:{{order.operatorName || order.operator || order.reserveName}}</span>
                             </p>
                             <p class="order-info">
