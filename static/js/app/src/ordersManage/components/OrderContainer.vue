@@ -925,7 +925,6 @@
     }
 
     .roomModals-footer {
-        position: absolute;
         bottom: 0;
         width: 100%;
         height: 56px;
@@ -992,19 +991,19 @@
                     return '';
                 }
 
-                let params = { orderId: this.order.orderId };
+                let params = { orderId: this.order.orderId, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
                 return http.getUrl2('/printer/getOrderDetailJsp?') + params;
             },
             orderStateText() {
-                if (!ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                if (this.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.type][this.order.orderState]) {
                     return '';
                 }
                 return ORDER_STATE_TEXT[this.type][this.order.orderState].text;
             },
             orderStateColor() {
-                if (!ORDER_STATE_TEXT[this.type][this.order.orderState]) {
+                if (this.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.type][this.order.orderState]) {
                     return '';
                 }
                 return ORDER_STATE_TEXT[this.type][this.order.orderState].color;

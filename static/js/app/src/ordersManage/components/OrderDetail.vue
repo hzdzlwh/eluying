@@ -45,7 +45,9 @@
                 }
             },
             id(orderId) {
-                this[types.GET_ORDER_DETAIL]({ orderId, orderType: this.type });
+                if (orderId) {
+                    this[types.GET_ORDER_DETAIL]({ orderId, orderType: this.type });
+                }
             }
         },
         computed: {
