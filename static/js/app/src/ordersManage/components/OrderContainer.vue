@@ -980,7 +980,8 @@
         },
         props: {
             type: Number,
-            order: Object
+            order: Object,
+            id: Number
         },
         computed: {
             title() {
@@ -1000,11 +1001,11 @@
                 }
             },
             printUrl() {
-                if (!this.order.orderId) {
+                if (!this.id) {
                     return '';
                 }
 
-                let params = { orderId: this.order.orderId, orderType: this.type };
+                let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
                 return http.getUrl2('/printer/getOrderDetailJsp?') + params;
