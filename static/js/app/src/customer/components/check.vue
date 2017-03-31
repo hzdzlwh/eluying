@@ -145,7 +145,7 @@ export default {
         subCheck() {
             http.get(this.content[this.type].url, data).then(res => {
                 if (res.code === 1) {
-                    modal.somethingAlert('添加成功')
+                    modal.somethingAlert('添加成功');
                     $('#add').modal('hide');
                     this.encompanyAddress = ''
                     this.encompanyName = ''
