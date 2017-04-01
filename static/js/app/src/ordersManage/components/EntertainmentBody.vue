@@ -23,7 +23,7 @@
                     </span>
                     <span class="enterTableState">
                     {{stateType[item.state]}}
-                    <span v-if='item.timer'>{{item.timer |gettime(item.state)}}</span>
+                    <span v-if='item.timer'>({{item.timer |gettime(item.state)}})</span>
                     </span>
                     <span class="enterTableGet">
                     {{ item.serialNum ? (item.serialNum + '(' + queueStateType[item.queueState + 1] + ')') : queueStateType[item.queueState + 1]}}
