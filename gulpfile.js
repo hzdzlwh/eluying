@@ -49,7 +49,7 @@ gulp.task('file-include', function() {
 });
 
 gulp.task('clean', function () {
-    gulp.src(['./build', './.sass-cache'])
+    gulp.src(['./build', './.sass-cache', './rev'])
         .pipe(clean({force: true}));
 });
 
