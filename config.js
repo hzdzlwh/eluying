@@ -4,7 +4,7 @@
 module.exports = {
     css: [
         'static/sass/main.scss',
-        'static/sass/ordersManage/orders/orders.scss',
+        'static/sass/order/orders/orders.scss',
         'static/sass/vip/setting.scss'
     ],
     js: {
@@ -27,7 +27,7 @@ module.exports = {
         'tips/noauthforvip': './static/js/app/src/tips/noauthforvip.js',
         'tips/upgrade': './static/js/app/src/tips/upgrade.js',
         'tips/expired': './static/js/app/src/tips/expired.js',
-        'ordersManage/orders': './static/js/app/src/ordersManage/orderForms/orders.js',
+        'ordersManage/orders': './static/js/app/src/ordersManage/orders.js',
         'accommodation': './static/js/app/src/accommodation/main.js',
         'manageVip/vip': './static/js/app/src/manageVip/vipItems/vip.js',
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
