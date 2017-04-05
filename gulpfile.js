@@ -50,8 +50,8 @@ gulp.task('file-include', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('clean', function() {
-    gulp.src(['./build', './.sass-cache'])
+gulp.task('clean', function () {
+    gulp.src(['./build', './.sass-cache', './rev'])
         .pipe(clean({force: true}));
 });
 
@@ -75,10 +75,7 @@ function revHash() {
     gulp.src('./*.html')
         .pipe(gulp.dest('build'));
     gulp.src('static/image/**/*')
-        .pipe(rev())
-        .pipe(gulp.dest('build/static/image'))
-        .pipe(rev.manifest())
-        .pipe(gulp.dest('rev/image'));
+        .pipe(gulp.dest('build/static/image'));
     gulp.src('static/js/app/dist/**/*.map')
         .pipe(gulp.dest('build/static/js/app/dist'));
 }
