@@ -351,7 +351,7 @@
                 http.get(OrdersUrls[this.type], params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.orders = res.data.list;
+                            this.orderstabtab = res.data.list;
                         } else {
                             modal.alert(res.msg);
                         }
