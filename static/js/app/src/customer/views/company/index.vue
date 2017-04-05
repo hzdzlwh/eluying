@@ -3,7 +3,7 @@
         <div class="box-head">
             <div class="vip-select">
                 <DdSelect v-model="CustomerStatus">
-                    <DdOption v-for="option in optionsCustomer" :value="option.value" :label="option.name">
+                    <DdOption v-for="option in optionsCustomer" :key="option.value" :value="option.value" :label="option.name">
                     </DdOption>
                 </DdSelect>
             </div>
