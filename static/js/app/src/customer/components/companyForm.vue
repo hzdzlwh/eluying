@@ -338,6 +338,7 @@ export default {
                     this.encontractNum = '';
                     this.discounts = [];
                     this.enremark = '';
+                    this.$emit('add');
                 } else {
                     modal.somethingAlert(res.msg);
                 }
