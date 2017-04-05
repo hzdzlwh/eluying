@@ -58,10 +58,10 @@
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType">
-                                            <dd-option v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
                                             </dd-option>
-                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label">
-                                                <dd-option v-for="origin in item.origins" :value="origin.originType" :label="origin.name">
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item">
+                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="origin.name">
                                                     <div class="user-group-origin">
                                                         <span>{{ origin.name }}</span>
                                                         <span class="user-group-img" v-if="!origin.type"></span>
@@ -105,14 +105,14 @@
                                             <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                                             <dd-select v-model="item.categoryType" placeholder="请选择房型"
                                                        @input="changeRoomType(item)">
-                                                <dd-option v-for="category in categoryList" :value="category.id"
+                                                <dd-option v-for="category in categoryList" :value="category.id" :key="category.id"
                                                            :label="category.name">
                                                 </dd-option>
                                             </dd-select>
                                             <div class="room-category">
                                                 <dd-select v-model="item.roomType" placeholder="请选择房型"
                                                            @input="modifyRoom(item)">
-                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
+                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :key="room.id"
                                                                :label="room.name">
                                                     </dd-option>
                                                 </dd-select>
