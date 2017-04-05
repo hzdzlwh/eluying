@@ -57,7 +57,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
     .acc-search {
         position: absolute;
         right: 242px;

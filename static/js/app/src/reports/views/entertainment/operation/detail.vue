@@ -16,7 +16,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
     .reports-component-container {
         display: inline-block;
         .dd-input {

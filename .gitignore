@@ -18,4 +18,5 @@ npm-debug.log*
 /.vscode/*
 /view/home/
 /login.html
-yarn.lock
+yarn-error.log
+.DS_Store

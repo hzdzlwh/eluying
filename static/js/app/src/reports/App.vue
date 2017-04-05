@@ -9,7 +9,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .reports-container {
         padding-top: 89px;
