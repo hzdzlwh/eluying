@@ -79,7 +79,7 @@
                             <span class="vipInfo-item-label">地区</span>
                             <div class="vipInfo-item-content">
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.province" placeholder="省">
+                                    <dd-select v-model="province" placeholder="省">
                                         <dd-option
                                             v-for="option in provinceItems"
                                             :value="option.id"
@@ -90,13 +90,13 @@
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.city" placeholder="市">
+                                    <dd-select v-model="city" placeholder="市">
                                         <dd-option  v-for="option in cityItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'city'">
                                         </dd-option>
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="vip.county" placeholder="区">
+                                    <dd-select v-model="county" placeholder="区">
                                         <dd-option  v-for="option in countyItems"  :value="option.id" :label="option.name" :key="option.id+option.name">
                                         </dd-option>
                                     </dd-select>
@@ -298,35 +298,38 @@
                 cityItems: [],
                 countyItems: [],
                 hasSubmit: false,
-                mailFilter: /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/
+                mailFilter: /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/,
+                province: undefined,
+                city: undefined,
+                county: undefined
             };
         },
         watch: {
             vipProps(val) {
                 this.vip = { ...val };
-                this.vip.province = this.mapAddress(this.provinceItems, val.province);
-                this.cityItems = dsyForComponent[0 + '_' + this.vip.province];
+                this.province = this.mapAddress(this.provinceItems, val.province);
+                this.cityItems = dsyForComponent[0 + '_' + this.province];
                 this.$nextTick(() => {
-                    this.vip.city = this.mapAddress(this.cityItems, val.city);
-                    this.countyItems = dsyForComponent[0 + '_' + this.vip.province + '_' + this.vip.city];
+                    this.city = this.mapAddress(this.cityItems, val.city);
+                    this.countyItems = dsyForComponent[0 + '_' + this.province + '_' + this.city];
                     this.$nextTick(() => {
-                        this.vip.county = this.mapAddress(this.countyItems, val.county);
+                        this.county = this.mapAddress(this.countyItems, val.county);
                     });
                 });
+            },
+            province(newVal) {
+                this.cityItems = dsyForComponent[`0_${newVal}`];
+                this.city = 0;
+                this.countyItems = dsyForComponent[`0_${this.province}_${this.city}`];
+                this.county = 0;
+            },
+            city(newVal) {
+                this.countyItems = dsyForComponent[`0_${this.province}_${newVal}`];
+                this.county = 0;
             }
         },
         created() {
             this.getVipLevels();
-            this.$watch('vip.province', newVal => {
-                this.cityItems = dsyForComponent[`0_${newVal}`];
-                this.vip.city = 0;
-                this.countyItems = dsyForComponent[`0_${this.vip.province}_${this.vip.city}`];
-                this.vip.county = 0;
-            });
-            this.$watch('vip.city', newVal => {
-                this.countyItems = dsyForComponent[`0_${this.vip.province}_${newVal}`];
-                this.vip.county = 0;
-            });
         },
         methods: {
             getVipLevels() {
@@ -362,9 +365,9 @@
                 this.hasSubmit = false;
                 const data = {
                     ...vip,
-                    province: this.provinceItems[vip.province] && this.provinceItems[vip.province].name,
-                    city: this.cityItems[vip.city] && this.cityItems[vip.city].name,
-                    county: this.countyItems[vip.county] && this.countyItems[vip.county].name
+                    province: this.provinceItems[this.province] && this.provinceItems[this.province].name,
+                    city: this.cityItems[this.city] && this.cityItems[this.city].name,
+                    county: this.countyItems[this.county] && this.countyItems[this.county].name
                 };
 
                 if (vip.vipUserId) {

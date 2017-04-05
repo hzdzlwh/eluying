@@ -1628,9 +1628,9 @@ dd-common-css@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/dd-common-css/-/dd-common-css-0.2.1.tgz#56af5f79ebec2584a2b58c3de1e81a67f307f4db"
 
-dd-vue-component@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/dd-vue-component/-/dd-vue-component-0.5.1.tgz#83b0b69b62fb694cd837fe86c585a257cc0d8cd4"
+dd-vue-component@0.5.2:
+  version "0.5.2"
+  resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-0.5.2.tgz#d3eb0596e8514ad96f7236c4883c090f0a99e9dd"
   dependencies:
     dd-common-css "0.2.1"
     vue "^2.0.1"
