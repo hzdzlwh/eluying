@@ -5,10 +5,15 @@ import Vue from 'vue';
 import util from 'util';
 import modal from 'modal';
 import AJAXService from 'AJAXService';
-import auth from '../../common/auth';
-import NoAuth from '../../common/components/noAuth.vue';
+import auth from '../common/auth';
+import NoAuth from '../common/components/noAuth.vue';
 import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
-import init from '../../common/init';
+import init from '../common/init';
+import OrderDetail from './components/OrderDetail.vue';
+import store from './store';
+import event from './event';
+import { ORDER_STATE_LIST } from './constant';
+
 init({
     leftMenu: false
 });
@@ -16,77 +21,42 @@ require("bootstrap");
 require("validation");
 
 $(function(){
-    var events = {
-
-        "click .orders-tr": function(ev){
-            ev.stopPropagation();
-            $(".orders-tr").removeClass("dd-tr-selected");
-            $(this).addClass("dd-tr-selected");
-        }
-
-    };
-    
-    let orderManage = new Vue({
+    const orderManage = new Vue({
         el: ".orderManage-rootContainer",
+        store: store,
         data: {
             hasAuth: false,
             isLoading: true,
             currentPage: 1,
             orderItems: [],
-            optionsSubOrderType: { '-1': [{id: -1, name: '全部业态'}], '2': [{id: -1, name: '全部商超' }] },
             searchContent: '',
             sort: null,
-            optionsParentOrderType: [{
-                id: -1,
-                name: '全部业态'
-                },
+            optionsParentOrderType: [
                 {
-                    id: 0,
-                    name: '餐饮'
-                },
-                {
-                    id: 1,
-                    name: '娱乐'
-                },
-                {
-                    id: 2,
-                    name: '商超'
+                    id: -1,
+                    name: '全部业态'
                 },
                 {
                     id: 3,
-                    name: '住宿'
-                }
+                    name: '住宿订单'
+                },
+                {
+                    id: 0,
+                    name: '餐饮订单'
+                },
+                {
+                    id: 1,
+                    name: '娱乐订单'
+                },
+                {
+                    id: 2,
+                    name: '商超订单'
+                },
             ],
             orderType: -1,
             orderStatus: '-1',
             orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
-            orderTypeItem: [-1],
-            optionsOrderState: [
-                {
-                    id: '-1',
-                    name: '全部订单状态'
-                },
-                {
-                    id: '0',
-                    name: '待处理'
-                },
-                {
-                    id: '1',
-                    name: '已拒绝'
-                },
-                {
-                    id: '2',
-                    name: '已预订'
-                },
-                {
-                    id: '3',
-                    name: '进行中'
-                },
-                {
-                    id: '5',
-                    name: '已结束'
-                }
-            ],
+            optionsOrderState: ORDER_STATE_LIST,
             startDate: '',
             endDate: '',
             orderNum: 0,
@@ -97,27 +67,27 @@ $(function(){
             showBothArrow: true,
             showTopArrow: true,
             showDownArrow: true,
-            searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png'
+            searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png',
+            detailVisible: false,
+            detailId: undefined,
+            detailType: undefined,
+            lastParamsObj: ''
         },
 
         created() {
+            event.$on('onClose', this.hideDetail);
+            event.$on('onShowDetail', this.showOrderDetail);
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
             }
        
             this.getOrdersList({}, false);
-            AJAXService.ajaxWithToken('get', '/order/getTypeMap', {}, result => {
-                this.optionsSubOrderType = Object.assign(this.optionsSubOrderType, result.data);
-                this.optionsSubOrderType['0'] = this.optionsSubOrderType['0'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['1'] = this.optionsSubOrderType['1'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['3'] = this.optionsSubOrderType['3'].map(el => ({ id: el.id, name: el.name, show: true}));
-                this.optionsSubOrderType['0'].unshift({id: -1, name: '全部餐厅', show: true });
-                this.optionsSubOrderType['1'].unshift({id: -1, name: '全部娱乐', show: true });
-                this.optionsSubOrderType['3'].unshift({id: -1, name: '全部房型', show: true });
-            });
         },
-
+        beforeDestroy: function () {
+            event.$off('onClose', this.hideDetail);
+            event.$off('onShowDetail', this.showOrderDetail);
+        },
         computed: {
             orderParams() {
                 if (this.orderStatus === '-1') {
@@ -136,6 +106,11 @@ $(function(){
              * @param obj
              */
             getOrdersList(obj, pageChange) {
+                const objStr = JSON.stringify(obj);
+                if (this.lastParamsObj === objStr) {
+                    return false;
+                }
+                this.lastParamsObj = objStr;
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
                 this.isLoading = true;
@@ -173,16 +148,14 @@ $(function(){
                 paramsObj.type = num;
                 const host = AJAXService.getUrl2('/order/listOrderListToText');
                 const pa = AJAXService.getDataWithToken(paramsObj);
-                pa.map = JSON.parse(pa.map);
                 let params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             },
 
             getParams() {
-                let obj = { endDate: this.endDate, startDate: this.startDate, keyword: this.searchContent, sort: this.sort };
-                let map = { list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
-                            orderType: this.orderType};
-                return Object.assign({}, obj, { map: JSON.stringify(map) }, this.orderParams);
+                let obj = { endDate: this.endDate, startDate: this.startDate,
+                            keyword: this.searchContent, sort: this.sort, orderType: this.orderType };
+                return Object.assign({}, obj, this.orderParams);
             },
             /**
              * 为各订单项添加showSub假数据
@@ -214,11 +187,30 @@ $(function(){
                 return typeArr;
             },
 
+            getOrderStatusText(item) {
+                const typeArr = this.getOrderType(item);
+                const isShopOrder = item.orderType === 2 || (typeArr.length === 1 && typeArr[0] === 2);
+                if (isShopOrder) {
+                    return '已结束';
+                } else {
+                    return this.orderStatusText[item.orderState];
+                }
+            },
+
             searchOrders() {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             },
-            
+
+            showOrderDetail(order) {
+                this.detailType = order.orderType;
+                this.detailId = order.orderId;
+                this.detailVisible = true;
+            },
+            hideDetail() {
+                this.detailId = undefined;
+                this.detailVisible = false;
+            },
             handleClickTr(item, event) {
                 item.showSub = !item.showSub;
                 $('.orders-tr').removeClass('dd-tr-selected');
@@ -226,6 +218,8 @@ $(function(){
                     event.stopPropagation();
                     $(event.currentTarget).addClass('dd-tr-selected');
                 }
+
+                this.showOrderDetail(item);
             },
 
             changeListByDate() {
@@ -260,61 +254,6 @@ $(function(){
                 this.getOrdersList(Object.assign({}, obj, { page: msg }), true);
             },
 
-            changeOrderTypeItem(item) {
-                if (item.id === -1 && item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        el.show = false;
-                    });
-                    this.$nextTick(function() {
-                        this.orderTypeItem = [];
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id === -1 && !item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        el.show = true;
-                    });
-                    this.$nextTick(function() {
-                        this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id !== -1 && item.show) {
-                    this.optionsSubOrderType[this.orderType][0].show = false;
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        if (el.id === item.id) {
-                            item.show = false;
-                        }
-                    });
-                    this.$nextTick(function() {
-                        if (this.orderTypeItem[0] === -1) {
-                            this.orderTypeItem.splice(0, 1);
-                        }
-                        const obj = this.getParams();
-                        this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                    });
-                } else if (item.id !== -1 && !item.show) {
-                    this.optionsSubOrderType[this.orderType].forEach(function(el){
-                        if(el.id === item.id) {
-                            item.show = true;
-                        }
-                    });
-                    this.$nextTick(function() {
-                        if(this.optionsSubOrderType[this.orderType].length - this.orderTypeItem.length === 1) {
-                            this.optionsSubOrderType[this.orderType][0].show = true;
-                            this.$nextTick(function(){
-                                this.orderTypeItem = this.optionsSubOrderType[this.orderType].map(el => el.id);
-                                const obj = this.getParams();
-                                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                            });
-                        } else {
-                            const obj = this.getParams();
-                            this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
-                        }
-                    });
-                }
-            },
-
             disableEndDate(date) {
                 if (this.startDate !== '') {
                     const arr = this.startDate.split('-');
@@ -335,24 +274,32 @@ $(function(){
         },
 
         watch: {
-            orderType: function(newVal, oldVal) {
-                this.orderTypeItem = [];
-                this.orderTypeItem = this.optionsSubOrderType[newVal].map(el => el.id);
-                const obj = this.getParams();
-                this.delayGetOrdersList(500, this.getOrdersList, [obj, false]);
+            orderType: function(newVal) {
+                if (newVal === 2) {
+                    this.$nextTick(() => {
+                        this.orderStatus = '5';
+                        const obj = this.getParams();
+                        this.getOrdersList(obj, false);
+                    });
+                } else {
+                    this.$nextTick(() => {
+                        this.orderStatus = '-1';
+                        const obj = this.getParams();
+                        this.getOrdersList(obj, false);
+                    })
+                }
             },
 
-            orderParams: function(newVal, oldVal) {
+            orderParams: function(newVal) {
                 const obj = { endDate: this.endDate,
                               startDate: this.startDate,
                               keyword: this.searchContent,
                               sort: this.sort,
-                              map: JSON.stringify({list: this.orderType === -1 ? [] : (this.orderTypeItem.length > 0 ? this.orderTypeItem : [-2]),
-                                                    orderType: this.orderType})};
-                this.getOrdersList(Object.assign({}, newVal, obj), false);
+                              orderType: this.orderType};
+                this.getOrdersList(Object.assign({}, obj, newVal), false);
             },
 
-            startDate: function(newVal, oldVal) {
+            startDate: function(newVal) {
                 let newValTime = new Date(newVal);
                 let endDateTime = new Date(this.endDate);
                 if (newVal !== '' && (this.endDate === '' || newValTime.getTime() > endDateTime.getTime())) {
@@ -360,7 +307,7 @@ $(function(){
                 }
             },
 
-            endDate: function(newVal, oldVal) {
+            endDate: function(newVal) {
                 let newValTime = new Date(newVal);
                 let startDateTime = new Date(this.startDate);
                 if (newVal !== '' && (this.startDate === '' || startDateTime.getTime() > newValTime.getTime())) {
@@ -376,7 +323,8 @@ $(function(){
             DdOption,
             DdSelect,
             DdDatepicker,
-            NoAuth
+            NoAuth,
+            OrderDetail
         }
     });
 
@@ -386,13 +334,11 @@ $(function(){
             let endTime = new Date(this.endDate);
             return { minusTime: endTime.getTime() - startTime.getTime() };
         },
-        function(newVal, oldVal) {
+        function(newVal) {
             if (newVal.minusTime >= 0) {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
             }
         }
     );
-
-    util.bindDomAction(events);
 });

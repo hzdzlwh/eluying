@@ -104,10 +104,10 @@
     import util from 'util';
     export default{
         created() {
-            Promise.all([
-                this.getRoomAndStatus(),
-                this.getCategories()
-            ])
+            this.getCategories()
+                .then(() => {
+                    return this.getRoomAndStatus();
+                })
                 .then(() => {
                     this.mapRoomsToCategory();
                     // 去除没有房间的房型
