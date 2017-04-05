@@ -63,8 +63,8 @@
                             <div class="vipInfo-item-content">
                                 <div class="vip-gender-container">
                                     <dd-select v-model="vip.gender">
-                                        <dd-option value="0" label="男"></dd-option>
-                                        <dd-option value="1" label="女"></dd-option>
+                                        <dd-option :value="0" label="男"></dd-option>
+                                        <dd-option :value="1" label="女"></dd-option>
                                     </dd-select>
                                 </div>
                                 <div>
@@ -288,11 +288,11 @@
                     vipLevelName: '—'
                 }],
                 idCardType: [
-                    { key: '0', name: '身份证' },
-                    { key: '1', name: '军官证' },
-                    { key: '2', name: '通行证' },
-                    { key: '3', name: '护照' },
-                    { key: '4', name: '其他' }
+                    { key: 0, name: '身份证' },
+                    { key: 1, name: '军官证' },
+                    { key: 2, name: '通行证' },
+                    { key: 3, name: '护照' },
+                    { key: 4, name: '其他' }
                 ],
                 provinceItems: dsyForComponent['0'],
                 cityItems: [],
@@ -304,6 +304,15 @@
         watch: {
             vipProps(val) {
                 this.vip = { ...val };
+                this.vip.province = this.mapAddress(this.provinceItems, val.province);
+                this.cityItems = dsyForComponent[0 + '_' + this.vip.province];
+                this.$nextTick(() => {
+                    this.vip.city = this.mapAddress(this.cityItems, val.city);
+                    this.countyItems = dsyForComponent[0 + '_' + this.vip.province + '_' + this.vip.city];
+                    this.$nextTick(() => {
+                        this.vip.county = this.mapAddress(this.countyItems, val.county);
+                    });
+                });
             },
             visible(val) {
                 if (val) {
@@ -336,6 +345,15 @@
             close() {
                 $('#vipForm').modal('hide');
                 this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: undefined };
+            },
+            mapAddress(arr, value) {
+                let i;
+                arr.forEach((item) => {
+                    if (item.name.indexOf(value) >= 0) {
+                        i = item.id;
+                    }
+                });
+                return i;
             },
             addEditVip() {
                 const vip = this.vip;
