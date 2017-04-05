@@ -52,7 +52,7 @@
                     </div>
                     <div class="vip-detail-row">
                         <span class="vip-detail-filed">地区</span>
-                        <span>{{vip.area}}</span>
+                        <span>{{vip.province + vip.city + vip.county}}</span>
                     </div>
                     <div class="vip-detail-row">
                         <span class="vip-detail-filed">生日</span>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="vip-detail-row">
                         <span class="vip-detail-filed">性别</span>
-                        <span>{{vip.gender}}</span>
+                        <span>{{['男', '女'][vip.gender]}}</span>
                     </div>
                     <div class="vip-detail-row">
                         <span class="vip-detail-filed">邮箱</span>

@@ -70,7 +70,7 @@
                                 <div>
                                     <span class="vipInfo-item-label vipInfo-birthday-label">生日</span>
                                     <div class="vip-birthday-container" v-if="!vip.detail">
-                                        <dd-datepicker></dd-datepicker>
+                                        <dd-datepicker v-model="vip.birthday"></dd-datepicker>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                             <span class="vipInfo-item-label">地区</span>
                             <div class="vipInfo-item-content">
                                 <div class="vip-country-container">
-                                    <dd-select v-model="provinceType" placeholder="省">
+                                    <dd-select v-model="vip.province" placeholder="省">
                                         <dd-option
                                             v-for="option in provinceItems"
                                             :value="option.id"
@@ -90,13 +90,13 @@
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="cityType" placeholder="市">
+                                    <dd-select v-model="vip.city" placeholder="市">
                                         <dd-option  v-for="option in cityItems"  :value="option.id" :label="option.name" :key="option.id+option.name+'city'">
                                         </dd-option>
                                     </dd-select>
                                 </div>
                                 <div class="vip-country-container">
-                                    <dd-select v-model="countyType" placeholder="区">
+                                    <dd-select v-model="vip.county" placeholder="区">
                                         <dd-option  v-for="option in countyItems"  :value="option.id" :label="option.name" :key="option.id+option.name">
                                         </dd-option>
                                     </dd-select>
@@ -294,18 +294,16 @@
                     { key: '3', name: '护照' },
                     { key: '4', name: '其他' }
                 ],
-                provinceType: undefined,
-                cityType: undefined,
-                countyType: undefined,
                 provinceItems: dsyForComponent['0'],
                 cityItems: [],
                 countyItems: [],
-                hasSubmit: false
+                hasSubmit: false,
+                mailFilter: /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/
             };
         },
         watch: {
             vipProps(val) {
-                this.vip = val;
+                this.vip = { ...val };
             },
             visible(val) {
                 if (val) {
@@ -313,20 +311,20 @@
                 } else {
                     $('#vipForm').modal('hide');
                 }
-            },
-            provinceType(newVal) {
-                this.cityItems = dsyForComponent[`0_${newVal}`];
-                this.cityType = 0;
-                this.countyItems = dsyForComponent[`0_${this.provinceType}_${this.cityType}`];
-                this.countyType = 0;
-            },
-            cityType(newVal) {
-                this.countyItems = dsyForComponent[`0_${this.provinceType}_${newVal}`];
-                this.countyType = 0;
             }
         },
         created() {
             this.getVipLevels();
+            this.$watch('vip.province', newVal => {
+                this.cityItems = dsyForComponent[`0_${newVal}`];
+                this.vip.city = 0;
+                this.countyItems = dsyForComponent[`0_${this.vip.province}_${this.vip.city}`];
+                this.vip.county = 0;
+            });
+            this.$watch('vip.city', newVal => {
+                this.countyItems = dsyForComponent[`0_${this.vip.province}_${newVal}`];
+                this.vip.county = 0;
+            });
         },
         methods: {
             getVipLevels() {
@@ -352,9 +350,9 @@
                 this.hasSubmit = false;
                 const data = {
                     ...vip,
-                    province: vip.provinceType && this.provinceItems[vip.provinceType].name,
-                    city: vip.cityType && this.cityItems[vip.cityType].name,
-                    county: vip.countyType && this.countyItems[vip.countyType].name
+                    province: this.provinceItems[vip.province] && this.provinceItems[vip.province].name,
+                    city: this.cityItems[vip.city] && this.cityItems[vip.city].name,
+                    county: this.countyItems[vip.county] && this.countyItems[vip.county].name
                 };
 
                 if (vip.vipUserId) {
