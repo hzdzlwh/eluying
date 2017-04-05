@@ -23,7 +23,7 @@
                                         <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
@@ -47,7 +47,7 @@
                                     <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
                                     <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
-                                        <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                        <dd-option v-for="payChannel in depositPayChannels" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>

@@ -10,12 +10,12 @@
             <div style="display: flex"><span>销售记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
                 <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="createrId">
-                        <dd-option v-for="employee in employeeList" :value="employee.employeeId" :label="employee.realName"></dd-option>
+                        <dd-option :key="employee.employeeId" v-for="employee in employeeList" :value="employee.employeeId" :label="employee.realName"></dd-option>
                     </dd-select>
                 </div>
                 <div style="width: 120px">
                     <dd-select v-model="originId">
-                        <dd-option v-for="origin in origins" :value="origin.id" :label="origin.name"></dd-option>
+                        <dd-option v-for="origin in origins" :value="origin.id" :key="origin.id" :label="origin.name"></dd-option>
                     </dd-select>
                 </div>
             </div>

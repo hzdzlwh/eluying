@@ -24,7 +24,7 @@
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(subOrderPenalty, index) in subOrderPenaltys">
                                         <dd-select v-model="subOrderPenalty.nodeId">
-                                            <dd-option v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
+                                            <dd-option :key="subOrder.nodeId" v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
                                             </dd-option>
                                         </dd-select>
                                         <input type="number" class="dd-input" v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金">

@@ -3,7 +3,7 @@
         <div class="box-head">
             <div class="vip-select">
                 <DdSelect v-model="CustomerStatus">
-                    <DdOption v-for="option in optionsCustomer" :value="option.value" :label="option.name">
+                    <DdOption v-for="option in optionsCustomer" :key="option.value" :value="option.value" :label="option.name">
                     </DdOption>
                 </DdSelect>
             </div>
@@ -40,12 +40,15 @@
             </div>
         </div>
         <!--add new customer Modal -->
-        <company> </company>
-<div>        <checkFromDio :visible="check.show" 
-                :type="check.type"
-                :checkType = "check.chekcType"
-                @close='checkFormClose'
-        ></checkFromDio></div>
+        <company @add='fetchDate'> </company>
+        <div>
+            <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
+        </div>
+        <detail 
+        :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'
+        >
+            <companyDetail :data='detailData'></companyDetail>
+        </detail>
     </div>
 </template>
 <style>
@@ -138,9 +141,17 @@ import {
 import http from '../../../common/AJAXService';
 import company from '../../components/companyForm.vue';
 import check from '../../components/check.vue';
+import detail from '../../components/detail.vue';
+import companyDetail from '../../components/companyDetail.vue';
+
 export default {
     data() {
         return {
+            detailData: {},
+            detailVisible: false,
+            detailTitle: '',
+            detailtab: 0,
+            detailid: 0,
             sort: {},
             pages: 0,
             cusDate: {
@@ -174,10 +185,12 @@ export default {
             }, {
                 title: '折扣',
                 render: (h, row) => < span title = {
+                        row.discount &&
                         row.discounts.map(function(item) {
                             return item.nodeName + '-' + item.discount + '折';
                         }).join('\n')
                     } > {
+                        row.discounts &&
                         row.discounts.length ? row.discounts[0].nodeName + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
                     } < /span>
             }, {
@@ -205,9 +218,9 @@ export default {
                         < span >
                         < span onClick = {
                             () => this.openDetailDialog(row, 0)
-                        } > 查单 < /span> / < span onClick = {
+                        } > 查单< /span>< span v-show={row.ledgerFee && row.companyType} onClick = {
                             () => this.openDetailDialog(row, 1)
-                        } > 结算 < /span> < /span >
+                        } > \/结算 < /span> < /span >
             }],
             datalist: [],
             count: 0,
@@ -218,10 +231,6 @@ export default {
             currentPage: 1,
             selecttype: 2,
             CustomerStatus: 2,
-                // isConsumeFeeDesc: 1,
-                // isCreationTimeDesc: 1,
-                // isLedgerFeeDesc: 1,
-                // isRechargeFeeDesc: 1,
             formCustomerType: [{
                 name: '可挂帐',
                 value: 1
@@ -242,11 +251,21 @@ export default {
             check: {
                 type: 0,
                 chekcType: [],
-                show: false
+                show: false,
+                data: {}
             }
         };
     },
     methods: {
+        detailEdit: function() {
+
+        },
+        detailDelete: function() {
+
+        },
+        detailClose: function() {
+            this.detailVisible = false;
+        },
         checkFormClose: function() {
             this.check.show = false;
         },
@@ -257,15 +276,26 @@ export default {
                     orderType: - 1,
                     type: 1
                 };
-
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
+                        this.check.type = 2;
                         this.check.chekcType = res.data.list;
                         this.check.show = true;
+                        this.check.data = {
+                            consumeFee: date.consumeFee,
+                            ledgerFee: date.ledgerFee,
+                            cid: date.cid
+                        };
                     } else {
-                            // modal.somethingAlert(res.msg)
+
                     }
                 });
+            } else {
+                this.detailid = date.cid;
+                this.detailtab = 2;
+                this.detailTitle = date.companyName;
+                this.detailVisible = true;
+                this.detailData = date;
             }
         },
         changeSort: function(value) {
@@ -329,7 +359,6 @@ export default {
             this.fetchDate();
         },
         sort: function() {
-            window.console.log('change');
             this.fetchDate();
         }
     },
@@ -341,7 +370,9 @@ export default {
         DdOption,
         DdTable,
         company,
-        'checkFromDio': check
+        'checkFromDio': check,
+        detail,
+        companyDetail
     }
 };
 </script>
