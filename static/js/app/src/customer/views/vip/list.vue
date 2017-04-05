@@ -274,6 +274,7 @@
                     });
             },
             openVipForm() {
+                this.vip = {};
                 $('#vipForm').modal('show');
             },
             outPutExcel() {

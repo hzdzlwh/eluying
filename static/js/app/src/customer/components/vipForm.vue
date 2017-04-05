@@ -118,7 +118,7 @@
                 </div>
                 <div class="vipForm-modal-foot">
                     <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-primary" @click="addEditVip">确定</button>
-                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-ghost" ng-click="close()">取消</button>
+                    <button v-if="!vip.detail" class="dd-btn dd-btn-sm dd-btn-ghost" @click="close">取消</button>
                 </div>
             </div>
         </div>
@@ -313,13 +313,6 @@
                         this.vip.county = this.mapAddress(this.countyItems, val.county);
                     });
                 });
-            },
-            visible(val) {
-                if (val) {
-                    $('#vipForm').modal('show');
-                } else {
-                    $('#vipForm').modal('hide');
-                }
             }
         },
         created() {
@@ -344,16 +337,17 @@
             },
             close() {
                 $('#vipForm').modal('hide');
-                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: undefined };
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: undefined, gender: undefined };
             },
             mapAddress(arr, value) {
-                let i;
-                arr.forEach((item) => {
-                    if (item.name.indexOf(value) >= 0) {
-                        i = item.id;
-                    }
+                if (!arr) {
+                    return undefined;
+                }
+
+                const item = arr.find(i => {
+                    return i.name.indexOf(value) >= 0;
                 });
-                return i;
+                return item && item.id;
             },
             addEditVip() {
                 const vip = this.vip;
