@@ -10,7 +10,7 @@
                     <div class="select-category" v-if="restNodeList.length > 0">
                         <span class="select-category-name"><input type="checkbox" class="dd-checkbox" v-model="food">餐饮</span>
                         <span class="select-category-nodes">
-                            <span class="select-category-node" v-for="node in restNodeList">
+                            <span class="select-category-node" :key="node.id" v-for="node in restNodeList">
                                 <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
                         </span>
                     </div>
@@ -19,7 +19,7 @@
                         <input type="checkbox" class="dd-checkbox" v-model="et">娱乐
                     </span>
                         <span class="select-category-nodes">
-                        <span class="select-category-node" v-for="node in enterNodeList">
+                        <span class="select-category-node" :key="node.id" v-for="node in enterNodeList">
                             <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
                     </span>
                     </div>

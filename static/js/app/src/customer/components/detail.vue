@@ -30,7 +30,7 @@
                         <div class="detail-content-filter">
                             <div style="width: 88px" v-if="type !== 'company'">
                                 <dd-select v-model="state">
-                                    <dd-option v-for="state in states" :value="state.id" :label="state.name"></dd-option>
+                                    <dd-option :key="state.id" v-for="state in states" :value="state.id" :label="state.name"></dd-option>
                                 </dd-select>
                             </div>
                             <div>

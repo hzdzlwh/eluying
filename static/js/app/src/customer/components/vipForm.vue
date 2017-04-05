@@ -38,7 +38,7 @@
                             </span>
                             <div v-if="!vip.vipUserId || (vip.modify && !vip.isAutoUpgrade)" class="short-input">
                                 <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
-                                    <dd-option v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
+                                    <dd-option :key="level.vipLevelId" v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
                                 </dd-select>
                             </div>
                             <span v-if="vip.vipUserId">{{vip.vipLevelName}}</span>
@@ -52,7 +52,7 @@
                             <div v-if="!vip.detail">
                                 <div class="vip-idCard-container">
                                     <dd-select v-model="vip.idCardType">
-                                        <dd-option v-for="type in idCardType" :value="type.key" :label="type.name"></dd-option>
+                                        <dd-option :key="type.key" v-for="type in idCardType" :value="type.key" :label="type.name"></dd-option>
                                     </dd-select>
                                 </div>
                                 <input class="dd-input inCardNum-input" v-model="vip.idCardNum" type="text" minlength="2" maxlength="18">
