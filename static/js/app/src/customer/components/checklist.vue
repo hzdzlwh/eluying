@@ -1,0 +1,159 @@
+<template>
+    <div>
+        <div id="checkList" class="modal fade" role="dialog" data-backdrop="static">
+            <div class="modal-content checkForm-modal-content">
+                <span class="checkForm-closeBtn" @click="close()">&times;</span>
+                <div class="checkForm-modal-header">
+                    <div v-if='checkListType'>
+                        <div><span>历史充值总额</span>￥{{historyRecharge}}</div>
+                        <div><span>历史退款总额</span>￥{{historyRefunds}}</div>
+                    </div>
+                    <div v-else>
+                        <div><span>历史结算总额</span>￥{{historySettle}}</div>
+                    </div>
+                </div>
+                           <div class="checkForm-modal-body">
+                <div class="cusTableContain">
+                    <DdTable :columns="col[checkListType]" :data-source="datalist"></DdTable>
+                </div>
+            </div>
+            </div>
+ 
+        </div>
+    </div>
+    </div>
+</template>
+<style lang="scss" rel="stylesheet/scss" scoped>
+.checkForm-modal-content {
+    background: #fafafa;
+    border-radius: 2px;
+    border-top: 4px solid #178ce6;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    width: 615px;
+    height: 445px;
+    margin-top: 0!important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%)!important;
+    transform: translate(-50%, -50%)!important;
+    .checkForm-closeBtn {
+        float: right;
+        margin-right: 15px;
+        cursor: pointer;
+    }
+    .checkForm-modal-header {
+        font-size: 16px;
+        color: #178ce6;
+        text-align: left;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 25px 20px;
+        .comName {
+            padding: 20px 24px 0;
+            font-family: MicrosoftYaHei;
+            font-size: 14px;
+            color: #666666;
+        }
+    }
+    .checkForm-modal-body {}
+}
+</style>
+<script>
+import {
+    DdTable
+} from 'dd-vue-component';
+import http from '../../common/AJAXService';
+import modal from '../../common/modal';
+export default {
+    props: {
+        visible: Boolean,
+        id: {
+            type: Number,
+            default: 0
+        },
+        checkListType: {
+            type: Number,
+            default: 0
+        }
+    },
+    data() {
+        return {
+            col: [
+                [{
+                    title: '结算日期',
+                    dataIndex: 'creationTime'
+                }, {
+                    title: '结算金额',
+                    dataIndex: 'settleFee'
+                }, {
+                    title: '支付方式',
+                    dataIndex: 'channel'
+                }, {
+                    title: '操作人',
+                    dataIndex: 'operator'
+                }],
+                [{
+                    title: '结算日期',
+                    dataIndex: 'creationTime'
+                }, {
+                    title: '结算金额',
+                    dataIndex: 'price'
+                }, {
+                    title: '支付方式',
+                    dataIndex: 'type'
+                }, {
+                    title: '操作人',
+                    dataIndex: 'operator'
+                }]
+            ],
+            historySettle: 0,
+            datalist: [],
+            historyRecharge: 0,
+            historyRefunds: 0
+        };
+    },
+    created() {},
+    methods: {
+        fetchDate() {
+            http.get('/contractCompany/removeCompany', {
+                cid: this.id
+            }).then(res => {
+                if (res.code === 1) {
+                    this.datalist = res.data.list;
+                    this.historyRecharge = res.data.list.historyRecharge;
+                    this.historyRefunds = res.data.list.historyRefunds;
+                } else {
+                    modal.alert(res.msg);
+                }
+            });
+        },
+        close() {
+            $('#checkList').modal('hide');
+            this.$emit('close');
+        }
+    },
+    watch: {
+        visible(val) {
+            if (val) {
+                $('#checkList').modal({
+                    backdrop: 'static'
+                });
+                $('#checkList').modal('show');
+            } else {
+                $('#checkList').modal('hide');
+            }
+        },
+        data(val) {
+            this.formdata = { ...val
+            };
+        }
+    },
+    components: {
+        DdTable
+    }
+};
+</script>
