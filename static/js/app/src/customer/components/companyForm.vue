@@ -32,7 +32,7 @@
                                     <img src="//static.dingdandao.com/start.png"/>企业类型：
                             </span>
                         <DdSelect v-model="encompanyType" class="addCustype">
-                            <DdOption v-for="option in formCustomerType" :value="option.value" :label="option.name">
+                            <DdOption :key="option.value" v-for="option in formCustomerType" :value="option.value" :label="option.name">
                             </DdOption>
                         </DdSelect>
                     </p>

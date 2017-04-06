@@ -2,7 +2,7 @@
     <div>
         <span class="date-select">
             <DdSelect v-model="type">
-                <DdOption v-for="type in DATE_TYPE" :value="type.value" :label="type.label"></DdOption>
+                <DdOption v-for="type in DATE_TYPE" :key="type.value" :value="type.value" :label="type.label"></DdOption>
             </DdSelect>
         </span>
         <DdDatepicker :disabled="dateDisabled" v-model="startDate" />
