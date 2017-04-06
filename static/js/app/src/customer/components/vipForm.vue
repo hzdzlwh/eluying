@@ -108,7 +108,7 @@
                                 <span class="vipInfo-item-label">邮箱</span>
                                 <input class="dd-input long-input" v-model="vip.email" type="text" minlength="2" maxlength="30" >
                             </div>
-                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="error-tips">邮箱格式错误</span>
+                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit" class="error-tips">邮箱格式错误</span>
                         </div>
                         <div class="vipInfo-item-container">
                             <div class="vipInfo-item">
@@ -380,14 +380,16 @@
                     city: this.cityItems && this.cityItems[this.city] && this.cityItems[this.city].name,
                     county: this.countyItems && this.countyItems[this.county] && this.countyItems[this.county].name
                 };
-
+                let url = '/vipUser/addEditVip';
                 if (vip.vipUserId) {
                     delete data.phone;
                     delete data.consumeAndDiscount;
                     delete data.vipConsumeList;
                 }
-
-                http.post('/vipUser/addEditVip', data)
+                if (vip.customerId) {
+                    url = '/customer/addToVip';
+                }
+                http.post(url, data)
                     .then(res => {
                         if (res.code === 1) {
                             this.close();
