@@ -7,7 +7,7 @@
                         <h4>{{title}}</h4>
                         <button type="button" class="close" @click="onClose"><span>&times;</span></button>
                     </div>
-                    <div class="detail-header-action" v-if="type !== 'novip'">
+                    <div class="detail-header-action" v-if="type !== 'nonvip'">
                         <ul class="restaurant-head-nav">
                             <li @click="innerTab = 1">
                                 <a :class="{active: innerTab === 1}">{{type === 'vip' ? '会员' : '企业'}}详情</a>
@@ -256,7 +256,7 @@
     ];
     export default{
         props: {
-            type: String, // vip, company, nonvip
+            type: String, // vip, company, novip
             id: Number,
             tab: Number, // 1-detail, 2-orders
             onDelete: Function,
