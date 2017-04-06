@@ -110,6 +110,12 @@
                             </div>
                             <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="error-tips">邮箱格式错误</span>
                         </div>
+                        <div class="vipInfo-item-container">
+                            <div class="vipInfo-item">
+                                <span class="vipInfo-item-label">创建渠道</span>
+                                <input class="dd-input long-input" v-model="vip.vipChannel" type="text" >
+                            </div>
+                        </div>
                         <div class="vipInfo-item vipInfo-remark-container">
                             <span class="vipInfo-item-label">备注</span>
                             <textarea v-model="vip.remark" type="text" placeholder="-请填写描述-" maxlength="140" ></textarea>
