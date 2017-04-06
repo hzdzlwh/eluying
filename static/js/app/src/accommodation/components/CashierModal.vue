@@ -156,7 +156,9 @@
                 deposit: undefined,
                 orderPayment: {},
                 disabledBtn: false,
-                uniqueId: 0
+                uniqueId: 0,
+                companyPay: false,
+                companyBalance: undefined
             }
         },
         computed:{
@@ -182,25 +184,30 @@
             }
         },
         created() {
-            this.getData();
+            //this.getData();
         },
         watch: {
             show(val) {
                 if (val) {
-                    Promise.resolve(this.getOrderPayment()).then(() => {
-                        if (this.orderState) {
-                            this.payChannels = [{channelId: 10000, name: '企业挂帐'}, {channelId: 10001, name: '企业扣费'}, ...this.payChannels];
-                        } else {
-                            this.payChannels = [{channelId: 10002, name: '退款至企业'}, ...this.payChannels];
+                    const params = {type: 1};
+                    if (this.type === 'register') {
+                        params.orderId = this.business.orderDetail.orderId;
+                        params.orderType = this.business.orderDetail.orderType;
+                    } else {
+                        params.orderId = this.orderDetail.orderType === -1
+                                         ? this.orderDetail.orderId
+                                         : this.orderDetail.subOrderId;
+                        params.orderType = this.orderDetail.orderType;
+                    }
+                    Promise.all([this.getOrderPayment(), this.getData(params)]).then(() => {
+                        if (this.orderState && this.companyPay) {
+                            this.payChannels = [{channelId: -14, name: '企业挂帐'}, {channelId: -15, name: '企业扣费'}, ...this.payChannels];
+                        } else if (!this.orderState && this.companyPay) {
+                            this.payChannels = [{channelId: -15, name: '退款至企业'}, ...this.payChannels];
                         }
                         $('#cashier').modal({backdrop: 'static'});
                     });
                 } else {
-                    if (this.orderState) {
-                        this.payChannels = this.payChannels.slice(2);
-                    } else {
-                        this.payChannels = this.payChannels.slice(1);
-                    }
                     $('#cashier').modal('hide');
                 }
             }
@@ -211,6 +218,8 @@
                 this.showDeposit = false;
                 this.deposit = undefined;
                 this.depositPayChannel = undefined;
+                this.companyPay = false;
+                this.companyBalance = undefined;
             },
             getPayChannels(index) {
                 if (this.type === 'register' && this.business.cashierType === 'finish') {
@@ -282,59 +291,27 @@
                         }
                     });
             },
-            getData() {
-                AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {})
-                        .then(result => {
-                            let payChannels = [].concat(result.data.payChannelCustomList);
-                            let map = result.data;
-                            let walletOpenAndUseStateList = map.walletOpenAndUseStateList;
-                            for (let key in walletOpenAndUseStateList) {
-                                if (map.onlineCollectionMethod === 1 &&
-                                        walletOpenAndUseStateList[key].onlineType === 2
-                                        && walletOpenAndUseStateList[key].openState === 1
-                                        && walletOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -11,
-                                        name: '支付宝（订单钱包）'
-                                    });
-                                }
-                                if (map.onlineCollectionMethod === 1 &&
-                                        walletOpenAndUseStateList[key].onlineType === 4
-                                        && walletOpenAndUseStateList[key].openState === 1
-                                        && walletOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -12,
-                                        name: '微信支付（订单钱包）'
-                                    });
-                                }
-                            }
-                            let enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
-                            for (let key in enterpriseOpenAndUseStateList) {
-                                if (map.onlineCollectionMethod === 2 &&
-                                        enterpriseOpenAndUseStateList[key].onlineType === 2
-                                        && enterpriseOpenAndUseStateList[key].openState === 1
-                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -6,
-                                        name: '支付宝'
-                                    });
-                                }
-                                if (map.onlineCollectionMethod === 2 &&
-                                        enterpriseOpenAndUseStateList[key].onlineType === 4
-                                        && enterpriseOpenAndUseStateList[key].openState === 1
-                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -7,
-                                        name: '微信支付'
-                                    });
-                                }
-                            }
-                            payChannels.sort(function(a, b){
+            getData(obj) {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', obj)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const channels = res.data.list;
+                            channels.forEach(channel => {
+                                channel.channelId = channel.id;
+                            });
+                            channels.sort((a, b) => {
                                 return a.channelId - b.channelId;
                             });
-                            this.payChannels = payChannels;
-                            this.depositPayChannels = result.data.payChannelCustomList;
-                        });
+                            this.payChannels = channels;
+                            this.depositPayChannels = channels.filter(channel => {
+                                return channel.channelId > 0;
+                            });
+                            this.companyPay = res.data.contractCompany ? res.data.contractCompany.companyPay : false;
+                            this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             },
             hideModal() {
                 this.resetData();
@@ -479,12 +456,21 @@
                 }
                 //判断是否进行扫码收款
                 let payWithAlipay = 0;
+                let payWithCompany = 0;
                 this.payments.forEach(pay => {
                     let id = pay.payChannelId;
                     if (id === -6 || id === -7 || id === -11 || id === -12) {
                         payWithAlipay += Number(pay.fee);
                     }
+                    if (id === -14 || id === -15) {
+                        payWithCompany += Number(pay.fee);
+                    }
                 });
+                if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
+                    const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
+                    modal.somethingAlert(payStr);
+                    return false;
+                }
                 if (payWithAlipay <= 0) {
                     AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                         .then(result => {
