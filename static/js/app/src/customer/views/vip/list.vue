@@ -27,6 +27,10 @@
             <div class="vip-detail-container">
                 <div style="margin-right: 75px;width: 250px">
                     <div class="vip-detail-row">
+                        <span class="vip-detail-filed">手机号</span>
+                        <span>{{vip.phone}}</span>
+                    </div>
+                    <div class="vip-detail-row">
                         <span class="vip-detail-filed">会员等级</span>
                         <span>{{vip.levelName}}</span>
                         <div v-if="vip.levelName !== '—' && vip.consumeAndDiscount  && vip.consumeAndDiscount.length > 0" class="tip-img-container">
