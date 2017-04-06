@@ -56,7 +56,7 @@
                             </dd-dropdown>
                         </div>
                         <div class="detail-list">
-                            <dd-table :columns="col" :dataSource="orders"></dd-table>
+                            <dd-table :columns="col" :dataSource="orders" stripe></dd-table>
                         </div>
                         <div class="detail-content-foot">
                             <span>
@@ -134,6 +134,29 @@
             border-right: 1px solid #e6e6e6;
             margin-right: 16px;
         }
+        .order-state {
+            display: inline-block;
+            text-align: center;
+            height: 22px;
+            width: 22px;
+            line-height: 22px;
+            color: #fff;
+            border-radius: 2px;
+            margin-right: 4px;
+            &.order-state-red {
+                background: #f27979;
+            }
+            &.order-state-blue {
+                background: #3dcde0;
+            }
+            &.order-state-green {
+                background: #62d99d;
+            }
+            &.order-state-yellow {
+                background: #ffac59;
+            }
+        }
+
     }
 
 </style>
@@ -150,64 +173,105 @@
     import http from '../../common/AJAXService';
     import modal from '../../common/modal';
 
+    const states = [
+        {
+            name: '全部状态',
+            id: ''
+        },
+        {
+            name: '已预订',
+            id: 1
+        },
+        {
+            name: '进行中',
+            id: 3
+        },
+        {
+            name: '已结束',
+            id: 5
+        },
+        {
+            name: '已取消',
+            id: 4
+        },
+        {
+            name: '待处理',
+            id: 0
+        },
+        {
+            name: '已拒绝',
+            id: 1
+        }
+    ];
+
+    function getStateText(id) {
+        const state = states.find(i => i.id === id);
+        return state && state.name;
+    }
+
+    const orderType = ['餐', '娱', '商', '住']; // eslint-disable-line
+    const orderTypeClass = [ 'order-state-yellow', 'order-state-blue', 'order-state-green',  'order-state-red']; // eslint-disable-line
+
     const vipCol = [
         {
             title: '订单号',
-            dateIndex: 'orderNum'
+            dataIndex: 'orderNum',
+            width: 180
         },
         {
             title: '订单业态',
-            dateIndex: 'orderTypes'
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '订单金额￥',
-            dateIndex: 'totalPrice'
+            dataIndex: 'totalPrice'
         },
         {
             title: '使用时间',
-            dateIndex: 'startTime'
+            dataIndex: 'startTime'
         },
         {
             title: '操作人',
-            dateIndex: 'operator'
+            dataIndex: 'operators'
         },
         {
             title: '订单状态',
-            dateIndex: 'state'
+            render: (h, row) => <span>{getStateText(row.state)}</span>
         }
     ];
     const companyCol = [
         {
             title: '订单号',
-            dateIndex: 'orderNum'
+            dataIndex: 'orderNum',
+            width: 180
         },
         {
             title: '订单业态',
-            dateIndex: 'orderTypes'
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '联系人',
-            dateIndex: 'name'
+            dataIndex: 'name'
         },
         {
             title: '联系号码',
-            dateIndex: 'phone'
+            dataIndex: 'phone'
         },
         {
             title: '订单金额￥',
-            dateIndex: 'orderNum'
+            dataIndex: 'orderNum'
         },
         {
             title: '挂账金额￥',
-            dateIndex: 'totalPrice'
+            dataIndex: 'totalPrice'
         },
         {
             title: '使用时间',
-            dateIndex: 'startTime'
+            dataIndex: 'startTime'
         },
         {
             title: '收银方式',
-            dateIndex: 'payTypes'
+            dataIndex: 'payTypes'
         }
     ];
     const OrdersUrls = {
@@ -220,40 +284,7 @@
         company: '/contractCompany/exportCompanyOrderList',
         nonvip: '/customer/customersToExcel'
     };
-    const states = [
-        {
-            name: '全部状态',
-            id: '7'
-        },
-        {
-            name: '已预订',
-            id: '1'
-        },
-        {
-            name: '进行中',
-            id: '3'
-        },
-        {
-            name: '已结束',
-            id: '5'
-        },
-        {
-            name: '已取消',
-            id: '4'
-        },
-        {
-            name: '待处理',
-            id: '0'
-        },
-        {
-            name: '已失效',
-            id: '6'
-        },
-        {
-            name: '已拒绝',
-            id: '1'
-        }
-    ];
+
     export default{
         props: {
             type: String, // vip, company, novip
@@ -275,7 +306,7 @@
                 ledgerFeeSum: 0,
                 startTime: '',
                 endTime: '',
-                state: '7',
+                state: '',
                 states: states,
                 innerTab: 1 // 1-detail, 2-orders
             };
@@ -330,7 +361,7 @@
 
             outPutText(num) {
                 const paramsObj = this.getParams();
-                paramsObj.type = num;
+                paramsObj.exportType = num;
                 const host = http.getUrl2(OutputUrl[this.type]);
                 const pa = http.getDataWithToken(paramsObj);
                 const params = http.paramsToString(pa);
@@ -351,7 +382,9 @@
                 http.get(OrdersUrls[this.type], params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.orderstabtab = res.data.list;
+                            this.orders = res.data.list;
+                            this.orderCount = res.data.orderCount;
+                            this.ordersTotalPrice = res.data.ordersTotalPrice;
                         } else {
                             modal.alert(res.msg);
                         }

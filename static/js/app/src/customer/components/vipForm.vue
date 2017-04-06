@@ -108,7 +108,7 @@
                                 <span class="vipInfo-item-label">邮箱</span>
                                 <input class="dd-input long-input" v-model="vip.email" type="text" minlength="2" maxlength="30" >
                             </div>
-                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="error-tips">邮箱格式错误</span>
+                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit" class="error-tips">邮箱格式错误</span>
                         </div>
                         <div class="vipInfo-item-container">
                             <div class="vipInfo-item">
