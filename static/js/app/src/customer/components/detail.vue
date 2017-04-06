@@ -16,7 +16,7 @@
                                 <a :class="{active: innerTab === 2}">消费订单</a>
                             </li>
                         </ul>
-                        <div>
+                        <div v-if="innerTab === 1">
                             <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
                             <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
                         </div>
@@ -30,7 +30,7 @@
                         <div class="detail-content-filter">
                             <div style="width: 88px" v-if="type !== 'company'">
                                 <dd-select v-model="state">
-                                    <dd-option v-for="state in states" :value="state.id" :label="state.name"></dd-option>
+                                    <dd-option :key="state.id" v-for="state in states" :value="state.id" :label="state.name"></dd-option>
                                 </dd-select>
                             </div>
                             <div>
@@ -351,7 +351,7 @@
                 http.get(OrdersUrls[this.type], params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.orders = res.data.list;
+                            this.orderstabtab = res.data.list;
                         } else {
                             modal.alert(res.msg);
                         }

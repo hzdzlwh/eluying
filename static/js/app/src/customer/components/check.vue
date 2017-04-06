@@ -1,27 +1,31 @@
 <template>
-    <div id="checkForm" class="modal fade" role="dialog">
-        <div class="modal-content checkForm-modal-content">
-            <span class="checkForm-closeBtn" @click="close()">&times;</span>
-            <div class="checkForm-modal-header">
-                <span>{{content[type].name}}</span>
-                <div class="comName"><span>企业名称：</span><span>成都棕榈世界房车露营</span></div>
-            </div>
-            <div class="checkForm-modal-body">
-                <div class="checkitem">
-                    <label for="">{{content[type].name1}}</label>
-                    <input v-model='num' type="text" class="dd-input" /><span class="CheckHave">可退余额￥13230000</span>
+    <div>
+        <div id="checkForm" class="modal fade" role="dialog">
+            <div class="modal-content checkForm-modal-content">
+                <span class="checkForm-closeBtn" @click="close()">&times;</span>
+                <div class="checkForm-modal-header">
+                    <span>{{content[type].name}}</span>
+                    <div class="comName"><span>企业名称：</span><span>成都棕榈世界房车露营</span></div>
                 </div>
-                <div class="checkitem">
-                    <label for="">{{content[type].name2}}</label>
-                    <dd-select v-model="select" class='checkSelect'>
-                        <dd-option v-for="type in checkType" :value="type.id" :label="type.name"></dd-option>
-                    </dd-select>
+                <div class="checkForm-modal-body">
+                    <div class="checkitem">
+                        <label for="">{{content[type].name1}}</label>
+                        <input v-model='num' type="Number" class="dd-input" /><span class="CheckHave" v-if='type !== 0'>可退余额￥{{data.rechargeFee || data.ledgerFee}}</span>
+                    </div>
+                    <div class="checkitem">
+                        <label for="">{{content[type].name2}}</label>
+                        <dd-select v-model="select" class='checkSelect'>
+                            <dd-option v-for="type in checkType" :value="type.id" :key="type.id" :label="type.name"></dd-option>
+                        </dd-select>
+                    </div>
+                    <div class="checkitem checkBtn">
+                        <button class="dd-btn dd-btn-sm dd-btn-primary" @click='subCheck'>确定</button>
+                        <button class="dd-btn dd-btn-sm dd-btn-ghost" @click="close()">取消</button>
+                    </div>
                 </div>
-                <div class="checkitem checkBtn"><button class="dd-btn dd-btn-sm dd-btn-primary" @click='subCheck'>确定</button>
-                <button class="dd-btn dd-btn-sm dd-btn-ghost">取消</button>
-            </div>
             </div>
         </div>
+        <getAlipay :data='alipay' :show='alipayshow' @close='changeAlipay' @changestatus='changeAlipayStatus'></getAlipay>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -61,18 +65,18 @@
     }
     .checkForm-modal-body {
         padding: 15px 0 15px 45px;
-        .checkitem{
-            padding-bottom:8px;
-            display:flex;
-                line-height: 24px;
+        .checkitem {
+            padding-bottom: 8px;
+            display: flex;
+            line-height: 24px;
         }
         label {
             font-size: 14px;
             color: #666;
         }
-        .CheckHave{
-            color:#999;
-            margin-left:5px;
+        .CheckHave {
+            color: #999;
+            margin-left: 5px;
         }
         input {
             background: #ffffff;
@@ -81,14 +85,14 @@
             width: 120px;
             height: 24px;
         }
-        .checkSelect{
+        .checkSelect {
             width: 120px;
         }
-        .checkBtn{
-                padding-left: 70px;
+        .checkBtn {
+            padding-left: 70px;
         }
-        .dd-btn{
-            margin-right:18px;
+        .dd-btn {
+            margin-right: 18px;
         }
     }
 }
@@ -96,6 +100,7 @@
 <script>
 import http from '../../common/AJAXService';
 import modal from '../../common/modal';
+import getAlipay from './getMoneyWithCode.vue';
 import {
     DdSelect,
     DdOption
@@ -103,10 +108,17 @@ import {
 export default {
     props: {
         visible: Boolean,
-        type: 0,
+        type: {
+            default: 2,
+            type: Number
+        },
         checkType: {
             default: [],
             type: Array
+        },
+        data: {
+            default: {},
+            type: Object
         }
     },
     data() {
@@ -128,13 +140,21 @@ export default {
                 name2: '支付方式：',
                 url: '/contractCompany/settle'
             }],
-            select: undefined
+            select: 0,
+            alipay: {
+                data: undefined,
+                url: ''
+            },
+            alipayshow: false
         };
     },
     watch: {
         visible(val) {
             if (val) {
                 $('#checkForm').modal('show');
+                $('#checkForm').modal({
+                    backdrop: 'static'
+                });
             } else {
                 $('#checkForm').modal('hide');
             }
@@ -142,119 +162,73 @@ export default {
     },
     created() {},
     methods: {
+        changeAlipay() {
+            this.alipayshow = false;
+        },
+        changeAlipayStatus(val) {
+            if (val) {
+                this.close();
+            }
+        },
         close() {
             $('#checkForm').modal('hide');
             this.$emit('close');
         },
         subCheck() {
-        //     if (this.select === undefined) {
-        //         modal.somethingAlert('请选择收款方式！');
-        //         return false;
-        //     }
-        //     if (Number(num.toFixed(2)) >= Number(shouldPayMoney)) {
-        //         modal.somethingAlert('订单未结清，无法完成收银！');
-        //         return false;
-        //     }
-        //     const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
-        //     if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
-        //         modal.somethingAlert('结算金额不能大于挂账金额！');
-        //         return false;
-        //     }
-        //     const payments = this.payments.map(payment => {
-        //         const channel = this.payChannels.find(c => c.channelId === payment.payChannelId);
-        //         return {
-        //             ...payment,
-        //             payChannel: channel.name
-        //         };
-        //     });
+            if (this.select === undefined) {
+                modal.somethingAlert('请选择收款方式！');
+                return false;
+            }
+            if (this.num === undefined) {
+                modal.somethingAlert('请输入金额');
+                return false;
+            }
+            if (this.data.rechargeFee && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
+                modal.somethingAlert('退款金额不能大于最大金额！！');
+                return false;
+            }
+            if (this.data.ledgerFee && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
+                modal.somethingAlert('结算金额不能大于挂账金额！！');
+                return false;
+            }
+            // 判断是否进行扫码收款
+            const id = this.select;
+            const getCodeData = {
+                amount: this.num,
+                cid: this.data.cid,
+                payChannel: this.checkType.filter(function(val) {
+                    return val.id === id;
+                })[0].name,
+                payChannelId: this.select
+            };
+            if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
+                this.alipay.data = getCodeData;
+                this.alipayshow = true;
+            } else {
+                modal.confirmDialog({
+                    message: '请确保金额已收到！'
 
-        //     if (this.deposit) {
-        //         const channel = this.depositPayChannels.find(c => c.channelId === this.depositPayChannel);
-
-        //         payments.push({
-        //             fee: this.deposit,
-        //             payChannelId: this.depositPayChannel,
-        //             payChannel: channel.name,
-        //             type: (this.orderPayment.deposit > 0 && this.type !== 'checkIn') ? 3 : 1
-        //         });
-        //     }
-        //     let params;
-        //     if (this.type === 'register') {
-        //         params = {
-        //             orderId: this.business.orderDetail.orderId,
-        //             orderType: this.business.orderDetail.orderType,
-        //             payments: JSON.stringify(payments)
-        //         };
-        //     } else if (this.type === 'cancel') {
-        //         const businessJson = {
-        //             functionType: this.business.functionType,
-        //             orderId: this.business.orderId,
-        //             orderType: this.business.orderType
-        //                 // subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
-        //         };
-        //         if (this.business.subOrderPenaltys) {
-        //             businessJson.subOrderPenaltys = JSON.parse(this.business.subOrderPenaltys);
-        //         }
-        //             /* if (this.business.penalty) {
-        //                 payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
-        //             }*/
-        //         params = {
-        //             orderId: this.business.orderId,
-        //             orderType: this.business.orderType,
-        //             payments: JSON.stringify(payments),
-        //             businessJson: JSON.stringify(businessJson)
-        //         };
-        //     } else {
-        //         params = {
-        //             orderId: this.orderDetail.orderId,
-        //             orderType: - 1,
-        //             payments: JSON.stringify(payments),
-        //             businessJson: JSON.stringify(this.business)
-        //         };
-        //         if (this.business.rooms) {
-        //             const subOrderIds = [];
-        //             this.business.rooms.forEach(room => {
-        //                 if (room) {
-        //                     subOrderIds.push(room.roomOrderId);
-        //                 }
-        //             });
-        //             params.subOrderIds = JSON.stringify(subOrderIds);
-        //         }
-        //         if (this.business.type === 2) {
-        //             params.operationType = 1;
-        //         }
-        //     }
-        //         // 判断是否进行扫码收款
-        //     const id = this.select;
-        //     if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
-        //         AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
-        //                 .then(result => {
-        //                     if (result.code === 1) {
-        //                         modal.somethingAlert('收银成功');
-        //                         this.resetData();
-        //                         this.$emit('hide');
-        //                         $('#Cashier').modal('hide');
-        //                         const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-        //                         this.$emit('refreshView');
-        //                         this.$emit('showOrder', orderId);
-        //                     } else {
-        //                         modal.somethingAlert(result.msg);
-        //                     }
-        //                     this.disabledBtn = false;
-        //                 });
-        //     } else {
-        //         this.disabledBtn = false;
-        //         this.resetData();
-        //         this.$emit('hide');
-        //         $('#Cashier').modal('hide');
-        //         this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
-        //     }
+                }, () => {
+                    const that = this;
+                    http.ajaxWithToken('GET', ' /contractCompany/settle', getCodeData)
+                        .then((result) => {
+                            if (result.code === 0) {
+                                modal.somethingAlert('收款成功');
+                                that.close();
+                                this.num = 0;
+                                this.select = 0;
+                            } else {
+                                modal.somethingAlert(result.msg);
+                            }
+                        });
+                });
+            }
         }
     },
     components: {
         DdSelect,
-        DdOption
+        DdOption,
+        getAlipay
     }
 };
 </script>
-

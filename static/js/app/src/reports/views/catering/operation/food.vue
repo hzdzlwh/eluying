@@ -5,7 +5,7 @@
                 <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
                 <div v-if="restaurantList.length > 0" class="reports-component-container">
                     <dd-select v-model="restaurantId">
-                        <dd-option v-for="rest in restaurantList" :value="rest.restId" :label="rest.restName"></dd-option>
+                        <dd-option v-for="rest in restaurantList" :key="rest.restId" :value="rest.restId" :label="rest.restName"></dd-option>
                     </dd-select>
                 </div>
                 <small><i>菜品统计包含套餐里面的菜品</i></small>
