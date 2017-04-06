@@ -274,7 +274,7 @@
                     });
             },
             openVipForm() {
-                this.vip = {};
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined };
                 $('#vipForm').modal('show');
             },
             outPutExcel() {
