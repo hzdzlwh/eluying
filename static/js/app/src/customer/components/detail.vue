@@ -330,7 +330,7 @@
 
             outPutText(num) {
                 const paramsObj = this.getParams();
-                paramsObj.type = num;
+                paramsObj.exportType = num;
                 const host = http.getUrl2(OutputUrl[this.type]);
                 const pa = http.getDataWithToken(paramsObj);
                 const params = http.paramsToString(pa);
