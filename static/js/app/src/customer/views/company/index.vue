@@ -3,7 +3,7 @@
         <div class="box-head">
             <div class="vip-select">
                 <DdSelect v-model="CustomerStatus">
-                    <DdOption v-for="option in optionsCustomer" :value="option.value" :label="option.name">
+                    <DdOption v-for="option in optionsCustomer" :key='option' :value="option.value" :label="option.name">
                     </DdOption>
                 </DdSelect>
             </div>
@@ -19,7 +19,7 @@
                     </DdDropdown>
                 </div>
             </div>
-            <div class="dd-btn-primary dd-btn add-button" data-toggle="modal" data-target="#add">添加协议单位</div>
+            <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加协议单位</div>
             <div class="vip-search">
                 <div class="vip-search-container">
                     <input type="text" v-model='search' placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input">
@@ -40,13 +40,11 @@
             </div>
         </div>
         <!--add new customer Modal -->
-        <company @add='fetchDate'> </company>
+        <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
         <div>
             <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
         </div>
-        <detail 
-        :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'
-        >
+        <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
             <companyDetail :data='detailData'></companyDetail>
         </detail>
     </div>
@@ -144,14 +142,20 @@ import check from '../../components/check.vue';
 import detail from '../../components/detail.vue';
 import companyDetail from '../../components/companyDetail.vue';
 
+import modal from '../../../common/modal';
 export default {
     data() {
         return {
+            // formddata
+            formvisible: false,
+            formdata: {},
+            // detaildata
             detailData: {},
             detailVisible: false,
             detailTitle: '',
             detailtab: 0,
             detailid: 0,
+            // indexdata
             sort: {},
             pages: 0,
             cusDate: {
@@ -215,12 +219,14 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span >
-                        < span onClick = {
-                            () => this.openDetailDialog(row, 0)
-                        } > 查单< /span>< span v-show={row.ledgerFee && row.companyType} onClick = {
-                            () => this.openDetailDialog(row, 1)
-                        } > \/结算 < /span> < /span >
+                    < span >
+                    < span onClick = {
+                        () => this.openDetailDialog(row, 0)
+                    } > 查单 < /span> {
+                    (row.ledgerFee && row.companyType) ? < span onClick = {
+                        () => this.openDetailDialog(row, 1)
+                    } > / 结算 < /span > : ''
+                } < /span >
             }],
             datalist: [],
             count: 0,
@@ -258,10 +264,33 @@ export default {
     },
     methods: {
         detailEdit: function() {
+            this.detailClose();
+            this.formdata = {
+                id: this.detailData.cid,
+                companyAddress: this.detailData.companyAddress,
+                companyName: this.detailData.companyName,
+                companyType: this.detailData.companyType,
+                contactName: this.detailData.contactName,
+                contactPhone: this.detailData.contactPhone,
+                contractNum: this.detailData.contractNum,
+                discounts: this.detailData.discounts || [],
+                remark: this.detailData.remark
+            };
 
+            this.formvisible = true;
         },
-        detailDelete: function() {
-
+        detailDelete: function(id) {
+            http.get('/contractCompany/removeCompany', {
+                cid: id
+            }).then(res => {
+                if (res.code === 1) {
+                    modal.alert('删除成功');
+                    this.fetchDate();
+                    this.detailClose();
+                } else {
+                    modal.alert(res.msg);
+                }
+            });
         },
         detailClose: function() {
             this.detailVisible = false;
@@ -287,7 +316,7 @@ export default {
                             cid: date.cid
                         };
                     } else {
-
+                        modal.alert(res.msg);
                     }
                 });
             } else {
@@ -310,7 +339,7 @@ export default {
             paramsObj.exportType = num;
             const host = http.getUrl2('/contractCompany/exportCompanyList');
             const pa = http.getDataWithToken(paramsObj);
-                // pa.map = JSON.parse(pa.map);
+            // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
@@ -326,12 +355,25 @@ export default {
         changetype: function(value) {
             this.selecttype = value;
         },
+        addForm: function() {
+            this.formdata = {
+                id: 0,
+                companyAddress: '',
+                companyName: '',
+                companyType: 0,
+                contactName: '',
+                contactPhone: '',
+                contractNum: '',
+                discounts: [],
+                remark: ''
+            };
+            this.formvisible = true;
+        },
+        formclose: function() {
+            this.formvisible = false;
+        },
         fetchDate: function() {
             const dataObject = {
-                isConsumeFeeDesc: this.isConsumeFeeDesc,
-                isCreationTimeDesc: this.isCreationTimeDesc,
-                isLedgerFeeDesc: this.isLedgerFeeDesc,
-                isRechargeFeeDesc: this.isRechargeFeeDesc,
                 keyword: this.search,
                 page: this.currentPage,
                 companyType: this.CustomerStatus
