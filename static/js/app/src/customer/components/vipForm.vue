@@ -41,7 +41,7 @@
                                     <dd-option :key="level.vipLevelId" v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
                                 </dd-select>
                             </div>
-                            <span v-if="vip.vipUserId">{{vip.vipLevelName}}</span>
+                            <span v-if="vip.vipUserId">{{vip.levelName}}</span>
                         </div>
                         <div class="vipInfo-item">
                             <span class="vipInfo-item-label">会员卡号</span>
