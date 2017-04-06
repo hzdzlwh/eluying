@@ -15,7 +15,11 @@
                     <div class="checkitem">
                         <label for="">{{content[type].name2}}</label>
                         <dd-select v-model="select" class='checkSelect'>
+<<<<<<< HEAD
                             <dd-option v-for="type in checkType" :key='type' :value="type.id" :label="type.name"></dd-option>
+=======
+                            <dd-option v-for="type in checkType" :value="type.id" :key="type.id" :label="type.name"></dd-option>
+>>>>>>> 0fd334368ff66084686045bf12ee4f34127c199f
                         </dd-select>
                     </div>
                     <div class="checkitem checkBtn">

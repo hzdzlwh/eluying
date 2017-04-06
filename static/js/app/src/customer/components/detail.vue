@@ -16,7 +16,7 @@
                                 <a :class="{active: innerTab === 2}">消费订单</a>
                             </li>
                         </ul>
-                        <div>
+                        <div v-if="innerTab === 1">
                             <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
                             <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
                         </div>
