@@ -209,17 +209,18 @@
         return state && state.name;
     }
 
-    const orderType = ['住', '餐', '娱', '商']; // eslint-disable-line
-    const orderTypeClass = ['order-state-red', 'order-state-yellow', 'order-state-blue', 'order-state-green']; // eslint-disable-line
+    const orderType = ['餐', '娱', '商', '住']; // eslint-disable-line
+    const orderTypeClass = [ 'order-state-yellow', 'order-state-blue', 'order-state-green',  'order-state-red']; // eslint-disable-line
 
     const vipCol = [
         {
             title: '订单号',
-            dataIndex: 'orderNum'
+            dataIndex: 'orderNum',
+            width: 180
         },
         {
             title: '订单业态',
-            render: (h, row) => row.orderTypes.map(type => <span class="order-state {orderTypeClass[type]}">orderType[type]</span>)
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '订单金额￥',
@@ -231,7 +232,7 @@
         },
         {
             title: '操作人',
-            render: (h, row) => <span>{row.operators.join('、')}</span>
+            dataIndex: 'operators'
         },
         {
             title: '订单状态',
@@ -241,11 +242,12 @@
     const companyCol = [
         {
             title: '订单号',
-            dataIndex: 'orderNum'
+            dataIndex: 'orderNum',
+            width: 180
         },
         {
             title: '订单业态',
-            render: (h, row) => row.orderTypes.map(type => <span class="order-state {orderTypeClass[type]}">orderType[type]</span>)
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '联系人',
@@ -269,7 +271,7 @@
         },
         {
             title: '收银方式',
-            render: (h, row) => <span>{row.payTypes.join('、')}</span>
+            dataIndex: 'payTypes'
         }
     ];
     const OrdersUrls = {
