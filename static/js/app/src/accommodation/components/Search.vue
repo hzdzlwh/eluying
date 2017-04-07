@@ -62,7 +62,7 @@
         position: absolute;
         right: 242px;
         top: -42px;
-        z-index: 999;
+        z-index: 1061;
     }
     .acc-search-switch, .acc-search-btn {
         cursor: pointer;
