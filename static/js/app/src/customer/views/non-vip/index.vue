@@ -9,14 +9,7 @@
         <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
-                    <DdDropdown text="导出明细" trigger="click">
-                        <dd-dropdown-item>
-                            <span><a :href="outPutText(1)" download>导出PDF</a></span>
-                        </dd-dropdown-item>
-                        <dd-dropdown-item>
-                            <span><a :href="outPutText(0)" download>导出Excel</a></span>
-                        </dd-dropdown-item>
-                    </DdDropdown>
+                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出Excel</a></span>
                 </div>
             </div>
         </div>
@@ -45,10 +38,13 @@
 <style scoped>
 .cusTableContain {
     width: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
     position: relative;
 }
-
+.dd-dropdown a, .dd-dropdown a:hover {
+    color: #fff;
+    text-decoration: none;
+}
 .footer-container {
     width: 100%;
     height: 45px;
@@ -226,20 +222,19 @@ export default {
             this.fetchDate();
         },
         outPutText(num) {
-            const paramsObj = this.getParams();
-            paramsObj.exportType = num;
-            const host = http.getUrl2('/contractCompany/exportCompanyList');
+            const paramsObj = {};
+            const host = http.getUrl2('/customer/customersToExcel');
             const pa = http.getDataWithToken(paramsObj);
             // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
-        getParams() {
-            const obj = {
-                keyword: this.search
-            };
-            return obj;
-        },
+        // getParams() {
+        //     const obj = {
+        //         keyword: this.search
+        //     };
+        //     return obj;
+        // },
         addForm: function() {
             // $('#vipForm').modal('show');
                 // this.formvisible = true
@@ -275,7 +270,7 @@ export default {
         DdPagination,
         DdSelect,
         DdDropdown,
-        'dd-dropdown-item': DdDropdownItem,
+        DdDropdownItem,
         DdOption,
         DdTable,
         detail,
