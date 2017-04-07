@@ -108,6 +108,7 @@ import {
     DdSelect,
     DdOption
 } from 'dd-vue-component';
+import event from '../event.js';
 export default {
     props: {
         visible: Boolean,
@@ -183,11 +184,11 @@ export default {
                 modal.somethingAlert('请输入金额');
                 return false;
             }
-            if (this.paytype === 2 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
+            if (this.type === 2 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
                 modal.somethingAlert('结算金额不能大于挂账金额！！');
                 return false;
             }
-            if (this.paytype === 1 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
+            if (this.type === 1 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
                 modal.somethingAlert('退款金额不能大于最大金额！！');
                 return false;
             }
@@ -216,7 +217,8 @@ export default {
                                 modal.somethingAlert('收款成功');
                                 that.close();
                                 that.num = 0;
-                                that.select = 0;
+                                that.select = undefined;
+                                event.$emit('checkSuc');
                             } else {
                                 modal.somethingAlert(result.msg);
                             }

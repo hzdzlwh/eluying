@@ -14,7 +14,7 @@
                     </p>
                     <p>
                         <span class="addCus">
-                                   协议编号：</span>
+                                   企业编号：</span>
                         <input v-model='formdata.contractNum' type="text" class="dd-input" maxlength="20" placeholder="-请输入数字或字母-">
                     </p>
                     <p>
@@ -42,16 +42,19 @@
                         <span class="addCus">
                                     优惠折扣：
                             </span>
+                            <span>
                         <span class="selectBox" v-if='formdata.discounts'>
                         <div v-for='(item,index) in formdata.discounts' :key="item.id">
                             <span class="preName">{{item.nodeName}}</span>
                         <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
                 </div>
+                
                 </span>
-                <div style="display:flex;    padding-left: 100px;">
+                <div style="display:flex;">
                     <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
-                    <span class="preRequest">请输入0.1-9.9之间的数字</span>
+                    <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
                 </div>
+                </span>
                 </p>
                 <p>
                     <span class="addCus">
@@ -99,6 +102,7 @@
 #add .modal-body p input {
     width: 210px;
     height: 24px;
+    margin-right: 4px;
 }
 
 #add .modal-body p {
@@ -170,6 +174,8 @@
 
 .selectBox > div {
     margin-bottom: 5px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .selectBox input {
@@ -179,8 +185,9 @@
 .selectBox {
     max-height: 300px;
     display: inline-block;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-right: 20px;
+    width: 250px;
 }
 </style>
 <script>
@@ -271,6 +278,13 @@ export default {
                 modal.somethingAlert('请输入公司名');
                 return;
             }
+            if (this.formdata.contractNum) {
+                const re = /^[0-9a-zA-Z]*$/g;
+                if (!re.test(this.formdata.contractNum)) {
+                    modal.somethingAlert('请输入正确的协议编号');
+                    return;
+                }
+            }
             if (!this.formdata.contactName) {
                 modal.somethingAlert('请输入联系人');
                 return;
@@ -282,7 +296,7 @@ export default {
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
                 for (let i = 0; i < this.formdata.discounts.length; i ++) {
-                    this.formdata.discounts[i].discount = parseInt(this.formdata.discounts[i].discount);
+                    this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount).toFixed(1);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
@@ -314,7 +328,7 @@ export default {
                 if (this.formdata.discounts) {
                     const newList = [];
                     list.map(item => {
-                        const result = this.formdata.discounts.find(i => i.id === item.id);
+                        const result = this.formdata.discounts.find(i => i.id === item.id && i.nodeType === item.nodeType);
                         if (result) {
                             if (item.selected) {
                                 newList.push({ ...result
@@ -349,7 +363,8 @@ export default {
             }
         },
         data(val) {
-            this.formdata = { ...val };
+            this.formdata = { ...val
+            };
         }
     },
     components: {

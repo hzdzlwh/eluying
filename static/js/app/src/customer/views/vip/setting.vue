@@ -414,7 +414,7 @@
                 } else {
                     const newList = [];
                     list.map(item => {
-                        const result = this.discount.find(i => i.id === item.id);
+                        const result = this.discount.find(i => i.id === item.id && i.nodeType === item.nodeType);
                         if (result) {
                             if (item.selected) {
                                 newList.push({ ...result });
