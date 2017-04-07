@@ -180,7 +180,7 @@
         },
         {
             name: '已预订',
-            id: 1
+            id: 2
         },
         {
             name: '进行中',
@@ -193,14 +193,6 @@
         {
             name: '已取消',
             id: 4
-        },
-        {
-            name: '待处理',
-            id: 0
-        },
-        {
-            name: '已拒绝',
-            id: 1
         }
     ];
 
@@ -394,7 +386,7 @@
                 return {
                     startTime: this.startTime,
                     endTime: this.endTime,
-                    state: this.state === '7' ? '' : this.state,
+                    state: this.state,
                     phone: this.phone,
                     pageNo: this.pageNo,
                     keyword: this.keyword,
@@ -405,7 +397,7 @@
             search() {
                 this.keyword = this.$refs.searchInput.value;
                 this.pageNo = 1;
-                this.geOrders();
+                this.getOrders();
             },
             show() {
                 this.innerTab = this.tab;
@@ -419,7 +411,7 @@
                 this.ledgerFeeSum = 0;
                 this.startTime = '';
                 this.endTime = '';
-                this.state = '7';
+                this.state = '';
             }
         }
     };
