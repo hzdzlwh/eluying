@@ -36,7 +36,7 @@
 <style scoped lang="sass" rel="stylesheet/scss">
 @import "~dd-common-css/src/variables";
 #goodsModal {
-    z-index: 1051;
+    z-index: 1062;
 }
 
 .goodsdialog {

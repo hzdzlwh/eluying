@@ -64,12 +64,11 @@
                                             <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
                                                 <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
                                                     <div class="user-group-origin">
-                                                        <span class="user-group-company"
-                                                              :title="origin.name">
+                                                        <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
                                                         </span>
-                                                        <!--<span class="user-group-img" v-if="!origin.type"></span>
-                                                        <div class="user-group-tips" v-if="!origin.type">
+                                                        <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                                        <!--<div class="user-group-tips" v-if="!origin.type">
                                                             <p class="user-company-title">{{ origin.companyName }}</p>
                                                             <p class="user-company-item">
                                                                 <span>{{ origin.contractNum }}</span>
@@ -408,6 +407,7 @@
         box-sizing: border-box;
         font-size: $font-size-base;
         color: $gary-daker;
+        z-index: 1062;
         .modal-dialog {
             width: 794px;
             margin-top: 0 !important;
@@ -1047,12 +1047,18 @@
                                 this.userSelfOrigins.push(origin);
                             } else if(origin.id === -5) {
                                 origin.companyList.forEach(company => {
+                                    let companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                    let number = `企业编号:${company.contractNum || ''}`;
+                                    let name = `联系人:${company.contactName || ''}`;
+                                    let phone = `联系人电话:${company.contactPhone || ''}`;
                                     company.name = company.companyName;
                                     company.originType = `${company.id}~${origin.id}`;
+                                    company.info = `${companyName}\n${number}\n${name}\n${phone}`;
                                 });
                                 this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
                             } else if(origin.id > 0) {
                                 origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
                                 otherOrigins.push(origin);
                             }
                         });
