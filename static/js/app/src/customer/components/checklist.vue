@@ -113,19 +113,24 @@ export default {
             historySettle: 0,
             datalist: [],
             historyRecharge: 0,
-            historyRefunds: 0
+            historyRefunds: 0,
+            url: [
+                '/contractCompany/getSettleLog',
+                '/contractCompany/getWalletLog'
+            ]
         };
     },
     created() {},
     methods: {
         fetchDate() {
-            http.get('/contractCompany/removeCompany', {
+            http.get(this.url[this.checkListType], {
                 cid: this.id
             }).then(res => {
                 if (res.code === 1) {
                     this.datalist = res.data.list;
-                    this.historyRecharge = res.data.list.historyRecharge;
-                    this.historyRefunds = res.data.list.historyRefunds;
+                    this.historyRecharge = res.data.historyRecharge;
+                    this.historyRefunds = res.data.historyRefunds;
+                    this.historySettle = res.data.historySettle;
                 } else {
                     modal.alert(res.msg);
                 }
@@ -147,10 +152,13 @@ export default {
                 $('#checkList').modal('hide');
             }
         },
-        data(val) {
-            this.formdata = { ...val
-            };
+        id(val) {
+            this.fetchDate();
+        },
+        checkListType() {
+            this.fetchDate();
         }
+
     },
     components: {
         DdTable

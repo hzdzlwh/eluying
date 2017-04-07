@@ -108,6 +108,7 @@ import {
     DdSelect,
     DdOption
 } from 'dd-vue-component';
+import event from '../event.js';
 export default {
     props: {
         visible: Boolean,
@@ -216,7 +217,8 @@ export default {
                                 modal.somethingAlert('收款成功');
                                 that.close();
                                 that.num = 0;
-                                that.select = 0;
+                                that.select = undefined;
+                                event.$emit('checkSuc');
                             } else {
                                 modal.somethingAlert(result.msg);
                             }

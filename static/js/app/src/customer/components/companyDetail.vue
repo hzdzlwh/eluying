@@ -18,7 +18,7 @@
             <div class="noVipEntitem"><span class="noVipLabel">订单数</span>{{data.orderCount || 0}}</div>
         </div>
         <div class="noVipitem">
-            <div class="noVipEntitem"><span class="noVipLabel">企业地址</span>{{data.companyName}}</div>
+            <div class="noVipEntitem"><span class="noVipLabel">企业地址</span>{{data.companyAddress || '无'}}</div>
             <div class="noVipEntitem"><span class="noVipLabel">创建时间</span>{{data.creationTime}}</div>
         </div>
         <div class="noVipitem">
