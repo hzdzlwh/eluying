@@ -101,7 +101,7 @@
 
 .vip-search-container {
     position: relative;
-    min-width: 216px;
+    min-width: 316px;
 }
 
 .vip-search-icon {

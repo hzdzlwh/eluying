@@ -271,7 +271,7 @@ export default {
         },
         customerDate: function() {
             if (!this.formdata.companyName) {
-                modal.somethingAlert('请输入公司名');
+                modal.somethingAlert('请输入企业名称');
                 return;
             }
             if (this.formdata.contractNum) {
