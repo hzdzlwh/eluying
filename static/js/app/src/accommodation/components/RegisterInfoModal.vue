@@ -59,12 +59,16 @@
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType">
                                             <dd-option :key="origin.originType" v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                                <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
-                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="origin.name">
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
+                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
                                                     <div class="user-group-origin">
-                                                        <span>{{ origin.name }}</span>
-                                                        <span class="user-group-img" v-if="!origin.type"></span>
+                                                        <span class="user-group-company"
+                                                              :title="origin.name">
+                                                            {{ origin.name }}
+                                                        </span>
+                                                        <!--<span class="user-group-img" v-if="!origin.type"></span>
                                                         <div class="user-group-tips" v-if="!origin.type">
                                                             <p class="user-company-title">{{ origin.companyName }}</p>
                                                             <p class="user-company-item">
@@ -75,7 +79,7 @@
                                                                 <span>{{ origin.contactName }}</span>
                                                                 <span>{{ origin.contactPhone }}</span>
                                                             </p>
-                                                        </div>
+                                                        </div>-->
                                                     </div>
                                                 </dd-option>
                                             </dd-group-option>
@@ -175,7 +179,7 @@
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
                                                   v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                                         </span>
                                     </div>
@@ -263,7 +267,7 @@
                                                   v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                                     </span>
                                 </div>
@@ -338,7 +342,7 @@
                                                 </span>
                                             </span>
                                             <span class="discount-num">
-                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
                                             </span>
                                     </span>
                                 </div>
@@ -557,6 +561,13 @@
                 position: absolute;
                 right: 0;
             }
+            .user-group-company {
+                display: inline-block;
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
             .user-group-img {
                 display: inline-block;
                 cursor: pointer;
@@ -565,7 +576,7 @@
                 background: url("../../../../../image/modal/room_modal_info.png");
                 background-size: contain;
             }
-            .dd-select-option {
+            .dd-select-option-group > .dd-select-option {
                 overflow: visible !important;
             }
             .user-group-img:hover + .user-group-tips {
@@ -1120,6 +1131,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             const discountList = res.data;
+                            this.vipDiscountDetail = {};
                             this.vipDiscountDetail.isVip = false;
                             this.vipDiscountDetail.vipDetail = discountList;
                         } else {
@@ -1794,6 +1806,15 @@
                 if (originType === -5) {
                     this.getCompanyDiscount({ contractCompanyId: originId });
                 }
+                if (originType === -4 && this.phone.length === 11) {
+                    const params = this.checkState === 'editOrder'
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        : { phone: this.phone };
+                    this.getVipDiscount(params);
+                }
+                if (originType !== -5 && originType !== -4) {
+                    this.vipDiscountDetail = {};
+                }
             },
             phone(newVal) {
                 const params = this.checkState === 'editOrder'
@@ -1808,7 +1829,7 @@
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
-                if (!newVal.vipDetail && !oldVal.vipDetail) { return false ;}
+                if (!newVal.vipDetail && !oldVal.vipDetail) { return false;}
                 this.registerRooms.forEach(room => {
                     if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
