@@ -116,6 +116,7 @@
 <script>
 import AJAXService from 'AJAXService';
 import modal from 'modal';
+import event from '../event.js';
 export default {
     props: {
         data: {
@@ -133,7 +134,7 @@ export default {
         return {
             authCode: '',
             inputFocus: false,
-            url: ['/contractCompany/refund', '/contractCompany/settle'
+            url: ['/contractCompany/refund', '', '/contractCompany/settle'
 
             ]
         };
@@ -144,6 +145,7 @@ export default {
             $('#payWithCode').modal('hide');
             this.$emit('close');
             if (bool === 1) {
+                event.$emit('checkSuc');
                 this.$emit('changestatus', 1);
             } else if (bool === 2) {
                 this.$emit('changestatus', 0);
@@ -152,7 +154,7 @@ export default {
         payMoney() {
             const params = JSON.parse(JSON.stringify(this.data.data));
             params.authCode = this.authCode;
-            AJAXService.ajaxWithToken('GET', this.url[this.paytype - 1], params)
+            AJAXService.ajaxWithToken('GET', this.url[this.paytype], params)
                 .then(result => {
                     if (result.code === 0) {
                         const status = result.data.status;

@@ -42,16 +42,19 @@
                         <span class="addCus">
                                     优惠折扣：
                             </span>
+                            <span>
                         <span class="selectBox" v-if='formdata.discounts'>
                         <div v-for='(item,index) in formdata.discounts' :key="item.id">
                             <span class="preName">{{item.nodeName}}</span>
                         <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
                 </div>
+                
                 </span>
-                <div style="display:flex;    padding-left: 100px;">
+                <div style="display:flex;">
                     <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
-                    <span class="preRequest">请输入0.1-9.9之间的数字</span>
+                    <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
                 </div>
+                </span>
                 </p>
                 <p>
                     <span class="addCus">
@@ -99,6 +102,7 @@
 #add .modal-body p input {
     width: 210px;
     height: 24px;
+    margin-right: 4px;
 }
 
 #add .modal-body p {

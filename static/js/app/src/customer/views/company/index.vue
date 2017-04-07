@@ -19,7 +19,7 @@
                     </DdDropdown>
                 </div>
             </div>
-            <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加协议单位</div>
+            <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加企业客户</div>
             <div class="vip-search">
                 <div class="vip-search-container">
                     <input type="text" v-model='search' placeholder="搜索企业编号/企业名称/联系人/联系号码" class="order-search dd-input">
@@ -101,7 +101,7 @@
 
 .vip-search-container {
     position: relative;
-    min-width: 216px;
+    min-width: 316px;
 }
 
 .vip-search-icon {
@@ -177,7 +177,7 @@ export default {
                 title: '企业名称',
                 dataIndex: 'companyName'
             }, {
-                title: '协议编号',
+                title: '企业编号',
                 dataIndex: 'contractNum'
             }, {
                 title: '联系人',
@@ -227,8 +227,7 @@ export default {
                     < span >
                     < span onClick = {
                         () => this.openDetailDialog(row, 0, 1)
-                    } > 详情 < /span> /
-                    < span onClick = {
+                    } > 详情 < /span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
                     } > 查单 < /span> {
                     (row.ledgerFee && row.companyType) ? < span onClick = {
@@ -333,7 +332,13 @@ export default {
                 this.detailtab = checkType;
                 this.detailTitle = date.companyName;
                 this.detailVisible = true;
-                this.detailData = date;
+                http.get('/contractCompany/getDetail', { cid: date.cid }).then(res => {
+                    if (res.code === 1) {
+                        this.detailData = res.data;
+                    } else {
+                        modal.alert(res.msg);
+                    }
+                });
             }
         },
         changeSort: function(value) {
@@ -421,9 +426,10 @@ export default {
             this.checkListType = 0;
             $('#checkList').modal('show');
         });
-        event.$on('showListSuc', () => {
-            this.checkListType = 1;
-            this.checkListVisible = true;
+        event.$on('checkSuc', () => {
+            this.checkListVisible = false;
+            this.detailVisible = false;
+            this.fetchDate();
         });
     },
     watch: {
