@@ -281,7 +281,7 @@ export default {
                     return;
                 }
             }
-            if (this.formdata.contractNum) {
+            if (!this.formdata.contactName) {
                 modal.somethingAlert('请输入联系人');
                 return;
             }
@@ -292,7 +292,7 @@ export default {
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
                 for (let i = 0; i < this.formdata.discounts.length; i ++) {
-                    this.formdata.discounts[i].discount = parseInt(this.formdata.discounts[i].discount);
+                    this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount).toFixed(1);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
