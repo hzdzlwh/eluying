@@ -56,7 +56,7 @@ function checkVersion() {
 function checkModule(moduleId, subId) {
     if (moduleId === BUSINESS_ID) {
         // 业务设置通过用户类型判断
-        const camp = camps.find(i => i.campId === campId);
+        const camp = camps.find(i => i.campId === Number(campId));
         return camp.userType === HOST_ID || camp.userType === ADMIN_ID;
     }
 
