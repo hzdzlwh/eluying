@@ -14,7 +14,7 @@
                     </p>
                     <p>
                         <span class="addCus">
-                                   协议编号：</span>
+                                   企业编号：</span>
                         <input v-model='formdata.contractNum' type="text" class="dd-input" maxlength="20" placeholder="-请输入数字或字母-">
                     </p>
                     <p>

@@ -22,7 +22,7 @@
             <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加协议单位</div>
             <div class="vip-search">
                 <div class="vip-search-container">
-                    <input type="text" v-model='search' placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input">
+                    <input type="text" v-model='search' placeholder="搜索企业编号/企业名称/联系人/联系号码" class="order-search dd-input">
                     <span class="vip-search-icon" @click='fetchDate'><img src="//static.dingdandao.com/order_manage_search_grey.png" alt=""></span>
                 </div>
             </div>
