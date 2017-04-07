@@ -22,13 +22,12 @@
                     <thead>
                     <tr>
                         <th>餐厅名称</th>
-                        <th>菜品</th>
-                        <th>桌子</th>
-                        <th>
+                        <th style="width: 60px;">菜品</th>
+                        <th style="width: 60px;">桌子</th>
+                        <th style="width: 105px;position: relative">
                             开启扫码下单<img src="//static.dingdandao.com/eluyun/EDE0105F-5118-47DA-8648-DE0021AF4558@1x.png" alt="" class="imgss">
                             <p class="remindWords" style="display:none;">
-                                <span class="words" style="line-height: 22px;">1、开启扫码下单后，客户可以通过微信扫描该餐厅的桌位二维码进行点菜、付款。<br/>2、您可以进入桌子列表管理和下载桌位二维码</span>
-                                <span class="bkImg"><img src="//static.dingdandao.com/eluyun83C27829-6711-43F4-B37B-B8CF2A81B863@1x.png" alt=""></span>
+                                1、开启扫码下单后，客户可以通过微信扫描该餐厅的桌位二维码进行点菜、付款。<br/>2、您可以进入桌子列表管理和下载桌位二维码。
                             </p>
                         </th>
                         <th>扫码下单公告</th>
@@ -43,7 +42,7 @@
                         <td><span class="code-btn back-{{restaurant.isOpenCaterScan === 1 ? 'open':'close'}}" @click="toggleStatus(restaurant)"></span></td>
                         <td class="rest-announcement" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
                         <td>
-                            <span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
+                            <span v-on:click="openSettingDialog(restaurant)">其他设置</span>/<span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
                         </td>
                     </tr>
                     </tbody>
@@ -71,6 +70,53 @@
                     <button class="v-btn v-blue-btn" v-if="status === 'create'" v-on:click="createRestaurant">确定</button>
                     <button class="v-btn v-blue-btn" v-if="status === 'edit'" v-on:click="editRestaurant">确定</button>
                     <button class="v-btn v-white-btn" v-on:click="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="settingDialog">
+        <div class="modal-dialog" style="width:437px;">
+            <div class="modal-content clearfloat v-modal">
+                <button type="button" class="close" @click="close"><span>&times;</span></button>
+                <p class="rest-title" style="margin-bottom: 18px;">
+                    其他设置
+                </p>
+                <p class="sub-line"></p>
+                <div style="display: flex;margin-bottom: 20px   ">
+                    <span class="setting-label">快捷折扣：</span>
+                    <div>
+                        <p v-for="discount in discounts" v-if="!discount.deleted">
+                            <span style="width: 130px;display: inline-block">{{discount.description}}</span>
+                            <span style="width: 78px;margin: 0 20px;display: inline-block">{{discount.discount}}折</span>
+                            <img src="/static/image/modal/room_modal_delete.png" @click="remove(discount)" style="cursor: pointer">
+                        </p>
+                        <div v-for="discount in newDiscounts" style="margin-bottom: 10px">
+                            <input class="dd-input" type="text" placeholder="折扣名称" v-model="discount.description" maxlength="8" style="width: 130px">
+                            <span style="margin: 0 20px"><input class="dd-input" type="text" placeholder="优惠" v-model="discount.discount" maxlength="3" style="width: 60px;margin-right: 4px">折</span>
+                            <img src="/static/image/modal/room_modal_delete.png" @click="remove(discount)" style="cursor: pointer">
+                        </div>
+                        <p style="margin: -5px 0 10px;font-size: 12px" v-if="newDiscounts.length > 0">注：请输入0.1~9.9之间的数字</p>
+                        <span @click="addDiscount" style="cursor: pointer"><img src="//static.dingdandao.com/vipAdditional.png" style="margin-right: 4px">新增折扣</span>
+                    </div>
+                </div>
+                <p class="sub-line"></p>
+                <div>
+                    <div>
+                        <span class="setting-label">零头处理：</span>
+                        <input name="oddType" type="radio" class="dd-radio" id="zero-none" value="0" v-model="oddType"><label for="zero-none">不处理</label>
+                        <input name="oddType" type="radio" class="dd-radio" id="zero-round" value="1" v-model="oddType"><label for="zero-round">四舍五入</label>
+                        <input name="oddType" type="radio" class="dd-radio" id="zero-fixed" value="2" v-model="oddType"><label for="zero-fixed">元后抹零</label>
+                    </div>
+                    <div v-if="oddType == 1 || oddType == 2">
+                        <span class="setting-label">精确到：</span>
+                        <input name="unit" type="radio" class="dd-radio" id="zero-jiao" value="1" v-model="unit"><label for="zero-jiao">角</label>
+                        <input name="unit" type="radio" class="dd-radio" id="zero-yuan" value="2" v-model="unit"><label for="zero-yuan">元</label>
+                        <input name="unit" type="radio" class="dd-radio" id="zero-ten" value="3" v-model="unit"><label for="zero-ten">十元</label>
+                    </div>
+                </div>
+                <div class="v-btn-group" style="padding-left: 60px">
+                    <button class="v-btn v-blue-btn" @click="confirm">确定</button>
+                    <button class="v-btn v-white-btn" @click="close">取消</button>
                 </div>
             </div>
         </div>

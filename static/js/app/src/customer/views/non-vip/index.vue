@@ -128,9 +128,13 @@ import {
 import http from '../../../common/AJAXService';
 import detail from '../../components/detail.vue';
 import vipForm from '../../components/vipForm.vue';
+import auth from '../../../common/auth';
 export default {
     data() {
         return {
+           contral:{
+                VIP_EDIT_ID : false
+            },
             // formddata
             formvisible: false,
             formdata: {},
@@ -183,10 +187,11 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span >
-                        < span onClick = {
-                            () => this.openDetailDialog(row, 1)
-                        }> 加入会员 </span><span onClick = {
+                        < span > {
+                        this.contral.VIP_EDIT_ID ? < span onClick = {
+                            () => this.openDetailDialog(row, 1) 
+                        }> 加入会员 /</span> : '-' }
+                        <span onClick = {
                         () => this.openDetailDialog(row, 0)
                 } > 查单 </span></span>
             }],
@@ -264,6 +269,7 @@ export default {
         }
     },
     created() {
+        this.contral.VIP_EDIT_ID = auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
         this.fetchDate();
     },
     components: {
