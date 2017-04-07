@@ -165,7 +165,8 @@
                     list.push({
                         id: 0,
                         nodeType: 0,
-                        nodeName: '住宿'
+                        nodeName: '住宿',
+                        selected: true
                     });
                 }
 
@@ -184,7 +185,8 @@
                     list.push({
                         id: 0,
                         nodeType: 3,
-                        nodeName: '商超'
+                        nodeName: '商超',
+                        selected: true
                     });
                 }
 
