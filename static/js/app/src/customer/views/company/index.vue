@@ -316,7 +316,14 @@ export default {
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
-                        this.check.chekcType = res.data.list;
+                        if (checkType === 1) {
+                            this.check.chekcType = res.data.list.filter(function(element) {
+                                const id = element.id;
+                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                            });
+                        } else {
+                            this.check.chekcType = res.data.list;
+                        }
                         this.check.show = true;
                         this.check.data = {
                             rechargeFee: date.rechargeFee,
@@ -409,23 +416,29 @@ export default {
     },
     created() {
         this.fetchDate();
+        // 充值记录
         event.$on('showlist', () => {
             this.checkListType = 1;
             this.checkListVisible = true;
         });
+        // 充值
         event.$on('showbtn1', () => {
             this.openDetailDialog(this.detailData, 1, 0);
         });
+        // 退款
         event.$on('showbtn2', () => {
             this.openDetailDialog(this.detailData, 1, 1);
         });
+        // 结账
         event.$on('showbtn3', () => {
             this.openDetailDialog(this.detailData, 1, 2);
         });
+        // 结算记录
         event.$on('showlistcheck', () => {
             this.checkListType = 0;
             $('#checkList').modal('show');
         });
+        // 电子钱包流程成功回调
         event.$on('checkSuc', () => {
             this.checkListVisible = false;
             this.detailVisible = false;
