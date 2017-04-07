@@ -1635,10 +1635,10 @@
             },
 
             modifyRoom(item) {
-                item.changeTimes++;
+                /*item.changeTimes++;
                 if (item.changeTimes <= 4) {
                     return false;
-                }
+                }*/
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
@@ -1661,17 +1661,17 @@
                 this.lastRoomItem.startDate = startDate;
                 this.lastRoomItem.endDate = endDate;
                 this.lastRoomItem.roomType = item.roomType;
-                const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
-                AJAXService.ajaxWithToken('get', '/room/getRoomStaus',
-                    { id: item.roomType,
-                        date: startDate,
-                        days: duration < 1 ? 1 : duration
-                    })
+                let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 .room? 1 : duration};
+                if (item.roomOrderId) {
+                    paramsObj.roomOrderId = item.roomOrderId;
+                }
+                AJAXService.ajaxWithToken('get', '/room/getRoomStaus', paramsObj)
                     .then(res => {
                         if (res.code === 1) {
                             let datePriceList = [];
                             let price = 0;
                             let originPrice = 0;
+                            const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                             res.data.rs.status.forEach((option,index) => {
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
                             });
@@ -1837,14 +1837,12 @@
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail && !oldVal.vipDetail) { return false;}
                 this.registerRooms.forEach(room => {
-                    if (this.checkState === 'editOrder') {
+                    /*if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
-                    }
-                    if (!room.roomOrderId || (room.roomOrderId && room.changeTimes > 3)) {
-                        room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
-                        this.setDateFee(room.price, room);
-                        this.setFirstDateFee(room.price, room);
-                    }
+                    }*/
+                    room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
+                    this.setDateFee(room.price, room);
+                    this.setFirstDateFee(room.price, room);
                 });
 
                 this.enterItems.forEach(enter => {
