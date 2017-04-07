@@ -405,7 +405,7 @@
             search() {
                 this.keyword = this.$refs.searchInput.value;
                 this.pageNo = 1;
-                this.geOrders();
+                this.getOrders();
             },
             show() {
                 this.innerTab = this.tab;
