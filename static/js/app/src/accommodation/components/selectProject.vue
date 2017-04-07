@@ -26,7 +26,7 @@
 <style scoped lang="sass" rel="stylesheet/scss">
 @import "~dd-common-css/src/variables";
 #selectModal {
-    z-index: 1051;
+    z-index: 1062;
 }
 
 .selectdialog {
