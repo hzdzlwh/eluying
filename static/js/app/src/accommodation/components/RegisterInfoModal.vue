@@ -1271,6 +1271,7 @@
                     if (obj.roomOrderId) {
                         delete obj.roomOrderId;
                         delete obj.state;
+                        delete obj.originDatePriceList;
                     }
                     this.registerRooms.push(obj);
                 }
@@ -1670,6 +1671,7 @@
                         if (res.code === 1) {
                             let datePriceList = [];
                             let price = 0;
+                            let oldPrice = 0;
                             let originPrice = 0;
                             const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                             res.data.rs.status.forEach((option,index) => {
@@ -1678,8 +1680,17 @@
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
+                                if (item.originDatePriceList) {
+                                    item.originDatePriceList.forEach(dat => {
+                                        if (date.date === dat.date) {
+                                            oldPrice += dat.dateFee;
+                                            price -= date.dateFee;
+                                            date.dateFee = dat.dateFee;
+                                        }
+                                    });
+                                }
                             });
-                            item.price = Number((price * discount).toFixed(2));
+                            item.price = Number((Number((price * discount).toFixed(2)) + oldPrice).toFixed(2));
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
                             this.setDateFee(item.price, item);
@@ -1948,6 +1959,7 @@
                             return newDate;
 
                         });
+                        room.originDatePriceList = JSON.parse(JSON.stringify(room.datePriceList));
                         room.showPriceList = false;
                         room.showTip = false;
                         room.state = item.state;
