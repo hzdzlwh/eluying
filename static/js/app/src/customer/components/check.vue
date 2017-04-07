@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="checkForm" class="modal fade" role="dialog">
+        <div id="checkForm" class="modal fade" role="dialog" data-backdrop="static">
             <div class="modal-content checkForm-modal-content">
                 <span class="checkForm-closeBtn" @click="close()">&times;</span>
                 <div class="checkForm-modal-header">
@@ -10,16 +10,12 @@
                 <div class="checkForm-modal-body">
                     <div class="checkitem">
                         <label for="">{{content[type].name1}}</label>
-                        <input v-model='num' type="Number" class="dd-input" /><span class="CheckHave" v-if='type !== 0'>可退余额￥{{data.rechargeFee || data.ledgerFee}}</span>
+                        <input v-model='num' type="Number" class="dd-input" /><span class="CheckHave" v-if='type !== 0'>可退余额￥{{type === 2 ? data.ledgerFee : data.rechargeFee}}</span>
                     </div>
                     <div class="checkitem">
                         <label for="">{{content[type].name2}}</label>
                         <dd-select v-model="select" class='checkSelect'>
-<<<<<<< HEAD
                             <dd-option v-for="type in checkType" :key='type' :value="type.id" :label="type.name"></dd-option>
-=======
-                            <dd-option v-for="type in checkType" :value="type.id" :key="type.id" :label="type.name"></dd-option>
->>>>>>> 0fd334368ff66084686045bf12ee4f34127c199f
                         </dd-select>
                     </div>
                     <div class="checkitem checkBtn">
@@ -29,10 +25,13 @@
                 </div>
             </div>
         </div>
-        <getAlipay :data='alipay' :show='alipayshow' @close='changeAlipay' @changestatus='changeAlipayStatus'></getAlipay>
+        <getAlipay :data='alipay' :show='alipayshow' @close='changeAlipay' @changestatus='changeAlipayStatus' :paytype='type'></getAlipay>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
+#checkForm {
+    z-index:1052;
+}
 .checkForm-modal-content {
     background: #fafafa;
     border-radius: 2px;
@@ -113,20 +112,17 @@ export default {
     props: {
         visible: Boolean,
         type: {
-            default: 2,
+            default: 2, // 0充值，1退款，2挂帐
             type: Number
-        },
-        checkType: {
-            default: [],
-            type: Array
         },
         data: {
             default: {},
             type: Object
-        }
+        }, checkType: undefined
     },
     data() {
         return {
+            paytype: 0,
             num: undefined,
             content: [{
                 name: '企业充值',
@@ -187,40 +183,40 @@ export default {
                 modal.somethingAlert('请输入金额');
                 return false;
             }
-            if (this.data.rechargeFee && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
-                modal.somethingAlert('退款金额不能大于最大金额！！');
+            if (this.paytype === 2 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
+                modal.somethingAlert('结算金额不能大于挂账金额！！');
                 return false;
             }
-            if (this.data.ledgerFee && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
-                modal.somethingAlert('结算金额不能大于挂账金额！！');
+            if (this.paytype === 1 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
+                modal.somethingAlert('退款金额不能大于最大金额！！');
                 return false;
             }
             // 判断是否进行扫码收款
             const id = this.select;
             const getCodeData = {
-                amount: this.num,
+                amount: parseInt(this.num),
                 cid: this.data.cid,
                 payChannel: this.checkType.filter(function(val) {
                     return val.id === id;
                 })[0].name,
                 payChannelId: this.select
             };
-            if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
+            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.paytype !== 1) {
                 this.alipay.data = getCodeData;
                 this.alipayshow = true;
             } else {
+                const that = this;
                 modal.confirmDialog({
                     message: '请确保金额已收到！'
 
                 }, () => {
-                    const that = this;
-                    http.ajaxWithToken('GET', ' /contractCompany/settle', getCodeData)
+                    http.ajaxWithToken('GET', this.content[this.paytype].url, getCodeData)
                         .then((result) => {
-                            if (result.code === 0) {
+                            if (result.code === 1) {
                                 modal.somethingAlert('收款成功');
                                 that.close();
-                                this.num = 0;
-                                this.select = 0;
+                                that.num = 0;
+                                that.select = 0;
                             } else {
                                 modal.somethingAlert(result.msg);
                             }
