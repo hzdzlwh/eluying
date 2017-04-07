@@ -203,6 +203,14 @@
                 $('#categorySelectModal').modal('hide');
             },
             close() {
+                this.restNodeList.map(i => {
+                    i.selected = false;
+                });
+                this.enterNodeList.map(i => {
+                    i.selected = false;
+                });
+                this.room = false;
+                this.shop = false;
                 $('#categorySelectModal').modal('hide');
             }
         }
