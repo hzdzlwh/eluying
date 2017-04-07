@@ -2,7 +2,7 @@
     <div class="modal fade" role="dialog" id="categorySelectModal" data-backdrop="static">
         <div class="modal-dialog" style="width: 400px">
             <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <button type="button" class="close" @click="close"><span>&times;</span></button>
                 <h2 style="margin-bottom: 21px">{{type === 'consume' ? '选择消费累计项目' : '选择优惠项目'}}</h2>
                 <div style="padding-left: 21px">
                     <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="all"><span>全部</span></div>

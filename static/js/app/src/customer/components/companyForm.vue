@@ -170,6 +170,8 @@
 
 .selectBox > div {
     margin-bottom: 5px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .selectBox input {
@@ -179,8 +181,9 @@
 .selectBox {
     max-height: 300px;
     display: inline-block;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-right: 20px;
+    width: 250px;
 }
 </style>
 <script>
@@ -271,7 +274,14 @@ export default {
                 modal.somethingAlert('请输入公司名');
                 return;
             }
-            if (!this.formdata.contactName) {
+            if (this.formdata.contractNum) {
+                const re = /^[0-9a-zA-Z]*$/g;
+                if (!re.test(this.formdata.contractNum)) {
+                    modal.somethingAlert('请输入正确的协议编号');
+                    return;
+                }
+            }
+            if (this.formdata.contractNum) {
                 modal.somethingAlert('请输入联系人');
                 return;
             }
@@ -349,7 +359,8 @@ export default {
             }
         },
         data(val) {
-            this.formdata = { ...val };
+            this.formdata = { ...val
+            };
         }
     },
     components: {
