@@ -837,7 +837,7 @@
                 modifyEnterOrShopIndex: -1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
-                lastEnterItem: {},
+                lastEnterItem: {}
             }
         },
 
@@ -973,7 +973,6 @@
                 this.vipListShow = false;
             },
             getVipDiscount(params) {
-                this.lastPhone = params.phone;
                 AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
