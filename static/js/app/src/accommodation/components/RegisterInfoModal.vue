@@ -1109,6 +1109,7 @@
                         delete obj.roomOrderId;
                         delete obj.state;
                         delete obj.originDatePriceList;
+                        delete obj.haveRequest;
                     }
                     this.registerRooms.push(obj);
                 }
@@ -1458,6 +1459,10 @@
                 if (item.changeTimes <= 4) {
                     return false;
                 }*/
+                if (item.haveRequest) {
+                    item.haveRequest = false;
+                    return false;
+                }
                 let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
@@ -1480,7 +1485,7 @@
                 this.lastRoomItem.startDate = startDate;
                 this.lastRoomItem.endDate = endDate;
                 this.lastRoomItem.roomType = item.roomType;
-                let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 .room? 1 : duration};
+                let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 ? 1 : duration};
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
                 }
@@ -1697,6 +1702,7 @@
                                                               changeTimes: 0,
                                                               showPriceList: false,
                                                               datePriceList: datePriceList,
+                                                              haveRequest: true,
                                                               showTip: false });
                                 }
                             });
