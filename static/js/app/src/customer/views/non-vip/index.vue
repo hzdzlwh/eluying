@@ -9,7 +9,7 @@
         <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
-                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出excle</a></span>
+                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出Excel</a></span>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
 <style scoped>
 .cusTableContain {
     width: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
     position: relative;
 }
 .dd-dropdown a, .dd-dropdown a:hover {

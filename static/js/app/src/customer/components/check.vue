@@ -197,7 +197,7 @@ export default {
             // 判断是否进行扫码收款
             const id = this.select;
             const getCodeData = {
-                amount: parseInt(this.num),
+                amount: parseFloat(this.num),
                 cid: this.data.cid,
                 payChannel: this.checkType.filter(function(val) {
                     return val.id === id;

@@ -33,7 +33,7 @@
     box-sizing: border-box;
     font-size: $font-size-base;
     color: $gary-daker;
-    z-index:1053;
+    z-index: 1053;
     .modal-dialog {
         width: 400px;
         margin-top: 0 !important;
@@ -134,7 +134,7 @@ export default {
         return {
             authCode: '',
             inputFocus: false,
-            url: ['/contractCompany/refund', '', '/contractCompany/settle'
+            url: ['/contractCompany/recharge', '', '/contractCompany/settle'
 
             ]
         };
@@ -145,7 +145,6 @@ export default {
             $('#payWithCode').modal('hide');
             this.$emit('close');
             if (bool === 1) {
-                event.$emit('checkSuc');
                 this.$emit('changestatus', 1);
             } else if (bool === 2) {
                 this.$emit('changestatus', 0);
@@ -156,15 +155,16 @@ export default {
             params.authCode = this.authCode;
             AJAXService.ajaxWithToken('GET', this.url[this.paytype], params)
                 .then(result => {
-                    if (result.code === 0) {
+                    if (result.code === 1) {
                         const status = result.data.status;
                         const tradeNum = result.data.tradeNum;
                         if (status === 0) {
                             modal.somethingAlert('收银成功');
                             this.authCode = '';
+                            event.$emit('checkSuc');
                             setTimeout(() => {
                                 this.hideModal(1);
-                            }, 2500);
+                            }, 1500);
                         } else if (status === 1) {
                             modal.somethingAlert('收款失败');
                             this.hideModal(2);
@@ -180,6 +180,7 @@ export default {
                                         }
                                         if (status1 === 0) {
                                             modal.somethingAlert('收银成功');
+                                            event.$emit('checkSuc');
                                             this.authCode = '';
                                             setTimeout(() => {
                                                 this.hideModal(1);
