@@ -149,13 +149,13 @@ import auth from '../../../common/auth';
 export default {
     data() {
         return {
-            contral:{
+            contral: {
                 // COMPANY_VIEW_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_VIEW_ID),
                 // COMPANY_EDIT_ID  : auth.checkModule(auth.COMPANY,auth.COMPANY_EDIT_ID),
                 // COMPANY_CHARGE_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_CHARGE_ID)
-                COMPANY_VIEW_ID : false,
-                COMPANY_EDIT_ID  : false,
-                COMPANY_CHARGE_ID : false
+                COMPANY_VIEW_ID: false,
+                COMPANY_EDIT_ID: false,
+                COMPANY_CHARGE_ID: false
             },
             checkListVisible: false,
             checkListType: 0,
@@ -423,8 +423,8 @@ export default {
         }
     },
     created() {
-        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY,auth.COMPANY_EDIT_ID);
-        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY,auth.COMPANY_CHARGE_ID);
+        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_EDIT_ID);
+        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_CHARGE_ID);
         this.fetchDate();
         // 充值记录
         event.$on('showlist', () => {

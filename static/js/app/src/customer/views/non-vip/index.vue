@@ -132,8 +132,8 @@ import auth from '../../../common/auth';
 export default {
     data() {
         return {
-           contral:{
-                VIP_EDIT_ID : false
+            contral: {
+                VIP_EDIT_ID: false
             },
             // formddata
             formvisible: false,
@@ -189,7 +189,7 @@ export default {
                 render: (h, row) =>
                         < span > {
                         this.contral.VIP_EDIT_ID ? < span onClick = {
-                            () => this.openDetailDialog(row, 1) 
+                            () => this.openDetailDialog(row, 1)
                         }> 加入会员 /</span> : '-' }
                         <span onClick = {
                         () => this.openDetailDialog(row, 0)
