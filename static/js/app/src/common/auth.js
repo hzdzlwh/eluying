@@ -6,7 +6,11 @@ var $ajax = require('./AJAXService');
 import modal from './modal';
 
 const ACCOMMODATION_ID = 2;
+
 const VIP_ID = 11;
+const VIP_VIEW_ID = 0;
+const VIP_EDIT_ID = 1;
+
 const BUSINESS_ID = 0;
 const HOST_ID = 1;
 const EMPLOYEE_ID = 2;
@@ -21,17 +25,16 @@ const UPGRADE_URL = '/view/tips/upgrade.html';
 const INSURANCE_ID = 1;
 
 const camps = JSON.parse(localStorage.getItem('camps'));
-const bottom = JSON.parse(localStorage.getItem('bottom'));
-const top = JSON.parse(localStorage.getItem('top'));
 const campId = localStorage.getItem('campId');
 const switches = JSON.parse(localStorage.getItem('switches'));
+const authList = JSON.parse(localStorage.getItem('authList'));
 
-const maintenanceHost =  process.env.NODE_ENV === 'production' ? "/mt" : "//www.dingdandao.com:1443/mt";
+const maintenanceHost = process.env.NODE_ENV === 'production' ? '/mt' : '//www.dingdandao.com:1443/mt';
 
 /**
  * 检测版本信息并跳转页面
  */
-function checkVersion(){
+function checkVersion() {
     for (var i = 0; i < camps.length; i++) {
         var camp = camps[i];
         if (campId == camp.campId) {
@@ -47,31 +50,28 @@ function checkVersion(){
 /**
  * 检测模块权限
  * @param moduleId
+ * @param subId
  * @returns {boolean}
  */
-function checkModule(moduleId){
+function checkModule(moduleId, subId) {
     if (moduleId === BUSINESS_ID) {
         // 业务设置通过用户类型判断
-        for (var i = 0; i < camps.length; i++) {
-            var camp = camps[i];
-            if (campId == camp.campId && (camp.userType === HOST_ID || camp.userType === ADMIN_ID)) {
-                return true;
-            }
-        }
-    } else {
-        for (var j = 0; j < bottom.length; j++) {
-            if (bottom[j].type === moduleId && bottom[j].status === 1) {
-                return true;
-            }
-        }
-
-        for (var k = 0; k < top.length; k++) {
-            if (top[k].type === moduleId && top[k].status === 1) {
-                return true;
-            }
-        }
+        const camp = camps.find(i => i.campId === campId);
+        return camp.userType === HOST_ID || camp.userType === ADMIN_ID;
     }
-    return false;
+
+    const auth = authList.find(i => i.privilegeId === moduleId);
+
+    if (!auth) {
+        return false;
+    }
+
+    if (subId === undefined) {
+        return auth.status === 1;
+    }
+
+    const subAuth = auth.subAuthList.find(i => i.privilegeId === subId);
+    return subAuth && subAuth.status === 1;
 }
 
 function showMaintenance(announcement) {
@@ -121,7 +121,7 @@ function checkAccess(moduleId) {
         modal.alert('请重新登录');
         setTimeout(() => {
             location.href = '/';
-        }, 3000)
+        }, 3000);
     }
 }
 
@@ -168,3 +168,5 @@ exports.ORDER_ID = ORDER_ID;
 exports.REPORT_ID = REPORT_ID;
 exports.checkSwitch = checkSwitch;
 exports.INSURANCE_ID = INSURANCE_ID;
+exports.VIP_VIEW_ID = VIP_VIEW_ID;
+exports.VIP_EDIT_ID = VIP_EDIT_ID;

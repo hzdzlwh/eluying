@@ -404,6 +404,7 @@ $(document).ready(function(){
                     localStorage.setItem("userType", data.data.user.userType);
                     localStorage.setItem("uid", data.data.user.uid);
                     localStorage.setItem("token", data.data.user.token);
+                    localStorage.setItem('authList', JSON.stringify(data.data.authList));
                     data.data.switches && localStorage.setItem('switches', JSON.stringify(data.data.switches));
                     localStorage.removeItem('maintenanceClosed');
                     //setTimeout(util.checkAuth, 900);
