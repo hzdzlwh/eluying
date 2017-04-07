@@ -1650,6 +1650,9 @@
                     /*if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
                     }*/
+                    if (room.originDatePriceList) {
+                        return false;
+                    }
                     room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
                     this.setDateFee(room.price, room);
                     this.setFirstDateFee(room.price, room);
