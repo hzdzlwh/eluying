@@ -2,7 +2,7 @@
     <div class="listbox">
         <div class="vip-search">
             <div class="vip-search-container">
-                <input type="text" v-model='search' placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input">
+                <input type="text" v-model='search' placeholder="搜索姓名/手机号" class="order-search dd-input">
                 <span class="vip-search-icon" @click='fetchDate'><img src="//static.dingdandao.com/order_manage_search_grey.png" alt=""></span>
             </div>
         </div>
