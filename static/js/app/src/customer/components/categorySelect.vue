@@ -79,15 +79,15 @@
     export default{
         props: {
             onConfirm: Function,
-            list: Array
+            list: Array,
+            type: ''
         },
         data() {
             return {
                 enterNodeList: [],
                 restNodeList: [],
                 room: undefined,
-                shop: undefined,
-                type: ''
+                shop: undefined
             };
         },
         watch: {
