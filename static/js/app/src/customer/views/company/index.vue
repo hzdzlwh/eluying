@@ -226,12 +226,16 @@ export default {
                 render: (h, row) =>
                     < span >
                     < span onClick = {
-                        () => this.openDetailDialog(row, 0)
+                        () => this.openDetailDialog(row, 0, 1)
+                    } > 详情 < /span> /
+                    < span onClick = {
+                        () => this.openDetailDialog(row, 0, 2)
                     } > 查单 < /span> {
                     (row.ledgerFee && row.companyType) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
-                } < /span >
+                } < /span >,
+                width: '140px'
             }],
             datalist: [],
             count: 0,
@@ -326,7 +330,7 @@ export default {
                 });
             } else {
                 this.detailid = date.cid;
-                this.detailtab = 2;
+                this.detailtab = checkType;
                 this.detailTitle = date.companyName;
                 this.detailVisible = true;
                 this.detailData = date;
