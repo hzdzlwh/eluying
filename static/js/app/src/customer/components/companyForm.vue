@@ -1,38 +1,38 @@
 <template>
-    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="add" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">添加企业客户／编辑企业客户</h4>
+                    <button type="button" class="close" @click='close'><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{data.id? '编辑企业客户' : '添加企业客户'}}</h4>
                 </div>
                 <div class="modal-body modal-line">
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">企业名称：</span>
-                        <input v-model='encompanyName' type="text" maxlength="20" class="dd-input">
+                        <input v-model='formdata.companyName' type="text" maxlength="20" class="dd-input">
                     </p>
                     <p>
                         <span class="addCus">
                                    协议编号：</span>
-                        <input v-model='encontractNum' type="text" class="dd-input" maxlength="20" placeholder="-请输入数字或字母-">
+                        <input v-model='formdata.contractNum' type="text" class="dd-input" maxlength="20" placeholder="-请输入数字或字母-">
                     </p>
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">联系人：</span>
-                        <input v-model='encontactName' class="dd-input" type="text" maxlength="20">
+                        <input v-model='formdata.contactName' class="dd-input" type="text" maxlength="20">
                     </p>
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">联系号码：</span>
-                        <input v-model='encontactPhone' class="dd-input" type="text" maxlength="12">
+                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="12">
                     </p>
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png"/>企业类型：
                             </span>
-                        <DdSelect v-model="encompanyType" class="addCustype">
-                            <DdOption :key="option.value" v-for="option in formCustomerType" :value="option.value" :label="option.name">
+                        <DdSelect v-model="formdata.companyType" class="addCustype">
+                            <DdOption v-for="option in formCustomerType" :value="option.value" :key='option' :label="option.name">
                             </DdOption>
                         </DdSelect>
                     </p>
@@ -42,34 +42,32 @@
                         <span class="addCus">
                                     优惠折扣：
                             </span>
-                        <span class="selectBox">
-                        <div v-for='(item, index) in discount'>
+                        <span class="selectBox" v-if='formdata.discounts'>
+                        <div v-for='(item,index) in formdata.discounts' :key="item.id">
                             <span class="preName">{{item.nodeName}}</span>
-                        <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='remove(index)'></span>
+                        <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
                 </div>
-
                 </span>
-                  <div style="display:flex;    padding-left: 100px;">
-                    <span class="preName addpre" @click="openSelectNode('discount', discount)">选择项目</span>
+                <div style="display:flex;    padding-left: 100px;">
+                    <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
                     <span class="preRequest">请输入0.1-9.9之间的数字</span>
                 </div>
                 </p>
-
                 <p>
                     <span class="addCus">
                                    地址：</span>
-                    <input v-model='encompanyAddress' type="text" class="dd-input addAdress" maxlength="16">
+                    <input v-model='formdata.companyAddress' type="text" class="dd-input addAdress" maxlength="16">
                 </p>
                 <p>
                     <span class="addCus">
                                    备注：</span>
-                    <textarea v-model='enremark' cols="7" class="addOthor dd-input" placeholder="-请填写描述-"></textarea>
+                    <textarea v-model='formdata.remark' cols="7" class="addOthor dd-input" placeholder="-请填写描述-"></textarea>
                 </p>
                 <p>
                     <span class="addCus">
                                    </span>
                     <span class="dd-btn-primary dd-btn" style="margin-right:10px;min-width: 30px;" @click='customerDate'>确定</span>
-                    <span class="dd-btn-ghost dd-btn" style="min-width: 30px;" data-dismiss="modal">取消</span>
+                    <span class="dd-btn-ghost dd-btn" style="min-width: 30px;" @click='close'>取消</span>
                 </p>
             </div>
         </div>
@@ -138,6 +136,10 @@
     width: 480px;
 }
 
+#add {
+    z-index: 1051;
+}
+
 .delete-icon {
     margin-left: 16px;
     width: 16px;
@@ -191,55 +193,30 @@ import http from '../../common/AJAXService';
 import modal from '../../common/modal';
 export default {
     props: {
-        id: {
-            type: Number
+        data: {
+            type: Object,
+            default: {}
         },
-        companyAddress: {
-            type: String,
-            default: ''
-        },
-        companyName: {
-            type: String,
-            default: ''
-        },
-        companyType: {
-            type: Number,
-            default: 0
-        },
-        contactName: {
-            type: String,
-            default: ''
-        },
-        contactPhone: {
-            type: String,
-            default: ''
-        },
-        contractNum: {
-            type: String,
-            default: ''
-        },
-        discounts: {
-            type: Array,
-            default: function() {
-                return [];
-            }
-        },
-        remark: {
-            type: String,
-            default: ''
+        visible: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
-            encompanyAddress: this.companyAddress,
-            encompanyName: this.companyName,
-            encompanyType: this.companyType,
-            encontactName: this.contactName,
-            encontactPhone: this.contactPhone,
-            encontractNum: this.contractNum,
-            enremark: this.remark,
+            formdata: {
+                id: 0,
+                companyAddress: '',
+                companyName: '',
+                companyType: 0,
+                contactName: '',
+                contactPhone: '',
+                contractNum: '',
+                discounts: [],
+                remark: ''
+            },
             consume: [],
-            discount: this.discounts,
+            // discount: this.data.discounts,
             selectType: undefined,
             formCustomerType: [{
                 name: '可挂帐',
@@ -250,25 +227,21 @@ export default {
             }]
         };
     },
-    // watch: {
-    //     visible(val) {
-    //         if (val) {
-    //             $('#vipForm').modal('show');
-    //         } else {
-    //             $('#vipForm').modal('hide');
-    //         }
-    //     }
-    // },
     computed: {
         nodes() {
-            return this.selectType === 'consume' ? this.consume : this.discount;
+            return this.selectType === 'consume' ? this.consume : this.formdata.discounts;
         }
     },
     created() {
         this.getCompanyDate();
     },
     methods: {
-        openSelectNode(type, data) {
+        close() {
+            this.selectType = undefined;
+            $('#add').modal('hide');
+            this.$emit('close');
+        },
+        openSelectNode(type) {
             $('#categorySelectModal').modal('show');
             this.selectType = type;
         },
@@ -280,7 +253,7 @@ export default {
                 http.get('/contractCompany/getDetail', {
                     cid: this.id
                 }).then(res => {
-                    this.encompanyAddress = res.data.companyAddress;
+                    this.companyAddress = res.data.companyAddress;
                     this.encompanyName = res.data.companyName;
                     this.encompanyType = res.data.companyType;
                     this.encontactName = res.data.contactName;
@@ -294,51 +267,41 @@ export default {
             }
         },
         customerDate: function() {
-            if (!this.encompanyName) {
+            if (!this.formdata.companyName) {
                 modal.somethingAlert('请输入公司名');
                 return;
             }
-            if (!this.encontactName) {
+            if (!this.formdata.contactName) {
                 modal.somethingAlert('请输入联系人');
                 return;
             }
-            if (!this.encontactPhone) {
+            if (!this.formdata.contactPhone) {
                 modal.somethingAlert('请输入联系号码');
                 return;
             }
-            for (let i = 0; i < this.discount.length; i ++) {
-                this.discount[i].discount = parseInt(this.discount[i].discount);
-                if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
-                    modal.alert('请输入0.1-9.9之间正确的折扣数字');
-                    return false;
+            const data = Object.assign({}, this.formdata);
+            if (this.formdata.discounts) {
+                for (let i = 0; i < this.formdata.discounts.length; i ++) {
+                    this.formdata.discounts[i].discount = parseInt(this.formdata.discounts[i].discount);
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
+                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
                 }
+
+                data.discounts = JSON.stringify(data.discounts);
             }
-            const data = {
-                companyAddress: this.encompanyAddress,
-                companyName: this.encompanyName,
-                companyType: this.encompanyType,
-                contactName: this.encontactName,
-                contactPhone: this.encontactPhone,
-                contractNum: this.encontractNum,
-                discounts: JSON.stringify(this.discount),
-                remark: this.enremark
-            };
-            if (this.id) {
-                data.id = this.id;
+            if (!this.formdata.id) {
+                delete data.id;
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
                 if (res.code === 1) {
                     modal.somethingAlert('添加成功');
-                    $('#add').modal('hide');
-                    this.encompanyAddress = '';
-                    this.encompanyName = '';
-                    this.encompanyType = 0;
-                    this.encontactName = '';
-                    this.encontactPhone = '';
-                    this.encontractNum = '';
-                    this.discounts = [];
-                    this.enremark = '';
                     this.$emit('add');
+                    if (this.formdata.id) {
+                        modal.somethingAlert('修改成功');
+                    }
+                    this.close();
                 } else {
                     modal.somethingAlert(res.msg);
                 }
@@ -348,25 +311,45 @@ export default {
             if (this.selectType === 'consume') {
                 this.consume = list;
             } else {
-                const newList = [];
-                list.map(item => {
-                    const result = this.discount.find(i => i.id === item.id);
-                    if (result) {
-                        if (item.selected) {
-                            newList.push({ ...result
+                if (this.formdata.discounts) {
+                    const newList = [];
+                    list.map(item => {
+                        const result = this.formdata.discounts.find(i => i.id === item.id);
+                        if (result) {
+                            if (item.selected) {
+                                newList.push({ ...result
+                                });
+                            }
+                        } else {
+                            newList.push({ ...item
                             });
                         }
-                    } else {
-                        newList.push({ ...item
-                        });
-                    }
-                });
-                this.discount = newList;
+                    });
+
+                    this.formdata.discounts = newList;
+                } else {
+                    this.formdata.discounts = list;
+                }
             }
         },
         deleteNode(item) {
-            const index = this.discount.indexOf(item);
-            this.discount.splice(index, 1);
+            const index = this.formdata.discounts.indexOf(item);
+            this.formdata.discounts.splice(index, 1);
+        }
+    },
+    watch: {
+        visible(val) {
+            if (val) {
+                $('#add').modal({
+                    backdrop: 'static'
+                });
+                $('#add').modal('show');
+            } else {
+                $('#add').modal('hide');
+            }
+        },
+        data(val) {
+            this.formdata = { ...val };
         }
     },
     components: {

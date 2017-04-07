@@ -33,6 +33,7 @@
     box-sizing: border-box;
     font-size: $font-size-base;
     color: $gary-daker;
+    z-index:1053;
     .modal-dialog {
         width: 400px;
         margin-top: 0 !important;
@@ -122,12 +123,19 @@ export default {
         },
         show: {
             type: Boolean
+        },
+        paytype: {
+            type: Number,
+            default: 0
         }
     },
     data() {
         return {
             authCode: '',
-            inputFocus: false
+            inputFocus: false,
+            url: ['/contractCompany/refund', '/contractCompany/settle'
+
+            ]
         };
     },
     methods: {
@@ -144,7 +152,7 @@ export default {
         payMoney() {
             const params = JSON.parse(JSON.stringify(this.data.data));
             params.authCode = this.authCode;
-            AJAXService.ajaxWithToken('GET', ' /contractCompany/settle', params)
+            AJAXService.ajaxWithToken('GET', this.url[this.paytype - 1], params)
                 .then(result => {
                     if (result.code === 0) {
                         const status = result.data.status;

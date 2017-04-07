@@ -18,8 +18,8 @@
                                 </span>
                                 <input v-model="vip.name" type="text" maxlength="16" class="dd-input short-input">
                             </div>
-                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && (vip.name.length === 0 || !vip.name)" class="error-tips">必填字段</span>
-                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.name.length === 1" class="error-tips">格式错误</span>
+                            <span v-if="hasSubmit && !vip.name" class="error-tips">必填字段</span>
+                            <span v-if="hasSubmit && vip.name && vip.name.length === 1" class="error-tips">格式错误</span>
                         </div>
                         <div class="vipInfo-item-container">
                             <div class="vipInfo-item">
@@ -29,8 +29,8 @@
                                 <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
                                 <span v-if="vip.vipUserId">{{vip.phone}}</span>
                             </div>
-                            <span v-if="!vip.vipUserId && hasSubmit && (vip.phone.length === 0 || !vip.phone)" class="error-tips">必填字段</span>
-                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
+                            <span v-if="!vip.vipUserId && hasSubmit && !vip.phone" class="error-tips">必填字段</span>
+                            <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
                         </div>
                         <div class="vipInfo-item">
                             <span class="vipInfo-item-label">
@@ -41,7 +41,7 @@
                                     <dd-option :key="level.vipLevelId" v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
                                 </dd-select>
                             </div>
-                            <span v-if="vip.vipUserId">{{vip.vipLevelName}}</span>
+                            <span v-if="vip.vipUserId">{{vip.levelName}}</span>
                         </div>
                         <div class="vipInfo-item">
                             <span class="vipInfo-item-label">会员卡号</span>
@@ -108,7 +108,13 @@
                                 <span class="vipInfo-item-label">邮箱</span>
                                 <input class="dd-input long-input" v-model="vip.email" type="text" minlength="2" maxlength="30" >
                             </div>
-                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit && (vip.modify || !vip.vipUserId)" class="error-tips">邮箱格式错误</span>
+                            <span v-if="vip.email && !mailFilter.test(vip.email) && hasSubmit" class="error-tips">邮箱格式错误</span>
+                        </div>
+                        <div class="vipInfo-item-container">
+                            <div class="vipInfo-item">
+                                <span class="vipInfo-item-label">创建渠道</span>
+                                <input class="dd-input long-input" v-model="vip.vipChannel" type="text" >
+                            </div>
                         </div>
                         <div class="vipInfo-item vipInfo-remark-container">
                             <span class="vipInfo-item-label">备注</span>
@@ -339,8 +345,9 @@
                     });
             },
             close() {
+                this.hasSubmit = false;
                 $('#vipForm').modal('hide');
-                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: undefined, gender: undefined };
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined };
             },
             mapAddress(arr, value) {
                 if (!arr) {
@@ -355,6 +362,10 @@
             addEditVip() {
                 const vip = this.vip;
                 this.hasSubmit = true;
+                if ((vip.email && !this.mailFilter.test(vip.email))) {
+                    return false;
+                }
+
                 if (!vip.phone ||
                     !vip.name ||
                     vip.name.length < 2 ||
@@ -366,17 +377,19 @@
                 const data = {
                     ...vip,
                     province: this.provinceItems[this.province] && this.provinceItems[this.province].name,
-                    city: this.cityItems[this.city] && this.cityItems[this.city].name,
-                    county: this.countyItems[this.county] && this.countyItems[this.county].name
+                    city: this.cityItems && this.cityItems[this.city] && this.cityItems[this.city].name,
+                    county: this.countyItems && this.countyItems[this.county] && this.countyItems[this.county].name
                 };
-
+                let url = '/vipUser/addEditVip';
                 if (vip.vipUserId) {
                     delete data.phone;
                     delete data.consumeAndDiscount;
                     delete data.vipConsumeList;
                 }
-
-                http.post('/vipUser/addEditVip', data)
+                if (vip.customerId) {
+                    url = '/customer/addToVip';
+                }
+                http.post(url, data)
                     .then(res => {
                         if (res.code === 1) {
                             this.close();
