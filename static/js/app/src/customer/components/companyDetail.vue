@@ -3,11 +3,11 @@
         <div class="noVipitem">
             <div class="noVipEntitem"><span class="noVipLabel">企业类型</span>{{ data.companyType ? '可挂账' : '不可挂账' }}
             </div>
-            <div class="noVipEntitem"><span class="noVipLabel">充值金额</span>￥{{data.rechargeFee}} <div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn1'>充值</div><div class=" btnl dd-btn dd-btn-primary dd-btn-sm"  @click='showbtn2'>退款</div><span @click='showlist' class="btnl fontbtn">充值记录</span> </div>
+            <div class="noVipEntitem"><span class="noVipLabel">充值金额</span>￥{{data.rechargeFee}} <div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn1'>充值</div><div class=" btnl dd-btn dd-btn-primary dd-btn-sm"  @click='showbtn2' v-if='data.rechargeFee'>退款</div><span @click='showlist' class="btnl fontbtn">充值记录</span> </div>
         </div>
         <div class="noVipitem">
             <div class="noVipEntitem"><span class="noVipLabel">协议编号</span>{{data.contractNum || '无'}}</div>
-            <div class="noVipEntitem" v-if='data.companyType'><span class="noVipLabel">挂帐金额</span>￥{{data.ledgerFee}}<div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn3'>结算</div><span @click='showlistcheck' class="btnl fontbtn">结算记录</span> </div>
+            <div class="noVipEntitem" v-if='data.companyType'><span class="noVipLabel">挂帐金额</span>￥{{data.ledgerFee}}<div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn3' v-if='data.ledgerFee'>结算</div><span @click='showlistcheck' class="btnl fontbtn">结算记录</span> </div>
         </div>
         <div class="noVipitem">
             <div class="noVipEntitem"><span class="noVipLabel">联系人</span>{{data.contactName || '无'}}</div>
