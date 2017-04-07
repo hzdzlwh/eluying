@@ -157,6 +157,8 @@ export default {
                     backdrop: 'static'
                 });
             } else {
+                this.select = undefined;
+                this.num = undefined;
                 $('#checkForm').modal('hide');
             }
         }
@@ -211,10 +213,14 @@ export default {
                     message: '请确保金额已收到！'
 
                 }, () => {
-                    http.ajaxWithToken('GET', this.content[this.paytype].url, getCodeData)
+                    http.ajaxWithToken('GET', that.content[that.type].url, getCodeData)
                         .then((result) => {
                             if (result.code === 1) {
-                                modal.somethingAlert('收款成功');
+                                if (that.type === 1) {
+                                    modal.somethingAlert('退款成功');
+                                } else {
+                                    modal.somethingAlert('收款成功');
+                                }
                                 that.close();
                                 that.num = 0;
                                 that.select = undefined;
