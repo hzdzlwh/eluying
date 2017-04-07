@@ -204,13 +204,6 @@ export default {
     },
     data() {
         return {
-            // encompanyAddress: this.data.companyAddress,
-            // encompanyName: this.data.companyName,
-            // encompanyType: this.data.companyType,
-            // encontactName: this.data.contactName,
-            // encontactPhone: this.data.contactPhone,
-            // encontractNum: this.data.contractNum,
-            // enremark: this.data.remark,
             formdata: {
                 id: 0,
                 companyAddress: '',
@@ -234,83 +227,10 @@ export default {
             }]
         };
     },
-    // watch: {
-    //     visible(val) {
-    //         if (val) {
-    //             $('#vipForm').modal('show');
-    //         } else {
-    //             $('#vipForm').modal('hide');
-    //         }
-    //     }
-    // },
     computed: {
         nodes() {
             return this.selectType === 'consume' ? this.consume : this.formdata.discounts;
         }
-        // _encompanyAddress: {
-        //     set: function(val) {
-        //         this.encompanyAddress = val
-        //     },
-        //     get: function() {
-        //         return this.companyAddress
-        //     }
-        // },
-        // _encompanyName: {
-        //     set: function(val) {
-        //         this.encompanyName = val
-        //     },
-        //     get: function() {
-        //         return this.companyName
-        //     }
-        // },
-        // _encompanyType: {
-        //     set: function(val) {
-        //         this.encompanyType = val
-        //     },
-        //     get: function() {
-        //         return this.companyType
-        //     }
-        // },
-        // _encontactName: {
-        //     set: function(val) {
-        //         this.encontactName = val
-        //     },
-        //     get: function() {
-        //         return this.contactName
-        //     }
-        // },
-        // _encontactPhone: {
-        //     set: function(val) {
-        //         this.encontactPhone = val
-        //     },
-        //     get: function() {
-        //         return this.contactPhone
-        //     }
-        // },
-        // _encontractNum: {
-        //     set: function(val) {
-        //         this.encontractNum = val
-        //     },
-        //     get: function() {
-        //         return this.contractNum
-        //     }
-        // },
-        // _enremark: {
-        //     set: function(val) {
-        //         this.enremark = val
-        //     },
-        //     get: function() {
-        //         return this.remark
-        //     }
-        // },
-        // _discount: {
-        //     set: function(val) {
-        //         this.discount = val
-        //     },
-        //     get: function() {
-        //         return this.discounts
-        //     }
-        // },
     },
     created() {
         this.getCompanyDate();
@@ -429,8 +349,7 @@ export default {
             }
         },
         data(val) {
-            this.formdata = { ...val
-            };
+            this.formdata = { ...val };
         }
     },
     components: {

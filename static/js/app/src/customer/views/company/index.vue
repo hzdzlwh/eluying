@@ -47,6 +47,7 @@
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
             <companyDetail :data='detailData'></companyDetail>
         </detail>
+        <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
     </div>
 </template>
 <style>
@@ -58,7 +59,7 @@
 <style scoped>
 .cusTableContain {
     width: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
     position: relative;
 }
 
@@ -141,11 +142,15 @@ import company from '../../components/companyForm.vue';
 import check from '../../components/check.vue';
 import detail from '../../components/detail.vue';
 import companyDetail from '../../components/companyDetail.vue';
-
+import checklist from '../../components/checklist.vue';
 import modal from '../../../common/modal';
+import event from '../../event.js';
+
 export default {
     data() {
         return {
+            checkListVisible: false,
+            checkListType: 0,
             // formddata
             formvisible: false,
             formdata: {},
@@ -224,7 +229,7 @@ export default {
                         () => this.openDetailDialog(row, 0)
                     } > 查单 < /span> {
                     (row.ledgerFee && row.companyType) ? < span onClick = {
-                        () => this.openDetailDialog(row, 1)
+                        () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
                 } < /span >
             }],
@@ -298,7 +303,7 @@ export default {
         checkFormClose: function() {
             this.check.show = false;
         },
-        openDetailDialog: function(date, type) {
+        openDetailDialog: function(date, type, checkType) {
             if (type) {
                 const dataobject = {
                     isAll: true,
@@ -307,11 +312,11 @@ export default {
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
-                        this.check.type = 2;
+                        this.check.type = checkType;
                         this.check.chekcType = res.data.list;
                         this.check.show = true;
                         this.check.data = {
-                            consumeFee: date.consumeFee,
+                            rechargeFee: date.rechargeFee,
                             ledgerFee: date.ledgerFee,
                             cid: date.cid
                         };
@@ -395,6 +400,27 @@ export default {
     },
     created() {
         this.fetchDate();
+        event.$on('showlist', () => {
+            this.checkListType = 1;
+            this.checkListVisible = true;
+        });
+        event.$on('showbtn1', () => {
+            this.openDetailDialog(this.detailData, 1, 0);
+        });
+        event.$on('showbtn2', () => {
+            this.openDetailDialog(this.detailData, 1, 1);
+        });
+        event.$on('showbtn3', () => {
+            this.openDetailDialog(this.detailData, 1, 2);
+        });
+        event.$on('showlistcheck', () => {
+            this.checkListType = 0;
+            $('#checkList').modal('show');
+        });
+        event.$on('showListSuc', () => {
+            this.checkListType = 1;
+            this.checkListVisible = true;
+        });
     },
     watch: {
         CustomerStatus: function() {
@@ -414,7 +440,8 @@ export default {
         company,
         'checkFromDio': check,
         detail,
-        companyDetail
+        companyDetail,
+        checklist
     }
 };
 </script>
