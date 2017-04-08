@@ -1634,7 +1634,7 @@
             },
             setFirstDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
+                obj.datePriceList[0].dateFee = +((Number(obj.datePriceList[0].dateFee) + (num - totalPrice)).toFixed(2));
             },
 
             modifyRoom(item) {
