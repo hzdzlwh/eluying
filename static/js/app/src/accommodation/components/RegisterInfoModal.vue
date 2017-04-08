@@ -1662,12 +1662,12 @@
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 let lastItem = this.lastRoomItem;
-                if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
+                /*if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
                     return false;
                 }
                 this.lastRoomItem.startDate = startDate;
                 this.lastRoomItem.endDate = endDate;
-                this.lastRoomItem.roomType = item.roomType;
+                this.lastRoomItem.roomType = item.roomType;*/
                 let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 ? 1 : duration};
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
