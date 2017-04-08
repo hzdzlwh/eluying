@@ -152,13 +152,26 @@ function checkSwitch(id) {
         setTimeout(() => {
             location.href = '/';
         }, 3000);
-
     }
-
 }
+
+function saveUserInfo(data) {
+    localStorage.setItem('avatar', data.user.avatar || '');
+    localStorage.setItem('userName', data.user.realName || '');
+    localStorage.setItem('userType', data.user.userType || '');
+    localStorage.setItem('uid', data.user.uid || '');
+    data.user.token && localStorage.setItem('token', data.user.token);
+    localStorage.setItem('camps', JSON.stringify(data.camps || []));
+    localStorage.setItem('authList', JSON.stringify(data.authList || []));
+    localStorage.setItem('switches', JSON.stringify(data.switches || []));
+}
+
 exports.checkModule = checkModule;
 exports.checkAuth = checkAuth;
 exports.checkAccess = checkAccess;
+exports.saveUserInfo = saveUserInfo;
+exports.checkSwitch = checkSwitch;
+
 exports.ACCOMMODATION_ID = ACCOMMODATION_ID;
 exports.VIP_ID = VIP_ID;
 exports.BUSINESS_ID = BUSINESS_ID;
@@ -172,7 +185,6 @@ exports.EXPIRED_URL = EXPIRED_URL;
 exports.UPGRADE_URL = UPGRADE_URL;
 exports.ORDER_ID = ORDER_ID;
 exports.REPORT_ID = REPORT_ID;
-exports.checkSwitch = checkSwitch;
 exports.INSURANCE_ID = INSURANCE_ID;
 exports.VIP_VIEW_ID = VIP_VIEW_ID;
 exports.VIP_EDIT_ID = VIP_EDIT_ID;

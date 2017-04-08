@@ -6,6 +6,7 @@ var AJAXService = require('AJAXService');
 var htmlMaker = require("../../../../tpl/createNetwork.js");
 var modal = require('modal');
 var baseUrl = AJAXService.urls.host;
+var auth = require('./auth');
 var network = {
 	status: {
 		CREATE_NETWORK: "create",
@@ -180,32 +181,11 @@ var network = {
 				$(".createNetworkButton").click(function () {
 					var campId = resultDom.find("input[name='campId']").val();
 					var campName = resultDom.find("input[name='campName']").val();
-					/*$.ajax({
-						url: AJAXService.getUrl("/network/changeNetwork"),
-						data: {
-							campId: campId
-						},
-						success: function (data) {
-							if(data.code == 1){
-								window.location.href = "/view/business/category/room.html";
-								localStorage.setItem("campId", campId);
-								localStorage.setItem("campName", campName);
-							}
-						}
-					})*/
 					AJAXService.ajaxWithToken("POST","/homepage/changeCamp",{campId: campId},function (data) {
 						if(data.code == 1){
-							localStorage.setItem("campId", campId);
-							localStorage.setItem("campName", campName);
-							localStorage.setItem("camps", JSON.stringify(data.data.camps));
-							localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
-							localStorage.setItem("top", JSON.stringify(data.data.top));
-							localStorage.setItem("avatar", data.data.user.avatar);
-							localStorage.setItem("userName", data.data.user.realName);
-							localStorage.setItem("userType", data.data.user.userType);
-							localStorage.setItem("uid", data.data.user.uid);
-                            data.data.switches && localStorage.setItem('switches', JSON.stringify(data.data.switches));
-                            localStorage.setItem('authList', JSON.stringify(data.data.authList));
+                            localStorage.setItem("campId", campId);
+                            localStorage.setItem("campName", campName);
+							auth.saveUserInfo(data.data);
                             // localStorage.setItem("token", data.data.user.token);
 							window.location.href = "/view/accommodation/calender/calender.html";
 						}
