@@ -19,7 +19,7 @@
                     </DdDropdown>
                 </div>
             </div>
-            <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加企业客户</div>
+            <div class="dd-btn-primary dd-btn add-button" @click='addForm' v-if='contral && contral.COMPANY_EDIT_ID'>添加企业客户</div>
             <div class="vip-search">
                 <div class="vip-search-container">
                     <input type="text" v-model='search' placeholder="搜索企业编号/企业名称/联系人/联系号码" class="order-search dd-input">
@@ -145,10 +145,18 @@ import companyDetail from '../../components/companyDetail.vue';
 import checklist from '../../components/checklist.vue';
 import modal from '../../../common/modal';
 import event from '../../event.js';
-
+import auth from '../../../common/auth';
 export default {
     data() {
         return {
+            contral: {
+                // COMPANY_VIEW_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_VIEW_ID),
+                // COMPANY_EDIT_ID  : auth.checkModule(auth.COMPANY,auth.COMPANY_EDIT_ID),
+                // COMPANY_CHARGE_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_CHARGE_ID)
+                COMPANY_VIEW_ID: false,
+                COMPANY_EDIT_ID: false,
+                COMPANY_CHARGE_ID: false
+            },
             checkListVisible: false,
             checkListType: 0,
             // formddata
@@ -230,7 +238,7 @@ export default {
                     } > 详情 < /span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
                     } > 查单 < /span> {
-                    (row.ledgerFee && row.companyType) ? < span onClick = {
+                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
                 } < /span >,
@@ -415,6 +423,8 @@ export default {
         }
     },
     created() {
+        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_EDIT_ID);
+        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_CHARGE_ID);
         this.fetchDate();
         // 充值记录
         event.$on('showlist', () => {
