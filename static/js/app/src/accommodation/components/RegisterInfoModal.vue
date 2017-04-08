@@ -1705,7 +1705,7 @@
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
                             item.countArr = countArr;
-                            this.setDateFee(item.price, item);
+                            //this.setDateFee(item.price, item);
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
