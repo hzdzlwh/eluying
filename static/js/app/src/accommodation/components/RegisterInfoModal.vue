@@ -1440,7 +1440,8 @@
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
-                    return item.dateFee / totalPrice;
+                    //return item.dateFee / totalPrice;
+                    return 1 / obj.datePriceList.length;
                 });
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = +((num * countArr[index]).toFixed(2));
