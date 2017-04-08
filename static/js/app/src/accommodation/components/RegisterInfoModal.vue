@@ -1436,13 +1436,13 @@
             },
             setDateFee(num, obj) {
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                let countArr = obj.datePriceList.map(item => {
+                /*let countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
-                    //return item.dateFee / totalPrice;
-                    return 1 / obj.datePriceList.length;
-                });
+                    return item.dateFee / totalPrice;
+                });*/
+                let countArr = obj.countArr;
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = +((num * countArr[index]).toFixed(2));
                 });
@@ -1494,12 +1494,17 @@
                     .then(res => {
                         if (res.code === 1) {
                             let datePriceList = [];
+                            let countTotalPrice = 0;
                             let price = 0;
                             let oldPrice = 0;
                             let originPrice = 0;
                             const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                             res.data.rs.status.forEach((option,index) => {
                                 datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
+                                countTotalPrice += option.p;
+                            });
+                            let countArr = datePriceList.map(dat => {
+                                return dat.dateFee / countTotalPrice;
                             });
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
@@ -1517,6 +1522,7 @@
                             item.price = Number((Number((price * discount).toFixed(2)) + oldPrice).toFixed(2));
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
+                            item.countArr = countArr;
                             this.setDateFee(item.price, item);
                         }
                     });
@@ -1695,6 +1701,9 @@
                                         datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false});
                                         price += option.p;
                                     });
+                                    let countArr = datePriceList.map(dat => {
+                                        return dat.dateFee / price;
+                                    });
                                     this.registerRooms.push({ categoryType: id,
                                                               roomType: item.roomId,
                                                               price: Number((price * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2)),
@@ -1704,6 +1713,7 @@
                                                               showPriceList: false,
                                                               datePriceList: datePriceList,
                                                               haveRequest: true,
+                                                              countArr: countArr,
                                                               showTip: false });
                                 }
                             });
