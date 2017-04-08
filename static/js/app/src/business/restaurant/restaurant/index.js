@@ -108,6 +108,8 @@ $(function() {
         },
         methods: {
             close() {
+                this.discounts = [];
+                this.newDiscounts = [];
                 $('#settingDialog').modal('hide');
             },
             remove(item) {
@@ -144,7 +146,8 @@ $(function() {
                     }
                 }
 
-                if ((this.oddType === 1 || this.oddType === 2) && this.unit === undefined) {
+                if ((Number(this.oddType) === 1 || Number(this.oddType) === 2) &&
+                    !this.unit) {
                     modal.alert('请选择精确单位');
                     return false;
                 }
@@ -155,11 +158,12 @@ $(function() {
                     oddType: this.oddType,
                     unit: this.unit,
                     restId: this.id,
-                    quickDiscountList: list
+                    quickDiscountList: JSON.stringify(list)
                 })
                     .then(res => {
                         if (res.code === 1) {
                             this.close();
+                            table.getRestaurants();
                         } else {
                             modal.alert(res.msg);
                         }
