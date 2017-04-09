@@ -149,6 +149,7 @@
                                                     <input class="dd-input fee-input" v-model="item.price"
                                                            @input="setDateFee(item.price, item)"
                                                            @blur="setFirstDateFee(item.price, item)"
+                                                           @focus="setFirstDateFee(item.price, item)"
                                                            style="width: 80px" type="number"
                                                            @click.stop="showPriceList(index)"/>
                                                 </p>
@@ -1617,6 +1618,7 @@
                 obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
+                //const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
                 /*let countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
@@ -1626,7 +1628,7 @@
                 });*/
                 let countArr = obj.countArr;
                 obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = +((num * countArr[index]).toFixed(2));
+                    item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
                 /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
@@ -1692,8 +1694,10 @@
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
                                 if (item.originDatePriceList) {
+                                    date.hasFind = false;
                                     item.originDatePriceList.forEach(dat => {
                                         if (date.date === dat.date) {
+                                            date.hasFind = true;
                                             oldPrice += dat.dateFee;
                                             price -= date.dateFee;
                                             date.dateFee = dat.dateFee;
@@ -1705,7 +1709,22 @@
                             item.originPrice = Number(originPrice.toFixed(2));
                             item.datePriceList = datePriceList;
                             item.countArr = countArr;
-                            //this.setDateFee(item.price, item);
+                            if (!item.originDatePriceList) {
+                                this.setDateFee(item.price, item);
+                            } else {
+                                item.datePriceList.forEach(date => {
+                                    if (!date.hasFind) {
+                                        date.dateFee = Number((date.dateFee * discount).toFixed(2));
+                                    }
+                                });
+                                let index = item.datePriceList.findIndex(dat => {
+                                    return !dat.hasFind;
+                                });
+                                if (index >= 0) {
+                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
+                                    item.datePriceList[index].dateFee = +((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
+                                }
+                            }
                         }
                     });
                 const params = { roomId: item.roomType, startDate: startDate, endDate: endDate };
