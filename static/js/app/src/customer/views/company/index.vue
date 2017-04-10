@@ -315,7 +315,6 @@ export default {
         openDetailDialog: function(date, type, checkType) {
             if (type) {
                 const dataobject = {
-                    isAll: true,
                     orderType: - 1,
                     type: 1
                 };
