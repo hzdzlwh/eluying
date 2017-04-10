@@ -45,7 +45,7 @@
             <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
         </div>
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
-            <companyDetail :data='detailData'></companyDetail>
+            <companyDetail :data='detailData' :contral='contral'></companyDetail>
         </detail>
         <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
     </div>
@@ -423,8 +423,8 @@ export default {
         }
     },
     created() {
-        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_EDIT_ID);
-        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_CHARGE_ID);
+        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID);
+        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_CHARGE_ID);
         this.fetchDate();
         // 充值记录
         event.$on('showlist', () => {

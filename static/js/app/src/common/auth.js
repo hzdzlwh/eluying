@@ -10,8 +10,8 @@ const ACCOMMODATION_ID = 2;
 const VIP_ID = 11;
 const VIP_VIEW_ID = 0;
 const VIP_EDIT_ID = 1;
-//企业客户权限
-const COMPANY = 241;
+// 企业客户权限
+const COMPANY_ID = 241;
 const COMPANY_VIEW_ID = 0;
 const COMPANY_EDIT_ID = 1;
 const COMPANY_CHARGE_ID = 2;
@@ -189,7 +189,7 @@ exports.INSURANCE_ID = INSURANCE_ID;
 exports.VIP_VIEW_ID = VIP_VIEW_ID;
 exports.VIP_EDIT_ID = VIP_EDIT_ID;
 
-exports.COMPANY = COMPANY;
+exports.COMPANY_ID = COMPANY_ID;
 exports.COMPANY_VIEW_ID = COMPANY_VIEW_ID;
 exports.COMPANY_EDIT_ID = COMPANY_EDIT_ID;
 exports.COMPANY_CHARGE_ID = COMPANY_CHARGE_ID;
