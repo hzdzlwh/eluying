@@ -161,9 +161,9 @@ export default {
                         if (status === 0) {
                             modal.somethingAlert('收银成功');
                             this.authCode = '';
-                            event.$emit('checkSuc');
                             setTimeout(() => {
                                 this.hideModal(1);
+                                event.$emit('checkSuc');
                             }, 1500);
                         } else if (status === 1) {
                             modal.somethingAlert('收款失败');
@@ -180,10 +180,10 @@ export default {
                                         }
                                         if (status1 === 0) {
                                             modal.somethingAlert('收银成功');
-                                            event.$emit('checkSuc');
                                             this.authCode = '';
                                             setTimeout(() => {
                                                 this.hideModal(1);
+                                                event.$emit('checkSuc');
                                             }, 2500);
                                         } else if (status1 === 1) {
                                             modal.somethingAlert('收款失败');
