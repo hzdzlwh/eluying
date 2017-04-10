@@ -1,6 +1,7 @@
 /**
  * Created by lingchenxuan on 2017/2/21.
  */
+require('core-js');
 import LeftMenu from '../common/leftMenu';
 import TopMenu from '../common/topMenu';
 import Header from '../common/header';

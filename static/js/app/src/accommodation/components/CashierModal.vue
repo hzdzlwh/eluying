@@ -335,7 +335,7 @@
                 }
             },
             addPayMent() {
-                const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2));
+                const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2));
                 let paidMoney = 0;
                 if (this.payments.length > 0) {
                     this.payments.forEach(pay => {
@@ -378,7 +378,7 @@
                     return false;
                 }
                 const receiveMoney = this.payments.reduce((a,b) => { return a + Number(b.fee) }, 0);
-                const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - this.orderPayment.paidFee + this.penalty).toFixed(2);
+                const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                 if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney)) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
                     this.disabledBtn = false;
