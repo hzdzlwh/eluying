@@ -4,7 +4,7 @@ var AJAXService = require('AJAXService');
 var networkAction = require('networkAction');
 var modal = require('modal');
 var headerHtml = require('./header.html');
-var dot = require('dot/doT');
+var dot = require('dot');
 var auth = require('../auth');
 var header = {
     render: function() {
