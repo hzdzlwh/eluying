@@ -3,7 +3,7 @@
         <div class="noVipitem">
             <div class="noVipEntitem"><span class="noVipLabel">企业类型</span>{{ data.companyType ? '可挂账' : '不可挂账' }}
             </div>
-            <div class="noVipEntitem"><span class="noVipLabel">充值金额</span>￥{{data.rechargeFee}} <div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn1' v-if='contral && contral.COMPANY_EDIT_ID'>充值</div><div class=" btnl dd-btn dd-btn-primary dd-btn-sm"  @click='showbtn2' v-if='data.rechargeFee && contral && contral.COMPANY_EDIT_ID'>退款</div><span @click='showlist' class="btnl fontbtn">充值日志</span> </div>
+            <div class="noVipEntitem"><span class="noVipLabel">充值余额</span>￥{{data.rechargeFee}} <div class="dd-btn dd-btn-primary dd-btn-sm btnl" @click='showbtn1' v-if='contral && contral.COMPANY_EDIT_ID'>充值</div><div class=" btnl dd-btn dd-btn-primary dd-btn-sm"  @click='showbtn2' v-if='data.rechargeFee && contral && contral.COMPANY_EDIT_ID'>退款</div><span @click='showlist' class="btnl fontbtn">充值日志</span> </div>
         </div>
         <div class="noVipitem">
             <div class="noVipEntitem"><span class="noVipLabel">企业编号</span>{{data.contractNum || '无'}}</div>
@@ -23,7 +23,7 @@
         </div>
         <div class="noVipitem">
             <div class="noVipEntitem" style="display:inline-flex"><span class="noVipLabel" style="display:inline-flex">优惠折扣</span>
-            <div style="width:300px">
+            <div style="width:300px;max-height: 356px;overflow-y: auto;">
                 <div v-for='item in data.discounts' class="detailDiscout">
                     <div><span :title='item  | getdiscount'>{{item  | getdiscount}}</span>{{item.discount}}折</div>
                 </div>
