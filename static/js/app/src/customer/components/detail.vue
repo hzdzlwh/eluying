@@ -240,7 +240,7 @@
         },
         {
             title: '订单业态',
-            render: (h, row) => row.orderTypes.map(type => <span class={'order-state' + orderTypeClass[type]}>{orderType[type]}</span>)
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '联系人',
