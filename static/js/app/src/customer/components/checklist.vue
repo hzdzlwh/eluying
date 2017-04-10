@@ -117,10 +117,10 @@ export default {
                     width: '200px'
                 }, {
                     title: '操作类型',
-                    render: (h, row) => <span>￥{row.price}</span>
+                    render: (h, row) => <span>{row.type === 1 ? '充值' : row.type === 2 ? '退款' : row.type === 3 ? '结账扣款' : row.type === 4 ? '订单退款' : ''}</span>
                 }, {
                     title: '结算金额',
-                    render: (h, row) => <span>￥{row.type === 1 ? '充值' : row.type === 2 ? '退款' : row.type === 3 ? '结账扣款' : row.type === 4 ? '订单退款' : ''}</span>
+                    render: (h, row) => <span>￥{row.price}</span>
                 }, {
                     title: '支付方式',
                     dataIndex: 'channel'

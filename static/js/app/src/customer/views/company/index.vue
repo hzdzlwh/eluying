@@ -426,7 +426,7 @@ export default {
                     this.datalist = res.data.list;
                     this.count = res.data.count;
                     this.totalLedgerFee = res.data.totalLedgerFee;
-                    this.totalRechargeFee = res.data.totalLedgerFee;
+                    this.totalRechargeFee = res.data.totalRechargeFee;
                 }
             });
         }
