@@ -113,7 +113,9 @@ var util = {
     },
 
     DateDiff: function(date1, date2){
-        return Math.ceil((date2.valueOf() - date1.valueOf())/24/60/60/1000);
+        const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+        const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+        return Math.ceil((d2.valueOf() - d1.valueOf())/24/60/60/1000);
     },
 
     compareDates: function(date1, date2){
