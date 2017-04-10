@@ -54,7 +54,14 @@ $(function() {
             ],
             orderType: -1,
             orderStatus: '-1',
-            orderStatusText: ['待处理', '已拒绝', '已预订', '进行中', '已取消', '已结束'],
+            orderStatusText: {
+                '0': '待处理',
+                '1': '已拒绝',
+                '2': '已预订',
+                '3': '进行中',
+                '4': '已取消',
+                '5': '已结束',
+                '8': '反结账' },
             optionsOrderState: ORDER_STATE_LIST,
             startDate: '',
             endDate: '',
@@ -190,8 +197,16 @@ $(function() {
             getOrderStatusText(item) {
                 const typeArr = this.getOrderType(item);
                 const isShopOrder = item.orderType === 2 || (typeArr.length === 1 && typeArr[0] === 2);
-                if (isShopOrder) {
+                const isCateOrder = item.orderType === 0 || (typeArr.length === 1 && typeArr[0] === 0);
+                const isRoomOrder = item.orderType === 3 || (typeArr.length === 1 && typeArr[0] === 3);
+                if (isShopOrder && item.orderState === 2) {
                     return '已结束';
+                } else if (isCateOrder && item.orderState === 3) {
+                    return '就餐中';
+                } else if (isRoomOrder && item.orderState === 3) {
+                    return '已入住';
+                } else if (isRoomOrder && item.orderState === 5) {
+                    return '已退房';
                 } else {
                     return this.orderStatusText[item.orderState];
                 }
@@ -275,7 +290,12 @@ $(function() {
 
         watch: {
             orderType: function(newVal) {
-                if (newVal === 2) {
+                this.$nextTick(() => {
+                    this.orderStatus = '-1';
+                    const obj = this.getParams();
+                    this.getOrdersList(obj, false);
+                });
+                /* if (newVal === 2) {
                     this.$nextTick(() => {
                         this.orderStatus = '5';
                         const obj = this.getParams();
@@ -287,7 +307,7 @@ $(function() {
                         const obj = this.getParams();
                         this.getOrdersList(obj, false);
                     });
-                }
+                } */
             },
 
             orderParams: function(newVal) {
