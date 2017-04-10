@@ -110,7 +110,7 @@ export default {
     data() {
         return {
             col: [
-                {},
+                [],
                 [{
                     title: '结算日期',
                     dataIndex: 'creationTime',
