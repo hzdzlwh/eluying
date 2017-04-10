@@ -179,7 +179,7 @@ export default {
     watch: {
         visible(val) {
             if (val) {
-            this.fetchDate();
+                this.fetchDate();
                 $('#checkList').modal({
                     backdrop: 'static'
                 });
