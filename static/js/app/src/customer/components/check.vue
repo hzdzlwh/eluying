@@ -144,7 +144,7 @@ export default {
                 name1: '结算金额：',
                 name2: '支付方式：',
                 url: '/contractCompany/settle',
-                msg: '结账'
+                msg: '结算'
             }],
             select: 0,
             alipay: {
@@ -191,7 +191,7 @@ export default {
                 return false;
             }
             if (!this.select) {
-                modal.somethingAlert('请选择支付方式！');
+                modal.somethingAlert('请选择' + this.content[this.type].msg +'方式！');
                 return false;
             }
             if (this.type === 2 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
