@@ -42,7 +42,7 @@
         <!--add new customer Modal -->
         <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
         <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
-            <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
+        <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
             <companyDetail :data='detailData' :contral='contral'></companyDetail>
         </detail>
@@ -230,15 +230,15 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                    < span >
-                    < span onClick = {
-                        () => this.openDetailDialog(row, 0, 1)
-                    } > 详情 < /span> / < span onClick = {
-                        () => this.openDetailDialog(row, 0, 2)
-                    } > 查单 < /span> {
-                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
-                        () => this.openDetailDialog(row, 1, 2)
-                    } > / 结算 < /span > : ''
+                        < span >
+                        < span onClick = {
+                            () => this.openDetailDialog(row, 0, 1)
+                        } > 详情 < /span> / < span onClick = {
+                            () => this.openDetailDialog(row, 0, 2)
+                        } > 查单 < /span> {
+                        (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                            () => this.openDetailDialog(row, 1, 2)
+                        } > / 结算 < /span > : ''
                 } < /span >,
                 width: '140px'
             }],
@@ -294,16 +294,25 @@ export default {
             this.formvisible = true;
         },
         detailDelete: function(id) {
-            http.get('/contractCompany/removeCompany', {
-                cid: id
-            }).then(res => {
-                if (res.code === 1) {
-                    modal.alert('删除成功');
-                    this.fetchDate();
-                    this.detailClose();
-                } else {
-                    modal.alert(res.msg);
-                }
+            modal.confirmDialog({
+                message: '您将会删除该企业客户信息，删除后信息不可恢复，且不能对该企业客户挂账进行结算，确认删除么？'
+            }, () => {
+                const that = this;
+                http.get('/contractCompany/removeCompany', {
+                    cid: id
+                }).then(res => {
+                    if (res.code === 1) {
+                        modal.alert('删除成功');
+                        that.fetchDate();
+                        that.detailClose();
+                    } else {
+                        if (res.code === 10) {
+                            modal.somethingAlert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    }
+                });
             });
         },
         detailClose: function() {
@@ -345,7 +354,9 @@ export default {
                 this.detailtab = checkType;
                 this.detailTitle = date.companyName;
                 this.detailVisible = true;
-                http.get('/contractCompany/getDetail', { cid: date.cid }).then(res => {
+                http.get('/contractCompany/getDetail', {
+                    cid: date.cid
+                }).then(res => {
                     if (res.code === 1) {
                         this.detailData = res.data;
                     } else {
