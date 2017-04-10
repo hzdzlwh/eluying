@@ -199,7 +199,7 @@ export default {
                 return false;
             }
             if (this.type === 1 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
-                modal.somethingAlert('退款金额不能大于最大金额！');
+                modal.somethingAlert('退款金额不能大于充值余额！');
                 return false;
             }
             // 判断是否进行扫码收款
@@ -218,10 +218,9 @@ export default {
             } else {
                 const that = this;
                 let msg = '';
-                this.type === 2 ? msg = '请确保金额已收到！' : msg = '确认进行退款吗';
+                this.type === 1 ? msg = '确认进行退款吗' : msg = '请确保金额已收到！';
                 modal.confirmDialog({
                     message: msg
-
                 }, () => {
                     http.ajaxWithToken('GET', that.content[that.type].url, getCodeData)
                         .then((result) => {
