@@ -45,7 +45,7 @@
             <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
         </div>
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
-            <companyDetail :data='detailData'></companyDetail>
+            <companyDetail :data='detailData' :contral='contral'></companyDetail>
         </detail>
         <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
     </div>
