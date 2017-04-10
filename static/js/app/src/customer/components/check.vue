@@ -217,7 +217,7 @@ export default {
             } else {
                 const that = this;
                 let msg = '';
-                this.type === 0 ? msg = '请确保金额已收到！' : msg = '确认进行退款吗';
+                this.type === 2 ? msg = '请确保金额已收到！' : msg = '确认进行退款吗';
                 modal.confirmDialog({
                     message: msg
 
