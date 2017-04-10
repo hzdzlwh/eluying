@@ -16,7 +16,7 @@
                                 <a :class="{active: innerTab === 2}">消费订单</a>
                             </li>
                         </ul>
-                        <div v-if="innerTab === 1">
+                        <div v-if="innerTab === 1 && hasEditAuth">
                             <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
                             <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
                         </div>
@@ -172,6 +172,7 @@
     } from 'dd-vue-component';
     import http from '../../common/AJAXService';
     import modal from '../../common/modal';
+    import auth from '../../common/auth';
 
     const states = [
         {
@@ -309,6 +310,11 @@
             },
             pages() {
                 return Math.ceil(this.orderCount / 30);
+            },
+            hasEditAuth() {
+                return this.type === 'company' ?
+                    auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID) :
+                    auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
             }
         },
         watch: {
