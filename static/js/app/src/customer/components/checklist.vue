@@ -110,20 +110,7 @@ export default {
     data() {
         return {
             col: [
-                [{
-                    title: '结算日期',
-                    dataIndex: 'creationTime',
-                    width: '200px'
-                }, {
-                    title: '结算金额',
-                    render: (h, row) => <span>￥{row.settleFee}</span>
-                }, {
-                    title: '支付方式',
-                    dataIndex: 'channel'
-                }, {
-                    title: '操作人',
-                    dataIndex: 'operator'
-                }],
+                {},
                 [{
                     title: '结算日期',
                     dataIndex: 'creationTime',
@@ -140,7 +127,22 @@ export default {
                 }, {
                     title: '操作人',
                     dataIndex: 'operator'
+                }],
+                [{
+                    title: '结算日期',
+                    dataIndex: 'creationTime',
+                    width: '200px'
+                }, {
+                    title: '结算金额',
+                    render: (h, row) => <span>￥{row.settleFee}</span>
+                }, {
+                    title: '支付方式',
+                    dataIndex: 'channel'
+                }, {
+                    title: '操作人',
+                    dataIndex: 'operator'
                 }]
+
             ],
             historySettle: 0,
             datalist: [],
@@ -175,8 +177,8 @@ export default {
     },
     watch: {
         visible(val) {
+            this.fetchDate();
             if (val) {
-                this.fetchDate();
                 $('#checkList').modal({
                     backdrop: 'static'
                 });
