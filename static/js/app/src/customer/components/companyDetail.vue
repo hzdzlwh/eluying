@@ -120,7 +120,7 @@ export default {
         },
         showlistcheck() {
             event.$emit('showlistcheck');
-            this.close();
+            // this.close();
         }
     }
 };
