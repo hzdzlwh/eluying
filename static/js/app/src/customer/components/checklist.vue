@@ -4,7 +4,7 @@
             <div class="modal-content checkForm-modal-content">
                 <span class="checkForm-closeBtn" @click="close()">&times;</span>
                 <div class="checkForm-modal-header">
-                    <div v-if='checkListType'>
+                    <div v-if='checkListType === 1'>
                         <div><span>历史充值总额</span>￥{{historyRecharge}}</div>
                         <div><span>历史退款总额</span>￥{{historyRefunds}}</div>
                     </div>
