@@ -312,9 +312,9 @@
                 return Math.ceil(this.orderCount / 30);
             },
             hasEditAuth() {
-                return this.type === 'company' ?
-                    auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID) :
-                    auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
+                return this.type === 'company'
+                    ? auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID)
+                    : auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
             }
         },
         watch: {
