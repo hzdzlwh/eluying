@@ -25,7 +25,7 @@
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">联系号码：</span>
-                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="12">
+                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="11">
                     </p>
                     <p>
                         <span class="addCus">
@@ -44,16 +44,17 @@
                             </span>
                             <span>
                         <span class="selectBox" v-if='formdata.discounts'>
-                        <div v-for='(item,index) in formdata.discounts' :key="item.id">
+                        <div class="discountBox">
+                        <div v-for='(item,index) in formdata.discounts' class="discountItem" :key="item.id">
                             <span class="preName">{{item.nodeName}}</span>
                         <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
-                </div>
-                
-                </span>
+                </div></div>
                 <div style="display:flex;">
                     <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
                     <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
                 </div>
+                </span>
+                
                 </span>
                 </p>
                 <p>
@@ -141,7 +142,7 @@
 }
 
 #add {
-    z-index: 1051;
+    z-index: 2051;
 }
 
 .delete-icon {
@@ -172,22 +173,23 @@
     display: inline-block;
 }
 
-.selectBox > div {
+.discountItem {
     margin-bottom: 5px;
     display: inline-flex;
     align-items: center;
 }
-
+.discountBox{
+        max-height: 284px;
+    overflow-y: auto;
+}
 .selectBox input {
     width: 56px!important;
 }
 
 .selectBox {
-    max-height: 300px;
     display: inline-block;
-    overflow-y: auto;
     padding-right: 20px;
-    width: 250px;
+    width: 300px;
 }
 </style>
 <script>
@@ -275,7 +277,7 @@ export default {
         },
         customerDate: function() {
             if (!this.formdata.companyName) {
-                modal.somethingAlert('请输入公司名');
+                modal.somethingAlert('请输入企业名称');
                 return;
             }
             if (this.formdata.contractNum) {
@@ -296,7 +298,7 @@ export default {
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
                 for (let i = 0; i < this.formdata.discounts.length; i ++) {
-                    this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount).toFixed(1);
+                    this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;

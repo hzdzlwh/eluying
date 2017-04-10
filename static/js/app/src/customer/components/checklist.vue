@@ -12,26 +12,51 @@
                         <div><span>历史结算总额</span>￥{{historySettle}}</div>
                     </div>
                 </div>
-                           <div class="checkForm-modal-body">
-                <div class="cusTableContain">
-                    <DdTable :columns="col[checkListType]" :data-source="datalist"></DdTable>
+                <div class="checkForm-modal-body">
+                    <div class="interList">
+                        <DdTable :columns="col[checkListType]" :data-source="datalist"></DdTable>
+                    </div>
                 </div>
             </div>
-            </div>
- 
         </div>
     </div>
     </div>
 </template>
+<style lang="scss" rel="stylesheet/scss">
+.interList {
+    max-height:340px;
+    overflow-y: auto;
+    .dd-table-container{
+        box-shadow:none;
+    }
+    .dd-table {
+        border-top: none;
+        thead{
+            tr {
+                border-bottom: 1px solid #e6e6e6;
+            }
+            th{
+            background: none;
+            text-align: center;
+            color:#999;
+        }
+            } 
+         tbody td{
+            border-top:none;
+            padding: 10px 6px;
+            color:#666;
+            text-align: center;
+         }
+    }
+}
+</style>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .checkForm-modal-content {
-    background: #fafafa;
     border-radius: 2px;
     border-top: 4px solid #178ce6;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
     padding: 0;
     overflow-x: hidden;
-    overflow-y: auto;
     position: relative;
     width: 615px;
     height: 445px;
@@ -50,7 +75,6 @@
         font-size: 16px;
         color: #178ce6;
         text-align: left;
-        border-bottom: 1px solid #e6e6e6;
         padding: 25px 20px;
         .comName {
             padding: 20px 24px 0;
@@ -85,7 +109,8 @@ export default {
             col: [
                 [{
                     title: '结算日期',
-                    dataIndex: 'creationTime'
+                    dataIndex: 'creationTime',
+                    width: '200px'
                 }, {
                     title: '结算金额',
                     dataIndex: 'settleFee'
@@ -98,13 +123,14 @@ export default {
                 }],
                 [{
                     title: '结算日期',
-                    dataIndex: 'creationTime'
+                    dataIndex: 'creationTime',
+                    width: '200px'
                 }, {
                     title: '结算金额',
                     dataIndex: 'price'
                 }, {
                     title: '支付方式',
-                    dataIndex: 'type'
+                    dataIndex: 'channel'
                 }, {
                     title: '操作人',
                     dataIndex: 'operator'

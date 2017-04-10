@@ -2,21 +2,14 @@
     <div class="listbox">
         <div class="vip-search">
             <div class="vip-search-container">
-                <input type="text" v-model='search' placeholder="搜索客户姓名/手机号/订单号" class="order-search dd-input">
+                <input type="text" v-model='search' placeholder="搜索姓名/手机号" class="order-search dd-input">
                 <span class="vip-search-icon" @click='fetchDate'><img src="//static.dingdandao.com/order_manage_search_grey.png" alt=""></span>
             </div>
         </div>
         <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
-                    <DdDropdown text="导出明细" trigger="click">
-                        <dd-dropdown-item>
-                            <span><a :href="outPutText(1)" download>导出PDF</a></span>
-                        </dd-dropdown-item>
-                        <dd-dropdown-item>
-                            <span><a :href="outPutText(0)" download>导出Excel</a></span>
-                        </dd-dropdown-item>
-                    </DdDropdown>
+                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出Excel</a></span>
                 </div>
             </div>
         </div>
@@ -45,10 +38,13 @@
 <style scoped>
 .cusTableContain {
     width: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
     position: relative;
 }
-
+.dd-dropdown a, .dd-dropdown a:hover {
+    color: #fff;
+    text-decoration: none;
+}
 .footer-container {
     width: 100%;
     height: 45px;
@@ -132,9 +128,13 @@ import {
 import http from '../../../common/AJAXService';
 import detail from '../../components/detail.vue';
 import vipForm from '../../components/vipForm.vue';
+import auth from '../../../common/auth';
 export default {
     data() {
         return {
+            contral: {
+                VIP_EDIT_ID: false
+            },
             // formddata
             formvisible: false,
             formdata: {},
@@ -187,10 +187,11 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span >
-                        < span onClick = {
+                        < span > {
+                        this.contral.VIP_EDIT_ID ? < span onClick = {
                             () => this.openDetailDialog(row, 1)
-                        }> 加入会员 </span><span onClick = {
+                        }> 加入会员 /</span> : '-' }
+                        <span onClick = {
                         () => this.openDetailDialog(row, 0)
                 } > 查单 </span></span>
             }],
@@ -226,20 +227,19 @@ export default {
             this.fetchDate();
         },
         outPutText(num) {
-            const paramsObj = this.getParams();
-            paramsObj.exportType = num;
-            const host = http.getUrl2('/contractCompany/exportCompanyList');
+            const paramsObj = {};
+            const host = http.getUrl2('/customer/customersToExcel');
             const pa = http.getDataWithToken(paramsObj);
             // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
-        getParams() {
-            const obj = {
-                keyword: this.search
-            };
-            return obj;
-        },
+        // getParams() {
+        //     const obj = {
+        //         keyword: this.search
+        //     };
+        //     return obj;
+        // },
         addForm: function() {
             // $('#vipForm').modal('show');
                 // this.formvisible = true
@@ -269,13 +269,14 @@ export default {
         }
     },
     created() {
+        this.contral.VIP_EDIT_ID = auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
         this.fetchDate();
     },
     components: {
         DdPagination,
         DdSelect,
         DdDropdown,
-        'dd-dropdown-item': DdDropdownItem,
+        DdDropdownItem,
         DdOption,
         DdTable,
         detail,

@@ -16,7 +16,7 @@
                                 <a :class="{active: innerTab === 2}">消费订单</a>
                             </li>
                         </ul>
-                        <div v-if="innerTab === 1">
+                        <div v-if="innerTab === 1 && hasEditAuth">
                             <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
                             <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
                         </div>
@@ -172,6 +172,7 @@
     } from 'dd-vue-component';
     import http from '../../common/AJAXService';
     import modal from '../../common/modal';
+    import auth from '../../common/auth';
 
     const states = [
         {
@@ -180,7 +181,7 @@
         },
         {
             name: '已预订',
-            id: 1
+            id: 2
         },
         {
             name: '进行中',
@@ -193,14 +194,6 @@
         {
             name: '已取消',
             id: 4
-        },
-        {
-            name: '待处理',
-            id: 0
-        },
-        {
-            name: '已拒绝',
-            id: 1
         }
     ];
 
@@ -317,6 +310,11 @@
             },
             pages() {
                 return Math.ceil(this.orderCount / 30);
+            },
+            hasEditAuth() {
+                return this.type === 'company'
+                    ? auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID)
+                    : auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
             }
         },
         watch: {
@@ -394,7 +392,7 @@
                 return {
                     startTime: this.startTime,
                     endTime: this.endTime,
-                    state: this.state === '7' ? '' : this.state,
+                    state: this.state,
                     phone: this.phone,
                     pageNo: this.pageNo,
                     keyword: this.keyword,
@@ -419,7 +417,7 @@
                 this.ledgerFeeSum = 0;
                 this.startTime = '';
                 this.endTime = '';
-                this.state = '7';
+                this.state = '';
             }
         }
     };

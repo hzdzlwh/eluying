@@ -19,7 +19,7 @@
                     </DdDropdown>
                 </div>
             </div>
-            <div class="dd-btn-primary dd-btn add-button" @click='addForm'>添加企业客户</div>
+            <div class="dd-btn-primary dd-btn add-button" @click='addForm' v-if='contral && contral.COMPANY_EDIT_ID'>添加企业客户</div>
             <div class="vip-search">
                 <div class="vip-search-container">
                     <input type="text" v-model='search' placeholder="搜索企业编号/企业名称/联系人/联系号码" class="order-search dd-input">
@@ -40,14 +40,12 @@
             </div>
         </div>
         <!--add new customer Modal -->
-        <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
-        <div>
-            <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
-        </div>
-        <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
-            <companyDetail :data='detailData'></companyDetail>
-        </detail>
         <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
+        <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
+            <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
+        <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
+            <companyDetail :data='detailData' :contral='contral'></companyDetail>
+        </detail>
     </div>
 </template>
 <style>
@@ -145,10 +143,18 @@ import companyDetail from '../../components/companyDetail.vue';
 import checklist from '../../components/checklist.vue';
 import modal from '../../../common/modal';
 import event from '../../event.js';
-
+import auth from '../../../common/auth';
 export default {
     data() {
         return {
+            contral: {
+                // COMPANY_VIEW_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_VIEW_ID),
+                // COMPANY_EDIT_ID  : auth.checkModule(auth.COMPANY,auth.COMPANY_EDIT_ID),
+                // COMPANY_CHARGE_ID : auth.checkModule(auth.COMPANY,auth.COMPANY_CHARGE_ID)
+                COMPANY_VIEW_ID: false,
+                COMPANY_EDIT_ID: false,
+                COMPANY_CHARGE_ID: false
+            },
             checkListVisible: false,
             checkListType: 0,
             // formddata
@@ -230,7 +236,7 @@ export default {
                     } > 详情 < /span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
                     } > 查单 < /span> {
-                    (row.ledgerFee && row.companyType) ? < span onClick = {
+                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
                 } < /span >,
@@ -316,12 +322,20 @@ export default {
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
-                        this.check.chekcType = res.data.list;
+                        if (checkType === 1) {
+                            this.check.chekcType = res.data.list.filter(function(element) {
+                                const id = element.id;
+                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                            });
+                        } else {
+                            this.check.chekcType = res.data.list;
+                        }
                         this.check.show = true;
                         this.check.data = {
                             rechargeFee: date.rechargeFee,
                             ledgerFee: date.ledgerFee,
-                            cid: date.cid
+                            cid: date.cid,
+                            name: date.companyName
                         };
                     } else {
                         modal.alert(res.msg);
@@ -408,24 +422,32 @@ export default {
         }
     },
     created() {
+        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID);
+        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_CHARGE_ID);
         this.fetchDate();
+        // 充值记录
         event.$on('showlist', () => {
             this.checkListType = 1;
             this.checkListVisible = true;
         });
+        // 充值
         event.$on('showbtn1', () => {
             this.openDetailDialog(this.detailData, 1, 0);
         });
+        // 退款
         event.$on('showbtn2', () => {
             this.openDetailDialog(this.detailData, 1, 1);
         });
+        // 结账
         event.$on('showbtn3', () => {
             this.openDetailDialog(this.detailData, 1, 2);
         });
+        // 结算记录
         event.$on('showlistcheck', () => {
             this.checkListType = 0;
             $('#checkList').modal('show');
         });
+        // 电子钱包流程成功回调
         event.$on('checkSuc', () => {
             this.checkListVisible = false;
             this.detailVisible = false;

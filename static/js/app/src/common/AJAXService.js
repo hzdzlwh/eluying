@@ -1,40 +1,40 @@
-require("cookie");
+require('cookie');
 import Raven from 'raven-js';
 import modal from './modal';
-var md5 = require("md5");
+const md5 = require('md5');
 const spin = new modal.Spin();
-var AJAXService = {
+const AJAXService = {
     urls: {
-        host: process.env.NODE_ENV === 'production' ? "/mg" : (process.env.serverUrl + "/mg"),
-        host2: process.env.NODE_ENV === 'production' ? "/ws" : (process.env.serverUrl + "/ws"),
-        loginUrl: "/user/login",
-        getRoomCategoryListUrl: "/category/getRoomCategoryList",
-        addAccommodationUrl: "/category/addAccommodation",
-        pullOtherCategoryListUrl: "/category/pullOtherCategoryList",
-        deleteOtherCategoryUrl: "/category/deleteOtherCategory",
-        subclassManageUrl: "/category/modifySubCategory",
-        addOrEditExtraCategoryUrl: "/category/addOrEditOtherCategory",
-        editRoomBasicUrl: "/category/modifyAccommodationBaseInfo",
-        deleteRoomUrl: "/category/deleteAccommodationCategory",
-        loadSubRoomUrl: "/category/pullRoomList",
-        editSubRoomUrl: "/category/modifyRooms",
-        modifyStateUrl: "/category/modifyState",
-        pullShowInfoUrl: "/category/pullShowInfo",
-        uploadImageUrl: "/image/upload",
-        editShowInfoUrl: "/category/modifyShowInfo",
-        getAccommodationBasicInfo: "/price/getAccommodationBasicInfo",
-        getAccommodationPriceList: "/price/getAccommodationPriceList",
-        ModifyAccommodationSpecialChannelPrice: "/price/batchModifyAccommodationSpecialChannelPrice",
-        getFoodCategoryPriceList: "/price/getFoodCategoryPriceList",
-        getPlayCategoryPriceList: "/price/getPlayCategoryPriceList",
-        modifyDefaultPrice: "/price/modifyDefaultPrice",
-        getCampSeasons: "/price/getCampSeasons",
-        getAccommodationPeriodicalPrice: "/price/getAccommodationPeriodicalPrice",
-        modifyAccommodationPeriodicalPrice: "/price/modifyAccommodationPeriodicalPrice",
-        modifyCampSeason: "/price/modifyCampSeason",
-        getAccommodationMonthPriceList: "/price/getAccommodationMonthPriceList",
-        batchModifyAccommodationSpecialPrice: "/price/batchModifyAccommodationSpecialPrice",
-        logoutUrl: "/user/logout",
+        host: process.env.NODE_ENV === 'production' ? '/mg' : (process.env.serverUrl + '/mg'),
+        host2: process.env.NODE_ENV === 'production' ? '/ws' : (process.env.serverUrl + '/ws'),
+        loginUrl: '/user/login',
+        getRoomCategoryListUrl: '/category/getRoomCategoryList',
+        addAccommodationUrl: '/category/addAccommodation',
+        pullOtherCategoryListUrl: '/category/pullOtherCategoryList',
+        deleteOtherCategoryUrl: '/category/deleteOtherCategory',
+        subclassManageUrl: '/category/modifySubCategory',
+        addOrEditExtraCategoryUrl: '/category/addOrEditOtherCategory',
+        editRoomBasicUrl: '/category/modifyAccommodationBaseInfo',
+        deleteRoomUrl: '/category/deleteAccommodationCategory',
+        loadSubRoomUrl: '/category/pullRoomList',
+        editSubRoomUrl: '/category/modifyRooms',
+        modifyStateUrl: '/category/modifyState',
+        pullShowInfoUrl: '/category/pullShowInfo',
+        uploadImageUrl: '/image/upload',
+        editShowInfoUrl: '/category/modifyShowInfo',
+        getAccommodationBasicInfo: '/price/getAccommodationBasicInfo',
+        getAccommodationPriceList: '/price/getAccommodationPriceList',
+        ModifyAccommodationSpecialChannelPrice: '/price/batchModifyAccommodationSpecialChannelPrice',
+        getFoodCategoryPriceList: '/price/getFoodCategoryPriceList',
+        getPlayCategoryPriceList: '/price/getPlayCategoryPriceList',
+        modifyDefaultPrice: '/price/modifyDefaultPrice',
+        getCampSeasons: '/price/getCampSeasons',
+        getAccommodationPeriodicalPrice: '/price/getAccommodationPeriodicalPrice',
+        modifyAccommodationPeriodicalPrice: '/price/modifyAccommodationPeriodicalPrice',
+        modifyCampSeason: '/price/modifyCampSeason',
+        getAccommodationMonthPriceList: '/price/getAccommodationMonthPriceList',
+        batchModifyAccommodationSpecialPrice: '/price/batchModifyAccommodationSpecialPrice',
+        logoutUrl: '/user/logout',
         getCategoriesAndInventoriesUrl: '/inventory/getCategoriesAndInventories',
         getRoomsAndStatusUrl: '/inventory/getRoomsAndStatus',
         getRoomStatusUrl: '/inventory/getRoomStatus',
@@ -87,20 +87,19 @@ var AJAXService = {
         getPayStatus4BarcodeUrl: '/cashier/getPayStatus4Barcode',
         getEmployeeDetailUrl: '/user/getEmployeeDetail',
         getCaterOrderDetailUrl: '/catering/getCaterOrderDetail',
-        cateringCancelOrderUrl: '/catering/cancelOrder',
+        cateringCancelOrderUrl: '/catering/cancelOrder'
     },
-    getUrl: function(path){
-        var url = this.urls.host + (this.urls[path] || path);
-        if (this.urls.rewriteUrl == true && $.cookie("jsessionid")) {
-            url += ";jsessionid=" + $.cookie("jsessionid");
+    getUrl: function(path) {
+        let url = this.urls.host + (this.urls[path] || path);
+        if (this.urls.rewriteUrl && $.cookie('jsessionid')) {
+            url += ';jsessionid=' + $.cookie('jsessionid');
         }
         return url;
     },
-    getUrl2: function(path){
-        var url = this.urls.host2 + (this.urls[path] || path);
-        return url;
+    getUrl2: function(path) {
+        return this.urls.host2 + (this.urls[path] || path);
     },
-    ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl){
+    ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl) {
         if (!data) {
             data = {};
         }
@@ -161,37 +160,36 @@ var AJAXService = {
                 errorCallback && errorCallback(e);
             }
         })
-            .always(() => {
-                spin.removePending();
-            });
+        .always(() => {
+            spin.removePending();
+        });
     },
-    get(path, data) {
+    get(path, data, option) {
         return this.ajaxWithToken('GET', path, data);
     },
-    post(path, data) {
+    post(path, data, option) {
         return this.ajaxWithToken('POST', path, data);
     },
-    sessionValidate: function(data){
+    sessionValidate: function(data) {
         data = JSON.parse(data);
         return JSON.stringify(data);
     },
     getDataWithToken: function(data) {
         data.timestamp = (new Date()).valueOf();
-        data.campId = data.campId || localStorage.getItem("campId");
-        data.uid = localStorage.getItem("uid");
+        data.campId = data.campId || localStorage.getItem('campId');
+        data.uid = localStorage.getItem('uid');
         data.terminal = 1;
         data.version = data.version || 18;
         data.kick = true;
-        var array = [];
-        for(var key in data){
+        const array = [];
+        for (const key in data) {
             array.push(data[key]);
         }
 
-        array.push(localStorage.getItem("token"));
+        array.push(localStorage.getItem('token'));
         array.sort();
-        var str = array.join("");
-        var strMD5 = md5(str);
-        data.sign = strMD5;
+        const str = array.join('');
+        data.sign = md5(str);
         return data;
     },
     paramsToString: function(params) {
