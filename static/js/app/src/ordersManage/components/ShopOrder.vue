@@ -47,7 +47,7 @@
         },
         computed: {
             filterShopList() {
-                let shopList = {};
+                const shopList = {};
                 if (this.order.pcGoodsItems) {
                     this.order.pcGoodsItems.forEach(item => {
                         if (shopList[item.goodsOrderId]) {
@@ -67,7 +67,7 @@
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
                 return shopList;
-            },
+            }
         },
         methods: {
             getTotalPrice(arr, dis) {

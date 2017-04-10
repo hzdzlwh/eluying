@@ -51,7 +51,7 @@
             }
         },
         computed: {
-            ...mapState({order: 'orderDetail'}),
+            ...mapState({ order: 'orderDetail' }),
             showShopOrderComponent() {
                 const combineShow = this.order.pcGoodsItems && this.order.pcGoodsItems.length > 0;
                 const singleShow = this.order.itemList && this.order.itemList.length > 0;

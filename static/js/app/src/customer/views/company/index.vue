@@ -316,7 +316,7 @@ export default {
             if (type) {
                 const dataobject = {
                     isAll: true,
-                    orderType: - 1,
+                    orderType: -1,
                     type: 1
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
@@ -325,7 +325,7 @@ export default {
                         if (checkType === 1) {
                             this.check.chekcType = res.data.list.filter(function(element) {
                                 const id = element.id;
-                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                                return !(id === -6 || id === -7 || id === -11 || id === -12);
                             });
                         } else {
                             this.check.chekcType = res.data.list;

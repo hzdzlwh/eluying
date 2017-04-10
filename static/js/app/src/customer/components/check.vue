@@ -204,7 +204,7 @@ export default {
                 })[0].name,
                 payChannelId: this.select
             };
-            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.paytype !== 1) {
+            if ((id === -6 || id === -7 || id === -11 || id === -12) && this.paytype !== 1) {
                 this.alipay.data = getCodeData;
                 this.alipayshow = true;
             } else {

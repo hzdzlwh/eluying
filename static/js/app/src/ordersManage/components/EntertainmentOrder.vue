@@ -69,7 +69,7 @@ export default {
     data() {
         return {
             ORDER_TYPE
-        }
+        };
     },
     computed: {
         playItems() {
@@ -77,15 +77,15 @@ export default {
                 return this.order.playItems;
             }
             return [this.order];
-        },
+        }
     },
     methods: {
         modalShow(id) {
             event.$emit('onShowDetail', {
                 orderId: parseInt(id),
                 orderType: ORDER_TYPE.ENTERTAINMENT
-            })
+            });
         }
     }
-}
+};
 </script>
