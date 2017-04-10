@@ -149,8 +149,9 @@ export default {
             historyRecharge: 0,
             historyRefunds: 0,
             url: [
-                '/contractCompany/getSettleLog',
-                '/contractCompany/getWalletLog'
+                '',
+                '/contractCompany/getWalletLog',
+                '/contractCompany/getSettleLog'
             ]
         };
     },
@@ -177,8 +178,8 @@ export default {
     },
     watch: {
         visible(val) {
-            this.fetchDate();
             if (val) {
+            this.fetchDate();
                 $('#checkList').modal({
                     backdrop: 'static'
                 });
