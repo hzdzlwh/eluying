@@ -135,7 +135,6 @@ export default {
             authCode: '',
             inputFocus: false,
             url: ['/contractCompany/recharge', '', '/contractCompany/settle'
-
             ]
         };
     },
