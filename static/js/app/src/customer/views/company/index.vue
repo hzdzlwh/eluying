@@ -422,8 +422,8 @@ export default {
         }
     },
     created() {
-        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_EDIT_ID);
-        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY, auth.COMPANY_CHARGE_ID);
+        this.contral.COMPANY_EDIT_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_EDIT_ID);
+        this.contral.COMPANY_CHARGE_ID = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_CHARGE_ID);
         this.fetchDate();
         // 充值记录
         event.$on('showlist', () => {
