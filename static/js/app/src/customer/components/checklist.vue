@@ -23,6 +23,9 @@
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
+#checkList {
+    z-index:2053;
+}
 .interList {
     max-height:340px;
     overflow-y: auto;
@@ -107,13 +110,17 @@ export default {
     data() {
         return {
             col: [
+                [],
                 [{
                     title: '结算日期',
                     dataIndex: 'creationTime',
                     width: '200px'
                 }, {
+                    title: '操作类型',
+                    render: (h, row) => <span>￥{row.price}</span>
+                }, {
                     title: '结算金额',
-                    dataIndex: 'settleFee'
+                    render: (h, row) => <span>￥{row.type === 1 ? '充值' : row.type === 2 ? '退款' : row.type === 3 ? '结账扣款' : row.type === 4 ? '订单退款' : ''}</span>
                 }, {
                     title: '支付方式',
                     dataIndex: 'channel'
@@ -127,7 +134,7 @@ export default {
                     width: '200px'
                 }, {
                     title: '结算金额',
-                    dataIndex: 'price'
+                    render: (h, row) => <span>￥{row.settleFee}</span>
                 }, {
                     title: '支付方式',
                     dataIndex: 'channel'
@@ -135,6 +142,7 @@ export default {
                     title: '操作人',
                     dataIndex: 'operator'
                 }]
+
             ],
             historySettle: 0,
             datalist: [],
@@ -169,6 +177,7 @@ export default {
     },
     watch: {
         visible(val) {
+            this.fetchDate();
             if (val) {
                 $('#checkList').modal({
                     backdrop: 'static'
@@ -177,14 +186,13 @@ export default {
             } else {
                 $('#checkList').modal('hide');
             }
-        },
-        id(val) {
-            this.fetchDate();
-        },
-        checkListType() {
-            this.fetchDate();
         }
-
+        // id(val) {
+        //     this.fetchDate();
+        // },
+        // checkListType() {
+        //     this.fetchDate();
+        // }
     },
     components: {
         DdTable

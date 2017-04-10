@@ -5,16 +5,16 @@
                 <span class="checkForm-closeBtn" @click="close()">&times;</span>
                 <div class="checkForm-modal-header">
                     <span>{{content[type].name}}</span>
-                    <div class="comName"><span>企业名称：</span><span>成都棕榈世界房车露营</span></div>
+                    <div class="comName"><span>企业名称：</span><span>{{data.name}}</span></div>
                 </div>
                 <div class="checkForm-modal-body">
                     <div class="checkitem">
                         <label for="">{{content[type].name1}}</label>
-                        <input v-model='num' type="Number" class="dd-input" /><span class="CheckHave" v-if='type !== 0'>可退余额￥{{type === 2 ? data.ledgerFee : data.rechargeFee}}</span>
+                        <input v-model='num' type="Number" class="dd-input" /><span class="CheckHave" v-if='type == 1'>可退余额￥{{data.rechargeFee}}</span>
                     </div>
                     <div class="checkitem">
                         <label for="">{{content[type].name2}}</label>
-                        <dd-select v-model="select" class='checkSelect'>
+                        <dd-select v-model="select" class='checkSelect' placeholder='请选择支付方式'>
                             <dd-option v-for="type in checkType" :key='type' :value="type.id" :label="type.name"></dd-option>
                         </dd-select>
                     </div>
@@ -30,7 +30,7 @@
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
 #checkForm {
-    z-index:1052;
+    z-index:2052;
 }
 .checkForm-modal-content {
     background: #fafafa;
@@ -119,7 +119,8 @@ export default {
         data: {
             default: {},
             type: Object
-        }, checkType: undefined
+        },
+        checkType: undefined
     },
     data() {
         return {
@@ -129,17 +130,20 @@ export default {
                 name: '企业充值',
                 name1: '充值金额：',
                 name2: '支付方式：',
-                url: '/contractCompany/recharge'
+                url: '/contractCompany/recharge',
+                msg: '充值'
             }, {
                 name: '企业退款',
                 name1: '退款金额：',
                 name2: '退款方式：',
-                url: ' /contractCompany/refund'
+                url: ' /contractCompany/refund',
+                msg: '退款'
             }, {
                 name: '挂帐结算',
                 name1: '结算金额：',
                 name2: '支付方式：',
-                url: '/contractCompany/settle'
+                url: '/contractCompany/settle',
+                msg: '结账'
             }],
             select: 0,
             alipay: {
@@ -151,14 +155,17 @@ export default {
     },
     watch: {
         visible(val) {
+            this.select = undefined;
+            this.num = undefined;
+            if (this.type === 2) {
+                this.num = this.data.ledgerFee;
+            }
             if (val) {
                 $('#checkForm').modal('show');
                 $('#checkForm').modal({
                     backdrop: 'static'
                 });
             } else {
-                this.select = undefined;
-                this.num = undefined;
                 $('#checkForm').modal('hide');
             }
         }
@@ -178,20 +185,20 @@ export default {
             this.$emit('close');
         },
         subCheck() {
-            if (this.select === undefined) {
-                modal.somethingAlert('请选择收款方式！');
+            if (!this.select) {
+                modal.somethingAlert('请选择' + this.content[this.type].msg + '方式！');
                 return false;
             }
-            if (this.num === undefined) {
-                modal.somethingAlert('请输入金额');
+            if (this.num === undefined || parseFloat(this.num) === 0) {
+                modal.somethingAlert('请输入' + this.content[this.type].msg + '金额！');
                 return false;
             }
             if (this.type === 2 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
-                modal.somethingAlert('结算金额不能大于挂账金额！！');
+                modal.somethingAlert('结算金额不能大于挂账金额！');
                 return false;
             }
             if (this.type === 1 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
-                modal.somethingAlert('退款金额不能大于最大金额！！');
+                modal.somethingAlert('退款金额不能大于最大金额！');
                 return false;
             }
             // 判断是否进行扫码收款
@@ -204,13 +211,15 @@ export default {
                 })[0].name,
                 payChannelId: this.select
             };
-            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.paytype !== 1) {
+            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.type !== 1) {
                 this.alipay.data = getCodeData;
                 this.alipayshow = true;
             } else {
                 const that = this;
+                let msg = '';
+                this.type === 0 ? msg = '请确保金额已收到！' : msg = '确认进行退款吗';
                 modal.confirmDialog({
-                    message: '请确保金额已收到！'
+                    message: msg
 
                 }, () => {
                     http.ajaxWithToken('GET', that.content[that.type].url, getCodeData)

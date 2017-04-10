@@ -1100,7 +1100,7 @@
             },
             changeVipList(num) {
                 let params = num === 1 ? { name: this.name } : { phone: this.phone };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (search && ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4))) {
                     clearTimeout(this.timeCount);
                     this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
@@ -1868,7 +1868,7 @@
                 const params = this.checkState === 'editOrder'
                                ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
                                : { phone: newVal };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
