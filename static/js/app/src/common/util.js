@@ -251,64 +251,7 @@ var util = {
         var str = array.join("");
         return md5(str);
     },
-    //checkAuth: function(){
-    //    var href = window.location.href;
-    //    //如果在提示页，不判断
-    //    if(href.indexOf("/view/tips") > 0){
-    //        return false;
-    //    }
-    //
-    //    var expiredFlag = false; //是否过期
-    //    var upgradeFlag = false; //是否需要续费
-    //    var authFlag = false; //是否有管理员权限
-    //    var aflag = false; //是否有前台录入权限
-    //    var vflag = false; //是否有会员管理权限
-    //
-    //    var isInBussiness = href.indexOf("/view/bussiness") > 0; //是否在网络设置页面
-    //    var isInAcc = href.indexOf("/view/accommodation") > 0; //是否在前台录入页面
-    //    var isInVip = href.indexOf("/view/manageVip") > 0; //是否在会员管理页面
-    //
-    //    var campId = localStorage.getItem("campId");
-    //    var camps = localStorage.getItem("camps");
-    //    var bottom = localStorage.getItem("bottom");
-    //    camps = JSON.parse(camps);
-    //    bottom = JSON.parse(bottom);
-    //    for(var i = 0; i < bottom.length; i++){
-    //        if(bottom[i].type === 2 && bottom[i].status === 1){
-    //            // $(".header .accomodationEntry").show();
-    //            aflag = true;
-    //        }
-    //    }
-    //    //UNKNOWN(-1, "未知"), SYSTEM_ADMIN(0, "易露云管理员-准备废弃"), HOST(1, "营地主"), EMPLOYEE(2, "普通员工"), ADMIN(3, "管理员");
-    //    for(var i = 0; i < camps.length; i++){
-    //        var camp = camps[i];
-    //        if(campId == camp.campId){
-    //            if(camp.userType === 1 || camp.userType === 3){
-    //                authFlag = true;
-    //            }
-    //            if(camp.type === 0 && camp.days <= 0){
-    //                upgradeFlag = true;
-    //            }else if(camp.type === 1 && camp.days <= 0){
-    //                expiredFlag = true;
-    //            }
-    //        }
-    //    }
-    //
-    //    if(!expiredFlag){
-    //        window.location.href = '/view/tips/expired.html';
-    //    }else if(!upgradeFlag){
-    //        window.location.href = '/view/tips/upgrade.html';
-    //    }else{
-    //        if(!authFlag && isInBussiness){
-    //            window.location.href = '/view/tips/noauth.html';
-    //        }else if(!aflag && isInAcc){
-    //            window.location.href = '/view/tips/noauthfora.html';
-    //        }else if(!vflag && isInVip){
-    //            //TODO 跳转到前台录入提示页
-    //        }
-    //    }
-    //},
-    
+
     objLen: function(obj){
         var num = 0;
         for(var key in obj){
