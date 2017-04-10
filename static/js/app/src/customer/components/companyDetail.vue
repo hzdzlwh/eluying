@@ -39,7 +39,6 @@
 <style scoped>
 .btnl{
     margin-left: 8px;
-    
 }
 .fontbtn{
     color: #178ce6;
