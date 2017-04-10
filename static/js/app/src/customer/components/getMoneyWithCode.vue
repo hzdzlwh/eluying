@@ -33,7 +33,7 @@
     box-sizing: border-box;
     font-size: $font-size-base;
     color: $gary-daker;
-    z-index: 1053;
+    z-index: 2053;
     .modal-dialog {
         width: 400px;
         margin-top: 0 !important;

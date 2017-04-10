@@ -40,14 +40,12 @@
             </div>
         </div>
         <!--add new customer Modal -->
+        <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
         <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
-        <div>
             <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
-        </div>
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
             <companyDetail :data='detailData' :contral='contral'></companyDetail>
         </detail>
-        <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
     </div>
 </template>
 <style>
@@ -336,7 +334,8 @@ export default {
                         this.check.data = {
                             rechargeFee: date.rechargeFee,
                             ledgerFee: date.ledgerFee,
-                            cid: date.cid
+                            cid: date.cid,
+                            name: date.companyName
                         };
                     } else {
                         modal.alert(res.msg);

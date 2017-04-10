@@ -142,7 +142,7 @@
 }
 
 #add {
-    z-index: 1051;
+    z-index: 2051;
 }
 
 .delete-icon {

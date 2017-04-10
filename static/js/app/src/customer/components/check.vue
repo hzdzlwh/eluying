@@ -5,7 +5,7 @@
                 <span class="checkForm-closeBtn" @click="close()">&times;</span>
                 <div class="checkForm-modal-header">
                     <span>{{content[type].name}}</span>
-                    <div class="comName"><span>企业名称：</span><span>成都棕榈世界房车露营</span></div>
+                    <div class="comName"><span>企业名称：</span><span>{{data.name}}</span></div>
                 </div>
                 <div class="checkForm-modal-body">
                     <div class="checkitem">
@@ -30,7 +30,7 @@
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
 #checkForm {
-    z-index:1052;
+    z-index:2052;
 }
 .checkForm-modal-content {
     background: #fafafa;
