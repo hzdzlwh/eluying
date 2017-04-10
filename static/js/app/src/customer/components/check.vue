@@ -186,7 +186,7 @@ export default {
             this.$emit('close');
         },
         subCheck() {
-            if (this.num === undefined || parseFloat(this.num) === 0) {
+            if (this.num === '' ||this.num === undefined || parseFloat(this.num) === 0) {
                 modal.somethingAlert('请输入' + this.content[this.type].msg + '金额！');
                 return false;
             }
