@@ -443,7 +443,7 @@ export default {
         });
         // 结算记录
         event.$on('showlistcheck', () => {
-            this.checkListType = 0;
+            this.checkListType = 2;
             $('#checkList').modal('show');
         });
         // 电子钱包流程成功回调
