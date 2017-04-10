@@ -6,19 +6,22 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span style="margin-right: 10px" v-if="type !== ORDER_TYPE.COMBINATION">
-                                <img v-if="type === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png" >
-                                <img v-if="type === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png" >
-                                <img v-if="type === ORDER_TYPE.CATERING" src="/static/image/food-icon.png" >
-                                <img v-if="type === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png" >
+                                <img v-if="type === ORDER_TYPE.ACCOMMODATION" src="/static/image/room-icon.png">
+                                <img v-if="type === ORDER_TYPE.ENTERTAINMENT" src="/static/image/ent-icon.png">
+                                <img v-if="type === ORDER_TYPE.CATERING" src="/static/image/food-icon.png">
+                                <img v-if="type === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png">
                             </span>
-                                <span class="header-text">{{title}}</span>
+                            <span class="header-text">{{title}}</span>
                             <span v-if="order.orderState !== undefined" class="order-state" :class="orderStateColor">
                                 {{orderStateText}}
                             </span>
                         </div>
                         <div class="header-container">
-                            <span class="header-tools" v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0" @click="openInsurance">查看保单({{order.insuranceInfoList.length}})</span>
-                            <span class="header-tools" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
+                            <span class="header-tools"
+                                  v-if="order.insuranceInfoList && order.insuranceInfoList.length > 0"
+                                  @click="openInsurance">查看保单({{order.insuranceInfoList.length}})</span>
+                            <span class="header-tools"
+                                  v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                   @click="showCombinationOrder">查看组合订单</span>
                             <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
@@ -175,18 +178,22 @@
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                      @click="checkInOrCheckOut(0)">
                                     办理入住
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
                                      v-if="getRoomsState.checkOutAdAble">
                                     提前退房
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
                                      v-if="getRoomsState.checkOutAble">
                                     办理退房
+
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     收银
+
                                 </div>
                             </div>
                         </div>
@@ -194,7 +201,7 @@
                 </div>
             </div>
         </div>
-        <Insurance :order="order" />
+        <Insurance :order="order"/>
     </div>
 </template>
 <style lang="scss">
@@ -979,7 +986,7 @@
                 ORDER_TYPE
             };
         },
-        components:{
+        components: {
             Insurance
         },
         props: {
@@ -1027,7 +1034,7 @@
                 return ORDER_STATE_TEXT[this.order.type][this.order.orderState].color;
             },
             orderDates() {
-                switch(this.order.type) {
+                switch (this.order.type) {
                     case ORDER_TYPE.ACCOMMODATION:
                         return [
                             {
@@ -1078,7 +1085,7 @@
             ...mapMutations([type.SET_ORDER_DETAIL]),
             hideModal() {
                 event.$emit('onClose');
-                this[type.SET_ORDER_DETAIL]({orderDetail: {}});
+                this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
             },
             /**
              * 计算各种类型的收费金额
@@ -1096,8 +1103,8 @@
                 }
                 return Number(price.toFixed(2));
             },
-            filterPayMents(arr, type1,type2) {
-                let newPayMents = [];
+            filterPayMents(arr, type1, type2) {
+                const newPayMents = [];
                 if (arr) {
                     arr.forEach(item => {
                         if (item.type === type1 || item.type === type2) {

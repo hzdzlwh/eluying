@@ -104,8 +104,7 @@ gulp.task('rev', function() {
         .pipe(gulp.dest('build/static/css'));
 });
 
-
-gulp.task('styles', function () {
+gulp.task('styles', function() {
     return sass(config.css, { style: 'compressed' })
         .pipe(autoprefixer('last 3 version'))
         .pipe(rename({ suffix: '.min' }))

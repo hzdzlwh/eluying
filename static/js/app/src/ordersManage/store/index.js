@@ -39,7 +39,7 @@ const store = new Vuex.Store({
                 AJAXService.ajaxWithToken('get', '/shop/list', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let shopList = [];
+                            const shopList = [];
                             res.data.list.forEach((d) => {
                                 shopList.push(d);
                             });
@@ -49,14 +49,14 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ENTER_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryListPC' , {})
+                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryListPC', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let enterList = [];
+                            const enterList = [];
                             res.data.list.map(el => {
                                 if (el.categoryList && el.categoryList.length > 0) {
                                     el.categoryList.map(item => {
@@ -73,7 +73,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -86,7 +86,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ROOM_BUSINESS_INFO]({ state, commit }, { businessType }) {
             return new Promise((resolve, reject) => {
@@ -100,7 +100,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_CATER_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -113,7 +113,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_ENTER_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -126,7 +126,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_GOODS_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -139,7 +139,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_ROOM_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -152,7 +152,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_ORDER_DETAIL]({ dispatch }, { orderId, orderType }) {
             switch (orderType) {

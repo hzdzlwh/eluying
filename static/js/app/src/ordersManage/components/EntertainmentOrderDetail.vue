@@ -6,16 +6,16 @@
 <style scoped>
 </style>
 <script>
-import EntertainmentBody from './EntertainmentBody.vue'
-export default {
-    props: {
-        order: {
-            type: Object,
-            default: undefined
+    import EntertainmentBody from './EntertainmentBody.vue';
+    export default {
+        props: {
+            order: {
+                type: Object,
+                default: undefined
+            }
+        },
+        components: {
+            EntertainmentBody
         }
-    },
-    components: {
-        EntertainmentBody
-    }
-}
+    };
 </script>

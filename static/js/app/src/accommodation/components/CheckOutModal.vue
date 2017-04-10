@@ -50,8 +50,8 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{`${ (totalPrice + (penalty || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
-                                <span class="order-price-num" :class="(totalPrice + (penalty || 0) - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice + (penalty || 0) - payed)).toFixed(2)}}</span>
+                            <span class="footer-label">{{`${ (totalPrice + (Number(penalty) || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
+                                <span class="order-price-num" :class="(totalPrice + (Number(penalty) || 0) - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice + (Number(penalty) || 0) - payed)).toFixed(2)}}</span>
                             </span>
                             <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span>
                         </div>
@@ -105,6 +105,8 @@
                             sum += room.payments.reduce((a, b) => {
                                 if (b.type === 0) {
                                     return a + b.fee;
+                                } else if (b.type === 2) {
+                                    return a - b.fee;
                                 } else {
                                     return a;
                                 }

@@ -1,28 +1,27 @@
+import AJAXService from 'AJAXService';
+import { DdDatepicker, DdDropdown, DdDropdownItem, DdOption, DdPagination, DdSelect } from 'dd-vue-component';
+import modal from 'modal';
 /**
  * Created by zhaoyongsheng on 16/9/22.
  */
 import Vue from 'vue';
-import util from 'util';
-import modal from 'modal';
-import AJAXService from 'AJAXService';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
-import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
-import store from './store';
-import event from './event';
 import { ORDER_STATE_LIST } from './constant';
+import event from './event';
+import store from './store';
 
 init({
     leftMenu: false
 });
-require("bootstrap");
-require("validation");
+require('bootstrap');
+require('validation');
 
-$(function(){
+$(function() {
     const orderManage = new Vue({
-        el: ".orderManage-rootContainer",
+        el: '.orderManage-rootContainer',
         store: store,
         data: {
             hasAuth: false,
@@ -51,7 +50,7 @@ $(function(){
                 {
                     id: 2,
                     name: '商超订单'
-                },
+                }
             ],
             orderType: -1,
             orderStatus: '-1',
@@ -81,22 +80,21 @@ $(function(){
             if (!this.hasAuth) {
                 return;
             }
-       
+
             this.getOrdersList({}, false);
         },
-        beforeDestroy: function () {
+        beforeDestroy: function() {
             event.$off('onClose', this.hideDetail);
             event.$off('onShowDetail', this.showOrderDetail);
         },
         computed: {
             orderParams() {
                 if (this.orderStatus === '-1') {
-                    return {}
+                    return {};
                 } else {
-                    return { orderStatus: this.orderStatus }
+                    return { orderStatus: this.orderStatus };
                 }
-            },
-
+            }
 
         },
 
@@ -148,13 +146,15 @@ $(function(){
                 paramsObj.type = num;
                 const host = AJAXService.getUrl2('/order/listOrderListToText');
                 const pa = AJAXService.getDataWithToken(paramsObj);
-                let params = AJAXService.paramsToString(pa);
+                const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             },
 
             getParams() {
-                let obj = { endDate: this.endDate, startDate: this.startDate,
-                            keyword: this.searchContent, sort: this.sort, orderType: this.orderType };
+                const obj = {
+                    endDate: this.endDate, startDate: this.startDate,
+                    keyword: this.searchContent, sort: this.sort, orderType: this.orderType
+                };
                 return Object.assign({}, obj, this.orderParams);
             },
             /**
@@ -163,7 +163,7 @@ $(function(){
              * @returns {*}
              */
             fixOrderItemData(arr) {
-                arr.forEach(function(ele){
+                arr.forEach(function(ele) {
                     if (ele.orderType === -1 && !!ele.subOrderList && ele.subOrderList.length > 1) {
                         ele.showSub = false;
                     }
@@ -240,14 +240,14 @@ $(function(){
 
             changeSearchIcon(str) {
                 if (str === 'blur') {
-                    this.searchIconUrl = this.searchContent === ""
-                                         ? "//static.dingdandao.com/order_manage_search_grey.png"
-                                         : "//static.dingdandao.com/order_manage_search_linght.png";
+                    this.searchIconUrl = this.searchContent === ''
+                        ? '//static.dingdandao.com/order_manage_search_grey.png'
+                        : '//static.dingdandao.com/order_manage_search_linght.png';
                 } else {
-                    this.searchIconUrl = "//static.dingdandao.com/order_manage_search_linght.png";
+                    this.searchIconUrl = '//static.dingdandao.com/order_manage_search_linght.png';
                 }
             },
-            
+
             handlePageChange(msg) {
                 const obj = this.getParams();
                 this.currentPage = msg;
@@ -257,7 +257,7 @@ $(function(){
             disableEndDate(date) {
                 if (this.startDate !== '') {
                     const arr = this.startDate.split('-');
-                    return date && date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                    return date && date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 } else {
                     return false;
                 }
@@ -266,7 +266,7 @@ $(function(){
             disableStartDate(date) {
                 if (this.endDate !== '') {
                     const arr = this.endDate.split('-');
-                    return date && date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()
+                    return date && date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 } else {
                     return false;
                 }
@@ -286,36 +286,38 @@ $(function(){
                         this.orderStatus = '-1';
                         const obj = this.getParams();
                         this.getOrdersList(obj, false);
-                    })
+                    });
                 }
             },
 
             orderParams: function(newVal) {
-                const obj = { endDate: this.endDate,
-                              startDate: this.startDate,
-                              keyword: this.searchContent,
-                              sort: this.sort,
-                              orderType: this.orderType};
+                const obj = {
+                    endDate: this.endDate,
+                    startDate: this.startDate,
+                    keyword: this.searchContent,
+                    sort: this.sort,
+                    orderType: this.orderType
+                };
                 this.getOrdersList(Object.assign({}, obj, newVal), false);
             },
 
             startDate: function(newVal) {
-                let newValTime = new Date(newVal);
-                let endDateTime = new Date(this.endDate);
+                const newValTime = new Date(newVal);
+                const endDateTime = new Date(this.endDate);
                 if (newVal !== '' && (this.endDate === '' || newValTime.getTime() > endDateTime.getTime())) {
                     this.endDate = newVal;
                 }
             },
 
             endDate: function(newVal) {
-                let newValTime = new Date(newVal);
-                let startDateTime = new Date(this.startDate);
+                const newValTime = new Date(newVal);
+                const startDateTime = new Date(this.startDate);
                 if (newVal !== '' && (this.startDate === '' || startDateTime.getTime() > newValTime.getTime())) {
                     this.startDate = newVal;
                 }
             }
         },
-        
+
         components: {
             DdDropdown,
             DdDropdownItem,
@@ -330,8 +332,8 @@ $(function(){
 
     orderManage.$watch(
         function() {
-            let startTime = new Date(this.startDate);
-            let endTime = new Date(this.endDate);
+            const startTime = new Date(this.startDate);
+            const endTime = new Date(this.endDate);
             return { minusTime: endTime.getTime() - startTime.getTime() };
         },
         function(newVal) {
