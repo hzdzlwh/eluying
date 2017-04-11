@@ -62,7 +62,10 @@
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
                                             <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
+                                                <dd-option v-for="origin in item.origins"
+                                                           :key="origin.originType"
+                                                           :value="origin.originType"
+                                                           :label="origin.originType.split('~')[1] > 0 ? origin.name : `企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
@@ -385,7 +388,7 @@
         </div>
     </div>
 </template>
-<style lang="scss" rel="stylesheet/scss" type="text/css">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .valid {
         position: absolute;
@@ -1898,7 +1901,7 @@
                     this.showOrder = true;
                     this.getVipDiscount({ phone: this.phone });
 
-                    if (this.order.originId === -5) {
+                    if (this.order.originId === - 5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
                     } else {
                         this.userOriginType = `${this.order.originId}~${this.order.originId}`;
