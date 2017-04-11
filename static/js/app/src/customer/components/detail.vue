@@ -46,7 +46,7 @@
                                     class="dd-input"
                                     ref="searchInput"
                                     @keyup.enter="search"
-                                    placeholder="订单号"
+                                    :placeholder="type === 'company' ? '搜索客户姓名/手机号/订单号' : '订单号'"
                                 >
                                 <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
                             </div>
