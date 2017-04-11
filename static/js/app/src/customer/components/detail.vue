@@ -46,7 +46,7 @@
                                     class="dd-input"
                                     ref="searchInput"
                                     @keyup.enter="search"
-                                    placeholder="订单号"
+                                    :placeholder="type === 'company' ? '搜索客户姓名/手机号/订单号' : '订单号'"
                                 >
                                 <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
                             </div>
@@ -240,7 +240,7 @@
         },
         {
             title: '订单业态',
-            render: (h, row) => row.orderTypes.map(type => <span class={'order-state' + orderTypeClass[type]}>{orderType[type]}</span>)
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>)
         },
         {
             title: '联系人',
@@ -252,11 +252,11 @@
         },
         {
             title: '订单金额￥',
-            dataIndex: 'orderNum'
+            dataIndex: 'totalPrice'
         },
         {
             title: '挂账金额￥',
-            dataIndex: 'totalPrice'
+            dataIndex: 'ledgerFee'
         },
         {
             title: '使用时间',
@@ -383,6 +383,7 @@
                             this.orders = res.data.list;
                             this.orderCount = res.data.orderCount;
                             this.ordersTotalPrice = res.data.ordersTotalPrice;
+                            this.ledgerFeeSum = res.data.ledgerFeeSum;
                         } else {
                             modal.alert(res.msg);
                         }
