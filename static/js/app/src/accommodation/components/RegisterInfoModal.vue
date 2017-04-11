@@ -953,18 +953,18 @@
                 timeCount: 0,
                 goodsSelectModalShow: false,
                 enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1,
+                modifyEnterOrShopIndex: - 1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
                 isLoading: false
-            }
+            };
         },
 
-        created(){
+        created() {
             this.getData();
         },
-        computed:{
+        computed: {
             ...mapState({ shopList: 'shopList', enterList: 'enterList' }),
             modalTitleOrBtn() {
                 if (this.checkState === 'ing') {
@@ -1710,7 +1710,7 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                /*if (item.id) {
+                /* if (item.id) {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
@@ -1718,11 +1718,11 @@
                 }*/
 
                 if (item.id && item.date) {
-                    let date = util.dateFormat(new Date(item.date));
-                    let lastItem = this.lastEnterItem;
+                    const date = util.dateFormat(new Date(item.date));
+                    /* const lastItem = this.lastEnterItem;
                     if (lastItem.id === item.id && lastItem.date === date) {
                         return false;
-                    }
+                    }*/
                     this.lastEnterItem.id = item.id;
                     this.lastEnterItem.date = item.date;
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
