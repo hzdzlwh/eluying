@@ -373,7 +373,7 @@
         <Insurance :order="order" />
     </div>
 </template>
-<style lang="scss" type="text/css" rel="stylesheet/scss">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     #orderDetail {
         .label-text {

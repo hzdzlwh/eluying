@@ -174,7 +174,17 @@
             </div>
         </div>
     </div >
-    <order-detail :id="detailId" :type="detailType" :visible="detailVisible" @onClose="hideDetail" />
+    <order-editor
+            :order-editor-visible="orderEditorVisible"
+    />
+    <order-detail
+        :id="detailId"
+        :type="detailType"
+        :visible="detailVisible"
+        @onClose="hideDetail"
+        @editOrder="editOrder"
+    />
+
 </div>
 </body>
 </html>

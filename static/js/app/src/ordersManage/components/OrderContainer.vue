@@ -25,9 +25,9 @@
                                   @click="showCombinationOrder">查看组合订单</span>
                             <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
-                                  v-if="!readOnly && (order.orderState === 2 || order.orderState === 3)"
+                                  v-if="order.orderState === 2 || order.orderState === 3"
                                   @click="editOrder">编辑订单</span>
-                            <span class="header-tools" v-if="!readOnly && order.orderState === 2" @click="cancelOrder">取消订单</span>
+                            <span class="header-tools" v-if="order.orderState === 2" @click="">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -581,7 +581,7 @@
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            padding: 0;
+            padding: 0 0 56px 0;
             margin-top: 0 !important;
         }
     }
@@ -1126,6 +1126,10 @@
             },
             openInsurance() {
                 $('#insuranceDialog').modal('show');
+            },
+            editOrder() {
+                this.hideModal();
+                this.$emit('editOrder', 'editOrder', this.order);
             }
         }
     };

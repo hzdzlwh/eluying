@@ -9,6 +9,7 @@ import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
 import OrderDetail from './components/OrderDetail.vue';
+import OrderEditor from './components/OrderEditor/OrderEditor.vue';
 import { ORDER_STATE_LIST } from './constant';
 import event from './event';
 import store from './store';
@@ -70,7 +71,8 @@ $(function() {
             detailVisible: false,
             detailId: undefined,
             detailType: undefined,
-            lastParamsObj: ''
+            lastParamsObj: '',
+            orderEditorVisible: false
         },
 
         created() {
@@ -270,6 +272,11 @@ $(function() {
                 } else {
                     return false;
                 }
+            },
+            editOrder(type, order) {
+                this.checkState = type;
+                this.orderEditorVisible = true;
+                this.orderDetail = order;
             }
         },
 
@@ -326,7 +333,8 @@ $(function() {
             DdSelect,
             DdDatepicker,
             NoAuth,
-            OrderDetail
+            OrderDetail,
+            OrderEditor
         }
     });
 

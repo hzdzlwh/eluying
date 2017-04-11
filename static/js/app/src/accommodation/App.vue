@@ -233,7 +233,8 @@
                 this.getRoomAndStatus();
             },
             refreshView() {
-                Promise.all([this.getRoomAndStatus()]).then(() => { this.mapRoomsToCategory(); });
+                this.getRoomAndStatus()
+                    .then(() => { this.mapRoomsToCategory(); });
             },
             handleRoomFilter(data) {
                 this.categories = data;
