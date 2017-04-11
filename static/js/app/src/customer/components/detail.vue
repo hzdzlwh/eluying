@@ -252,11 +252,11 @@
         },
         {
             title: '订单金额￥',
-            dataIndex: 'orderNum'
+            dataIndex: 'totalPrice'
         },
         {
             title: '挂账金额￥',
-            dataIndex: 'totalPrice'
+            dataIndex: 'ledgerFee'
         },
         {
             title: '使用时间',
