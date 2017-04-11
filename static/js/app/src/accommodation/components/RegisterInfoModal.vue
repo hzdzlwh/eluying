@@ -1124,7 +1124,7 @@
                 AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
@@ -1544,7 +1544,7 @@
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
-                } else if (type === -2) {
+                } else if (type === - 2) {
                     this.enterItems.forEach((item, index) => {
                         const price = item['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
@@ -1615,26 +1615,26 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
+                obj.price = + (obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
-                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                let countArr = obj.datePriceList.map(item => {
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0);
+                const countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
                     return item.dateFee / totalPrice;
                 });
-                obj.datePriceList.forEach((item,index) => {
-                    item.dateFee = +((num * countArr[index]).toFixed(2));
+                obj.datePriceList.forEach((item, index) => {
+                    item.dateFee = + ((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
-                /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
+                /* let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
             setFirstDateFee(num, obj) {
-                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee }, 0);
-                obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + b.dateFee; }, 0);
+                obj.datePriceList[0].dateFee = + ((obj.datePriceList[0].dateFee + (num - totalPrice)).toFixed(2));
             },
 
             modifyRoom(item) {
@@ -1812,24 +1812,28 @@
             userOriginType(newVal) {
                 const originType = Number(newVal.split('~')[1]);
                 const originId = Number(newVal.split('~')[0]);
-                if (originType === -5) {
+                if (originType === - 5) {
                     this.getCompanyDiscount({ contractCompanyId: originId });
                 }
-                if (originType === -4 && this.phone.length === 11) {
+                if (originType === - 4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: - 1 }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
-                if (originType !== -5 && originType !== -4) {
+                if (originType !== - 5 && originType !== - 4) {
                     this.vipDiscountDetail = {};
                 }
             },
             phone(newVal) {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                if (originType === - 5 && this.checkState === 'editOrder') {
+                    return false;
+                }
                 const params = this.checkState === 'editOrder'
-                               ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                               ? { phone: newVal, orderId: this.order.orderId, orderType: - 1 }
                                : { phone: newVal };
-                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
@@ -1859,7 +1863,7 @@
             registerInfoShow(newVal) {
                 if (newVal && this.checkState !== 'editOrder') {
                     this.roomsItems.forEach(item => {
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1868,17 +1872,17 @@
                             });
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
-                        let duration = this.getDateDiff(item.startDate, item.endDate);
+                        const duration = this.getDateDiff(item.startDate, item.endDate);
                         AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId,
                             date: util.dateFormat(item.startDate),
                             days: duration })
                             .then(res => {
                                 if (res.code === 1) {
-                                    let datePriceList = [];
+                                    const datePriceList = [];
                                     let price = 0;
-                                    res.data.rs.status.forEach((option,index) => {
+                                    res.data.rs.status.forEach((option, index) => {
                                         const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
-                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false});
+                                        datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
                                         price += option.p;
                                     });
                                     this.registerRooms.push({ categoryType: id,
@@ -1893,13 +1897,12 @@
                                 }
                             });
                     });
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (newVal && this.checkState === 'editOrder') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
-                    this.getVipDiscount({ phone: this.phone });
 
                     if (this.order.originId === - 5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
@@ -1907,12 +1910,12 @@
                         this.userOriginType = `${this.order.originId}~${this.order.originId}`;
                     }
 
-                    let enterItems = [];
-                    let filterEnters = this.order.playItems.filter(enter => {
+                    const enterItems = [];
+                    const filterEnters = this.order.playItems.filter(enter => {
                         return enter.state !== 3;
                     });
                     filterEnters.forEach(item => {
-                        const enter = {...item};
+                        const enter = { ...item };
                         enter.price = item.originPrice;
                         enter.changeTimes = 0;
                         enter.id = item.categoryId;
@@ -1926,13 +1929,13 @@
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
-                    let registerRooms = [];
-                    let filterRooms = this.order.rooms.filter(room => {
+                    const registerRooms = [];
+                    const filterRooms = this.order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
                     });
                     filterRooms.forEach(item => {
                         const room = {};
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1947,7 +1950,7 @@
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
                         room.datePriceList = item.datePriceList.map(dat => {
-                            let newDate = { showInput: false };
+                            const newDate = { showInput: false };
                             newDate.date = dat.date;
                             newDate.dateFee = dat.dateFee;
                             return newDate;
@@ -1962,7 +1965,7 @@
                     });
                     this.registerRooms = registerRooms;
 
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (!newVal) {
                     this.showOrder = false;
                 }
