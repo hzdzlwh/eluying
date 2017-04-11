@@ -186,12 +186,12 @@ export default {
             this.$emit('close');
         },
         subCheck() {
-            if (this.num === '' ||this.num === undefined || parseFloat(this.num) === 0) {
+            if (this.num === '' || this.num === undefined || parseFloat(this.num) === 0) {
                 modal.somethingAlert('请输入' + this.content[this.type].msg + '金额！');
                 return false;
             }
             if (!this.select) {
-                modal.somethingAlert('请选择' + this.content[this.type].msg +'方式！');
+                modal.somethingAlert('请选择' + this.content[this.type].msg + '方式！');
                 return false;
             }
             if (this.type === 2 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
