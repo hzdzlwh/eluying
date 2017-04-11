@@ -383,6 +383,7 @@
                             this.orders = res.data.list;
                             this.orderCount = res.data.orderCount;
                             this.ordersTotalPrice = res.data.ordersTotalPrice;
+                            this.ledgerFeeSum = res.data.ledgerFeeSum;
                         } else {
                             modal.alert(res.msg);
                         }
