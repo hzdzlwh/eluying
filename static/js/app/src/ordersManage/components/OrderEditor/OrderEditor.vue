@@ -6,15 +6,6 @@
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{titleAndBtn.title}}</span>
-                            <span v-if="order.orderState && checkState === 'editOrder'"
-                                  class="order-state-angle"
-                                  :style="{ borderColor: getOrderState(order.orderState)['borderColor']}">
-                            </span>
-                            <span v-if="order.orderState && checkState === 'editOrder'"
-                                  class="order-state"
-                                  :style="{ background: getOrderState(order.orderState)['backgroundColor']}"
-                                  v-text="getOrderState(order.orderState)['text']">
-                            </span>
                         </div>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
@@ -58,16 +49,20 @@
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType">
-                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
+                                                       :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
-                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
+                                                             :key="item" v-if="item.origins.length > 0">
+                                                <dd-option v-for="origin in item.origins" :key="origin.originType"
+                                                           :value="origin.originType" :label="`企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
                                                         </span>
-                                                        <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                                        <span class="user-group-img" v-if="!origin.type"
+                                                              :title="origin.info"></span>
                                                     </div>
                                                 </dd-option>
                                             </dd-group-option>
@@ -77,6 +72,7 @@
                                     <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
                                     <div class="company-origin-tips">
                                         变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +83,8 @@
                                 <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark"
                                           class="dd-input">
                                 </textarea>
-                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
+                                <span class="valid-remark-tip"
+                                      :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
                                     {{remark.length}}/140
                                 </span>
                             </div>
@@ -106,9 +103,10 @@
     </div>
 </template>
 <style lang="scss">
-    .userInfo-item:last-child,.select-component-container {
+    .userInfo-item:last-child, .select-component-container {
         display: inline-block;
     }
+
     .user-group-origin {
         display: flex;
         justify-content: space-between;
@@ -116,6 +114,7 @@
         padding-right: 4px;
         position: relative;
     }
+
     .company-origin-tipImg {
         display: inline-block;
         vertical-align: sub;
@@ -126,26 +125,30 @@
         background: url("../../../../../../image/modal/room_modal_info.png");
         background-size: contain;
     }
+
     .company-origin-tipLike {
         display: inline-block;
         margin-left: 12px;
         width: 16px;
         height: 16px;
     }
+
     .company-origin-tipImg:hover + .company-origin-tips {
         display: block;
     }
+
     .company-origin-tips {
         display: none;
-        background:#fafafa;
-        box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
-        border-radius:2px;
-        width:188px;
+        background: #fafafa;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        width: 188px;
         font-size: 12px;
         padding: 8px 16px;
         position: absolute;
         right: 0;
     }
+
     .user-group-company {
         display: inline-block;
         max-width: 80px;
@@ -153,6 +156,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     .user-group-img {
         display: inline-block;
         cursor: pointer;
@@ -161,12 +165,15 @@
         background: url("../../../../../../image/modal/room_modal_info.png");
         background-size: contain;
     }
+
     .dd-select-option-group > .dd-select-option {
         overflow: visible !important;
     }
+
     .user-group-img:hover + .user-group-tips {
         display: block;
     }
+
     .user-group-tips {
         display: none;
         position: absolute;
@@ -180,12 +187,14 @@
         padding-bottom: 10px;
         z-index: 1090;
     }
+
     .user-company-title {
         font-size: 14px;
         color: #666666;
         padding: 8px 16px;
         border-bottom: 1px solid #e6e6e6;
     }
+
     .user-company-item {
         display: flex;
         padding: 0 16px;
@@ -198,10 +207,19 @@
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
-    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdGroupOption, DdOption } from 'dd-vue-component';
+    import event from '../../event';
+    import {
+        DdDropdown,
+        DdDropdownItem,
+        DdPagination,
+        DdDatepicker,
+        DdSelect,
+        DdGroupOption,
+        DdOption
+    } from 'dd-vue-component';
     import http from '../../../common/AJAXService';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
-
+    import modal from '../../../common/modal';
 
     export default{
         name: 'OrderEditor',
@@ -230,7 +248,8 @@
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
-                isLoading: false
+                isLoading: false,
+                ORDER_TYPE
             };
         },
         props: {
@@ -241,7 +260,7 @@
             checkState: {
                 type: String,
                 default: ''
-            },
+            }
         },
         components: {
             DdDropdown,
@@ -281,6 +300,8 @@
                         if (this.order.type === ORDER_TYPE.RETAIL) {
                             return { title: '编辑商超订单', btn: '完成' };
                         }
+
+                        break;
                     default:
                         return { title: '编辑订单', btn: '完成' };
                 }
@@ -321,47 +342,48 @@
             this.getData();
         },
         watch: {
-            orderEditorVisible() {
-                this.name = this.order.customerName;
-                this.phone = this.order.customerPhone;
-                this.remark = this.order.remark || '';
-                this.showOrder = true;
-                this.getVipDiscount({ phone: this.phone });
+            orderEditorVisible(visible) {
+                if (visible) {
+                    this.name = this.order.customerName;
+                    this.phone = this.order.customerPhone;
+                    this.remark = this.order.remark || '';
+                    this.showOrder = true;
+                    this.getVipDiscount({ phone: this.phone });
 
-                if (this.order.originId === -5) {
-                    this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
-                } else {
-                    this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                    if (this.order.originId === -5) {
+                        this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                    } else {
+                        this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                    }
+
+                    $('#orderEditor').modal('show');
                 }
-
-
-                $('#orderEditor').modal('show');
             }
         },
         methods: {
-            getData(){
+            getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
                         if (res.code === 1) {
                             const originsList = res.data.list;
-                            let otherOrigins = [];
+                            const otherOrigins = [];
                             this.userOrigins = originsList;
                             originsList.forEach(origin => {
                                 if (origin.id === -1 || origin.id === -4) {
                                     origin.originType = `${origin.id}~${origin.id}`;
                                     this.userSelfOrigins.push(origin);
-                                } else if(origin.id === -5) {
+                                } else if (origin.id === -5) {
                                     origin.companyList.forEach(company => {
-                                        let companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                        let number = `企业编号:${company.contractNum || ''}`;
-                                        let name = `联系人:${company.contactName || ''}`;
-                                        let phone = `联系人电话:${company.contactPhone || ''}`;
+                                        const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                        const number = `企业编号:${company.contractNum || ''}`;
+                                        const name = `联系人:${company.contactName || ''}`;
+                                        const phone = `联系人电话:${company.contactPhone || ''}`;
                                         company.name = company.companyName;
                                         company.originType = `${company.id}~${origin.id}`;
                                         company.info = `${companyName}\n${number}\n${name}\n${phone}`;
                                     });
                                     this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                } else if(origin.id > 0) {
+                                } else if (origin.id > 0) {
                                     origin.originType = `${origin.id}~${origin.id}`;
                                     origin.info = origin.name;
                                     otherOrigins.push(origin);
@@ -372,12 +394,12 @@
                         } else {
                             modal.somethingAlert(res.msg);
                         }
-                });
+                    });
             },
             hideModal(e) {
                 e.stopPropagation();
-                this.$emit('changeRegisterInfoShow', false);
-                $('#registerInfoModal').modal('hide');
+                event.$emit('hideOrderEditor');
+                $('#orderEditor').modal('hide');
             },
             hidePriceList(arr) {
                 arr.forEach(item => {
@@ -405,7 +427,7 @@
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
@@ -415,7 +437,7 @@
                             modal.somethingAlert(res.msg);
                         }
                     });
-            },
+            }
         }
     };
 </script>

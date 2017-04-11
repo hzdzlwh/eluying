@@ -87,6 +87,7 @@ $(function() {
             event.$on('onClose', this.hideDetail);
             event.$on('onShowDetail', this.showOrderDetail);
             event.$on('editOrder', this.editOrder);
+            event.$on('hideOrderEditor', this.hideOrderEditor);
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
@@ -98,6 +99,7 @@ $(function() {
             event.$off('onClose', this.hideDetail);
             event.$off('onShowDetail', this.showOrderDetail);
             event.$off('editOrder', this.editOrder);
+            event.$off('hideOrderEditor', this.hideOrderEditor);
         },
         computed: {
             orderParams() {
@@ -161,7 +163,9 @@ $(function() {
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             },
-
+            hideOrderEditor() {
+                this.orderEditorVisible = false;
+            },
             getParams() {
                 const obj = {
                     endDate: this.endDate, startDate: this.startDate,
