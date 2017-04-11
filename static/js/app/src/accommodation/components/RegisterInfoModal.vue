@@ -911,11 +911,11 @@
         props: {
             roomsItems: {
                 type: Array,
-                default: function() { return [] }
+                default: function() { return []; }
             },
             categories: {
                 type: Array,
-                default: function() { return [] }
+                default: function() { return []; }
             },
             checkState: {
                 type: String,
@@ -927,7 +927,7 @@
             },
             order: {
                 type: Object,
-                default: function() { return {} }
+                default: function() { return {}; }
             }
         },
         data() {
@@ -956,30 +956,30 @@
                 lastRoomItem: {},
                 lastEnterItem: {},
                 isLoading: false
-            }
+            };
         },
 
-        created(){
+        created() {
             this.getData();
         },
-        computed:{
+        computed: {
             ...mapState({ shopList: 'shopList', enterList: 'enterList' }),
             modalTitleOrBtn() {
                 if (this.checkState === 'ing') {
-                    return { title: '直接入住', btn: '入住并收银' }
+                    return { title: '直接入住', btn: '入住并收银' };
                 } else if (this.checkState === 'finish') {
-                    return { title: '补录', btn: '补录' }
+                    return { title: '补录', btn: '补录' };
                 } else if (this.checkState === 'book') {
-                    return { title: '预订', btn: '完成预订' }
+                    return { title: '预订', btn: '完成预订' };
                 } else {
-                    return { title: '编辑订单', btn: '完成' }
+                    return { title: '编辑订单', btn: '完成' };
                 }
             },
             categoryList() {
                 let categoryList = [];
                 if (this.categories.length > 0) {
                     this.categories.forEach(item => {
-                        categoryList.push({id: item.cId, name: item.cName});
+                        categoryList.push({ id: item.cId, name: item.cName });
                     });
                 }
                 return categoryList;
@@ -1342,12 +1342,12 @@
                 return enterInfo;
             },
 
-            submitInfo(e){
+            submitInfo(e) {
                 let valid = true;
                 let durationValid = true;
                 let roomPersonValid = true;
-                if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
-                    modal.somethingAlert("请输入联系人或手机号!");
+                if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
+                    modal.somethingAlert('请输入联系人或手机号!');
                     return false;
                 }
                 this.registerRooms.forEach(item => {
@@ -1364,11 +1364,11 @@
                     }
                 });
                 if (!valid) {
-                    modal.somethingAlert("订单信息有误，请核对信息后再提交！");
+                    modal.somethingAlert('订单信息有误，请核对信息后再提交！');
                     return false;
                 }
                 if (!durationValid) {
-                    modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
+                    modal.somethingAlert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
                     return false;
                 }
                 this.registerRooms.forEach(item => {
@@ -1533,9 +1533,9 @@
                 }
             },
 
-            handleNumChange(type, tag, num){
+            handleNumChange(type, tag, num) {
                 if (type === 3) {
-                    this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                    this.shopGoodsItems.forEach((item, index) => { item.count = (index === tag) ? num : item.count; });
                 } else if (type === 2) {
                     this.enterItems.forEach((item, index) => {
                         const price = item['price'];
@@ -1664,7 +1664,7 @@
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 let lastItem = this.lastRoomItem;
-                /*if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
+                /* if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
                     return false;
                 }
                 this.lastRoomItem.startDate = startDate;
@@ -1749,12 +1749,12 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                /*if (item.id) {
+                /* if (item.id) {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
-                }*/
+                } */
 
                 if (item.id && item.date) {
                     let date = util.dateFormat(new Date(item.date));
@@ -1829,7 +1829,7 @@
                             item.count += good.count;
                             goodsList.splice(index, 1);
                         }
-                    })
+                    });
                 });
                 this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
             }

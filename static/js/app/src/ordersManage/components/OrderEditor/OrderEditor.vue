@@ -146,6 +146,10 @@
             orderEditorVisible: {
                 type: Boolean,
                 default: false
+            },
+            checkState: {
+                type: String,
+                default: ''
             }
         },
         components: {
