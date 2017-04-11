@@ -3,6 +3,7 @@
         <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content" @click="hidePriceList(registerRooms)">
+                    <!-- header start -->
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{titleAndBtn.title}}</span>
@@ -77,6 +78,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- header end -->
+                        <RoomEditor />
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -220,6 +223,7 @@
     import http from '../../../common/AJAXService';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
     import modal from '../../../common/modal';
+    import RoomEditor from './RoomEditor.vue';
 
     export default{
         name: 'OrderEditor',
@@ -268,7 +272,8 @@
             DdDatepicker,
             DdSelect,
             DdGroupOption,
-            DdOption
+            DdOption,
+            RoomEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
