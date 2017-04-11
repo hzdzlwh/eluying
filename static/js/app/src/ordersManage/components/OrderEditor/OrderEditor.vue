@@ -118,11 +118,28 @@
             return {
                 name: '',
                 phone: '',
+                userOriginType: '-1~-1',
+                userOrigins: [],
+                userSelfOrigins: [],
+                userGroupOrigins: [],
+                phoneValid: true,
                 remark: '',
-                vipDiscountDetail: {},
-                registerRooms: [],
                 enterItems: [],
-                shopGoodsItems: []
+                shopGoodsItems: [],
+                registerRooms: [],
+                showOrder: false,
+                vipDiscountDetail: {},
+                lastModifyRoomTime: 0,
+                vipListShow: false,
+                vipList: [],
+                timeCount: 0,
+                goodsSelectModalShow: false,
+                enterSelectModalShow: false,
+                modifyEnterOrShopIndex: -1,
+                roomStatusRequest: 0,
+                lastRoomItem: {},
+                lastEnterItem: {},
+                isLoading: false
             };
         },
         props: {
@@ -131,7 +148,7 @@
                 default: false
             }
         },
-        components:{
+        components: {
             DdDropdown,
             DdDropdownItem,
             DdDatepicker,
@@ -151,6 +168,10 @@
                 } else {
                     return { title: '编辑订单', btn: '完成' };
                 }
+            },
+            showCompanyOriginTip() {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                return originType === -5;
             },
             totalPrice() {
                 let totalPrice = 0;
@@ -192,7 +213,7 @@
             }
         },
         methods: {
-            hideModal(e){
+            hideModal(e) {
                 e.stopPropagation();
                 this.refreshData();
                 this.$emit('changeRegisterInfoShow', false);
