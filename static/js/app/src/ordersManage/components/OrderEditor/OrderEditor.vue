@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderEditor" role="dialog">
+        <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content" @click="hidePriceList(registerRooms)">
                     <div class="roomModals-header">
                         <div class="header-container">
-                            <span class="header-text">{{modalTitleOrBtn.title}}</span>
+                            <span class="header-text">{{titleAndBtn.title}}</span>
                             <span v-if="order.orderState && checkState === 'editOrder'"
                                   class="order-state-angle"
                                   :style="{ borderColor: getOrderState(order.orderState)['borderColor']}">
@@ -98,7 +98,7 @@
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{modalTitleOrBtn.btn}}</div>
+                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{titleAndBtn.btn}}</div>
                     </div>
                 </div>
             </div>
@@ -106,11 +106,102 @@
     </div>
 </template>
 <style lang="scss">
-
+    .userInfo-item:last-child,.select-component-container {
+        display: inline-block;
+    }
+    .user-group-origin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 4px;
+        position: relative;
+    }
+    .company-origin-tipImg {
+        display: inline-block;
+        vertical-align: sub;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        margin-left: 12px;
+        background: url("../../../../../../image/modal/room_modal_info.png");
+        background-size: contain;
+    }
+    .company-origin-tipLike {
+        display: inline-block;
+        margin-left: 12px;
+        width: 16px;
+        height: 16px;
+    }
+    .company-origin-tipImg:hover + .company-origin-tips {
+        display: block;
+    }
+    .company-origin-tips {
+        display: none;
+        background:#fafafa;
+        box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius:2px;
+        width:188px;
+        font-size: 12px;
+        padding: 8px 16px;
+        position: absolute;
+        right: 0;
+    }
+    .user-group-company {
+        display: inline-block;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .user-group-img {
+        display: inline-block;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        background: url("../../../../../../image/modal/room_modal_info.png");
+        background-size: contain;
+    }
+    .dd-select-option-group > .dd-select-option {
+        overflow: visible !important;
+    }
+    .user-group-img:hover + .user-group-tips {
+        display: block;
+    }
+    .user-group-tips {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 4px;
+        transform: translateY(-100%);
+        background: #fafafa;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        width: 256px;
+        padding-bottom: 10px;
+        z-index: 1090;
+    }
+    .user-company-title {
+        font-size: 14px;
+        color: #666666;
+        padding: 8px 16px;
+        border-bottom: 1px solid #e6e6e6;
+    }
+    .user-company-item {
+        display: flex;
+        padding: 0 16px;
+        margin-top: 8px;
+        font-size: 12px;
+        color: #999999;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
     import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdGroupOption, DdOption } from 'dd-vue-component';
+    import http from '../../../common/AJAXService';
+    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
+
 
     export default{
         name: 'OrderEditor',
@@ -146,7 +237,11 @@
             orderEditorVisible: {
                 type: Boolean,
                 default: false
-            }
+            },
+            checkState: {
+                type: String,
+                default: ''
+            },
         },
         components: {
             DdDropdown,
@@ -158,15 +253,36 @@
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
-            modalTitleOrBtn() {
-                if (this.checkState === 'ing') {
-                    return { title: '直接入住', btn: '入住并收银' };
-                } else if (this.checkState === 'finish') {
-                    return { title: '补录', btn: '补录' };
-                } else if (this.checkState === 'book') {
-                    return { title: '预订', btn: '完成预订' };
-                } else {
-                    return { title: '编辑订单', btn: '完成' };
+            titleAndBtn() {
+                switch (this.checkState) {
+                    case 'ing':
+                        return { title: '直接入住', btn: '入住并收银' };
+                    case 'finish':
+                        return { title: '补录', btn: '补录' };
+                    case 'book':
+                        return { title: '预订', btn: '完成预订' };
+                    case 'editOrder':
+                        if (this.order.type === ORDER_TYPE.ACCOMMODATION) {
+                            return { title: '编辑住宿订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.COMBINATION) {
+                            return { title: '编辑组合订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+                            return { title: '编辑娱乐订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.CATERING) {
+                            return { title: '编辑餐饮订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.RETAIL) {
+                            return { title: '编辑商超订单', btn: '完成' };
+                        }
+                    default:
+                        return { title: '编辑订单', btn: '完成' };
                 }
             },
             showCompanyOriginTip() {
@@ -202,20 +318,64 @@
             }
         },
         created() {
-            console.log('hi');
+            this.getData();
         },
         watch: {
             orderEditorVisible() {
-                this.name = this.order.name;
-                this.phone = this.order.phone;
-                this.remark = this.order.remark;
+                this.name = this.order.customerName;
+                this.phone = this.order.customerPhone;
+                this.remark = this.order.remark || '';
+                this.showOrder = true;
+                this.getVipDiscount({ phone: this.phone });
+
+                if (this.order.originId === -5) {
+                    this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                } else {
+                    this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                }
+
+
                 $('#orderEditor').modal('show');
             }
         },
         methods: {
+            getData(){
+                http.get('/user/getChannels', { type: 2, isAll: true })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            const originsList = res.data.list;
+                            let otherOrigins = [];
+                            this.userOrigins = originsList;
+                            originsList.forEach(origin => {
+                                if (origin.id === -1 || origin.id === -4) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    this.userSelfOrigins.push(origin);
+                                } else if(origin.id === -5) {
+                                    origin.companyList.forEach(company => {
+                                        let companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                        let number = `企业编号:${company.contractNum || ''}`;
+                                        let name = `联系人:${company.contactName || ''}`;
+                                        let phone = `联系人电话:${company.contactPhone || ''}`;
+                                        company.name = company.companyName;
+                                        company.originType = `${company.id}~${origin.id}`;
+                                        company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                    });
+                                    this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                } else if(origin.id > 0) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    origin.info = origin.name;
+                                    otherOrigins.push(origin);
+                                }
+                            });
+                            this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                            this.userOriginType = this.userSelfOrigins[0].originType;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                });
+            },
             hideModal(e) {
                 e.stopPropagation();
-                this.refreshData();
                 this.$emit('changeRegisterInfoShow', false);
                 $('#registerInfoModal').modal('hide');
             },
@@ -240,7 +400,22 @@
             },
             submitInfo() {
 
-            }
+            },
+            getVipDiscount(params) {
+                http.get('/vipUser/getVipDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipDiscountDetail = {...res.data};
+                            if (!this.vipDiscountDetail.isVip) {
+                                this.userOriginType = '-1~-1';
+                            } else {
+                                this.userOriginType = '-4~-4';
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
         }
     };
 </script>

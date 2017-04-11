@@ -79,12 +79,14 @@ $(function() {
             detailId: undefined,
             detailType: undefined,
             lastParamsObj: '',
-            orderEditorVisible: false
+            orderEditorVisible: false,
+            checkState: ''
         },
 
         created() {
             event.$on('onClose', this.hideDetail);
             event.$on('onShowDetail', this.showOrderDetail);
+            event.$on('editOrder', this.editOrder);
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
@@ -95,6 +97,7 @@ $(function() {
         beforeDestroy: function() {
             event.$off('onClose', this.hideDetail);
             event.$off('onShowDetail', this.showOrderDetail);
+            event.$off('editOrder', this.editOrder);
         },
         computed: {
             orderParams() {

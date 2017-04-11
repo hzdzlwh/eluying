@@ -681,9 +681,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            div:last-child {
-                margin-right: 16px;
-            }
         }
         .userVip-list {
             position: absolute;
@@ -1085,7 +1082,7 @@
             ...mapMutations([type.SET_ORDER_DETAIL]),
             hideModal() {
                 event.$emit('onClose');
-                this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
+                // this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
             },
             /**
              * 计算各种类型的收费金额
@@ -1129,7 +1126,7 @@
             },
             editOrder() {
                 this.hideModal();
-                this.$emit('editOrder', 'editOrder', this.order);
+                event.$emit('editOrder', 'editOrder', this.order);
             }
         }
     };
