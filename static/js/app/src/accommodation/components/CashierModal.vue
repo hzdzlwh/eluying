@@ -378,7 +378,8 @@
                     invalid = true;
                 }
                 if (invalid) {
-                    modal.somethingAlert('请选择收款方式！');
+                    const loss = !this.orderState || (this.totalDeposit > 0 && this.type !== 'checkIn');
+                    modal.somethingAlert(`请选择${loss ? '退款' : '收款'}方式！`);
                     this.disabledBtn = false;
                     return false;
                 }
@@ -474,6 +475,7 @@
                 if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
                     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
                     modal.somethingAlert(payStr);
+                    this.disabledBtn = false;
                     return false;
                 }
                 if (payWithAlipay <= 0) {
