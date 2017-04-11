@@ -4,7 +4,7 @@
             <div class="modal-content checkForm-modal-content">
                 <span class="checkForm-closeBtn" @click="close()">&times;</span>
                 <div class="checkForm-modal-header">
-                    <div v-if='checkListType'>
+                    <div v-if='checkListType === 1'>
                         <div><span>历史充值总额</span>￥{{historyRecharge}}</div>
                         <div><span>历史退款总额</span>￥{{historyRefunds}}</div>
                     </div>
@@ -117,10 +117,10 @@ export default {
                     width: '200px'
                 }, {
                     title: '操作类型',
-                    render: (h, row) => <span>￥{row.price}</span>
+                    render: (h, row) => <span>{row.type === 1 ? '充值' : row.type === 2 ? '退款' : row.type === 3 ? '结账扣款' : row.type === 4 ? '订单退款' : ''}</span>
                 }, {
                     title: '结算金额',
-                    render: (h, row) => <span>￥{row.type === 1 ? '充值' : row.type === 2 ? '退款' : row.type === 3 ? '结账扣款' : row.type === 4 ? '订单退款' : ''}</span>
+                    render: (h, row) => <span>￥{row.price}</span>
                 }, {
                     title: '支付方式',
                     dataIndex: 'channel'
@@ -149,8 +149,9 @@ export default {
             historyRecharge: 0,
             historyRefunds: 0,
             url: [
-                '/contractCompany/getSettleLog',
-                '/contractCompany/getWalletLog'
+                '',
+                '/contractCompany/getWalletLog',
+                '/contractCompany/getSettleLog'
             ]
         };
     },
@@ -177,8 +178,8 @@ export default {
     },
     watch: {
         visible(val) {
-            this.fetchDate();
             if (val) {
+                this.fetchDate();
                 $('#checkList').modal({
                     backdrop: 'static'
                 });
