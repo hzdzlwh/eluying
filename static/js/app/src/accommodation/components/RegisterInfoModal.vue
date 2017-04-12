@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="registerInfoModal" role="dialog">
             <div class="modal-dialog">
-                <div class="modal-content" @click="hidePriceList(registerRooms)">
+                <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-container">
                             <span class="header-text">{{modalTitleOrBtn.title}}</span>
