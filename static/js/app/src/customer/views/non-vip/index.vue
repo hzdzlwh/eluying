@@ -190,7 +190,7 @@ export default {
                         < span > {
                         this.contral.VIP_EDIT_ID ? < span onClick = {
                             () => this.openDetailDialog(row, 1)
-                        }> 加入会员 /</span> : '-' }
+                        }> 加入会员 /</span> : '' }
                         <span onClick = {
                         () => this.openDetailDialog(row, 0)
                 } > 查单 </span></span>

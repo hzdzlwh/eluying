@@ -238,7 +238,7 @@ export default {
                     } > 查单 < /span> {
                     (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
-                    } > / 结算 < /span > : '-'
+                    } > / 结算 < /span > : ''
                 } < /span >,
                 width: '140px'
             }],
