@@ -120,7 +120,7 @@
             event.$on('submitOrder', this.changeRooms);
         },
         beforeDestroy() {
-            event.$off('submitOrder', this.changeRooms)
+            event.$off('submitOrder', this.changeRooms);
         },
         components: {
             CheckInPerson,
@@ -407,7 +407,6 @@
                             item.idCardList = [];
                             item.idCardList.push(obj);
                         }
-
                     }
                 });
             },
