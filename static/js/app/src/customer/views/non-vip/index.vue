@@ -215,7 +215,7 @@ export default {
                 $('#vipForm').modal('show');
                 this.formvisible = true;
             } else {
-                this.detailid = date.customerId;
+                this.detailid = date.phone;
                 this.detailVisible = true;
             }
         },
