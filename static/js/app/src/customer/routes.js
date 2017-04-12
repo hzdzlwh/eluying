@@ -7,10 +7,6 @@ import nonVip from './views/non-vip/index.vue';
 import Router from 'vue-router';
 import list from './views/vip/list.vue';
 import setting from './views/vip/setting.vue';
-import auth from '../common/auth';
-import NoAuth from './components/no-auth.vue';
-const hasAuth = auth.checkModule(auth.VIP_ID);
-const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 
 export const routes = [
     {
@@ -24,11 +20,8 @@ export const routes = [
         children: [
             {
                 path: '/vip/list',
-                component: list,
-                meta: {
-                auth: hasAuth,
-                authName: '会员查看'
-                },
+                component: list
+
             },
             {
                 path: '/vip/setting',
@@ -38,24 +31,15 @@ export const routes = [
     },
     {
         path: '/company',
-        component: company,
-        meta: {
-            auth: hasCompanyAuth,
-            // auth: false,testcode
-            authName: '企业会员查看'
-        }
+        component: company
     },
     {
         path: '/non-vip',
         component: nonVip
-    },
-    {
-        path: '/non-auth',
-        component: NoAuth
-    },
+    }
 ];
 
-const router = new Router({
+export const router = new Router({
     mode: 'history',
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { x: 0, y: 0 };
@@ -64,13 +48,3 @@ const router = new Router({
     linkActiveClass: 'active',
     routes
 });
-router.beforeEach((to, from, next) => {
-        if (to.meta.auth === false) {
-            router.push({path:'/non-auth', query: { name: encodeURI(from.meta.authName) }, params:{userId: 123 }, meta:{userid: 123 }})
-            // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
-        }
-        next()
-
-})
-exports.router = router
-
