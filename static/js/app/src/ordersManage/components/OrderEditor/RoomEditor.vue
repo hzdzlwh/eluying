@@ -14,7 +14,7 @@
                         <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                         <dd-select v-model="item.categoryType" placeholder="请选择房型"
                                    @input="changeRoomType(item)">
-                            <dd-option v-for="category in categoryList" :value="category.id" :key="category.id"
+                            <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
                                        :label="category.name">
                             </dd-option>
                         </dd-select>
@@ -121,7 +121,8 @@
         },
         props: {
             rooms: Array,
-            checkState: String
+            checkState: String,
+            categories: Array
         },
         watch: {
             rooms(val) {
@@ -200,6 +201,12 @@
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
                 }
+            },
+            getRoomsList(id) {
+                const category = this.categories.find(c => c.typeId === id);
+                return category.rooms.map(r => {
+                    return { id: r.roomId, name: r.serialNum };
+                });
             },
             modifyRoom(item) {
                 if (item.haveRequest) {

@@ -25,6 +25,7 @@ $(function() {
         el: '.orderManage-rootContainer',
         store: store,
         data: {
+            categories: [],
             hasAuth: false,
             isLoading: true,
             currentPage: 1,
@@ -94,6 +95,7 @@ $(function() {
             }
 
             this.getOrdersList({}, false);
+            this.getRoomsList();
         },
         beforeDestroy: function() {
             event.$off('onClose', this.hideDetail);
@@ -138,6 +140,12 @@ $(function() {
                         } else if (result.code !== 1) {
                             modal.somethingAlert(result.msg);
                         }
+                    });
+            },
+            getRoomsList() {
+                return AJAXService.ajaxWithToken('get', '/room/getRoomsList', {})
+                    .then(res => {
+                        this.categories = res.data.list;
                     });
             },
             /**
