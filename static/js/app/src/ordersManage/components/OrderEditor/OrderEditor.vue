@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
-                <div class="modal-content" @click="hidePriceList(registerRooms)">
+                <div class="modal-content">
                     <!-- header start -->
                     <div class="roomModals-header">
                         <div class="header-container">
@@ -508,16 +508,6 @@
                 e.stopPropagation();
                 event.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
-            },
-            hidePriceList(arr) {
-                arr.forEach(item => {
-                    item.showPriceList = false;
-                    item.datePriceList.forEach(date => {
-                        date.showInput = false;
-                    });
-                });
-                this.vipListShow = false;
-                this.vipList = [];
             },
             stopPropagation() {
                 return false;

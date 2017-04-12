@@ -60,7 +60,7 @@
                                        style="width: 80px" type="number"
                                        @click.stop="showPriceList(index)"/>
                             </p>
-                            <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList">
+                            <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList" v-clickoutside="hidePriceList">
                                 <dl class="price-item" v-for="priceItem in item.datePriceList">
                                     <dt>{{priceItem.date.slice(5)}}</dt>
                                     <dd v-show="!priceItem.showInput"
@@ -106,6 +106,7 @@
     import CheckInPerson from './CheckInPerson.vue';
     import modal from '../../../common/modal';
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
+    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../common/AJAXService';
     import util from '../../../common/util';
     export default{
@@ -119,6 +120,9 @@
             DdSelect,
             DdOption,
             DdDatepicker
+        },
+        directives: {
+            Clickoutside
         },
         props: {
             rooms: Array,
@@ -214,6 +218,16 @@
             },
             checkIsToday(date) {
                 return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
+            },
+            hidePriceList() {
+                this.registerRooms.forEach(item => {
+                    item.showPriceList = false;
+                    item.datePriceList.forEach(date => {
+                        date.showInput = false;
+                    });
+                });
+                this.vipListShow = false;
+                this.vipList = [];
             },
             modifyRoom(item) {
                 if (item.haveRequest) {
