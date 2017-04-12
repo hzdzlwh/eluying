@@ -364,6 +364,10 @@
                 }
             },
             phone(newVal) {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                if (originType === -5 && this.checkState === 'editOrder') {
+                    return false;
+                }
                 const params = this.checkState === 'editOrder'
                     ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
                     : { phone: newVal };
