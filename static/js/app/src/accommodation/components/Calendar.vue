@@ -306,6 +306,7 @@
         background: white;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
+        background-clip: padding-box;
     }
     .calendar-status-busy {
         color: #f24949;
