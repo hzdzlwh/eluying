@@ -478,7 +478,7 @@
                 http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
