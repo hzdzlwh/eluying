@@ -9,7 +9,7 @@
         <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
-                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出Excel</a></span>
+                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出明细</a></span>
                 </div>
             </div>
         </div>
@@ -210,12 +210,14 @@ export default {
                 this.formdata = {
                     name: date.name,
                     phone: date.phone,
-                    customerId: date.customerId
+                    customerId: date.customerId,
+                    vipLevelId: ''
+
                 };
                 $('#vipForm').modal('show');
                 this.formvisible = true;
             } else {
-                this.detailid = date.phone;
+                this.detailid = date.customerId;
                 this.detailVisible = true;
             }
         },
@@ -234,12 +236,6 @@ export default {
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
-        // getParams() {
-        //     const obj = {
-        //         keyword: this.search
-        //     };
-        //     return obj;
-        // },
         addForm: function() {
             // $('#vipForm').modal('show');
                 // this.formvisible = true
