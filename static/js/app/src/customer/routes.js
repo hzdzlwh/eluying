@@ -41,7 +41,7 @@ export const routes = [
         component: company,
         meta: {
             auth: hasCompanyAuth,
-            // auth: false,testcode
+            // auth: false,
             authName: '企业会员查看'
         }
     },
@@ -66,7 +66,7 @@ const router = new Router({
 });
 router.beforeEach((to, from, next) => {
     if (to.meta.auth === false) {
-        router.push({ path: '/non-auth', query: { name: encodeURI(from.meta.authName) }, params: { userId: 123 }, meta: { userid: 123 }});
+        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.authName) }, params: { userId: 123 }, meta: { userid: 123 }});
             // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
     }
     next();
