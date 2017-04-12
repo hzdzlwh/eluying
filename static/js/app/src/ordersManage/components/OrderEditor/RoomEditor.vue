@@ -105,7 +105,7 @@
 <script>
     import CheckInPerson from './CheckInPerson.vue';
     import modal from '../../../common/modal';
-    import { DdSelect, DdOption } from 'dd-vue-component';
+    import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import http from '../../../common/AJAXService';
     import util from '../../../common/util';
     export default{
@@ -117,12 +117,14 @@
         components: {
             CheckInPerson,
             DdSelect,
-            DdOption
+            DdOption,
+            DdDatepicker
         },
         props: {
             rooms: Array,
             checkState: String,
-            categories: Array
+            categories: Array,
+            vipDiscountDetail: Object
         },
         watch: {
             rooms(val) {
@@ -150,7 +152,9 @@
                 this.$emit('onChange', this.registerRooms);
             },
             dateDiff(date1, date2) {
-                return util.DateDiff(date1, date2);
+                const d1 = new Date(date1);
+                const d2 = new Date(date2);
+                return util.DateDiff(d1, d2);
             },
             changeRoomType(item) {
                 this.$nextTick(function() {
@@ -208,13 +212,16 @@
                     return { id: r.roomId, name: r.serialNum };
                 });
             },
+            checkIsToday(date) {
+                return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
+            },
             modifyRoom(item) {
                 if (item.haveRequest) {
                     item.haveRequest = false;
                     return false;
                 }
 
-                const duration = util.DateDiff(item.room.startDate, item.room.endDate);
+                const duration = this.dateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
@@ -324,7 +331,7 @@
             showPriceList(id) {
                 this.registerRooms.forEach((item, index) => {
                     if (index === id) {
-                        const duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                        const duration = this.dateDiff(item.room.startDate, item.room.endDate);
                         if (duration > 1) {
                             item.showPriceList = true;
                         }

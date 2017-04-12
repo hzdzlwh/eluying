@@ -79,7 +79,7 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor :rooms="rooms" :categories="categories" @change="handleRoomChange"/>
+                        <RoomEditor :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -347,6 +347,34 @@
             this.getData();
         },
         watch: {
+            userOriginType(newVal) {
+                const originType = Number(newVal.split('~')[1]);
+                const originId = Number(newVal.split('~')[0]);
+                if (originType === -5) {
+                    this.getCompanyDiscount({ contractCompanyId: originId });
+                }
+                if (originType === -4 && this.phone.length === 11) {
+                    const params = this.checkState === 'editOrder'
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        : { phone: this.phone };
+                    this.getVipDiscount(params);
+                }
+                if (originType !== -5 && originType !== -4) {
+                    this.vipDiscountDetail = {};
+                }
+            },
+            phone(newVal) {
+                const params = this.checkState === 'editOrder'
+                    ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                    : { phone: newVal };
+                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                if (newVal.length === 11 && search) {
+                    this.checkPhone();
+                    this.getVipDiscount(params);
+                } else if (newVal.length !== 11) {
+                    this.vipDiscountDetail = {};
+                }
+            },
             orderEditorVisible(visible) {
                 if (visible) {
                     this.name = this.order.customerName;
@@ -386,7 +414,7 @@
                     });
                     filterRooms.forEach(item => {
                         const room = {};
-                        room.categoryType = item.categoryId;
+                        room.categoryType = item.typeId;
                         room.roomType = item.roomId;
                         room.originPrice = item.originPrice;
                         room.price = Number(item.fee.toFixed(2));
@@ -413,6 +441,34 @@
             }
         },
         methods: {
+            getVipDiscount(params) {
+                http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipDiscountDetail = {...res.data};
+                            if (!this.vipDiscountDetail.isVip) {
+                                this.userOriginType = '-1~-1';
+                            } else {
+                                this.userOriginType = '-4~-4';
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            getCompanyDiscount(params) {
+                http.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const discountList = res.data;
+                            this.vipDiscountDetail = {};
+                            this.vipDiscountDetail.isVip = false;
+                            this.vipDiscountDetail.vipDetail = discountList;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
             getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
