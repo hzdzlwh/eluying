@@ -214,14 +214,13 @@
     import {
         DdDropdown,
         DdDropdownItem,
-        DdPagination,
         DdDatepicker,
         DdSelect,
         DdGroupOption,
         DdOption
     } from 'dd-vue-component';
     import http from '../../../common/AJAXService';
-    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
+    import { ORDER_TYPE } from '../../constant';
     import modal from '../../../common/modal';
     import RoomEditor from './RoomEditor.vue';
 

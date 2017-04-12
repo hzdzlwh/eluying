@@ -2,34 +2,34 @@ export default {
     init() {
         const ie = document.getElementById('ieIdc');
         const ff = document.getElementById('myIdc');
-        if (typeof(ie.idcard) !== 'undefined') {
+        if (typeof (ie.idcard) !== 'undefined') {
             this.idc = ie;
-        } else if (typeof(ff.idcard) !== 'undefined') {
+        } else if (typeof (ff.idcard) !== 'undefined') {
             this.idc = ff;
         } else {
-            //$(".readBtn").html('读卡添加');
-            //$(".readBtn").removeClass('ing');
+            // $(".readBtn").html('读卡添加');
+            // $(".readBtn").removeClass('ing');
             throw new Error('请使用360浏览器（极速模式）、火狐、Opera、Chrome（低于44版）、WEBKIT内核等浏览器并安装IDCardWeb控件!');
         }
         this.data = this.idc.IDCard;
-        //- 网站授权，此属性必须在属性Verify和RarelyWord设置之前设置。License请与phototake@qq.com联系获取。
-        //this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
-        this.idc.License = "G95dPDwfAAsvk1IzmDT1CZr8I777NZ8mj3XO+d7Ak2yXn80EfIDgQ4MSrls/Eewbb16nRTnjvvY18VW8uPWKbPUAe4Hfo6OxicY4q4ZlGTMeW6DIfAAGI3Psuu8a9tpkl4bF1t4s3d";
+        // - 网站授权，此属性必须在属性Verify和RarelyWord设置之前设置。License请与phototake@qq.com联系获取。
+        // this.idc.License = "QAD3uz5fE0N26Es9Id0UOkC4Fj9qSFcGpp0q3eQi877now/CoJAVPg7KnZnRxdMuILivrVTo4pZLx60OokHnWrtAEefyplUD8Vlsk9U9eThBozc8O5kaOy7jk=";
+        this.idc.License = 'G95dPDwfAAsvk1IzmDT1CZr8I777NZ8mj3XO+d7Ak2yXn80EfIDgQ4MSrls/Eewbb16nRTnjvvY18VW8uPWKbPUAe4Hfo6OxicY4q4ZlGTMeW6DIfAAGI3Psuu8a9tpkl4bF1t4s3d';
 
-        //- 停止自动读卡间隔时间（秒），默认600秒
+        // - 停止自动读卡间隔时间（秒），默认600秒
         this.idc.AutoStopTime = 300;
 
-        //- 设置界面大小，0－无界面（0*0），1－图标界面（20*20）(默认)，2－基本信息界面（40*134，只显示姓名和身份证号），3－标准界面（220*450），4－照片界面（176*134）
+        // - 设置界面大小，0－无界面（0*0），1－图标界面（20*20）(默认)，2－基本信息界面（40*134，只显示姓名和身份证号），3－标准界面（220*450），4－照片界面（176*134）
         this.idc.Size = 0;
 
-        //- 设置阅读按键类型，0－无按键，1－图标按键(默认)，2－文字按键
+        // - 设置阅读按键类型，0－无按键，1－图标按键(默认)，2－文字按键
         this.idc.ReadButtonType = 0;
 
-        //- 设置是否寻找串口设备，ture－启动时寻找一次串口设备，false－不寻找串口设备（默认）
+        // - 设置是否寻找串口设备，ture－启动时寻找一次串口设备，false－不寻找串口设备（默认）
         this.idc.COMEnabled = true;
 
-        //- 设置相片图片格式，支持jpg、png、bmp格式输出，默认jpg
-        this.idc.PicFormat = "jpg";
+        // - 设置相片图片格式，支持jpg、png、bmp格式输出，默认jpg
+        this.idc.PicFormat = 'jpg';
     },
 
     /**
@@ -38,13 +38,13 @@ export default {
      * @returns {boolean}
      */
     read(timeout) {
-        //- timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
+        // - timeout为同步阅读搜寻超时时间（秒），正确阅读返回身份证号同时引发onRead事件(其它信息可以通过data读取或在onRead事件中处理)，否则返回空字符串。
         if (!this.idc) {
             return false;
         }
 
-        const cid = this.idc.ReadOneCID(timeout);
-        /*******************************************************************************************************************
+        const cid = this.idc.ReadOneCID(timeout); // eslint-disable-line
+        /** *****************************************************************************************************************
          读卡后数据获取（通过控件的idcard对象）
          idName				姓名，替换了生僻字的（如果有的话）
          idNameCode		姓名编码，字节ASCII码，如：837B 795E F86A，建议在数据库中也保存此编码
@@ -80,6 +80,6 @@ export default {
         return {
             name: IDname,
             idCardNum: IDCardNo
-        }
+        };
     }
 };

@@ -66,6 +66,8 @@
                                     <dd v-show="!priceItem.showInput"
                                         @click="changShowInput(item, priceItem)">
                                         ¥{{priceItem.dateFee}}
+
+
                                     </dd>
                                     <dd v-show="priceItem.showInput">
                                         <input class="dd-input" style="width: 60px;" type="number"
@@ -161,15 +163,15 @@
                 if (this.checkState === 'finish') {
                     return (date) => {
                         return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    }
+                    };
                 } else if (this.checkState === 'ing') {
                     return (date) => {
                         return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    }
-                }else {
+                    };
+                } else {
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    }
+                    };
                 }
             },
             disabledEndDate(startDate) {
@@ -178,25 +180,25 @@
                         const str1 = util.dateFormat(new Date());
                         const arr1 = str1.split('-');
                         return (date) => {
-                            let disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                            const disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
                             return disable;
-                        }
+                        };
                     } else {
                         const str = util.dateFormat(new Date(startDate));
                         const arr = str.split('-');
                         const str1 = util.dateFormat(new Date());
                         const arr1 = str1.split('-');
                         return (date) => {
-                            let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                            const disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
                             return disable;
-                        }
+                        };
                     }
                 } else {
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    }
+                    };
                 }
             },
             modifyRoom(item) {
@@ -211,9 +213,9 @@
                     return false;
                 }
                 if (duration > 400) {
-                    let currentTime = + new Date();
+                    const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        modal.somethingAlert('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
@@ -221,24 +223,29 @@
                 const startDate = util.dateFormat(new Date(item.room.startDate));
                 const endDate = util.dateFormat(new Date(item.room.endDate));
 
-                const paramsObj = {id: item.roomType, date: startDate,days: duration < 1 ? 1 : duration};
+                const paramsObj = { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration };
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
                 }
                 http.get('/room/getRoomStaus', paramsObj)
                     .then(res => {
                         if (res.code === 1) {
-                            let datePriceList = [];
+                            const datePriceList = [];
                             let countTotalPrice = 0;
                             let price = 0;
                             let oldPrice = 0;
                             let originPrice = 0;
                             const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
-                            res.data.rs.status.forEach((option,index) => {
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
+                            res.data.rs.status.forEach((option, index) => {
+                                datePriceList.push({
+                                    date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)),
+                                    dateFee: option.p,
+                                    originDateFee: option.p,
+                                    showInput: false
+                                });
                                 countTotalPrice += option.p;
                             });
-                            let countArr = datePriceList.map(dat => {
+                            const countArr = datePriceList.map(dat => {
                                 return dat.dateFee / countTotalPrice;
                             });
                             datePriceList.forEach(date => {
@@ -268,12 +275,14 @@
                                         date.dateFee = Number((date.dateFee * discount).toFixed(2));
                                     }
                                 });
-                                let index = item.datePriceList.findIndex(dat => {
+                                const index = item.datePriceList.findIndex(dat => {
                                     return !dat.hasFind;
                                 });
                                 if (index >= 0) {
-                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                                    item.datePriceList[index].dateFee = +((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
+                                    const totalPrice = item.datePriceList.reduce((a, b) => {
+                                        return a + Number(b.dateFee);
+                                    }, 0);
+                                    item.datePriceList[index].dateFee = + ((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
                                 }
                             }
                         }
@@ -294,19 +303,21 @@
             },
             setDateFee(num, obj) {
                 const countArr = obj.countArr;
-                obj.datePriceList.forEach((item,index) => {
+                obj.datePriceList.forEach((item, index) => {
                     item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
             },
             setFirstDateFee(num, obj) {
-                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                obj.datePriceList[0].dateFee = +((Number(obj.datePriceList[0].dateFee) + (num - totalPrice)).toFixed(2));
+                const totalPrice = obj.datePriceList.reduce((a, b) => {
+                    return a + Number(b.dateFee);
+                }, 0);
+                obj.datePriceList[0].dateFee = + ((Number(obj.datePriceList[0].dateFee) + (num - totalPrice)).toFixed(2));
             },
             showPriceList(id) {
                 this.registerRooms.forEach((item, index) => {
                     if (index === id) {
-                        let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                        const duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                         if (duration > 1) {
                             item.showPriceList = true;
                         }
@@ -322,7 +333,9 @@
                 option.showInput = true;
             },
             setTotalPrice(obj) {
-                obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
+                obj.price = + (obj.datePriceList.reduce((a, b) => {
+                    return a + Number(b.dateFee);
+                }, 0).toFixed(2));
             },
             deleteRoom(index) {
                 if (this.registerRooms.length <= 1) {
@@ -336,9 +349,9 @@
                 if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
                     obj.vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                            item = {...list};
+                            item = { ...list };
                         } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                            item = {...list};
+                            item = { ...list };
                         }
                     });
                 }

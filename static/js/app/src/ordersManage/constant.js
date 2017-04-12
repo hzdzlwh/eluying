@@ -106,5 +106,3 @@ export const ORDER_STATE_LIST = {
         { id: '5', name: '已结束' },
         { id: '8', name: '反结账' }]
 };
-
-export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];

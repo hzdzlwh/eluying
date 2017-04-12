@@ -100,43 +100,42 @@
     import { DdSelect, DdOption } from 'dd-vue-component';
     import { ID_CARD_TYPE } from '../../constant';
     import modal from 'modal';
-    import ieidc  from '../../utils/ieidc';
+    import ieidc from '../../utils/ieidc';
     export default{
         props: {
-          personsObj:{
-              type: Object,
-              default: function(){ return {} ;}
-          }
-        },
-        data(){
-            return{
-                ID_CARD_TYPE
+            personsObj: {
+                type: Object,
+                default: function() { return {}; }
             }
         },
+        data() {
+            return {
+                ID_CARD_TYPE
+            };
+        },
         computed: {
-            cardsList(){
+            cardsList() {
                 return ID_CARD_TYPE.map((item, index) => {
                     return { id: index, name: item };
                 });
             }
         },
         methods: {
-            addPerson(type){
+            addPerson(type) {
                 if (type === 0) {
-                    this.$emit('addPerson', this.personsObj.id, {idCardNum:'', idCardType: 0, name: ''});
+                    this.$emit('addPerson', this.personsObj.id, { idCardNum: '', idCardType: 0, name: '' });
                 } else {
-                    let obj = { idCardType: 0 };
                     try {
                         ieidc.init();
                         const { idCardNum, name } = ieidc.read(3);
 
                         this.$emit('addPerson', this.personsObj.id, { idCardType: 0, idCardNum, name });
-                    } catch(e) {
+                    } catch (e) {
                         modal.somethingAlert(e);
                     }
                 }
             },
-            deletePerson(index){
+            deletePerson(index) {
                 this.$emit('deletePerson', this.personsObj.id, index);
             }
         },
@@ -144,5 +143,5 @@
             DdSelect,
             DdOption
         }
-    }
+    };
 </script>
