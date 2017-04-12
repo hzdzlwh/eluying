@@ -79,6 +79,7 @@ import SelectProject from './selectProject.vue';
 import AJAXService from 'AJAXService';
 import modal from 'modal';
 import event from '../../event';
+import util from '../../../common/util';
 export default {
     props: {
         enterList: {
@@ -89,11 +90,12 @@ export default {
             type: String,
             default: ''
         },
-        enterItems: Array,
+        enterItem: Array,
         vipDiscountDetail: Object,
     },
     data() {
         return {
+            enterItems: [],
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: undefined,
             // vipDiscountDetail: {},
@@ -106,7 +108,7 @@ export default {
         event.$off('submitOrder', this.changeRooms);
     },
     watch: {
-        rooms(val) {
+        enterItem(val) {
             this.enterItems = val;
         }
     },
@@ -208,6 +210,33 @@ export default {
         closeEnterSelectModal(value) {
             this.modifyEnterOrShopIndex = -1;
             this.enterSelectModalShow = false;
+        },
+        disabledEndDate(startDate) {
+            if (this.checkState === 'finish') {
+                if (util.isSameDay(new Date(startDate), new Date())) {
+                    const str1 = util.dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        let disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                        return disable;
+                    }
+                } else {
+                    const str = util.dateFormat(new Date(startDate));
+                    const arr = str.split('-');
+                    const str1 = util.dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                        return disable;
+                    }
+                }
+            } else {
+                const str = util.dateFormat(new Date(startDate));
+                const arr = str.split('-');
+                return (date) => {
+                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                }
+            }
         },
         setEnterItems(data) {
             if (this.modifyEnterOrShopIndex === -1) {

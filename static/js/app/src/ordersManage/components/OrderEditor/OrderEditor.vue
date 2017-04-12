@@ -80,7 +80,7 @@
                         </div>
                         <!-- header end -->
                         <RoomEditor :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
-                        <EnterEditor :enterItems="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <EnterEditor :enterItem="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
