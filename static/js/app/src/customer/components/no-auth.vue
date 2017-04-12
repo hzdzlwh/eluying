@@ -4,15 +4,14 @@
     </div>
 </template>
 <script>
-import noAuth from '../../common/components/noAuth.vue'
-    export default{
-        data(){
-            return{
-            }
-        },
-        components: {
-        	noAuth
-        },
-
+import noAuth from '../../common/components/noAuth.vue';
+export default{
+    data() {
+        return {
+        };
+    },
+    components: {
+        noAuth
     }
+};
 </script>

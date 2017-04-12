@@ -26,9 +26,9 @@ export const routes = [
                 path: '/vip/list',
                 component: list,
                 meta: {
-                auth: hasAuth,
-                authName: '会员查看'
-                },
+                    auth: hasAuth,
+                    authName: '会员查看'
+                }
             },
             {
                 path: '/vip/setting',
@@ -41,8 +41,8 @@ export const routes = [
         component: company,
         meta: {
             auth: hasCompanyAuth,
-            // auth: false,testcode
-            authName: '企业会员查看'
+            // auth: false,
+            authName: '企业查看'
         }
     },
     {
@@ -52,7 +52,7 @@ export const routes = [
     {
         path: '/non-auth',
         component: NoAuth
-    },
+    }
 ];
 
 const router = new Router({
@@ -65,12 +65,10 @@ const router = new Router({
     routes
 });
 router.beforeEach((to, from, next) => {
-        if (to.meta.auth === false) {
-            router.push({path:'/non-auth', query: { name: encodeURI(from.meta.authName) }, params:{userId: 123 }, meta:{userid: 123 }})
+    if (to.meta.auth === false) {
+        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.authName) }, params: { userId: 123 }, meta: { userid: 123 }});
             // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
-        }
-        next()
-
-})
-exports.router = router
-
+    }
+    next();
+});
+exports.router = router;

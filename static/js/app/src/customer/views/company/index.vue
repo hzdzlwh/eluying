@@ -180,26 +180,26 @@ export default {
                 remark: ''
             },
             col: [{
-                    title: '企业名称',
-                    dataIndex: 'companyName'
-                }, {
-                    title: '企业编号',
-                    dataIndex: 'contractNum'
-                }, {
-                    title: '联系人',
-                    dataIndex: 'contactName'
-                }, {
-                    title: '联系号码',
-                    dataIndex: 'contactPhone'
-                }, {
-                    title: '企业类型',
-                    render: (h, row) => < span > {
+                title: '企业名称',
+                dataIndex: 'companyName'
+            }, {
+                title: '企业编号',
+                dataIndex: 'contractNum'
+            }, {
+                title: '联系人',
+                dataIndex: 'contactName'
+            }, {
+                title: '联系号码',
+                dataIndex: 'contactPhone'
+            }, {
+                title: '企业类型',
+                render: (h, row) => < span > {
                         row.companyType ? '可挂账' : '不可挂账'
                     } < /span>,
-                    width: '80px'
-                }, {
-                    title: '折扣',
-                    render: (h, row) => < span title = {
+                width: '80px'
+            }, {
+                title: '折扣',
+                render: (h, row) => < span title = {
                         row.discount &&
                         row.discounts.map(function(item) {
                             return item.nodeName + '-' + item.discount + '折';
@@ -208,41 +208,41 @@ export default {
                         row.discounts &&
                         row.discounts.length ? row.discounts[0].nodeName + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
                     } < /span>
-                }, {
-                    title: '充值余额',
-                    dataIndex: 'rechargeFee',
-                    sorter: true
-                }, {
-                    title: '挂账金额',
-                    dataIndex: 'ledgerFee',
-                    sorter: true
-                }, {
-                    title: '消费金额',
-                    dataIndex: 'consumeFee',
-                    sorter: true
-                }, {
-                    title: '创建时间',
-                    render: (h, row) => < span > {
+            }, {
+                title: '充值余额',
+                dataIndex: 'rechargeFee',
+                sorter: true
+            }, {
+                title: '挂账金额',
+                dataIndex: 'ledgerFee',
+                sorter: true
+            }, {
+                title: '消费金额',
+                dataIndex: 'consumeFee',
+                sorter: true
+            }, {
+                title: '创建时间',
+                render: (h, row) => < span > {
                         row.creationTime.split(' ')[0]
                     } < /span>,
-                    dataIndex: 'creationTime',
-                    sorter: true
-                }, {
-                    title: '操作',
-                    render: (h, row) =>
-                        < span >
-                        < span onClick = {
-                            () => this.openDetailDialog(row, 0, 1)
-                        } > 详情 < /span> / < span onClick = {
-                            () => this.openDetailDialog(row, 0, 2)
-                        } > 查单 < /span> {
-                        (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
-                            () => this.openDetailDialog(row, 1, 2)
-                        } > / 结算 < /span > : '-'
+                dataIndex: 'creationTime',
+                sorter: true
+            }, {
+                title: '操作',
+                render: (h, row) =>
+                    < span >
+                    < span onClick = {
+                        () => this.openDetailDialog(row, 0, 1)
+                    } > 详情 < /span> / < span onClick = {
+                        () => this.openDetailDialog(row, 0, 2)
+                    } > 查单 < /span> {
+                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                        () => this.openDetailDialog(row, 1, 2)
+                    } > / 结算 < /span > : ''
                 } < /span >,
                 width: '140px'
             }],
-        datalist: [],
+            datalist: [],
             count: 0,
             totalLedgerFee: 0,
             totalRechargeFee: 0,
@@ -274,9 +274,9 @@ export default {
                 show: false,
                 data: {}
             }
-    };
-},
-methods: {
+        };
+    },
+    methods: {
         detailEdit: function() {
             this.detailClose();
             this.formdata = {
@@ -324,7 +324,7 @@ methods: {
         openDetailDialog: function(date, type, checkType) {
             if (type) {
                 const dataobject = {
-                    orderType: -1,
+                    orderType: - 1,
                     type: 1,
                     origin: 1
                 };
@@ -335,25 +335,25 @@ methods: {
                             let moreChannel = [];
                             if (res.data.contractCompany && res.data.contractCompany.companPay) {
                                 moreChannel = [{
-                                    id: -15,
+                                    id: - 15,
                                     name: '退款至企业'
                                 }];
                             }
                             this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
                                 const id = element.id;
-                                return !(id === -6 || id === -7 || id === -11 || id === -12);
-                            }))
+                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                            }));
                         } else {
-                            let moreChannel = [];
+                            const moreChannel = [];
                             if (res.data.contractCompany && res.data.contractCompany.companPay) {
                                 moreChannel.push({
-                                    id: -15,
+                                    id: - 15,
                                     name: '企业扣费'
                                 });
                             }
                             if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
                                 moreChannel.push({
-                                    id: -14,
+                                    id: - 14,
                                     name: '企业挂帐'
                                 });
                             }

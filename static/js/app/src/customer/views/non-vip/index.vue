@@ -190,7 +190,7 @@ export default {
                         < span > {
                         this.contral.VIP_EDIT_ID ? < span onClick = {
                             () => this.openDetailDialog(row, 1)
-                        }> 加入会员 /</span> : '-' }
+                        }> 加入会员 /</span> : '' }
                         <span onClick = {
                         () => this.openDetailDialog(row, 0)
                 } > 查单 </span></span>
@@ -236,12 +236,6 @@ export default {
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
-        // getParams() {
-        //     const obj = {
-        //         keyword: this.search
-        //     };
-        //     return obj;
-        // },
         addForm: function() {
             // $('#vipForm').modal('show');
                 // this.formvisible = true
