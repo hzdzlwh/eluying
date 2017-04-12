@@ -42,7 +42,7 @@ export const routes = [
         meta: {
             auth: hasCompanyAuth,
             // auth: false,
-            authName: '企业会员查看'
+            authName: '企业查看'
         }
     },
     {
