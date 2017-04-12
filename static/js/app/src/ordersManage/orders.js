@@ -63,7 +63,8 @@ $(function() {
                 '3': '进行中',
                 '4': '已取消',
                 '5': '已结束',
-                '8': '反结账' },
+                '8': '反结账'
+            },
             optionsOrderState: ORDER_STATE_LIST,
             startDate: '',
             endDate: '',
