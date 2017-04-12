@@ -2,7 +2,7 @@
     <div>
         <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
-                <div class="modal-content" @click="hidePriceList(registerRooms)">
+                <div class="modal-content" @click="hidePriceList(rooms)">
                     <!-- header start -->
                     <div class="roomModals-header">
                         <div class="header-container">

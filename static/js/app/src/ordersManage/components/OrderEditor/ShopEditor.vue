@@ -93,7 +93,7 @@
     import modal from 'modal';
     export default{
         props: {
-            goodsItems: {
+            goods: {
                 type: Array,
                 default: function() { return []; }
             },
@@ -104,16 +104,12 @@
             vipDiscountDetail: {
                 type: Object,
                 default: function() { return {}; }
-            },
-            order: {
-                type: Object,
-                default: function() { return {}; }
             }
         },
         data() {
             return {
                 goodsSelectModalShow: false,
-                shopGoodsItem: JSON.parse(JSON.stringify(this.goodsItems))
+                shopGoodsItem: JSON.parse(JSON.stringify(this.goods))
             };
         },
         methods: {
@@ -153,7 +149,7 @@
                     });
                 });
                 this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
-                this.$emit('changeGoodsItem', this.shopGoodsItems);
+                this.$emit('change', this.shopGoodsItems);
             },
             // 处理商超项目数量变化事件
             handleNumChange(type, tag, num) {

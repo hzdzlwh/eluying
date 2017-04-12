@@ -1428,7 +1428,7 @@
                     params.origin = '微官网';
                 } else if (Number(this.userOriginType.split('~')[1]) === -5) {
                     params.origin = '企业';
-                }else {
+                } else {
                     this.userOrigins.forEach(origin => {
                         if (origin.id === Number(this.userOriginType.split('~')[0])) {
                             params.origin = origin.name;
