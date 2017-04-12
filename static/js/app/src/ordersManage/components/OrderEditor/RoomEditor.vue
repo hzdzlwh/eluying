@@ -109,11 +109,18 @@
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../common/AJAXService';
     import util from '../../../common/util';
+    import event from '../../event';
     export default{
         data() {
             return {
                 registerRooms: []
             };
+        },
+        created() {
+            event.$on('submitOrder', this.changeRooms);
+        },
+        beforeDestroy() {
+            event.$off('submitOrder', this.changeRooms)
         },
         components: {
             CheckInPerson,
@@ -128,7 +135,8 @@
             rooms: Array,
             checkState: String,
             categories: Array,
-            vipDiscountDetail: Object
+            vipDiscountDetail: Object,
+            change: Function
         },
         watch: {
             rooms(val) {
@@ -153,7 +161,6 @@
                 }
 
                 this.registerRooms.push(room);
-                this.$emit('onChange', this.registerRooms);
             },
             dateDiff(date1, date2) {
                 const d1 = new Date(date1);
@@ -401,7 +408,6 @@
                             item.idCardList.push(obj);
                         }
 
-                        this.$emit('onChange', this.registerRooms);
                     }
                 });
             },
@@ -409,9 +415,11 @@
                 this.registerRooms.forEach((item, index) => {
                     if (index === id) {
                         item.idCardList.splice(num, 1);
-                        this.$emit('onChange', this.registerRooms);
                     }
                 });
+            },
+            changeRooms() {
+                this.$emit('change', this.registerRooms);
             }
         }
     };

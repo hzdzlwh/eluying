@@ -548,7 +548,8 @@
                 this.userOriginType = '-4~-4';
             },
             submitInfo() {
-
+                event.$emit('submitOrder');
+                http.post();
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
