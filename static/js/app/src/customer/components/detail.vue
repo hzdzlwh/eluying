@@ -270,7 +270,7 @@
     const OrdersUrls = {
         vip: '/vipUser/getVipUserOrders',
         company: '/contractCompany/getCompanyOrderList',
-        nonvip: '/customer/getCustomerList'
+        nonvip: '/customer/getCustomerOrders'
     };
     const OutputUrl = {
         vip: '/vipUser/vipUserOrdersExport',
@@ -394,7 +394,7 @@
                     startTime: this.startTime,
                     endTime: this.endTime,
                     state: this.state,
-                    phone: this.phone,
+                    phone: this.id,
                     pageNo: this.pageNo,
                     keyword: this.keyword,
                     vipUserId: this.id,
