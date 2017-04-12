@@ -62,7 +62,10 @@
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
                                             <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
+                                                <dd-option v-for="origin in item.origins"
+                                                           :key="origin.originType"
+                                                           :value="origin.originType"
+                                                           :label="origin.originType.split('~')[1] > 0 ? origin.name : `企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
@@ -386,7 +389,7 @@
         </div>
     </div>
 </template>
-<style lang="scss" rel="stylesheet/scss" type="text/css">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .valid {
         position: absolute;
@@ -911,11 +914,11 @@
         props: {
             roomsItems: {
                 type: Array,
-                default: function() { return [] }
+                default: function() { return []; }
             },
             categories: {
                 type: Array,
-                default: function() { return [] }
+                default: function() { return []; }
             },
             checkState: {
                 type: String,
@@ -927,7 +930,7 @@
             },
             order: {
                 type: Object,
-                default: function() { return {} }
+                default: function() { return {}; }
             }
         },
         data() {
@@ -951,35 +954,35 @@
                 timeCount: 0,
                 goodsSelectModalShow: false,
                 enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1,
+                modifyEnterOrShopIndex: - 1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
                 isLoading: false
-            }
+            };
         },
 
-        created(){
+        created() {
             this.getData();
         },
-        computed:{
+        computed: {
             ...mapState({ shopList: 'shopList', enterList: 'enterList' }),
             modalTitleOrBtn() {
                 if (this.checkState === 'ing') {
-                    return { title: '直接入住', btn: '入住并收银' }
+                    return { title: '直接入住', btn: '入住并收银' };
                 } else if (this.checkState === 'finish') {
-                    return { title: '补录', btn: '补录' }
+                    return { title: '补录', btn: '补录' };
                 } else if (this.checkState === 'book') {
-                    return { title: '预订', btn: '完成预订' }
+                    return { title: '预订', btn: '完成预订' };
                 } else {
-                    return { title: '编辑订单', btn: '完成' }
+                    return { title: '编辑订单', btn: '完成' };
                 }
             },
             categoryList() {
                 let categoryList = [];
                 if (this.categories.length > 0) {
                     this.categories.forEach(item => {
-                        categoryList.push({id: item.cId, name: item.cName});
+                        categoryList.push({ id: item.cId, name: item.cName });
                     });
                 }
                 return categoryList;
@@ -1122,7 +1125,7 @@
                 AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
@@ -1342,12 +1345,12 @@
                 return enterInfo;
             },
 
-            submitInfo(e){
+            submitInfo(e) {
                 let valid = true;
                 let durationValid = true;
                 let roomPersonValid = true;
-                if(!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
-                    modal.somethingAlert("请输入联系人或手机号!");
+                if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid){
+                    modal.somethingAlert('请输入联系人或手机号!');
                     return false;
                 }
                 this.registerRooms.forEach(item => {
@@ -1364,11 +1367,11 @@
                     }
                 });
                 if (!valid) {
-                    modal.somethingAlert("订单信息有误，请核对信息后再提交！");
+                    modal.somethingAlert('订单信息有误，请核对信息后再提交！');
                     return false;
                 }
                 if (!durationValid) {
-                    modal.somethingAlert("所选择房间的入住时间超过了400天，请核对入住信息后再提交！");
+                    modal.somethingAlert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
                     return false;
                 }
                 this.registerRooms.forEach(item => {
@@ -1425,7 +1428,7 @@
                     params.origin = '微官网';
                 } else if (Number(this.userOriginType.split('~')[1]) === -5) {
                     params.origin = '企业';
-                }else {
+                } else {
                     this.userOrigins.forEach(origin => {
                         if (origin.id === Number(this.userOriginType.split('~')[0])) {
                             params.origin = origin.name;
@@ -1533,9 +1536,9 @@
                 }
             },
 
-            handleNumChange(type, tag, num){
+            handleNumChange(type, tag, num) {
                 if (type === 3) {
-                    this.shopGoodsItems.forEach((item, index) => {item.count = (index === tag) ? num : item.count;});
+                    this.shopGoodsItems.forEach((item, index) => { item.count = (index === tag) ? num : item.count; });
                 } else if (type === 2) {
                     this.enterItems.forEach((item, index) => {
                         const price = item['price'];
@@ -1544,7 +1547,7 @@
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
-                } else if (type === -2) {
+                } else if (type === - 2) {
                     this.enterItems.forEach((item, index) => {
                         const price = item['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
@@ -1615,7 +1618,7 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
+                obj.price = + (obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
                 //const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
@@ -1664,7 +1667,7 @@
                 let startDate = util.dateFormat(new Date(item.room.startDate));
                 let endDate = util.dateFormat(new Date(item.room.endDate));
                 let lastItem = this.lastRoomItem;
-                /*if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
+                /* if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
                     return false;
                 }
                 this.lastRoomItem.startDate = startDate;
@@ -1749,19 +1752,19 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                /*if (item.id) {
+                /* if (item.id) {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                     item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
-                }*/
+                } */
 
                 if (item.id && item.date) {
-                    let date = util.dateFormat(new Date(item.date));
-                    let lastItem = this.lastEnterItem;
+                    const date = util.dateFormat(new Date(item.date));
+                    /* const lastItem = this.lastEnterItem;
                     if (lastItem.id === item.id && lastItem.date === date) {
                         return false;
-                    }
+                    }*/
                     this.lastEnterItem.id = item.id;
                     this.lastEnterItem.date = item.date;
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
@@ -1829,7 +1832,7 @@
                             item.count += good.count;
                             goodsList.splice(index, 1);
                         }
-                    })
+                    });
                 });
                 this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
             }
@@ -1851,24 +1854,28 @@
             userOriginType(newVal) {
                 const originType = Number(newVal.split('~')[1]);
                 const originId = Number(newVal.split('~')[0]);
-                if (originType === -5) {
+                if (originType === - 5) {
                     this.getCompanyDiscount({ contractCompanyId: originId });
                 }
-                if (originType === -4 && this.phone.length === 11) {
+                if (originType === - 4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: - 1 }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
-                if (originType !== -5 && originType !== -4) {
+                if (originType !== - 5 && originType !== - 4) {
                     this.vipDiscountDetail = {};
                 }
             },
             phone(newVal) {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                if (originType === - 5 && this.checkState === 'editOrder') {
+                    return false;
+                }
                 const params = this.checkState === 'editOrder'
-                               ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                               ? { phone: newVal, orderId: this.order.orderId, orderType: - 1 }
                                : { phone: newVal };
-                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
@@ -1899,7 +1906,7 @@
             registerInfoShow(newVal) {
                 if (newVal && this.checkState !== 'editOrder') {
                     this.roomsItems.forEach(item => {
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1908,17 +1915,17 @@
                             });
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
-                        let duration = this.getDateDiff(item.startDate, item.endDate);
+                        const duration = this.getDateDiff(item.startDate, item.endDate);
                         AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId,
                             date: util.dateFormat(item.startDate),
                             days: duration })
                             .then(res => {
                                 if (res.code === 1) {
-                                    let datePriceList = [];
+                                    const datePriceList = [];
                                     let price = 0;
-                                    res.data.rs.status.forEach((option,index) => {
+                                    res.data.rs.status.forEach((option, index) => {
                                         const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
-                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false});
+                                        datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
                                         price += option.p;
                                     });
                                     let countArr = datePriceList.map(dat => {
@@ -1938,13 +1945,12 @@
                                 }
                             });
                     });
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (newVal && this.checkState === 'editOrder') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
-                    this.getVipDiscount({ phone: this.phone });
 
                     if (this.order.originId === -5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
@@ -1952,12 +1958,12 @@
                         this.userOriginType = `${this.order.originId}~${this.order.originId}`;
                     }
 
-                    let enterItems = [];
-                    let filterEnters = this.order.playItems.filter(enter => {
+                    const enterItems = [];
+                    const filterEnters = this.order.playItems.filter(enter => {
                         return enter.state !== 3;
                     });
                     filterEnters.forEach(item => {
-                        const enter = {...item};
+                        const enter = { ...item };
                         enter.price = item.originPrice;
                         enter.changeTimes = 0;
                         enter.id = item.categoryId;
@@ -1971,13 +1977,13 @@
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
-                    let registerRooms = [];
-                    let filterRooms = this.order.rooms.filter(room => {
+                    const registerRooms = [];
+                    const filterRooms = this.order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
                     });
                     filterRooms.forEach(item => {
                         const room = {};
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1992,7 +1998,7 @@
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
                         room.datePriceList = item.datePriceList.map(dat => {
-                            let newDate = { showInput: false };
+                            const newDate = { showInput: false };
                             newDate.date = dat.date;
                             newDate.dateFee = dat.dateFee;
                             return newDate;
@@ -2008,7 +2014,7 @@
                     });
                     this.registerRooms = registerRooms;
 
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (!newVal) {
                     this.showOrder = false;
                 }

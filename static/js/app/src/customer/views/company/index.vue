@@ -42,7 +42,7 @@
         <!--add new customer Modal -->
         <checklist :id='detailid' :checkListType='checkListType' :visible='checkListVisible' @close='checkListVisible = false'></checklist>
         <company @add='fetchDate' :data='formdata' @close='formclose' :visible='formvisible'> </company>
-            <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
+        <checkFromDio :visible="check.show" :type="check.type" :checkType="check.chekcType" :data='check.data' @close='checkFormClose'></checkFromDio>
         <detail :visible='detailVisible' :type='"company"' :id='detailid' :tab='detailtab' :title='detailTitle' :onClose='detailClose' :onDelete='detailDelete' :onEdit='detailEdit'>
             <companyDetail :data='detailData' :contral='contral'></companyDetail>
         </detail>
@@ -294,16 +294,25 @@ export default {
             this.formvisible = true;
         },
         detailDelete: function(id) {
-            http.get('/contractCompany/removeCompany', {
-                cid: id
-            }).then(res => {
-                if (res.code === 1) {
-                    modal.alert('删除成功');
-                    this.fetchDate();
-                    this.detailClose();
-                } else {
-                    modal.alert(res.msg);
-                }
+            modal.confirmDialog({
+                message: '您将会删除该企业客户信息，删除后信息不可恢复，且不能对该企业客户挂账进行结算，确认删除么？'
+            }, () => {
+                const that = this;
+                http.get('/contractCompany/removeCompany', {
+                    cid: id
+                }).then(res => {
+                    if (res.code === 1) {
+                        modal.alert('删除成功');
+                        that.fetchDate();
+                        that.detailClose();
+                    } else {
+                        if (res.code === 10) {
+                            modal.somethingAlert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    }
+                });
             });
         },
         detailClose: function() {
@@ -315,20 +324,40 @@ export default {
         openDetailDialog: function(date, type, checkType) {
             if (type) {
                 const dataobject = {
-                    isAll: true,
-                    orderType: -1,
-                    type: 1
+                    orderType: - 1,
+                    type: 1,
+                    origin: 1
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
                         if (checkType === 1) {
-                            this.check.chekcType = res.data.list.filter(function(element) {
+                            let moreChannel = [];
+                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                moreChannel = [{
+                                    id: - 15,
+                                    name: '退款至企业'
+                                }];
+                            }
+                            this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
                                 const id = element.id;
-                                return !(id === -6 || id === -7 || id === -11 || id === -12);
-                            });
+                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                            }));
                         } else {
-                            this.check.chekcType = res.data.list;
+                            const moreChannel = [];
+                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                moreChannel.push({
+                                    id: - 15,
+                                    name: '企业扣费'
+                                });
+                            }
+                            if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
+                                moreChannel.push({
+                                    id: - 14,
+                                    name: '企业挂帐'
+                                });
+                            }
+                            this.check.chekcType = moreChannel.concat(res.data.list);
                         }
                         this.check.show = true;
                         this.check.data = {
@@ -346,7 +375,9 @@ export default {
                 this.detailtab = checkType;
                 this.detailTitle = date.companyName;
                 this.detailVisible = true;
-                http.get('/contractCompany/getDetail', { cid: date.cid }).then(res => {
+                http.get('/contractCompany/getDetail', {
+                    cid: date.cid
+                }).then(res => {
                     if (res.code === 1) {
                         this.detailData = res.data;
                     } else {
@@ -416,7 +447,7 @@ export default {
                     this.datalist = res.data.list;
                     this.count = res.data.count;
                     this.totalLedgerFee = res.data.totalLedgerFee;
-                    this.totalRechargeFee = res.data.totalLedgerFee;
+                    this.totalRechargeFee = res.data.totalRechargeFee;
                 }
             });
         }
@@ -444,8 +475,8 @@ export default {
         });
         // 结算记录
         event.$on('showlistcheck', () => {
-            this.checkListType = 0;
-            $('#checkList').modal('show');
+            this.checkListType = 2;
+            this.checkListVisible = true;
         });
         // 电子钱包流程成功回调
         event.$on('checkSuc', () => {

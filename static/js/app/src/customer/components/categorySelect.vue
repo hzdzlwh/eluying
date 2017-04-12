@@ -92,18 +92,7 @@
         },
         watch: {
             list(val) {
-                this.restNodeList.map(i => {
-                    const node = val.find(item => item.id === i.id);
-                    i.selected = !!node;
-                });
-                this.enterNodeList.map(i => {
-                    const node = val.find(item => item.id === i.id);
-                    i.selected = !!node;
-                });
-                const room = val.find(item => item.nodeType === 0);
-                this.room = !!room;
-                const shop = val.find(item => item.nodeType === 3);
-                this.shop = !!shop;
+                this.initList(val);
             }
         },
         computed: {
@@ -190,27 +179,25 @@
                     });
                 }
 
-                /* if (this.type === 'discount') {
-                    main.discount.map( i => {
-                        const node = list.find(j => {
-                            return j.id === i.id && j.nodeType === i.nodeType;
-                        });
-
-                        node && (node.discount = i.discount);
-                    });
-                }*/
                 this.onConfirm(list);
                 $('#categorySelectModal').modal('hide');
             },
-            close() {
+            initList(list) {
                 this.restNodeList.map(i => {
-                    i.selected = false;
+                    const node = list.find(item => item.id === i.id);
+                    i.selected = !!node;
                 });
                 this.enterNodeList.map(i => {
-                    i.selected = false;
+                    const node = list.find(item => item.id === i.id);
+                    i.selected = !!node;
                 });
-                this.room = false;
-                this.shop = false;
+                const room = list.find(item => item.nodeType === 0);
+                this.room = !!room;
+                const shop = list.find(item => item.nodeType === 3);
+                this.shop = !!shop;
+            },
+            close() {
+                this.initList(this.list);
                 $('#categorySelectModal').modal('hide');
             }
         }

@@ -365,6 +365,10 @@
                 }
             },
             phone(newVal) {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                if (originType === -5 && this.checkState === 'editOrder') {
+                    return false;
+                }
                 const params = this.checkState === 'editOrder'
                     ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
                     : { phone: newVal };
@@ -382,7 +386,6 @@
                     this.phone = this.order.customerPhone;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
-                    this.getVipDiscount({ phone: this.phone });
 
                     if (this.order.originId === -5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
@@ -475,7 +478,7 @@
                 http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = { ...res.data };
+                            this.vipDiscountDetail = {...res.data};
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
