@@ -3,7 +3,7 @@ import Raven from 'raven-js';
 import modal from './modal';
 const md5 = require('md5');
 const spin = new modal.Spin();
-const AJAXService = {
+const http = {
     urls: {
         host: process.env.NODE_ENV === 'production' ? '/mg' : (process.env.serverUrl + '/mg'),
         host2: process.env.NODE_ENV === 'production' ? '/ws' : (process.env.serverUrl + '/ws'),
@@ -110,10 +110,10 @@ const AJAXService = {
 
         spin.addPending();
 
-        const url = baseUrl ? baseUrl + path : AJAXService.getUrl2(path);
+        const url = baseUrl ? baseUrl + path : http.getUrl2(path);
         return $.ajax({
             type: method,
-            url: baseUrl ? baseUrl + path : AJAXService.getUrl2(path),
+            url: url,
             async: asy,
             data: data,
             dataFilter: function(res) {
@@ -211,4 +211,5 @@ const AJAXService = {
         return paramsArray.join('&');
     }
 };
-module.exports = AJAXService;
+module.exports = http;
+export default http;

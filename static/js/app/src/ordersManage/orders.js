@@ -25,6 +25,7 @@ $(function() {
         el: '.orderManage-rootContainer',
         store: store,
         data: {
+            categories: [],
             hasAuth: false,
             isLoading: true,
             currentPage: 1,
@@ -79,22 +80,28 @@ $(function() {
             detailId: undefined,
             detailType: undefined,
             lastParamsObj: '',
-            orderEditorVisible: false
+            orderEditorVisible: false,
+            checkState: ''
         },
 
         created() {
             event.$on('onClose', this.hideDetail);
             event.$on('onShowDetail', this.showOrderDetail);
+            event.$on('editOrder', this.editOrder);
+            event.$on('hideOrderEditor', this.hideOrderEditor);
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
             }
 
             this.getOrdersList({}, false);
+            this.getRoomsList();
         },
         beforeDestroy: function() {
             event.$off('onClose', this.hideDetail);
             event.$off('onShowDetail', this.showOrderDetail);
+            event.$off('editOrder', this.editOrder);
+            event.$off('hideOrderEditor', this.hideOrderEditor);
         },
         computed: {
             orderParams() {
@@ -135,6 +142,12 @@ $(function() {
                         }
                     });
             },
+            getRoomsList() {
+                return AJAXService.ajaxWithToken('get', '/room/getRoomsList', {})
+                    .then(res => {
+                        this.categories = res.data.list;
+                    });
+            },
             /**
              * 延迟获取订单列表
              * @param delayTime
@@ -158,7 +171,9 @@ $(function() {
                 const params = AJAXService.paramsToString(pa);
                 return `${host}?${params}`;
             },
-
+            hideOrderEditor() {
+                this.orderEditorVisible = false;
+            },
             getParams() {
                 const obj = {
                     endDate: this.endDate, startDate: this.startDate,

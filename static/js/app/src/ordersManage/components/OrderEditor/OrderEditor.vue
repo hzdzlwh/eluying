@@ -1,20 +1,12 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderEditor" role="dialog">
+        <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content" @click="hidePriceList(registerRooms)">
+                    <!-- header start -->
                     <div class="roomModals-header">
                         <div class="header-container">
-                            <span class="header-text">{{modalTitleOrBtn.title}}</span>
-                            <span v-if="order.orderState && checkState === 'editOrder'"
-                                  class="order-state-angle"
-                                  :style="{ borderColor: getOrderState(order.orderState)['borderColor']}">
-                            </span>
-                            <span v-if="order.orderState && checkState === 'editOrder'"
-                                  class="order-state"
-                                  :style="{ background: getOrderState(order.orderState)['backgroundColor']}"
-                                  v-text="getOrderState(order.orderState)['text']">
-                            </span>
+                            <span class="header-text">{{titleAndBtn.title}}</span>
                         </div>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
@@ -58,16 +50,20 @@
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType">
-                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
+                                                       :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
-                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType" :value="origin.originType" :label="`企业(${origin.name})`">
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
+                                                             :key="item" v-if="item.origins.length > 0">
+                                                <dd-option v-for="origin in item.origins" :key="origin.originType"
+                                                           :value="origin.originType" :label="`企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
                                                         </span>
-                                                        <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                                        <span class="user-group-img" v-if="!origin.type"
+                                                              :title="origin.info"></span>
                                                     </div>
                                                 </dd-option>
                                             </dd-group-option>
@@ -77,17 +73,21 @@
                                     <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
                                     <div class="company-origin-tips">
                                         变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- header end -->
+                        <RoomEditor :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
                                 <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark"
                                           class="dd-input">
                                 </textarea>
-                                <span class="valid-remark-tip" :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
+                                <span class="valid-remark-tip"
+                                      :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
                                     {{remark.length}}/140
                                 </span>
                             </div>
@@ -98,7 +98,7 @@
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{modalTitleOrBtn.btn}}</div>
+                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{titleAndBtn.btn}}</div>
                     </div>
                 </div>
             </div>
@@ -106,11 +106,123 @@
     </div>
 </template>
 <style lang="scss">
+    .userInfo-item:last-child, .select-component-container {
+        display: inline-block;
+    }
 
+    .user-group-origin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 4px;
+        position: relative;
+    }
+
+    .company-origin-tipImg {
+        display: inline-block;
+        vertical-align: sub;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        margin-left: 12px;
+        background: url("../../../../../../image/modal/room_modal_info.png");
+        background-size: contain;
+    }
+
+    .company-origin-tipLike {
+        display: inline-block;
+        margin-left: 12px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .company-origin-tipImg:hover + .company-origin-tips {
+        display: block;
+    }
+
+    .company-origin-tips {
+        display: none;
+        background: #fafafa;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        width: 188px;
+        font-size: 12px;
+        padding: 8px 16px;
+        position: absolute;
+        right: 0;
+    }
+
+    .user-group-company {
+        display: inline-block;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .user-group-img {
+        display: inline-block;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        background: url("../../../../../../image/modal/room_modal_info.png");
+        background-size: contain;
+    }
+
+    .dd-select-option-group > .dd-select-option {
+        overflow: visible !important;
+    }
+
+    .user-group-img:hover + .user-group-tips {
+        display: block;
+    }
+
+    .user-group-tips {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 4px;
+        transform: translateY(-100%);
+        background: #fafafa;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        width: 256px;
+        padding-bottom: 10px;
+        z-index: 1090;
+    }
+
+    .user-company-title {
+        font-size: 14px;
+        color: #666666;
+        padding: 8px 16px;
+        border-bottom: 1px solid #e6e6e6;
+    }
+
+    .user-company-item {
+        display: flex;
+        padding: 0 16px;
+        margin-top: 8px;
+        font-size: 12px;
+        color: #999999;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
-    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdGroupOption, DdOption } from 'dd-vue-component';
+    import event from '../../event';
+    import {
+        DdDropdown,
+        DdDropdownItem,
+        DdDatepicker,
+        DdSelect,
+        DdGroupOption,
+        DdOption
+    } from 'dd-vue-component';
+    import http from '../../../common/AJAXService';
+    import { ORDER_TYPE } from '../../constant';
+    import modal from '../../../common/modal';
+    import RoomEditor from './RoomEditor.vue';
 
     export default{
         name: 'OrderEditor',
@@ -126,7 +238,7 @@
                 remark: '',
                 enterItems: [],
                 shopGoodsItems: [],
-                registerRooms: [],
+                rooms: [],
                 showOrder: false,
                 vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
@@ -139,7 +251,8 @@
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
-                isLoading: false
+                isLoading: false,
+                ORDER_TYPE
             };
         },
         props: {
@@ -150,7 +263,8 @@
             checkState: {
                 type: String,
                 default: ''
-            }
+            },
+            categories: Array
         },
         components: {
             DdDropdown,
@@ -158,19 +272,43 @@
             DdDatepicker,
             DdSelect,
             DdGroupOption,
-            DdOption
+            DdOption,
+            RoomEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
-            modalTitleOrBtn() {
-                if (this.checkState === 'ing') {
-                    return { title: '直接入住', btn: '入住并收银' };
-                } else if (this.checkState === 'finish') {
-                    return { title: '补录', btn: '补录' };
-                } else if (this.checkState === 'book') {
-                    return { title: '预订', btn: '完成预订' };
-                } else {
-                    return { title: '编辑订单', btn: '完成' };
+            titleAndBtn() {
+                switch (this.checkState) {
+                    case 'ing':
+                        return { title: '直接入住', btn: '入住并收银' };
+                    case 'finish':
+                        return { title: '补录', btn: '补录' };
+                    case 'book':
+                        return { title: '预订', btn: '完成预订' };
+                    case 'editOrder':
+                        if (this.order.type === ORDER_TYPE.ACCOMMODATION) {
+                            return { title: '编辑住宿订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.COMBINATION) {
+                            return { title: '编辑组合订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+                            return { title: '编辑娱乐订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.CATERING) {
+                            return { title: '编辑餐饮订单', btn: '完成' };
+                        }
+
+                        if (this.order.type === ORDER_TYPE.RETAIL) {
+                            return { title: '编辑商超订单', btn: '完成' };
+                        }
+
+                        break;
+                    default:
+                        return { title: '编辑订单', btn: '完成' };
                 }
             },
             showCompanyOriginTip() {
@@ -179,8 +317,8 @@
             },
             totalPrice() {
                 let totalPrice = 0;
-                if (this.registerRooms.length > 0) {
-                    this.registerRooms.forEach(room => {
+                if (this.rooms.length > 0) {
+                    this.rooms.forEach(room => {
                         totalPrice += Number(room.price);
                     });
                 }
@@ -206,22 +344,170 @@
             }
         },
         created() {
-            console.log('hi');
+            this.getData();
         },
         watch: {
-            orderEditorVisible() {
-                this.name = this.order.name;
-                this.phone = this.order.phone;
-                this.remark = this.order.remark;
-                $('#orderEditor').modal('show');
+            userOriginType(newVal) {
+                const originType = Number(newVal.split('~')[1]);
+                const originId = Number(newVal.split('~')[0]);
+                if (originType === -5) {
+                    this.getCompanyDiscount({ contractCompanyId: originId });
+                }
+                if (originType === -4 && this.phone.length === 11) {
+                    const params = this.checkState === 'editOrder'
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        : { phone: this.phone };
+                    this.getVipDiscount(params);
+                }
+                if (originType !== -5 && originType !== -4) {
+                    this.vipDiscountDetail = {};
+                }
+            },
+            phone(newVal) {
+                const params = this.checkState === 'editOrder'
+                    ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                    : { phone: newVal };
+                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                if (newVal.length === 11 && search) {
+                    this.checkPhone();
+                    this.getVipDiscount(params);
+                } else if (newVal.length !== 11) {
+                    this.vipDiscountDetail = {};
+                }
+            },
+            orderEditorVisible(visible) {
+                if (visible) {
+                    this.name = this.order.customerName;
+                    this.phone = this.order.customerPhone;
+                    this.remark = this.order.remark || '';
+                    this.showOrder = true;
+                    this.getVipDiscount({ phone: this.phone });
+
+                    if (this.order.originId === -5) {
+                        this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                    } else {
+                        this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                    }
+
+                    const enterItems = [];
+                    const filterEnters = this.order.playItems.filter(enter => {
+                        return enter.state !== 3;
+                    });
+                    filterEnters.forEach(item => {
+                        const enter = { ...item };
+                        enter.price = item.originPrice;
+                        enter.changeTimes = 0;
+                        enter.id = item.categoryId;
+                        enter.count = item.amount;
+                        enter.selfInventory = item.amount;
+                        enter.type = 2;
+                        enter.inventory = undefined;
+                        enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
+                        enter.totalPrice = item.totalPrice;
+                        enterItems.push(enter);
+                    });
+                    this.enterItems = JSON.parse(JSON.stringify(enterItems));
+
+                    const registerRooms = [];
+                    const filterRooms = this.order.rooms.filter(room => {
+                        return room.state === 0 || room.state === 1;
+                    });
+                    filterRooms.forEach(item => {
+                        const room = {};
+                        room.categoryType = item.typeId;
+                        room.roomType = item.roomId;
+                        room.originPrice = item.originPrice;
+                        room.price = Number(item.fee.toFixed(2));
+                        room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
+                        room.idCardList = item.idCardList;
+                        room.datePriceList = item.datePriceList.map(dat => {
+                            const newDate = { showInput: false };
+                            newDate.date = dat.date;
+                            newDate.dateFee = dat.dateFee;
+                            return newDate;
+                        });
+                        room.originDatePriceList = JSON.parse(JSON.stringify(room.datePriceList));
+                        room.showPriceList = false;
+                        room.showTip = false;
+                        room.state = item.state;
+                        room.roomOrderId = item.serviceId;
+                        room.changeTimes = 0;
+                        registerRooms.push(room);
+                    });
+                    this.rooms = registerRooms;
+
+                    $('#orderEditor').modal('show');
+                }
             }
         },
         methods: {
+            getVipDiscount(params) {
+                http.get('/vipUser/getVipDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipDiscountDetail = { ...res.data };
+                            if (!this.vipDiscountDetail.isVip) {
+                                this.userOriginType = '-1~-1';
+                            } else {
+                                this.userOriginType = '-4~-4';
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            getCompanyDiscount(params) {
+                http.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const discountList = res.data;
+                            this.vipDiscountDetail = {};
+                            this.vipDiscountDetail.isVip = false;
+                            this.vipDiscountDetail.vipDetail = discountList;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            getData() {
+                http.get('/user/getChannels', { type: 2, isAll: true })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            const originsList = res.data.list;
+                            const otherOrigins = [];
+                            this.userOrigins = originsList;
+                            originsList.forEach(origin => {
+                                if (origin.id === -1 || origin.id === -4) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    this.userSelfOrigins.push(origin);
+                                } else if (origin.id === -5) {
+                                    origin.companyList.forEach(company => {
+                                        const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                        const number = `企业编号:${company.contractNum || ''}`;
+                                        const name = `联系人:${company.contactName || ''}`;
+                                        const phone = `联系人电话:${company.contactPhone || ''}`;
+                                        company.name = company.companyName;
+                                        company.originType = `${company.id}~${origin.id}`;
+                                        company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                    });
+                                    this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                } else if (origin.id > 0) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    origin.info = origin.name;
+                                    otherOrigins.push(origin);
+                                }
+                            });
+                            this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                            this.userOriginType = this.userSelfOrigins[0].originType;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
             hideModal(e) {
                 e.stopPropagation();
-                this.refreshData();
-                this.$emit('changeRegisterInfoShow', false);
-                $('#registerInfoModal').modal('hide');
+                event.$emit('hideOrderEditor');
+                $('#orderEditor').modal('hide');
             },
             hidePriceList(arr) {
                 arr.forEach(item => {
@@ -244,6 +530,9 @@
             },
             submitInfo() {
 
+            },
+            handleRoomChange(rooms) {
+                this.rooms = rooms;
             }
         }
     };

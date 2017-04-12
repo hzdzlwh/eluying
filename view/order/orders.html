@@ -176,13 +176,14 @@
     </div >
     <order-editor
             :order-editor-visible="orderEditorVisible"
+            :check-state="checkState"
+            :categories="categories"
     ></order-editor>
     <order-detail
             :id="detailId"
             :type="detailType"
             :visible="detailVisible"
             @onClose="hideDetail"
-            @editOrder="editOrder"
     ></order-detail>
 </div>
 </body>

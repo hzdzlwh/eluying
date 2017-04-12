@@ -543,11 +543,11 @@
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
                 currentAction: undefined
-            }
+            };
         },
         components: {
             DateSelect,
-            RoomFilter,
+            RoomFilter
         },
         computed: {
             dateRange() {
@@ -561,7 +561,7 @@
                     let left = 0;
                     this.categories.map(c => {
                         if (!this.leftMap[c.cId] || !c.selected) {
-                            return
+                            return false;
                         }
 
                         left += this.leftMap[c.cId][i];
@@ -595,23 +595,23 @@
                 this.categories.map(c => {
                     // 过滤未选中的房间
                     if (!c.rooms || !c.selected) {
-                        return
+                        return false;
                     }
 
                     //  折叠的房间占一行
                     if (c.folded) {
                         index ++;
-                        return
+                        return false;
                     }
 
                     c.rooms.map(r => {
                         map[r.i] = index ++;
-                    })
+                    });
                 });
                 return map;
             },
             glyphs() {
-                //生成订单图元
+                // 生成订单图元
                 const glyphs = [];
                 const GRID_WIDTH = 100;
                 const GRID_HEIGHT = 48;
@@ -620,7 +620,7 @@
                     // 过滤未选中的房型
                     const category = this.categories.find(category => category.cId === order.id);
                     if (!category.selected || category.folded) {
-                        return
+                        return false;
                     }
 
                     // seeStart用于标志订单开始时间是否在查看日期范围内
@@ -665,7 +665,7 @@
                     this.$refs.calendarHeader.scrollLeft = ev.target.scrollLeft;
                     window.requestAnimationFrame(() => {
                         this.scrollTicking = false;
-                    })
+                    });
                 }
 
                 this.scrollTicking = true;
@@ -703,9 +703,9 @@
                             modal.somethingAlert(result.msg);
                         }
                         status.actionVisible = false;
-                });
+                    });
             },
-            showOrder(id){
+            showOrder(id) {
                 this.$emit('showOrder', id);
             },
             openAction(status, ev) {
