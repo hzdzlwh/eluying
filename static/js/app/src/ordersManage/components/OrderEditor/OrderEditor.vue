@@ -367,7 +367,7 @@
                 const params = this.checkState === 'editOrder'
                     ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
                     : { phone: newVal };
-                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
+                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
                     this.checkPhone();
                     this.getVipDiscount(params);
@@ -441,7 +441,32 @@
             }
         },
         methods: {
-            checkPhone(){
+            changeVipList(num) {
+                const params = num === 1 ? { name: this.name } : { phone: this.phone };
+                if ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4)) {
+                    clearTimeout(this.timeCount);
+                    this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
+                }
+            },
+            getVipList(params, position) {
+                http.ajaxWithToken('GET', '/vipUser/search', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.vipList = res.data.list;
+                            this.vipListShow = res.data.list && res.data.list.length > 0;
+                            this.setVipListPosition(position);
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            setVipListPosition(position) {
+                const vipList = document.querySelector('.userVip-list');
+                if (vipList) {
+                    vipList.style.left = position === 1 ? 46 + 'px' : 312 + 'px';
+                }
+            },
+            checkPhone() {
                 const phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
@@ -449,7 +474,7 @@
                 http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
@@ -524,21 +549,6 @@
             },
             submitInfo() {
 
-            },
-            getVipDiscount(params) {
-                http.get('/vipUser/getVipDiscount', params)
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.vipDiscountDetail = { ...res.data };
-                            if (!this.vipDiscountDetail.isVip) {
-                                this.userOriginType = '-1~-1';
-                            } else {
-                                this.userOriginType = '-4~-4';
-                            }
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
-                    });
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
