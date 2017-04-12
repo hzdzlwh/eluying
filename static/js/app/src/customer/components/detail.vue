@@ -333,9 +333,6 @@
             },
             endTime() {
                 this.getOrders();
-            },
-            id() {
-                this.getOrders();
             }
         },
         components: {
@@ -407,6 +404,7 @@
                 this.getOrders();
             },
             show() {
+                this.getOrders();
                 this.innerTab = this.tab;
                 $('#detailModal').modal('show');
             },
