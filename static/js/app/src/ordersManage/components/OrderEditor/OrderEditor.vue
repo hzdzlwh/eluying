@@ -441,6 +441,10 @@
             }
         },
         methods: {
+            checkPhone(){
+                const phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
+            },
             getVipDiscount(params) {
                 http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
