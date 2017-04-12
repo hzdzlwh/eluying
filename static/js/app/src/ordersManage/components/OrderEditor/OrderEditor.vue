@@ -80,6 +80,7 @@
                         </div>
                         <!-- header end -->
                         <RoomEditor :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <EnterEditor :enterItems="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -223,6 +224,7 @@
     import { ORDER_TYPE } from '../../constant';
     import modal from '../../../common/modal';
     import RoomEditor from './RoomEditor.vue';
+    import EnterEditor from './EntertainmentEditor.vue';
 
     export default{
         name: 'OrderEditor',
@@ -273,7 +275,8 @@
             DdSelect,
             DdGroupOption,
             DdOption,
-            RoomEditor
+            RoomEditor,
+            EnterEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
