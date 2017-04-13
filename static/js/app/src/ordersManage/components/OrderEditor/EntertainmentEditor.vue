@@ -12,9 +12,9 @@
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div v-if="item.usedAmount <= 0">
-                            <input class="dd-input" :value="item.name" @click="showEnterSelectModal(index)" />
+                            <input class="dd-input" :value="item.name || item.itemName" @click="showEnterSelectModal(index)" />
                         </div>
-                        <span v-if="item.usedAmount > 0">{{item.name}}</span>
+                        <span v-if="item.usedAmount > 0">{{item.name || item.itemName}}</span>
                         <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div>
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
@@ -87,27 +87,34 @@ export default {
             type: String,
             default: ''
         },
-        enterItem: Array,
+        order: Object,
         vipDiscountDetail: Object,
     },
     data() {
         return {
-            enterItems: [],
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: undefined,
             // vipDiscountDetail: {},
         }
     },
+    computed: {
+        enterItems() {
+            if (this.order.playItems) {
+                return this.order.playItems;
+            }
+            return [this.order];
+        }
+    },
+    watch: {
+        order: {
+            
+        }
+    }
     created() {
         event.$on('submitOrder', this.changeRooms);
     },
     beforeDestroy() {
         event.$off('submitOrder', this.changeRooms);
-    },
-    watch: {
-        enterItem(val) {
-            this.enterItems = val;
-        }
     },
     components: {
         DdDatepicker,
