@@ -87,6 +87,7 @@
                                     @change="handleRoomChange"
                                     @priceChange=""/>
                         <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""/>
+                        <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""></ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -233,6 +234,7 @@
     import RoomEditor from './RoomEditor.vue';
     import util from '../../../common/util';
     import EnterEditor from './EntertainmentEditor.vue';
+    import ShopEditor from './ShopEditor.vue';
     export default{
         name: 'OrderEditor',
         data() {
@@ -286,7 +288,8 @@
             DdGroupOption,
             DdOption,
             RoomEditor,
-            EnterEditor
+            EnterEditor,
+            ShopEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),

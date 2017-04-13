@@ -42,8 +42,7 @@
             order: Object
         },
         data() {
-            return {
-            };
+            return {};
         },
         computed: {
             filterShopList() {
