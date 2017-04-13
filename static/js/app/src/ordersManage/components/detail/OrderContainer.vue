@@ -396,14 +396,14 @@
         .user-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_user.png");
+            background: url("../../../../../../image/modal/room_modal_user.png");
             background-size: contain;
             margin-right: 25px;
         }
         .food-icon {
             width: 14px;
             height: 18px;
-            background: url("../../../../../image/modal/room_modal_food.png");
+            background: url("../../../../../../image/modal/room_modal_food.png");
             background-size: contain;
             margin-right: 25px;
         }
@@ -412,7 +412,7 @@
             cursor: pointer;
             width: 16px;
             height: 16px;
-            background: url("../../../../../image/modal/room_modal_info.png");
+            background: url("../../../../../../image/modal/room_modal_info.png");
             background-size: contain;
         }
         .info-content {
@@ -595,7 +595,7 @@
             display: inline-block;
             width: 14px;
             height: 14px;
-            background: url("../../../../../image/modal/room_modal_close.png");
+            background: url("../../../../../../image/modal/room_modal_close.png");
             background-size: contain;
             cursor: pointer;
         }
@@ -639,7 +639,7 @@
         .increase-icon {
             height: 16px;
             width: 16px;
-            background: url("../../../../../image/modal/room_modal_incre.png");
+            background: url("../../../../../../image/modal/room_modal_incre.png");
             background-size: contain;
             margin-right: 4px;
             cursor: pointer;
@@ -652,7 +652,7 @@
             right: 0;
             top: 4px;
             transform: translateX(100%);
-            background: url("../../../../../image/modal/vip_level_img.png");
+            background: url("../../../../../../image/modal/vip_level_img.png");
             background-size: contain;
             &:hover + .vip-level-tip {
                 display: inline-flex;
@@ -724,7 +724,7 @@
         .enter-icon {
             width: 18px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_enter.png");
+            background: url("../../../../../../image/modal/room_modal_enter.png");
             background-size: contain;
             margin-right: 14px;
         }
@@ -743,7 +743,7 @@
         .room-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_home.png");
+            background: url("../../../../../../image/modal/room_modal_home.png");
             background-size: contain;
             margin-right: 25px;
         }
@@ -817,10 +817,10 @@
             }
         }
         .selected-icon {
-            background: url("../../../../../image/modal/room_modal_selected.png");
+            background: url("../../../../../../image/modal/room_modal_selected.png");
         }
         .notSelect-icon {
-            background: url("../../../../../image/modal/room_modal_notSelect.png");
+            background: url("../../../../../../image/modal/room_modal_notSelect.png");
         }
         .time-container {
             margin-left: 2px;
@@ -868,7 +868,7 @@
         .shop-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_cart.png");
+            background: url("../../../../../../image/modal/room_modal_cart.png");
             background-size: contain;
             margin-right: 16px;
         }
@@ -893,7 +893,7 @@
             margin-left: 16px;
             width: 16px;
             height: 16px;
-            background: url("../../../../../image/modal/room_modal_delete.png");
+            background: url("../../../../../../image/modal/room_modal_delete.png");
             background-size: contain;
             cursor: pointer;
         }
@@ -966,13 +966,13 @@
     }
 </style>
 <script>
-    import event from '../event';
+    import event from '../../event';
     import util from 'util';
-    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
+    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
     import { mapMutations } from 'vuex';
-    import type from '../store/types';
-    import http from '../../common/AJAXService';
-    import Insurance from '../../accommodation/components/Insurance.vue';
+    import type from '../../store/types';
+    import http from '../../../common/AJAXService';
+    import Insurance from '../../../accommodation/components/Insurance.vue';
     export default{
         data() {
             return {
