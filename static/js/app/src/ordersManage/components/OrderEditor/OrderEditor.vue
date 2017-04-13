@@ -8,14 +8,14 @@
                         <div class="header-container">
                             <span class="header-text">{{titleAndBtn.title}}</span>
                         </div>
-                        <span class="close-icon" @click="hideModal"></span>
+                        <span class="close-icon" @click.stop="hideModal"></span>
                     </div>
                     <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
-                                    <div class="userVip-list" v-show="vipListShow" @click.stop="stopPropagation">
+                                    <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
                                         <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
                                             <span class="vip-level" v-if="vip.level">
                                                 [
@@ -79,7 +79,8 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION" :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <EnterEditor :enterItem="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -224,7 +225,8 @@
     import modal from '../../../common/modal';
     import types from '../../store/types';
     import RoomEditor from './RoomEditor.vue';
-
+    import util from '../../../common/util';
+    import EnterEditor from './EntertainmentEditor.vue';
     export default{
         name: 'OrderEditor',
         data() {
@@ -274,7 +276,8 @@
             DdSelect,
             DdGroupOption,
             DdOption,
-            RoomEditor
+            RoomEditor,
+            EnterEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
@@ -412,7 +415,7 @@
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
-                    const registerRooms = [];
+                    const rooms = [];
                     const filterRooms = this.order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
                     });
@@ -436,9 +439,9 @@
                         room.state = item.state;
                         room.roomOrderId = item.serviceId;
                         room.changeTimes = 0;
-                        registerRooms.push(room);
+                        rooms.push(room);
                     });
-                    this.rooms = registerRooms;
+                    this.rooms = rooms;
 
                     $('#orderEditor').modal('show');
                 }
@@ -482,7 +485,7 @@
                 http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
                             if (!this.vipDiscountDetail.isVip) {
                                 this.userOriginType = '-1~-1';
                             } else {
@@ -543,13 +546,9 @@
                 this[types.LOAD_SHOP_LIST]().catch(e => { modal.somethingAlert(e.msg); });
                 this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
             },
-            hideModal(e) {
-                e.stopPropagation();
+            hideModal() {
                 event.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
-            },
-            stopPropagation() {
-                return false;
             },
             setUserInfo(obj) {
                 this.name = obj.name;
@@ -557,9 +556,210 @@
                 this.vipListShow = false;
                 this.userOriginType = '-4~-4';
             },
+            validate() {
+                let valid = true;
+                let durationValid = true;
+                let roomPersonValid = true;
+
+                if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
+                    modal.somethingAlert('请输入联系人或手机号!');
+                    return false;
+                }
+
+                this.rooms.map(item => {
+                    if (item.showTip) {
+                        valid = false;
+                    }
+
+                    if (util.DateDiff(new Date(item.room.endDate), new Date(item.room.startDate)) > 400) {
+                        durationValid = false;
+                    }
+
+                    if (item.idCardList.length > 0) {
+                        item.idCardList.forEach(person => {
+                            if (person.idCardNum === '' || person.name === '') {
+                                roomPersonValid = false;
+                            }
+                        });
+                    }
+                });
+                this.enterItems.map(item => {
+                    if (item.inventory + item.selfInventory <= 0) {
+                        valid = false;
+                    }
+                });
+                const enterItemsValid = this.enterItems.every(enter => { return enter.id && enter.date; });
+                const shopGoodsItemsValid = this.shopGoodsItems.every(good => { return good.id; });
+
+                if (!valid) {
+                    modal.somethingAlert('订单信息有误，请核对信息后再提交！');
+                    return false;
+                }
+
+                if (!durationValid) {
+                    modal.somethingAlert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
+                    return false;
+                }
+
+                if (!roomPersonValid) {
+                    modal.somethingAlert('请完善入住人信息！');
+                    return false;
+                }
+
+                if (!enterItemsValid) {
+                    modal.somethingAlert('请完善娱乐信息！');
+                    return false;
+                }
+
+                if (!shopGoodsItemsValid) {
+                    modal.somethingAlert('请完善商超信息！');
+                    return false;
+                }
+
+                return true;
+            },
             submitInfo() {
                 event.$emit('submitOrder');
-                http.post();
+
+                if (!this.validate()) {
+                    return false;
+                }
+
+                const params = {
+                    name: this.name,
+                    phone: this.phone,
+                    remark: this.remark
+                };
+
+                if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.originId = -5;
+                    params.discountRelatedId = Number(this.userOriginType.split('~')[0]);
+                } else {
+                    params.originId = Number(this.userOriginType.split('~')[0]);
+                }
+
+                if (this.vipDiscountDetail.isVip) {
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                }
+
+                if (this.checkState === 'ing') {
+                    params.type = 0;
+                } else if (this.checkState === 'finish') {
+                    params.type = 1;
+                } else if (this.checkState === 'book') {
+                    params.type = 2;
+                } else {
+                    params.orderId = this.order.orderId;
+                }
+
+                if (Number(this.userOriginType.split('~')[0]) === -3) {
+                    params.origin = '微官网';
+                } else if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.origin = '企业';
+                } else {
+                    this.userOrigins.forEach(origin => {
+                        if (origin.id === Number(this.userOriginType.split('~')[0])) {
+                            params.origin = origin.name;
+                        }
+                    });
+                }
+
+                const rooms = this.rooms.map(room => {
+                    return {
+                        datePriceList: room.datePriceList,
+                        endDate: room.room.endDate,
+                        startDate: room.room.startDate,
+                        id: room.categoryType,
+                        roomId: room.roomType,
+                        idCardList: room.idCardList,
+                        fee: room.price,
+                        sub: true,
+                        roomOrderId: room.roomOrderId
+                    };
+                });
+
+                const entertainmentItems = [];
+                const playItems = [];
+                this.enterItems.forEach(item => {
+                    const enter = {};
+                    enter.amount = item.count;
+                    enter.timeAmount = item.timeAmount;
+                    enter.date = item.date;
+                    enter.categoryId = item.id;
+                    enter.categoryName = item.name;
+                    enter.price = Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
+                    enter.totalPrice = Number(item.totalPrice);
+                    if (this.checkState === 'editOrder' && item.playOrderId) {
+                        enter.playOrderId = item.playOrderId;
+                    }
+                    if (this.checkState === 'editOrder' && item.entertainmentId) {
+                        enter.entertainmentId = item.entertainmentId;
+                    }
+
+                    entertainmentItems.push(enter);
+                    playItems.push(enter);
+                });
+
+                const items = [];
+                this.shopGoodsItems.forEach(item => {
+                    const good = {};
+                    good.amount = item.count;
+                    good.id = item.id;
+                    good.type = 3;
+                    good.priceId = 0;
+                    good.date = util.dateFormat(new Date());
+                    good.name = item.name;
+                    good.price = Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2));
+
+                    items.push(good);
+                });
+
+                params.rooms = JSON.stringify(rooms);
+                params.items = JSON.stringify(items);
+                if (this.checkState === 'editOrder') {
+                    params.playItems = JSON.stringify(playItems);
+                    params.payments = JSON.stringify([]);
+                } else {
+                    params.entertainmentItems = JSON.stringify(entertainmentItems);
+                }
+
+                if (this.checkState === 'editOrder') {
+                    http.post('/order/modify', params)
+                        .then(res => {
+                            this.isLoading = false;
+                            if (res.code === 1) {
+                                this.hideModal();
+                                this.$emit('refreshView');
+                                this.$emit('showOrder', this.order.orderId);
+                            } else {
+                                modal.alert(res.msg);
+                            }
+                        });
+                } else {
+                    http.post('/room/confirmOrder', params)
+                        .then(res => {
+                            this.isLoading = false;
+                            if (res.code === 1) {
+                                this.hideModal();
+                                if (this.checkState === 'ing' || this.checkState === 'finish') {
+                                    const business = {};
+                                    business.businessJson = JSON.parse(JSON.stringify(params));
+                                    business.businessJson.functionType = 1;
+                                    business.businessJson.orderId = res.data.orderId;
+                                    business.orderDetail = { ...res.data };
+                                    business.cashierType = this.checkState;
+                                    this.$emit('showCashier', { type: 'register', business: business });
+                                } else {
+                                    const orderId = res.data.orderType === 3 ? res.data.relatedOrderId : res.data.orderId;
+                                    this.$emit('refreshView');
+                                    this.$emit('showOrder', orderId);
+                                    event.$emit('onShowDetail', this.order);
+                                }
+                            } else {
+                                modal.alert(res.msg);
+                            }
+                        });
+                }
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
