@@ -102,7 +102,7 @@
 <style lang="scss">
 </style>
 <script>
-    import CheckInPerson from './CheckInPerson.vue';
+    import CheckInPerson from '../CheckInPerson.vue';
     import modal from '../../../common/modal';
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
