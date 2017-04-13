@@ -98,6 +98,7 @@
                     @selectGoodsDate="setShopGoodsItems"
                     @Modalclose="closeShopSelectModal"/>
         </div>
+        <span v-show="false">{{totalPrice}}</span>
     </div>
 </template>
 <style lang="scss">
@@ -130,7 +131,24 @@
             };
         },
         computed: {
-            ...mapState({ order: 'orderDetail', shopList: 'shopList' })
+            ...mapState({ order: 'orderDetail', shopList: 'shopList' }),
+            totalPrice() {
+                let totalPrice = 0;
+                this.editShopList.map(item => {
+                    totalPrice = item.items.reduce((a, b) => {
+                        const itemPrice = ((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount).toFixed(2) * b.amount).toFixed(2);
+                        return a + Number(itemPrice);
+                    }, totalPrice);
+                });
+                if (this.shopGoodsItems.length > 0) {
+                    totalPrice = this.shopGoodsItems.reduce((a, b) => {
+                        const itemPrice = ((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount).toFixed(2) * b.amount).toFixed(2);
+                        return a + Number(itemPrice);
+                    }, totalPrice);
+                }
+                this.$emit('priceChange', totalPrice);
+                return totalPrice;
+            }
         },
         methods: {
             // 添加商超项目
