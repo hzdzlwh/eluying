@@ -145,6 +145,12 @@ export default {
                 name2: '支付方式：',
                 url: '/contractCompany/settle',
                 msg: '结算'
+            }, {
+                name: '挂帐结算',
+                name1: '结算金额(退款)：',
+                name2: '支付方式：',
+                url: '/contractCompany/settle',
+                msg: '结算'
             }],
             select: 0,
             alipay: {
@@ -218,7 +224,7 @@ export default {
             } else {
                 const that = this;
                 let msg = '';
-                this.type === 1 ? msg = '确认进行退款吗' : msg = '请确保金额已收到！';
+                this.type === 1 ? msg = '确认进行退款吗' : this.type === 3 ? msg = '请确保金额已退！' : msg = '请确保金额已收到！';
                 modal.confirmDialog({
                     message: msg
                 }, () => {
