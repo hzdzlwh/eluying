@@ -969,10 +969,12 @@
     import event from '../../event';
     import util from 'util';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
-    import { mapMutations } from 'vuex';
+    import { mapMutations, mapActions } from 'vuex';
     import type from '../../store/types';
     import http from '../../../common/AJAXService';
     import Insurance from '../../../accommodation/components/Insurance.vue';
+    import types from '../../store/types';
+    import modal from '../../../common/modal';
     export default{
         data() {
             return {
@@ -1109,7 +1111,7 @@
             }
         },
         methods: {
-            ...mapMutations([type.SET_ORDER_DETAIL]),
+            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
             hideModal() {
                 event.$emit('onClose');
                 // this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
@@ -1157,6 +1159,38 @@
             editOrder() {
                 this.hideModal();
                 event.$emit('editOrder', 'editOrder', this.order);
+            },
+            showCashier() {
+                this.hideModal();
+                event.$emit('showCashier', { type: 'orderDetail' });
+            },
+            checkInOrCheckOut(type) {
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
+                    .then(res => {
+                        if (type === 0) {
+                            const haveToday = res.data.roomOrderInfoList.some((room) => {
+                                return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
+                            });
+                            if (haveToday) {
+                                $('#checkIn').modal({ backdrop: 'static' });
+                            } else {
+                                modal.somethingAlert('未到办理入住的时间，无法入住！');
+                                return false;
+                            }
+                        } else {
+                            $('#checkOut').modal({ backdrop: 'static' });
+                        }
+                        this.isLoading = false;
+                        this.hideModal();
+                    })
+                    .catch(res => {
+                        modal.somethingAlert(res.msg);
+                        this.isLoading = false;
+                    });
             }
         }
     };

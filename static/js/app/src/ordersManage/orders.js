@@ -10,6 +10,12 @@ import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
 import OrderDetail from './components/Detail/OrderDetail.vue';
 import OrderEditor from './components/OrderEditor/OrderEditor.vue';
+import CheckInModal from './components/CheckInModal.vue';
+import CheckOutModal from './components/CheckOutModal.vue';
+import CancelOrderModal from './components/CancelOrderModal.vue';
+import CashierModal from './components/CashierModal.vue';
+import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
+
 import { ORDER_STATE_LIST } from './constant';
 import event from './event';
 import store from './store';
@@ -82,7 +88,16 @@ $(function() {
             detailType: undefined,
             lastParamsObj: '',
             orderEditorVisible: false,
-            checkState: ''
+            checkState: '',
+            cashierType: '',
+            cashierShow: false,
+            cancelOrderShow: false,
+            getMoneyShow: false,
+            getMoneyType: '',
+            getMoneyBusiness: {},
+            getMoneyParams: {},
+            payWithAlipay: 0,
+            cashierBusiness: {}
         },
 
         created() {
@@ -90,6 +105,13 @@ $(function() {
             event.$on('onShowDetail', this.showOrderDetail);
             event.$on('editOrder', this.editOrder);
             event.$on('hideOrderEditor', this.hideOrderEditor);
+            event.$on('refreshView', this.refreshView);
+            event.$on('showCashier', this.showCashier);
+            event.$on('hideCashier', this.hideCashier);
+            event.$on('showGetMoney', this.showGetMoney);
+            event.$on('hideGetMoney', this.hideGetMoney);
+            event.$on('hideCancelOrder', this.hideCancelOrder);
+
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
                 return;
@@ -103,6 +125,12 @@ $(function() {
             event.$off('onShowDetail', this.showOrderDetail);
             event.$off('editOrder', this.editOrder);
             event.$off('hideOrderEditor', this.hideOrderEditor);
+            event.$off('refreshView', this.refreshView);
+            event.$off('showCashier', this.showCashier);
+            event.$off('hideCashier', this.hideCashier);
+            event.$off('showGetMoney', this.showGetMoney);
+            event.$off('hideGetMoney', this.hideGetMoney);
+            event.$off('hideCancelOrder', this.hideCancelOrder);
         },
         computed: {
             orderParams() {
@@ -122,10 +150,6 @@ $(function() {
              */
             getOrdersList(obj, pageChange) {
                 const objStr = JSON.stringify(obj);
-                if (this.lastParamsObj === objStr) {
-                    return false;
-                }
-                this.lastParamsObj = objStr;
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
                 this.isLoading = true;
@@ -142,6 +166,23 @@ $(function() {
                             modal.somethingAlert(result.msg);
                         }
                     });
+            },
+            refreshView() {
+                const params = this.getParams();
+                this.getOrdersList(params, false);
+            },
+            showGetMoney({ type, business, params, payWithAlipay }) {
+                this.getMoneyType = type;
+                this.getMoneyBusiness = business;
+                this.getMoneyParams = params;
+                this.payWithAlipay = payWithAlipay;
+                this.getMoneyShow = true;
+            },
+            hideGetMoney() {
+                this.getMoneyShow = false;
+            },
+            hideCancelOrder() {
+                this.cancelOrderShow = false;
             },
             getRoomsList() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomsList', {})
@@ -177,8 +218,11 @@ $(function() {
             },
             getParams() {
                 const obj = {
-                    endDate: this.endDate, startDate: this.startDate,
-                    keyword: this.searchContent, sort: this.sort, orderType: this.orderType
+                    endDate: this.endDate,
+                    startDate: this.startDate,
+                    keyword: this.searchContent,
+                    sort: this.sort,
+                    orderType: this.orderType
                 };
                 return Object.assign({}, obj, this.orderParams);
             },
@@ -308,6 +352,14 @@ $(function() {
                 this.checkState = type;
                 this.orderEditorVisible = true;
                 this.orderDetail = order;
+            },
+            showCashier({ type, business }) {
+                this.cashierType = type;
+                this.cashierBusiness = business;
+                this.cashierShow = true;
+            },
+            hideCashier() {
+                this.cashierShow = false;
             }
         },
 
@@ -370,7 +422,12 @@ $(function() {
             DdDatepicker,
             NoAuth,
             OrderDetail,
-            OrderEditor
+            OrderEditor,
+            CheckInModal,
+            CheckOutModal,
+            CancelOrderModal,
+            CashierModal,
+            GetMoneyWithCode
         }
     });
 

@@ -182,8 +182,27 @@
             :id="detailId"
             :type="detailType"
             :visible="detailVisible"
-            @onClose="hideDetail"
     ></order-detail>
+    <Check-Out-Modal
+    ></Check-Out-Modal>
+    <Check-In-Modal
+    ></Check-In-Modal>
+    <Cashier-Modal
+            :show="cashierShow"
+            :type="cashierType"
+            :business="cashierBusiness"
+    ></Cashier-Modal>
+    <Cancel-Order-Modal
+            :order-id="detailId"
+            :show="cancelOrderShow"
+    ></Cancel-Order-Modal>
+    <GetMoney-With-Code
+            :show="getMoneyShow"
+            :type="getMoneyType"
+            :business="getMoneyBusiness"
+            :params="getMoneyParams"
+            :total-price="payWithAlipay"
+    ></GetMoney-With-Code>
 </div>
 </body>
 </html>
