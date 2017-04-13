@@ -68,7 +68,8 @@ router.beforeEach((to, from, next) => {
     if (to.meta.auth === false) {
         router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.authName) }, params: { userId: 123 }, meta: { userid: 123 }});
             // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
+    } else {
+        next();
     }
-    next();
 });
 exports.router = router;
