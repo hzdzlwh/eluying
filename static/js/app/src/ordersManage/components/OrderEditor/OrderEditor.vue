@@ -29,7 +29,7 @@
                                     </div>
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
-                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                            v-model="name"
                                            @input="changeVipList(1)">
                                 </div>

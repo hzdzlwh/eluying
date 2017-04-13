@@ -94,6 +94,7 @@
                         :personsObj="{id: index, persons: item.idCardList}"
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
+                <span v-show="false">{{totalPrice}}</span>
             </div>
         </div>
     </div>
@@ -149,7 +150,7 @@
                 const price = this.registerRooms.reduce((sum, room) => {
                     return sum + room.price;
                 }, 0);
-                this.$emit('priceChange', this.price);
+                this.$emit('priceChange', price);
                 return price;
             }
         },
