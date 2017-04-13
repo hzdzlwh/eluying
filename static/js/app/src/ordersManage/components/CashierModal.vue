@@ -132,6 +132,7 @@
     import AJAXService from 'AJAXService';
     import modal from 'modal';
     import { mapState } from 'vuex';
+    import event from '../event';
     export default{
         props: {
             type: {
@@ -331,11 +332,12 @@
                                 modal.somethingAlert(res.msg);
                             } else {
                                 this.$emit('hide');
+                                event.$emit('hide');
                                 $('#Cashier').modal('hide');
                             }
                         });
                 } else {
-                    this.$emit('hide');
+                    event.$emit('hide');
                     $('#Cashier').modal('hide');
                 }
             },
@@ -485,10 +487,13 @@
                                 modal.somethingAlert('收银成功');
                                 this.resetData();
                                 this.$emit('hide');
+                                event.$emit('hide');
                                 $('#Cashier').modal('hide');
                                 const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', orderId);
+                                event.$emit('refreshView');
+                                event.$emit('showOrder', orderId);
                             } else {
                                 modal.somethingAlert(result.msg);
                             }
@@ -498,8 +503,10 @@
                     this.disabledBtn = false;
                     this.resetData();
                     this.$emit('hide');
+                    event.$emit('hide');
                     $('#Cashier').modal('hide');
                     this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
+                    event.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                 }
             }
         },
