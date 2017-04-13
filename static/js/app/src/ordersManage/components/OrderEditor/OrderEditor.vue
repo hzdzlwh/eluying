@@ -73,14 +73,18 @@
                                     <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
                                     <div class="company-origin-tips">
                                         变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION" :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
-                        <EnterEditor :enterItem="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION"
+                                    :order="order"
+                                    :categories="categories"
+                                    :vipDiscountDetail="vipDiscountDetail"
+                                    @change="handleRoomChange"
+                                    @priceChange=""/>
+                        <EnterEditor :order="order" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">

@@ -61,6 +61,29 @@
                 const combineShow = this.order.foodItems && this.order.foodItems.length > 0;
                 const singleShow = this.order.itemsMap && this.order.itemsMap.length > 0;
                 return combineShow || singleShow;
+            },
+            getRoomsState() {
+                const roomsState = {
+                    checkOutAdAble: false,
+                    checkOutAble: false,
+                    checkInAble: false
+                };
+                if (this.order.rooms) {
+                    this.order.rooms.forEach(item => {
+                        if (item.state === 0) {
+                            roomsState.checkInAble = true;
+                        } else if (item.state === 1) {
+                            let today = new Date();
+                            let endDate = new Date(item.endDate);
+                            if(endDate > today && !util.isSameDay(endDate, today)){
+                                roomsState.checkOutAdAble = true;
+                            }else{
+                                roomsState.checkOutAble = true;
+                            }
+                        }
+                    });
+                }
+                return roomsState;
             }
         },
         methods: {
