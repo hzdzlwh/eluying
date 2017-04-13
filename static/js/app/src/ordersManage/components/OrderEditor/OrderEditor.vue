@@ -29,12 +29,14 @@
                                     </div>
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
                                            v-model="name"
                                            @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
                                            v-model="phone"
                                            @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
@@ -49,7 +51,7 @@
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType">
+                                        <dd-select v-model="userOriginType" :disabled="order.type !== ORDER_TYPE.COMBINATION">
                                             <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                                        :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
