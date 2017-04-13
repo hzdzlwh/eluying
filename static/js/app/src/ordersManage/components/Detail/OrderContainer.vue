@@ -25,9 +25,9 @@
                                   @click="showCombinationOrder">查看组合订单</span>
                             <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
-                                  v-if="order.orderState === 2 || order.orderState === 3"
+                                  v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
-                            <span class="header-tools" v-if="order.orderState === 2" @click="">取消订单</span>
+                            <span class="header-tools" v-if="order.cancelAble" @click="">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -172,28 +172,26 @@
                             </p>
                         </div>
                     </div>
-                    <div class="roomModals-footer" v-if="!readOnly">
+                    <div class="roomModals-footer">
                         <div style="width: 100%;">
                             <div class="order-btns">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
-                                     @click="checkInOrCheckOut(0)">
-                                    办理入住
-
-                                </div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
-                                     v-if="getRoomsState.checkOutAdAble">
-                                    提前退房
-
-                                </div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
-                                     v-if="getRoomsState.checkOutAble">
-                                    办理退房
-
-                                </div>
+                                <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
+                                         @click="checkInOrCheckOut(0)">
+                                        办理入住
+                                    </div>
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
+                                         v-if="getRoomsState.checkOutAdAble">
+                                        提前退房
+                                    </div>
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
+                                         v-if="getRoomsState.checkOutAble">
+                                        办理退房
+                                    </div>
+                                </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
-                                    收银
-
+                                    结账
                                 </div>
                             </div>
                         </div>
@@ -398,14 +396,14 @@
         .user-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_user.png");
+            background: url("../../../../../../image/modal/room_modal_user.png");
             background-size: contain;
             margin-right: 25px;
         }
         .food-icon {
             width: 14px;
             height: 18px;
-            background: url("../../../../../image/modal/room_modal_food.png");
+            background: url("../../../../../../image/modal/room_modal_food.png");
             background-size: contain;
             margin-right: 25px;
         }
@@ -414,7 +412,7 @@
             cursor: pointer;
             width: 16px;
             height: 16px;
-            background: url("../../../../../image/modal/room_modal_info.png");
+            background: url("../../../../../../image/modal/room_modal_info.png");
             background-size: contain;
         }
         .info-content {
@@ -581,7 +579,7 @@
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            padding: 0 0 56px 0;
+            padding: 0;
             margin-top: 0 !important;
         }
     }
@@ -597,7 +595,7 @@
             display: inline-block;
             width: 14px;
             height: 14px;
-            background: url("../../../../../image/modal/room_modal_close.png");
+            background: url("../../../../../../image/modal/room_modal_close.png");
             background-size: contain;
             cursor: pointer;
         }
@@ -641,7 +639,7 @@
         .increase-icon {
             height: 16px;
             width: 16px;
-            background: url("../../../../../image/modal/room_modal_incre.png");
+            background: url("../../../../../../image/modal/room_modal_incre.png");
             background-size: contain;
             margin-right: 4px;
             cursor: pointer;
@@ -654,7 +652,7 @@
             right: 0;
             top: 4px;
             transform: translateX(100%);
-            background: url("../../../../../image/modal/vip_level_img.png");
+            background: url("../../../../../../image/modal/vip_level_img.png");
             background-size: contain;
             &:hover + .vip-level-tip {
                 display: inline-flex;
@@ -726,7 +724,7 @@
         .enter-icon {
             width: 18px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_enter.png");
+            background: url("../../../../../../image/modal/room_modal_enter.png");
             background-size: contain;
             margin-right: 14px;
         }
@@ -745,7 +743,7 @@
         .room-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_home.png");
+            background: url("../../../../../../image/modal/room_modal_home.png");
             background-size: contain;
             margin-right: 25px;
         }
@@ -819,10 +817,10 @@
             }
         }
         .selected-icon {
-            background: url("../../../../../image/modal/room_modal_selected.png");
+            background: url("../../../../../../image/modal/room_modal_selected.png");
         }
         .notSelect-icon {
-            background: url("../../../../../image/modal/room_modal_notSelect.png");
+            background: url("../../../../../../image/modal/room_modal_notSelect.png");
         }
         .time-container {
             margin-left: 2px;
@@ -870,7 +868,7 @@
         .shop-icon {
             width: 16px;
             height: 15px;
-            background: url("../../../../../image/modal/room_modal_cart.png");
+            background: url("../../../../../../image/modal/room_modal_cart.png");
             background-size: contain;
             margin-right: 16px;
         }
@@ -895,7 +893,7 @@
             margin-left: 16px;
             width: 16px;
             height: 16px;
-            background: url("../../../../../image/modal/room_modal_delete.png");
+            background: url("../../../../../../image/modal/room_modal_delete.png");
             background-size: contain;
             cursor: pointer;
         }
@@ -968,13 +966,13 @@
     }
 </style>
 <script>
-    import event from '../event';
+    import event from '../../event';
     import util from 'util';
-    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../constant';
+    import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
     import { mapMutations } from 'vuex';
-    import type from '../store/types';
-    import http from '../../common/AJAXService';
-    import Insurance from '../../accommodation/components/Insurance.vue';
+    import type from '../../store/types';
+    import http from '../../../common/AJAXService';
+    import Insurance from '../../../accommodation/components/Insurance.vue';
     export default{
         data() {
             return {
@@ -1076,6 +1074,38 @@
                             }
                         ];
                 }
+            },
+            getRoomsState() {
+                const roomsState = {
+                    checkOutAdAble: false,
+                    checkOutAble: false,
+                    checkInAble: false
+                };
+
+                function checkState(room) {
+                    if (room.state === 0) {
+                        roomsState.checkInAble = true;
+                    } else if (room.state === 1) {
+                        const today = new Date();
+                        const endDate = new Date(room.checkOutDate || room.endDate);
+                        if (endDate > today && !util.isSameDay(endDate, today)) {
+                            roomsState.checkOutAdAble = true;
+                        } else {
+                            roomsState.checkOutAble = true;
+                        }
+                    }
+                }
+
+                if (this.order.rooms) {
+                    this.order.rooms.forEach(item => {
+                        checkState(item);
+                    });
+                }
+
+                const room = this.order.roomInfo;
+                room && checkState(room);
+
+                return roomsState;
             }
         },
         methods: {

@@ -10,9 +10,9 @@
 </style>
 <script>
     import OrderContainer from './OrderContainer.vue';
-    import { ORDER_TYPE } from '../constant';
+    import { ORDER_TYPE } from '../../constant';
     import { mapActions, mapState } from 'vuex';
-    import types from '../store/types';
+    import types from '../../store/types';
     import CateOrder from './CateOrder.vue';
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';

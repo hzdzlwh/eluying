@@ -231,7 +231,7 @@
     }
 </style>
 <script>
-    import event from '../event.js';
+    import event from '../../event.js';
     export default{
         props: {
             order: Object

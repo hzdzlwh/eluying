@@ -8,7 +8,7 @@ import Vue from 'vue';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
-import OrderDetail from './components/OrderDetail.vue';
+import OrderDetail from './components/Detail/OrderDetail.vue';
 import OrderEditor from './components/OrderEditor/OrderEditor.vue';
 import { ORDER_STATE_LIST } from './constant';
 import event from './event';

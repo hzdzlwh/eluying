@@ -1,8 +1,8 @@
 <template>
-    <div class="content-item" v-if="registerRooms && registerRooms.length > 0">
+    <div class="content-item">
         <p class="content-item-title">
             <span>房间信息</span>
-            <span class="increase-container" @click="addRoom">
+            <span class="increase-container" @click="addRoom" v-if="order.rooms || (order.roomInfo && !order.isCombinationOrder)">
                 <span class="increase-icon"></span>添加房间
             </span>
         </p>
@@ -66,8 +66,6 @@
                                     <dd v-show="!priceItem.showInput"
                                         @click="changShowInput(item, priceItem)">
                                         ¥{{priceItem.dateFee}}
-
-
                                     </dd>
                                     <dd v-show="priceItem.showInput">
                                         <input class="dd-input" style="width: 60px;" type="number"
@@ -96,6 +94,7 @@
                         :personsObj="{id: index, persons: item.idCardList}"
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
+                <span v-show="false">{{totalPrice}}</span>
             </div>
         </div>
     </div>
@@ -103,7 +102,7 @@
 <style lang="scss">
 </style>
 <script>
-    import CheckInPerson from './CheckInPerson.vue';
+    import CheckInPerson from '../CheckInPerson.vue';
     import modal from '../../../common/modal';
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
@@ -118,6 +117,7 @@
         },
         created() {
             event.$on('submitOrder', this.changeRooms);
+            this.initRooms(this.order);
         },
         beforeDestroy() {
             event.$off('submitOrder', this.changeRooms);
@@ -132,18 +132,81 @@
             Clickoutside
         },
         props: {
-            rooms: Array,
             checkState: String,
             categories: Array,
             vipDiscountDetail: Object,
-            change: Function
+            order: {
+                type: Object,
+                default: {}
+            }
         },
         watch: {
-            rooms(val) {
-                this.registerRooms = val;
+            order(order) {
+                this.initRooms(order);
+            }
+        },
+        computed: {
+            totalPrice() {
+                const price = this.registerRooms.reduce((sum, room) => {
+                    return sum + room.price;
+                }, 0);
+                this.$emit('priceChange', price);
+                return price;
             }
         },
         methods: {
+            initRooms(order) {
+                if (order.rooms) {
+                    const filterRooms = order.rooms.filter(room => {
+                        return room.state === 0 || room.state === 1;
+                    });
+                    this.registerRooms = filterRooms.map(item => {
+                        return {
+                            categoryType: item.typeId,
+                            roomType: item.roomId,
+                            originPrice: item.originPrice,
+                            price: Number(item.fee.toFixed(2)),
+                            room: { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate },
+                            idCardList: item.idCardList,
+                            datePriceList: item.datePriceList.map(dat => {
+                                const newDate = { showInput: false };
+                                newDate.date = dat.date;
+                                newDate.dateFee = dat.dateFee;
+                                return newDate;
+                            }),
+                            originDatePriceList: JSON.parse(JSON.stringify(item.datePriceList)),
+                            showPriceList: false,
+                            showTip: false,
+                            state: item.state,
+                            roomOrderId: item.serviceId
+                        };
+                    });
+                }
+
+                if (order.roomInfo) {
+                    const roomInfo = order.roomInfo;
+                    const room = {
+                        categoryType: roomInfo.subTypeId,
+                        roomType: roomInfo.roomId,
+                        originPrice: roomInfo.originPrice,
+                        price: Number(roomInfo.price.toFixed(2)),
+                        room: { roomId: roomInfo.roomId, startDate: roomInfo.checkInDate, endDate: roomInfo.checkOutDate },
+                        idCardList: order.idCardsList,
+                        datePriceList: order.datePriceList.map(dat => {
+                            const newDate = { showInput: false };
+                            newDate.date = dat.date;
+                            newDate.dateFee = dat.dateFee;
+                            return newDate;
+                        }),
+                        originDatePriceList: JSON.parse(JSON.stringify(order.datePriceList)),
+                        showPriceList: false,
+                        showTip: false,
+                        state: roomInfo.state,
+                        roomOrderId: order.roomOrderId
+                    };
+                    this.registerRooms = [room];
+                }
+            },
             addRoom() {
                 const len = this.registerRooms.length;
                 if (this.registerRooms.length >= 99) {

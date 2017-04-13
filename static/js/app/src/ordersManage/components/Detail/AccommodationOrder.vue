@@ -73,8 +73,8 @@
     import {
         ID_CARD_TYPE,
         ORDER_TYPE
-    } from '../constant';
-    import event from '../event';
+    } from '../../constant';
+    import event from '../../event';
     export default {
         props: {
             order: {

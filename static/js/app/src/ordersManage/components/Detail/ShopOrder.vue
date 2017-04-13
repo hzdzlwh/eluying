@@ -36,7 +36,7 @@
 <style lang="scss" type="text/css" rel="stylesheet/scss">
 </style>
 <script>
-    import event from '../event.js';
+    import event from '../../event.js';
     export default{
         props: {
             order: Object

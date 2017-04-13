@@ -8,13 +8,13 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orederType || item.orderState === 1' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div v-if="item.usedAmount <= 0">
-                            <input class="dd-input" :value="item.name" @click="showEnterSelectModal(index)" />
+                            <input class="dd-input" :value="item.name || item.itemName" @click="showEnterSelectModal(index)" :disabled="orederType === 1" />
                         </div>
-                        <span v-if="item.usedAmount > 0">{{item.name}}</span>
+                        <span v-if="item.usedAmount > 0">{{item.name || item.itemName}}</span>
                         <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div>
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
@@ -43,12 +43,12 @@
                                 <label>小计</label>
                                 <p class="fee-container">
                                     <span class="fee-symbol">¥</span>
-                                    <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice" />
+                                    <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice"  />
                                 </p>
                             </p>
                         </div>
                     </div>
-                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0">
+                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0 && !orederType">
                                     </span>
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
@@ -74,7 +74,10 @@
 import {
     DdDatepicker
 } from 'dd-vue-component';
-import { mapActions, mapState } from 'vuex';
+import {
+    mapActions,
+    mapState
+} from 'vuex';
 import counter from '../../../common/components/counter.vue';
 import SelectProject from './selectProject.vue';
 import AJAXService from 'AJAXService';
@@ -87,15 +90,28 @@ export default {
             type: String,
             default: ''
         },
-        enterItem: Array,
+        order: {
+            type: Object,
+            default: {}
+        },
         vipDiscountDetail: Object,
+
     },
     data() {
         return {
-            enterItems: [],
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: undefined,
-            // vipDiscountDetail: {},
+            enterItems: this.order.playItems || [this.order],
+            orederType: this.order.playItems ? 1 : 0//1组合订单，0子订单
+        }
+    },
+    watch: {
+        order: {
+            handler(c, o) {
+                this.enterItems = this.order.playItems || [this.order];
+                this.orederType = this.order.playItems ? 1 : 0
+            },
+            deep: true
         }
     },
     created() {
@@ -104,18 +120,15 @@ export default {
     beforeDestroy() {
         event.$off('submitOrder', this.changeRooms);
     },
-    watch: {
-        enterItem(val) {
-            this.enterItems = val;
-        }
-    },
     components: {
         DdDatepicker,
         counter,
         SelectProject
     },
     computed: {
-        ...mapState({ enterList: 'enterList' })
+        ...mapState({
+            enterList: 'enterList'
+        })
     },
     methods: {
         addItem() {
