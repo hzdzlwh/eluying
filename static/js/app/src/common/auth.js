@@ -11,7 +11,7 @@ const VIP_ID = 11;
 const VIP_VIEW_ID = 0;
 const VIP_EDIT_ID = 1;
 // 企业客户权限
-const COMPANY_ID = 241;
+const COMPANY_ID = 15;
 const COMPANY_VIEW_ID = 0;
 const COMPANY_EDIT_ID = 1;
 const COMPANY_CHARGE_ID = 2;
