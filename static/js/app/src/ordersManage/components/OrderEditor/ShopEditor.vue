@@ -135,7 +135,7 @@
             totalPrice() {
                 let totalPrice = 0;
                 for (const key in this.editShopList) {
-                    this.editShopList[key].items.reduce((a, b) => {
+                    totalPrice = this.editShopList[key].items.reduce((a, b) => {
                         const itemPrice = ((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount).toFixed(2) * b.amount).toFixed(2);
                         return a + Number(itemPrice);
                     }, totalPrice);
