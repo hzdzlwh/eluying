@@ -222,6 +222,7 @@
     import http from '../../../common/AJAXService';
     import { ORDER_TYPE } from '../../constant';
     import modal from '../../../common/modal';
+    import types from '../../store/types';
     import RoomEditor from './RoomEditor.vue';
 
     export default{
@@ -444,6 +445,10 @@
             }
         },
         methods: {
+            ...mapActions([
+                types.LOAD_SHOP_LIST,
+                types.LOAD_ENTER_LIST
+            ]),
             changeVipList(num) {
                 const params = num === 1 ? { name: this.name } : { phone: this.phone };
                 if ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4)) {
@@ -535,6 +540,8 @@
                             modal.somethingAlert(res.msg);
                         }
                     });
+                this[types.LOAD_SHOP_LIST]().catch(e => { modal.somethingAlert(e.msg); });
+                this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
             },
             hideModal(e) {
                 e.stopPropagation();
