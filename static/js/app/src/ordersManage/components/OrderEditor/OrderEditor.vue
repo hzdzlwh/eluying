@@ -85,9 +85,8 @@
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
-                                    @priceChange="handleRoomPriceChange"/>
-                        <EnterEditor v-if="this.order.type === ORDER_TYPE.COMBINATION ||this.order.type === ORDER_TYPE.ENTERTAINMENT"
-                                     :order="order" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                                    @priceChange=""/>
+                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""/>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
