@@ -172,28 +172,24 @@
                             </p>
                         </div>
                     </div>
-                    <div class="roomModals-footer" v-if="!readOnly">
+                    <div class="roomModals-footer">
                         <div style="width: 100%;">
-                            <div class="order-btns">
+                            <div class="order-btns" v-if="false">
                                 <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                      @click="checkInOrCheckOut(0)">
                                     办理入住
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
                                      v-if="getRoomsState.checkOutAdAble">
                                     提前退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
                                      v-if="getRoomsState.checkOutAble">
                                     办理退房
-
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     收银
-
                                 </div>
                             </div>
                         </div>
