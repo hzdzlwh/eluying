@@ -10,9 +10,9 @@
 </style>
 <script>
     import OrderContainer from './OrderContainer.vue';
-    import { ORDER_TYPE } from '../constant';
+    import { ORDER_TYPE } from '../../constant';
     import { mapActions, mapState } from 'vuex';
-    import types from '../store/types';
+    import types from '../../store/types';
     import CateOrder from './CateOrder.vue';
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
@@ -61,29 +61,6 @@
                 const combineShow = this.order.foodItems && this.order.foodItems.length > 0;
                 const singleShow = this.order.itemsMap && this.order.itemsMap.length > 0;
                 return combineShow || singleShow;
-            },
-            getRoomsState() {
-                const roomsState = {
-                    checkOutAdAble: false,
-                    checkOutAble: false,
-                    checkInAble: false
-                };
-                if (this.order.rooms) {
-                    this.order.rooms.forEach(item => {
-                        if (item.state === 0) {
-                            roomsState.checkInAble = true;
-                        } else if (item.state === 1) {
-                            let today = new Date();
-                            let endDate = new Date(item.endDate);
-                            if(endDate > today && !util.isSameDay(endDate, today)){
-                                roomsState.checkOutAdAble = true;
-                            }else{
-                                roomsState.checkOutAble = true;
-                            }
-                        }
-                    });
-                }
-                return roomsState;
             }
         },
         methods: {

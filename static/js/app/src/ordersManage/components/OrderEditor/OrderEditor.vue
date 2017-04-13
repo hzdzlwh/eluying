@@ -29,12 +29,14 @@
                                     </div>
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                            v-model="name"
                                            @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
                                            v-model="phone"
                                            @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
@@ -49,7 +51,7 @@
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType">
+                                        <dd-select v-model="userOriginType" :disabled="order.type !== ORDER_TYPE.COMBINATION">
                                             <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                                        :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
@@ -258,7 +260,10 @@
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
-                isLoading: false,
+                roomPrice: 0,
+                enterPrice: 0,
+                goodsPrice: 0,
+                foodPrice: 0,
                 ORDER_TYPE
             };
         },
@@ -324,31 +329,7 @@
                 return originType === -5;
             },
             totalPrice() {
-                let totalPrice = 0;
-                if (this.rooms.length > 0) {
-                    this.rooms.forEach(room => {
-                        totalPrice += Number(room.price);
-                    });
-                }
-
-                if (this.enterItems.length > 0) {
-                    this.enterItems.forEach(enter => {
-                        if (enter.id) {
-                            const enterPrice = enter.totalPrice;
-                            totalPrice += Number(enterPrice);
-                        }
-                    });
-                }
-                if (this.shopGoodsItems.length > 0) {
-                    this.shopGoodsItems.forEach(good => {
-                        if (good.id) {
-                            const goodPrice = ((good['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
-                            totalPrice += Number(goodPrice);
-                        }
-                    });
-                }
-
-                return Number(totalPrice).toFixed(2);
+                return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
             }
         },
         created() {
@@ -399,53 +380,6 @@
                     } else {
                         this.userOriginType = `${this.order.originId}~${this.order.originId}`;
                     }
-
-                    const enterItems = [];
-                    const filterEnters = this.order.playItems.filter(enter => {
-                        return enter.state !== 3;
-                    });
-                    filterEnters.forEach(item => {
-                        const enter = { ...item };
-                        enter.price = item.originPrice;
-                        enter.changeTimes = 0;
-                        enter.id = item.categoryId;
-                        enter.count = item.amount;
-                        enter.selfInventory = item.amount;
-                        enter.type = 2;
-                        enter.inventory = undefined;
-                        enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
-                        enter.totalPrice = item.totalPrice;
-                        enterItems.push(enter);
-                    });
-                    this.enterItems = JSON.parse(JSON.stringify(enterItems));
-
-                    const rooms = [];
-                    const filterRooms = this.order.rooms.filter(room => {
-                        return room.state === 0 || room.state === 1;
-                    });
-                    filterRooms.forEach(item => {
-                        const room = {};
-                        room.categoryType = item.typeId;
-                        room.roomType = item.roomId;
-                        room.originPrice = item.originPrice;
-                        room.price = Number(item.fee.toFixed(2));
-                        room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
-                        room.idCardList = item.idCardList;
-                        room.datePriceList = item.datePriceList.map(dat => {
-                            const newDate = { showInput: false };
-                            newDate.date = dat.date;
-                            newDate.dateFee = dat.dateFee;
-                            return newDate;
-                        });
-                        room.originDatePriceList = JSON.parse(JSON.stringify(room.datePriceList));
-                        room.showPriceList = false;
-                        room.showTip = false;
-                        room.state = item.state;
-                        room.roomOrderId = item.serviceId;
-                        room.changeTimes = 0;
-                        rooms.push(room);
-                    });
-                    this.rooms = rooms;
 
                     $('#orderEditor').modal('show');
                 }
@@ -767,6 +701,9 @@
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
+            },
+            handleRoomPriceChange(price) {
+                this.roomPrice = price;
             }
         }
     };
