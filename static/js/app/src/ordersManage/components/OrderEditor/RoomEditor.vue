@@ -66,8 +66,6 @@
                                     <dd v-show="!priceItem.showInput"
                                         @click="changShowInput(item, priceItem)">
                                         ¥{{priceItem.dateFee}}
-
-
                                     </dd>
                                     <dd v-show="priceItem.showInput">
                                         <input class="dd-input" style="width: 60px;" type="number"
@@ -144,6 +142,15 @@
         watch: {
             order(order) {
                 this.initRooms(order);
+            }
+        },
+        computed: {
+            totalPrice() {
+                const price = this.registerRooms.reduce((sum, room) => {
+                    return sum + room.price;
+                }, 0);
+                this.$emit('priceChange', this.price);
+                return price;
             }
         },
         methods: {

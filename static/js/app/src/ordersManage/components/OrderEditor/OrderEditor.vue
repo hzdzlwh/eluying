@@ -85,7 +85,7 @@
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
-                                    @priceChange=""/>
+                                    @priceChange="handleRoomPriceChange"/>
                         <EnterEditor v-if="this.order.type === ORDER_TYPE.COMBINATION ||this.order.type === ORDER_TYPE.ENTERTAINMENT"
                                      :order="order" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <div class="content-item">
@@ -261,7 +261,10 @@
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
-                isLoading: false,
+                roomPrice: 0,
+                enterPrice: 0,
+                goodsPrice: 0,
+                foodPrice: 0,
                 ORDER_TYPE
             };
         },
@@ -327,31 +330,7 @@
                 return originType === -5;
             },
             totalPrice() {
-                let totalPrice = 0;
-                if (this.rooms.length > 0) {
-                    this.rooms.forEach(room => {
-                        totalPrice += Number(room.price);
-                    });
-                }
-
-                if (this.enterItems.length > 0) {
-                    this.enterItems.forEach(enter => {
-                        if (enter.id) {
-                            const enterPrice = enter.totalPrice;
-                            totalPrice += Number(enterPrice);
-                        }
-                    });
-                }
-                if (this.shopGoodsItems.length > 0) {
-                    this.shopGoodsItems.forEach(good => {
-                        if (good.id) {
-                            const goodPrice = ((good['price'] * this.getItemDiscountInfo(0, good.type, this.vipDiscountDetail).discount).toFixed(2) * good.count).toFixed(2);
-                            totalPrice += Number(goodPrice);
-                        }
-                    });
-                }
-
-                return Number(totalPrice).toFixed(2);
+                return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
             }
         },
         created() {
@@ -723,6 +702,9 @@
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
+            },
+            handleRoomPriceChange(price) {
+                this.roomPrice = price;
             }
         }
     };
