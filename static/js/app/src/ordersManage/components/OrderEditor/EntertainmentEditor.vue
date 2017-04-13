@@ -74,6 +74,7 @@
 import {
     DdDatepicker
 } from 'dd-vue-component';
+import { mapActions, mapState } from 'vuex';
 import counter from '../../../common/components/counter.vue';
 import SelectProject from './selectProject.vue';
 import AJAXService from 'AJAXService';
@@ -82,10 +83,6 @@ import event from '../../event';
 import util from '../../../common/util';
 export default {
     props: {
-        enterList: {
-            type: Array,
-            default: []
-        },
         checkState: {
             type: String,
             default: ''
@@ -116,6 +113,9 @@ export default {
         DdDatepicker,
         counter,
         SelectProject
+    },
+    computed: {
+        ...mapState({ enterList: 'enterList' })
     },
     methods: {
         addItem() {
