@@ -326,7 +326,8 @@ export default {
                 const dataobject = {
                     orderType: - 1,
                     type: 1,
-                    origin: 1
+                    origin: 1,
+                    originRelatedId: this.detailData.cid
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
@@ -345,17 +346,26 @@ export default {
                             }));
                         } else {
                             const moreChannel = [];
-                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                            if (date.ledgerFee < 0) {
+                                date.ledgerFee = - date.ledgerFee;
+                                this.check.type = 3;
                                 moreChannel.push({
                                     id: - 15,
-                                    name: '企业扣费'
+                                    name: '退款至企业'
                                 });
-                            }
-                            if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
-                                moreChannel.push({
-                                    id: - 14,
-                                    name: '企业挂帐'
-                                });
+                            } else {
+                                if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                    moreChannel.push({
+                                        id: - 15,
+                                        name: '企业扣费'
+                                    });
+                                }
+                                if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
+                                    moreChannel.push({
+                                        id: - 14,
+                                        name: '企业挂帐'
+                                    });
+                                }
                             }
                             this.check.chekcType = moreChannel.concat(res.data.list);
                         }
