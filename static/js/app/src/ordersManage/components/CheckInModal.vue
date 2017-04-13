@@ -63,15 +63,16 @@
     import util from 'util';
     import CheckInPerson from './CheckInPerson.vue';
     import { mapState } from 'vuex';
+    import event from '../event';
     export default{
-        data(){
-            return{}
+        data() {
+            return {};
         },
         computed: {
             ...mapState(['roomBusinessInfo']),
             roomsList() {
                 if (this.roomBusinessInfo.roomOrderInfoList) {
-                    let rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
+                    const rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
                         return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                     });
                     rooms.forEach(item => {
@@ -81,7 +82,7 @@
                 }
             },
             finalPrice() {
-                let price  = 0;
+                let price = 0;
                 if (this.roomBusinessInfo.roomOrderInfoList) {
                     this.roomsList.forEach(item => {
                         if (item.selected) {
@@ -96,7 +97,7 @@
                 return price;
             }
         },
-        methods:{
+        methods: {
             hideModal() {
                 $('#checkIn').modal('hide');
             },
@@ -110,7 +111,7 @@
                             modal.somethingAlert('一间房最多添加20个入住人');
                             return false;
                         }
-                        if(item.idCardList){
+                        if (item.idCardList) {
                             item.idCardList.push(obj);
                         } else {
                             item.idCardList = [];
@@ -127,7 +128,7 @@
                 });
             },
             finishCheckIn() {
-                let selectedRoom = this.roomsList.filter(room => { return room.selected });
+                const selectedRoom = this.roomsList.filter(room => { return room.selected; });
                 if (selectedRoom.length <= 0) {
                     modal.somethingAlert('请选择入住的房间！');
                     return false;
@@ -143,10 +144,10 @@
                     }
                 });
                 if (!roomPersonValid) {
-                    modal.somethingAlert("请完善入住人信息！");
+                    modal.somethingAlert('请完善入住人信息！');
                     return false;
                 }
-                let subOrderIds = [];
+                const subOrderIds = [];
                 if (this.roomBusinessInfo.roomOrderInfoList) {
                     this.roomsList.forEach(item => {
                         if (item.selected) {
@@ -162,21 +163,22 @@
                             idCardList: room.idCardList,
                             roomId: room.roomId,
                             roomOrderId: room.roomOrderId
-                        }
+                        };
                     }
                 });
                 const business = {
                     functionType: 1,
                     type: 0,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms.filter((room) => { return room })
+                    rooms: rooms.filter((room) => { return room; })
                 };
                 $('#checkIn').modal('hide');
                 this.$emit('showCashier', { type: 'checkIn', business });
+                event.$emit('showCashier', { type: 'checkIn', business });
             }
         },
-        components:{
+        components: {
             CheckInPerson
         }
-    }
+    };
 </script>

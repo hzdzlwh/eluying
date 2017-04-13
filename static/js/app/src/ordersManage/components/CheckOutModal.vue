@@ -68,12 +68,13 @@
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
     import { mapState } from 'vuex';
+    import event from '../event';
     export default{
-        data(){
-            return{
+        data() {
+            return {
                 penalty: undefined,
                 isLoading: false
-            }
+            };
         },
         computed: {
             ...mapState(['roomBusinessInfo', 'orderDetail']),
@@ -137,8 +138,8 @@
                 return sum;
             }
         },
-        methods:{
-            hideModal(){
+        methods: {
+            hideModal() {
                 this.penalty = undefined;
                 $('#checkOut').modal('hide');
             },
@@ -154,15 +155,15 @@
                             idCardList: room.idCardList,
                             roomId: room.roomId,
                             roomOrderId: room.roomOrderId
-                        }
+                        };
                     }
                 });
-                const　filterRooms = rooms.filter(room => { return room });
+                const　filterRooms = rooms.filter(room => { return room; });
                 if (filterRooms.length <= 0) {
                     modal.somethingAlert('请选择房间！');
                     return false;
                 }
-                const business =  {
+                const business = {
                     type: this.roomBusinessInfo.businessType,
                     orderId: this.roomBusinessInfo.orderId,
                     rooms: filterRooms
@@ -174,7 +175,7 @@
                     return false;
                 }
                 this.isLoading = true;
-                if (this.deposit === 0 && (this.totalPrice+ (this.penalty || 0) - this.payed) === 0) {
+                if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
@@ -186,6 +187,8 @@
                                 modal.somethingAlert('退房成功');
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderDetail.orderId);
+                                event.$emit('refreshView');
+                                event.$emit('showOrder', this.orderDetail.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -196,9 +199,10 @@
                     business.functionType = 1;
                     this.hideModal();
                     this.$emit('showCashier', { type: 'checkOut', business });
+                    event.$emit('showCashier', { type: 'checkOut', business });
                 }
             }
         },
-        components:{}
-    }
+        components: {}
+    };
 </script>

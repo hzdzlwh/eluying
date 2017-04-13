@@ -195,18 +195,18 @@
                         params.orderId = this.business.orderDetail.orderId;
                         params.orderType = this.business.orderDetail.orderType;
                     } else {
-                        params.orderId = this.orderDetail.orderType === - 1
+                        params.orderId = this.orderDetail.orderType === -1
                                          ? this.orderDetail.orderId
                                          : this.orderDetail.subOrderId;
                         params.orderType = this.orderDetail.orderType;
                     }
                     Promise.all([this.getOrderPayment(), this.getData(params)]).then(() => {
                         if (this.orderState && this.isCompany && this.companyCityLedger) {
-                            this.payChannels = [{ channelId: - 14, name: '企业挂帐' }, { channelId: - 15, name: '企业扣款' }].concat(this.payChannels);
+                            this.payChannels = [{ channelId: -14, name: '企业挂帐' }, { channelId: -15, name: '企业扣款' }].concat(this.payChannels);
                         } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
-                            this.payChannels = [{ channelId: - 15, name: '企业扣款' }].concat(this.payChannels);
+                            this.payChannels = [{ channelId: -15, name: '企业扣款' }].concat(this.payChannels);
                         } else if (!this.orderState && this.companyCityLedger) {
-                            this.payChannels = [{ channelId: - 15, name: '退款至企业' }].concat(this.payChannels);
+                            this.payChannels = [{ channelId: -15, name: '退款至企业' }].concat(this.payChannels);
                         }
                         $('#cashier').modal({ backdrop: 'static' });
                     });
@@ -236,14 +236,14 @@
                     let arr = this.payChannels;
                     this.payments.forEach((pay, num) => {
                         const id = pay.payChannelId;
-                        if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && (num !== index)) {
+                        if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
                             own = true;
                         }
                     });
                     if (own) {
                         arr = this.payChannels.filter(item => {
                             const index = item.channelId;
-                            return index !== - 6 && index !== - 7 && index !== - 11 && index !== - 12;
+                            return index !== -6 && index !== -7 && index !== -11 && index !== -12;
                         });
                     }
                     return arr;
@@ -260,7 +260,7 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
-                    const orderId = this.orderDetail.orderType === - 1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
+                    const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
                     const subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
@@ -383,7 +383,7 @@
                     this.disabledBtn = false;
                     return false;
                 }
-                const receiveMoney = this.payments.reduce((a,b) => { return a + Number(b.fee) }, 0);
+                const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                 if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney)) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
@@ -443,7 +443,7 @@
                 } else {
                     params = {
                         orderId: this.orderDetail.orderId,
-                        orderType: - 1,
+                        orderType: -1,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(this.business)
                     };
@@ -465,10 +465,10 @@
                 let payWithCompany = 0;
                 this.payments.forEach(pay => {
                     const id = pay.payChannelId;
-                    if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
+                    if (id === -6 || id === -7 || id === -11 || id === -12) {
                         payWithAlipay += Number(pay.fee);
                     }
-                    if (id === - 14 || id === - 15) {
+                    if (id === -14 || id === -15) {
                         payWithCompany += Number(pay.fee);
                     }
                 });

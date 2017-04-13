@@ -138,13 +138,13 @@
                 type: Boolean
             }
         },
-        data(){
-            return{
+        data() {
+            return {
                 authCode: '',
                 inputFocus: false
-            }
+            };
         },
-        computed:{
+        computed: {
             ...mapState(['orderDetail']),
             operator() {
                 if (this.type === 'register') {
@@ -154,7 +154,7 @@
                 }
             }
         },
-        methods:{
+        methods: {
             hideModal() {
                 this.authCode = '';
                 this.$emit('hide');
@@ -162,28 +162,28 @@
                 this.$emit('showCashier', { type: this.type, business: this.business });
             },
             payMoney() {
-                let params = JSON.parse(JSON.stringify(this.params));
+                const params = JSON.parse(JSON.stringify(this.params));
                 params.authCode = this.authCode;
                 AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                     .then(result => {
-                        if(result.code === 1) {
-                            let status = result.data.status;
-                            let tradeNum = result.data.tradeNum;
+                        if (result.code === 1) {
+                            const status = result.data.status;
+                            const tradeNum = result.data.tradeNum;
                             if (status === 0) {
                                 modal.somethingAlert('收银成功');
                                 this.$emit('hide');
                                 this.authCode = '';
                                 $('#payWithCode').modal('hide');
-                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('refreshView');
                                 setTimeout(() => {
                                     this.$emit('showOrder', orderId);
                                 }, 2500);
                             } else if (status === 1) {
-                                modal.somethingAlert("收款失败");
+                                modal.somethingAlert('收款失败');
                                 this.hideModal();
                             } else if (status === 2) {
-                                let inter = setInterval(() => {
+                                const inter = setInterval(() => {
                                     AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
                                         tradeNum: tradeNum
                                     }, (result1) => {
@@ -197,13 +197,13 @@
                                                 this.$emit('hide');
                                                 this.authCode = '';
                                                 $('#payWithCode').modal('hide');
-                                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                                const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                                 this.$emit('refreshView');
                                                 setTimeout(() => {
                                                     this.$emit('showOrder', orderId);
                                                 }, 2500);
                                             } else if (status1 === 1) {
-                                                modal.somethingAlert("收款失败");
+                                                modal.somethingAlert('收款失败');
                                                 this.hideModal();
                                             }
                                         }
@@ -221,10 +221,10 @@
                 $('.payWithCodeModal-codeNum').focus();
             });
         },
-        watch:{
-            show(val){
+        watch: {
+            show(val) {
                 if (val) {
-                    $('#payWithCode').modal({backdrop: 'static'});
+                    $('#payWithCode').modal({ backdrop: 'static' });
                 } else {
                     this.$emit('hide');
                     this.authCode = '';
@@ -232,5 +232,5 @@
                 }
             }
         }
-    }
+    };
 </script>
