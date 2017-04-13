@@ -25,9 +25,9 @@
                                   @click="showCombinationOrder">查看组合订单</span>
                             <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
-                                  v-if="order.orderState === 2 || order.orderState === 3"
+                                  v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
-                            <span class="header-tools" v-if="order.orderState === 2" @click="">取消订单</span>
+                            <span class="header-tools" v-if="order.cancelAble" @click="">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -174,22 +174,24 @@
                     </div>
                     <div class="roomModals-footer">
                         <div style="width: 100%;">
-                            <div class="order-btns" v-if="false">
-                                <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
-                                     @click="checkInOrCheckOut(0)">
-                                    办理入住
-                                </div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
-                                     v-if="getRoomsState.checkOutAdAble">
-                                    提前退房
-                                </div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
-                                     v-if="getRoomsState.checkOutAble">
-                                    办理退房
-                                </div>
+                            <div class="order-btns">
+                                <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
+                                         @click="checkInOrCheckOut(0)">
+                                        办理入住
+                                    </div>
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(2)"
+                                         v-if="getRoomsState.checkOutAdAble">
+                                        提前退房
+                                    </div>
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="checkInOrCheckOut(1)"
+                                         v-if="getRoomsState.checkOutAble">
+                                        办理退房
+                                    </div>
+                                </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
-                                    收银
+                                    结账
                                 </div>
                             </div>
                         </div>
@@ -577,7 +579,7 @@
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
-            padding: 0 0 56px 0;
+            padding: 0;
             margin-top: 0 !important;
         }
     }
@@ -1072,6 +1074,38 @@
                             }
                         ];
                 }
+            },
+            getRoomsState() {
+                const roomsState = {
+                    checkOutAdAble: false,
+                    checkOutAble: false,
+                    checkInAble: false
+                };
+
+                function checkState(room) {
+                    if (room.state === 0) {
+                        roomsState.checkInAble = true;
+                    } else if (room.state === 1) {
+                        const today = new Date();
+                        const endDate = new Date(room.checkOutDate || room.endDate);
+                        if (endDate > today && !util.isSameDay(endDate, today)) {
+                            roomsState.checkOutAdAble = true;
+                        } else {
+                            roomsState.checkOutAble = true;
+                        }
+                    }
+                }
+
+                if (this.order.rooms) {
+                    this.order.rooms.forEach(item => {
+                        checkState(item);
+                    });
+                }
+
+                const room = this.order.roomInfo;
+                room && checkState(room);
+
+                return roomsState;
             }
         },
         methods: {
