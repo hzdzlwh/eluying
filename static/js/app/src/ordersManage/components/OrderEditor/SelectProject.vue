@@ -23,7 +23,7 @@
         </div>
     </div>
 </template>
-<style scoped lang="sass" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss">
 @import "~dd-common-css/src/variables";
 #selectModal {
     z-index: 1062;
@@ -129,7 +129,7 @@ export default {
         selectDate: {
             type: Array,
             default: function() {
-                return []
+                return [];
             }
         }
     },
@@ -137,23 +137,23 @@ export default {
         return {
             entertainmentIdActive: this.selectDate[0],
             entertainmentListActive: this.selectDate[0].categoryList
-        }
+        };
     },
     computed: {},
     methods: {
         changelist(list) {
-            this.entertainmentListActive = list.categoryList
-            this.entertainmentIdActive = list
+            this.entertainmentListActive = list.categoryList;
+            this.entertainmentIdActive = list;
         },
         hideModal() {
-            this.$emit('close', false)
+            this.$emit('close', false);
             $('#selectModal').modal('hide');
         },
         selectprogram(item) {
             // let data = this.entertainmentIdActive
             // data.categoryList = item
-            this.$emit('selectProjectDate', item)
-            this.hideModal()
+            this.$emit('selectProjectDate', item);
+            this.hideModal();
         }
     },
     watch: {
@@ -161,11 +161,11 @@ export default {
             if (val) {
                 $('#selectModal').modal({
                     backdrop: 'static'
-                })
+                });
             } else {
                 $('#selectModal').modal('hide');
             }
         }
     }
-}
+};
 </script>
