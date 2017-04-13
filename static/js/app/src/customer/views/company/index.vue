@@ -230,15 +230,15 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span >
-                        < span onClick = {
-                            () => this.openDetailDialog(row, 0, 1)
-                        } > 详情 < /span> / < span onClick = {
-                            () => this.openDetailDialog(row, 0, 2)
-                        } > 查单 < /span> {
-                        (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
-                            () => this.openDetailDialog(row, 1, 2)
-                        } > / 结算 < /span > : ''
+                    < span >
+                    < span onClick = {
+                        () => this.openDetailDialog(row, 0, 1)
+                    } > 详情 < /span> / < span onClick = {
+                        () => this.openDetailDialog(row, 0, 2)
+                    } > 查单 < /span> {
+                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                        () => this.openDetailDialog(row, 1, 2)
+                    } > / 结算 < /span > : ''
                 } < /span >,
                 width: '140px'
             }],
@@ -325,18 +325,39 @@ export default {
             if (type) {
                 const dataobject = {
                     orderType: - 1,
-                    type: 1
+                    type: 1,
+                    origin: 1
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
                         if (checkType === 1) {
-                            this.check.chekcType = res.data.list.filter(function(element) {
+                            let moreChannel = [];
+                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                moreChannel = [{
+                                    id: - 15,
+                                    name: '退款至企业'
+                                }];
+                            }
+                            this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
                                 const id = element.id;
                                 return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
-                            });
+                            }));
                         } else {
-                            this.check.chekcType = res.data.list;
+                            const moreChannel = [];
+                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                moreChannel.push({
+                                    id: - 15,
+                                    name: '企业扣费'
+                                });
+                            }
+                            if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
+                                moreChannel.push({
+                                    id: - 14,
+                                    name: '企业挂帐'
+                                });
+                            }
+                            this.check.chekcType = moreChannel.concat(res.data.list);
                         }
                         this.check.show = true;
                         this.check.data = {

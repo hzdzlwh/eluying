@@ -270,7 +270,7 @@
     const OrdersUrls = {
         vip: '/vipUser/getVipUserOrders',
         company: '/contractCompany/getCompanyOrderList',
-        nonvip: '/customer/getCustomerList'
+        nonvip: '/customer/getCustomerOrders'
     };
     const OutputUrl = {
         vip: '/vipUser/vipUserOrdersExport',
@@ -333,9 +333,6 @@
             },
             endTime() {
                 this.getOrders();
-            },
-            id() {
-                this.getOrders();
             }
         },
         components: {
@@ -394,7 +391,7 @@
                     startTime: this.startTime,
                     endTime: this.endTime,
                     state: this.state,
-                    phone: this.phone,
+                    phone: this.id,
                     pageNo: this.pageNo,
                     keyword: this.keyword,
                     vipUserId: this.id,
@@ -407,6 +404,7 @@
                 this.getOrders();
             },
             show() {
+                this.getOrders();
                 this.innerTab = this.tab;
                 $('#detailModal').modal('show');
             },

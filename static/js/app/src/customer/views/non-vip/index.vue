@@ -9,7 +9,7 @@
         <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
-                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出Excel</a></span>
+                        <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出明细</a></span>
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@ export default {
                         < span > {
                         this.contral.VIP_EDIT_ID ? < span onClick = {
                             () => this.openDetailDialog(row, 1)
-                        }> 加入会员 /</span> : '-' }
+                        }> 加入会员 /</span> : '' }
                         <span onClick = {
                         () => this.openDetailDialog(row, 0)
                 } > 查单 </span></span>
@@ -210,7 +210,9 @@ export default {
                 this.formdata = {
                     name: date.name,
                     phone: date.phone,
-                    customerId: date.customerId
+                    customerId: date.customerId,
+                    vipLevelId: ''
+
                 };
                 $('#vipForm').modal('show');
                 this.formvisible = true;
@@ -234,12 +236,6 @@ export default {
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
         },
-        // getParams() {
-        //     const obj = {
-        //         keyword: this.search
-        //     };
-        //     return obj;
-        // },
         addForm: function() {
             // $('#vipForm').modal('show');
                 // this.formvisible = true
