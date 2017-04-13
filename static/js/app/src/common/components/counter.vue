@@ -59,6 +59,10 @@
             type: {
                 type: Number,
                 default: 0
+            },
+            orderId: {
+                type: Number,
+                default: -1
             }
         },
         data(){
@@ -73,14 +77,22 @@
                     return;
                 }
                 this.value -= this.step;
-                this.$emit('numChange', this.type, this.id, this.value / this.step);
+                if (this.orderId === -1) {
+                    this.$emit('numChange', this.type, this.id, this.value / this.step);
+                } else {
+                    this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
+                }
             },
             increaseNum(){
                 if (this.value >= this.max) {
                     return;
                 }
                 this.value += this.step;
-                this.$emit('numChange', this.type, this.id, this.value / this.step);
+                if (this.orderId === -1) {
+                    this.$emit('numChange', this.type, this.id, this.value / this.step);
+                } else {
+                    this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
+                }
             }
         },
         watch:{

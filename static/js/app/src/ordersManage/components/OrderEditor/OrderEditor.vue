@@ -81,6 +81,7 @@
                         <!-- header end -->
                         <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION" :rooms="rooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
                         <EnterEditor :enterItem="enterItems" :enterList="categories" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"/>
+                        <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange"></ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -227,6 +228,7 @@
     import RoomEditor from './RoomEditor.vue';
     import util from '../../../common/util';
     import EnterEditor from './EntertainmentEditor.vue';
+    import ShopEditor from './ShopEditor.vue';
     export default{
         name: 'OrderEditor',
         data() {
@@ -277,7 +279,8 @@
             DdGroupOption,
             DdOption,
             RoomEditor,
-            EnterEditor
+            EnterEditor,
+            ShopEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),

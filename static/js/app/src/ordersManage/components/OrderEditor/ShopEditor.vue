@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="shopEditor">
         <div class="content-item">
             <p class="content-item-title">
                 <span>商超信息</span>
@@ -8,71 +8,86 @@
                     添加项目
                 </span>
             </p>
-<!--
-            <div v-if="order.orderState && showOrder" class="items">
+            <div v-if="order.orderState" class="items">
                 <div class="shop-item"
                      :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
                      style="align-items: stretch;flex-direction: column"
-                     v-for="item in filterShopList">
+                     v-for="item in editShopList">
                     <div class="orderDetailModal-shop-item">
                         <span class="shop-icon"></span>
                         <div class="item-content">
-                            <span class="shop-time small-font">{{item.time.slice(5, 16)}}</span>
-                            <div style="margin-right: 81px">
-                                <label class="label-text">小计</label>
-                                <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                                <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
+                            <span class="shop-time small-font">{{item.time.slice(0, 16)}}</span>
+                        </div>
+                    </div>
+                    <div class="item-content" v-for="(option, index) in item['items']">
+                        <div class="shop-item-content">
+                            <input class="dd-input shopEditor-shopName" :value="option.name" disabled />
+                            <div class="shop-item-count">
+                                <label>数量</label>
+                                <counter @numChange="handleNumChange" :num="option.amount" :id="index" :type="3" :orderId="option.goodsOrderId">
+                                </counter>
+                                <p class="shop-item-price">
+                                    <label>小计</label>
                                     <span>
-                                        原价
-                                        <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
-                                    </span>
-                                    <span class="discount-num">
-                                        {{ item.items[0].showDiscount }}
-                                    </span>
+                                    ¥{{((option['originPrice'] * getItemDiscountInfo(option.type, vipDiscountDetail).discount).toFixed(2) * option.amount).toFixed(2)}}
                                 </span>
+                                </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="item-content" v-for="option in item['items']">
-                        <span style="padding-left: 32px; width: 120px;">{{option.name}}</span>
-                        <span>x{{option.amount}}</span>
-                        <span style="margin-right: 304px;width: 120px; text-align: right">{{`¥${(option.price * option.amount).toFixed(2)}`}}</span>
-                    </div>
-                </div>
-            </div>
--->
-            <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in shopGoodsItems">
-                    <span class="shop-icon"></span>
-                    <div class="shop-item-content">
-                        <input class="dd-input" :value="item.name" disabled />
-                        <div class="shop-item-count">
-                            <label>数量</label>
-                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="3">
-                            </counter>
-                            <p class="shop-item-price">
-                                <label>小计</label>
-                                <span>
-                                    ¥{{((item['price'] * getItemDiscountInfo(item.type, vipDiscountDetail).discount).toFixed(2) * item.count).toFixed(2)}}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                    <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
-                    <span class="discount-info"
-                          style="top:24px"
-                          v-if="vipDiscountDetail.vipDetail
-                          && getItemDiscountInfo(item.type, vipDiscountDetail).discount < 1">
+                        <span class="delete-icon" @click="deleteItem(index, option.goodsOrderId)"></span>
+                        <span class="discount-info"
+                              style="top:24px"
+                              v-if="vipDiscountDetail.vipDetail
+                              && getItemDiscountInfo(option.type, vipDiscountDetail).discount < 1">
                             <span>
                                 原价
                                 <span class="origin-price">
-                                    ¥{{ (item['price'] * item.count).toFixed(2) }}
+                                    ¥{{ (option['originPrice'] * option.amount).toFixed(2) }}
                                 </span>
                             </span>
                             <span class="discount-num">
-                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(item.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
+                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
                             </span>
-                    </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="shop-item"
+                     style="align-items: stretch;flex-direction: column"
+                     v-if="shopGoodsItems.length > 0">
+                    <div class="orderDetailModal-shop-item">
+                        <span class="shop-icon"></span>
+                    </div>
+                    <div class="item-content" v-for="(option, index) in shopGoodsItems">
+                        <div class="shop-item-content">
+                            <input class="dd-input shopEditor-shopName" :value="option.name" disabled />
+                            <div class="shop-item-count">
+                                <label>数量</label>
+                                <counter @numChange="handleNumChange" :num="option.amount" :id="index" :type="3">
+                                </counter>
+                                <p class="shop-item-price">
+                                    <label>小计</label>
+                                    <span>
+                                    ¥{{((option['originPrice'] * getItemDiscountInfo(option.type, vipDiscountDetail).discount).toFixed(2) * option.amount).toFixed(2)}}
+                                </span>
+                                </p>
+                            </div>
+                        </div>
+                        <span class="delete-icon" @click="deleteItem(index, false)"></span>
+                        <span class="discount-info"
+                              style="top:24px"
+                              v-if="vipDiscountDetail.vipDetail
+                          && getItemDiscountInfo(option.type, vipDiscountDetail).discount < 1">
+                            <span>
+                                原价
+                                <span class="origin-price">
+                                    ¥{{ (option['originPrice'] * option.amount).toFixed(2) }}
+                                </span>
+                            </span>
+                            <span class="discount-num">
+                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
+                            </span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,21 +101,22 @@
     </div>
 </template>
 <style lang="scss">
+    .shopEditor {
+        .item-content {
+            margin-bottom: 10px;
+        }
+        .shopEditor-shopName {
+            margin-left: 32px;
+        }
+    }
 </style>
 <script>
+    import { mapState } from 'vuex';
     import counter from '../../../common/components/counter.vue';
     import selectGoods from './SelectGoods.vue';
     import modal from 'modal';
     export default{
         props: {
-            goods: {
-                type: Array,
-                default: function() { return []; }
-            },
-            shopList: {
-                type: Array,
-                default: function() { return []; }
-            },
             vipDiscountDetail: {
                 type: Object,
                 default: function() { return {}; }
@@ -109,8 +125,12 @@
         data() {
             return {
                 goodsSelectModalShow: false,
-                shopGoodsItem: JSON.parse(JSON.stringify(this.goods))
+                shopGoodsItems: [],
+                editShopList: {}
             };
+        },
+        computed: {
+            ...mapState({ order: 'orderDetail', shopList: 'shopList' })
         },
         methods: {
             // 添加商超项目
@@ -136,14 +156,15 @@
                 const goodsList = data;
                 goodsList.forEach(good => {
                     good.type = 3;
+                    good.originPrice = good.p;
                     good.price = good.p;
                     good.name = good.n;
-                    good.count = good.num;
+                    good.amount = good.num;
                 });
                 this.shopGoodsItems.forEach(item => {
                     goodsList.forEach((good, index) => {
                         if (good.id === item.id) {
-                            item.count += good.count;
+                            item.amount += good.amount;
                             goodsList.splice(index, 1);
                         }
                     });
@@ -152,9 +173,11 @@
                 this.$emit('change', this.shopGoodsItems);
             },
             // 处理商超项目数量变化事件
-            handleNumChange(type, tag, num) {
-                if (type === 3) {
-                    this.shopGoodsItems.forEach((item, index) => { item.count = (index === tag) ? num : item.count; });
+            handleNumChange(type, tag, num, orderId = -1) {
+                if (orderId === -1) {
+                    this.shopGoodsItems.forEach((item, index) => { item.amount = (index === tag) ? num : item.amount; });
+                } else {
+                    this.editShopList[orderId].items.forEach((item, index) => { item.amount = (index === tag) ? num : item.amount; });
                 }
             },
             /**
@@ -174,11 +197,46 @@
                 }
 
                 return item;
+            },
+            deleteItem(index, shopOrderId) {
+                if (!shopOrderId) {
+                    this.shopGoodsItems.splice(index, 1);
+                } else {
+                    if (this.editShopList[shopOrderId].items.length <= 1) {
+                        modal.alert('已经是最后一个项目了， 不允许删除！');
+                        return false;
+                    }
+                    this.editShopList[shopOrderId].items.splice(index, 1);
+                }
             }
         },
         components: {
             counter,
             selectGoods
+        },
+        watch: {
+            order(newVal) {
+                const shopList = {};
+                if (newVal.pcGoodsItems) {
+                    newVal.pcGoodsItems.forEach(item => {
+                        if (shopList[item.goodsOrderId]) {
+                            shopList[item.goodsOrderId]['items'].push(item);
+                        } else {
+                            shopList[item.goodsOrderId] = {};
+                            shopList[item.goodsOrderId]['time'] = item.date;
+                            shopList[item.goodsOrderId]['items'] = [];
+                            shopList[item.goodsOrderId]['items'].push(item);
+                        }
+                    });
+                } else if (this.order.goodsOrderId) {
+                    const orderId = this.order.goodsOrderId;
+                    shopList[orderId] = {};
+                    shopList[orderId]['time'] = this.order.creationTime;
+                    shopList[orderId]['items'] = this.order.itemList;
+                    shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
+                }
+                this.editShopList = shopList;
+            }
         }
     };
 </script>
