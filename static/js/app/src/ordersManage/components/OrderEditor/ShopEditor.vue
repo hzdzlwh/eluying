@@ -8,7 +8,7 @@
                     添加项目
                 </span>
             </p>
-            <div v-if="order.orderState" class="items">
+            <div v-if="!!(order.orderState || order.state)" class="items">
                 <div class="shop-item"
                      :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
                      style="align-items: stretch;flex-direction: column"
@@ -178,17 +178,33 @@
                     good.price = good.p;
                     good.name = good.n;
                     good.amount = good.num;
+                    // 判断是单个订单，还是组合订单
+                    if (this.order.goodsOrderId) {
+                        good.goodsOrderId = this.order.goodsOrderId;
+                    }
                 });
-                this.shopGoodsItems.forEach(item => {
-                    goodsList.forEach((good, index) => {
-                        if (good.id === item.id) {
+                // 判断是单个商超订单，还是组合订单
+                if (this.order.goodsOrderId) {
+                    const orderId = this.order.goodsOrderId;
+                    this.editShopList[orderId]['items'].forEach(item => {
+                        goodsList.forEach((good, index) => {
                             item.amount += good.amount;
                             goodsList.splice(index, 1);
-                        }
+                        });
                     });
-                });
-                this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
-                this.$emit('change', this.shopGoodsItems);
+                    this.editShopList[orderId]['items'] = this.editShopList[orderId]['items'].concat(goodsList);
+                } else {
+                    this.shopGoodsItems.forEach(item => {
+                        goodsList.forEach((good, index) => {
+                            if (good.id === item.id) {
+                                item.amount += good.amount;
+                                goodsList.splice(index, 1);
+                            }
+                        });
+                    });
+                    this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
+                }
+                // this.$emit('change', this.shopGoodsItems);
             },
             // 处理商超项目数量变化事件
             handleNumChange(type, tag, num, orderId = -1) {
@@ -246,11 +262,14 @@
                             shopList[item.goodsOrderId]['items'].push(item);
                         }
                     });
-                } else if (this.order.goodsOrderId) {
-                    const orderId = this.order.goodsOrderId;
+                } else if (newVal.goodsOrderId) {
+                    const orderId = newVal.goodsOrderId;
                     shopList[orderId] = {};
                     shopList[orderId]['time'] = this.order.creationTime;
                     shopList[orderId]['items'] = this.order.itemList;
+                    shopList[orderId]['items'].map(good => {
+                        good.goodsOrderId = orderId;
+                    });
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
                 this.editShopList = shopList;

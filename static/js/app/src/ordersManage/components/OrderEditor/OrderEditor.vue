@@ -80,14 +80,22 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION"
+                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange=""/>
-                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""/>
-                        <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""></ShopEditor>
+                        <CateEditor></CateEditor>
+                        <EnterEditor :order="order"
+                                     v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT || this.order.type === ORDER_TYPE.COMBINATION"
+                                     :vipDiscountDetail="vipDiscountDetail"
+                                     @change="handleRoomChange"
+                                     @priceChange=""/>
+                        <ShopEditor v-if="this.order.type === ORDER_TYPE.RETAIL || this.order.type === ORDER_TYPE.COMBINATION"
+                                    :vipDiscountDetail="vipDiscountDetail"
+                                    @change="handleRoomChange"
+                                    @priceChange="" />
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -235,6 +243,7 @@
     import util from '../../../common/util';
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
+    import CateEditor from './CateEditor.vue';
     export default{
         name: 'OrderEditor',
         data() {
@@ -289,7 +298,8 @@
             DdOption,
             RoomEditor,
             EnterEditor,
-            ShopEditor
+            ShopEditor,
+            CateEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
