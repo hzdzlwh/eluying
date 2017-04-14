@@ -239,7 +239,7 @@ export default {
                     (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
-                } < /span >,
+            } < /span >,
                 width: '140px'
             }],
             datalist: [],
@@ -332,9 +332,17 @@ export default {
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
+                        let moreChannel = [];
+                        if (checkType === 0) {
+                            if (res.data.contractCompany.companyPay) {
+                                moreChannel.push({
+                                    id: - 15,
+                                    name: '企业扣费'
+                                });
+                            }
+                        }
                         if (checkType === 1) {
-                            let moreChannel = [];
-                            if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                            if (res.data.contractCompany.companyPay) {
                                 moreChannel = [{
                                     id: - 15,
                                     name: '退款至企业'
@@ -344,8 +352,8 @@ export default {
                                 const id = element.id;
                                 return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
                             }));
-                        } else {
-                            const moreChannel = [];
+                        }
+                        if (checkType === 2) {
                             if (date.ledgerFee < 0) {
                                 date.ledgerFee = - date.ledgerFee;
                                 this.check.type = 3;
@@ -354,21 +362,15 @@ export default {
                                     name: '退款至企业'
                                 });
                             } else {
-                                if (res.data.contractCompany && res.data.contractCompany.companPay) {
+                                if (res.data.contractCompany.companyPay) {
                                     moreChannel.push({
                                         id: - 15,
                                         name: '企业扣费'
                                     });
                                 }
-                                if (res.data.contractCompany && res.data.contractCompany.companyCityLedger) {
-                                    moreChannel.push({
-                                        id: - 14,
-                                        name: '企业挂帐'
-                                    });
-                                }
                             }
-                            this.check.chekcType = moreChannel.concat(res.data.list);
                         }
+                        this.check.chekcType = moreChannel.concat(res.data.list);
                         this.check.show = true;
                         this.check.data = {
                             rechargeFee: date.rechargeFee,
