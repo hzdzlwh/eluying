@@ -11,7 +11,7 @@
                 <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orderType || item.state === 0 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
-                        <div >
+                        <div>
                             <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0" />
                         </div>
                         <!-- <span v-if="item.usedAmount > 0">{{item.name}}</span> -->
@@ -99,22 +99,24 @@ export default {
     },
     data() {
         return {
+            lastEnterItem: {},
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: -1,
-            enterItems: JSON.parse(JSON.stringify(this.order.playItems)) || this.getplayItems(this.order),
+            enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0 //1组合订单，0子订单
         }
     },
     watch: {
         order: {
             handler(c, o) {
-                this.enterItems = this.order.playItems ? JSON.parse(JSON.stringify(this.order.playItems)) : this.getplayItems(this.order);
+                this.enterItems = this.getplayItems()
                 this.orderType = this.order.playItems ? 1 : 0
             },
             deep: true
         }
     },
     created() {
+        // 确认按钮事件
         event.$on('submitOrder', this.enterItems);
     },
     beforeDestroy() {
@@ -130,32 +132,86 @@ export default {
             enterList: 'enterList'
         }),
         totalPrice() {
-            let totalprice = 0 ;
-            this.enterItems.filter(function (el) {
-                return el.state === 0 || el.state === undefined
-            })
-            .forEach(function (el) {
-                totalprice += Number(el.totalPrice)
-            })
-            this.$emit('priceChange',totalprice)
+            let totalprice = 0;
+            this.enterItems.filter(function(el) {
+                // 统计预定中和新加项目的总价
+                    return el.state === 0 || el.state === undefined
+                })
+                .forEach(function(el) {
+                    totalprice += Number(el.totalPrice)
+                })
+            this.$emit('priceChange', totalprice)
             return totalprice
         }
     },
     methods: {
-        getplayItems(enterItems) {
-            return [{
-                name: enterItems.customerName,
-                usedAmount: enterItems.bookNum - enterItems.enableAmount,
-                unitTime: enterItems.chargeUnitTime,
-                chargeUnit: enterItems.chargeMode,
-                timeAmount: enterItems.timeAmount,
-                chargeUnit: enterItems.chargeUnit,
-                chargeUnitTime: enterItems.chargeUnitTime,
-                date: enterItems.date,
-                count: enterItems.bookNum,
-                totalPrice: enterItems.totalPrice,
-                price: enterItems.price
-            }]
+        // 组合订单和子订单key统一化处理
+        getplayItems() {
+            let enterItems = [];
+            let filterEnters = []
+            if (this.order.playItems) {
+                filterEnters = this.order.playItems.filter(enter => {
+                    return enter.state !== 3;
+                });
+                filterEnters.forEach(item => {
+                    const enter = {...item
+                    };
+                    enter.price = item.originPrice;
+                    enter.changeTimes = 0;
+                    enter.id = item.categoryId;
+                    enter.count = item.amount;
+                    enter.selfInventory = item.amount;
+                    enter.type = 2;
+                    enter.inventory = undefined;
+                    enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
+                    enter.totalPrice = item.totalPrice;
+                    enterItems.push(enter);
+                });
+                return (JSON.parse(JSON.stringify(enterItems)));
+
+            } else {
+                filterEnters = [this.order]
+                filterEnters.forEach(item => {
+                    const enter = {...item
+                    };
+
+                    enter.name = item.customerName;
+                    enter.usedAmount = item.bookNum - item.enableAmount;
+                    enter.unitTime = item.chargeUnitTime;
+                    enter.price = item.originPrice;
+                    enter.price = item.originPrice;
+                    enter.changeTimes = 0;
+                    enter.id = item.categoryId;
+                    enter.count = item.bookNum  ;
+                    enter.selfInventory = item.bookNum;
+                    enter.type = 2;
+                    enter.inventory = undefined;
+                    enter.originPrice = (item.originPrice * item.bookNum * item.timeAmount).toFixed(2);
+                    enter.totalPrice = item.totalPrice;
+                    enter.nodeId = item. categoryId;
+                    enterItems.push(enter);
+                });
+                return (JSON.parse(JSON.stringify(enterItems)));
+            }
+            // return [{
+            //     name: enterItems.customerName,
+            //     usedAmount: enterItems.bookNum - enterItems.enableAmount,
+            //     unitTime: enterItems.chargeUnitTime,
+            //     chargeUnit: enterItems.chargeMode,
+            //     timeAmount: enterItems.timeAmount,
+            //     chargeUnit: enterItems.chargeUnit,
+            //     chargeUnitTime: enterItems.chargeUnitTime,
+            //     date: enterItems.date,
+            //     count: enterItems.bookNum,
+            //     totalPrice: enterItems.totalPrice,
+            //     price: enterItems.price，
+            //     id: enterItems.categoryId,
+            //     changeTimes: 0;,
+            //     type: 2,
+            //     selfInventory: enterItems.bookNum,
+            //     inventory: undefined,
+
+            // }]
         },
         addItem() {
             if (this.enterItems.length >= 99) {
