@@ -146,7 +146,6 @@ export default {
     },
     methods: {
         emitchange() {
-            window.console.log(this.enterItems)
             this.$emit('change',this.enterItems)
         },
         // 组合订单和子订单key统一化处理
@@ -192,7 +191,6 @@ export default {
                     enter.inventory = undefined;
                     enter.originPrice = (item.originPrice * item.bookNum * item.timeAmount).toFixed(2);
                     enter.totalPrice = item.totalPrice;
-                    enter.nodeId = item. categoryId;
                     enterItems.push(enter);
                 });
                 return (JSON.parse(JSON.stringify(enterItems)));
