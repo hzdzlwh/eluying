@@ -36,7 +36,7 @@
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
-                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
+                                           :disabled="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                            v-model="phone"
                                            @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
@@ -51,7 +51,7 @@
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType" :disabled="order.type !== ORDER_TYPE.COMBINATION">
+                                        <dd-select v-model="userOriginType" :disabled="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder">
                                             <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                                        :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
