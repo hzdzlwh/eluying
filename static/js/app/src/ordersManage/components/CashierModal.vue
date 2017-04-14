@@ -349,7 +349,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({ fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId++ });
+                this.payments.push({ fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId ++ });
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);

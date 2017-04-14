@@ -436,10 +436,6 @@
                 }, 0).toFixed(2));
             },
             deleteRoom(index) {
-                if (this.registerRooms.length <= 1) {
-                    modal.alert('已经是最后一间房间了!');
-                    return false;
-                }
                 this.registerRooms.splice(index, 1);
             },
             getItemDiscountInfo(nodeId, nodeType, obj) {
