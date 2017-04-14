@@ -332,22 +332,22 @@ export default {
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
                         this.check.type = checkType;
-                        let moreChannel = [];
+                        const moreChannel = [];
                         if (checkType === 0) {
-                            if (res.data.contractCompany.companyPay) {
-                                moreChannel.push({
-                                    id: - 15,
-                                    name: '企业扣费'
-                                });
-                            }
+                            // if (res.data.contractCompany.companyPay) {
+                            //     moreChannel.push({
+                            //         id: - 15,
+                            //         name: '企业扣费'
+                            //     });
+                            // }
                         }
                         if (checkType === 1) {
-                            if (res.data.contractCompany.companyPay) {
-                                moreChannel = [{
-                                    id: - 15,
-                                    name: '退款至企业'
-                                }];
-                            }
+                            // if (res.data.contractCompany.companyPay) {
+                            //     moreChannel = [{
+                            //         id: - 15,
+                            //         name: '退款至企业'
+                            //     }];
+                            // }
                             this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
                                 const id = element.id;
                                 return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
