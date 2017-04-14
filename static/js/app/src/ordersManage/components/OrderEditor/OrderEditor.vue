@@ -747,7 +747,7 @@
 
                     }
 
-                    if (this.order.type === ORDER_TYPE.CATERING) {
+                    if (this.order.type === ORDER_TYPE.RETAIL) {
 
                     }
 
