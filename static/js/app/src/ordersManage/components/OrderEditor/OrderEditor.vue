@@ -629,6 +629,29 @@
                         }
                     });
             },
+            modifyEntertainmentOrder() {
+                const room = this.rooms[0];
+                const params = {
+                    customerName: this.name,
+                    customerPhone: this.phone,
+                    remark: this.remark,
+                    amount: room.count,
+                    enterOrderId: room.id,
+                    timeAmount: room.unitTime,
+                    totalPrice: room.totalPrice,
+                    ...this.getDiscountRelatedIdAndOrigin()
+                };
+                http.post(' /entertainment/getCategoryListPC', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            event.$emit('refreshView');
+                            event.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
             // 获取 originId origin discountRelatedId
             getDiscountRelatedIdAndOrigin() {
                 const params = {};
@@ -750,7 +773,7 @@
 
                     // 娱乐订单
                     if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
-
+                        this.modifyEntertainmentOrder();
                     }
 
                     // 商超订单
