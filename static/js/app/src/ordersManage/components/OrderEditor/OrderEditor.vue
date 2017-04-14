@@ -641,7 +641,7 @@
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
-                http.post(' /entertainment/getCategoryListPC', params)
+                http.post(' /order/modifyEnterOrder', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
