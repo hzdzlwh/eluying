@@ -117,10 +117,10 @@ export default {
     },
     created() {
         // 确认按钮事件
-        bus.$on('submitOrder', this.enterItems);
+        bus.$on('submitOrder', this.emitchange);
     },
     beforeDestroy() {
-        bus.$off('submitOrder', this.enterItems);
+        bus.$off('submitOrder', this.emitchange);
     },
     components: {
         DdDatepicker,
@@ -145,6 +145,10 @@ export default {
         }
     },
     methods: {
+        emitchange() {
+            window.console.log(this.enterItems)
+            this.$emit('change',this.enterItems)
+        },
         // 组合订单和子订单key统一化处理
         getplayItems() {
             let enterItems = [];
