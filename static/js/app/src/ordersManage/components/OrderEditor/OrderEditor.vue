@@ -629,6 +629,7 @@
                         }
                     });
             },
+            // 获取 originId origin discountRelatedId
             getDiscountRelatedIdAndOrigin() {
                 const params = {};
                 if (Number(this.userOriginType.split('~')[1]) === -5) {
@@ -728,25 +729,31 @@
                     });
             },
             submitInfo() {
+                // 获取 shopGoodsItems enterItems rooms
                 event.$emit('submitOrder');
 
                 if (!this.validate()) {
                     return false;
                 }
-    
+
+                // 编辑订单根据不同的type调用不同的接口
                 if (this.checkState === 'editOrder') {
+                    // 住宿订单
                     if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
                         this.modifyRoomOrder();
                     }
 
+                    // 餐饮订单
                     if (this.order.type === ORDER_TYPE.CATERING) {
 
                     }
 
+                    // 娱乐订单
                     if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
 
                     }
 
+                    // 商超订单
                     if (this.order.type === ORDER_TYPE.RETAIL) {
 
                     }
@@ -756,6 +763,7 @@
                         this.modifyCombinationOrder();
                     }
                 } else {
+                    // 住宿业务
                     this.handleRoomBusiness();
                 }
             },
