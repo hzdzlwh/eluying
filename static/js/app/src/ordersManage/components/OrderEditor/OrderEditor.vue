@@ -86,7 +86,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
-                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""/>
+                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange=""/>
                         <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""></ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
@@ -630,15 +630,15 @@
                     });
             },
             modifyEntertainmentOrder() {
-                const room = this.rooms[0];
+                const enterItems = this.enterItems[0];
                 const params = {
                     customerName: this.name,
                     customerPhone: this.phone,
                     remark: this.remark,
-                    amount: room.count,
-                    enterOrderId: room.id,
-                    timeAmount: room.unitTime,
-                    totalPrice: room.totalPrice,
+                    amount: enterItems.count,
+                    enterOrderId: enterItems.id,
+                    timeAmount: enterItems.unitTime,
+                    totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post(' /entertainment/getCategoryListPC', params)
@@ -792,6 +792,9 @@
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
+            },
+            handleEnterChange(enter) {
+                this.enterItems = enter
             },
             handleRoomPriceChange(price) {
                 this.roomPrice = price;
