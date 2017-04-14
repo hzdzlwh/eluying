@@ -158,7 +158,7 @@
                         };
                     }
                 });
-                const　filterRooms = rooms.filter(room => { return room; });
+                const filterRooms = rooms.filter(room => { return room; });
                 if (filterRooms.length <= 0) {
                     modal.somethingAlert('请选择房间！');
                     return false;
