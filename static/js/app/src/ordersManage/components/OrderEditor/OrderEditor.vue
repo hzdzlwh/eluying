@@ -559,6 +559,22 @@
 
                 return true;
             },
+            getItemDiscountInfo(nodeId, nodeType) {
+                let item = {
+                    discount: 1
+                };
+                if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
+                    this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
+                            item = {...list };
+                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                            item = {...list };
+                        }
+                    });
+                }
+
+                return item;
+            },
             getSubmitRooms() {
                 return this.rooms.map(room => {
                     return {
@@ -575,7 +591,7 @@
                 });
             },
             getSubmitGoods() {
-                this.shopGoodsItems.map(item => {
+                return this.shopGoodsItems.map(item => {
                     return {
                         amount: item.count,
                         id: item.id,
@@ -583,7 +599,7 @@
                         priceId: 0,
                         date: util.dateFormat(new Date()),
                         name: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2))
+                        price: Number((item.price * this.getItemDiscountInfo(0, item.type).discount).toFixed(2))
                     };
                 });
             },
@@ -596,7 +612,7 @@
                         date: item.date,
                         categoryId: item.id,
                         categoryName: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2)),
+                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type).discount).toFixed(2)),
                         totalPrice: Number(item.totalPrice),
                         playOrderId: item.playOrderId,
                         entertainmentId: item.entertainmentId
