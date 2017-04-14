@@ -236,7 +236,7 @@ export default {
                     } > 详情 < /span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
                     } > 查单 < /span> {
-                    (row.ledgerFee && row.companyType && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                    (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
                     } > / 结算 < /span > : ''
                 } < /span >,
