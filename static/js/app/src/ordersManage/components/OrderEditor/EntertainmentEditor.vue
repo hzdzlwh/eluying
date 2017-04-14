@@ -8,13 +8,13 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orederType || item.orderState === 1' :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orederType || item.state === 0 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div v-if="item.usedAmount <= 0">
-                            <input class="dd-input" :value="item.name || item.itemName" @click="showEnterSelectModal(index)" :disabled="orederType === 1" />
+                            <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orederType === 1 || item.usedAmount > 0" />
                         </div>
-                        <span v-if="item.usedAmount > 0">{{item.name || item.itemName}}</span>
+                        <span v-if="item.usedAmount > 0">{{item.name}}</span>
                         <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div>
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
@@ -43,12 +43,12 @@
                                 <label>小计</label>
                                 <p class="fee-container">
                                     <span class="fee-symbol">¥</span>
-                                    <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice"  />
+                                    <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice" />
                                 </p>
                             </p>
                         </div>
                     </div>
-                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0 && !orederType">
+                    <span class="delete-icon" @click="deleteItem(item.type, index)" v-if="item.usedAmount <= 0 && orederType && (item.state === 0 || item.state === undefined ) ">
                                     </span>
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
@@ -100,15 +100,15 @@ export default {
     data() {
         return {
             enterSelectModalShow: false,
-            modifyEnterOrShopIndex: undefined,
-            enterItems: this.order.playItems || [this.order],
-            orederType: this.order.playItems ? 1 : 0//1组合订单，0子订单
+            modifyEnterOrShopIndex: -1,
+            enterItems: JSON.parse(JSON.stringify(this.order.playItems)) || [this.order],
+            orederType: this.order.playItems ? 1 : 0 //1组合订单，0子订单
         }
     },
     watch: {
         order: {
             handler(c, o) {
-                this.enterItems = this.order.playItems || [this.order];
+                this.enterItems = JSON.parse(JSON.stringify(this.order.playItems))|| [...this.order];
                 this.orederType = this.order.playItems ? 1 : 0
             },
             deep: true
@@ -131,6 +131,15 @@ export default {
         })
     },
     methods: {
+        getplayItems(enterItems) {
+            return [{
+                name: enterItems.customerName,
+                usedAmount: enterItems.enterItems.filter(function(item) {
+                    return item.state !== 0
+                }).length
+
+            }]
+        },
         addItem() {
             if (this.enterItems.length >= 99) {
                 modal.somethingAlert('一次做多添加99个娱乐项目!');
@@ -147,14 +156,28 @@ export default {
             this.modifyEnterOrShopIndex = index;
             this.enterSelectModalShow = true;
         },
+        closeEnterSelectModal(value) {
+            this.modifyEnterOrShopIndex = -1;
+            this.enterSelectModalShow = value;
+        },
         handleNumChange(type, tag, num) {
-            this.enterItems.forEach((item, index) => {
-                let price = item['price'];
-                let discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                item.count = (index === tag) ? num : item.count;
-                item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
-                item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
-            });
+            if (type === 2) {
+                this.enterItems.forEach((item, index) => {
+                    const price = item['price'];
+                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                    item.amount = (index === tag) ? num : item.amount;
+                    item.totalPrice = ((price * discount).toFixed(2) * item.amount * item.timeAmount).toFixed(2);
+                    item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                });
+            } else if (type === -2) {
+                this.enterItems.forEach((item, index) => {
+                    const price = item['price'];
+                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                    item.timeAmount = (index === tag) ? num : item.timeAmount;
+                    item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                    item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                });
+            }
         },
         /**
          * 获取单个项目的优惠信息
