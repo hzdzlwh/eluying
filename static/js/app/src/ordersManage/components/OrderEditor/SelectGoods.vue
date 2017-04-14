@@ -218,88 +218,88 @@ export default {
     },
     computed: {
         totalbill() {
-            let total = {
+            const total = {
                 count: 0,
                 total: 0
-            }
-            for (let item in this.bill) {
+            };
+            for (const item in this.bill) {
                 if (this.bill[item].num) {
-                    total.count += this.bill[item].num
-                    total.total += parseInt(this.bill[item].num) * this.bill[item].p
+                    total.count += this.bill[item].num;
+                    total.total += parseInt(this.bill[item].num) * this.bill[item].p;
                 }
             }
-            total.total = window.Math.floor(total.total * 100) / 100
-            return total
+            total.total = window.Math.floor(total.total * 100) / 100;
+            return total;
         }
     },
     methods: {
         changelist(list) {
-            this.gListActive = list.gList
-            this.gIdActive = list
+            this.gListActive = list.gList;
+            this.gIdActive = list;
         },
         hideModal() {
-            this.$emit('Modalclose')
-            this.bill = this.getDefoult()
-            $('#goodsModal').modal('hide')
+            this.$emit('Modalclose');
+            this.bill = this.getDefoult();
+            $('#goodsModal').modal('hide');
         },
         goodsprogram() {
-            let data = []
-            for (let item in this.bill) {
+            const data = [];
+            for (const item in this.bill) {
                 if (this.bill[item].num > 0) {
                     data.push(Object.assign({
                         id: item
-                    }, this.bill[item]))
+                    }, this.bill[item]));
                 }
             }
-            this.bill = this.getDefoult()
-            this.$emit('selectGoodsDate', data)
-            this.hideModal()
+            this.bill = this.getDefoult();
+            this.$emit('selectGoodsDate', data);
+            this.hideModal();
         },
-        getDefoult(){
-            let billobjecct = Object.assign(this.goodsDate.map(function(el) {
-            let bill = {}
-            el.gList.map(function(ob) {
-                let object = {}
-                object[ob.i] = {
-                    n: ob.n,
-                    p: ob.p,
-                    num: 0
-                }
-                Object.assign(bill, object)
-            })
-            return bill
-        }))
-        let bill = {}
-        let item
-        for (item in billobjecct) {
-            Object.assign(bill, billobjecct[item])
-        }
-        return bill
+        getDefoult() {
+            const billobjecct = Object.assign(this.goodsDate.map(function(el) {
+                const bill = {};
+                el.gList.map(function(ob) {
+                    const object = {};
+                    object[ob.i] = {
+                        n: ob.n,
+                        p: ob.p,
+                        num: 0
+                    };
+                    Object.assign(bill, object);
+                });
+                return bill;
+            }));
+            const bill = {};
+            let item;
+            for (item in billobjecct) {
+                Object.assign(bill, billobjecct[item]);
+            }
+            return bill;
         },
         changebill(item, type) {
             if (type) {
-                this.bill[item.i].num++
+                this.bill[item.i].num++;
             } else {
                 if (this.bill[item.i].num) {
-                    this.bill[item.i].num--
+                    this.bill[item.i].num--;
                 }
             }
         }
     },
     created() {
-        this.bill = this.getDefoult()
+        this.bill = this.getDefoult();
     },
     watch: {
         show(val) {
             if (val) {
                 $('#goodsModal').modal({
                     backdrop: 'static'
-                })
+                });
                 $('#goodsModal').modal('show');
             } else {
                 $('#goodsModal').modal('hide');
             }
         }
     }
-}
+};
 </script>

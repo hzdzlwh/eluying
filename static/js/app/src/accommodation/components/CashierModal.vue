@@ -159,6 +159,7 @@
                 uniqueId: 0,
                 isCompany: false,
                 companyCityLedger: false,
+                companyPay: false,
                 companyBalance: undefined
             };
         },
@@ -201,11 +202,13 @@
                         params.orderType = this.orderDetail.orderType;
                     }
                     Promise.all([this.getOrderPayment(), this.getData(params)]).then(() => {
-                        if (this.orderState && this.isCompany && this.companyCityLedger) {
-                            this.payChannels = [{ channelId: - 14, name: '企业挂帐' }, { channelId: - 15, name: '企业扣款' }].concat(this.payChannels);
-                        } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
+                        if (this.orderState && this.isCompany && this.companyPay) {
                             this.payChannels = [{ channelId: - 15, name: '企业扣款' }].concat(this.payChannels);
-                        } else if (!this.orderState && this.companyCityLedger) {
+                        }
+                        if (this.orderState && this.isCompany && this.companyCityLedger) {
+                            this.payChannels = [{ channelId: - 14, name: '企业挂帐' }].concat(this.payChannels);
+                        }
+                        if (!this.orderState && this.isCompany && this.companyPay) {
                             this.payChannels = [{ channelId: - 15, name: '退款至企业' }].concat(this.payChannels);
                         }
                         $('#cashier').modal({ backdrop: 'static' });
@@ -223,6 +226,7 @@
                 this.depositPayChannel = undefined;
                 this.isCompany = false;
                 this.companyCityLedger = false;
+                this.companyPay = false;
                 this.companyBalance = undefined;
             },
             getPayChannels(index) {
@@ -311,6 +315,7 @@
                                 return channel.channelId > 0;
                             });
                             this.isCompany = !!res.data.contractCompany;
+                            this.companyPay = res.data.contractCompany.companyPay;
                             this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
                             this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
                         } else {
@@ -468,7 +473,7 @@
                     if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
                         payWithAlipay += Number(pay.fee);
                     }
-                    if (id === - 14 || id === - 15) {
+                    if (id === - 15) {
                         payWithCompany += Number(pay.fee);
                     }
                 });

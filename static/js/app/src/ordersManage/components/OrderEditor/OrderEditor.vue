@@ -29,14 +29,14 @@
                                     </div>
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
-                                           :disabled="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
+                                           :disabled="!(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="name"
                                            @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
-                                           :disabled="order.type !== ORDER_TYPE.COMBINATION"
+                                           :disabled="!(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
                                            @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
@@ -51,7 +51,7 @@
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType" :disabled="order.type !== ORDER_TYPE.COMBINATION">
+                                        <dd-select v-model="userOriginType" :disabled="!(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))">
                                             <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                                        :value="origin.originType" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
@@ -85,7 +85,7 @@
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
-                                    @priceChange=""/>
+                                    @priceChange="handleRoomPriceChange"/>
                         <CateEditor></CateEditor>
                         <EnterEditor :order="order"
                                      v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT || this.order.type === ORDER_TYPE.COMBINATION"
@@ -569,19 +569,79 @@
 
                 return true;
             },
-            submitInfo() {
-                event.$emit('submitOrder');
+            getSubmitRooms() {
+                return this.rooms.map(room => {
+                    return {
+                        datePriceList: room.datePriceList,
+                        endDate: room.room.endDate,
+                        startDate: room.room.startDate,
+                        id: room.categoryType,
+                        roomId: room.roomType,
+                        idCardList: JSON.stringify(room.idCardList),
+                        fee: room.price,
+                        sub: true,
+                        roomOrderId: room.roomOrderId
+                    };
+                });
+            },
+            getSubmitGoods() {
+                this.shopGoodsItems.map(item => {
+                    return {
+                        amount: item.count,
+                        id: item.id,
+                        type: 3,
+                        priceId: 0,
+                        date: util.dateFormat(new Date()),
+                        name: item.name,
+                        price: Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2))
+                    };
+                });
+            },
 
-                if (!this.validate()) {
-                    return false;
-                }
-
+            getSubmitEnterItems() {
+                return this.enterItems.map(item => {
+                    return {
+                        amount: item.count,
+                        timeAmount: item.timeAmount,
+                        date: item.date,
+                        categoryId: item.id,
+                        categoryName: item.name,
+                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2)),
+                        totalPrice: Number(item.totalPrice),
+                        playOrderId: item.playOrderId,
+                        entertainmentId: item.entertainmentId
+                    };
+                });
+            },
+            modifyRoomOrder() {
+                const room = this.rooms[0];
                 const params = {
-                    name: this.name,
-                    phone: this.phone,
-                    remark: this.remark
+                    customerName: this.name,
+                    customerPhone: this.phone,
+                    remark: this.remark,
+                    checkInDate: room.startDate,
+                    checkOutDate: room.endDate,
+                    idCardsList: JSON.stringify(room.idCardList),
+                    fee: room.price,
+                    roomId: room.roomType,
+                    datePriceList: room.datePriceList,
+                    serviceId: room.roomOrderId,
+                    ...this.getDiscountRelatedIdAndOrigin()
                 };
-
+                http.post('/order/modifyRoomOrder', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            event.$emit('refreshView');
+                            event.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
+            // 获取 originId origin discountRelatedId
+            getDiscountRelatedIdAndOrigin() {
+                const params = {};
                 if (Number(this.userOriginType.split('~')[1]) === -5) {
                     params.originId = -5;
                     params.discountRelatedId = Number(this.userOriginType.split('~')[0]);
@@ -591,16 +651,6 @@
 
                 if (this.vipDiscountDetail.isVip) {
                     params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
-                }
-
-                if (this.checkState === 'ing') {
-                    params.type = 0;
-                } else if (this.checkState === 'finish') {
-                    params.type = 1;
-                } else if (this.checkState === 'book') {
-                    params.type = 2;
-                } else {
-                    params.orderId = this.order.orderId;
                 }
 
                 if (Number(this.userOriginType.split('~')[0]) === -3) {
@@ -615,101 +665,116 @@
                     });
                 }
 
-                const rooms = this.rooms.map(room => {
-                    return {
-                        datePriceList: room.datePriceList,
-                        endDate: room.room.endDate,
-                        startDate: room.room.startDate,
-                        id: room.categoryType,
-                        roomId: room.roomType,
-                        idCardList: room.idCardList,
-                        fee: room.price,
-                        sub: true,
-                        roomOrderId: room.roomOrderId
-                    };
-                });
+                return params;
+            },
+            modifyCombinationOrder() {
+                const rooms = this.getSubmitRooms();
+                const playItems = this.getSubmitEnterItems();
+                const items = this.getSubmitGoods();
 
-                const entertainmentItems = [];
-                const playItems = [];
-                this.enterItems.forEach(item => {
-                    const enter = {};
-                    enter.amount = item.count;
-                    enter.timeAmount = item.timeAmount;
-                    enter.date = item.date;
-                    enter.categoryId = item.id;
-                    enter.categoryName = item.name;
-                    enter.price = Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
-                    enter.totalPrice = Number(item.totalPrice);
-                    if (this.checkState === 'editOrder' && item.playOrderId) {
-                        enter.playOrderId = item.playOrderId;
-                    }
-                    if (this.checkState === 'editOrder' && item.entertainmentId) {
-                        enter.entertainmentId = item.entertainmentId;
-                    }
+                const params = {
+                    name: this.name,
+                    phone: this.phone,
+                    remark: this.remark,
+                    rooms: JSON.stringify(rooms),
+                    playItems: JSON.stringify(playItems),
+                    items: JSON.stringify(items),
+                    payments: JSON.stringify([]),
+                    orderId: this.order.orderId,
+                    ...this.getDiscountRelatedIdAndOrigin()
+                };
+                http.post('/order/modify', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            event.$emit('refreshView');
+                            event.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
+            handleRoomBusiness() {
+                const rooms = this.getSubmitRooms();
+                const entertainmentItems = this.getSubmitEnterItems();
+                const items = this.getSubmitGoods();
 
-                    entertainmentItems.push(enter);
-                    playItems.push(enter);
-                });
-
-                const items = [];
-                this.shopGoodsItems.forEach(item => {
-                    const good = {};
-                    good.amount = item.count;
-                    good.id = item.id;
-                    good.type = 3;
-                    good.priceId = 0;
-                    good.date = util.dateFormat(new Date());
-                    good.name = item.name;
-                    good.price = Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2));
-
-                    items.push(good);
-                });
-
-                params.rooms = JSON.stringify(rooms);
-                params.items = JSON.stringify(items);
-                if (this.checkState === 'editOrder') {
-                    params.playItems = JSON.stringify(playItems);
-                    params.payments = JSON.stringify([]);
-                } else {
-                    params.entertainmentItems = JSON.stringify(entertainmentItems);
+                const params = {
+                    name: this.name,
+                    phone: this.phone,
+                    remark: this.remark,
+                    rooms: JSON.stringify(rooms),
+                    entertainmentItems: JSON.stringify(entertainmentItems),
+                    items: JSON.stringify(items),
+                    ...this.getDiscountRelatedIdAndOrigin()
+                };
+                if (this.checkState === 'ing') {
+                    params.type = 0;
+                } else if (this.checkState === 'finish') {
+                    params.type = 1;
+                } else if (this.checkState === 'book') {
+                    params.type = 2;
                 }
 
+                http.post('/room/confirmOrder', params)
+                    .then(res => {
+                        this.isLoading = false;
+                        if (res.code === 1) {
+                            this.hideModal();
+                            if (this.checkState === 'ing' || this.checkState === 'finish') {
+                                const business = {};
+                                business.businessJson = JSON.parse(JSON.stringify(params));
+                                business.businessJson.functionType = 1;
+                                business.businessJson.orderId = res.data.orderId;
+                                business.orderDetail = { ...res.data };
+                                business.cashierType = this.checkState;
+                                this.$emit('showCashier', { type: 'register', business: business });
+                            } else {
+                                event.$emit('refreshView');
+                                event.$emit('onShowDetail', this.order);
+                            }
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
+            submitInfo() {
+                // 获取 shopGoodsItems enterItems rooms
+                event.$emit('submitOrder');
+
+                if (!this.validate()) {
+                    return false;
+                }
+
+                // 编辑订单根据不同的type调用不同的接口
                 if (this.checkState === 'editOrder') {
-                    http.post('/order/modify', params)
-                        .then(res => {
-                            this.isLoading = false;
-                            if (res.code === 1) {
-                                this.hideModal();
-                                this.$emit('refreshView');
-                                this.$emit('showOrder', this.order.orderId);
-                            } else {
-                                modal.alert(res.msg);
-                            }
-                        });
+                    // 住宿订单
+                    if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
+                        this.modifyRoomOrder();
+                    }
+
+                    // 餐饮订单
+                    if (this.order.type === ORDER_TYPE.CATERING) {
+
+                    }
+
+                    // 娱乐订单
+                    if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+
+                    }
+
+                    // 商超订单
+                    if (this.order.type === ORDER_TYPE.RETAIL) {
+
+                    }
+
+                    // 住宿独立订单使用组合订单编辑接口
+                    if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
+                        this.modifyCombinationOrder();
+                    }
                 } else {
-                    http.post('/room/confirmOrder', params)
-                        .then(res => {
-                            this.isLoading = false;
-                            if (res.code === 1) {
-                                this.hideModal();
-                                if (this.checkState === 'ing' || this.checkState === 'finish') {
-                                    const business = {};
-                                    business.businessJson = JSON.parse(JSON.stringify(params));
-                                    business.businessJson.functionType = 1;
-                                    business.businessJson.orderId = res.data.orderId;
-                                    business.orderDetail = { ...res.data };
-                                    business.cashierType = this.checkState;
-                                    this.$emit('showCashier', { type: 'register', business: business });
-                                } else {
-                                    const orderId = res.data.orderType === 3 ? res.data.relatedOrderId : res.data.orderId;
-                                    this.$emit('refreshView');
-                                    this.$emit('showOrder', orderId);
-                                    event.$emit('onShowDetail', this.order);
-                                }
-                            } else {
-                                modal.alert(res.msg);
-                            }
-                        });
+                    // 住宿业务
+                    this.handleRoomBusiness();
                 }
             },
             handleRoomChange(rooms) {

@@ -70,12 +70,12 @@
                 oldPenalty: undefined,
                 subOrders: [],
                 isLoading: false
-            }
+            };
         },
         computed: {
-            ...mapState({order: 'orderDetail'}),
+            ...mapState({ order: 'orderDetail' }),
             need() {
-                let penalty = this.subOrderPenaltys.reduce((a, b) => { return a + (Number(b.penalty) || 0) }, 0);
+                const penalty = this.subOrderPenaltys.reduce((a, b) => { return a + (Number(b.penalty) || 0); }, 0);
                 return this.paid - (this.oldPenalty || 0) - (this.penalty || 0) - penalty;
             }
         },
@@ -83,13 +83,13 @@
             show(val) {
                 if (val) {
                     this.getCancelOrder();
-                    $('#cancelOrder').modal({backdrop: 'static'});
+                    $('#cancelOrder').modal({ backdrop: 'static' });
                 } else {
                     $('#cancelOrder').modal('hide');
                 }
             }
         },
-        methods:{
+        methods: {
             hideModal() {
                 this.penalty = undefined;
                 this.subOrderPenaltys = [];
@@ -114,18 +114,18 @@
                             this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
                             this.subOrders = res.data.subOrdersTotalPriceList;
                         }
-                    })
+                    });
             },
             cancel() {
                 let totalPenalty = this.penalty || 0;
                 const business = {
                     orderId: this.orderId,
-                    orderType: -1,
+                    orderType: -1
                 };
                 let valid = true;
                 if (this.subOrderPenaltys.length > 0) {
                     totalPenalty = this.subOrderPenaltys.reduce((a, b) => { return Number(a) + Number(b.penalty); }, totalPenalty);
-                    valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== '' });
+                    valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== ''; });
                 }
                 if (!valid) {
                     modal.somethingAlert('请输入违约金！');
@@ -166,7 +166,7 @@
                                 modal.somethingAlert(res.msg);
                             }
                             this.isLoading = false;
-                        })
+                        });
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
@@ -176,9 +176,9 @@
                 }
             }
         },
-        components:{
+        components: {
             DdSelect,
             DdOption
         }
-    }
+    };
 </script>
