@@ -17,7 +17,7 @@ import CashierModal from './components/CashierModal.vue';
 import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
 
 import { ORDER_STATE_LIST } from './constant';
-import event from './event';
+import bus from '../common/eventBus';
 import store from './store';
 
 init({
@@ -101,16 +101,16 @@ $(function() {
         },
 
         created() {
-            event.$on('onClose', this.hideDetail);
-            event.$on('onShowDetail', this.showOrderDetail);
-            event.$on('editOrder', this.editOrder);
-            event.$on('hideOrderEditor', this.hideOrderEditor);
-            event.$on('refreshView', this.refreshView);
-            event.$on('showCashier', this.showCashier);
-            event.$on('hideCashier', this.hideCashier);
-            event.$on('showGetMoney', this.showGetMoney);
-            event.$on('hideGetMoney', this.hideGetMoney);
-            event.$on('hideCancelOrder', this.hideCancelOrder);
+            bus.$on('onClose', this.hideDetail);
+            bus.$on('onShowDetail', this.showOrderDetail);
+            bus.$on('editOrder', this.editOrder);
+            bus.$on('hideOrderEditor', this.hideOrderEditor);
+            bus.$on('refreshView', this.refreshView);
+            bus.$on('showCashier', this.showCashier);
+            bus.$on('hideCashier', this.hideCashier);
+            bus.$on('showGetMoney', this.showGetMoney);
+            bus.$on('hideGetMoney', this.hideGetMoney);
+            bus.$on('hideCancelOrder', this.hideCancelOrder);
 
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
@@ -121,16 +121,16 @@ $(function() {
             this.getRoomsList();
         },
         beforeDestroy: function() {
-            event.$off('onClose', this.hideDetail);
-            event.$off('onShowDetail', this.showOrderDetail);
-            event.$off('editOrder', this.editOrder);
-            event.$off('hideOrderEditor', this.hideOrderEditor);
-            event.$off('refreshView', this.refreshView);
-            event.$off('showCashier', this.showCashier);
-            event.$off('hideCashier', this.hideCashier);
-            event.$off('showGetMoney', this.showGetMoney);
-            event.$off('hideGetMoney', this.hideGetMoney);
-            event.$off('hideCancelOrder', this.hideCancelOrder);
+            bus.$off('onClose', this.hideDetail);
+            bus.$off('onShowDetail', this.showOrderDetail);
+            bus.$off('editOrder', this.editOrder);
+            bus.$off('hideOrderEditor', this.hideOrderEditor);
+            bus.$off('refreshView', this.refreshView);
+            bus.$off('showCashier', this.showCashier);
+            bus.$off('hideCashier', this.hideCashier);
+            bus.$off('showGetMoney', this.showGetMoney);
+            bus.$off('hideGetMoney', this.hideGetMoney);
+            bus.$off('hideCancelOrder', this.hideCancelOrder);
         },
         computed: {
             orderParams() {

@@ -218,7 +218,7 @@
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     import {
         DdDropdown,
         DdDropdownItem,
@@ -488,7 +488,7 @@
                 this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
             },
             hideModal() {
-                event.$emit('hideOrderEditor');
+                bus.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
             },
             setUserInfo(obj) {
@@ -622,8 +622,8 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -645,8 +645,8 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -700,8 +700,8 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -743,8 +743,8 @@
                                 business.cashierType = this.checkState;
                                 this.$emit('showCashier', { type: 'register', business: business });
                             } else {
-                                event.$emit('refreshView');
-                                event.$emit('onShowDetail', this.order);
+                                bus.$emit('refreshView');
+                                bus.$emit('onShowDetail', this.order);
                             }
                         } else {
                             modal.alert(res.msg);
@@ -753,7 +753,7 @@
             },
             submitInfo() {
                 // 获取 shopGoodsItems enterItems rooms
-                event.$emit('submitOrder');
+                bus.$emit('submitOrder');
 
                 if (!this.validate()) {
                     return false;

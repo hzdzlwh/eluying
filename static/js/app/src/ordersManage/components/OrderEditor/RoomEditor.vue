@@ -108,7 +108,7 @@
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../common/AJAXService';
     import util from '../../../common/util';
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     export default{
         data() {
             return {
@@ -116,11 +116,11 @@
             };
         },
         created() {
-            event.$on('submitOrder', this.changeRooms);
+            bus.$on('submitOrder', this.changeRooms);
             this.initRooms(this.order);
         },
         beforeDestroy() {
-            event.$off('submitOrder', this.changeRooms);
+            bus.$off('submitOrder', this.changeRooms);
         },
         components: {
             CheckInPerson,

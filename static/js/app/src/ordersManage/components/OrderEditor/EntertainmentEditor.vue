@@ -82,7 +82,7 @@ import counter from '../../../common/components/counter.vue';
 import SelectProject from './selectProject.vue';
 import AJAXService from 'AJAXService';
 import modal from 'modal';
-import event from '../../event';
+import bus from '../../../common/eventBus';
 import util from '../../../common/util';
 export default {
     props: {
@@ -117,10 +117,10 @@ export default {
     },
     created() {
         // 确认按钮事件
-        event.$on('submitOrder', this.enterItems);
+        bus.$on('submitOrder', this.enterItems);
     },
     beforeDestroy() {
-        event.$off('submitOrder', this.enterItems);
+        bus.$off('submitOrder', this.enterItems);
     },
     components: {
         DdDatepicker,

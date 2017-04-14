@@ -966,7 +966,7 @@
     }
 </style>
 <script>
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     import util from 'util';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
     import { mapMutations, mapActions } from 'vuex';
@@ -1113,7 +1113,7 @@
         methods: {
             ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
             hideModal() {
-                event.$emit('onClose');
+                bus.$emit('onClose');
                 // this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
             },
             /**
@@ -1144,7 +1144,7 @@
                 return newPayMents;
             },
             showCombinationOrder() {
-                event.$emit('onShowDetail',
+                bus.$emit('onShowDetail',
                     {
                         orderId: this.order.combinationOrderId,
                         orderType: ORDER_TYPE.COMBINATION
@@ -1158,11 +1158,11 @@
             },
             editOrder() {
                 this.hideModal();
-                event.$emit('editOrder', 'editOrder', this.order);
+                bus.$emit('editOrder', 'editOrder', this.order);
             },
             showCashier() {
                 this.hideModal();
-                event.$emit('showCashier', { type: 'orderDetail' });
+                bus.$emit('showCashier', { type: 'orderDetail' });
             },
             checkInOrCheckOut(type) {
                 if (this.isLoading) {
