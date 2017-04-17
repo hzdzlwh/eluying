@@ -72,6 +72,7 @@
                 </div>
             </div>
         </div>
+        <span v-show="false">{{getTotalPrice()}}</span>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -176,6 +177,12 @@
         data() {
             return {};
         },
+        created() {
+            bus.$on('submitOrder', this.changeFood);
+        },
+        beforeDestroy() {
+            bus.$off('submitOrder', this.changeFood);
+        },
         computed: {
             ...mapState({ order: 'orderDetail' }),
             foodItems() {
@@ -223,11 +230,16 @@
                 }
 
                 return desksStr;
-            }
-        },
-        watch: {
-            vipDiscountDetail(newVal) {
-                console.log(newVal);
+            },
+            getTotalPrice() {
+                if (this.foodItems && this.foodItems.length > 0) {
+                    const totalPrice = this.foodItems.reduce((a, b) => { return a + Number(b.foodPrice); }, 0);
+                    this.$emit('priceChange', totalPrice);
+                    return totalPrice;
+                }
+            },
+            changeFood() {
+                this.$emit('change');
             }
         }
     };

@@ -86,9 +86,13 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
-                        <CateEditor :vipDiscountDetail="vipDiscountDetail"></CateEditor>
+                        <CateEditor
+                                :vipDiscountDetail="vipDiscountDetail"
+                                @change="handleFoodChange"
+                                @priceChange="handleFoodPriceChange">
+                        </CateEditor>
                         <EnterEditor
-                        :order="order"
+                         :order="order"
                          v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION"
                          :vipDiscountDetail="vipDiscountDetail"
                          @change="handleEnterChange"
@@ -668,6 +672,22 @@
                         }
                     });
             },
+            modifyFoodOrder() {
+                const params = {
+                    caterOrderId: this.order.caterOrderId,
+                    remark: this.remark
+                };
+                http.get('/order/modifyCaterOrderRemark', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
             modifyEntertainmentOrder() {
                 const enterItems = this.enterItems[0];
                 const params = {
@@ -680,7 +700,7 @@
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
-                http.post(' /order/modifyEnterOrder', params)
+                http.post('/order/modifyEnterOrder', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
@@ -827,7 +847,7 @@
 
                     // 餐饮订单
                     if (this.order.type === ORDER_TYPE.CATERING) {
-
+                        this.modifyFoodOrder();
                     }
 
                     // 娱乐订单
@@ -852,6 +872,9 @@
             handleRoomChange(rooms) {
                 this.rooms = rooms;
             },
+            handleFoodChange() {
+                return false;
+            },
             handleEnterChange(enter) {
                 this.enterItems = enter;
             },
@@ -860,6 +883,9 @@
             },
             handleRoomPriceChange(price) {
                 this.roomPrice = price;
+            },
+            handleFoodPriceChange(price) {
+                this.foodPrice = price;
             },
             handlEnterPriceChange(price) {
                 this.enterPrice = price;
