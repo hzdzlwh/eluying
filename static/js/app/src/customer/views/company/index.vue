@@ -365,7 +365,7 @@ export default {
                                 if (res.data.contractCompany.companyPay) {
                                     moreChannel.push({
                                         id: - 15,
-                                        name: '企业扣费'
+                                        name: '企业扣款'
                                     });
                                 }
                             }

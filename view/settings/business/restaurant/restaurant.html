@@ -96,7 +96,7 @@
                             <img src="/static/image/modal/room_modal_delete.png" @click="remove(discount)" style="cursor: pointer">
                         </div>
                         <p style="margin: -5px 0 10px;font-size: 12px" v-if="newDiscounts.length > 0">注：请输入0.1~9.9之间的数字</p>
-                        <span @click="addDiscount" style="cursor: pointer"><img src="//static.dingdandao.com/vipAdditional.png" style="margin-right: 4px">新增折扣</span>
+                        <span v-if="newDiscounts.length+discounts.length<10" @click="addDiscount" style="cursor: pointer"><img src="//static.dingdandao.com/vipAdditional.png" style="margin-right: 4px">新增折扣</span>
                     </div>
                 </div>
                 <p class="sub-line"></p>
