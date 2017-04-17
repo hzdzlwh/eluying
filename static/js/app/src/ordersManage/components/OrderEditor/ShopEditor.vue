@@ -8,7 +8,7 @@
                     添加项目
                 </span>
             </p>
-            <div v-if="order.orderState" class="items">
+            <div v-if="order.creationTime" class="items">
                 <div class="shop-item"
                      :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
                      style="align-items: stretch;flex-direction: column"
@@ -116,9 +116,14 @@
     import counter from '../../../common/components/counter.vue';
     import selectGoods from './SelectGoods.vue';
     import modal from 'modal';
+    import bus from '../../../common/eventBus';
     export default{
         props: {
             vipDiscountDetail: {
+                type: Object,
+                default: function() { return {}; }
+            },
+            order: {
                 type: Object,
                 default: function() { return {}; }
             }
@@ -130,8 +135,14 @@
                 editShopList: {}
             };
         },
+        created() {
+            bus.$on('submitOrder', this.changeGoods);
+        },
+        beforeDestroy() {
+            bus.$off('submitOrder', this.changeGoods);
+        },
         computed: {
-            ...mapState({ order: 'orderDetail', shopList: 'shopList' }),
+            ...mapState({ shopList: 'shopList' }),
             totalPrice() {
                 let totalPrice = 0;
                 for (const key in this.editShopList) {
@@ -178,17 +189,35 @@
                     good.price = good.p;
                     good.name = good.n;
                     good.amount = good.num;
+                    // 判断是单个订单，还是组合订单
+                    if (this.order.goodsOrderId) {
+                        good.goodsOrderId = this.order.goodsOrderId;
+                    }
                 });
-                this.shopGoodsItems.forEach(item => {
-                    goodsList.forEach((good, index) => {
-                        if (good.id === item.id) {
+                // 判断是单个商超订单，还是组合订单
+                if (this.order.goodsOrderId) {
+                    const orderId = this.order.goodsOrderId;
+                    this.editShopList[orderId]['items'].forEach(item => {
+                        goodsList.forEach((good, index) => {
                             item.amount += good.amount;
                             goodsList.splice(index, 1);
-                        }
+                        });
                     });
-                });
-                this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
-                this.$emit('change', this.shopGoodsItems);
+                    this.editShopList[orderId]['items'] = this.editShopList[orderId]['items'].concat(goodsList);
+                } else {
+                    this.shopGoodsItems.forEach(item => {
+                        goodsList.forEach((good, index) => {
+                            if (good.id === item.id) {
+                                item.amount += good.amount;
+                                goodsList.splice(index, 1);
+                            }
+                        });
+                    });
+                    this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
+                }
+                const goods = JSON.parse(JSON.stringify(this.editShopList));
+                const items = JSON.parse(JSON.stringify(this.shopGoodsItems));
+                this.$emit('change', { goods: goods, items: items });
             },
             // 处理商超项目数量变化事件
             handleNumChange(type, tag, num, orderId = -1) {
@@ -226,6 +255,11 @@
                     }
                     this.editShopList[shopOrderId].items.splice(index, 1);
                 }
+            },
+            changeGoods() {
+                const goods = JSON.parse(JSON.stringify(this.editShopList));
+                const items = JSON.parse(JSON.stringify(this.shopGoodsItems));
+                this.$emit('change', { goods: goods, items: items });
             }
         },
         components: {
@@ -235,8 +269,9 @@
         watch: {
             order(newVal) {
                 const shopList = {};
-                if (newVal.pcGoodsItems) {
+                if (newVal.pcGoodsItems && newVal.pcGoodsItems.length > 0) {
                     newVal.pcGoodsItems.forEach(item => {
+                        item.id = item.goodsId;
                         if (shopList[item.goodsOrderId]) {
                             shopList[item.goodsOrderId]['items'].push(item);
                         } else {
@@ -246,11 +281,15 @@
                             shopList[item.goodsOrderId]['items'].push(item);
                         }
                     });
-                } else if (this.order.goodsOrderId) {
-                    const orderId = this.order.goodsOrderId;
+                } else if (newVal.goodsOrderId) {
+                    const orderId = newVal.goodsOrderId;
                     shopList[orderId] = {};
                     shopList[orderId]['time'] = this.order.creationTime;
                     shopList[orderId]['items'] = this.order.itemList;
+                    shopList[orderId]['items'].map(good => {
+                        good.goodsOrderId = orderId;
+                        good.id = good.goodsId;
+                    });
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
                 this.editShopList = shopList;

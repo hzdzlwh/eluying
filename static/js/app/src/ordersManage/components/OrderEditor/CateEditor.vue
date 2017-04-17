@@ -114,43 +114,43 @@
         justify-content: space-between;
         align-items: center;
 
-        .item-indent {
-            padding-left: 16px;
-        }
+    .item-indent {
+        padding-left: 16px;
+    }
 
-        .dish-discount-icon {
-            font-size: 10px;
-            color: #ffffff;
-            display: inline-flex;
-            background: #ffba75;
-            border-radius: 2px;
-            width: 17px;
-            height: 16px;
-            margin-left: 5px;
-            align-items: center;
-            justify-content: center;
-        }
+    .dish-discount-icon {
+        font-size: 10px;
+        color: #ffffff;
+        display: inline-flex;
+        background: #ffba75;
+        border-radius: 2px;
+        width: 17px;
+        height: 16px;
+        margin-left: 5px;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .dish-name-container {
-            width: 170px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
+    .dish-name-container {
+        width: 170px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
 
-        .dish-name {
-            display: block;
-            max-width: 140px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
+    .dish-name {
+        display: block;
+        max-width: 140px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 
-        .dish-numAndPrice {
-            flex-grow: 1;
-            display: inline-flex;
-            justify-content: space-between;
-        }
+    .dish-numAndPrice {
+        flex-grow: 1;
+        display: inline-flex;
+        justify-content: space-between;
+    }
     }
     .cateOrder-dish:not(:last-child) {
         margin-bottom: 10px;
@@ -165,15 +165,14 @@
     }
 </style>
 <script>
-    import bus from '../../../common/eventBus.js';
+    import { mapState } from 'vuex';
+    import bus from '../../../common/eventBus';
     export default{
-        props: {
-            order: Object
-        },
         data() {
             return {};
         },
         computed: {
+            ...mapState({ order: 'orderDetail' }),
             foodItems() {
                 let foodItems = [];
                 if (this.order.caterOrderId) {

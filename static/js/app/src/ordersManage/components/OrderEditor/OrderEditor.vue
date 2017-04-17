@@ -80,14 +80,20 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION ||this.order.type === ORDER_TYPE.COMBINATION"
+                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
+
                         <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""></ShopEditor>
+                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
+                                    :order="order"
+                                    :vipDiscountDetail="vipDiscountDetail"
+                                    @change="handleShopChange"
+                                    @priceChange="handleShopPriceChange">
+                        </ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -235,6 +241,7 @@
     import util from '../../../common/util';
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
+    import CateEditor from './CateEditor.vue';
     export default{
         name: 'OrderEditor',
         data() {
@@ -249,16 +256,16 @@
                 remark: '',
                 enterItems: [],
                 shopGoodsItems: [],
+                newGoodItems: [],
+                previousGoods: [],
                 rooms: [],
+                shopItems: {},
                 showOrder: false,
                 vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
-                goodsSelectModalShow: false,
-                enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
@@ -289,7 +296,8 @@
             DdOption,
             RoomEditor,
             EnterEditor,
-            ShopEditor
+            ShopEditor,
+            CateEditor
         },
         computed: {
             ...mapState({ order: 'orderDetail' }),
@@ -559,6 +567,22 @@
 
                 return true;
             },
+            getItemDiscountInfo(nodeId, nodeType) {
+                let item = {
+                    discount: 1
+                };
+                if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
+                    this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
+                            item = {...list };
+                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                            item = {...list };
+                        }
+                    });
+                }
+
+                return item;
+            },
             getSubmitRooms() {
                 return this.rooms.map(room => {
                     return {
@@ -575,19 +599,29 @@
                 });
             },
             getSubmitGoods() {
-                this.shopGoodsItems.map(item => {
+                this.newGoodItems = this.shopItems.items.map(item => {
                     return {
-                        amount: item.count,
-                        id: item.id,
-                        type: 3,
-                        priceId: 0,
-                        date: util.dateFormat(new Date()),
+                        amount: item.amount,
+                        id: Number(item.id),
                         name: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2))
+                        price: item.price,
+                        type: 3
                     };
                 });
+                for (const key in this.shopItems.goods) {
+                    const previousItem = {};
+                    previousItem.goodsOrderId = key;
+                    previousItem.goodsItems = this.shopItems.goods[key]['items'].map(item => {
+                        return {
+                            amount: item.amount,
+                            id: item.id,
+                            price: item.price
+                        };
+                    });
+                    this.previousGoods.push(previousItem);
+                }
             },
-    
+
             getSubmitEnterItems() {
                 return this.enterItems.map(item => {
                     return {
@@ -596,7 +630,7 @@
                         date: item.date,
                         categoryId: item.id,
                         categoryName: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2)),
+                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type).discount).toFixed(2)),
                         totalPrice: Number(item.totalPrice),
                         playOrderId: item.playOrderId,
                         entertainmentId: item.entertainmentId
@@ -652,6 +686,24 @@
                         }
                     });
             },
+            modifyShopOrder() {
+                this.getSubmitGoods();
+                const good = this.previousGoods[0];
+                const params = {
+                    goodsItems: JSON.stringify(good.goodsItems),
+                    goodsOrderId: good.goodsOrderId
+                };
+                http.post('/order/modifyGoodsOrder', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
             // 获取 originId origin discountRelatedId
             getDiscountRelatedIdAndOrigin() {
                 const params = {};
@@ -681,9 +733,9 @@
                 return params;
             },
             modifyCombinationOrder() {
+                this.getSubmitGoods();
                 const rooms = this.getSubmitRooms();
                 const playItems = this.getSubmitEnterItems();
-                const items = this.getSubmitGoods();
 
                 const params = {
                     name: this.name,
@@ -691,7 +743,8 @@
                     remark: this.remark,
                     rooms: JSON.stringify(rooms),
                     playItems: JSON.stringify(playItems),
-                    items: JSON.stringify(items),
+                    items: JSON.stringify(this.newGoodItems),
+                    goods: JSON.stringify(this.previousGoods),
                     payments: JSON.stringify([]),
                     orderId: this.order.orderId,
                     ...this.getDiscountRelatedIdAndOrigin()
@@ -708,9 +761,9 @@
                     });
             },
             handleRoomBusiness() {
+                this.getSubmitGoods();
                 const rooms = this.getSubmitRooms();
                 const entertainmentItems = this.getSubmitEnterItems();
-                const items = this.getSubmitGoods();
 
                 const params = {
                     name: this.name,
@@ -718,7 +771,8 @@
                     remark: this.remark,
                     rooms: JSON.stringify(rooms),
                     entertainmentItems: JSON.stringify(entertainmentItems),
-                    items: JSON.stringify(items),
+                    items: JSON.stringify(this.newGoodItems),
+                    goods: JSON.stringify(this.previousGoods),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 if (this.checkState === 'ing') {
@@ -778,7 +832,7 @@
 
                     // 商超订单
                     if (this.order.type === ORDER_TYPE.RETAIL) {
-
+                        this.modifyShopOrder();
                     }
 
                     // 住宿独立订单使用组合订单编辑接口
@@ -796,11 +850,17 @@
             handleEnterChange(enter) {
                 this.enterItems = enter
             },
+            handleShopChange(goods) {
+                this.shopItems = goods;
+            },
             handleRoomPriceChange(price) {
                 this.roomPrice = price;
             },
             handlEnterPriceChange(price) {
                 this.enterPrice = price;
+            },
+            handleShopPriceChange(price) {
+                this.goodsPrice = price;
             }
         }
     };

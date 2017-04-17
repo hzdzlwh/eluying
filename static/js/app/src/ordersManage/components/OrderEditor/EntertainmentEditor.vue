@@ -113,6 +113,20 @@ export default {
                 this.orderType = this.order.playItems ? 1 : 0
             },
             deep: true
+        },
+        enterItems: {
+            handler(c,o) {
+                let totalprice = 0;
+                this.enterItems.filter(function(el) {
+                    // 统计预定中和新加项目的总价
+                        return el.state === 0 || el.state === undefined
+                    })
+                    .forEach(function(el) {
+                        totalprice += Number(el.totalPrice)
+                    })
+                this.$emit('priceChange', totalprice)
+            },
+            deep: true
         }
     },
     created() {
@@ -130,19 +144,19 @@ export default {
     computed: {
         ...mapState({
             enterList: 'enterList'
-        }),
-        totalPrice() {
-            let totalprice = 0;
-            this.enterItems.filter(function(el) {
-                // 统计预定中和新加项目的总价
-                    return el.state === 0 || el.state === undefined
-                })
-                .forEach(function(el) {
-                    totalprice += Number(el.totalPrice)
-                })
-            this.$emit('priceChange', totalprice)
-            return totalprice
-        }
+        })
+        // totalPrice() {
+        //     let totalprice = 0;
+        //     this.enterItems.filter(function(el) {
+        //         // 统计预定中和新加项目的总价
+        //             return el.state === 0 || el.state === undefined
+        //         })
+        //         .forEach(function(el) {
+        //             totalprice += Number(el.totalPrice)
+        //         })
+        //     this.$emit('priceChange', totalprice)
+        //     return totalprice
+        // }
     },
     methods: {
         emitchange() {
@@ -242,7 +256,7 @@ export default {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.count = (index === tag) ? num : item.count;
-                    item.totalPrice = ((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2);
+                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
                     item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
                 });
             } else if (type === -2) {
@@ -250,7 +264,7 @@ export default {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.timeAmount = (index === tag) ? num : item.timeAmount;
-                    item.totalPrice = ((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2);
+                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
                     item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
                 });
             }
