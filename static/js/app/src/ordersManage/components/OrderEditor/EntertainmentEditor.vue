@@ -79,7 +79,7 @@ import {
     mapState
 } from 'vuex';
 import counter from '../../../common/components/counter.vue';
-import SelectProject from './selectProject.vue';
+import SelectProject from './SelectProject.vue';
 import AJAXService from 'AJAXService';
 import modal from 'modal';
 import bus from '../../../common/eventBus';
