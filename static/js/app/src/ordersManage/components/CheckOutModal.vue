@@ -72,8 +72,7 @@
     export default{
         data() {
             return {
-                penalty: undefined,
-                isLoading: false
+                penalty: undefined
             };
         },
         computed: {
@@ -160,7 +159,7 @@
                 });
                 const filterRooms = rooms.filter(room => { return room; });
                 if (filterRooms.length <= 0) {
-                    modal.somethingAlert('请选择房间！');
+                    modal.alert('请选择房间！');
                     return false;
                 }
                 const business = {
@@ -171,30 +170,25 @@
                 if (business.type === 2) {
                     business.penalty = this.penalty;
                 }
-                if (this.isLoading) {
-                    return false;
-                }
-                this.isLoading = true;
+
                 if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
                     })
                         .then(res => {
-                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal();
-                                modal.somethingAlert('退房成功');
+                                modal.alert('退房成功');
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderDetail.orderId);
                                 bus.$emit('refreshView');
                                 bus.$emit('showOrder', this.orderDetail.orderId);
                             } else {
-                                modal.somethingAlert(res.msg);
+                                modal.alert(res.msg);
                             }
                         });
                 } else {
-                    this.isLoading = false;
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();

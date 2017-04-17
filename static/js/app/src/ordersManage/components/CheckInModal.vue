@@ -69,7 +69,7 @@
             return {};
         },
         computed: {
-            ...mapState(['roomBusinessInfo']),
+            ...mapState(['roomBusinessInfo', 'orderDetail']),
             roomsList() {
                 if (this.roomBusinessInfo.roomOrderInfoList) {
                     const rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
@@ -77,6 +77,11 @@
                     });
                     rooms.forEach(item => {
                         this.$set(item, 'selected', true);
+                        // 独立住宿订单和子订单只选择一个房间
+                        const roomInfo = this.orderDetail.roomInfo;
+                        if (roomInfo && roomInfo.roomId !== item.roomId) {
+                            this.$set(item, 'selected', false);
+                        }
                     });
                     return rooms;
                 }
