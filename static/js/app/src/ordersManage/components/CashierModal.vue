@@ -157,7 +157,6 @@
                 depositPayChannel: undefined,
                 deposit: undefined,
                 orderPayment: {},
-                disabledBtn: false,
                 uniqueId: 0,
                 isCompany: false,
                 companyCityLedger: false,
@@ -278,7 +277,7 @@
 
                     params = {
                         // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
-                        orderType: this.orderDetail.orderType,
+                        orderType: this.orderDetail.type,
                         // 住宿业务使用
                         subOrderIds: JSON.stringify(subOrderIds),
                         // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
@@ -339,12 +338,12 @@
                                 modal.somethingAlert(res.msg);
                             } else {
                                 this.$emit('hide');
-                                bus.$emit('hide');
-                                $('#Cashier').modal('hide');
+                                bus.$emit('hideCashier');
+                                $('#cashier').modal('hide');
                             }
                         });
                 } else {
-                    bus.$emit('hide');
+                    bus.$emit('hideCashier');
                     $('#cashier').modal('hide');
                 }
             },
@@ -372,10 +371,6 @@
                 this.showDeposit = false;
             },
             payMoney() {
-                if (this.disabledBtn) {
-                    return false;
-                }
-                this.disabledBtn = true;
                 let invalid = false;
                 if (this.payments.length > 0) {
                     this.payments.forEach(payment => {
@@ -390,20 +385,17 @@
                 if (invalid) {
                     const loss = !this.orderState || (this.totalDeposit > 0 && this.type !== 'checkIn');
                     modal.somethingAlert(`请选择${loss ? '退款' : '收款'}方式！`);
-                    this.disabledBtn = false;
                     return false;
                 }
                 const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                 if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney)) {
                     modal.somethingAlert('订单未结清，无法完成收银！');
-                    this.disabledBtn = false;
                     return false;
                 }
                 const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                 if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
                     modal.somethingAlert('退款押金无法大于已付押金！');
-                    this.disabledBtn = false;
                     return false;
                 }
                 const payments = this.payments.map(payment => {
@@ -424,6 +416,7 @@
                         type: (this.orderPayment.deposit > 0 && this.type !== 'checkIn') ? 3 : 1
                     });
                 }
+
                 let params;
                 if (this.type === 'register') {
                     params = {
@@ -436,14 +429,11 @@
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
                         orderType: this.business.orderType
-                        // subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
                     };
                     if (this.business.subOrderPenaltys) {
                         businessJson.subOrderPenaltys = JSON.parse(this.business.subOrderPenaltys);
                     }
-                    /* if (this.business.penalty) {
-                        payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
-                    }*/
+
                     params = {
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
@@ -451,9 +441,10 @@
                         businessJson: JSON.stringify(businessJson)
                     };
                 } else {
+                    // 普通结账 办理入住 办理退房
                     params = {
-                        orderId: this.orderDetail.orderId,
-                        orderType: -1,
+                        orderId: getOrderId(this.orderDetail),
+                        orderType: this.orderDetail.type,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(this.business)
                     };
@@ -485,18 +476,17 @@
                 if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
                     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
                     modal.somethingAlert(payStr);
-                    this.disabledBtn = false;
                     return false;
                 }
                 if (payWithAlipay <= 0) {
-                    AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                    AJAXService.post('/order/addOrderPayment', params)
                         .then(result => {
                             if (result.code === 1) {
                                 modal.somethingAlert('收银成功');
                                 this.resetData();
                                 this.$emit('hide');
-                                bus.$emit('hide');
-                                $('#Cashier').modal('hide');
+                                bus.$emit('hideCashier');
+                                $('#cashier').modal('hide');
                                 const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', orderId);
@@ -505,14 +495,12 @@
                             } else {
                                 modal.somethingAlert(result.msg);
                             }
-                            this.disabledBtn = false;
                         });
                 } else {
-                    this.disabledBtn = false;
                     this.resetData();
                     this.$emit('hide');
-                    bus.$emit('hide');
-                    $('#Cashier').modal('hide');
+                    bus.$emit('hideCashier');
+                    $('#cashier').modal('hide');
                     this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                     bus.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                 }
