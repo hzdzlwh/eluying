@@ -55,6 +55,7 @@
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
     import bus from '../../common/eventBus';
+    import { getOrderId } from '../utils/order';
     import { mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
@@ -106,7 +107,7 @@
                 this.subOrderPenaltys.splice(index, 1);
             },
             getCancelOrder() {
-                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: this.order.roomOrderId, orderType: this.order.orderType })
+                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: getOrderId(this.order), orderType: this.order.orderType })
                     .then(res => {
                         if (res.code === 1) {
                             this.cancelFee = res.data.payments.find(p => p.type === 13).fee;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
+        <div class="modal fade roomModals" id="orderDetail" role="dialog" >
             <div v-if="order.orderId" class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -1158,7 +1158,8 @@
             },
             editOrder() {
                 this.hideModal();
-                bus.$emit('editOrder', 'editOrder', this.order);
+                // 这里有个顺序问题，所以这样写了
+                $('#orderDetail').on('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
             },
             cancelOrder() {
                 this.hideModal();
@@ -1169,31 +1170,27 @@
                 bus.$emit('showCashier', { type: 'orderDetail' });
             },
             checkInOrCheckOut(type) {
-                if (this.isLoading) {
-                    return false;
-                }
-                this.isLoading = true;
                 this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
                     .then(res => {
                         if (type === 0) {
+                            // 办理入住
                             const haveToday = res.data.roomOrderInfoList.some((room) => {
                                 return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                             });
                             if (haveToday) {
                                 $('#checkIn').modal({ backdrop: 'static' });
                             } else {
-                                modal.somethingAlert('未到办理入住的时间，无法入住！');
+                                modal.alert('未到办理入住的时间，无法入住！');
                                 return false;
                             }
                         } else {
+                            // 退房
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
-                        this.isLoading = false;
                         this.hideModal();
                     })
                     .catch(res => {
-                        modal.somethingAlert(res.msg);
-                        this.isLoading = false;
+                        modal.alert(res.msg);
                     });
             }
         }

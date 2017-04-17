@@ -133,6 +133,7 @@
     import modal from 'modal';
     import { mapState } from 'vuex';
     import bus from '../../common/eventBus';
+    import { getOrderId } from '../utils/order';
     export default{
         props: {
             type: {
@@ -201,7 +202,7 @@
                                          : this.orderDetail.subOrderId;
                         params.orderType = this.orderDetail.orderType;
                     }
-                    Promise.all([this.getOrderPayment(), this.getData(params)]).then(() => {
+                    Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                         if (this.orderState && this.isCompany && this.companyCityLedger) {
                             this.payChannels = [{ channelId: -14, name: '企业挂帐' }, { channelId: -15, name: '企业扣款' }].concat(this.payChannels);
                         } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
@@ -261,7 +262,9 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
-                    const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
+
+                    const orderId = getOrderId(this.orderDetail);
+
                     const subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
@@ -272,9 +275,13 @@
                             }
                         });
                     }
+
                     params = {
+                        // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
                         orderType: this.orderDetail.orderType,
+                        // 住宿业务使用
                         subOrderIds: JSON.stringify(subOrderIds),
+                        // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
                         operationType,
                         orderId
                     };
@@ -296,8 +303,8 @@
                         }
                     });
             },
-            getData(obj) {
-                AJAXService.ajaxWithToken('get', '/user/getChannels', obj)
+            getChannels(params) {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', params)
                     .then(res => {
                         if (res.code === 1) {
                             const channels = res.data.list;
@@ -338,7 +345,7 @@
                         });
                 } else {
                     bus.$emit('hide');
-                    $('#Cashier').modal('hide');
+                    $('#cashier').modal('hide');
                 }
             },
             addPayMent() {
@@ -349,7 +356,8 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({ fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId ++ });
+                this.uniqueId += 1;
+                this.payments.push({ fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId });
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);

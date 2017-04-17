@@ -64,7 +64,7 @@
             </div>
         </div>
         <div v-if="enterList.length > 0">
-            <selectProject :show="enterSelectModalShow" :selectDate="enterList" @close="closeEnterSelectModal" @selectProjectDate="setEnterItems" />
+            <selectProject :show="enterSelectModalShow" :selectDate="enterList" @close="closeEnterModal" @selectProjectDate="setEnterItems" />
         </div>
     </div>
 </template>
@@ -75,11 +75,10 @@ import {
     DdDatepicker
 } from 'dd-vue-component';
 import {
-    mapActions,
     mapState
 } from 'vuex';
 import counter from '../../../common/components/counter.vue';
-import SelectProject from './selectProject.vue';
+import SelectProject from './SelectProject.vue';
 import AJAXService from 'AJAXService';
 import modal from 'modal';
 import bus from '../../../common/eventBus';
@@ -94,7 +93,7 @@ export default {
             type: Object,
             default: {}
         },
-        vipDiscountDetail: Object,
+        vipDiscountDetail: Object
 
     },
     data() {
@@ -103,14 +102,28 @@ export default {
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: -1,
             enterItems: this.getplayItems(),
-            orderType: this.order.playItems ? 1 : 0 //1组合订单，0子订单
-        }
+            orderType: this.order.playItems ? 1 : 0 // 1组合订单，0子订单
+        };
     },
     watch: {
         order: {
             handler(c, o) {
-                this.enterItems = this.getplayItems()
-                this.orderType = this.order.playItems ? 1 : 0
+                this.enterItems = this.getplayItems();
+                this.orderType = this.order.playItems ? 1 : 0;
+            },
+            deep: true
+        },
+        enterItems: {
+            handler(c, o) {
+                let totalprice = 0;
+                this.enterItems.filter(function(el) {
+                    // 统计预定中和新加项目的总价
+                    return el.state === 0 || el.state === undefined;
+                })
+                    .forEach(function(el) {
+                        totalprice += Number(el.totalPrice);
+                    });
+                this.$emit('priceChange', totalprice);
             },
             deep: true
         }
@@ -118,9 +131,6 @@ export default {
     created() {
         // 确认按钮事件
         bus.$on('submitOrder', this.emitchange);
-    },
-    beforeDestroy() {
-        bus.$off('submitOrder', this.emitchange);
     },
     components: {
         DdDatepicker,
@@ -130,34 +140,29 @@ export default {
     computed: {
         ...mapState({
             enterList: 'enterList'
-        }),
-        totalPrice() {
-            let totalprice = 0;
-            this.enterItems.filter(function(el) {
-                // 统计预定中和新加项目的总价
-                    return el.state === 0 || el.state === undefined
-                })
-                .forEach(function(el) {
-                    totalprice += Number(el.totalPrice)
-                })
-            this.$emit('priceChange', totalprice)
-            return totalprice
-        }
+        })
+        // totalPrice() {
+        //     const totalprice = this.enterItems.reduce((sum,price) =>
+        //         sum + Number(price.totalPrice)
+        //     ,0)
+        //     this.$emit('priceChange', totalprice)
+        //     return totalprice
+        // }
     },
     methods: {
         emitchange() {
-            this.$emit('change',this.enterItems)
+            this.$emit('change', this.enterItems);
         },
         // 组合订单和子订单key统一化处理
         getplayItems() {
-            let enterItems = [];
-            let filterEnters = []
+            const enterItems = [];
+            let filterEnters = [];
             if (this.order.playItems) {
                 filterEnters = this.order.playItems.filter(enter => {
                     return enter.state !== 3;
                 });
                 filterEnters.forEach(item => {
-                    const enter = {...item
+                    const enter = { ...item
                     };
                     enter.price = item.originPrice;
                     enter.changeTimes = 0;
@@ -171,11 +176,10 @@ export default {
                     enterItems.push(enter);
                 });
                 return (JSON.parse(JSON.stringify(enterItems)));
-
             } else {
-                filterEnters = [this.order]
+                filterEnters = [this.order];
                 filterEnters.forEach(item => {
-                    const enter = {...item
+                    const enter = { ...item
                     };
 
                     enter.name = item.customerName;
@@ -185,7 +189,7 @@ export default {
                     enter.price = item.originPrice;
                     enter.changeTimes = 0;
                     enter.id = item.categoryId;
-                    enter.count = item.bookNum  ;
+                    enter.count = item.bookNum;
                     enter.selfInventory = item.bookNum;
                     enter.type = 2;
                     enter.inventory = undefined;
@@ -238,11 +242,10 @@ export default {
         handleNumChange(type, tag, num) {
             if (type === 2) {
                 this.enterItems.forEach((item, index) => {
-
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.count = (index === tag) ? num : item.count;
-                    item.totalPrice = ((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2);
+                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
                     item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
                 });
             } else if (type === -2) {
@@ -250,7 +253,7 @@ export default {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.timeAmount = (index === tag) ? num : item.timeAmount;
-                    item.totalPrice = ((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2);
+                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
                     item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
                 });
             }
@@ -265,10 +268,10 @@ export default {
             if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
                 obj.vipDetail.discountList.forEach(list => {
                     if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                        item = {...list
+                        item = { ...list
                         };
                     } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                        item = {...list
+                        item = { ...list
                         };
                     }
                 });
@@ -278,12 +281,13 @@ export default {
         },
         modifyEnter(item) {
             if (item.playOrderId) {
-                item.changeTimes++;
+                item
+                .changeTimes++;
             }
             if (item.playOrderId && item.changeTimes < 2) {
                 return false;
             }
-            /*if (item.id) {
+            /* if (item.id) {
                 const price = item['price'];
                 const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                 item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
@@ -291,17 +295,17 @@ export default {
             }*/
 
             if (item.id && item.date) {
-                let date = util.dateFormat(new Date(item.date));
-                let lastItem = this.lastEnterItem;
+                const date = util.dateFormat(new Date(item.date));
+                const lastItem = this.lastEnterItem;
                 if (lastItem.id === item.id && lastItem.date === date) {
                     return false;
                 }
                 this.lastEnterItem.id = item.id;
                 this.lastEnterItem.date = item.date;
                 AJAXService.ajaxWithToken('get', '/item/getInventory', {
-                        id: item.id,
-                        date: date
-                    })
+                    id: item.id,
+                    date: date
+                })
                     .then(res => {
                         if (res.code === 1) {
                             const price = item['price'];
@@ -319,7 +323,7 @@ export default {
         deleteItem(type, index) {
             this.enterItems.splice(index, 1);
         },
-        closeEnterSelectModal(value) {
+        closeEnterModal(value) {
             this.modifyEnterOrShopIndex = -1;
             this.enterSelectModalShow = false;
         },
@@ -329,25 +333,25 @@ export default {
                     const str1 = util.dateFormat(new Date());
                     const arr1 = str1.split('-');
                     return (date) => {
-                        let disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                        const disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
                         return disable;
-                    }
+                    };
                 } else {
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     const str1 = util.dateFormat(new Date());
                     const arr1 = str1.split('-');
                     return (date) => {
-                        let disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                        const disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
                         return disable;
-                    }
+                    };
                 }
             } else {
                 const str = util.dateFormat(new Date(startDate));
                 const arr = str.split('-');
                 return (date) => {
                     return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                }
+                };
             }
         },
         setEnterItems(data) {
@@ -364,8 +368,8 @@ export default {
                     ...data
                 });
             } else {
-                let index = this.modifyEnterOrShopIndex;
-                for (let key in data) {
+                const index = this.modifyEnterOrShopIndex;
+                for (const key in data) {
                     this.enterItems[index][key] = data[key];
                 }
                 if (this.enterItems[index].count === 0) {
@@ -373,7 +377,7 @@ export default {
                 }
                 this.modifyEnter(this.enterItems[index]);
             }
-        },
+        }
     }
-}
+};
 </script>

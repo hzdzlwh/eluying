@@ -13,7 +13,45 @@
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/ordersManage/orders.js"></script>
 </head>
-<body>
+<body><OBJECT ID="ieIdc"
+              CLASSID="clsid:63CAB467-5BB8-4CB2-8C87-C8F3B66040C0"
+              WIDTH="0" HEIGHT="0" style="float:left;width:0px; height:0px; padding:0px; margin:0px"
+>
+    <embed id="myIdc"
+           TYPE="application/x-itst-activex"
+           style="float:left;width:20px; height:20px; visibility: hidden"
+           clsid="{63CAB467-5BB8-4CB2-8C87-C8F3B66040C0}"
+           event_OnStatus="onStatus"
+           event_OnMessage="onMessage"
+    >
+</OBJECT>
+<script>
+
+    //- 状态事件
+    function onStatus(state,msg) {
+        /*****************************************************************************
+         state	msg
+         0		关闭
+         1		启动
+         2		找到阅读器：……
+         3		未找到卡（证），已查找了n秒时间。
+         4		选择卡（证）失败
+         5		读取基本信息失败。……
+         6		读取追加数据失败。……
+         7		照片解码错误。……
+         8		软件未授权。
+         9		读卡成功。
+         10		读卡时系统出现错误。……
+         11		未找到USB读卡设备(连接USB端口失败)
+         *****************************************************************************/
+        console.log('state:', state, 'msg:', msg);
+    }
+
+    //- 消息事件，主要是读卡错误时引发
+    function onMessage(msg) {
+        console.log('msg:', msg);
+    }
+</script>
 <div class="orderManage-rootContainer">
     <no-auth v-if="!hasAuth" auth-name="订单管理"></no-auth>
     <div class="ordersManage-mainContainer" v-if="hasAuth">
