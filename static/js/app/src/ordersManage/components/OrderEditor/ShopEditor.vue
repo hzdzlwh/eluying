@@ -116,7 +116,7 @@
     import counter from '../../../common/components/counter.vue';
     import selectGoods from './SelectGoods.vue';
     import modal from 'modal';
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     export default{
         props: {
             vipDiscountDetail: {
@@ -136,10 +136,10 @@
             };
         },
         created() {
-            event.$on('submitOrder', this.changeGoods);
+            bus.$on('submitOrder', this.changeGoods);
         },
         beforeDestroy() {
-            event.$off('submitOrder', this.changeGoods);
+            bus.$off('submitOrder', this.changeGoods);
         },
         computed: {
             ...mapState({ shopList: 'shopList' }),
