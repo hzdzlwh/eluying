@@ -111,6 +111,7 @@ $(function() {
             bus.$on('showGetMoney', this.showGetMoney);
             bus.$on('hideGetMoney', this.hideGetMoney);
             bus.$on('hideCancelOrder', this.hideCancelOrder);
+            bus.$on('showCancelOrder', this.showCancelOrder);
 
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
@@ -131,6 +132,7 @@ $(function() {
             bus.$off('showGetMoney', this.showGetMoney);
             bus.$off('hideGetMoney', this.hideGetMoney);
             bus.$off('hideCancelOrder', this.hideCancelOrder);
+            bus.$off('showCancelOrder', this.showCancelOrder);
         },
         computed: {
             orderParams() {
@@ -183,6 +185,9 @@ $(function() {
             },
             hideCancelOrder() {
                 this.cancelOrderShow = false;
+            },
+            showCancelOrder() {
+                this.cancelOrderShow = true;
             },
             getRoomsList() {
                 return AJAXService.ajaxWithToken('get', '/room/getRoomsList', {})

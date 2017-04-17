@@ -804,7 +804,7 @@
             },
             cancelOrder() {
                 this.hideModal();
-                this.$emit('showCancelOrder', orderDetail.orderId)
+                this.$emit('showCancelOrder')
             },
             getFoodDetail(food) {
                 if (food.detail) {

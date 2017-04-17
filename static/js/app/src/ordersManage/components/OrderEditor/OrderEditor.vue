@@ -355,7 +355,7 @@
                 }
                 if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
@@ -369,7 +369,7 @@
                     return false;
                 }
                 const params = this.checkState === 'editOrder'
-                    ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                    ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
                     : { phone: newVal };
                 const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
