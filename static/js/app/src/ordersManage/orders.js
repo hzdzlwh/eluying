@@ -149,7 +149,7 @@ $(function() {
              * @param obj
              */
             getOrdersList(obj, pageChange) {
-                const objStr = JSON.stringify(obj);
+                // const objStr = JSON.stringify(obj);
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
                 this.isLoading = true;
