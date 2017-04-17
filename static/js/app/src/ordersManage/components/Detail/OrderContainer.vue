@@ -1158,7 +1158,8 @@
             },
             editOrder() {
                 this.hideModal();
-                bus.$emit('editOrder', 'editOrder', this.order);
+                // 这里有个顺序问题，所以这样写了
+                $('#orderDetail').on('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
             },
             showCashier() {
                 this.hideModal();
