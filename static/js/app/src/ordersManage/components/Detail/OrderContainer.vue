@@ -27,7 +27,7 @@
                             <span class="header-tools"
                                   v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
-                            <span class="header-tools" v-if="order.cancelAble" @click="">取消订单</span>
+                            <span class="header-tools" v-if="order.cancelAble" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
                     </div>
@@ -1160,6 +1160,10 @@
                 this.hideModal();
                 // 这里有个顺序问题，所以这样写了
                 $('#orderDetail').on('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
+            },
+            cancelOrder() {
+                this.hideModal();
+                bus.$emit('showCancelOrder');
             },
             showCashier() {
                 this.hideModal();

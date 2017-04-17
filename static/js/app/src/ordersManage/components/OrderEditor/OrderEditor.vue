@@ -86,12 +86,12 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
-
-                        <EnterEditor 
+                        <CateEditor :vipDiscountDetail="vipDiscountDetail"></CateEditor>
+                        <EnterEditor
                         :order="order"
-                         v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" 
-                         :vipDiscountDetail="vipDiscountDetail" 
-                         @change="handleEnterChange" 
+                         v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION"
+                         :vipDiscountDetail="vipDiscountDetail"
+                         @change="handleEnterChange"
                          @priceChange="handlEnterPriceChange"/>
                         <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
@@ -360,7 +360,7 @@
                 }
                 if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
+                        ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
@@ -374,7 +374,7 @@
                     return false;
                 }
                 const params = this.checkState === 'editOrder'
-                    ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
+                    ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
                     : { phone: newVal };
                 const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {

@@ -31,8 +31,7 @@
                                 <span>¥{{item.foodPrice}}</span>
                                 <span class="single-order-btn"
                                       v-text="!order.caterOrderId ? '查看': ''"
-                                      :class="!order.caterOrderId ? 'cursor' : ''"
-                                      @click="showSingleOrder(item)">
+                                      :class="!order.caterOrderId ? 'cursor' : ''">
                                 </span>
                             </div>
                             <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
@@ -168,6 +167,12 @@
     import { mapState } from 'vuex';
     import bus from '../../../common/eventBus';
     export default{
+        props: {
+            vipDiscountDetail: {
+                type: Object,
+                default: function() { return {}; }
+            }
+        },
         data() {
             return {};
         },
@@ -218,17 +223,11 @@
                 }
 
                 return desksStr;
-            },
-            showSingleOrder(order) {
-                if (!this.order.caterOrderId) {
-                    bus.$emit('onShowDetail',
-                        {
-                            orderId: order.foodOrderId,
-                            orderType: 0
-                        });
-                } else {
-                    return false;
-                }
+            }
+        },
+        watch: {
+            vipDiscountDetail(newVal) {
+                console.log(newVal);
             }
         }
     };
