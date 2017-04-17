@@ -140,6 +140,16 @@ $(function() {
             },
             confirm() {
                 for (let i = 0; i < this.newDiscounts.length; i ++) {
+                    if (!this.newDiscounts[i].description) {
+                        modal.alert('请填写折扣名称');
+                        return false;
+                    }
+
+                    if (!this.newDiscounts[i].discount) {
+                        modal.alert('请填写优惠折扣');
+                        return false;
+                    }
+
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.newDiscounts[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
