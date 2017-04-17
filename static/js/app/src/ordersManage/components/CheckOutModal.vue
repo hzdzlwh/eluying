@@ -68,7 +68,7 @@
     import AJAXService from '../../common/AJAXService';
     import modal from '../../common/modal';
     import { mapState } from 'vuex';
-    import event from '../event';
+    import bus from '../../common/eventBus';
     export default{
         data() {
             return {
@@ -187,8 +187,8 @@
                                 modal.somethingAlert('退房成功');
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', this.orderDetail.orderId);
-                                event.$emit('refreshView');
-                                event.$emit('showOrder', this.orderDetail.orderId);
+                                bus.$emit('refreshView');
+                                bus.$emit('showOrder', this.orderDetail.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -199,7 +199,7 @@
                     business.functionType = 1;
                     this.hideModal();
                     this.$emit('showCashier', { type: 'checkOut', business });
-                    event.$emit('showCashier', { type: 'checkOut', business });
+                    bus.$emit('showCashier', { type: 'checkOut', business });
                 }
             }
         },

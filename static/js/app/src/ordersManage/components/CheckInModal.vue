@@ -63,7 +63,7 @@
     import util from 'util';
     import CheckInPerson from './CheckInPerson.vue';
     import { mapState } from 'vuex';
-    import event from '../event';
+    import bus from '../../common/eventBus';
     export default{
         data() {
             return {};
@@ -174,7 +174,7 @@
                 };
                 $('#checkIn').modal('hide');
                 this.$emit('showCashier', { type: 'checkIn', business });
-                event.$emit('showCashier', { type: 'checkIn', business });
+                bus.$emit('showCashier', { type: 'checkIn', business });
             }
         },
         components: {

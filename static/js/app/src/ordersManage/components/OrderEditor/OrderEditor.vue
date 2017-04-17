@@ -86,12 +86,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
-                        <CateEditor></CateEditor>
-                        <EnterEditor :order="order"
-                                     v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT || this.order.type === ORDER_TYPE.COMBINATION"
-                                     :vipDiscountDetail="vipDiscountDetail"
-                                     @change="handleRoomChange"
-                                     @priceChange=""/>
+                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange=""/>
                         <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
@@ -228,7 +223,7 @@
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     import {
         DdDropdown,
         DdDropdownItem,
@@ -500,7 +495,7 @@
                 this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
             },
             hideModal() {
-                event.$emit('hideOrderEditor');
+                bus.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
             },
             setUserInfo(obj) {
@@ -571,6 +566,22 @@
 
                 return true;
             },
+            getItemDiscountInfo(nodeId, nodeType) {
+                let item = {
+                    discount: 1
+                };
+                if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
+                    this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
+                            item = {...list };
+                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                            item = {...list };
+                        }
+                    });
+                }
+
+                return item;
+            },
             getSubmitRooms() {
                 return this.rooms.map(room => {
                     return {
@@ -618,7 +629,7 @@
                         date: item.date,
                         categoryId: item.id,
                         categoryName: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2)),
+                        price: Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type).discount).toFixed(2)),
                         totalPrice: Number(item.totalPrice),
                         playOrderId: item.playOrderId,
                         entertainmentId: item.entertainmentId
@@ -644,31 +655,31 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
                     });
             },
             modifyEntertainmentOrder() {
-                const room = this.rooms[0];
+                const enterItems = this.enterItems[0];
                 const params = {
                     customerName: this.name,
                     customerPhone: this.phone,
                     remark: this.remark,
-                    amount: room.count,
-                    enterOrderId: room.id,
-                    timeAmount: room.unitTime,
-                    totalPrice: room.totalPrice,
+                    amount: enterItems.count,
+                    enterOrderId: enterItems.id,
+                    timeAmount: enterItems.unitTime,
+                    totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
-                http.post(' /entertainment/getCategoryListPC', params)
+                http.post(' /order/modifyEnterOrder', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -685,8 +696,8 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -741,8 +752,8 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
-                            event.$emit('refreshView');
-                            event.$emit('onShowDetail', this.order);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', this.order);
                         } else {
                             modal.alert(res.msg);
                         }
@@ -785,8 +796,8 @@
                                 business.cashierType = this.checkState;
                                 this.$emit('showCashier', { type: 'register', business: business });
                             } else {
-                                event.$emit('refreshView');
-                                event.$emit('onShowDetail', this.order);
+                                bus.$emit('refreshView');
+                                bus.$emit('onShowDetail', this.order);
                             }
                         } else {
                             modal.alert(res.msg);
@@ -795,7 +806,7 @@
             },
             submitInfo() {
                 // 获取 shopGoodsItems enterItems rooms
-                event.$emit('submitOrder');
+                bus.$emit('submitOrder');
 
                 if (!this.validate()) {
                     return false;
@@ -834,6 +845,9 @@
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
+            },
+            handleEnterChange(enter) {
+                this.enterItems = enter
             },
             handleShopChange(goods) {
                 this.shopItems = goods;

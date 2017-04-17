@@ -82,7 +82,7 @@ import counter from '../../../common/components/counter.vue';
 import SelectProject from './selectProject.vue';
 import AJAXService from 'AJAXService';
 import modal from 'modal';
-import event from '../../event';
+import bus from '../../../common/eventBus';
 import util from '../../../common/util';
 export default {
     props: {
@@ -117,10 +117,10 @@ export default {
     },
     created() {
         // 确认按钮事件
-        event.$on('submitOrder', this.enterItems);
+        bus.$on('submitOrder', this.emitchange);
     },
     beforeDestroy() {
-        event.$off('submitOrder', this.enterItems);
+        bus.$off('submitOrder', this.emitchange);
     },
     components: {
         DdDatepicker,
@@ -145,6 +145,9 @@ export default {
         }
     },
     methods: {
+        emitchange() {
+            this.$emit('change',this.enterItems)
+        },
         // 组合订单和子订单key统一化处理
         getplayItems() {
             let enterItems = [];
@@ -188,7 +191,6 @@ export default {
                     enter.inventory = undefined;
                     enter.originPrice = (item.originPrice * item.bookNum * item.timeAmount).toFixed(2);
                     enter.totalPrice = item.totalPrice;
-                    enter.nodeId = item. categoryId;
                     enterItems.push(enter);
                 });
                 return (JSON.parse(JSON.stringify(enterItems)));

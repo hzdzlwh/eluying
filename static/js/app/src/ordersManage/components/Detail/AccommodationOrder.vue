@@ -74,7 +74,7 @@
         ID_CARD_TYPE,
         ORDER_TYPE
     } from '../../constant';
-    import event from '../../event';
+    import bus from '../../../common/eventBus';
     export default {
         props: {
             order: {
@@ -134,7 +134,7 @@
                 }
             },
             modalShow(id) {
-                event.$emit('onShowDetail', {
+                bus.$emit('onShowDetail', {
                     orderId: id,
                     orderType: 3
                 });

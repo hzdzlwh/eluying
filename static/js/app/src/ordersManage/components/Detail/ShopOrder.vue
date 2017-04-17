@@ -36,7 +36,7 @@
 <style lang="scss" type="text/css" rel="stylesheet/scss">
 </style>
 <script>
-    import event from '../../event.js';
+    import bus from '../../../common/eventBus.js';
     export default{
         props: {
             order: Object
@@ -80,7 +80,7 @@
             },
             showSingleOrder(order) {
                 if (!this.order.goodsOrderId) {
-                    event.$emit('onShowDetail',
+                    bus.$emit('onShowDetail',
                         {
                             orderId: order.goodsOrderId,
                             orderType: 2

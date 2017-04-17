@@ -165,7 +165,7 @@
     }
 </style>
 <script>
-    import event from '../../event.js';
+    import bus from '../../../common/eventBus.js';
     export default{
         props: {
             order: Object
@@ -222,7 +222,7 @@
             },
             showSingleOrder(order) {
                 if (!this.order.caterOrderId) {
-                    event.$emit('onShowDetail',
+                    bus.$emit('onShowDetail',
                         {
                             orderId: order.foodOrderId,
                             orderType: 0
