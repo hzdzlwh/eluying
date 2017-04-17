@@ -86,7 +86,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
-                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange=""/>
+                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange="handlEnterPriceChange"/>
                         <ShopEditor :vipDiscountDetail="vipDiscountDetail" @change="handleRoomChange" @priceChange=""></ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
@@ -798,6 +798,9 @@
             },
             handleRoomPriceChange(price) {
                 this.roomPrice = price;
+            },
+            handlEnterPriceChange(price) {
+                this.enterPrice = price;
             }
         }
     };
