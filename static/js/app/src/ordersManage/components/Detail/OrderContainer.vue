@@ -12,7 +12,7 @@
                                 <img v-if="type === ORDER_TYPE.RETAIL" src="/static/image/shop-icon.png">
                             </span>
                             <span class="header-text">{{title}}</span>
-                            <span v-if="order.orderState !== undefined" class="order-state" :class="orderStateColor">
+                            <span v-if="order.orderState !== undefined || order.state !== undefined" class="order-state" :class="orderStateColor">
                                 {{orderStateText}}
                             </span>
                         </div>
@@ -1019,16 +1019,18 @@
                 return http.getUrl2('/printer/getOrderDetailJsp?') + params;
             },
             orderStateText() {
-                if (this.order.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.order.orderState]) {
+                const state = this.order.orderState === undefined ? this.order.state : this.order.orderState;
+                if (this.order.type === undefined || state === undefined || !ORDER_STATE_TEXT[this.order.type][state]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.order.type][this.order.orderState].text;
+                return ORDER_STATE_TEXT[this.order.type][state].text;
             },
             orderStateColor() {
-                if (this.order.type === undefined || this.order.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.order.orderState]) {
+                const state = this.order.orderState === undefined ? this.order.state : this.order.orderState;
+                if (this.order.type === undefined || state === undefined || !ORDER_STATE_TEXT[this.order.type][state]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.order.type][this.order.orderState].color;
+                return ORDER_STATE_TEXT[this.order.type][state].color;
             },
             orderDates() {
                 switch (this.order.type) {

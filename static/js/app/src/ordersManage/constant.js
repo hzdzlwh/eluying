@@ -29,20 +29,23 @@ export const ORDER_STATUS_ICON = {
     '5': { text: '已完成', borderColor: '#ffffff #bfbfbf', backgroundColor: '#bfbfbf' }
 };
 
+// 订单详情中使用
 export const ORDER_STATE_TEXT = {
     [ORDER_TYPE.COMBINATION]: {
         '-1': { text: '待付款', color: 'red' },
         '2': { text: '已预订', color: 'yellow' },
         '3': { text: '进行中', color: 'blue' },
         '4': { text: '已取消', color: 'grey' },
-        '5': { text: '已结束', color: 'grey' }
+        '5': { text: '已结束', color: 'grey' },
+        '8': { text: '反结账', color: 'red' }
     },
     [ORDER_TYPE.ACCOMMODATION]: {
         '-1': { text: '待付款', color: 'red' },
         '0': { text: '已预订', color: 'yellow' },
         '1': { text: '已入住', color: 'blue' },
         '2': { text: '已退房', color: 'grey' },
-        '3': { text: '已取消', color: 'grey' }
+        '3': { text: '已取消', color: 'grey' },
+        '8': { text: '反结账', color: 'red' }
     },
     [ORDER_TYPE.CATERING]: {
         '-1': { text: '待付款', color: 'red' },
@@ -51,17 +54,27 @@ export const ORDER_STATE_TEXT = {
         '2': { text: '已结束', color: 'grey' },
         '3': { text: '已取消', color: 'grey' },
         '4': { text: '待处理', color: 'green' },
-        '5': { text: '已拒绝', color: 'grey' }
+        '5': { text: '已拒绝', color: 'grey' },
+        '8': { text: '反结账', color: 'red' }
     },
     [ORDER_TYPE.ENTERTAINMENT]: {
         '-1': { text: '待付款', color: 'red' },
         '0': { text: '已预订', color: 'yellow' },
         '1': { text: '进行中', color: 'blue' },
         '3': { text: '已取消', color: 'grey' },
-        '2': { text: '已结束', color: 'grey' }
+        '2': { text: '已结束', color: 'grey' },
+        '8': { text: '反结账', color: 'red' }
+    },
+    [ORDER_TYPE.RETAIL]: {
+        '-1': { text: '待付款', color: 'red' },
+        '1': { text: '进行中', color: 'blue' },
+        '3': { text: '已取消', color: 'grey' },
+        '2': { text: '已结束', color: 'grey' },
+        '8': { text: '反结账', color: 'red' }
     }
 };
 
+// 订单列表中使用
 export const ORDER_STATE_LIST = {
     '-1': [{ id: '-1', name: '全部状态' },
         { id: '0', name: '待处理' },
