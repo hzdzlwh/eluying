@@ -76,8 +76,6 @@ $(function() {
                     this.deleteRestaurant.bind(this));
             },
             openSettingDialog: function(restaurant) {
-                settingDialog.oddType = restaurant.oddType;
-                settingDialog.unit = restaurant.unit;
                 settingDialog.id = restaurant.restId;
                 settingDialog.getDiscounts();
                 $('#settingDialog').modal('show');
@@ -133,6 +131,8 @@ $(function() {
                     .then(res => {
                         if (res.code === 1) {
                             this.discounts = res.data.list;
+                            this.oddType = res.data.oddSetting.oddType;
+                            this.unit = res.data.oddSetting.unit;
                         } else {
                             modal.alert(res.msg);
                         }
