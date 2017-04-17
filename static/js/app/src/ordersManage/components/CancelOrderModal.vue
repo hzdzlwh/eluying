@@ -107,7 +107,7 @@
                 this.subOrderPenaltys.splice(index, 1);
             },
             getCancelOrder() {
-                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: getOrderId(this.order), orderType: this.order.orderType })
+                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: getOrderId(this.order), orderType: this.order.type })
                     .then(res => {
                         if (res.code === 1) {
                             this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
