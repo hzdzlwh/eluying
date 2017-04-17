@@ -87,7 +87,12 @@
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
 
-                        <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange="handlEnterPriceChange"/>
+                        <EnterEditor 
+                        :order="order"
+                         v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" 
+                         :vipDiscountDetail="vipDiscountDetail" 
+                         @change="handleEnterChange" 
+                         @priceChange="handlEnterPriceChange"/>
                         <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"

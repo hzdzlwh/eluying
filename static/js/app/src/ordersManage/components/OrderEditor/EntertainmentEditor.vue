@@ -133,9 +133,6 @@ export default {
         // 确认按钮事件
         bus.$on('submitOrder', this.emitchange);
     },
-    beforeDestroy() {
-        bus.$off('submitOrder', this.emitchange);
-    },
     components: {
         DdDatepicker,
         counter,
@@ -144,16 +141,11 @@ export default {
     computed: {
         ...mapState({
             enterList: 'enterList'
-        })
+        }),
         // totalPrice() {
-        //     let totalprice = 0;
-        //     this.enterItems.filter(function(el) {
-        //         // 统计预定中和新加项目的总价
-        //             return el.state === 0 || el.state === undefined
-        //         })
-        //         .forEach(function(el) {
-        //             totalprice += Number(el.totalPrice)
-        //         })
+        //     const totalprice = this.enterItems.reduce((sum,price) => 
+        //         sum + Number(price.totalPrice)
+        //     ,0)
         //     this.$emit('priceChange', totalprice)
         //     return totalprice
         // }
