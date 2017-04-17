@@ -86,6 +86,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
+                        <CateEditor :vipDiscountDetail="vipDiscountDetail"></CateEditor>
                         <EnterEditor :order="order" v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange=""/>
                         <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"

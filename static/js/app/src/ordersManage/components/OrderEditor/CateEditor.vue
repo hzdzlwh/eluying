@@ -168,6 +168,12 @@
     import { mapState } from 'vuex';
     import bus from '../../../common/eventBus';
     export default{
+        props: {
+            vipDiscountDetail: {
+                type: Object,
+                default: function() { return {}; }
+            }
+        },
         data() {
             return {};
         },
@@ -229,6 +235,11 @@
                 } else {
                     return false;
                 }
+            }
+        },
+        watch: {
+            vipDiscountDetail(newVal) {
+                console.log(newVal);
             }
         }
     };
