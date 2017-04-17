@@ -4,23 +4,24 @@
 import { ORDER_TYPE } from '../constant';
 export function getOrderId(order) {
     let orderId;
-    if (order.orderType === ORDER_TYPE.ENTERTAINMENT) {
+    // type字段代表订单真实type orderType在子订单里为-1
+    if (order.type === ORDER_TYPE.ENTERTAINMENT) {
         orderId = order.enterOrderId;
     }
 
-    if (order.orderType === ORDER_TYPE.COMBINATION) {
+    if (order.type === ORDER_TYPE.COMBINATION) {
         orderId = order.orderId;
     }
 
-    if (order.orderType === ORDER_TYPE.ACCOMMODATION) {
+    if (order.type === ORDER_TYPE.ACCOMMODATION) {
         orderId = order.roomOrderId;
     }
 
-    if (order.orderType === ORDER_TYPE.RETAIL) {
+    if (order.type === ORDER_TYPE.RETAIL) {
         orderId = order.goodsOrderId;
     }
 
-    if (order.orderType === ORDER_TYPE.CATERING) {
+    if (order.type === ORDER_TYPE.CATERING) {
         orderId = order.caterOrderId;
     }
 
