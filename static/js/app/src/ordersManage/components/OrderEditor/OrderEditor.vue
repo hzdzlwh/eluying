@@ -92,10 +92,12 @@
                                      :vipDiscountDetail="vipDiscountDetail"
                                      @change="handleRoomChange"
                                      @priceChange=""/>
-                        <ShopEditor v-if="this.order.type === ORDER_TYPE.RETAIL || this.order.type === ORDER_TYPE.COMBINATION"
+                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
+                                    :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
-                                    @change="handleRoomChange"
-                                    @priceChange="" />
+                                    @change="handleShopChange"
+                                    @priceChange="handleShopPriceChange">
+                        </ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
@@ -258,16 +260,16 @@
                 remark: '',
                 enterItems: [],
                 shopGoodsItems: [],
+                newGoodItems: [],
+                previousGoods: [],
                 rooms: [],
+                shopItems: {},
                 showOrder: false,
                 vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
-                goodsSelectModalShow: false,
-                enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
                 lastEnterItem: {},
@@ -585,17 +587,27 @@
                 });
             },
             getSubmitGoods() {
-                this.shopGoodsItems.map(item => {
+                this.newGoodItems = this.shopItems.items.map(item => {
                     return {
-                        amount: item.count,
-                        id: item.id,
-                        type: 3,
-                        priceId: 0,
-                        date: util.dateFormat(new Date()),
+                        amount: item.amount,
+                        id: Number(item.id),
                         name: item.name,
-                        price: Number((item.price * this.getItemDiscountInfo(0, item.type, this.vipDiscountDetail).discount).toFixed(2))
+                        price: item.price,
+                        type: 3
                     };
                 });
+                for (const key in this.shopItems.goods) {
+                    const previousItem = {};
+                    previousItem.goodsOrderId = key;
+                    previousItem.goodsItems = this.shopItems.goods[key]['items'].map(item => {
+                        return {
+                            amount: item.amount,
+                            id: item.id,
+                            price: item.price
+                        };
+                    });
+                    this.previousGoods.push(previousItem);
+                }
             },
 
             getSubmitEnterItems() {
@@ -662,6 +674,24 @@
                         }
                     });
             },
+            modifyShopOrder() {
+                this.getSubmitGoods();
+                const good = this.previousGoods[0];
+                const params = {
+                    goodsItems: JSON.stringify(good.goodsItems),
+                    goodsOrderId: good.goodsOrderId
+                };
+                http.post('/order/modifyGoodsOrder', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            event.$emit('refreshView');
+                            event.$emit('onShowDetail', this.order);
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
             // 获取 originId origin discountRelatedId
             getDiscountRelatedIdAndOrigin() {
                 const params = {};
@@ -691,9 +721,9 @@
                 return params;
             },
             modifyCombinationOrder() {
+                this.getSubmitGoods();
                 const rooms = this.getSubmitRooms();
                 const playItems = this.getSubmitEnterItems();
-                const items = this.getSubmitGoods();
 
                 const params = {
                     name: this.name,
@@ -701,7 +731,8 @@
                     remark: this.remark,
                     rooms: JSON.stringify(rooms),
                     playItems: JSON.stringify(playItems),
-                    items: JSON.stringify(items),
+                    items: JSON.stringify(this.newGoodItems),
+                    goods: JSON.stringify(this.previousGoods),
                     payments: JSON.stringify([]),
                     orderId: this.order.orderId,
                     ...this.getDiscountRelatedIdAndOrigin()
@@ -718,9 +749,9 @@
                     });
             },
             handleRoomBusiness() {
+                this.getSubmitGoods();
                 const rooms = this.getSubmitRooms();
                 const entertainmentItems = this.getSubmitEnterItems();
-                const items = this.getSubmitGoods();
 
                 const params = {
                     name: this.name,
@@ -728,7 +759,8 @@
                     remark: this.remark,
                     rooms: JSON.stringify(rooms),
                     entertainmentItems: JSON.stringify(entertainmentItems),
-                    items: JSON.stringify(items),
+                    items: JSON.stringify(this.newGoodItems),
+                    goods: JSON.stringify(this.previousGoods),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 if (this.checkState === 'ing') {
@@ -788,7 +820,7 @@
 
                     // 商超订单
                     if (this.order.type === ORDER_TYPE.RETAIL) {
-
+                        this.modifyShopOrder();
                     }
 
                     // 住宿独立订单使用组合订单编辑接口
@@ -803,8 +835,14 @@
             handleRoomChange(rooms) {
                 this.rooms = rooms;
             },
+            handleShopChange(goods) {
+                this.shopItems = goods;
+            },
             handleRoomPriceChange(price) {
                 this.roomPrice = price;
+            },
+            handleShopPriceChange(price) {
+                this.goodsPrice = price;
             }
         }
     };

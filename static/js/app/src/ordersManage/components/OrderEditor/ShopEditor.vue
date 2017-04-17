@@ -8,7 +8,7 @@
                     添加项目
                 </span>
             </p>
-            <div v-if="!!(order.orderState || order.state)" class="items">
+            <div v-if="order.creationTime" class="items">
                 <div class="shop-item"
                      :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
                      style="align-items: stretch;flex-direction: column"
@@ -116,9 +116,14 @@
     import counter from '../../../common/components/counter.vue';
     import selectGoods from './SelectGoods.vue';
     import modal from 'modal';
+    import event from '../../event';
     export default{
         props: {
             vipDiscountDetail: {
+                type: Object,
+                default: function() { return {}; }
+            },
+            order: {
                 type: Object,
                 default: function() { return {}; }
             }
@@ -130,8 +135,14 @@
                 editShopList: {}
             };
         },
+        created() {
+            event.$on('submitOrder', this.changeGoods);
+        },
+        beforeDestroy() {
+            event.$off('submitOrder', this.changeGoods);
+        },
         computed: {
-            ...mapState({ order: 'orderDetail', shopList: 'shopList' }),
+            ...mapState({ shopList: 'shopList' }),
             totalPrice() {
                 let totalPrice = 0;
                 for (const key in this.editShopList) {
@@ -204,7 +215,9 @@
                     });
                     this.shopGoodsItems = this.shopGoodsItems.concat(goodsList);
                 }
-                // this.$emit('change', this.shopGoodsItems);
+                const goods = JSON.parse(JSON.stringify(this.editShopList));
+                const items = JSON.parse(JSON.stringify(this.shopGoodsItems));
+                this.$emit('change', { goods: goods, items: items });
             },
             // 处理商超项目数量变化事件
             handleNumChange(type, tag, num, orderId = -1) {
@@ -242,6 +255,11 @@
                     }
                     this.editShopList[shopOrderId].items.splice(index, 1);
                 }
+            },
+            changeGoods() {
+                const goods = JSON.parse(JSON.stringify(this.editShopList));
+                const items = JSON.parse(JSON.stringify(this.shopGoodsItems));
+                this.$emit('change', { goods: goods, items: items });
             }
         },
         components: {
@@ -251,8 +269,9 @@
         watch: {
             order(newVal) {
                 const shopList = {};
-                if (newVal.pcGoodsItems) {
+                if (newVal.pcGoodsItems && newVal.pcGoodsItems.length > 0) {
                     newVal.pcGoodsItems.forEach(item => {
+                        item.id = item.goodsId;
                         if (shopList[item.goodsOrderId]) {
                             shopList[item.goodsOrderId]['items'].push(item);
                         } else {
@@ -269,6 +288,7 @@
                     shopList[orderId]['items'] = this.order.itemList;
                     shopList[orderId]['items'].map(good => {
                         good.goodsOrderId = orderId;
+                        good.id = good.goodsId;
                     });
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
