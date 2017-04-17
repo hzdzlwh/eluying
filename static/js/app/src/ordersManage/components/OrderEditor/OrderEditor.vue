@@ -579,9 +579,9 @@
                 if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
                     this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                            item = {...list };
+                            item = { ...list };
                         } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                            item = {...list };
+                            item = { ...list };
                         }
                     });
                 }
@@ -853,7 +853,7 @@
                 this.rooms = rooms;
             },
             handleEnterChange(enter) {
-                this.enterItems = enter
+                this.enterItems = enter;
             },
             handleShopChange(goods) {
                 this.shopItems = goods;

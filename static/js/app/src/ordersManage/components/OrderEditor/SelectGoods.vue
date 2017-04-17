@@ -278,10 +278,14 @@ export default {
         },
         changebill(item, type) {
             if (type) {
-                this.bill[item.i].num++;
+                this
+                .bill[item.i]
+                .num++;
             } else {
                 if (this.bill[item.i].num) {
-                    this.bill[item.i].num--;
+                    this
+                    .bill[item.i]
+                    .num--;
                 }
             }
         }
