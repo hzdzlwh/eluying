@@ -82,11 +82,11 @@
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
                           v-if="(vipDiscountDetail.vipDetail
-                                && getItemDiscountInfo().discount < 1) || item.quickDiscountId">
+                                && vipDiscount < 1) || item.quickDiscountId">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
-                              v-if="!item.quickDiscountId && Number(item.price) === Number((item.originPrice * getItemDiscountInfo().discount).toFixed(2))">
-                            {{vipDiscountDetail.isVip ? '会员' : '企业'}}{{(getItemDiscountInfo().discount * 10).toFixed(1)}}折
+                              v-if="!item.quickDiscountId && Number(item.price) === Number((item.originPrice * vipDiscount).toFixed(2))">
+                            {{vipDiscountDetail.isVip ? '会员' : '企业'}}{{(vipDiscount * 10).toFixed(1)}}折
                         </span>
                         <span class="discount-num" v-if="item.quickDiscountId">
                             {{getQuickDiscountById(item.quickDiscountId).description}}{{getQuickDiscountById(item.quickDiscountId).discount}}折
@@ -171,12 +171,12 @@
                 }
 
                 this.registerRooms.forEach(room => {
+                    // 快捷折扣优先级最高
                     if (room.quickDiscountId) {
                         return false;
                     }
 
-                    // 快捷折扣优先级最高
-                    room.price = Number((room.originPrice * this.getItemDiscountInfo().discount).toFixed(2));
+                    room.price = Number((room.originPrice * this.vipDiscount).toFixed(2));
                     this.setDateFee(room);
                 });
             }
@@ -204,6 +204,15 @@
                         this.registerRooms.map(room => room.quickDiscountId = firstId);
                     }
                 }
+            },
+            vipDiscount() {
+                const vipDetail = this.vipDiscountDetail.vipDetail;
+                if (vipDetail && vipDetail.discountList) {
+                    const node = vipDetail.discountList.find(i => i.nodeId === 0 && i.nodeType === 0);
+                    return node ? node.discount : 1;
+                }
+
+                return 1;
             }
         },
         methods: {
@@ -234,9 +243,17 @@
                 return this.quickDiscounts.find(i => id === i.id) || {};
             },
             quickDiscountIdChange(room) {
+                if (!room.quickDiscountId) {
+                    room.price = this.vipDiscount < 1 ? this.getVipPrice(room) : room.originPrice;
+                    return false;
+                }
+
                 const quickDiscount = this.quickDiscounts.find(i => i.id === room.quickDiscountId);
                 room.price = Number((room.originPrice * (quickDiscount.discount / 10)).toFixed(2));
                 this.setDateFee(room);
+            },
+            getVipPrice(room) {
+                return Number((room.originPrice * this.vipDiscount).toFixed(2));
             },
             initRooms(order) {
                 // 组合订单
@@ -420,7 +437,7 @@
                             let price = 0;
                             let oldPrice = 0;
                             let originPrice = 0;
-                            const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
+                            const discount = this.vipDiscount;
                             res.data.rs.status.forEach((option, index) => {
                                 datePriceList.push({
                                     date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)),
@@ -534,19 +551,6 @@
             },
             deleteRoom(index) {
                 this.registerRooms.splice(index, 1);
-            },
-            getItemDiscountInfo() {
-                const vipDetail = this.vipDiscountDetail.vipDetail;
-                let item = { discount: 1 };
-                if (vipDetail && vipDetail.discountList.length > 0) {
-                    vipDetail.discountList.forEach(list => {
-                        if (list.nodeId === 0 && list.nodeType === 0) {
-                            item = { ...list };
-                        }
-                    });
-                }
-
-                return item;
             },
             addPerson(id, preson) {
                 this.registerRooms.forEach((item, index) => {
