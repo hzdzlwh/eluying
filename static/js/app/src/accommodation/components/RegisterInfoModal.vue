@@ -1867,14 +1867,13 @@
             },
             phone(newVal) {
                 const originType = Number(this.userOriginType.split('~')[1]);
-                if (originType === - 5 && this.checkState === 'editOrder') {
+                if (originType === - 5) {
                     return false;
                 }
                 const params = this.checkState === 'editOrder'
                                ? { phone: newVal, orderId: this.order.orderId, orderType: - 1 }
                                : { phone: newVal };
-                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
-                if (newVal.length === 11 && search) {
+                if (newVal.length === 11) {
                     this.checkPhone();
                     this.getVipDiscount(params);
                 } else if (newVal.length !== 11) {
@@ -1882,15 +1881,16 @@
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
-                if (!newVal.vipDetail && !oldVal.vipDetail) { return false;}
+                if (!newVal.vipDetail && !oldVal.vipDetail) { return false; }
                 this.registerRooms.forEach(room => {
                     delete room.previousRoomType;
                     if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
+                    } else {
+                        room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
+                        this.setDateFee(room.price, room);
+                        this.setFirstDateFee(room.price, room);
                     }
-                    room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
-                    this.setDateFee(room.price, room);
-                    this.setFirstDateFee(room.price, room);
                 });
 
                 this.enterItems.forEach(enter => {
