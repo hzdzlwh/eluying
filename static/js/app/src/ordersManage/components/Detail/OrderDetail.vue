@@ -71,10 +71,12 @@
                 types.LOAD_ROOM_BUSINESS_INFO
             ]),
             resetOrder(id) {
+                const that = this;
                 AJAXService.ajaxWithToken('get', '/order/resettle', { orderId: id, orderType: this.type })
                     .then(res => {
                         if (res.code === 1) {
-                            this[types.GET_ORDER_DETAIL]({ id, orderType: this.type });
+                            that[types.GET_ORDER_DETAIL]({ orderId: id, orderType: that.type });
+                            bus.$emit('refreshView');
                         } else {
                             modal.somethingAlert(res.msg);
                         }
