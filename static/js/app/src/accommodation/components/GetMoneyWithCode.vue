@@ -31,7 +31,7 @@
         </div>
     </div>
 </template>
-<style type="text/css" rel="stylesheet/scss" lang="sass">
+<style type="text/css" rel="stylesheet/scss" lang="scss">
     @import "~dd-common-css/src/variables";
     #payWithCode {
         box-sizing: border-box;

@@ -5,7 +5,7 @@
                 <small><i>({{date.startDate}}~{{date.endDate}})</i></small>
                 <div v-if="entertainmentList.length > 0" class="reports-component-container">
                     <dd-select v-model="entertainmentId">
-                        <dd-option v-for="enter in entertainmentList" :value="enter.entertainmentId" :label="enter.entertainmentName"></dd-option>
+                        <dd-option v-for="enter in entertainmentList" :value="enter.entertainmentId" :key="enter.entertainmentId" :label="enter.entertainmentName"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -16,7 +16,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
     .reports-component-container {
         display: inline-block;
         .dd-input {

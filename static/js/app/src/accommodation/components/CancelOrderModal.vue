@@ -24,7 +24,7 @@
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(subOrderPenalty, index) in subOrderPenaltys">
                                         <dd-select v-model="subOrderPenalty.nodeId">
-                                            <dd-option v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
+                                            <dd-option :key="subOrder.nodeId" v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
                                             </dd-option>
                                         </dd-select>
                                         <input type="number" class="dd-input" v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金">
@@ -68,7 +68,8 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: []
+                subOrders: [],
+                isLoading: false
             }
         },
         computed: {
@@ -149,6 +150,10 @@
 
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
                     AJAXService.ajaxWithToken('get', '/order/cancel', business)
                         .then(res => {
@@ -160,12 +165,14 @@
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
+                            this.isLoading = false;
                         })
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
                     this.hideModal();
                     this.$emit('showCashier', { type: 'cancel', business });
+                    this.isLoading = false;
                 }
             }
         },

@@ -99,6 +99,12 @@
       .sbtn-cancel:active{
         @include btn1_click();
       }
+      .grey-btn {
+        background: #cccccc;
+      }
+      .grey-btn:hover {
+        background: #cccccc;
+      }
     }
   }
 }
@@ -265,6 +271,9 @@
     }
     .col2:active{
       color: $color1Click;
+    }
+    .col-other-guest {
+      padding-left: 20px;
     }
   }
 }

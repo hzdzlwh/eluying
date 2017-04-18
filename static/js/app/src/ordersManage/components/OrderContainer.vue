@@ -69,6 +69,12 @@
                                             <span class="money-type">商品总价</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
                                         </p>
+                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 17) != 0">
+                                            <span class="money-type">零头处理</span>
+                                            <span class="money-num">
+                                                {{findTypePrice(order.payments, 17) > 0 ? '-' : ''}}¥{{Math.abs(findTypePrice(order.payments, 17))}}
+                                            </span>
+                                        </p>
                                         <p class="money-item item-indent money-sub-item"
                                            v-if="findTypePrice(order.payments, 5) > 0">
                                             <span class="money-type">优惠</span>
