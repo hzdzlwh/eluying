@@ -327,7 +327,7 @@ export default {
                     orderType: - 1,
                     type: 1,
                     origin: 1,
-                    originRelatedId: this.detailData.cid
+                    originRelatedId: date.cid
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
