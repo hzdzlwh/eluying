@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderDetail" role="dialog" >
+        <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
             <div v-if="order.orderId" class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">

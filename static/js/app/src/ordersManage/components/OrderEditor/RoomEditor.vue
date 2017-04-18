@@ -53,8 +53,8 @@
                             <label class="label-text">房费</label>
                             <p class="fee-container">
                                 <span class="fee-symbol">¥</span>
-                                <input class="dd-input fee-input" v-model="item.price"
-                                       @input="setDateFee(item)"
+                                <input class="dd-input fee-input" v-model.number="item.price"
+                                       @input="changeRoomFee(item)"
                                        @blur="setFirstDateFee(item)"
                                        @focus="setFirstDateFee(item)"
                                        style="width: 80px" type="number"
@@ -81,12 +81,15 @@
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
-                          v-if="vipDiscountDetail.vipDetail
-                                && getItemDiscountInfo().discount < 1">
+                          v-if="(vipDiscountDetail.vipDetail
+                                && getItemDiscountInfo().discount < 1) || item.quickDiscountId">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
-                              v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo().discount).toFixed(2))">
-                            {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo().discount * 10).toFixed(1)}折`}}
+                              v-if="!item.quickDiscountId && Number(item.price) === Number((item.originPrice * getItemDiscountInfo().discount).toFixed(2))">
+                            {{vipDiscountDetail.isVip ? '会员' : '企业'}}{{(getItemDiscountInfo().discount * 10).toFixed(1)}}折
+                        </span>
+                        <span class="discount-num" v-if="item.quickDiscountId">
+                            {{getQuickDiscountById(item.quickDiscountId).description}}{{getQuickDiscountById(item.quickDiscountId).discount}}折
                         </span>
                     </span>
                 </div>
@@ -166,7 +169,13 @@
                 if (!newVal.vipDetail && !oldVal.vipDetail) {
                     return false;
                 }
+
                 this.registerRooms.forEach(room => {
+                    if (room.quickDiscountId) {
+                        return false;
+                    }
+
+                    // 快捷折扣优先级最高
                     room.price = Number((room.originPrice * this.getItemDiscountInfo().discount).toFixed(2));
                     this.setDateFee(room);
                 });
@@ -220,6 +229,9 @@
                             modal.alert(res.msg);
                         }
                     });
+            },
+            getQuickDiscountById(id) {
+                return this.quickDiscounts.find(i => id === i.id) || {};
             },
             quickDiscountIdChange(room) {
                 const quickDiscount = this.quickDiscounts.find(i => i.id === room.quickDiscountId);
@@ -474,6 +486,11 @@
                             modal.alert(res.msg);
                         }
                     });
+            },
+            changeRoomFee(room) {
+                // 手动修改价格需要把快捷折扣置为无
+                room.quickDiscountId = '';
+                this.setDateFee(room);
             },
             // 设置每日房价
             setDateFee(room) {
