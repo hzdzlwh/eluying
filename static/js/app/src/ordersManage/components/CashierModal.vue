@@ -227,13 +227,13 @@
                 this.companyBalance = undefined;
             },
             getPayChannels(index) {
-                if (this.type === 'register' && this.business.cashierType === 'finish') {
+                if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
                     return this.depositPayChannels;
                 }
                 if (this.payments.length <= 1) {
                     return this.payChannels;
                 } else {
-                    let own = false;
+                    let own = false; // 判断是否已存在订单钱包的支付方式
                     let arr = this.payChannels;
                     this.payments.forEach((pay, num) => {
                         const id = pay.payChannelId;
@@ -484,12 +484,9 @@
                             if (result.code === 1) {
                                 modal.somethingAlert('收银成功');
                                 this.resetData();
-                                this.$emit('hide');
                                 bus.$emit('hideCashier');
                                 $('#cashier').modal('hide');
                                 const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                this.$emit('refreshView');
-                                this.$emit('showOrder', orderId);
                                 bus.$emit('refreshView');
                                 bus.$emit('showOrder', orderId);
                             } else {
@@ -498,10 +495,8 @@
                         });
                 } else {
                     this.resetData();
-                    this.$emit('hide');
                     bus.$emit('hideCashier');
                     $('#cashier').modal('hide');
-                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                     bus.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                 }
             }

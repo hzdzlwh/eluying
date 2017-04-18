@@ -161,8 +161,8 @@
                             if (res.code === 1) {
                                 modal.somethingAlert('取消成功');
                                 this.hideModal();
-                                this.$emit('refreshView');
-                                this.$emit('showOrder', this.orderId);
+                                bus.$emit('refreshView');
+                                bus.$emit('showOrder', this.orderId);
                             } else {
                                 modal.somethingAlert(res.msg);
                             }
@@ -172,7 +172,7 @@
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
                     this.hideModal();
-                    this.$emit('showCashier', { type: 'cancel', business });
+                    bus.$emit('showCashier', { type: 'cancel', business });
                     this.isLoading = false;
                 }
             }
