@@ -18,6 +18,7 @@ module.exports = {
         'category/foodEntry': './static/js/app/src/business/category/food/foodEntry.js',
         'category/ETEntry': './static/js/app/src/business/category/entertainment/ETEntry.js',
         'category/shopEntry': './static/js/app/src/business/category/shop/shopEntry.js',
+        'other/room': './static/js/app/src/business/other/other.js',
         'salesite/info': './static/js/app/src/salesite/info/info.js',
         'salesite/operation': './static/js/app/src/salesite/operation/operation.js',
         'guest/source': './static/js/app/src/guest/source/source.js',
