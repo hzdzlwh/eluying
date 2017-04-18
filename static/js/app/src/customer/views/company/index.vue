@@ -200,10 +200,9 @@ export default {
             }, {
                 title: '折扣',
                 render: (h, row) => < span title = {
-                        row.discount &&
-                        row.discounts.map(function(item) {
+                        row.discounts ? row.discounts.map(function(item) {
                             return item.nodeName + '-' + item.discount + '折';
-                        }).join('\n')
+                        }).join('\n') : ''
                     } > {
                         row.discounts &&
                         row.discounts.length ? row.discounts[0].nodeName + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
