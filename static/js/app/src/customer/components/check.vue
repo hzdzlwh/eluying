@@ -42,7 +42,6 @@
     overflow-x: visible;
     position: relative;
     width: 410px;
-    height: 245px;
     margin-top: 0!important;
     position: absolute;
     top: 50%;

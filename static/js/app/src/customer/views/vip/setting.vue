@@ -221,10 +221,11 @@
     import http from '../../../common/AJAXService';
     import { DdTable } from 'dd-vue-component';
     import categorySelect from '../../components/categorySelect.vue';
-
+    import auth from '../../../common/auth';
     export default{
         data() {
             return {
+                contral: { VIP_EDIT_ID: auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID) },
                 settings: undefined,
                 autoUpgrade: undefined,
                 levelName: undefined,
@@ -285,10 +286,11 @@
                                     {
                                         title: '操作',
                                         render: (h, row) => (
-                                            <span>
+                                            this.contral.VIP_EDIT_ID ? <span>
                                                 <span class="list-action" onClick={() => this.openEdit(row)}>编辑</span>／
                                                 <span class="list-action" onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
                                             </span>
+                                            : ''
                                         ),
                                         width: 100
                                     }
