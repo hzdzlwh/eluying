@@ -279,7 +279,7 @@
     const OutputUrl = {
         vip: '/vipUser/vipUserOrdersExport',
         company: '/contractCompany/exportCompanyOrderList',
-        nonvip: '/customer/customersToExcel'
+        nonvip: '/customer/customerOrdersExport'
     };
 
     export default{
