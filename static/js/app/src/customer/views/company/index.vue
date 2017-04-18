@@ -230,15 +230,15 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                    < span >
-                    < span onClick = {
+                    <span>
+                    <span onClick = {
                         () => this.openDetailDialog(row, 0, 1)
-                    } > 详情 < /span> / < span onClick = {
+                    } > 详情 </span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
-                    } > 查单 < /span> {
-                    (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                    } > 查单 </span> {
+                    (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? <span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
-                    } > / 结算 < /span > : ''
+                    }> / 结算 </span> : ''
             } < /span >,
                 width: '140px'
             }],
@@ -362,7 +362,7 @@ export default {
                                     name: '退款至企业'
                                 });
                             } else {
-                                if (res.data.contractCompany.companyPay) {
+                                if (res.data.contractCompany && res.data.contractCompany.companyPay) {
                                     moreChannel.push({
                                         id: - 15,
                                         name: '企业扣款'
