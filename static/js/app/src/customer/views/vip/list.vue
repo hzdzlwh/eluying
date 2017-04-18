@@ -6,7 +6,7 @@
         </div>
         <div style="display: flex;flex-direction: row-reverse;margin-bottom: 8px;margin-top: 24px">
             <a :href="outPutExcel()"><button class="dd-btn dd-btn-primary" >导出明细</button></a>
-            <button class="dd-btn dd-btn-primary" style="margin-right: 8px" @click="openVipForm">新增会员</button>
+            <button class="dd-btn dd-btn-primary" style="margin-right: 8px" v-if='contral.VIP_EDIT_ID' @click="openVipForm">新增会员</button>
         </div>
         <dd-table :on-change="handleTableChange" :columns="col" :data-source="vips"></dd-table>
         <div class="foot">
@@ -193,10 +193,11 @@
     const idCardType = [
         '身', '军', '通', '护', '其'
     ];
-
+    import auth from '../../../common/auth';
     export default{
         data() {
             return {
+                contral: {},
                 vips: [],
                 vip: {},
                 pages: 0,
@@ -259,6 +260,7 @@
         },
         created() {
             this.getVips();
+            this.contral.VIP_EDIT_ID = auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
         },
         methods: {
             getVips(page) {
