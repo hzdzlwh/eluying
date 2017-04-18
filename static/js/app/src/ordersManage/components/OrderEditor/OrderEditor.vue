@@ -94,11 +94,11 @@
                         </CateEditor>
                         <EnterEditor
                              :order="order"
-                             v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && order.isCombination)"
+                             v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombination)"
                              :vipDiscountDetail="vipDiscountDetail"
                              @change="handleEnterChange"
                              @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && order.isCombination)"
+                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombination)"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleShopChange"
