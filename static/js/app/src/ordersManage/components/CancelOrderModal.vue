@@ -16,11 +16,11 @@
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>违约信息</span></p>
-                            <div v-if="order && order.orderType !== -1" >
+                            <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
                                 <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
                             </div>
-                            <div v-if="order && order.orderType === -1">
+                            <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(subOrderPenalty, index) in subOrderPenaltys">
                                         <dd-select v-model="subOrderPenalty.nodeId">
@@ -60,7 +60,7 @@
     import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
         props: {
-            show: Boolean,
+            show: Boolean
         },
         data() {
             return {
@@ -120,8 +120,8 @@
             cancel() {
                 let totalPenalty = this.penalty || 0;
                 const business = {
-                    orderId: this.orderId,
-                    orderType: -1
+                    orderId: getOrderId(this.order),
+                    orderType: this.order.type
                 };
                 let valid = true;
                 if (this.subOrderPenaltys.length > 0) {
@@ -132,14 +132,14 @@
                     modal.somethingAlert('请输入违约金！');
                     return false;
                 }
-                if (this.penalty && this.order.orderType !== -1) {
+                if (this.penalty && this.order.type !== -1) {
                     this.subOrderPenaltys[0] = {};
                     this.subOrderPenaltys[0].nodeId = this.subOrders[0].nodeId;
                     this.subOrderPenaltys[0].nodeName = this.subOrders[0].nodeName;
                     this.subOrderPenaltys[0].subOrderType = this.subOrders[0].subOrderType;
                     this.subOrderPenaltys[0].penalty = this.penalty;
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
-                } else if (this.subOrderPenaltys.length > 0 && this.order.orderType === -1) {
+                } else if (this.subOrderPenaltys.length > 0 && this.order.type === -1) {
                     this.subOrderPenaltys.forEach(subOrderPenalty => {
                         this.subOrders.forEach(subOrder => {
                             if (subOrderPenalty.nodeId === subOrder.nodeId) {
