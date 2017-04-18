@@ -672,7 +672,7 @@
                         if (res.code === 1) {
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.order);
+                            bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                         } else {
                             modal.alert(res.msg);
                         }
@@ -688,7 +688,7 @@
                         if (res.code === 1) {
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.order);
+                            bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                         } else {
                             modal.alert(res.msg);
                         }
@@ -711,7 +711,7 @@
                         if (res.code === 1) {
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.order);
+                            bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                         } else {
                             modal.alert(res.msg);
                         }
@@ -729,7 +729,7 @@
                         if (res.code === 1) {
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.order);
+                            bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                         } else {
                             modal.alert(res.msg);
                         }
@@ -785,7 +785,7 @@
                         if (res.code === 1) {
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.order);
+                            bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                         } else {
                             modal.alert(res.msg);
                         }
@@ -829,7 +829,7 @@
                                 this.$emit('showCashier', { type: 'register', business: business });
                             } else {
                                 bus.$emit('refreshView');
-                                bus.$emit('onShowDetail', this.order);
+                                bus.$emit('onShowDetail', { orderId: getOrderId(this.order), ...this.order });
                             }
                         } else {
                             modal.alert(res.msg);

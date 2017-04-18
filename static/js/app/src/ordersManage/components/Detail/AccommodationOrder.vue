@@ -136,7 +136,7 @@
             modalShow(id) {
                 bus.$emit('onShowDetail', {
                     orderId: id,
-                    orderType: 3
+                    type: 3
                 });
             }
         }
