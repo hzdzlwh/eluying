@@ -397,6 +397,7 @@
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
 
+                    // -5企业，-4会员
                     if (this.order.originId === -5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
                     } else {
@@ -472,6 +473,7 @@
             getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
+                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                         if (res.code === 1) {
                             const originsList = res.data.list;
                             const otherOrigins = [];
