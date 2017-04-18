@@ -106,7 +106,7 @@ $(function() {
                     });
             }
         },
-        create() {
+        created() {
             this.getDiscounts()
         }
     });
