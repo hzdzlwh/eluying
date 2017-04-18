@@ -26,7 +26,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/scss">
+<style lang="scss" type="text/css" rel="stylesheet/scss">
     .checkInPerson-baseStyle {
         display: flex;
         align-items: center;

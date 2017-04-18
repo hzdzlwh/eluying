@@ -42,7 +42,7 @@ function somethingAlert(message){
     }
     $(".error-alert-container").html(
         "<div class='modal fade' role='dialog' id='errorAlert'>" +
-        "<div class='modal-dialog modal-w392'>" +
+        "<div class='modal-dialog modal-w300'>" +
         "<div class='modal-content clearfloat'>" +
         "<div class='modal-header'>" +
         "<p>" + "提示" + "</p>" +
@@ -53,10 +53,12 @@ function somethingAlert(message){
         "</div>" +
         "</div>" +
         "</div>");
-    $("#errorAlert").modal("show");
+    const errorAlert = $('#errorAlert');
+    errorAlert.modal({ backdrop: false });
+    errorAlert.modal('show');
     centerModals();
-    setTimeout(function(){
-        $("#errorAlert").modal("hide");
+    setTimeout(function() {
+        errorAlert.modal('hide');
     }, 2500);
 }
 

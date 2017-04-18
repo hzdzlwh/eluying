@@ -23,7 +23,7 @@
                                         <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
@@ -47,7 +47,7 @@
                                     <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
                                     <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
-                                        <dd-option v-for="payChannel in depositPayChannels" :value="payChannel.channelId" :label="payChannel.name">
+                                        <dd-option v-for="payChannel in depositPayChannels" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
                                         </dd-option>
                                     </dd-select>
                                     <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
@@ -71,7 +71,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/scss">
+<style lang="scss">
     .cashier-money-text {
         margin-right: 24px;
     }
@@ -136,18 +136,18 @@
         props: {
             type: {
                 type: String,
-                default: ''//该界面的跳转来源界面类型
+                default: ''// 该界面的跳转来源界面类型
             },
             business: {
                 type: Object,
-                default: function(){ return {} }
+                default: function() { return {}; }
             },
             show: {
                 type: Boolean
             }
         },
-        data(){
-            return{
+        data() {
+            return {
                 showDeposit: false,
                 payments: [],
                 payChannels: [],
@@ -156,14 +156,18 @@
                 deposit: undefined,
                 orderPayment: {},
                 disabledBtn: false,
-                uniqueId: 0
-            }
+                uniqueId: 0,
+                isCompany: false,
+                companyCityLedger: false,
+                companyPay: false,
+                companyBalance: undefined
+            };
         },
-        computed:{
+        computed: {
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
+                    const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
                     return income >= 0;
                 }
                 return false;
@@ -182,13 +186,33 @@
             }
         },
         created() {
-            this.getData();
+            // this.getData();
         },
         watch: {
             show(val) {
                 if (val) {
-                    this.getOrderPayment();
-                    $('#cashier').modal({backdrop: 'static'});
+                    const params = { type: 1 };
+                    if (this.type === 'register') {
+                        params.orderId = this.business.orderDetail.orderId;
+                        params.orderType = this.business.orderDetail.orderType;
+                    } else {
+                        params.orderId = this.orderDetail.orderType === - 1
+                                         ? this.orderDetail.orderId
+                                         : this.orderDetail.subOrderId;
+                        params.orderType = this.orderDetail.orderType;
+                    }
+                    Promise.all([this.getOrderPayment(), this.getData(params)]).then(() => {
+                        if (this.orderState && this.isCompany && this.companyPay) {
+                            this.payChannels = [{ channelId: - 15, name: '企业扣款' }].concat(this.payChannels);
+                        }
+                        if (this.orderState && this.isCompany && this.companyCityLedger) {
+                            this.payChannels = [{ channelId: - 14, name: '企业挂帐' }].concat(this.payChannels);
+                        }
+                        if (!this.orderState && this.isCompany && this.companyPay) {
+                            this.payChannels = [{ channelId: - 15, name: '退款至企业' }].concat(this.payChannels);
+                        }
+                        $('#cashier').modal({ backdrop: 'static' });
+                    });
                 } else {
                     $('#cashier').modal('hide');
                 }
@@ -200,33 +224,44 @@
                 this.showDeposit = false;
                 this.deposit = undefined;
                 this.depositPayChannel = undefined;
+                this.isCompany = false;
+                this.companyCityLedger = false;
+                this.companyPay = false;
+                this.companyBalance = undefined;
             },
             getPayChannels(index) {
-                if (this.type === 'register' && this.business.cashierType === 'finish') {
+                if ((this.type === 'register' && this.business.cashierType === 'finish')) {
                     return this.depositPayChannels;
                 }
-                if (this.payments.length <= 1) {
+                if (this.payments.length <= 1 && this.orderState) {
                     return this.payChannels;
-                } else {
+                } else if (this.orderState) {
                     let own = false;
                     let arr = this.payChannels;
                     this.payments.forEach((pay, num) => {
-                        let id = pay.payChannelId;
-                        if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
+                        const id = pay.payChannelId;
+                        if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && (num !== index)) {
                             own = true;
                         }
                     });
                     if (own) {
                         arr = this.payChannels.filter(item => {
-                            let index = item.channelId;
-                            return index !== -6 && index !== -7 && index !== -11 && index !== -12
-                        })
+                            const index = item.channelId;
+                            return index !== - 6 && index !== - 7 && index !== - 11 && index !== - 12;
+                        });
                     }
-                    return arr
+                    return arr;
+                }
+                if (!this.orderState) {
+                    const arr = this.payChannels.filter(item => {
+                        const index = item.channelId;
+                        return index !== - 6 && index !== - 7 && index !== - 11 && index !== - 12;
+                    });
+                    return arr;
                 }
             },
             getOrderPayment() {
-                let params = undefined;
+                let params;
                 if (this.type === 'register') {
                     params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
                 } else {
@@ -236,11 +271,11 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
-                    const orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
-                    let subOrderIds = [];
-                    if (this.roomBusinessInfo.roomOrderInfoList
-                            && this.type !== 'orderDetail'
-                            && this.type !== 'cancel') {
+                    const orderId = this.orderDetail.orderType === - 1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
+                    const subOrderIds = [];
+                    if (this.roomBusinessInfo.roomOrderInfoList &&
+                            this.type !== 'orderDetail' &&
+                            this.type !== 'cancel') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
@@ -254,13 +289,13 @@
                         orderId
                     };
                 }
-                AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params )
+                return AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
                             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
-                            if (payMoney != 0) {
-                                this.payments.push({fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2});
+                            if (Number(payMoney) !== 0) {
+                                this.payments.push({ fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2 });
                             }
                             if ((this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0)) !== 0 && this.type !== 'checkIn') {
                                 this.showDeposit = true;
@@ -271,67 +306,37 @@
                         }
                     });
             },
-            getData() {
-                AJAXService.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {})
-                        .then(result => {
-                            let payChannels = [].concat(result.data.payChannelCustomList);
-                            let map = result.data;
-                            let walletOpenAndUseStateList = map.walletOpenAndUseStateList;
-                            for (let key in walletOpenAndUseStateList) {
-                                if (map.onlineCollectionMethod === 1 &&
-                                        walletOpenAndUseStateList[key].onlineType === 2
-                                        && walletOpenAndUseStateList[key].openState === 1
-                                        && walletOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -11,
-                                        name: '支付宝（订单钱包）'
-                                    });
-                                }
-                                if (map.onlineCollectionMethod === 1 &&
-                                        walletOpenAndUseStateList[key].onlineType === 4
-                                        && walletOpenAndUseStateList[key].openState === 1
-                                        && walletOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -12,
-                                        name: '微信支付（订单钱包）'
-                                    });
-                                }
-                            }
-                            let enterpriseOpenAndUseStateList = map.enterpriseOpenAndUseStateList;
-                            for (let key in enterpriseOpenAndUseStateList) {
-                                if (map.onlineCollectionMethod === 2 &&
-                                        enterpriseOpenAndUseStateList[key].onlineType === 2
-                                        && enterpriseOpenAndUseStateList[key].openState === 1
-                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -6,
-                                        name: '支付宝'
-                                    });
-                                }
-                                if (map.onlineCollectionMethod === 2 &&
-                                        enterpriseOpenAndUseStateList[key].onlineType === 4
-                                        && enterpriseOpenAndUseStateList[key].openState === 1
-                                        && enterpriseOpenAndUseStateList[key].useState === 1) {
-                                    payChannels.push({
-                                        channelId: -7,
-                                        name: '微信支付'
-                                    });
-                                }
-                            }
-                            payChannels.sort(function(a, b){
+            getData(obj) {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', obj)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const channels = res.data.list;
+                            channels.forEach(channel => {
+                                channel.channelId = channel.id;
+                            });
+                            channels.sort((a, b) => {
                                 return a.channelId - b.channelId;
                             });
-                            this.payChannels = payChannels;
-                            this.depositPayChannels = result.data.payChannelCustomList;
-                        });
+                            this.payChannels = channels;
+                            this.depositPayChannels = channels.filter(channel => {
+                                return channel.channelId > 0;
+                            });
+                            this.isCompany = !!res.data.contractCompany;
+                            this.companyPay = res.data.contractCompany.companyPay;
+                            this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
+                            this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             },
             hideModal() {
                 this.resetData();
                 if (this.type === 'register') {
-                    let params = {
+                    const params = {
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType
-                    }
+                    };
                     AJAXService.ajaxWithToken('get', '/order/cancel', params)
                         .then(res => {
                             if (res.code !== 1) {
@@ -354,7 +359,7 @@
                         paidMoney += Number(pay.fee);
                     });
                 }
-                this.payments.push({fee: Math.abs((payMoney - Number(paidMoney)).toFixed(2)), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId++ });
+                this.payments.push({ fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))), payChannelId: undefined, type: this.orderState ? 0 : 2, uniqueId: this.uniqueId++ });
             },
             deletePayMent(index) {
                 this.payments.splice(index, 1);
@@ -384,8 +389,9 @@
                 if (this.deposit && !this.depositPayChannel) {
                     invalid = true;
                 }
-                if(invalid) {
-                    modal.somethingAlert('请选择收款方式！');
+                if (invalid) {
+                    const loss = !this.orderState || (this.totalDeposit > 0 && this.type !== 'checkIn');
+                    modal.somethingAlert(`请选择${loss ? '退款' : '收款'}方式！`);
                     this.disabledBtn = false;
                     return false;
                 }
@@ -407,7 +413,7 @@
                     return {
                         ...payment,
                         payChannel: channel.name
-                    }
+                    };
                 });
 
                 if (this.deposit) {
@@ -418,26 +424,26 @@
                         payChannelId: this.depositPayChannel,
                         payChannel: channel.name,
                         type: (this.orderPayment.deposit > 0 && this.type !== 'checkIn') ? 3 : 1
-                    })
+                    });
                 }
-                let params = undefined;
+                let params;
                 if (this.type === 'register') {
                     params = {
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType,
-                        payments: JSON.stringify(payments),
+                        payments: JSON.stringify(payments)
                     };
                 } else if (this.type === 'cancel') {
                     const businessJson = {
                         functionType: this.business.functionType,
                         orderId: this.business.orderId,
-                        orderType: this.business.orderType,
-                        //subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
+                        orderType: this.business.orderType
+                        // subOrderPenaltys: JSON.parse(this.business.subOrderPenaltys)
                     };
                     if (this.business.subOrderPenaltys) {
-                        businessJson.subOrderPenaltys =  JSON.parse(this.business.subOrderPenaltys);
+                        businessJson.subOrderPenaltys = JSON.parse(this.business.subOrderPenaltys);
                     }
-                    /*if (this.business.penalty) {
+                    /* if (this.business.penalty) {
                         payments.push({ fee: this.business.penalty, type: 4, payChannel: '违约金', payChannelId: -5 });
                     }*/
                     params = {
@@ -445,16 +451,16 @@
                         orderType: this.business.orderType,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(businessJson)
-                    }
+                    };
                 } else {
                     params = {
                         orderId: this.orderDetail.orderId,
-                        orderType: -1,
+                        orderType: - 1,
                         payments: JSON.stringify(payments),
                         businessJson: JSON.stringify(this.business)
                     };
                     if (this.business.rooms) {
-                        let  subOrderIds = [];
+                        const subOrderIds = [];
                         this.business.rooms.forEach(room => {
                             if (room) {
                                 subOrderIds.push(room.roomOrderId);
@@ -466,23 +472,33 @@
                         params.operationType = 1;
                     }
                 }
-                //判断是否进行扫码收款
+                // 判断是否进行扫码收款
                 let payWithAlipay = 0;
+                let payWithCompany = 0;
                 this.payments.forEach(pay => {
-                    let id = pay.payChannelId;
-                    if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    const id = pay.payChannelId;
+                    if (id === - 6 || id === - 7 || id === - 11 || id === - 12) {
                         payWithAlipay += Number(pay.fee);
                     }
+                    if (id === - 15) {
+                        payWithCompany += Number(pay.fee);
+                    }
                 });
+                if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
+                    const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
+                    modal.somethingAlert(payStr);
+                    this.disabledBtn = false;
+                    return false;
+                }
                 if (payWithAlipay <= 0) {
                     AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
                         .then(result => {
-                            if(result.code === 1) {
+                            if (result.code === 1) {
                                 modal.somethingAlert('收银成功');
                                 this.resetData();
                                 this.$emit('hide');
                                 $('#Cashier').modal('hide');
-                                let orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
+                                const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                 this.$emit('refreshView');
                                 this.$emit('showOrder', orderId);
                             } else {
@@ -495,7 +511,7 @@
                     this.resetData();
                     this.$emit('hide');
                     $('#Cashier').modal('hide');
-                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2))});
+                    this.$emit('showGetMoney', { type: this.type, business: this.business, params, payWithAlipay: Number(payWithAlipay.toFixed(2)) });
                 }
             }
         },
@@ -503,5 +519,5 @@
             DdSelect,
             DdOption
         }
-    }
+    };
 </script>

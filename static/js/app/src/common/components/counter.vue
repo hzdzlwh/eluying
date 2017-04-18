@@ -6,7 +6,7 @@
         <slot></slot>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss" rel="stylesheet/scss" type="text/css">
     .counter-container {
         font-size: 0;
         display: inline-block;

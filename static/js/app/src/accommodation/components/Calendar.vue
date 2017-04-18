@@ -137,7 +137,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar {
        height: 100%;
@@ -162,6 +162,9 @@
         width: 140px;
         overflow-x: scroll;
         overflow-y: hidden;
+        &::-webkit-scrollbar {
+            background: transparent;
+        }
     }
     .calendar-category {
         width: 100%;
@@ -233,6 +236,9 @@
         margin-left: 1px;
         overflow-x: hidden;
         overflow-y: scroll;
+        &::-webkit-scrollbar {
+            background: #f8f9fc;
+        }
     }
     .calendar-header-table {
         width: 100%;

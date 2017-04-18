@@ -7,6 +7,7 @@ var loginValidate = require('loginValidate');
 var AJAXService = require('AJAXService');
 var baseUrl = AJAXService.urls.host;
 var networkAction = require("networkAction");
+var auth = require('../common/auth');
 require('bootstrap');
 require('cookie');
 import init from '../common/init';
@@ -338,10 +339,7 @@ $(document).ready(function(){
                 },
                 success: function(data){
                     if(data.code == 1){
-                        localStorage.setItem("userName", data.data.user.realName);
-                        localStorage.setItem("uid", data.data.user.uid);
-                        localStorage.setItem("avatar", data.data.user.avatar);
-                        localStorage.setItem("token", data.data.user.token);
+                        auth.saveUserInfo(data.data);
                         localStorage.removeItem('maintenanceClosed');
                         //$.cookie("jsessionid", data.data.jsessionid, {path: "/"});
                         $("#loginRegister").modal('hide');
@@ -396,15 +394,7 @@ $(document).ready(function(){
                         });
                         setTimeout("window.location.href = '/view/accommodation/calender/calender.html';", 1000);
                     }
-                    localStorage.setItem("camps", JSON.stringify(data.data.camps));
-                    localStorage.setItem("bottom", JSON.stringify(data.data.bottom));
-                    localStorage.setItem("top", JSON.stringify(data.data.top));
-                    localStorage.setItem("avatar", data.data.user.avatar);
-                    localStorage.setItem("userName", data.data.user.realName);
-                    localStorage.setItem("userType", data.data.user.userType);
-                    localStorage.setItem("uid", data.data.user.uid);
-                    localStorage.setItem("token", data.data.user.token);
-                    data.data.switches && localStorage.setItem('switches', JSON.stringify(data.data.switches));
+                    auth.saveUserInfo(data.data);
                     localStorage.removeItem('maintenanceClosed');
                     //setTimeout(util.checkAuth, 900);
                     //util.checkAuth();

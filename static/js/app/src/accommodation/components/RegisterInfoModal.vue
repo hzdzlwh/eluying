@@ -38,15 +38,13 @@
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
                                            v-model="name"
-                                           @input="changeVipList(1)"
-                                           :disabled="checkState === 'editOrder' && order.isVip">
+                                           @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
                                            v-model="phone"
-                                           @input="changeVipList(2)"
-                                           :disabled="checkState === 'editOrder' && order.isVip">
+                                           @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
                                         <span class="vip-level-img"></span>
                                         <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
@@ -57,11 +55,43 @@
                                     </span>
                                 </div>
                                 <div class="userInfo-item">
-                                    <label>客源渠道</label>
-                                    <dd-select v-model="userOriginType" placeholder="">
-                                        <dd-option v-for="origin in userOrigins" :value="origin.id" :label="origin.name">
-                                        </dd-option>
-                                    </dd-select>
+                                    <label>客户来源</label>
+                                    <div class="select-component-container">
+                                        <dd-select v-model="userOriginType">
+                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins" :value="origin.originType" :label="origin.name">
+                                                <span :title="origin.name">{{origin.name}}</span>
+                                            </dd-option>
+                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
+                                                <dd-option v-for="origin in item.origins"
+                                                           :key="origin.originType"
+                                                           :value="origin.originType"
+                                                           :label="origin.originType.split('~')[1] > 0 ? origin.name : `企业(${origin.name})`">
+                                                    <div class="user-group-origin">
+                                                        <span class="user-group-company" :title="origin.name">
+                                                            {{ origin.name }}
+                                                        </span>
+                                                        <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                                        <!--<div class="user-group-tips" v-if="!origin.type">
+                                                            <p class="user-company-title">{{ origin.companyName }}</p>
+                                                            <p class="user-company-item">
+                                                                <span>{{ origin.contractNum }}</span>
+                                                                <span>{{ origin.companyType ? '可挂帐' : '不可挂帐' }}</span>
+                                                            </p>
+                                                            <p class="user-company-item">
+                                                                <span>{{ origin.contactName }}</span>
+                                                                <span>{{ origin.contactPhone }}</span>
+                                                            </p>
+                                                        </div>-->
+                                                    </div>
+                                                </dd-option>
+                                            </dd-group-option>
+                                        </dd-select>
+                                    </div>
+                                    <span class="company-origin-tipLike" v-show="!showCompanyOriginTip"></span>
+                                    <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
+                                    <div class="company-origin-tips">
+                                        变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -81,14 +111,14 @@
                                             <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                                             <dd-select v-model="item.categoryType" placeholder="请选择房型"
                                                        @input="changeRoomType(item)">
-                                                <dd-option v-for="category in categoryList" :value="category.id"
+                                                <dd-option v-for="category in categoryList" :value="category.id" :key="category.id"
                                                            :label="category.name">
                                                 </dd-option>
                                             </dd-select>
                                             <div class="room-category">
                                                 <dd-select v-model="item.roomType" placeholder="请选择房型"
                                                            @input="modifyRoom(item)">
-                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
+                                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id" :key="room.id"
                                                                :label="room.name">
                                                     </dd-option>
                                                 </dd-select>
@@ -147,12 +177,12 @@
                                         </span>
                                         <span v-if="item.state === 1" class="delete-icon-like"></span>
                                         <span class="discount-info"
-                                              v-if="vipDiscountDetail.isVip
+                                              v-if="vipDiscountDetail.vipDetail
                                               && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
                                                   v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                                         </span>
                                     </div>
@@ -233,14 +263,14 @@
                                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                                     <span class="discount-info"
                                           style="top: 28px"
-                                          v-if="vipDiscountDetail.isVip
+                                          v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                                             <span class="discount-num"
                                                   v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
-                                                会员{{(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                                     </span>
                                 </div>
@@ -267,13 +297,13 @@
                                             <div style="margin-right: 81px">
                                                 <label class="label-text">小计</label>
                                                 <span>¥{{getTotalPrice(item['items'], true)}}</span>
-                                                <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                                                <span class="discount-info" v-if="item.items[0].showDiscount" style="top: 14px">
                                                     <span>
                                                         原价
                                                         <span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span>
                                                     </span>
                                                     <span class="discount-num">
-                                                        {{ item.items[0].vipShowDiscount }}
+                                                        {{ item.items[0].showDiscount }}
                                                     </span>
                                                 </span>
                                             </div>
@@ -306,7 +336,7 @@
                                     <span class="delete-icon" @click="deleteItem(item.type, index)"></span>
                                     <span class="discount-info"
                                           style="top:24px"
-                                          v-if="vipDiscountDetail.isVip
+                                          v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(0, item.type, vipDiscountDetail).discount < 1">
                                             <span>
                                                 原价
@@ -315,7 +345,7 @@
                                                 </span>
                                             </span>
                                             <span class="discount-num">
-                                                会员{{ (getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1) }}折
+                                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(0, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
                                             </span>
                                     </span>
                                 </div>
@@ -359,7 +389,7 @@
         </div>
     </div>
 </template>
-<style lang="sass" rel="stylesheet/scss" type="text/css">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .valid {
         position: absolute;
@@ -381,6 +411,7 @@
         box-sizing: border-box;
         font-size: $font-size-base;
         color: $gary-daker;
+        z-index: 1062;
         .modal-dialog {
             width: 794px;
             margin-top: 0 !important;
@@ -494,8 +525,94 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            div:last-child {
-                margin-right: 16px;
+            .userInfo-item:last-child,.select-component-container {
+                display: inline-block;
+            }
+            .user-group-origin {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-right: 4px;
+                position: relative;
+            }
+            .company-origin-tipImg {
+                display: inline-block;
+                vertical-align: sub;
+                cursor: pointer;
+                width: 16px;
+                height: 16px;
+                margin-left: 12px;
+                background: url("../../../../../image/modal/room_modal_info.png");
+                background-size: contain;
+            }
+            .company-origin-tipLike {
+                display: inline-block;
+                margin-left: 12px;
+                width: 16px;
+                height: 16px;
+            }
+            .company-origin-tipImg:hover + .company-origin-tips {
+                display: block;
+            }
+            .company-origin-tips {
+                display: none;
+                background:#fafafa;
+                box-shadow:0px 2px 4px 0px rgba(0,0,0,0.15);
+                border-radius:2px;
+                width:188px;
+                font-size: 12px;
+                padding: 8px 16px;
+                position: absolute;
+                right: 0;
+            }
+            .user-group-company {
+                display: inline-block;
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .user-group-img {
+                display: inline-block;
+                cursor: pointer;
+                width: 16px;
+                height: 16px;
+                background: url("../../../../../image/modal/room_modal_info.png");
+                background-size: contain;
+            }
+            .dd-select-option-group > .dd-select-option {
+                overflow: visible !important;
+            }
+            .user-group-img:hover + .user-group-tips {
+                display: block;
+            }
+            .user-group-tips {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 4px;
+                transform: translateY(-100%);
+                background: #fafafa;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+                border-radius: 2px;
+                width: 256px;
+                padding-bottom: 10px;
+                z-index: 1090;
+            }
+            .user-company-title {
+                font-size: 14px;
+                color: #666666;
+                padding: 8px 16px;
+                border-bottom: 1px solid #e6e6e6;
+            }
+            .user-company-item {
+                display: flex;
+                padding: 0 16px;
+                margin-top: 8px;
+                font-size: 12px;
+                color: #999999;
+                justify-content: space-between;
+                align-items: center;
             }
         }
         .userVip-list {
@@ -783,7 +900,7 @@
     }
 </style>
 <script>
-    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
+    import { DdDropdown, DdDropdownItem, DdPagination, DdDatepicker, DdSelect, DdGroupOption, DdOption } from 'dd-vue-component';
     import CheckInPerson from './CheckInPerson.vue';
     import SelectGoods from './selectGoods.vue';
     import SelectProject from './selectProject.vue';
@@ -820,8 +937,10 @@
             return {
                 name: '',
                 phone: '',
-                userOriginType: -1,
+                userOriginType: '-1~-1',
                 userOrigins: [],
+                userSelfOrigins: [],
+                userGroupOrigins: [],
                 phoneValid: true,
                 remark: '',
                 enterItems: [],
@@ -835,17 +954,18 @@
                 timeCount: 0,
                 goodsSelectModalShow: false,
                 enterSelectModalShow: false,
-                modifyEnterOrShopIndex: -1,
+                modifyEnterOrShopIndex: - 1,
                 roomStatusRequest: 0,
                 lastRoomItem: {},
-                lastEnterItem: {}
-            }
+                lastEnterItem: {},
+                isLoading: false
+            };
         },
 
-        created(){
+        created() {
             this.getData();
         },
-        computed:{
+        computed: {
             ...mapState({ shopList: 'shopList', enterList: 'enterList' }),
             modalTitleOrBtn() {
                 if (this.checkState === 'ing') {
@@ -908,6 +1028,10 @@
                     });
                 }
                 return shopList;
+            },
+            showCompanyOriginTip() {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                return originType === -5;
             }
         },
         methods:{
@@ -916,11 +1040,34 @@
                 types.LOAD_ENTER_LIST
             ]),
             getData(){
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2 }, (res) => {
+                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true }, (res) => {
                     if (res.code === 1) {
-                        this.userOrigins = res.data.list;
-                        this.userOrigins.unshift({ id: -1, name: '散客' });
-                        this.userOriginType = this.userOrigins[0].id;
+                        const originsList = res.data.list;
+                        let otherOrigins = [];
+                        this.userOrigins = originsList;
+                        originsList.forEach(origin => {
+                            if (origin.id === -1 || origin.id === -4) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if(origin.id === -5) {
+                                origin.companyList.forEach(company => {
+                                    let companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                    let number = `企业编号:${company.contractNum || ''}`;
+                                    let name = `联系人:${company.contactName || ''}`;
+                                    let phone = `联系人电话:${company.contactPhone || ''}`;
+                                    company.name = company.companyName;
+                                    company.originType = `${company.id}~${origin.id}`;
+                                    company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                });
+                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                            } else if(origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        this.userOriginType = this.userSelfOrigins[0].originType;
                     } else {
                         modal.somethingAlert(res.msg);
                     }
@@ -956,7 +1103,7 @@
             },
             changeVipList(num) {
                 let params = num === 1 ? { name: this.name } : { phone: this.phone };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
+                let search = true;//this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (search && ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4))) {
                     clearTimeout(this.timeCount);
                     this.timeCount = setTimeout(() => { this.getVipList(params, num); }, 500);
@@ -972,12 +1119,31 @@
                 this.name = obj.name;
                 this.phone = obj.phone;
                 this.vipListShow = false;
+                this.userOriginType = '-4~-4';
             },
             getVipDiscount(params) {
                 AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
-                            this.vipDiscountDetail = {...res.data};
+                            this.vipDiscountDetail = { ...res.data };
+                            if (!this.vipDiscountDetail.isVip) {
+                                this.userOriginType = '-1~-1';
+                            } else {
+                                this.userOriginType = '-4~-4';
+                            }
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
+            },
+            getCompanyDiscount(params) {
+                AJAXService.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            const discountList = res.data;
+                            this.vipDiscountDetail = {};
+                            this.vipDiscountDetail.isVip = false;
+                            this.vipDiscountDetail.vipDetail = discountList;
                         } else {
                             modal.somethingAlert(res.msg);
                         }
@@ -988,7 +1154,7 @@
              **/
             getItemDiscountInfo(nodeId, nodeType, obj) {
                 let item = { discount: 1 };
-                if (obj.isVip && obj.vipDetail.discountList.length > 0) {
+                if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
                     obj.vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
                             item = {...list};
@@ -1050,7 +1216,7 @@
             refreshData(){
                 this.name = '';
                 this.phone = '';
-                this.userOriginType =  -1;
+                this.userOriginType = '-1~-1';
                 this.remark = '';
                 this.enterItems = [];
                 this.shopGoodsItems = [];
@@ -1231,10 +1397,23 @@
                     modal.somethingAlert("请完善商超信息！");
                     return false;
                 }
-                const params = { name: this.name, phone: this.phone, remark: this.remark, originId: this.userOriginType };
-                if (this.vipDiscountDetail.isVip) {
-                    params.vipId = this.vipDiscountDetail.vipDetail.vipId;
+                if (this.isLoading) {
+                    return false;
                 }
+                this.isLoading = true;
+                const params = { name: this.name, phone: this.phone, remark: this.remark };
+
+                if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.originId = -5;
+                    params.discountRelatedId = Number(this.userOriginType.split('~')[0]);
+                } else {
+                    params.originId = Number(this.userOriginType.split('~')[0]);
+                }
+
+                if (this.vipDiscountDetail.isVip) {
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                }
+
                 if (this.checkState === 'ing') {
                     params.type = 0;
                 } else if (this.checkState === 'finish') {
@@ -1244,15 +1423,19 @@
                 } else {
                     params.orderId = this.order.orderId;
                 }
-                if (this.userOriginType === -3) {
+
+                if (Number(this.userOriginType.split('~')[0]) === -3) {
                     params.origin = '微官网';
+                } else if (Number(this.userOriginType.split('~')[1]) === -5) {
+                    params.origin = '企业';
                 } else {
                     this.userOrigins.forEach(origin => {
-                        if (origin.id === this.userOriginType) {
+                        if (origin.id === Number(this.userOriginType.split('~')[0])) {
                             params.origin = origin.name;
                         }
                     });
                 }
+
                 let rooms = [];
                 this.registerRooms.forEach(item => {
                     const room = {};
@@ -1293,7 +1476,7 @@
                     playItems.push(enter);
                 });
 
-                let items = [];
+                const items = [];
                 this.shopGoodsItems.forEach(item => {
                     const good = {};
                     good.amount = item.count;
@@ -1315,9 +1498,10 @@
                     params.entertainmentItems = JSON.stringify(entertainmentItems);
                 }
 
-                if (this.checkState === "editOrder") {
+                if (this.checkState === 'editOrder') {
                     AJAXService.ajaxWithToken('post', '/order/modify', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 this.$emit('refreshView');
@@ -1329,6 +1513,7 @@
                 } else {
                     AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal(e);
                                 if(this.checkState === 'ing' || this.checkState === 'finish') {
@@ -1362,7 +1547,7 @@
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
                         item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
-                } else if (type === -2) {
+                } else if (type === - 2) {
                     this.enterItems.forEach((item, index) => {
                         const price = item['price'];
                         const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
@@ -1433,23 +1618,23 @@
                 return false;
             },
             setTotalPrice(obj) {
-                obj.price = +(obj.datePriceList.reduce((a,b) => { return a + Number(b.dateFee) }, 0).toFixed(2));
+                obj.price = + (obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
-                //const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
+                // const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                /*let countArr = obj.datePriceList.map(item => {
+                /* let countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
                     return item.dateFee / totalPrice;
                 });*/
-                let countArr = obj.countArr;
+                const countArr = obj.countArr;
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
-                /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
+                /* let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
             setFirstDateFee(num, obj) {
@@ -1458,56 +1643,54 @@
             },
 
             modifyRoom(item) {
-                /*item.changeTimes++;
-                if (item.changeTimes <= 4) {
-                    return false;
-                }*/
                 if (item.haveRequest) {
                     item.haveRequest = false;
                     return false;
                 }
-                let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                const duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
                 if (duration > 400) {
-                    let currentTime = + new Date();
+                    const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        modal.somethingAlert('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
-                 }
-                let startDate = util.dateFormat(new Date(item.room.startDate));
-                let endDate = util.dateFormat(new Date(item.room.endDate));
-                let lastItem = this.lastRoomItem;
-                /*if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
+                }
+                const startDate = util.dateFormat(new Date(item.room.startDate));
+                const endDate = util.dateFormat(new Date(item.room.endDate));
+                /* if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
                     return false;
                 }
                 this.lastRoomItem.startDate = startDate;
                 this.lastRoomItem.endDate = endDate;
                 this.lastRoomItem.roomType = item.roomType;*/
-                let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 ? 1 : duration};
+                const paramsObj = { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration };
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
                 }
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', paramsObj)
                     .then(res => {
                         if (res.code === 1) {
-                            let datePriceList = [];
+                            const datePriceList = [];
                             let countTotalPrice = 0;
                             let price = 0;
                             let oldPrice = 0;
                             let originPrice = 0;
                             const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
-                            res.data.rs.status.forEach((option,index) => {
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
+                            res.data.rs.status.forEach((option, index) => {
+                                datePriceList.push({ date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false });
                                 countTotalPrice += option.p;
                             });
-                            let countArr = datePriceList.map(dat => {
+                            const countArr = datePriceList.map(dat => {
                                 return dat.dateFee / countTotalPrice;
                             });
+                            if (!item.previousRoomType || item.roomType != item.previousRoomType) {
+                                delete item.originDatePriceList;
+                            }
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
@@ -1535,12 +1718,12 @@
                                         date.dateFee = Number((date.dateFee * discount).toFixed(2));
                                     }
                                 });
-                                let index = item.datePriceList.findIndex(dat => {
+                                const index = item.datePriceList.findIndex(dat => {
                                     return !dat.hasFind;
                                 });
                                 if (index >= 0) {
-                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                                    item.datePriceList[index].dateFee = +((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
+                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0);
+                                    item.datePriceList[index].dateFee = + ((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
                                 }
                             }
                         }
@@ -1567,7 +1750,7 @@
                 if (item.playOrderId && item.changeTimes < 2) {
                     return false;
                 }
-                /*if (item.id) {
+                /* if (item.id) {
                     const price = item['price'];
                     const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
                     item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
@@ -1575,11 +1758,11 @@
                 }*/
 
                 if (item.id && item.date) {
-                    let date = util.dateFormat(new Date(item.date));
-                    let lastItem = this.lastEnterItem;
+                    const date = util.dateFormat(new Date(item.date));
+                    /* const lastItem = this.lastEnterItem;
                     if (lastItem.id === item.id && lastItem.date === date) {
                         return false;
-                    }
+                    }*/
                     this.lastEnterItem.id = item.id;
                     this.lastEnterItem.date = item.date;
                     AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
@@ -1658,6 +1841,7 @@
             DdPagination,
             DdDatepicker,
             DdSelect,
+            DdGroupOption,
             DdOption,
             counter,
             CheckInPerson,
@@ -1665,10 +1849,31 @@
             SelectProject
         },
         watch: {
+            userOriginType(newVal) {
+                const originType = Number(newVal.split('~')[1]);
+                const originId = Number(newVal.split('~')[0]);
+                if (originType === - 5) {
+                    this.getCompanyDiscount({ contractCompanyId: originId });
+                }
+                if (originType === - 4 && this.phone.length === 11) {
+                    const params = this.checkState === 'editOrder'
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: - 1 }
+                        : { phone: this.phone };
+                    this.getVipDiscount(params);
+                }
+                if (originType !== - 5 && originType !== - 4) {
+                    this.vipDiscountDetail = {};
+                }
+            },
             phone(newVal) {
-                const params = { phone: newVal };
-                let search = this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.isVip);
-                if (newVal.length === 11 && search) {
+                const originType = Number(this.userOriginType.split('~')[1]);
+                if (originType === - 5) {
+                    return false;
+                }
+                const params = this.checkState === 'editOrder'
+                               ? { phone: newVal, orderId: this.order.orderId, orderType: - 1 }
+                               : { phone: newVal };
+                if (newVal.length === 11) {
                     this.checkPhone();
                     this.getVipDiscount(params);
                 } else if (newVal.length !== 11) {
@@ -1676,17 +1881,16 @@
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
-                if (!newVal.vipDetail && !oldVal.vipDetail) { return false ;}
+                if (!newVal.vipDetail && !oldVal.vipDetail) { return false; }
                 this.registerRooms.forEach(room => {
-                    /*if (this.checkState === 'editOrder') {
+                    delete room.previousRoomType;
+                    if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
-                    }*/
-                    if (room.originDatePriceList) {
-                        return false;
+                    } else {
+                        room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
+                        this.setDateFee(room.price, room);
+                        this.setFirstDateFee(room.price, room);
                     }
-                    room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
-                    this.setDateFee(room.price, room);
-                    this.setFirstDateFee(room.price, room);
                 });
 
                 this.enterItems.forEach(enter => {
@@ -1698,7 +1902,7 @@
             registerInfoShow(newVal) {
                 if (newVal && this.checkState !== 'editOrder') {
                     this.roomsItems.forEach(item => {
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1707,17 +1911,17 @@
                             });
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
-                        let duration = this.getDateDiff(item.startDate, item.endDate);
+                        const duration = this.getDateDiff(item.startDate, item.endDate);
                         AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId,
                             date: util.dateFormat(item.startDate),
                             days: duration })
                             .then(res => {
                                 if (res.code === 1) {
-                                    let datePriceList = [];
+                                    const datePriceList = [];
                                     let price = 0;
-                                    res.data.rs.status.forEach((option,index) => {
+                                    res.data.rs.status.forEach((option, index) => {
                                         const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
-                                        datePriceList.push({date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false});
+                                        datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
                                         price += option.p;
                                     });
                                     let countArr = datePriceList.map(dat => {
@@ -1737,21 +1941,25 @@
                                 }
                             });
                     });
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (newVal && this.checkState === 'editOrder') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
-                    this.userOriginType = this.order.originId;
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
-                    this.getVipDiscount({ phone: this.phone });
 
-                    let enterItems = [];
-                    let filterEnters = this.order.playItems.filter(enter => {
+                    if (this.order.originId === - 5) {
+                        this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                    } else {
+                        this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                    }
+
+                    const enterItems = [];
+                    const filterEnters = this.order.playItems.filter(enter => {
                         return enter.state !== 3;
                     });
                     filterEnters.forEach(item => {
-                        const enter = {...item};
+                        const enter = { ...item };
                         enter.price = item.originPrice;
                         enter.changeTimes = 0;
                         enter.id = item.categoryId;
@@ -1765,13 +1973,13 @@
                     });
                     this.enterItems = JSON.parse(JSON.stringify(enterItems));
 
-                    let registerRooms = [];
-                    let filterRooms = this.order.rooms.filter(room => {
+                    const registerRooms = [];
+                    const filterRooms = this.order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
                     });
                     filterRooms.forEach(item => {
                         const room = {};
-                        let id = undefined;
+                        let id;
                         this.categories.forEach(category => {
                             category.rooms.forEach(room => {
                                 if (room.i === item.roomId) {
@@ -1781,16 +1989,16 @@
                         });
                         room.categoryType = id;
                         room.roomType = item.roomId;
+                        room.previousRoomType = item.roomId;
                         room.originPrice = item.originPrice;
                         room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
                         room.idCardList = item.idCardList;
                         room.datePriceList = item.datePriceList.map(dat => {
-                            let newDate = { showInput: false };
+                            const newDate = { showInput: false };
                             newDate.date = dat.date;
                             newDate.dateFee = dat.dateFee;
                             return newDate;
-
                         });
                         room.originDatePriceList = JSON.parse(JSON.stringify(room.datePriceList));
                         room.showPriceList = false;
@@ -1802,7 +2010,7 @@
                     });
                     this.registerRooms = registerRooms;
 
-                    $('#registerInfoModal').modal({backdrop: 'static'});
+                    $('#registerInfoModal').modal({ backdrop: 'static' });
                 } else if (!newVal) {
                     this.showOrder = false;
                 }

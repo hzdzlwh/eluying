@@ -71,7 +71,8 @@
     export default{
         data(){
             return{
-                penalty: undefined
+                penalty: undefined,
+                isLoading: false
             }
         },
         computed: {
@@ -169,12 +170,17 @@
                 if (business.type === 2) {
                     business.penalty = this.penalty;
                 }
+                if (this.isLoading) {
+                    return false;
+                }
+                this.isLoading = true;
                 if (this.deposit === 0 && (this.totalPrice+ (this.penalty || 0) - this.payed) === 0) {
                     AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
                     })
                         .then(res => {
+                            this.isLoading = false;
                             if (res.code === 1) {
                                 this.hideModal();
                                 modal.somethingAlert('退房成功');
@@ -185,6 +191,7 @@
                             }
                         });
                 } else {
+                    this.isLoading = false;
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();

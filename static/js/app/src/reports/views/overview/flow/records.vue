@@ -5,12 +5,12 @@
                 <span>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
                 <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="operatorId">
-                        <dd-option v-for="employee in employeeList" :value="employee.employeeId" :label="employee.realName"></dd-option>
+                        <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
                     </dd-select>
                 </div>
                 <div style="width: 120px">
                     <dd-select v-model="channelId">
-                        <dd-option v-for="channel in channels" :value="channel.id" :label="channel.name"></dd-option>
+                        <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
