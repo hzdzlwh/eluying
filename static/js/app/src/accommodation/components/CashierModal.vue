@@ -230,7 +230,7 @@
                 this.companyBalance = undefined;
             },
             getPayChannels(index) {
-                if (this.type === 'register' && this.business.cashierType === 'finish') {
+                if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
                     return this.depositPayChannels;
                 }
                 if (this.payments.length <= 1) {
