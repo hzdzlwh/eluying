@@ -16,7 +16,7 @@
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
                                     <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
-                                        <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
+                                        <p class="userVip-item" v-for="vip in vipList" @click="setVipInfo(vip)">
                                             <span class="vip-level" v-if="vip.level">
                                                 [
                                                 <span class="vip-level-text">{{ vip.level }}</span>
@@ -397,6 +397,7 @@
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
 
+                    // -5企业，-4会员
                     if (this.order.originId === -5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
                     } else {
@@ -472,6 +473,7 @@
             getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
+                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                         if (res.code === 1) {
                             const originsList = res.data.list;
                             const otherOrigins = [];
@@ -510,9 +512,9 @@
                 bus.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
             },
-            setUserInfo(obj) {
-                this.name = obj.name;
-                this.phone = obj.phone;
+            setVipInfo(vip) {
+                this.name = vip.name;
+                this.phone = vip.phone;
                 this.vipListShow = false;
                 this.userOriginType = '-4~-4';
             },
@@ -605,7 +607,8 @@
                         idCardList: JSON.stringify(room.idCardList),
                         fee: room.price,
                         sub: true,
-                        roomOrderId: room.roomOrderId
+                        roomOrderId: room.roomOrderId,
+                        quickDiscountId: room.quickDiscountId
                     };
                 });
             },
@@ -661,6 +664,7 @@
                     roomId: room.roomType,
                     datePriceList: room.datePriceList,
                     serviceId: room.roomOrderId,
+                    quickDiscountId: room.quickDiscountId,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)

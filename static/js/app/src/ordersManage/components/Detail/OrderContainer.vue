@@ -298,7 +298,7 @@
                 }
             }
             &.red {
-                background: #82beff;
+                background: #f27979;
                 &::before {
                     border-right-color: #f27979;
                 }
