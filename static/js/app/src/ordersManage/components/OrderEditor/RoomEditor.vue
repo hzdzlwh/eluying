@@ -179,9 +179,6 @@
                     room.price = Number((room.originPrice * this.vipDiscount).toFixed(2));
                     this.setDateFee(room);
                 });
-            },
-            registerRooms(v1, v2) {
-                console.log(v1, v2);
             }
         },
         computed: {
