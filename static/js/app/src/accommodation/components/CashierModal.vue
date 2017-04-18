@@ -230,12 +230,12 @@
                 this.companyBalance = undefined;
             },
             getPayChannels(index) {
-                if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
+                if ((this.type === 'register' && this.business.cashierType === 'finish')) {
                     return this.depositPayChannels;
                 }
-                if (this.payments.length <= 1) {
+                if (this.payments.length <= 1 && this.orderState) {
                     return this.payChannels;
-                } else {
+                } else if (this.orderState) {
                     let own = false;
                     let arr = this.payChannels;
                     this.payments.forEach((pay, num) => {
@@ -250,6 +250,13 @@
                             return index !== - 6 && index !== - 7 && index !== - 11 && index !== - 12;
                         });
                     }
+                    return arr;
+                }
+                if (!this.orderState) {
+                    const arr = this.payChannels.filter(item => {
+                        const index = item.channelId;
+                        return index !== - 6 && index !== - 7 && index !== - 11 && index !== - 12;
+                    });
                     return arr;
                 }
             },
