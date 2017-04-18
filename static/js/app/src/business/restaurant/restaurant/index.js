@@ -76,8 +76,6 @@ $(function() {
                     this.deleteRestaurant.bind(this));
             },
             openSettingDialog: function(restaurant) {
-                settingDialog.oddType = restaurant.oddType;
-                settingDialog.unit = restaurant.unit;
                 settingDialog.id = restaurant.restId;
                 settingDialog.getDiscounts();
                 $('#settingDialog').modal('show');
@@ -133,6 +131,8 @@ $(function() {
                     .then(res => {
                         if (res.code === 1) {
                             this.discounts = res.data.list;
+                            this.oddType = res.data.oddSetting.oddType;
+                            this.unit = res.data.oddSetting.unit;
                         } else {
                             modal.alert(res.msg);
                         }
@@ -140,6 +140,16 @@ $(function() {
             },
             confirm() {
                 for (let i = 0; i < this.newDiscounts.length; i ++) {
+                    if (!this.newDiscounts[i].description) {
+                        modal.alert('请填写折扣名称');
+                        return false;
+                    }
+
+                    if (!this.newDiscounts[i].discount) {
+                        modal.alert('请填写优惠折扣');
+                        return false;
+                    }
+
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.newDiscounts[i].discount)) {
                         modal.alert('请输入0.1-9.9之间正确的折扣数字');
                         return false;
@@ -157,7 +167,8 @@ $(function() {
                 http.post('/quickDiscount/discountAndOddSettingEdit', {
                     oddType: this.oddType,
                     unit: this.unit,
-                    restId: this.id,
+                    nodeId: this.id,
+                    nodeType: 1,
                     quickDiscountList: JSON.stringify(list)
                 })
                     .then(res => {
