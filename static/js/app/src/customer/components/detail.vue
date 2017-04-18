@@ -209,16 +209,17 @@
         {
             title: '订单号',
             dataIndex: 'orderNum',
-            width: 180
+            width: 170
         },
         {
             title: '订单业态',
             render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>),
-            width: '120px'
+            width: 120
         },
         {
             title: '订单金额￥',
-            dataIndex: 'totalPrice'
+            dataIndex: 'totalPrice',
+            width: 80
         },
         {
             title: '使用时间',
@@ -237,15 +238,17 @@
         {
             title: '订单号',
             dataIndex: 'orderNum',
-            width: 180
+            width: 170
         },
         {
             title: '订单业态',
-            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>)
+            render: (h, row) => row.orderTypes.map(type => <span class={'order-state ' + orderTypeClass[type]}>{orderType[type]}</span>),
+            width: 120
         },
         {
             title: '联系人',
-            dataIndex: 'name'
+            dataIndex: 'name',
+            width: 80
         },
         {
             title: '联系号码',
