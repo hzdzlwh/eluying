@@ -1169,7 +1169,7 @@
             editOrder() {
                 this.hideModal();
                 // 这里有个顺序问题，所以这样写了
-                $('#orderDetail').on('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
+                $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
             },
             cancelOrder() {
                 this.hideModal();
