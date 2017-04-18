@@ -16,7 +16,7 @@
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
                                     <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
-                                        <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
+                                        <p class="userVip-item" v-for="vip in vipList" @click="setVipInfo(vip)">
                                             <span class="vip-level" v-if="vip.level">
                                                 [
                                                 <span class="vip-level-text">{{ vip.level }}</span>
@@ -87,17 +87,18 @@
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
+                                v-if="this.order.type === ORDER_TYPE.CATERING"
                                 :vipDiscountDetail="vipDiscountDetail"
                                 @change="handleFoodChange"
                                 @priceChange="handleFoodPriceChange">
                         </CateEditor>
                         <EnterEditor
-                         :order="order"
-                         v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION"
-                         :vipDiscountDetail="vipDiscountDetail"
-                         @change="handleEnterChange"
-                         @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
+                             :order="order"
+                             v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
+                             :vipDiscountDetail="vipDiscountDetail"
+                             @change="handleEnterChange"
+                             @priceChange="handlEnterPriceChange"/>
+                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleShopChange"
@@ -251,6 +252,7 @@
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
+    import { getOrderId } from '../../utils/order';
     export default{
         name: 'OrderEditor',
         data() {
@@ -364,7 +366,7 @@
                 }
                 if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
+                        ? { phone: this.phone, orderId: getOrderId(this.order), orderType: this.order.type }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
@@ -377,11 +379,11 @@
                 if (originType === -5 && this.checkState === 'editOrder') {
                     return false;
                 }
+
                 const params = this.checkState === 'editOrder'
-                    ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
+                    ? { phone: newVal, orderId: getOrderId(this.order), orderType: this.order.type }
                     : { phone: newVal };
-                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
-                if (newVal.length === 11 && search) {
+                if (newVal.length === 11) {
                     this.checkPhone();
                     this.getVipDiscount(params);
                 } else if (newVal.length !== 11) {
@@ -395,6 +397,7 @@
                     this.remark = this.order.remark || '';
                     this.showOrder = true;
 
+                    // -5企业，-4会员
                     if (this.order.originId === -5) {
                         this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
                     } else {
@@ -470,6 +473,7 @@
             getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
+                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                         if (res.code === 1) {
                             const originsList = res.data.list;
                             const otherOrigins = [];
@@ -508,9 +512,9 @@
                 bus.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
             },
-            setUserInfo(obj) {
-                this.name = obj.name;
-                this.phone = obj.phone;
+            setVipInfo(vip) {
+                this.name = vip.name;
+                this.phone = vip.phone;
                 this.vipListShow = false;
                 this.userOriginType = '-4~-4';
             },
@@ -603,7 +607,8 @@
                         idCardList: JSON.stringify(room.idCardList),
                         fee: room.price,
                         sub: true,
-                        roomOrderId: room.roomOrderId
+                        roomOrderId: room.roomOrderId,
+                        quickDiscountId: room.quickDiscountId
                     };
                 });
             },
@@ -659,6 +664,7 @@
                     roomId: room.roomType,
                     datePriceList: room.datePriceList,
                     serviceId: room.roomOrderId,
+                    quickDiscountId: room.quickDiscountId,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)
