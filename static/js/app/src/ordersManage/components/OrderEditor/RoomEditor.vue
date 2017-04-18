@@ -82,13 +82,27 @@
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
                           v-if="vipDiscountDetail.vipDetail
-                                && getItemDiscountInfo(0, 0, vipDiscountDetail).discount < 1">
+                                && getItemDiscountInfo().discount < 1">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
-                              v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo(0, 0, vipDiscountDetail).discount).toFixed(2))">
-                            {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(0, 0, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
+                              v-if="Number(item.price) === Number((item.originPrice * getItemDiscountInfo().discount).toFixed(2))">
+                            {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo().discount * 10).toFixed(1)}折`}}
                         </span>
                     </span>
+                </div>
+                <div style="margin-top: 15px;padding-left: 41px">
+                    <span>快捷折扣</span>
+                    <span style="width: 179px;display: inline-block" class="room-category">
+                        <dd-select v-model="item.roomType" placeholder="请选择快捷折扣">
+                            <dd-option v-for="discount in quickDiscounts"
+                                       :value="discount.id"
+                                       :key="discount.id"
+                                       :label="discount.label">
+                            </dd-option>
+                        </dd-select>
+                    </span>
+                    <input v-if="order.type" v-model="applyQuick" type="checkbox" class="dd-checkbox">
+                    <span>应用到所有房间</span>
                 </div>
                 <CheckInPerson
                         :personsObj="{id: index, persons: item.idCardList}"
@@ -112,12 +126,15 @@
     export default{
         data() {
             return {
-                registerRooms: []
+                registerRooms: [],
+                quickDiscounts: [],
+                applyQuick: false
             };
         },
         created() {
             bus.$on('submitOrder', this.changeRooms);
             this.initRooms(this.order);
+            this.getQuickDiscounts();
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeRooms);
@@ -155,7 +172,26 @@
             }
         },
         methods: {
+            getQuickDiscounts() {
+                http.get('/quickDiscount/getList', {
+                    nodeId: 0,
+                    nodeType: 1
+                })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.quickDiscounts = res.data.list.map(item => {
+                                return {
+                                    ...item,
+                                    label: item.description + ' ' + item.discount + '折'
+                                };
+                            });
+                        } else {
+                            modal.alert(res.msg);
+                        }
+                    });
+            },
             initRooms(order) {
+                // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
@@ -178,11 +214,13 @@
                             showPriceList: false,
                             showTip: false,
                             state: item.state,
-                            roomOrderId: item.serviceId
+                            roomOrderId: item.serviceId,
+                            quickDiscountId: item.quickDiscountId
                         };
                     });
                 }
 
+                // 住宿独立订单
                 if (order.roomInfo) {
                     const roomInfo = order.roomInfo;
                     const room = {
@@ -202,8 +240,10 @@
                         showPriceList: false,
                         showTip: false,
                         state: roomInfo.state,
-                        roomOrderId: order.roomOrderId
+                        roomOrderId: order.roomOrderId,
+                        quickDiscountId: order.quickDiscountId
                     };
+
                     this.registerRooms = [room];
                 }
             },
@@ -213,6 +253,7 @@
                     modal.somethingAlert('一个订单最多添加99间房!');
                     return false;
                 }
+
                 // 新增房间，房型时间同上一间
                 const room = JSON.parse(JSON.stringify(this.registerRooms[len - 1]));
                 room.idCardList = [];
@@ -438,13 +479,12 @@
             deleteRoom(index) {
                 this.registerRooms.splice(index, 1);
             },
-            getItemDiscountInfo(nodeId, nodeType, obj) {
+            getItemDiscountInfo() {
+                const vipDetail = this.vipDiscountDetail.vipDetail;
                 let item = { discount: 1 };
-                if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
-                    obj.vipDetail.discountList.forEach(list => {
-                        if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                            item = { ...list };
-                        } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
+                if (vipDetail && vipDetail.discountList.length > 0) {
+                    vipDetail.discountList.forEach(list => {
+                        if (list.nodeId === 0 && list.nodeType === 0) {
                             item = { ...list };
                         }
                     });

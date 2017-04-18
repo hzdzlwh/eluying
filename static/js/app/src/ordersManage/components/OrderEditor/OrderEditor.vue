@@ -92,11 +92,11 @@
                                 @priceChange="handleFoodPriceChange">
                         </CateEditor>
                         <EnterEditor
-                         :order="order"
-                         v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION"
-                         :vipDiscountDetail="vipDiscountDetail"
-                         @change="handleEnterChange"
-                         @priceChange="handlEnterPriceChange"/>
+                             :order="order"
+                             v-if="this.order.type === ORDER_TYPE.ENTERTAINMENT ||this.order.type === ORDER_TYPE.COMBINATION"
+                             :vipDiscountDetail="vipDiscountDetail"
+                             @change="handleEnterChange"
+                             @priceChange="handlEnterPriceChange"/>
                         <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
@@ -251,6 +251,7 @@
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
+    import { getOrderId } from '../../utils/order';
     export default{
         name: 'OrderEditor',
         data() {
@@ -364,7 +365,7 @@
                 }
                 if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
+                        ? { phone: this.phone, orderId: getOrderId(this.order), orderType: this.order.type }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
@@ -377,11 +378,11 @@
                 if (originType === -5 && this.checkState === 'editOrder') {
                     return false;
                 }
+
                 const params = this.checkState === 'editOrder'
-                    ? { phone: this.phone, orderId: this.order.orderType === 0 ? this.order.caterOrderId : this.order.orderId, orderType: this.order.orderType }
+                    ? { phone: newVal, orderId: getOrderId(this.order), orderType: this.order.type }
                     : { phone: newVal };
-                const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
-                if (newVal.length === 11 && search) {
+                if (newVal.length === 11) {
                     this.checkPhone();
                     this.getVipDiscount(params);
                 } else if (newVal.length !== 11) {
