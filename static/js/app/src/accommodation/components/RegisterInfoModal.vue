@@ -1428,7 +1428,7 @@
                     params.origin = '微官网';
                 } else if (Number(this.userOriginType.split('~')[1]) === -5) {
                     params.origin = '企业';
-                }else {
+                } else {
                     this.userOrigins.forEach(origin => {
                         if (origin.id === Number(this.userOriginType.split('~')[0])) {
                             params.origin = origin.name;
@@ -1476,7 +1476,7 @@
                     playItems.push(enter);
                 });
 
-                let items = [];
+                const items = [];
                 this.shopGoodsItems.forEach(item => {
                     const good = {};
                     good.amount = item.count;
@@ -1498,7 +1498,7 @@
                     params.entertainmentItems = JSON.stringify(entertainmentItems);
                 }
 
-                if (this.checkState === "editOrder") {
+                if (this.checkState === 'editOrder') {
                     AJAXService.ajaxWithToken('post', '/order/modify', params)
                         .then(res => {
                             this.isLoading = false;
@@ -1621,20 +1621,20 @@
                 obj.price = + (obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
-                //const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
+                // const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
                 const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                /*let countArr = obj.datePriceList.map(item => {
+                /* let countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
                     return item.dateFee / totalPrice;
                 });*/
-                let countArr = obj.countArr;
+                const countArr = obj.countArr;
                 obj.datePriceList.forEach((item,index) => {
                     item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
-                /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
+                /* let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
             setFirstDateFee(num, obj) {
@@ -1643,56 +1643,54 @@
             },
 
             modifyRoom(item) {
-                /*item.changeTimes++;
-                if (item.changeTimes <= 4) {
-                    return false;
-                }*/
                 if (item.haveRequest) {
                     item.haveRequest = false;
                     return false;
                 }
-                let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                const duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
                 if (duration > 400) {
-                    let currentTime = + new Date();
+                    const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        modal.somethingAlert('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
-                 }
-                let startDate = util.dateFormat(new Date(item.room.startDate));
-                let endDate = util.dateFormat(new Date(item.room.endDate));
-                let lastItem = this.lastRoomItem;
+                }
+                const startDate = util.dateFormat(new Date(item.room.startDate));
+                const endDate = util.dateFormat(new Date(item.room.endDate));
                 /* if (lastItem.startDate === startDate && lastItem.endDate === endDate && lastItem.roomType === item.roomType) {
                     return false;
                 }
                 this.lastRoomItem.startDate = startDate;
                 this.lastRoomItem.endDate = endDate;
                 this.lastRoomItem.roomType = item.roomType;*/
-                let paramsObj = {id: item.roomType, date: startDate,days: duration < 1 ? 1 : duration};
+                const paramsObj = { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration };
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
                 }
                 AJAXService.ajaxWithToken('get', '/room/getRoomStaus', paramsObj)
                     .then(res => {
                         if (res.code === 1) {
-                            let datePriceList = [];
+                            const datePriceList = [];
                             let countTotalPrice = 0;
                             let price = 0;
                             let oldPrice = 0;
                             let originPrice = 0;
                             const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
-                            res.data.rs.status.forEach((option,index) => {
-                                datePriceList.push({date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false});
+                            res.data.rs.status.forEach((option, index) => {
+                                datePriceList.push({ date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)), dateFee: option.p, originDateFee: option.p, showInput: false });
                                 countTotalPrice += option.p;
                             });
-                            let countArr = datePriceList.map(dat => {
+                            const countArr = datePriceList.map(dat => {
                                 return dat.dateFee / countTotalPrice;
                             });
+                            if (!item.previousRoomType || item.roomType != item.previousRoomType) {
+                                delete item.originDatePriceList;
+                            }
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
@@ -1720,12 +1718,12 @@
                                         date.dateFee = Number((date.dateFee * discount).toFixed(2));
                                     }
                                 });
-                                let index = item.datePriceList.findIndex(dat => {
+                                const index = item.datePriceList.findIndex(dat => {
                                     return !dat.hasFind;
                                 });
                                 if (index >= 0) {
-                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                                    item.datePriceList[index].dateFee = +((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
+                                    const totalPrice = item.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0);
+                                    item.datePriceList[index].dateFee = + ((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
                                 }
                             }
                         }
@@ -1886,11 +1884,9 @@
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail && !oldVal.vipDetail) { return false;}
                 this.registerRooms.forEach(room => {
-                    /*if (this.checkState === 'editOrder') {
+                    delete room.previousRoomType;
+                    if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
-                    }*/
-                    if (room.originDatePriceList) {
-                        return false;
                     }
                     room.price = (Number(room.originPrice) * this.getItemDiscountInfo(0, 0, newVal).discount).toFixed(2);
                     this.setDateFee(room.price, room);
@@ -1993,6 +1989,7 @@
                         });
                         room.categoryType = id;
                         room.roomType = item.roomId;
+                        room.previousRoomType = item.roomId;
                         room.originPrice = item.originPrice;
                         room.price = Number(item.fee.toFixed(2));
                         room.room = { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate };
@@ -2002,7 +1999,6 @@
                             newDate.date = dat.date;
                             newDate.dateFee = dat.dateFee;
                             return newDate;
-
                         });
                         room.originDatePriceList = JSON.parse(JSON.stringify(room.datePriceList));
                         room.showPriceList = false;
