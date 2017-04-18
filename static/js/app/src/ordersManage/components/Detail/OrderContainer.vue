@@ -27,6 +27,8 @@
                             <span class="header-tools"
                                   v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
+                            <span class="header-tools"
+                                  @click="resetOrder">反结账</span>
                             <span class="header-tools" v-if="order.cancelAble" @click="cancelOrder">取消订单</span>
                             <span class="close-icon" @click="hideModal"></span>
                         </div>
@@ -1200,6 +1202,9 @@
                     .catch(res => {
                         modal.alert(res.msg);
                     });
+            },
+            resetOrder() {
+                bus.$emit('resetOrder', this.id);
             }
         }
     };

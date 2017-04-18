@@ -99,6 +99,7 @@ $(function() {
                     })
                     .then(res => {
                         if (res.code === 1) {
+                            this.newDiscounts = []
                             this.getDiscounts();
                         } else {
                             modal.alert(res.msg);
