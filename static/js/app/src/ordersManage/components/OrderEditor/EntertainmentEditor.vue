@@ -3,7 +3,7 @@
         <div class="content-item">
             <p class="content-item-title">
                 <span>娱乐信息</span>
-                <span class="increase-container" @click="addItem(2)" v-if='orderType'>
+                <span class="increase-container" @click="addItem(2)" v-if='order.type === ORDER_TYPE.ACCOMMODATION || order.type === ORDER_TYPE.COMBINATION'>
                                     <span class="increase-icon"></span> 添加项目
                 </span>
             </p>
@@ -83,6 +83,7 @@ import AJAXService from 'AJAXService';
 import modal from 'modal';
 import bus from '../../../common/eventBus';
 import util from '../../../common/util';
+import { ORDER_TYPE } from '../../constant';
 export default {
     props: {
         checkState: {
@@ -102,7 +103,8 @@ export default {
             enterSelectModalShow: false,
             modifyEnterOrShopIndex: -1,
             enterItems: this.getplayItems(),
-            orderType: this.order.playItems ? 1 : 0 // 1组合订单，0子订单
+            orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
+            ORDER_TYPE
         };
     },
     watch: {
@@ -141,13 +143,6 @@ export default {
         ...mapState({
             enterList: 'enterList'
         })
-        // totalPrice() {
-        //     const totalprice = this.enterItems.reduce((sum,price) =>
-        //         sum + Number(price.totalPrice)
-        //     ,0)
-        //     this.$emit('priceChange', totalprice)
-        //     return totalprice
-        // }
     },
     methods: {
         emitchange() {
@@ -157,8 +152,8 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
-            if (this.order.playItems) {
-                filterEnters = this.order.playItems.filter(enter => {
+            if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
+                filterEnters = (this.order.playItems || []).filter(enter => {
                     return enter.state !== 3;
                 });
                 filterEnters.forEach(item => {
@@ -199,25 +194,6 @@ export default {
                 });
                 return (JSON.parse(JSON.stringify(enterItems)));
             }
-            // return [{
-            //     name: enterItems.customerName,
-            //     usedAmount: enterItems.bookNum - enterItems.enableAmount,
-            //     unitTime: enterItems.chargeUnitTime,
-            //     chargeUnit: enterItems.chargeMode,
-            //     timeAmount: enterItems.timeAmount,
-            //     chargeUnit: enterItems.chargeUnit,
-            //     chargeUnitTime: enterItems.chargeUnitTime,
-            //     date: enterItems.date,
-            //     count: enterItems.bookNum,
-            //     totalPrice: enterItems.totalPrice,
-            //     price: enterItems.price，
-            //     id: enterItems.categoryId,
-            //     changeTimes: 0;,
-            //     type: 2,
-            //     selfInventory: enterItems.bookNum,
-            //     inventory: undefined,
-
-            // }]
         },
         addItem() {
             if (this.enterItems.length >= 99) {
