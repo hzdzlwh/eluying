@@ -167,7 +167,8 @@ $(function() {
                 http.post('/quickDiscount/discountAndOddSettingEdit', {
                     oddType: this.oddType,
                     unit: this.unit,
-                    restId: this.id,
+                    nodeId: this.id,
+                    nodeType: 1,
                     quickDiscountList: JSON.stringify(list)
                 })
                     .then(res => {
