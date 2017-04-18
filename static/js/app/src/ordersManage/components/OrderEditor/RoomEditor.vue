@@ -161,6 +161,15 @@
         watch: {
             order(order) {
                 this.initRooms(order);
+            },
+            vipDiscountDetail(newVal, oldVal) {
+                if (!newVal.vipDetail && !oldVal.vipDetail) {
+                    return false;
+                }
+                this.registerRooms.forEach(room => {
+                    room.price = Number((room.originPrice * this.getItemDiscountInfo().discount).toFixed(2));
+                    this.setDateFee(room);
+                });
             }
         },
         computed: {

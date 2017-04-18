@@ -16,7 +16,7 @@
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
                                     <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
-                                        <p class="userVip-item" v-for="vip in vipList" @click="setUserInfo(vip)">
+                                        <p class="userVip-item" v-for="vip in vipList" @click="setVipInfo(vip)">
                                             <span class="vip-level" v-if="vip.level">
                                                 [
                                                 <span class="vip-level-text">{{ vip.level }}</span>
@@ -512,9 +512,9 @@
                 bus.$emit('hideOrderEditor');
                 $('#orderEditor').modal('hide');
             },
-            setUserInfo(obj) {
-                this.name = obj.name;
-                this.phone = obj.phone;
+            setVipInfo(vip) {
+                this.name = vip.name;
+                this.phone = vip.phone;
                 this.vipListShow = false;
                 this.userOriginType = '-4~-4';
             },
@@ -607,7 +607,8 @@
                         idCardList: JSON.stringify(room.idCardList),
                         fee: room.price,
                         sub: true,
-                        roomOrderId: room.roomOrderId
+                        roomOrderId: room.roomOrderId,
+                        quickDiscountId: room.quickDiscountId
                     };
                 });
             },
@@ -663,6 +664,7 @@
                     roomId: room.roomType,
                     datePriceList: room.datePriceList,
                     serviceId: room.roomOrderId,
+                    quickDiscountId: room.quickDiscountId,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)
