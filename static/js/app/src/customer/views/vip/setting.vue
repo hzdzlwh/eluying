@@ -286,8 +286,7 @@
                                     {
                                         title: '操作',
                                         render: (h, row) => (
-                                            this.contral.VIP_EDIT_ID ? 
-                                            <span>
+                                            this.contral.VIP_EDIT_ID ? <span>
                                                 <span class="list-action" onClick={() => this.openEdit(row)}>编辑</span>／
                                                 <span class="list-action" onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
                                             </span>
