@@ -85,7 +85,7 @@
                                 && vipDiscount < 1) || item.quickDiscountId">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
-                              v-if="!item.quickDiscountId && Number(item.price) === Number((item.originPrice * vipDiscount).toFixed(2))">
+                              v-if="!item.quickDiscountId && Number(item.price) === getVipPrice(item)">
                             {{vipDiscountDetail.isVip ? '会员' : '企业'}}{{(vipDiscount * 10).toFixed(1)}}折
                         </span>
                         <span class="discount-num" v-if="item.quickDiscountId">
@@ -179,6 +179,9 @@
                     room.price = Number((room.originPrice * this.vipDiscount).toFixed(2));
                     this.setDateFee(room);
                 });
+            },
+            registerRooms(v1, v2) {
+                console.log(v1, v2);
             }
         },
         computed: {
@@ -292,7 +295,7 @@
                         categoryType: roomInfo.subTypeId,
                         roomType: roomInfo.roomId,
                         originPrice: roomInfo.originPrice,
-                        price: Number(roomInfo.price.toFixed(2)),
+                        price: Number(roomInfo.totalPrice.toFixed(2)),
                         room: { roomId: roomInfo.roomId, startDate: roomInfo.checkInDate, endDate: roomInfo.checkOutDate },
                         idCardList: order.idCardsList,
                         datePriceList: order.datePriceList.map(dat => {
