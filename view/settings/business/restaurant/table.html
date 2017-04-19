@@ -62,7 +62,7 @@
                     <ul class="board-num-container clearfloat">
                         <li class="board-num" v-for="num in nameList" track-by="$index">
                             <span class="board-num-close" @click="closeBoardNum($index)"></span>
-                            <input class="board-num-edit" type="text" v-model="num" maxlength="3" @keyup="boardNumCheck($index)">
+                            <input class="board-num-edit" type="text" v-model="num" maxlength="4" @keyup="boardNumCheck($index)">
                         </li>
                         <li class="board-num" @click="addBoardNum">+</li>
                     </ul>
