@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/1/10.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 require("fileupload");
@@ -9,19 +9,10 @@ require("fileupload");
 var showInfo = {
     //读取展示信息
     pullFoodShowInfo: function (id) {
-        /*$.ajax({
-            url: AJAXService.getUrl("pullShowInfoUrl"),
-            data: {id: id},
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
+        http.get('/category/pullShowInfoPC',{id: id})
+            .then(function (result) {
                 showInfo.showFoodShowInfo(result.data);
-            }
-        })*/
-        AJAXService.ajaxWithToken('get','/category/pullShowInfoPC',{id: id},function (result) {
-            showInfo.showFoodShowInfo(result.data);
-        });
+            });
     },
 
 //显示展示信息
@@ -50,7 +41,7 @@ var showInfo = {
         }
         //上传图片
         $("#cover").fileupload({
-            url: AJAXService.getUrl2("uploadImageUrl"),
+            url: http.getUrl("uploadImageUrl"),
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -60,7 +51,7 @@ var showInfo = {
             }
         });
         $("#detail").fileupload({
-            url: AJAXService.getUrl2("uploadImageUrl"),
+            url: http.getUrl("uploadImageUrl"),
             done: function (e, data) {
                 var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                 result = JSON.parse(result);
@@ -101,23 +92,10 @@ var showInfo = {
 
 //发送展示信息
     sendFoodShowInfo: function (item, that) {
-        /*$.ajax({
-            url: AJAXService.getUrl("editShowInfoUrl"),
-            data: item,
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
-                if (util.errorHandler(result)) {
-                    modal.clearModal(that);
-                }
-            }
-        })*/
-        AJAXService.ajaxWithToken('post','/category/modifyShowInfoPC',item,function (result) {
-            if (util.errorHandler(result)) {
+        http.post('/category/modifyShowInfoPC',item)
+            .then(function (result) {
                 modal.clearModal(that);
-            }
-        });
+            });
     },
 
     events: {
@@ -161,7 +139,7 @@ var showInfo = {
         "click #replaceDetail": function () {
             $("#replaceDetailImg").click();
             $("#replaceDetailImg").fileupload({
-                url: AJAXService.getUrl2("uploadImageUrl"),
+                url: http.getUrl("uploadImageUrl"),
                 done: function (e, data) {
                     var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                     result = JSON.parse(result);

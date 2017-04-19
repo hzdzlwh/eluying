@@ -52,7 +52,7 @@
 <style>
 </style>
 <script>
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import bus from '../../common/eventBus';
     import { getOrderId } from '../utils/order';
@@ -107,14 +107,12 @@
                 this.subOrderPenaltys.splice(index, 1);
             },
             getCancelOrder() {
-                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: getOrderId(this.order), orderType: this.order.type })
+                http.get('/order/refund4AllOrder', { orderId: getOrderId(this.order), orderType: this.order.type })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
-                            this.paid = res.data.payments.find(p => p.type === 14).fee;
-                            this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
-                            this.subOrders = res.data.subOrdersTotalPriceList;
-                        }
+                        this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
+                        this.paid = res.data.payments.find(p => p.type === 14).fee;
+                        this.oldPenalty = res.data.payments.find(p => p.type === 4) ? (res.data.payments.find(p => p.type === 4).fee || 0) : 0;
+                        this.subOrders = res.data.subOrdersTotalPriceList;
                     });
             },
             cancel() {
@@ -156,17 +154,12 @@
                 }
                 this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
-                    AJAXService.ajaxWithToken('get', '/order/cancel', business)
+                    http.get('/order/cancel', business)
                         .then(res => {
-                            if (res.code === 1) {
-                                modal.somethingAlert('取消成功');
-                                this.hideModal();
-                                this.$emit('refreshView');
-                                this.$emit('showOrder', this.orderId);
-                            } else {
-                                modal.somethingAlert(res.msg);
-                            }
-                            this.isLoading = false;
+                            modal.somethingAlert('取消成功');
+                            this.hideModal();
+                            this.$emit('refreshView');
+                            this.$emit('showOrder', this.orderId);
                         });
                 } else {
                     business.penalty = Number(totalPenalty);

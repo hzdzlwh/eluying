@@ -118,7 +118,7 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     export default{
         props: {
@@ -164,7 +164,7 @@
             payMoney() {
                 let params = JSON.parse(JSON.stringify(this.params));
                 params.authCode = this.authCode;
-                AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                http.get('/order/addOrderPayment', params)
                     .then(result => {
                         if(result.code === 1) {
                             let status = result.data.status;
@@ -184,7 +184,7 @@
                                 this.hideModal();
                             } else if (status === 2) {
                                 let inter = setInterval(() => {
-                                    AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
+                                    http.get('getPayStatus4BarcodeUrl', {
                                         tradeNum: tradeNum
                                     }, (result1) => {
                                         if (result1.code === 1) {

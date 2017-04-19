@@ -129,7 +129,7 @@
 </style>
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     import { mapState } from 'vuex';
     import bus from '../../common/eventBus';
@@ -285,7 +285,7 @@
                         orderId
                     };
                 }
-                return AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params)
+                return http.get('/order/getOrderPayment', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
@@ -303,26 +303,22 @@
                     });
             },
             getChannels(params) {
-                AJAXService.ajaxWithToken('get', '/user/getChannels', params)
+                http.get('/user/getChannels', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            const channels = res.data.list;
-                            channels.forEach(channel => {
-                                channel.channelId = channel.id;
-                            });
-                            channels.sort((a, b) => {
-                                return a.channelId - b.channelId;
-                            });
-                            this.payChannels = channels;
-                            this.depositPayChannels = channels.filter(channel => {
-                                return channel.channelId > 0;
-                            });
-                            this.isCompany = !!res.data.contractCompany;
-                            this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
-                            this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
+                        const channels = res.data.list;
+                        channels.forEach(channel => {
+                            channel.channelId = channel.id;
+                        });
+                        channels.sort((a, b) => {
+                            return a.channelId - b.channelId;
+                        });
+                        this.payChannels = channels;
+                        this.depositPayChannels = channels.filter(channel => {
+                            return channel.channelId > 0;
+                        });
+                        this.isCompany = !!res.data.contractCompany;
+                        this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
+                        this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
                     });
             },
             hideModal() {
@@ -332,15 +328,11 @@
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType
                     };
-                    AJAXService.ajaxWithToken('get', '/order/cancel', params)
+                    http.get('/order/cancel', params)
                         .then(res => {
-                            if (res.code !== 1) {
-                                modal.somethingAlert(res.msg);
-                            } else {
-                                this.$emit('hide');
-                                bus.$emit('hideCashier');
-                                $('#cashier').modal('hide');
-                            }
+                            this.$emit('hide');
+                            bus.$emit('hideCashier');
+                            $('#cashier').modal('hide');
                         });
                 } else {
                     bus.$emit('hideCashier');
@@ -479,7 +471,7 @@
                     return false;
                 }
                 if (payWithAlipay <= 0) {
-                    AJAXService.post('/order/addOrderPayment', params)
+                    http.post('/order/addOrderPayment', params)
                         .then(result => {
                             if (result.code === 1) {
                                 modal.somethingAlert('收银成功');

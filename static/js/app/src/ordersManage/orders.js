@@ -1,4 +1,4 @@
-import AJAXService from 'AJAXService';
+import http from 'http';
 import { DdDatepicker, DdDropdown, DdDropdownItem, DdOption, DdPagination, DdSelect } from 'dd-vue-component';
 import modal from 'modal';
 /**
@@ -155,18 +155,14 @@ $(function() {
                 this.currentPage = pageChange ? this.currentPage : 1;
                 this.orderItems = [];
                 this.isLoading = true;
-                AJAXService.ajaxWithToken('get', '/order/listPc', obj,
-                    (result) => {
+                http.get('/order/listPc', obj)
+                    .then((result) => {
                         this.isLoading = false;
-                        if (result.code === 1 && result.data) {
-                            this.orderItems = this.fixOrderItemData(result.data.list);
-                            this.depositAmount = result.data.depositAmount;
-                            this.orderNum = result.data.orderNum;
-                            this.orderTotalPrice = result.data.orderTotalPrice;
-                            this.totalPay = result.data.totalPay;
-                        } else if (result.code !== 1) {
-                            modal.somethingAlert(result.msg);
-                        }
+                        this.orderItems = this.fixOrderItemData(result.data.list);
+                        this.depositAmount = result.data.depositAmount;
+                        this.orderNum = result.data.orderNum;
+                        this.orderTotalPrice = result.data.orderTotalPrice;
+                        this.totalPay = result.data.totalPay;
                     });
             },
             refreshView() {
@@ -190,7 +186,7 @@ $(function() {
                 this.cancelOrderShow = true;
             },
             getRoomsList() {
-                return AJAXService.ajaxWithToken('get', '/room/getRoomsList', {})
+                return http.get('/room/getRoomsList', {})
                     .then(res => {
                         this.categories = res.data.list;
                     });
@@ -213,9 +209,9 @@ $(function() {
                 const paramsObj = this.getParams();
                 // paramsObj.map = JSON.stringify(paramsObj.map);
                 paramsObj.type = num;
-                const host = AJAXService.getUrl2('/order/listOrderListToText');
-                const pa = AJAXService.getDataWithToken(paramsObj);
-                const params = AJAXService.paramsToString(pa);
+                const host = http.getUrl('/order/listOrderListToText');
+                const pa = http.getDataWithToken(paramsObj);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
             hideOrderEditor() {

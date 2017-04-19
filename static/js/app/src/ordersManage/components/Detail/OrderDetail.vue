@@ -18,7 +18,7 @@
     import EntertainmentOrder from './EntertainmentOrder.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
     import bus from '../../../common/eventBus';
-    import http from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     export default{
         data() {

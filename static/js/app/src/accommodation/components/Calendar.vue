@@ -523,7 +523,7 @@
     import DateSelect from './DateSelect.vue';
     import RoomFilter from './RoomFilter.vue';
     import util from 'util';
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     export default{
@@ -686,7 +686,7 @@
                 status.actionVisible = true;
             },
             openOrCloseStatus(room, status) {
-                AJAXService.ajaxWithToken('GET', 'modifyRoomStatusUrl', {
+                http.get('modifyRoomStatusUrl', {
                     isAll: false,
                     dateList: JSON.stringify([util.dateFormat(status.date)]),
                     open: status.s === 100 ? 1 : 0,
@@ -716,7 +716,7 @@
                 return false;
             },
             setDirtyRoom(room) {
-                AJAXService.ajaxWithToken('GET', '/room/addRemoveDirtyRoom', {
+                http.get('/room/addRemoveDirtyRoom', {
                     actionType: !room.isDirty,
                     roomId: room.i
                 })

@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var floatInfo = require("floatInfo");
@@ -23,19 +23,20 @@ var roomCategoryList = {
     //读取房型列表
     loadRoomCategoryList: function () {
         /*$.ajax({
-            url: AJAXService.getUrl('getRoomCategoryListUrl'),
+            url: http.getUrl('getRoomCategoryListUrl'),
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 roomCategoryList.list = result.data.list;
                 roomCategoryList.render();
             }
         })*/
-        AJAXService.ajaxWithToken("GET",'getRoomCategoryListUrl',{},function (result) {
-            roomCategoryList.list = result.data.list;
-            roomCategoryList.render();
-        });
+        http.get('getRoomCategoryListUrl',{})
+            .then(function (result) {
+                roomCategoryList.list = result.data.list;
+                roomCategoryList.render();
+            });
     },
 
     //绘制
@@ -73,10 +74,10 @@ var roomCategoryList = {
 //上下架
     modifyState: function (item) {
         /*$.ajax({
-            url: AJAXService.getUrl('modifyStateUrl'),
+            url: http.getUrl('modifyStateUrl'),
             data: item,
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (!util.errorHandler(result)) {
@@ -91,25 +92,23 @@ var roomCategoryList = {
                 roomCategoryList.render();
             }
         })*/
-        AJAXService.ajaxWithToken('get','/category/modifyStatePC',item,function (result) {
-            if (!util.errorHandler(result)) {
-                return;
-            }
-            $.each(roomCategoryList.list, function (index, element) {
-                if (element.id == item.id) {
-                    roomCategoryList.list[index].state = item.state;
-                    return false; //等于break
-                }
+        http.get('/category/modifyStatePC',item)
+            .then(function (result) {
+                $.each(roomCategoryList.list, function (index, element) {
+                    if (element.id == item.id) {
+                        roomCategoryList.list[index].state = item.state;
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
             });
-            roomCategoryList.render();
-        });
     },
 
     //删除房型
     deleteRoom: function () {
         var id = $(".mainActive .id").val();
         /*$.ajax({
-            url: AJAXService.getUrl("deleteRoomUrl"),
+            url: http.getUrl("deleteRoomUrl"),
             data: {id: id},
             success: function (result) {
                 if (!util.errorHandler(result)) {
@@ -124,21 +123,22 @@ var roomCategoryList = {
                 roomCategoryList.render();
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             }
         })*/
-        AJAXService.ajaxWithToken("POST","deleteRoomUrl",{id: id},function (result) {
-            if (!util.errorHandler(result)) {
-                return;
-            }
-            $.each(roomCategoryList.list, function (index, element) {
-                if (element.id == id) {
-                    roomCategoryList.list.splice(index, 1);
-                    return false; //等于break
+        http.post("deleteRoomUrl",{id: id})
+            .then(function (result) {
+                if (!util.errorHandler(result)) {
+                    return;
                 }
+                $.each(roomCategoryList.list, function (index, element) {
+                    if (element.id == id) {
+                        roomCategoryList.list.splice(index, 1);
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.render();
             });
-            roomCategoryList.render();
-        });
     },
 
     events: {

@@ -129,7 +129,7 @@
 </style>
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     import { mapState } from 'vuex';
     export default{
@@ -282,7 +282,7 @@
                         orderId
                     };
                 }
-                return AJAXService.ajaxWithToken('GET', '/order/getOrderPayment', params)
+                return http.get('/order/getOrderPayment', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
@@ -300,7 +300,7 @@
                     });
             },
             getData(obj) {
-                AJAXService.ajaxWithToken('get', '/user/getChannels', obj)
+                http.get('/user/getChannels', obj)
                     .then(res => {
                         if (res.code === 1) {
                             const channels = res.data.list;
@@ -330,7 +330,7 @@
                         orderId: this.business.orderDetail.orderId,
                         orderType: this.business.orderDetail.orderType
                     };
-                    AJAXService.ajaxWithToken('get', '/order/cancel', params)
+                    http.get('/order/cancel', params)
                         .then(res => {
                             if (res.code !== 1) {
                                 modal.somethingAlert(res.msg);
@@ -484,7 +484,7 @@
                     return false;
                 }
                 if (payWithAlipay <= 0) {
-                    AJAXService.ajaxWithToken('GET', '/order/addOrderPayment', params)
+                    http.get('/order/addOrderPayment', params)
                         .then(result => {
                             if (result.code === 1) {
                                 modal.somethingAlert('收银成功');

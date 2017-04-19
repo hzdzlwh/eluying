@@ -3,7 +3,7 @@
  */
 import Vuex from 'vuex';
 import Vue from 'vue';
-import AJAXService from '../../common/AJAXService';
+import http from '../../common/http';
 import types from './types';
 
 Vue.use(Vuex);
@@ -34,7 +34,7 @@ const store = new Vuex.Store({
     actions: {
         [types.LOAD_SHOP_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/shop/list', {})
+                http.get('/shop/list', {})
                     .then(res => {
                         if (res.code === 1) {
                             let shopList = [];
@@ -51,7 +51,7 @@ const store = new Vuex.Store({
         },
         [types.LOAD_ENTER_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryListPC' , {})
+                http.get('/entertainment/getCategoryListPC' , {})
                     .then(res => {
                         if (res.code === 1) {
                             let enterList = [];
@@ -75,7 +75,7 @@ const store = new Vuex.Store({
         },
         [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId })
+                http.get('/order/getOrderDetail', { orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -88,7 +88,7 @@ const store = new Vuex.Store({
         },
         [types.LOAD_ROOM_BUSINESS_INFO]({ state, commit }, { businessType }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getRoomBusinessInfo', { orderId: state.orderDetail.orderId, businessType })
+                http.get('/order/getRoomBusinessInfo', { orderId: state.orderDetail.orderId, businessType })
                     .then((res) => {
                         if (res.code === 1) {
                             res.data.businessType = businessType;

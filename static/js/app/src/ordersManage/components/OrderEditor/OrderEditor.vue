@@ -243,7 +243,7 @@
         DdGroupOption,
         DdOption
     } from 'dd-vue-component';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import { ORDER_TYPE } from '../../constant';
     import modal from '../../../common/modal';
     import types from '../../store/types';
@@ -417,15 +417,11 @@
                 }
             },
             getVipList(params, position) {
-                http.ajaxWithToken('GET', '/vipUser/search', params)
+                http.get('/vipUser/search', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.vipList = res.data.list;
-                            this.vipListShow = res.data.list && res.data.list.length > 0;
-                            this.setVipListPosition(position);
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
+                        this.vipList = res.data.list;
+                        this.vipListShow = res.data.list && res.data.list.length > 0;
+                        this.setVipListPosition(position);
                     });
             },
             setVipListPosition(position) {
@@ -439,31 +435,23 @@
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
             getVipDiscount(params) {
-                http.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
+                http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.vipDiscountDetail = { ...res.data };
-                            if (!this.vipDiscountDetail.isVip) {
-                                this.userOriginType = '-1~-1';
-                            } else {
-                                this.userOriginType = '-4~-4';
-                            }
+                        this.vipDiscountDetail = { ...res.data };
+                        if (!this.vipDiscountDetail.isVip) {
+                            this.userOriginType = '-1~-1';
                         } else {
-                            modal.somethingAlert(res.msg);
+                            this.userOriginType = '-4~-4';
                         }
                     });
             },
             getCompanyDiscount(params) {
-                http.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                http.get('/contractCompany/getContractDiscount', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            const discountList = res.data;
-                            this.vipDiscountDetail = {};
-                            this.vipDiscountDetail.isVip = false;
-                            this.vipDiscountDetail.vipDetail = discountList;
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
+                        const discountList = res.data;
+                        this.vipDiscountDetail = {};
+                        this.vipDiscountDetail.isVip = false;
+                        this.vipDiscountDetail.vipDetail = discountList;
                     });
             },
             getData() {

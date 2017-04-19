@@ -52,7 +52,7 @@
 <style>
 </style>
 <script>
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import { mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
@@ -106,7 +106,7 @@
                 this.subOrderPenaltys.splice(index, 1);
             },
             getCancelOrder() {
-                AJAXService.ajaxWithToken('get', '/order/refund4AllOrder', { orderId: this.orderId, orderType: -1 })
+                http.get('/order/refund4AllOrder', { orderId: this.orderId, orderType: -1 })
                     .then(res => {
                         if (res.code === 1) {
                             this.cancelFee = res.data.payments.find(p => p.type === 13).fee;
@@ -155,7 +155,7 @@
                 }
                 this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
-                    AJAXService.ajaxWithToken('get', '/order/cancel', business)
+                    http.get('/order/cancel', business)
                         .then(res => {
                             if (res.code === 1) {
                                 modal.somethingAlert('取消成功');

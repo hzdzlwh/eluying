@@ -26,7 +26,7 @@
 <script>
     import { mapState } from 'vuex';
     import { DdTable } from 'dd-vue-component';
-    import AJAXService from '../../../../common/AJAXService';
+    import http from '../../../../common/http';
     import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { setPie } from '../../../utils/chartHelper';
@@ -42,10 +42,10 @@
                         endDate: this.date.endDate
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         },
@@ -71,7 +71,7 @@
         },
         methods: {
             getFlowStatsByChannel() {
-                AJAXService.ajaxWithToken('get', '/stat/getFlowStatsByChannel', {
+                http.get('/stat/getFlowStatsByChannel', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                 })

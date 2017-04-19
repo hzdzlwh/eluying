@@ -666,7 +666,7 @@
     }
 </style>
 <script>
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import util from 'util';
     import { ID_CARD_TYPE, FOOD_STATE, ORDER_STATUS_ICON } from '../const';
     import modal from 'modal';
@@ -802,9 +802,9 @@
             },
             openPrint(orderDetail) {
                 let params = { orderId: orderDetail.orderId };
-                params = AJAXService.getDataWithToken(params);
-                params = AJAXService.paramsToString(params);
-                window.open(AJAXService.getUrl2('/printer/getOrderDetailJsp?') + params);
+                params = http.getDataWithToken(params);
+                params = http.paramsToString(params);
+                window.open(http.getUrl('/printer/getOrderDetailJsp?') + params);
             },
             cancelOrder() {
                 this.hideModal();
@@ -816,7 +816,7 @@
                     return;
                 }
                 food.detail = {};
-                AJAXService.ajaxWithToken('GET', 'getCaterOrderDetailUrl', {caterOrderId: food.foodOrderId}, function(res){
+                http.get('getCaterOrderDetailUrl', {caterOrderId: food.foodOrderId}, function(res){
                     if (res.code === 1) {
                         food.detail = res.data;
                         food.detail.boardDetailResps = res.data.boardDetailResps.reduce((a,b) => { return a.concat(b.boardName) }, []);
