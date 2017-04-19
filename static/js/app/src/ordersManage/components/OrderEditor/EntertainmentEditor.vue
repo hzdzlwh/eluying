@@ -52,7 +52,7 @@
                                     </span>
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
-                                          && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
+                                          && getItemDiscountInfo(item.nodeId).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                     <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
@@ -125,6 +125,20 @@ export default {
                     .forEach(function(el) {
                         totalprice += Number(el.totalPrice);
                     });
+                this.$emit('priceChange', totalprice);
+            },
+            deep: true
+        },
+        vipDiscountDetail: {
+            handler(c, o) {
+                const _this = this;
+                let totalprice = 0;
+                this.enterItems.forEach((el) => {
+                    el.totalPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
+                    if (el.state === 0 || el.state === undefined) {
+                        totalprice += Number(el.totalPrice);
+                    }
+                });
                 this.$emit('priceChange', totalprice);
             },
             deep: true
