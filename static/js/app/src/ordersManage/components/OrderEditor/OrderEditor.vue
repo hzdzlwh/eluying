@@ -98,7 +98,7 @@
                              :vipDiscountDetail="vipDiscountDetail"
                              @change="handleEnterChange"
                              @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor v-if="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
+                        <ShopEditor v-show="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleShopChange"
