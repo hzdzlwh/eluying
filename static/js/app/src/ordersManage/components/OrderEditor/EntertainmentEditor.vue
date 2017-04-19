@@ -53,9 +53,7 @@
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
-                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span>|{{Number(((item['price']
-                                                                         * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
-                                                                         * item.count * item.timeAmount).toFixed(2))}}</span>
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                     <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
