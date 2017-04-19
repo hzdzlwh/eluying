@@ -180,8 +180,6 @@
                             if (res.code === 1) {
                                 this.hideModal();
                                 modal.alert('退房成功');
-                                this.$emit('refreshView');
-                                this.$emit('showOrder', this.orderDetail.orderId);
                                 bus.$emit('refreshView');
                                 bus.$emit('showOrder', this.orderDetail.orderId);
                             } else {

@@ -178,7 +178,6 @@
                     rooms: rooms.filter((room) => { return room; })
                 };
                 $('#checkIn').modal('hide');
-                this.$emit('showCashier', { type: 'checkIn', business });
                 bus.$emit('showCashier', { type: 'checkIn', business });
             }
         },

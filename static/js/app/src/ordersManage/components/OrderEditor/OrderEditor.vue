@@ -267,10 +267,10 @@
                 remark: '',
                 enterItems: [],
                 shopGoodsItems: [],
-                newGoodItems: [],
-                previousGoods: [],
+                newGoodItems: [], // 新的商超项目
+                previousGoods: [], // 之前的商超项目
                 rooms: [],
-                shopItems: {},
+                shopItems: {}, // 商超组件传出的数据：包含新旧商超项目
                 showOrder: false,
                 vipDiscountDetail: {},
                 lastModifyRoomTime: 0,
@@ -439,7 +439,7 @@
                 }
             },
             checkPhone() {
-                const phoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                const phoneReg = /^1[34578]\d{9}$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
             getVipDiscount(params) {
