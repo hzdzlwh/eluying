@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderDetail" role="dialog" >
+        <div class="modal fade roomModals" id="orderDetail" role="dialog" data-backdrop="static">
             <div v-if="order.orderId" class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
@@ -978,7 +978,7 @@
     import bus from '../../../common/eventBus';
     import util from 'util';
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
-    import { mapMutations, mapActions } from 'vuex';
+    import { mapActions } from 'vuex';
     import type from '../../store/types';
     import http from '../../../common/AJAXService';
     import Insurance from '../../../accommodation/components/Insurance.vue';
@@ -1122,7 +1122,7 @@
             }
         },
         methods: {
-            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
+            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO, types.GET_ORDER_DETAIL]),
             hideModal() {
                 bus.$emit('onClose');
                 // this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
@@ -1158,7 +1158,7 @@
                 bus.$emit('onShowDetail',
                     {
                         orderId: this.order.combinationOrderId,
-                        orderType: ORDER_TYPE.COMBINATION
+                        type: ORDER_TYPE.COMBINATION
                     });
             },
             dateFormat(date) {
@@ -1205,7 +1205,15 @@
                     });
             },
             resetOrder() {
-                bus.$emit('resetOrder', this.id);
+                http.post('/order/resettle', { orderId: this.id, orderType: this.type })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                            bus.$emit('refreshView');
+                        } else {
+                            modal.somethingAlert(res.msg);
+                        }
+                    });
             }
         }
     };

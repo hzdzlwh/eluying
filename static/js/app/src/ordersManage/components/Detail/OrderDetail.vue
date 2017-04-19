@@ -18,7 +18,7 @@
     import EntertainmentOrder from './EntertainmentOrder.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
     import bus from '../../../common/eventBus';
-    import AJAXService from 'AJAXService';
+    import http from 'AJAXService';
     import modal from 'modal';
     export default{
         data() {
@@ -66,28 +66,7 @@
             }
         },
         methods: {
-            ...mapActions([
-                types.GET_ORDER_DETAIL,
-                types.LOAD_ROOM_BUSINESS_INFO
-            ]),
-            resetOrder(id) {
-                const that = this;
-                AJAXService.ajaxWithToken('get', '/order/resettle', { orderId: id, orderType: this.type })
-                    .then(res => {
-                        if (res.code === 1) {
-                            that[types.GET_ORDER_DETAIL]({ orderId: id, orderType: that.type });
-                            bus.$emit('refreshView');
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
-                    });
-            }
-        },
-        created() {
-            bus.$on('resetOrder', this.resetOrder);
-        },
-        beforeDestroy: function() {
-            bus.$off('resetOrder', this.resetOrder);
+            ...mapActions([types.GET_ORDER_DETAIL])
         }
     };
 </script>

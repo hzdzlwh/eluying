@@ -83,7 +83,7 @@
                     bus.$emit('onShowDetail',
                         {
                             orderId: order.goodsOrderId,
-                            orderType: 2
+                            type: 2
                         });
                 } else {
                     return false;
