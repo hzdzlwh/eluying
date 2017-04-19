@@ -273,13 +273,9 @@
                 shopItems: {}, // 商超组件传出的数据：包含新旧商超项目
                 showOrder: false,
                 vipDiscountDetail: {},
-                lastModifyRoomTime: 0,
                 vipListShow: false,
                 vipList: [],
                 timeCount: 0,
-                roomStatusRequest: 0,
-                lastRoomItem: {},
-                lastEnterItem: {},
                 roomPrice: 0,
                 enterPrice: 0,
                 goodsPrice: 0,

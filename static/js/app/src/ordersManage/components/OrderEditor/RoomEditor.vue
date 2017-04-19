@@ -137,11 +137,13 @@
         },
         created() {
             bus.$on('submitOrder', this.changeRooms);
+            bus.$on('hideOrderEditor', this.cleanRooms);
             this.initRooms(this.order);
             this.getQuickDiscounts();
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeRooms);
+            bus.$on('hideOrderEditor', this.cleanRooms);
         },
         components: {
             CheckInPerson,
@@ -176,7 +178,7 @@
                         return false;
                     }
 
-                    room.price = Number((room.originPrice * this.vipDiscount).toFixed(2));
+                    room.price = this.getVipPrice(room);
                     this.setDateFee(room);
                 });
             }
@@ -216,6 +218,9 @@
             }
         },
         methods: {
+            cleanRooms() {
+                this.registerRooms = [];
+            },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
                     nodeId: 0,
@@ -266,7 +271,7 @@
                             categoryType: item.typeId,
                             roomType: item.roomId,
                             originPrice: item.originPrice,
-                            price: Number(item.fee.toFixed(2)),
+                            price: item.fee,
                             room: { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate },
                             idCardList: item.idCardList,
                             datePriceList: item.datePriceList.map(dat => {
@@ -292,7 +297,7 @@
                         categoryType: roomInfo.subTypeId,
                         roomType: roomInfo.roomId,
                         originPrice: roomInfo.originPrice,
-                        price: Number(roomInfo.totalPrice.toFixed(2)),
+                        price: roomInfo.totalPrice,
                         room: { roomId: roomInfo.roomId, startDate: roomInfo.checkInDate, endDate: roomInfo.checkOutDate },
                         idCardList: order.idCardsList,
                         datePriceList: order.datePriceList.map(dat => {
