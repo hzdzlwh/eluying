@@ -60,7 +60,7 @@
     import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
         props: {
-            show: Boolean,
+            show: Boolean
         },
         data() {
             return {
