@@ -285,7 +285,7 @@ $(function() {
             },
 
             showOrderDetail(order) {
-                this.detailType = order.orderType;
+                this.detailType = order.type;
                 this.detailId = order.orderId;
                 this.detailVisible = true;
             },

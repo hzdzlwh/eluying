@@ -225,7 +225,7 @@
                     bus.$emit('onShowDetail',
                         {
                             orderId: order.foodOrderId,
-                            orderType: 0
+                            type: 0
                         });
                 } else {
                     return false;
