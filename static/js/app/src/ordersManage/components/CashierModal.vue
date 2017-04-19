@@ -17,12 +17,12 @@
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
                             </div>
                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
-                                <div class="cashier-getMoney-channels" v-if="paylogs.length > 0">
+                                <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(log, index) in paylogs" :key="log.payId">
                                         <span>金额:</span>
                                         <input type="number" class="dd-input" :value="Math.abs(log.fee)" disabled />
-                                        <span :class="log.fee > 0 ? 'green' : 'red'">{{log.fee > 0 ? '收款' : '退款'}}方式:</span>
-                                        <input type="text" class="dd-input" :value="log.payChannelId" disabled />
+                                        <span style="margin-left: 24px" :class="log.type === 0 ? 'green' : 'red'">{{log.type === 0 ? '收款' : '退款'}}方式:</span>
+                                        <input type="text" class="dd-input" :value="log.payChannel" disabled />
                                         <span class="cashier-delBtn-icon" @click="deletePayLog(index)"></span>
                                     </div>
                                 </div>
@@ -312,7 +312,9 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.orderPayment = res.data;
-                            this.paylogs = res.data.payments.map(pay => { return pay.type === 14; });
+                            if (res.data.payments && res.data.payments.length > 0) {
+                                this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
+                            }
                             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                             if (Number(payMoney) !== 0) {
                                 this.payments.push({ fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2 });
@@ -421,9 +423,18 @@
                 }
                 const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
-                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney)) {
+                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder') {
                     modal.somethingAlert('订单未结清，无法完成收银！');
                     return false;
+                }
+                if (this.type === 'resetOrder') {
+                    const oldReceiveMoney = this.paylogs.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : -Number(b.fee)); }, 0);
+                    const newReceiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
+                    const shouldReceiveMoney = this.orderPayment.payableFee;
+                    if (oldReceiveMoney + newReceiveMoney !== Number(shouldReceiveMoney)) {
+                        modal.alert('反结账有误!');
+                        return false;
+                    }
                 }
                 const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                 if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {

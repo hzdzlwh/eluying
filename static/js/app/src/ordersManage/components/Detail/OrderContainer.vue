@@ -198,7 +198,8 @@
                                         办理退房
                                     </div>
                                 </span>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney">重新结账</div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
+                                     v-if="order.state || order.orderState === 8">重新结账</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
                                      v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
                                     结账
