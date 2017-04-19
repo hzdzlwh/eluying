@@ -36,16 +36,16 @@ const http = {
             data = {};
         }
 
+        if (path !== 'loginUrl') {
+            data = this.getDataWithToken(data);
+        }
+
         if (method === 'get') {
             config.params = data;
         }
 
         if (method === 'post') {
             config.data = qs.stringify(data);
-        }
-
-        if (path !== 'loginUrl') {
-            data = this.getDataWithToken(data);
         }
 
         spin.addPending();
@@ -59,7 +59,7 @@ const http = {
             .then(res => {
                 if (res.data.code !== 1) {
                     if (config.notify && res.data.code !== 5) {
-                        modal.alert(res.msg);
+                        modal.alert(res.data.msg);
                     } else if (res.data.code === 5) {
                         window.localStorage.clear();
                         modal.alert('账号在别处登录。');
