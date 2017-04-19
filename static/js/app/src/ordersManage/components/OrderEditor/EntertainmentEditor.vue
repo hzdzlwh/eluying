@@ -52,10 +52,10 @@
                                     </span>
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
-                                          && getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount < 1">
+                                          && getItemDiscountInfo(item.nodeId).discount < 1">
                                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                     <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
-                                                                         * getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount).toFixed(2)
+                                                                         * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
                                                 {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
@@ -128,6 +128,20 @@ export default {
                 this.$emit('priceChange', totalprice);
             },
             deep: true
+        },
+        vipDiscountDetail: {
+            handler(c, o) {
+                const _this = this;
+                let totalprice = 0;
+                this.enterItems.forEach((el) => {
+                    el.totalPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
+                    if (el.state === 0 || el.state === undefined) {
+                        totalprice += Number(el.totalPrice);
+                    }
+                });
+                this.$emit('priceChange', totalprice);
+            },
+            deep: true
         }
     },
     created() {
@@ -159,6 +173,7 @@ export default {
                 filterEnters.forEach(item => {
                     const enter = { ...item
                     };
+                    // enter.price = Number((item.originPrice).toFixed(2));
                     enter.price = item.originPrice;
                     enter.changeTimes = 0;
                     enter.id = item.categoryId;
@@ -166,7 +181,8 @@ export default {
                     enter.selfInventory = item.amount;
                     enter.type = 2;
                     enter.inventory = undefined;
-                    enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
+                    enter.originPrice = item.originPrice.toFixed(2);
+                    // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                     enter.totalPrice = item.totalPrice;
                     enterItems.push(enter);
                 });
@@ -176,11 +192,9 @@ export default {
                 filterEnters.forEach(item => {
                     const enter = { ...item
                     };
-
                     enter.name = item.customerName;
                     enter.usedAmount = item.bookNum - item.enableAmount;
                     enter.unitTime = item.chargeUnitTime;
-                    enter.price = item.originPrice;
                     enter.price = item.originPrice;
                     enter.changeTimes = 0;
                     enter.id = item.categoryId;
@@ -188,7 +202,7 @@ export default {
                     enter.selfInventory = item.bookNum;
                     enter.type = 2;
                     enter.inventory = undefined;
-                    enter.originPrice = (item.originPrice * item.bookNum * item.timeAmount).toFixed(2);
+                    enter.originPrice = item.originPrice.toFixed(2);
                     enter.totalPrice = item.totalPrice;
                     enterItems.push(enter);
                 });
@@ -237,18 +251,16 @@ export default {
         /**
          * 获取单个项目的优惠信息
          **/
-        getItemDiscountInfo(nodeId, nodeType, obj) {
+        getItemDiscountInfo(nodeId = function() {
+            throw new Error('nodeId参数缺少');
+        }, nodeType = 2) {
             let item = {
                 discount: 1
             };
-            if (obj.vipDetail && obj.vipDetail.discountList.length > 0) {
-                obj.vipDetail.discountList.forEach(list => {
-                    if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                        item = { ...list
-                        };
-                    } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                        item = { ...list
-                        };
+            if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
+                this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                    if (list.nodeId === nodeId && list.nodeType === nodeType) {
+                        item = { ...list };
                     }
                 });
             }

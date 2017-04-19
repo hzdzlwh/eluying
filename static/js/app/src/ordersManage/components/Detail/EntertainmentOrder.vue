@@ -83,7 +83,7 @@ export default {
         modalShow(id) {
             bus.$emit('onShowDetail', {
                 orderId: parseInt(id),
-                orderType: ORDER_TYPE.ENTERTAINMENT
+                type: ORDER_TYPE.ENTERTAINMENT
             });
         }
     }
