@@ -161,14 +161,15 @@ export default {
                 filterEnters.forEach(item => {
                     const enter = { ...item
                     };
-                    enter.price = Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
-                    // enter.price = item.originPrice;
+                    // enter.price = Number((item.originPrice).toFixed(2));
+                    enter.price = item.originPrice;
                     enter.changeTimes = 0;
                     enter.id = item.categoryId;
                     enter.count = item.amount;
                     enter.selfInventory = item.amount;
                     enter.type = 2;
                     enter.inventory = undefined;
+                    enter.originPrice = item.originPrice.toFixed(2);
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                     enter.totalPrice = item.totalPrice;
                     enterItems.push(enter);
@@ -182,14 +183,14 @@ export default {
                     enter.name = item.customerName;
                     enter.usedAmount = item.bookNum - item.enableAmount;
                     enter.unitTime = item.chargeUnitTime;
-                    enter.price = Number((item.price * this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount).toFixed(2));
+                    enter.price = item.originPrice;
                     enter.changeTimes = 0;
                     enter.id = item.categoryId;
                     enter.count = item.bookNum;
                     enter.selfInventory = item.bookNum;
                     enter.type = 2;
                     enter.inventory = undefined;
-                    // enter.originPrice = (item.originPrice * item.bookNum * item.timeAmount).toFixed(2);
+                    enter.originPrice = item.originPrice.toFixed(2);
                     enter.totalPrice = item.totalPrice;
                     enterItems.push(enter);
                 });
@@ -238,7 +239,9 @@ export default {
         /**
          * 获取单个项目的优惠信息
          **/
-        getItemDiscountInfo(nodeId, nodeType = 2) {
+        getItemDiscountInfo(nodeId = function() {
+            throw new Error('nodeId参数缺少');
+        }, nodeType = 2) {
             let item = {
                 discount: 1
             };
