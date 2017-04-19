@@ -137,11 +137,13 @@
         },
         created() {
             bus.$on('submitOrder', this.changeRooms);
+            bus.$on('hideOrderEditor', this.cleanRooms);
             this.initRooms(this.order);
             this.getQuickDiscounts();
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeRooms);
+            bus.$on('hideOrderEditor', this.cleanRooms);
         },
         components: {
             CheckInPerson,
@@ -216,6 +218,9 @@
             }
         },
         methods: {
+            cleanRooms() {
+                this.registerRooms = [];
+            },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
                     nodeId: 0,
