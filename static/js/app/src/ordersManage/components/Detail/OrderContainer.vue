@@ -982,7 +982,7 @@
     import { ORDER_TYPE, ORDER_STATUS_ICON, ORDER_STATE_TEXT } from '../../constant';
     import { mapActions } from 'vuex';
     import type from '../../store/types';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import Insurance from '../../../accommodation/components/Insurance.vue';
     import types from '../../store/types';
     import modal from '../../../common/modal';
@@ -1027,7 +1027,7 @@
                 let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
-                return http.getUrl2('/printer/getOrderDetailJsp?') + params;
+                return http.getUrl('/printer/getOrderDetailJsp?') + params;
             },
             orderStateText() {
                 const state = this.order.orderState === undefined ? this.order.state : this.order.orderState;

@@ -125,7 +125,7 @@ import {
     DdOption,
     DdTable
 } from 'dd-vue-component';
-import http from '../../../common/AJAXService';
+import http from '../../../common/http';
 import detail from '../../components/detail.vue';
 import vipForm from '../../components/vipForm.vue';
 import auth from '../../../common/auth';
@@ -230,7 +230,7 @@ export default {
         },
         outPutText(num) {
             const paramsObj = {};
-            const host = http.getUrl2('/customer/customersToExcel');
+            const host = http.getUrl('/customer/customersToExcel');
             const pa = http.getDataWithToken(paramsObj);
             // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);

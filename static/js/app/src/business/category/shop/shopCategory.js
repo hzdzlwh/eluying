@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/1/25.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var shopList = require('./shopList');
@@ -12,19 +12,20 @@ var shopCategory = {
 
     loadShopCategory: function() {
         /*$.ajax({
-            url: AJAXService.getUrl('getShopCategory'),
+            url: http.getUrl('getShopCategory'),
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 shopCategory.list = result.data.list;
                 shopCategory.render();
             }
         });*/
-        AJAXService.ajaxWithToken('get','getShopCategory',{},function (result) {
-            shopCategory.list = result.data.list;
-            shopCategory.render();
-        });
+        http.get('getShopCategory',{})
+            .then(function (result) {
+                shopCategory.list = result.data.list;
+                shopCategory.render();
+            });
     },
 
 
@@ -32,10 +33,10 @@ var shopCategory = {
     editCategory: function(that, item) {
         /*$.ajax({
             type: "POST",
-            url: AJAXService.getUrl('editCategory'),
+            url: http.getUrl('editCategory'),
             data: {subList: JSON.stringify(item)},
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -47,15 +48,12 @@ var shopCategory = {
                 shopList.loadShopList();
             }
         });*/
-        AJAXService.ajaxWithToken('POST','editCategory',{subList: JSON.stringify(item)},function (result) {
-            if (util.errorHandler(result)) {
+        http.post('editCategory',{subList: JSON.stringify(item)})
+            .then(function (result) {
                 modal.clearModal(that);
-            } else {
-                return;
-            }
-            shopList.loadShopCategory();
-            shopList.loadShopList();
-        });
+                shopList.loadShopCategory();
+                shopList.loadShopList();
+            });
     },
 
     render: function() {

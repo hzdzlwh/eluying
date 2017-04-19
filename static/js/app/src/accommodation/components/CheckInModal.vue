@@ -58,7 +58,7 @@
 <style>
 </style>
 <script>
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     import util from 'util';
     import CheckInPerson from './CheckInPerson.vue';

@@ -79,7 +79,7 @@ import {
 } from 'vuex';
 import counter from '../../../common/components/counter.vue';
 import SelectProject from './SelectProject.vue';
-import AJAXService from 'AJAXService';
+import http from 'http';
 import modal from 'modal';
 import bus from '../../../common/eventBus';
 import util from '../../../common/util';
@@ -290,21 +290,17 @@ export default {
                 }
                 this.lastEnterItem.id = item.id;
                 this.lastEnterItem.date = item.date;
-                AJAXService.ajaxWithToken('get', '/item/getInventory', {
+                http.get('/item/getInventory', {
                     id: item.id,
                     date: date
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            const price = item['price'];
-                            const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                            item.inventory = res.data.inventory;
-                            item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
-                            item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
-                            item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
+                        const price = item['price'];
+                        const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
+                        item.inventory = res.data.inventory;
+                        item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
+                        item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
+                        item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
                     });
             }
         },

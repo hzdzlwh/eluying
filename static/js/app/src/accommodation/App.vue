@@ -100,7 +100,7 @@
     import CashierModal from './components/CashierModal.vue';
     import CancelOrderModal from './components/CancelOrderModal.vue';
     import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import util from 'util';
     export default{
         created() {
@@ -169,7 +169,7 @@
         },
         methods: {
             getRoomAndStatus() {
-                return AJAXService.ajaxWithToken('get', '/room/getRoomsAndStaus', {
+                return http.get('/room/getRoomsAndStaus', {
                     date: this.startDateStr,
                     days: this.DAYS,
                     sub: true,
@@ -216,7 +216,7 @@
                 });
             },
             getCategories() {
-                return AJAXService.ajaxWithToken('get', '/room/getRoomCategories', {})
+                return http.get('/room/getRoomCategories', {})
                     .then(res => {
                         this.categories = res.data.list;
                     });

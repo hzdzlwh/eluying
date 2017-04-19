@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/1/26.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var shopList = require('./shopList');
@@ -18,9 +18,9 @@ var editShop = {
         $('#editBrand').val($('.categoryGrid .mainActive').find('td:eq(5)').html());
         $('#editDescription').val($('.categoryGrid .mainActive').find('td:eq(6)').html());
         /*$.ajax({
-            url: AJAXService.getUrl('getShopCategory'),
+            url: http.getUrl('getShopCategory'),
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 var category = result.data.list;
@@ -33,16 +33,17 @@ var editShop = {
                 $('#editCategory').val($('.categoryGrid .mainActive').attr('data-categoryId'));
             }
         });*/
-        AJAXService.ajaxWithToken('get','/category/getGoodTypeInfo',{},function (result) {
-            var category = result.data.list;
-            var str = '';
-            $.each(category, function(index, el) {
-                str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
-            });
+        http.get('/category/getGoodTypeInfo',{})
+            .then(function (result) {
+                var category = result.data.list;
+                var str = '';
+                $.each(category, function(index, el) {
+                    str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
+                });
 
-            $('#editCategory').html(str);
-            $('#editCategory').val($('.categoryGrid .mainActive').attr('data-categoryId'));
-        });
+                $('#editCategory').html(str);
+                $('#editCategory').val($('.categoryGrid .mainActive').attr('data-categoryId'));
+            });
     },
 
     buildData: function(that) {
@@ -61,11 +62,11 @@ var editShop = {
 
     edit: function(data, that) {
         /*$.ajax({
-            url: AJAXService.getUrl('editGood'),
+            url: http.getUrl('editGood'),
             type: 'POST',
             data: data,
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -77,15 +78,12 @@ var editShop = {
                 shopList.loadShopList();
             }
         });*/
-        AJAXService.ajaxWithToken('post','editGood',data,function (result) {
-            if (util.errorHandler(result)) {
+        http.post('editGood',data)
+            .then(function (result) {
                 modal.clearModal(that);
-            } else {
-                return;
-            }
-            shopList.loadShopCategory();
-            shopList.loadShopList();
-        });
+                shopList.loadShopCategory();
+                shopList.loadShopList();
+            });
     },
 
     events: {

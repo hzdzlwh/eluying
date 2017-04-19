@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/1/26.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var shopList = require('./shopList');
@@ -14,9 +14,9 @@ var createShop = {
     //获取商品类型数据
     init: function() {
         /*$.ajax({
-            url: AJAXService.getUrl('getShopCategory'),
+            url: http.getUrl('getShopCategory'),
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 var category = result.data.list;
@@ -28,14 +28,15 @@ var createShop = {
 
             }
         });*/
-        AJAXService.ajaxWithToken('get','/category/getGoodTypeInfo',{},function (result) {
-            var category = result.data.list;
-            var str = '';
-            $.each(category, function(index, el) {
-                str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
+        http.get('/category/getGoodTypeInfo',{})
+            .then(function (result) {
+                var category = result.data.list;
+                var str = '';
+                $.each(category, function(index, el) {
+                    str += '<option value="' + el.goodstypeId + '">' + el.goodstypeName + '</option>'
+                });
+                $('#category').html(str);
             });
-            $('#category').html(str);        
-        });
     },
 
     buildData: function(that) {
@@ -53,11 +54,11 @@ var createShop = {
 
     create: function(data, that) {
         /*$.ajax({
-            url: AJAXService.getUrl('addGood'),
+            url: http.getUrl('addGood'),
             type: 'POST',
             data: data,
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -69,15 +70,12 @@ var createShop = {
                 shopList.loadShopList();
             }
         });*/
-        AJAXService.ajaxWithToken('get','/category/addNewGood',data,function (result) {
-            if (util.errorHandler(result)) {
+        http.get('/category/addNewGood',data)
+            .then(function (result) {
                 modal.clearModal(that);
-            } else {
-                return;
-            }
-            shopList.loadShopCategory();
-            shopList.loadShopList();
-        });
+                shopList.loadShopCategory();
+                shopList.loadShopList();
+            });
     },
 
     events: {

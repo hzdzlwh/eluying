@@ -2,7 +2,7 @@
  * Created by lingchenxuan on 16/6/14.
  */
 
-var $ajax = require('./AJAXService');
+var $ajax = require('./http');
 import modal from './modal';
 
 const ACCOMMODATION_ID = 2;

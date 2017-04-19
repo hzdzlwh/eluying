@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var auth = require('../../common/auth');
@@ -22,14 +22,15 @@ $(function(){
         scope.companyStatus = 0;
         scope.repeatTipsShow = false;
         scope.errorTipsShow = false;
-        AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
+        http.get('getChannelsUrl', {
             type: 2,
             isAll: true
-        }, function(result){
-            scope.guestList = result.data.list;
-            scope.companyStatus = result.data.companyStatus;
-            scope.$apply();
-        });
+        })
+            .then(function(result){
+                scope.guestList = result.data.list;
+                scope.companyStatus = result.data.companyStatus;
+                scope.$apply();
+            });
         scope.hideRepeatTips = function() {
             scope.errorTipsShow = false;
             scope.repeatTipsShow = false;
@@ -48,42 +49,47 @@ $(function(){
             if (scope.repeatTipsShow) {
                 return false;
             }
-            AJAXService.ajaxWithToken('GET', 'addChannelUrl', {
+            http.get('addChannelUrl', {
                 type: 2,
                 channelName: scope.newGuest
-            }, function(result){
-                if (result.code === 2) {
-                    scope.repeatTipsShow = true;
-                    scope.$apply();
-                } else if (result.code === 1) {
-                    AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
+            })
+                .then(function(result){
+                    http.get('getChannelsUrl', {
                         type: 2,
                         isAll: true
-                    }, function(result){
-                        scope.guestList = result.data.list;
-                        scope.companyStatus = result.data.companyStatus;
-                        scope.newGuest = '';
-                        $(".modal").modal("hide");
+                    })
+                        .then(function(result){
+                            scope.guestList = result.data.list;
+                            scope.companyStatus = result.data.companyStatus;
+                            scope.newGuest = '';
+                            $(".modal").modal("hide");
+                            scope.$apply();
+                        });
+                })
+                .catch(result => {
+                    if (result.code === 2) {
+                        scope.repeatTipsShow = true;
                         scope.$apply();
-                    });
-                }
-            });
+                    }
+                });
         };
         scope.deleteGuest = function(){
-            AJAXService.ajaxWithToken('GET', 'removeChannelUrl', {
+            http.get('removeChannelUrl', {
                 type: 2,
                 channelId: scope.guestToDelete
-            }, function(result){
-                AJAXService.ajaxWithToken('GET', 'getChannelsUrl', {
-                    type: 2,
-                    isAll: true
-                }, function(result){
+            })
+                .then(function(result){
+                    return http.get('getChannelsUrl', {
+                        type: 2,
+                        isAll: true
+                    });
+                })
+                .then(function(result){
                     scope.guestList = result.data.list;
                     scope.companyStatus = result.data.companyStatus;
                     $(".modal").modal("hide");
                     scope.$apply();
                 });
-            });
         };
         scope.cancelAdd = function() {
             scope.hideRepeatTips();

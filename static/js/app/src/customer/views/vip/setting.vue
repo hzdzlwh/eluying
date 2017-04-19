@@ -218,7 +218,7 @@
 </style>
 <script>
     import modal from '../../../common/modal';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import { DdTable } from 'dd-vue-component';
     import categorySelect from '../../components/categorySelect.vue';
     import auth from '../../../common/auth';

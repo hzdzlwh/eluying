@@ -125,7 +125,7 @@
     import modal from '../../../common/modal';
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import util from '../../../common/util';
     import bus from '../../../common/eventBus';
     export default{

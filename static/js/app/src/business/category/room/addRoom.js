@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var modal = require("modal");
 var util = require("util");
 var roomCategoryList = require("roomCategoryList");
@@ -7,38 +7,15 @@ var addRoom = {
     //新增房型
     addRoom: function (data, that) {
         data.subTypeList = JSON.stringify(data.subTypeList);
-        /*$.ajax({
-            url: AJAXService.getUrl("addAccommodationUrl"),
-            type: "POST",
-            data: data,
-            success: function (result) {
-                if (util.errorHandler(result)) {
-                    modal.clearModal(that);
-                } else {
-                    return;
-                }
+        http.post("addAccommodationUrl",data)
+            .then(function (result) {
+                modal.clearModal(that);
                 data.subTypeList = result.data.subTypeList;
                 data.state = 0;
                 data.id = result.data.id;
                 roomCategoryList.list.push(data);
                 roomCategoryList.render();
-            },
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            }
-        })*/
-        AJAXService.ajaxWithToken("POST","addAccommodationUrl",data,function (result) {
-            if (util.errorHandler(result)) {
-                modal.clearModal(that);
-            } else {
-                return;
-            }
-            data.subTypeList = result.data.subTypeList;
-            data.state = 0;
-            data.id = result.data.id;
-            roomCategoryList.list.push(data);
-            roomCategoryList.render();
-        });
+            });
     },
     events: {
         //新增房型确认按钮

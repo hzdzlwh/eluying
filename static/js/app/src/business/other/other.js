@@ -2,7 +2,7 @@
  * Created by huwanqi on 15/12/26.
  */
 import Vue from 'vue1';
-var http = require("AJAXService");
+var http = require("http");
 var util = require("util");
 var trToggle = require("trToggle");
 require("jqueryui");

@@ -905,7 +905,7 @@
     import SelectGoods from './selectGoods.vue';
     import SelectProject from './selectProject.vue';
     import counter from '../../common/components/counter.vue';
-    import AJAXService from 'AJAXService';
+    import http from 'http';
     import modal from 'modal';
     import types from '../store/types';
     import { mapActions, mapState } from 'vuex';
@@ -1040,7 +1040,7 @@
                 types.LOAD_ENTER_LIST
             ]),
             getData(){
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true }, (res) => {
+                http.get('/user/getChannels', { type: 2, isAll: true }, (res) => {
                     if (res.code === 1) {
                         const originsList = res.data.list;
                         let otherOrigins = [];
@@ -1090,7 +1090,7 @@
                 }
             },
             getVipList(params, position) {
-                AJAXService.ajaxWithToken('GET', '/vipUser/search', params)
+                http.get('/vipUser/search', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.vipList = res.data.list;
@@ -1122,7 +1122,7 @@
                 this.userOriginType = '-4~-4';
             },
             getVipDiscount(params) {
-                AJAXService.ajaxWithToken('GET', '/vipUser/getVipDiscount', params)
+                http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.vipDiscountDetail = { ...res.data };
@@ -1137,7 +1137,7 @@
                     });
             },
             getCompanyDiscount(params) {
-                AJAXService.ajaxWithToken('GET', '/contractCompany/getContractDiscount', params)
+                http.get('/contractCompany/getContractDiscount', params)
                     .then(res => {
                         if (res.code === 1) {
                             const discountList = res.data;
@@ -1499,7 +1499,7 @@
                 }
 
                 if (this.checkState === "editOrder") {
-                    AJAXService.ajaxWithToken('post', '/order/modify', params)
+                    http.post('/order/modify', params)
                         .then(res => {
                             this.isLoading = false;
                             if (res.code === 1) {
@@ -1511,7 +1511,7 @@
                             }
                         });
                 } else {
-                    AJAXService.ajaxWithToken('post', '/room/confirmOrder', params)
+                    http.post('/room/confirmOrder', params)
                         .then(res => {
                             this.isLoading = false;
                             if (res.code === 1) {
@@ -1677,7 +1677,7 @@
                 if (item.roomOrderId) {
                     paramsObj.roomOrderId = item.roomOrderId;
                 }
-                AJAXService.ajaxWithToken('get', '/room/getRoomStaus', paramsObj)
+                http.get('/room/getRoomStaus', paramsObj)
                     .then(res => {
                         if (res.code === 1) {
                             let datePriceList = [];
@@ -1735,7 +1735,7 @@
                     params.roomOrderId = item.roomOrderId;
                 }
 
-                AJAXService.ajaxWithToken('get', '/room/getStatusAndTotalPrice', params)
+                http.get('/room/getStatusAndTotalPrice', params)
                     .then(res => {
                         if (res.code === 1) {
                             item.showTip = !res.data.available;
@@ -1767,7 +1767,7 @@
                     }*/
                     this.lastEnterItem.id = item.id;
                     this.lastEnterItem.date = item.date;
-                    AJAXService.ajaxWithToken('get', '/item/getInventory', { id: item.id, date: date })
+                    http.get('/item/getInventory', { id: item.id, date: date })
                         .then(res => {
                             if (res.code === 1) {
                                 const price = item['price'];
@@ -1916,7 +1916,7 @@
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
                         const duration = this.getDateDiff(item.startDate, item.endDate);
-                        AJAXService.ajaxWithToken('get', '/room/getRoomStaus', { id: item.roomId,
+                        http.get('/room/getRoomStaus', { id: item.roomId,
                             date: util.dateFormat(item.startDate),
                             days: duration })
                             .then(res => {

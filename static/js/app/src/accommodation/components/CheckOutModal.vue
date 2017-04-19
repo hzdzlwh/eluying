@@ -65,7 +65,7 @@
 <style>
 </style>
 <script>
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import { mapState } from 'vuex';
     export default{
@@ -175,7 +175,7 @@
                 }
                 this.isLoading = true;
                 if (this.deposit === 0 && (this.totalPrice+ (this.penalty || 0) - this.payed) === 0) {
-                    AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
+                    http.get('/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
                     })
