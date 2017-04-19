@@ -1621,20 +1621,20 @@
                 obj.price = + (obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0).toFixed(2));
             },
             setDateFee(num, obj) {
-                //const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
-                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee) }, 0);
-                /*let countArr = obj.datePriceList.map(item => {
+                // const discount = this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount;
+                const totalPrice = obj.datePriceList.reduce((a, b) => { return a + Number(b.dateFee); }, 0);
+                /* let countArr = obj.datePriceList.map(item => {
                     if (totalPrice === 0) {
                         return 1 / obj.datePriceList.length;
                     }
                     return item.dateFee / totalPrice;
                 });*/
-                let countArr = obj.countArr;
-                obj.datePriceList.forEach((item,index) => {
+                const countArr = obj.countArr;
+                obj.datePriceList.forEach((item, index) => {
                     item.dateFee = Number((num * countArr[index]).toFixed(2));
                 });
                 this.setFirstDateFee(num, obj);
-                /*let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
+                /* let total = obj.datePriceList.reduce((a, b) => { return a + (+b.dateFee) }, 0);
                 obj.datePriceList[0].dateFee = +((obj.datePriceList[0].dateFee + (num - total)).toFixed(2));*/
             },
             setFirstDateFee(num, obj) {
@@ -1643,7 +1643,7 @@
             },
 
             modifyRoom(item) {
-                /*item.changeTimes++;
+                /* item.changeTimes++;
                 if (item.changeTimes <= 4) {
                     return false;
                 }*/
@@ -1651,15 +1651,15 @@
                     item.haveRequest = false;
                     return false;
                 }
-                let duration = this.getDateDiff(item.room.startDate, item.room.endDate);
+                const duration = this.getDateDiff(item.room.startDate, item.room.endDate);
                 if (duration < 1) {
                     item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
                     return false;
                 }
                 if (duration > 400) {
-                    let currentTime = + new Date();
+                    const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.somethingAlert("入住上限最大为400天，请重新选择入住时间！");
+                        modal.somethingAlert('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
@@ -1854,26 +1854,26 @@
             userOriginType(newVal) {
                 const originType = Number(newVal.split('~')[1]);
                 const originId = Number(newVal.split('~')[0]);
-                if (originType === - 5) {
+                if (originType === -5) {
                     this.getCompanyDiscount({ contractCompanyId: originId });
                 }
-                if (originType === - 4 && this.phone.length === 11) {
+                if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: this.order.orderId, orderType: - 1 }
+                        ? { phone: this.phone, orderId: this.order.orderId, orderType: -1 }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
-                if (originType !== - 5 && originType !== - 4) {
+                if (originType !== -5 && originType !== -4) {
                     this.vipDiscountDetail = {};
                 }
             },
             phone(newVal) {
                 const originType = Number(this.userOriginType.split('~')[1]);
-                if (originType === - 5 && this.checkState === 'editOrder') {
+                if (originType === -5 && this.checkState === 'editOrder') {
                     return false;
                 }
                 const params = this.checkState === 'editOrder'
-                               ? { phone: newVal, orderId: this.order.orderId, orderType: - 1 }
+                               ? { phone: newVal, orderId: this.order.orderId, orderType: -1 }
                                : { phone: newVal };
                 const search = true;// this.checkState !== 'editOrder' || (this.checkState === 'editOrder' && this.order.discountChannel === 1);
                 if (newVal.length === 11 && search) {
@@ -1886,7 +1886,7 @@
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail && !oldVal.vipDetail) { return false;}
                 this.registerRooms.forEach(room => {
-                    /*if (this.checkState === 'editOrder') {
+                    /* if (this.checkState === 'editOrder') {
                         this.modifyRoom(room);
                     }*/
                     if (room.originDatePriceList) {

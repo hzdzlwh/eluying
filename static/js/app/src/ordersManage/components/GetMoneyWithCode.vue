@@ -119,6 +119,7 @@
 <script>
     import { mapState } from 'vuex';
     import AJAXService from 'AJAXService';
+    import bus from '../../common/eventBus';
     import modal from 'modal';
     export default{
         props: {
@@ -157,9 +158,9 @@
         methods: {
             hideModal() {
                 this.authCode = '';
-                this.$emit('hide');
+                bus.$emit('hideGetMoney');
                 $('#payWithCode').modal('hide');
-                this.$emit('showCashier', { type: this.type, business: this.business });
+                bus.$emit('showCashier', { type: this.type, business: this.business });
             },
             payMoney() {
                 const params = JSON.parse(JSON.stringify(this.params));
@@ -171,13 +172,13 @@
                             const tradeNum = result.data.tradeNum;
                             if (status === 0) {
                                 modal.somethingAlert('收银成功');
-                                this.$emit('hide');
+                                bus.$emit('hideGetMoney');
                                 this.authCode = '';
                                 $('#payWithCode').modal('hide');
                                 const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                this.$emit('refreshView');
+                                bus.$emit('refreshView');
                                 setTimeout(() => {
-                                    this.$emit('showOrder', orderId);
+                                    bus.$emit('onShowDetail', orderId);
                                 }, 2500);
                             } else if (status === 1) {
                                 modal.somethingAlert('收款失败');
@@ -194,13 +195,13 @@
                                             }
                                             if (status1 === 0) {
                                                 modal.somethingAlert('收银成功');
-                                                this.$emit('hide');
+                                                bus.$emit('hideGetMoney');
                                                 this.authCode = '';
                                                 $('#payWithCode').modal('hide');
                                                 const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                                this.$emit('refreshView');
+                                                bus.$emit('refreshView');
                                                 setTimeout(() => {
-                                                    this.$emit('showOrder', orderId);
+                                                    bus.$emit('onShowDetail', orderId);
                                                 }, 2500);
                                             } else if (status1 === 1) {
                                                 modal.somethingAlert('收款失败');
@@ -226,7 +227,7 @@
                 if (val) {
                     $('#payWithCode').modal({ backdrop: 'static' });
                 } else {
-                    this.$emit('hide');
+                    bus.$emit('hideGetMoney');
                     this.authCode = '';
                     $('#payWithCode').modal('hide');
                 }
