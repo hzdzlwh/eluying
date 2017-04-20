@@ -93,7 +93,7 @@
 import {
     DdTable
 } from 'dd-vue-component';
-import http from '../../common/AJAXService';
+import http from '../../common/http';
 import modal from '../../common/modal';
 export default {
     props: {

@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/6/16.
  */
-import http from 'AJAXService';
+import http from 'http';
 import modal from 'modal';
 import util from 'util';
 import Vue from 'vue1';
@@ -38,22 +38,18 @@ $(function() {
         },
         methods: {
             deleteRestaurant: function() {
-                http.ajaxWithToken('GET',
-                    '/catering/modifyRestaurant',
-                    { restId: this.restIdWillDeleted },
-                    function(result) {
-                        if (result.code === 1) {
-                            modal.somethingAlert('删除成功');
-                            this.getRestaurants();
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                http.get('/catering/modifyRestaurant',
+                    { restId: this.restIdWillDeleted })
+                    .then(result => {
+                        modal.somethingAlert('删除成功');
+                        this.getRestaurants();
+                    });
             },
             getRestaurants: function() {
-                http.ajaxWithToken('GET', '/catering/getRestaurantList', {}, function(result) {
-                    this.restaurants = result.data.list;
-                }.bind(this));
+                http.get('/catering/getRestaurantList', {})
+                    .then(result => {
+                        this.restaurants = result.data.list;
+                    });
             },
             openCreateDialog: function() {
                 restaurantDialog.status = 'create';
@@ -81,16 +77,17 @@ $(function() {
                 $('#settingDialog').modal('show');
             },
             toggleStatus: function(item) {
-                http.ajaxWithToken('get', '/catering/openCloseCaterScan', {
+                http.get('/catering/openCloseCaterScan', {
                     restId: item.restId,
                     isOpenCaterScan: (item.isOpenCaterScan === 1 ? 0 : 1)
-                }, result => {
-                    if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    } else {
-                        item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
-                    }
-                });
+                })
+                    .then(result => {
+                        if (result.code !== 1) {
+                            modal.somethingAlert(result.msg);
+                        } else {
+                            item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
+                        }
+                    });
             }
         }
     });
@@ -198,34 +195,28 @@ $(function() {
                 if (this.restaurantName === '') {
                     return;
                 }
-                http.ajaxWithToken('POST',
-                    '/catering/addRestaurant',
-                    { restName: this.restaurantName, caterScanAnnouncement: this.resturantNotice },
-                    function(result) {
-                        if (result.code === 1) {
-                            $('#restaurantDialog').modal('hide');
-                            table.getRestaurants();
-                            this.restaurantName = '';
-                            this.resturantNotice = '';
-                            this.submitted = false;
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                http.post('/catering/addRestaurant',
+                    { restName: this.restaurantName, caterScanAnnouncement: this.resturantNotice })
+                    .then(result => {
+                        $('#restaurantDialog').modal('hide');
+                        table.getRestaurants();
+                        this.restaurantName = '';
+                        this.resturantNotice = '';
+                        this.submitted = false;
+                    });
             },
             editRestaurant: function() {
                 this.submitted = true;
                 if (this.restaurantName === '') {
                     return;
                 }
-                http.ajaxWithToken('POST',
-                    '/catering/modifyRestaurant',
+                http.post('/catering/modifyRestaurant',
                     {
                         restName: this.restaurantName,
                         restId: this.restaurantId,
                         caterScanAnnouncement: this.resturantNotice
-                    },
-                    function(result) {
+                    })
+                    .then(result => {
                         if (result.code === 1) {
                             $('#restaurantDialog').modal('hide');
                             table.getRestaurants();
@@ -235,7 +226,7 @@ $(function() {
                         } else {
                             modal.somethingAlert(result.msg);
                         }
-                    }.bind(this));
+                    });
             },
             cancel: function() {
                 this.restaurantName = '';

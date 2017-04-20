@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var trToggle = require("trToggle");
 var modal = require("modal");
@@ -9,25 +9,26 @@ var accommodationPriceList = {
         var endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 6);
         /*$.ajax({
-            url: AJAXService.getUrl("getAccommodationPriceList"),
+            url: http.getUrl("getAccommodationPriceList"),
             data: {
                 campId: localStorage.getItem("campId"),
                 startDate: util.dateFormat(startDate),
                 endDate: util.dateFormat(endDate)
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 accommodationPriceList.createEl(startDate, result);
             }
         })*/
-        AJAXService.ajaxWithToken("GET","getAccommodationPriceList",{
+        http.get("getAccommodationPriceList",{
             startDate: util.dateFormat(startDate),
             endDate: util.dateFormat(endDate)
-        },function(result){
-            accommodationPriceList.createEl(startDate, result);
-        });
+        })
+            .then(function(result){
+                accommodationPriceList.createEl(startDate, result);
+            });
     },
 
     events: {
@@ -150,13 +151,13 @@ var accommodationPriceList = {
             newSalePrice: $("#retailPrice").val()
         }];
         /*$.ajax({
-            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
+            url: http.getUrl("batchModifyAccommodationSpecialPrice"),
             data: {
                 items: JSON.stringify(items),
                 categoryId: $(".selected").attr("category-id")
             },
             dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -166,16 +167,15 @@ var accommodationPriceList = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","batchModifyAccommodationSpecialPrice",{
+        http.get("batchModifyAccommodationSpecialPrice",{
                 items: JSON.stringify(items),
                 categoryId: $("td.selected").attr("category-id")
-            },function(result){
-                if (util.errorHandler(result)) {
+            })
+            .then(function(result){
                     $("td.selected").html($("#retailPrice").val());
 
                     modal.clearModal(that);
-                }
-            })
+            });
     },
 
     //改网络价和协议价
@@ -188,13 +188,13 @@ var accommodationPriceList = {
             newSalePrice: $("#netPrice").val()
         }];
         /*$.ajax({
-            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
+            url: http.getUrl("batchModifyAccommodationSpecialPrice"),
             data: {
                 items: JSON.stringify(items),
                 categoryId: $(".selected").attr("category-id")
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -204,16 +204,15 @@ var accommodationPriceList = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","batchModifyAccommodationSpecialPrice",{
+        http.get("batchModifyAccommodationSpecialPrice",{
             items: JSON.stringify(items),
             categoryId: $("td.selected").attr("category-id")
-        },function(result){
-            if (util.errorHandler(result)) {
+        })
+            .then(function(result){
                 $("td.selected").find("p:eq(0)").html($("#commissionPrice").val());
                 $("td.selected").find("p:eq(0)").html($("#netPrice").val());
                 modal.clearModal(that);
-            }
-        });
+            });
     }
 };
 module.exports = accommodationPriceList;

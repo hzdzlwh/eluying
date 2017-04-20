@@ -168,7 +168,7 @@
 </style>
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import { ORDER_STATUS } from '../const';
     export default{
@@ -197,7 +197,7 @@
             },
             search(page) {
                 this.page = page;
-                AJAXService.ajaxWithToken('GET', 'orderSearchPCUrl', {
+                http.get('orderSearchPCUrl', {
                     keyword: this.searchKeyword,
                     page: this.page,
                     limit: this.limit,

@@ -277,7 +277,7 @@
 </style>
 <script>
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
-    import http from '../../common/AJAXService';
+    import http from '../../common/http';
     import { dsyForComponent } from '../../common/dsy';
     import modal from '../../common/modal';
 

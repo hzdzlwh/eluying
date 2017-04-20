@@ -65,7 +65,7 @@
 <style>
 </style>
 <script>
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import { mapState } from 'vuex';
     import bus from '../../common/eventBus';
@@ -172,19 +172,15 @@
                 }
 
                 if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
-                    AJAXService.ajaxWithToken('GET', '/order/checkInOrCheckout', {
+                    http.get('/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
                     })
                         .then(res => {
-                            if (res.code === 1) {
-                                this.hideModal();
-                                modal.alert('退房成功');
-                                bus.$emit('refreshView');
-                                bus.$emit('showOrder', this.orderDetail.orderId);
-                            } else {
-                                modal.alert(res.msg);
-                            }
+                            this.hideModal();
+                            modal.alert('退房成功');
+                            bus.$emit('refreshView');
+                            bus.$emit('showOrder', this.orderDetail.orderId);
                         });
                 } else {
                     business.penalty = Number(this.penalty);

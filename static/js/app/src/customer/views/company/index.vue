@@ -135,7 +135,7 @@ import {
     DdOption,
     DdTable
 } from 'dd-vue-component';
-import http from '../../../common/AJAXService';
+import http from '../../../common/http';
 import company from '../../components/companyForm.vue';
 import check from '../../components/check.vue';
 import detail from '../../components/detail.vue';
@@ -408,7 +408,7 @@ export default {
         outPutText(num) {
             const paramsObj = this.getParams();
             paramsObj.exportType = num;
-            const host = http.getUrl2('/contractCompany/exportCompanyList');
+            const host = http.getUrl('/contractCompany/exportCompanyList');
             const pa = http.getDataWithToken(paramsObj);
             // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);

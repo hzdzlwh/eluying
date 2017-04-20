@@ -61,7 +61,7 @@ var webpackConf = {
             leftMenu: path.join(__dirname, './static/js/app/src/common/leftMenu'),
             util: path.join(__dirname, './static/js/app/src/common/util.js'),
             logout: path.join(__dirname, './static/js/app/src/common/logout.js'),
-            AJAXService: path.join(__dirname, './static/js/app/src/common/AJAXService.js'),
+            http: path.join(__dirname, './static/js/app/src/common/http.js'),
             accommodationPriceList: path.join(__dirname, './static/js/app/src/business/price/accommodationPriceList.js'),
             foodETPriceList: path.join(__dirname, './static/js/app/src/business/price/foodETPriceList.js'),
             trToggle: path.join(__dirname, './static/js/app/src/common/trToggle.js'),
