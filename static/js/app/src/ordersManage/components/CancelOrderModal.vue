@@ -14,7 +14,7 @@
                             <span v-if="oldPenalty">违约金:<span>¥{{oldPenalty}}</span></span>
                             <span style="margin-left: 24px">已付金额:<span>¥{{paid}}</span></span>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if="order && order.type !== 2">
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
