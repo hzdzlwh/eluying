@@ -30,7 +30,7 @@ http.post(url, data, config)
 ```
 ```js
 config: {
-    notify: Boolean // 是否alert后端错误信息
+    notify: Boolean // 是否alert后端错误信息，默认为true
 }
 ````
 
