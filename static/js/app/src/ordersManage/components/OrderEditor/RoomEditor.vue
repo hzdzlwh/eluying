@@ -139,7 +139,6 @@
             bus.$on('submitOrder', this.changeRooms);
             bus.$on('hideOrderEditor', this.cleanRooms);
             bus.$on('editOrder', this.initRooms);
-            this.initRooms(this.order);
             this.getQuickDiscounts();
         },
         beforeDestroy() {
@@ -332,7 +331,7 @@
                     this.rooms = [room];
                 }
 
-                if (this.checkState !== 'editOrder') {
+                if (this.checkState === 'ing' || this.checkState === 'book' || this.checkState === 'finish') {
                     this.registerRooms.forEach(item => {
                         let id;
                         this.categories.forEach(category => {
@@ -343,7 +342,7 @@
                             });
                         });
                         item.endDate = util.diffDate(item.endDate, 1);
-                        const duration = this.getDateDiff(item.startDate, item.endDate);
+                        const duration = this.dateDiff(item.startDate, item.endDate);
                         http.get('/room/getRoomStaus', { id: item.roomId,
                             date: util.dateFormat(item.startDate),
                             days: duration })

@@ -77,6 +77,8 @@
     import GetMoneyWithCode from '../ordersManage/components/GetMoneyWithCode.vue';
     import http from 'http';
     import util from 'util';
+    import { mapMutations } from 'vuex';
+    import types from '../ordersManage/store/types';
     export default{
         created() {
             bus.$on('onClose', this.hideDetail);
@@ -172,6 +174,7 @@
             }
         },
         methods: {
+            ...mapMutations([types.SET_ORDER_DETAIL]),
             getRoomAndStatus() {
                 return http.get('/room/getRoomsAndStaus', {
                     date: this.startDateStr,
@@ -268,6 +271,10 @@
                 this.orderEditorVisible = true;
             },
             editOrder(type, order) {
+                if (type === 'ing' || type === 'book' || type === 'finish') {
+                    this[types.SET_ORDER_DETAIL]({ orderDetail: {}});
+                }
+
                 this.checkState = type;
                 this.orderEditorVisible = true;
                 this.orderDetail = order;
