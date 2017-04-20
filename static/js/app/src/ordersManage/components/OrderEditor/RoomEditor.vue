@@ -104,7 +104,7 @@
                             </dd-option>
                         </dd-select>
                     </span>
-                    <span v-if="(order.rooms || !order.isCombinationOrder) && index === 0 && registerRooms.length > 1" style="margin-left: 16px">
+                    <span v-if="(order.rooms || !order.isCombinationOrder) && index === 0 && rooms.length > 1" style="margin-left: 16px">
                         <input style="width: auto" v-model="allQuick" type="checkbox" class="dd-checkbox">
                         <span>应用到所有房间</span>
                     </span>
@@ -139,12 +139,14 @@
             bus.$on('submitOrder', this.changeRooms);
             bus.$on('hideOrderEditor', this.cleanRooms);
             bus.$on('editOrder', this.initRooms);
+            bus.$on('register', this.initRegisterRooms);
             this.getQuickDiscounts();
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeRooms);
             bus.$off('hideOrderEditor', this.cleanRooms);
             bus.$off('editOrder', this.initRooms);
+            bus.$off('register', this.initRegisterRooms);
         },
         components: {
             CheckInPerson,
@@ -330,49 +332,42 @@
 
                     this.rooms = [room];
                 }
-
-                if (this.checkState === 'ing' || this.checkState === 'book' || this.checkState === 'finish') {
-                    this.registerRooms.forEach(item => {
-                        let id;
-                        this.categories.forEach(category => {
-                            category.rooms.forEach(room => {
-                                if (room.i === item.roomId) {
-                                    id = category.cId;
-                                }
+            },
+            initRegisterRooms(rooms) {
+                rooms.forEach(item => {
+                    item.endDate = util.diffDate(item.endDate, 1);
+                    const duration = this.dateDiff(item.startDate, item.endDate);
+                    http.get('/room/getRoomStaus', { id: item.roomId,
+                        date: util.dateFormat(item.startDate),
+                        days: duration })
+                        .then(res => {
+                            const datePriceList = [];
+                            let price = 0;
+                            res.data.rs.status.forEach((option, index) => {
+                                const fee = option.p;
+                                datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
+                                price += option.p;
+                            });
+                            // 每日房价分配比例
+                            const priceScale = datePriceList.map(dat => {
+                                return dat.dateFee / price;
+                            });
+                            this.rooms.push({
+                                categoryType: item.categoryType,
+                                roomType: item.roomId,
+                                price: Number(price.toFixed(2)),
+                                originPrice: Number(price.toFixed(2)),
+                                room: item, idCardList: [],
+                                changeTimes: 0,
+                                showPriceList: false,
+                                datePriceList: datePriceList,
+                                haveRequest: true,
+                                priceScale: priceScale,
+                                showTip: false,
+                                quickDiscountId: ''
                             });
                         });
-                        item.endDate = util.diffDate(item.endDate, 1);
-                        const duration = this.dateDiff(item.startDate, item.endDate);
-                        http.get('/room/getRoomStaus', { id: item.roomId,
-                            date: util.dateFormat(item.startDate),
-                            days: duration })
-                            .then(res => {
-                                const datePriceList = [];
-                                let price = 0;
-                                res.data.rs.status.forEach((option, index) => {
-                                    const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
-                                    datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
-                                    price += option.p;
-                                });
-                                // 每日房价分配比例
-                                const priceScale = datePriceList.map(dat => {
-                                    return dat.dateFee / price;
-                                });
-                                this.rooms.push({ categoryType: id,
-                                    roomType: item.roomId,
-                                    price: Number((price * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2)),
-                                    originPrice: Number(price.toFixed(2)),
-                                    room: item, idCardList: [],
-                                    changeTimes: 0,
-                                    showPriceList: false,
-                                    datePriceList: datePriceList,
-                                    haveRequest: true,
-                                    priceScale: priceScale,
-                                    showTip: false
-                                });
-                            });
-                    });
-                }
+                });
             },
             addRoom() {
                 const len = this.rooms.length;

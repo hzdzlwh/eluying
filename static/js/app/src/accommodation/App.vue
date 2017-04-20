@@ -166,6 +166,7 @@
                             s.id = r.i;
                             s.cName = category.cName;
                             s.rName = r.sn;
+                            s.cId = r.cId;
                             temp.push(s);
                         }
                     });
@@ -225,6 +226,7 @@
                 this.roomStatus.map(room => {
                     // 将房间加入房型中
                     const category = this.categories.find(category => category.cId === room.ti);
+                    room.cId = category.cId;
                     category.rooms.push(room);
                 });
             },
@@ -266,15 +268,13 @@
                 this.registerInfoShow = value;
             },
             changeCheckState(type, rooms) {
+                this[types.SET_ORDER_DETAIL]({ orderDetail: {}});
                 this.checkState = type;
                 this.registerRooms = rooms;
                 this.orderEditorVisible = true;
+                bus.$emit('register', rooms);
             },
             editOrder(type, order) {
-                if (type === 'ing' || type === 'book' || type === 'finish') {
-                    this[types.SET_ORDER_DETAIL]({ orderDetail: {}});
-                }
-
                 this.checkState = type;
                 this.orderEditorVisible = true;
                 this.orderDetail = order;

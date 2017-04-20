@@ -180,7 +180,8 @@
                         temp.push({
                             roomId: e.id,
                             startDate: e.date,
-                            endDate: e.date
+                            endDate: e.date,
+                            categoryType: e.cId
                         });
                     } else {
                         const lastItem = temp[temp.length - 1];
@@ -191,7 +192,8 @@
                             temp.push({
                                 roomId: e.id,
                                 startDate: e.date,
-                                endDate: e.date
+                                endDate: e.date,
+                                categoryType: e.cId
                             });
                         }
                     }
