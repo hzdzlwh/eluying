@@ -21,7 +21,7 @@ http.get(url, data, config)
         // do something
     })
     .catch(res => {
-        // do something
+        // do something 捕获code不为1的情况
     });
 http.post(url, data, config)
     .then(res => {
@@ -33,7 +33,10 @@ config: {
     notify: Boolean // 是否alert后端错误信息，默认为true
 }
 ````
+source: common\http.js
 
 注意：
+
 1.为了将this指向当前环境，使用箭头函数。
+
 2.错误信息处理使用catch,不是必须。
