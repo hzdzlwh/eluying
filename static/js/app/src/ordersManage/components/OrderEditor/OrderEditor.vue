@@ -80,10 +80,12 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION"
+                        <RoomEditor v-if="this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)"
                                     :order="order"
+                                    :registerRooms="registerRooms"
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
+                                    :checkState="checkState"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
@@ -94,11 +96,11 @@
                         </CateEditor>
                         <EnterEditor
                              :order="order"
-                             v-if="order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
+                             v-if="this.checkState !== 'editOrder' || (order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                              :vipDiscountDetail="vipDiscountDetail"
                              @change="handleEnterChange"
                              @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor v-show="order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)"
+                        <ShopEditor v-show="this.checkState !== 'editOrder' || (order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                     :order="order"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     @change="handleShopChange"
@@ -271,7 +273,6 @@
                 previousGoods: [], // 之前的商超项目
                 rooms: [],
                 shopItems: {}, // 商超组件传出的数据：包含新旧商超项目
-                showOrder: false,
                 vipDiscountDetail: {},
                 vipListShow: false,
                 vipList: [],
@@ -284,6 +285,12 @@
             };
         },
         props: {
+            registerRooms: {
+                type: Array,
+                default: function() {
+                    return [];
+                }
+            },
             orderEditorVisible: {
                 type: Boolean,
                 default: false
@@ -388,19 +395,22 @@
             },
             orderEditorVisible(visible) {
                 if (visible) {
-                    this.name = this.order.customerName;
-                    this.phone = this.order.customerPhone;
-                    this.remark = this.order.remark || '';
-                    this.showOrder = true;
+                    if (this.checkState === 'editOrder') {
+                        this.name = this.order.customerName;
+                        this.phone = this.order.customerPhone;
+                        this.remark = this.order.remark || '';
 
-                    // -5企业，-4会员
-                    if (this.order.originId === -5) {
-                        this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
-                    } else {
-                        this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                        // -5企业，-4会员
+                        if (this.order.originId === -5) {
+                            this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
+                        } else {
+                            this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                        }
                     }
 
                     $('#orderEditor').modal('show');
+                } else {
+                    $('#orderEditor').modal('hide');
                 }
             }
         },
@@ -492,9 +502,17 @@
                 this[types.LOAD_SHOP_LIST]().catch(e => { modal.somethingAlert(e.msg); });
                 this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
             },
+            refreshData() {
+                this.name = '';
+                this.phone = '';
+                this.userOriginType = '-1~-1';
+                this.remark = '';
+                this.vipDiscountDetail = {};
+                this.phoneValid = true;
+            },
             hideModal() {
                 bus.$emit('hideOrderEditor');
-                $('#orderEditor').modal('hide');
+                this.refreshData();
             },
             setVipInfo(vip) {
                 this.name = vip.name;

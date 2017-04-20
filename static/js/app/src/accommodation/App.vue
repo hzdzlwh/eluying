@@ -1,11 +1,11 @@
 <template>
     <div class="acc-container">
-        <Search @showOrder="showOrder" />
+        <Search @showOrder="showOrderDetail" />
         <Calendar
             @dateChange="handleDateChange"
             @roomFilterChange="handleRoomFilter"
             @fold="handleFold"
-            @showOrder="showOrder"
+            @showOrder="showOrderDetail"
             :categories="categories"
             :holidays="holidays"
             :roomStatus="roomStatus"
@@ -20,62 +20,36 @@
             :selectedEntries="selectedEntries"
             @changeCheckState="changeCheckState"
         />
-        <RegisterInfoModal
-            :roomsItems="registerRooms"
-            :categories="categories"
-            :checkState="checkState"
-            :registerInfoShow="registerInfoShow"
-            :order="orderDetail"
-            @changeRegisterInfoShow="changeRegisterInfoShow"
-            @refreshView="refreshView"
-            @showOrder="showOrder"
-            @showCashier="showCashier"
-        />
-        <OrderDetailModal
-            :orderId="orderId"
-            :orderDetailShow="orderDetailShow"
-            :order="orderDetail"
-            @showCancelOrder="showCancelOrder"
-            @hideOrderDetail="hideOrderDetail"
-            @showCashier="showCashier"
-            @editOrder="editOrder"
-        />
-        <CheckOutModal
-            @refreshView="refreshView"
-            @showOrder="showOrder"
-            @showCashier="showCashier"
-        />
-        <CheckInModal
-            @showCashier="showCashier"
-        />
-        <CashierModal
-            :show="cashierShow"
-            :type="cashierType"
-            :business="cashierBusiness"
-            @hide="hideCashier"
-            @refreshView="refreshView"
-            @showOrder="showOrder"
-            @showGetMoney="showGetMoney"
-        />
-        <CancelOrderModal
-            :orderId="orderId"
-            :show="cancelOrderShow"
-            @refreshView="refreshView"
-            @showOrder="showOrder"
-            @hideCancelOrder="hideCancelOrder"
-            @showCashier="showCashier"
-        />
-        <GetMoneyWithCode
-            :show="getMoneyShow"
-            :type="getMoneyType"
-            :business="getMoneyBusiness"
-            :params="getMoneyParams"
-            :totalPrice="payWithAlipay"
-            @refreshView="refreshView"
-            @hide="hideGetMoney"
-            @showCashier="showCashier"
-            @showOrder="showOrder"
-        />
+        <order-editor
+                :registerRooms="registerRooms"
+                :order-editor-visible="orderEditorVisible"
+                :check-state="checkState"
+                :categories="roomCategory"
+        ></order-editor>
+        <order-detail
+                :id="detailId"
+                :type="detailType"
+                :visible="detailVisible"
+        ></order-detail>
+        <Check-Out-Modal
+        ></Check-Out-Modal>
+        <Check-In-Modal
+        ></Check-In-Modal>
+        <Cashier-Modal
+                :show="cashierShow"
+                :type="cashierType"
+                :business="cashierBusiness"
+        ></Cashier-Modal>
+        <Cancel-Order-Modal
+                :show="cancelOrderShow"
+        ></Cancel-Order-Modal>
+        <Get-Money-With-Code
+                :show="getMoneyShow"
+                :type="getMoneyType"
+                :business="getMoneyBusiness"
+                :params="getMoneyParams"
+                :total-price="payWithAlipay"
+        ></Get-Money-With-Code>
     </div>
 </template>
 <style>
@@ -90,20 +64,33 @@
 }
 </style>
 <script>
+    import bus from '../common/eventBus';
     import Calendar from './components/Calendar.vue';
     import ShopCart from './components/ShopCart.vue';
     import Search from './components/Search.vue';
-    import RegisterInfoModal from './components/RegisterInfoModal.vue';
-    import OrderDetailModal from './components/OrderDetailModal.vue';
-    import CheckOutModal from './components/CheckOutModal.vue';
-    import CheckInModal from './components/CheckInModal.vue';
-    import CashierModal from './components/CashierModal.vue';
-    import CancelOrderModal from './components/CancelOrderModal.vue';
-    import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
+    import OrderDetail from '../ordersManage/components/Detail/OrderDetail.vue';
+    import OrderEditor from '../ordersManage/components/OrderEditor/OrderEditor.vue';
+    import CheckInModal from '../ordersManage/components/CheckInModal.vue';
+    import CheckOutModal from '../ordersManage/components/CheckOutModal.vue';
+    import CancelOrderModal from '../ordersManage/components/CancelOrderModal.vue';
+    import CashierModal from '../ordersManage/components/CashierModal.vue';
+    import GetMoneyWithCode from '../ordersManage/components/GetMoneyWithCode.vue';
     import http from 'http';
     import util from 'util';
     export default{
         created() {
+            bus.$on('onClose', this.hideDetail);
+            bus.$on('onShowDetail', this.showOrderDetail);
+            bus.$on('editOrder', this.editOrder);
+            bus.$on('hideOrderEditor', this.hideOrderEditor);
+            bus.$on('refreshView', this.refreshView);
+            bus.$on('showCashier', this.showCashier);
+            bus.$on('hideCashier', this.hideCashier);
+            bus.$on('showGetMoney', this.showGetMoney);
+            bus.$on('hideGetMoney', this.hideGetMoney);
+            bus.$on('hideCancelOrder', this.hideCancelOrder);
+            bus.$on('showCancelOrder', this.showCancelOrder);
+            this.getRoomsList();
             this.getCategories()
                 .then(() => {
                     return this.getRoomAndStatus();
@@ -117,7 +104,20 @@
                         this.$set(c, 'selected', true);
                         this.$set(c, 'folded', false);
                     });
-                })
+                });
+        },
+        beforeDestroy: function() {
+            bus.$off('onClose', this.hideDetail);
+            bus.$off('onShowDetail', this.showOrderDetail);
+            bus.$off('editOrder', this.editOrder);
+            bus.$off('hideOrderEditor', this.hideOrderEditor);
+            bus.$off('refreshView', this.refreshView);
+            bus.$off('showCashier', this.showCashier);
+            bus.$off('hideCashier', this.hideCashier);
+            bus.$off('showGetMoney', this.showGetMoney);
+            bus.$off('hideGetMoney', this.hideGetMoney);
+            bus.$off('hideCancelOrder', this.hideCancelOrder);
+            bus.$off('showCancelOrder', this.showCancelOrder);
         },
         data() {
             return {
@@ -130,7 +130,7 @@
                 dateRange: [],
                 leftMap: {},
                 orderDetailShow: false,
-                registerInfoShow: false,
+                orderEditorVisible: false,
                 orderId: undefined,
                 orderDetail: {},
                 checkState: undefined,
@@ -143,8 +143,12 @@
                 getMoneyBusiness: {},
                 getMoneyParams: {},
                 payWithAlipay: 0,
-                cashierBusiness: {}
-            }
+                cashierBusiness: {},
+                detailType: undefined,
+                detailId: undefined,
+                detailVisible: false,
+                roomCategory: [] // 订单编辑中使用
+            };
         },
         computed: {
             startDateStr() {
@@ -159,10 +163,10 @@
                         if (s.selected) {
                             s.id = r.i;
                             s.cName = category.cName;
-                            s.rName= r.sn;
+                            s.rName = r.sn;
                             temp.push(s);
                         }
-                    })
+                    });
                 });
                 return temp;
             }
@@ -172,7 +176,7 @@
                 return http.get('/room/getRoomsAndStaus', {
                     date: this.startDateStr,
                     days: this.DAYS,
-                    sub: true,
+                    sub: true
                 })
                     .then(res => {
                         const { holidays, orderList, rs } = res.data;
@@ -205,7 +209,13 @@
                             }
                         });
                         this.roomStatus = rs;
-                    })
+                    });
+            },
+            getRoomsList() {
+                return http.get('/room/getRoomsList', {})
+                    .then(res => {
+                        this.roomCategory = res.data.list;
+                    });
             },
             mapRoomsToCategory() {
                 this.categories.map(c => this.$set(c, 'rooms', []));
@@ -223,7 +233,7 @@
             },
             handleDateChange(date) {
                 if (util.isSameDay(util.stringToDate(date), this.startDate)) {
-                    return
+                    return;
                 }
 
                 this.startDate = util.stringToDate(date);
@@ -240,25 +250,27 @@
                 const category = this.categories.find(category => category.cId === id);
                 category.folded = !category.folded;
             },
-            showOrder(id) {
-                this.orderDetailShow = true;
-                this.orderId = id;
+            showOrderDetail(order) {
+                this.detailType = order.type;
+                this.detailId = order.orderId;
+                this.detailVisible = true;
             },
-            hideOrderDetail() {
-                this.orderDetailShow = false;
+            hideDetail() {
+                this.detailId = undefined;
+                this.detailVisible = false;
             },
-            changeRegisterInfoShow(value){
+            changeRegisterInfoShow(value) {
                 this.registerInfoShow = value;
             },
-            changeCheckState(type, arr) {
+            changeCheckState(type, rooms) {
                 this.checkState = type;
-                this.registerRooms = arr;
-                this.registerInfoShow = true;
+                this.registerRooms = rooms;
+                this.orderEditorVisible = true;
             },
-            editOrder(type, obj) {
-              this.checkState = type;
-              this.registerInfoShow = true;
-              this.orderDetail = obj;
+            editOrder(type, order) {
+                this.checkState = type;
+                this.orderEditorVisible = true;
+                this.orderDetail = order;
             },
             showCashier({ type, business }) {
                 this.cashierType = type;
@@ -285,26 +297,29 @@
                 this.payMents = obj;
             },
             getDateDiff(date1, date2) {
-                let dateStart = new Date(date1);
-                let dateEnd = new Date(date2);
-                let duration = util.DateDiff(dateStart, dateEnd);
+                const dateStart = new Date(date1);
+                const dateEnd = new Date(date2);
+                const duration = util.DateDiff(dateStart, dateEnd);
                 return duration + 1;
             },
             hideCancelOrder() {
                 this.cancelOrderShow = false;
+            },
+            hideOrderEditor() {
+                this.orderEditorVisible = false;
             }
         },
         components: {
             Calendar,
             ShopCart,
             Search,
-            RegisterInfoModal,
-            OrderDetailModal,
+            OrderEditor,
+            OrderDetail,
             CheckOutModal,
             CheckInModal,
             CashierModal,
             CancelOrderModal,
             GetMoneyWithCode
         }
-    }
+    };
 </script>

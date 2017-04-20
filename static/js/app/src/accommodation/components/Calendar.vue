@@ -706,7 +706,7 @@
                     });
             },
             showOrder(id) {
-                this.$emit('showOrder', id);
+                this.$emit('showOrder', { type: -1, orderId: id });
             },
             openAction(status, ev) {
                 ev.preventDefault();

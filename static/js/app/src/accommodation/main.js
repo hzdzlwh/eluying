@@ -2,11 +2,11 @@
  * Created by lingchenxuan on 2016/12/12.
  */
 import Vue from 'vue';
-import App from './App';
+import App from './App.vue';
 import 'bootstrap';
 import auth from '../common/auth';
 import util from '../common/util';
-import store from './store';
+import store from '../ordersManage/store';
 import init from '../common/init';
 
 document.addEventListener('DOMContentLoaded', () => {

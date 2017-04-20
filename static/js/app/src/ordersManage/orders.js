@@ -1,6 +1,5 @@
 import http from 'http';
 import { DdDatepicker, DdDropdown, DdDropdownItem, DdOption, DdPagination, DdSelect } from 'dd-vue-component';
-import modal from 'modal';
 /**
  * Created by zhaoyongsheng on 16/9/22.
  */

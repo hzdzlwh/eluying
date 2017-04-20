@@ -7,7 +7,7 @@
             </span>
         </p>
         <div class="registerRoom-items">
-            <div class="registerRoom-container" v-for="(item,index) in registerRooms">
+            <div class="registerRoom-container" v-for="(item,index) in rooms">
                 <div class="registerRoom-item">
                     <span class="room-icon"></span>
                     <div class="shop-item-content">
@@ -57,7 +57,7 @@
                                        @input="changeRoomFee(item)"
                                        @blur="setFirstDateFee(item)"
                                        @focus="setFirstDateFee(item)"
-                                       style="width: 80px" type="number"
+                                       style="width: 80px"
                                        @click.stop="showPriceList(index)"/>
                             </p>
                             <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList" v-clickoutside="hidePriceList">
@@ -68,7 +68,7 @@
                                         ¥{{priceItem.dateFee}}
                                     </dd>
                                     <dd v-show="priceItem.showInput">
-                                        <input class="dd-input" style="width: 60px;" type="number"
+                                        <input class="dd-input" style="width: 60px;"
                                                v-model="priceItem.dateFee"
                                                @input="setTotalPrice(item)">
                                     </dd>
@@ -131,19 +131,21 @@
     export default{
         data() {
             return {
-                registerRooms: [],
+                rooms: [],
                 quickDiscounts: []
             };
         },
         created() {
             bus.$on('submitOrder', this.changeRooms);
             bus.$on('hideOrderEditor', this.cleanRooms);
+            bus.$on('editOrder', this.initRooms);
             this.initRooms(this.order);
             this.getQuickDiscounts();
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeRooms);
-            bus.$on('hideOrderEditor', this.cleanRooms);
+            bus.$off('hideOrderEditor', this.cleanRooms);
+            bus.$off('editOrder', this.initRooms);
         },
         components: {
             CheckInPerson,
@@ -158,6 +160,7 @@
             checkState: String,
             categories: Array,
             vipDiscountDetail: Object,
+            registerRooms: Array,
             order: {
                 type: Object,
                 default: {}
@@ -165,14 +168,17 @@
         },
         watch: {
             order(order) {
-                this.initRooms(order);
+                // this.initRooms(order);
+            },
+            registerRooms() {
+
             },
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail && !oldVal.vipDetail) {
                     return false;
                 }
 
-                this.registerRooms.forEach(room => {
+                this.rooms.forEach(room => {
                     // 快捷折扣优先级最高
                     if (room.quickDiscountId) {
                         return false;
@@ -185,7 +191,7 @@
         },
         computed: {
             totalPrice() {
-                const price = this.registerRooms.reduce((sum, room) => {
+                const price = this.rooms.reduce((sum, room) => {
                     return sum + room.price;
                 }, 0);
                 this.$emit('priceChange', price);
@@ -193,17 +199,17 @@
             },
             allQuick: {
                 get() {
-                    if (this.registerRooms.length < 2) {
+                    if (this.rooms.length < 2) {
                         return false;
                     }
 
-                    const firstId = this.registerRooms[0].quickDiscountId;
-                    return this.registerRooms.every(room => room.quickDiscountId === firstId);
+                    const firstId = this.rooms[0].quickDiscountId;
+                    return this.rooms.every(room => room.quickDiscountId === firstId);
                 },
                 set(val) {
                     if (val === true) {
-                        const firstId = this.registerRooms[0].quickDiscountId;
-                        this.registerRooms.map(room => room.quickDiscountId = firstId);
+                        const firstId = this.rooms[0].quickDiscountId;
+                        this.rooms.map(room => room.quickDiscountId = firstId);
                     }
                 }
             },
@@ -220,7 +226,7 @@
         },
         methods: {
             cleanRooms() {
-                this.registerRooms = [];
+                this.rooms = [];
             },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
@@ -228,21 +234,17 @@
                     nodeType: 1
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.quickDiscounts = res.data.list.map(item => {
-                                return {
-                                    ...item,
-                                    label: item.description + '  ' + item.discount + '折'
-                                };
-                            });
-                            // 默认选项
-                            this.quickDiscounts.unshift({
-                                id: '',
-                                label: '无'
-                            });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.quickDiscounts = res.data.list.map(item => {
+                            return {
+                                ...item,
+                                label: item.description + '  ' + item.discount + '折'
+                            };
+                        });
+                        // 默认选项
+                        this.quickDiscounts.unshift({
+                            id: '',
+                            label: '无'
+                        });
                     });
             },
             getQuickDiscountById(id) {
@@ -265,13 +267,15 @@
                 const quickDiscount = this.quickDiscounts.find(i => i.id === room.quickDiscountId);
                 return Number((room.originPrice * (quickDiscount.discount / 10)).toFixed(2));
             },
-            initRooms(order) {
+            initRooms() {
+                const order = this.order;
+
                 // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1;
                     });
-                    this.registerRooms = filterRooms.map(item => {
+                    this.rooms = filterRooms.map(item => {
                         return {
                             categoryType: item.typeId,
                             roomType: item.roomId,
@@ -290,7 +294,10 @@
                             showTip: false,
                             state: item.state,
                             roomOrderId: item.serviceId,
-                            quickDiscountId: item.quickDiscountId || ''
+                            quickDiscountId: item.quickDiscountId || '',
+                            priceScale: item.datePriceList.map(dat => {
+                                return dat.dateFee / item.fee;
+                            })
                         };
                     });
                 }
@@ -316,21 +323,67 @@
                         showTip: false,
                         state: roomInfo.state,
                         roomOrderId: order.roomOrderId,
-                        quickDiscountId: order.quickDiscountId || ''
+                        quickDiscountId: order.quickDiscountId || '',
+                        priceScale: order.datePriceList.map(dat => {
+                            return dat.dateFee / roomInfo.totalPrice;
+                        })
                     };
 
-                    this.registerRooms = [room];
+                    this.rooms = [room];
+                }
+
+                if (this.checkState !== 'editOrder') {
+                    this.registerRooms.forEach(item => {
+                        let id;
+                        this.categories.forEach(category => {
+                            category.rooms.forEach(room => {
+                                if (room.i === item.roomId) {
+                                    id = category.cId;
+                                }
+                            });
+                        });
+                        item.endDate = util.diffDate(item.endDate, 1);
+                        const duration = this.getDateDiff(item.startDate, item.endDate);
+                        http.get('/room/getRoomStaus', { id: item.roomId,
+                            date: util.dateFormat(item.startDate),
+                            days: duration })
+                            .then(res => {
+                                const datePriceList = [];
+                                let price = 0;
+                                res.data.rs.status.forEach((option, index) => {
+                                    const fee = Number((option.p * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2));
+                                    datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
+                                    price += option.p;
+                                });
+                                // 每日房价分配比例
+                                const priceScale = datePriceList.map(dat => {
+                                    return dat.dateFee / price;
+                                });
+                                this.rooms.push({ categoryType: id,
+                                    roomType: item.roomId,
+                                    price: Number((price * this.getItemDiscountInfo(0, 0, this.vipDiscountDetail).discount).toFixed(2)),
+                                    originPrice: Number(price.toFixed(2)),
+                                    room: item, idCardList: [],
+                                    changeTimes: 0,
+                                    showPriceList: false,
+                                    datePriceList: datePriceList,
+                                    haveRequest: true,
+                                    priceScale: priceScale,
+                                    showTip: false
+                                });
+                            });
+                    });
                 }
             },
             addRoom() {
-                const len = this.registerRooms.length;
-                if (this.registerRooms.length >= 99) {
-                    modal.somethingAlert('一个订单最多添加99间房!');
+                const len = this.rooms.length;
+                if (this.rooms.length >= 99) {
+                    modal.alert('一个订单最多添加99间房!');
                     return false;
                 }
 
                 // 新增房间，房型时间同上一间
-                const room = JSON.parse(JSON.stringify(this.registerRooms[len - 1]));
+                const room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
                 room.idCardList = [];
                 if (room.roomOrderId) {
                     delete room.roomOrderId;
@@ -339,7 +392,7 @@
                     delete room.haveRequest;
                 }
 
-                this.registerRooms.push(room);
+                this.rooms.push(room);
             },
             dateDiff(date1, date2) {
                 const d1 = new Date(date1);
@@ -404,7 +457,7 @@
                 return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
             },
             hidePriceList() {
-                this.registerRooms.forEach(item => {
+                this.rooms.forEach(item => {
                     item.showPriceList = false;
                     item.datePriceList.forEach(date => {
                         date.showInput = false;
@@ -427,7 +480,7 @@
                 if (duration > 400) {
                     const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.somethingAlert('入住上限最大为400天，请重新选择入住时间！');
+                        modal.alert('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
@@ -505,7 +558,6 @@
                     roomId: room.roomType,
                     startDate: startDate,
                     endDate: endDate,
-                    datePriceList: room.datePriceList
                 };
                 if (room.roomOrderId) {
                     param.roomOrderId = room.roomOrderId;
@@ -561,7 +613,7 @@
                 room.datePriceList[0].dateFee = + ((Number(room.datePriceList[0].dateFee) + (price - totalPrice)).toFixed(2));
             },
             showPriceList(id) {
-                this.registerRooms.forEach((item, index) => {
+                this.rooms.forEach((item, index) => {
                     if (index === id) {
                         const duration = this.dateDiff(item.room.startDate, item.room.endDate);
                         if (duration > 1) {
@@ -584,10 +636,10 @@
                 }, 0).toFixed(2));
             },
             deleteRoom(index) {
-                this.registerRooms.splice(index, 1);
+                this.rooms.splice(index, 1);
             },
             addPerson(id, preson) {
-                this.registerRooms.forEach((item, index) => {
+                this.rooms.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
                             modal.alert('一间房最多添加20个入住人');
@@ -604,14 +656,14 @@
                 });
             },
             deletePerson(id, num) {
-                this.registerRooms.forEach((item, index) => {
+                this.rooms.forEach((item, index) => {
                     if (index === id) {
                         item.idCardList.splice(num, 1);
                     }
                 });
             },
             changeRooms() {
-                this.$emit('change', this.registerRooms);
+                this.$emit('change', this.rooms);
             }
         }
     };
