@@ -823,23 +823,18 @@
 
                 http.post('/room/confirmOrder', params)
                     .then(res => {
-                        this.isLoading = false;
-                        if (res.code === 1) {
-                            this.hideModal();
-                            if (this.checkState === 'ing' || this.checkState === 'finish') {
-                                const business = {};
-                                business.businessJson = JSON.parse(JSON.stringify(params));
-                                business.businessJson.functionType = 1;
-                                business.businessJson.orderId = res.data.orderId;
-                                business.orderDetail = { ...res.data };
-                                business.cashierType = this.checkState;
-                                this.$emit('showCashier', { type: 'register', business: business });
-                            } else {
-                                bus.$emit('refreshView');
-                                bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                            }
+                        this.hideModal();
+                        if (this.checkState === 'ing' || this.checkState === 'finish') {
+                            const business = {};
+                            business.businessJson = JSON.parse(JSON.stringify(params));
+                            business.businessJson.functionType = 1;
+                            business.businessJson.orderId = res.data.orderId;
+                            business.orderDetail = { ...res.data };
+                            business.cashierType = this.checkState;
+                            bus.$emit('showCashier', { type: 'register', business: business });
                         } else {
-                            modal.alert(res.msg);
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                         }
                     });
             },
