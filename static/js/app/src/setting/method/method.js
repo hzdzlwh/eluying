@@ -323,12 +323,13 @@ $(function() {
         }
     });
     $('#company-aliPay').on('show.bs.modal', function() {
-        http.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: companyAli.apiServiceType }, function(result) {
-            companyAli.publicKey = result.data.publicKey;
-            companyAli.pid = result.data.pid;
-            companyAli.pidTips = (companyAli.pid === '' || companyAli.pid === null);
-            companyAli.valid = companyAli.pidTips ? 'invalid' : 'valid';
-        });
+        http.get('/collectionMethod/getAlipayAccountInfo', { apiServiceType: companyAli.apiServiceType })
+            .then(result => {
+                companyAli.publicKey = result.data.publicKey;
+                companyAli.pid = result.data.pid;
+                companyAli.pidTips = (companyAli.pid === '' || companyAli.pid === null);
+                companyAli.valid = companyAli.pidTips ? 'invalid' : 'valid';
+            });
     });
 
     var aliImmedia = new Vue({
@@ -372,12 +373,13 @@ $(function() {
         }
     });
     $('#ali-immediaPay').on('show.bs.modal', function() {
-        http.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliImmedia.apiServiceType }, function(result) {
-            aliImmedia.publicKey = result.data.publicKey;
-            aliImmedia.pid = result.data.pid;
-            aliImmedia.pidTips = (aliImmedia.pid === '' || aliImmedia.pid === null);
-            aliImmedia.valid = aliImmedia.pidTips ? 'invalid' : 'valid';
-        });
+        http.get('/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliImmedia.apiServiceType })
+            .then(result => {
+                aliImmedia.publicKey = result.data.publicKey;
+                aliImmedia.pid = result.data.pid;
+                aliImmedia.pidTips = (aliImmedia.pid === '' || aliImmedia.pid === null);
+                aliImmedia.valid = aliImmedia.pidTips ? 'invalid' : 'valid';
+            });
     });
 
     var aliFace = new Vue({
@@ -426,14 +428,15 @@ $(function() {
         }
     });
     $('#ali-facePay').on('show.bs.modal', function() {
-        http.ajaxWithToken('get', '/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliFace.apiServiceType }, function(result) {
-            aliFace.publicKey = result.data.publicKey;
-            aliFace.pid = result.data.pid;
-            aliFace.appId = result.data.appId;
-            aliFace.pidTips = (aliFace.pid === '' || aliFace.pid === null);
-            aliFace.appIdTips = (aliFace.appId === '' || aliFace.appId === null);
-            aliFace.valid = (aliFace.pidTips || aliFace.appIdTips) ? 'invalid' : 'valid';
-        });
+        http.get('/collectionMethod/getAlipayAccountInfo', { apiServiceType: aliFace.apiServiceType })
+            .then(result => {
+                aliFace.publicKey = result.data.publicKey;
+                aliFace.pid = result.data.pid;
+                aliFace.appId = result.data.appId;
+                aliFace.pidTips = (aliFace.pid === '' || aliFace.pid === null);
+                aliFace.appIdTips = (aliFace.appId === '' || aliFace.appId === null);
+                aliFace.valid = (aliFace.pidTips || aliFace.appIdTips) ? 'invalid' : 'valid';
+            });
     });
 
     var confirmSubmit = new Vue({
@@ -446,8 +449,8 @@ $(function() {
         methods: {
             confirm: function() {
                 if (ajaxChannel === 'aliImmedia') {
-                    http.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliImmedia.apiServiceType, pid: aliImmedia.pid }, function(result) {
-                        if (result.code === 1) {
+                    http.get('/collectionMethod/bindAlipayAccount', { apiServiceType: aliImmedia.apiServiceType, pid: aliImmedia.pid })
+                        .then(result => {
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                             $('#ali-immediaPay').modal('hide');
@@ -456,15 +459,15 @@ $(function() {
                             setTimeout(function() {
                                 $('#method-submitSuccess').modal('hide');
                             }, 2000);
-                        } else {
+                        })
+                        .catch(res => {
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
                             $('#method-confirmSubmit').modal('hide');
-                        }
-                    });
+                        });
                 } else if (ajaxChannel === 'aliFace') {
-                    http.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: aliFace.apiServiceType, pid: aliFace.pid, appId: aliFace.appId }, function(result) {
-                        if (result.code === 1) {
+                    http.get('/collectionMethod/bindAlipayAccount', { apiServiceType: aliFace.apiServiceType, pid: aliFace.pid, appId: aliFace.appId })
+                        .then(result => {
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                             $('#ali-facePay').modal('hide');
@@ -473,15 +476,15 @@ $(function() {
                             setTimeout(function() {
                                 $('#method-submitSuccess').modal('hide');
                             }, 2000);
-                        } else {
+                        })
+                        .catch(res => {
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
                             $('#method-confirmSubmit').modal('hide');
-                        }
-                    });
+                        });
                 } else {
-                    http.ajaxWithToken('get', '/collectionMethod/bindAlipayAccount', { apiServiceType: companyAli.apiServiceType, pid: companyAli.pid }, function(result) {
-                        if (result.code === 1) {
+                    http.get('/collectionMethod/bindAlipayAccount', { apiServiceType: companyAli.apiServiceType, pid: companyAli.pid })
+                        .then(result => {
                             $('#method-submitSuccess').modal('show');
                             $('#method-confirmSubmit').modal('hide');
                             $('#company-aliPay').modal('hide');
@@ -491,12 +494,12 @@ $(function() {
                             setTimeout(function() {
                                 $('#method-submitSuccess').modal('hide');
                             }, 2000);
-                        } else {
+                        })
+                        .catch(res => {
                             submitFail.failMessage = result.msg;
                             $('#method-submitFail').modal('show');
                             $('#method-confirmSubmit').modal('hide');
-                        }
-                    });
+                        });
                 }
             }
         }
@@ -513,16 +516,13 @@ $(function() {
         el: '#method-wechatMethod',
         methods: {
             confirm: function() {
-                http.ajaxWithToken('GET', 'applyWxPayUrl', {}, function(result) {
-                    if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    } else {
+                http.get('applyWxPayUrl', {})
+                    .then(result => {
                         $('#method-wechatMethod').modal('hide');
                         mainContainer.c_weChatObj = { typeId: 0, typeStr: '审核中', typeStyle: 'yellow', operationStr: '' };
                         mainContainer.c_webObj = { typeId: -1, typeStr: '未开通', typeStyle: 'grey', operationStr: '绑定账号' };
                         mainContainer.c_webPayStatus = 'close';
-                    }
-                });
+                    });
             }
         }
     });
@@ -555,16 +555,16 @@ $(function() {
                     return false;
                 }
                 this.errorTips = '';
-                http.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
-                    channelName: newMethod.value
-                }, function(result) {
-                    modal.somethingAlert(result.msg);
-                    $('#method-newMethod').modal('hide');
-                    newMethod.value = '';
-                    http.ajaxWithToken('GET', 'getPaymentMethodAndStateUrl', {}, function(result) {
-                        mainContainer.payList = result.data.payChannelCustomList;
+                http.get('newDeleteCollectionMethodUrl', { channelName: newMethod.value })
+                    .then(result => {
+                        modal.alert(result.msg);
+                        $('#method-newMethod').modal('hide');
+                        newMethod.value = '';
+                        http.get('getPaymentMethodAndStateUrl', {})
+                            .then(result => {
+                                mainContainer.payList = result.data.payChannelCustomList;
+                            });
                     });
-                });
             }
         }
     });
@@ -573,17 +573,12 @@ $(function() {
         el: '#method-deleteMethod',
         methods: {
             deleteMethod: function() {
-                http.ajaxWithToken('GET', 'newDeleteCollectionMethodUrl', {
-                    channelId: mainContainer.deleteItem.channelId
-                }, function(result) {
-                    if (result.code === 1) {
+                http.get('newDeleteCollectionMethodUrl', { channelId: mainContainer.deleteItem.channelId })
+                    .then(result => {
                         $('#method-deleteMethod').modal('hide');
                         mainContainer.payList.$remove(mainContainer.deleteItem);
                         mainContainer.deleteItem = {};
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                });
+                    });
             }
         }
     });
