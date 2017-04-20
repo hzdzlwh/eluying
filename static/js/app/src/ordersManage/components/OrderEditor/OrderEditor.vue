@@ -834,7 +834,7 @@
                             bus.$emit('showCashier', { type: 'register', business: business });
                         } else {
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
+                            bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
                         }
                     });
             },
