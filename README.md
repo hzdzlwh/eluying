@@ -18,7 +18,7 @@ import foo from './foo';
 import http from 'http';
 http.get(url, data, config)
     .then(res => {
-        // do something
+        // do something 不需判断code是否为1
     })
     .catch(res => {
         // do something 捕获code不为1的情况

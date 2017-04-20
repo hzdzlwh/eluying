@@ -214,6 +214,7 @@
                     return node ? node.discount : 1;
                 }
 
+                // 没有折扣时返回1
                 return 1;
             }
         },
@@ -248,17 +249,21 @@
                 return this.quickDiscounts.find(i => id === i.id) || {};
             },
             quickDiscountIdChange(room) {
+                room.price = this.getPrice(room);
+                this.setDateFee(room);
+            },
+            // 计算vip折扣价，如果没有vip折扣价返回原价
+            getVipPrice(room) {
+                return Number((room.originPrice * this.vipDiscount).toFixed(2));
+            },
+            // 计算折扣后房间总价，考虑快捷折扣和vip折扣
+            getPrice(room) {
                 if (!room.quickDiscountId) {
-                    room.price = this.vipDiscount < 1 ? this.getVipPrice(room) : room.originPrice;
-                    return false;
+                    return this.getVipPrice(room);
                 }
 
                 const quickDiscount = this.quickDiscounts.find(i => i.id === room.quickDiscountId);
-                room.price = Number((room.originPrice * (quickDiscount.discount / 10)).toFixed(2));
-                this.setDateFee(room);
-            },
-            getVipPrice(room) {
-                return Number((room.originPrice * this.vipDiscount).toFixed(2));
+                return Number((room.originPrice * (quickDiscount.discount / 10)).toFixed(2));
             },
             initRooms(order) {
                 // 组合订单
@@ -408,15 +413,15 @@
                 this.vipListShow = false;
                 this.vipList = [];
             },
-            modifyRoom(item) {
-                if (item.haveRequest) {
-                    item.haveRequest = false;
+            modifyRoom(room) {
+                if (room.haveRequest) {
+                    room.haveRequest = false;
                     return false;
                 }
 
-                const duration = this.dateDiff(item.room.startDate, item.room.endDate);
+                const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
-                    item.room.endDate = util.diffDate(new Date(item.room.endDate), 1);
+                    room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
                     return false;
                 }
                 if (duration > 400) {
@@ -427,12 +432,12 @@
                     }
                     return false;
                 }
-                const startDate = util.dateFormat(new Date(item.room.startDate));
-                const endDate = util.dateFormat(new Date(item.room.endDate));
+                const startDate = util.dateFormat(new Date(room.room.startDate));
+                const endDate = util.dateFormat(new Date(room.room.endDate));
 
-                const params = { id: item.roomType, date: startDate, days: duration < 1 ? 1 : duration };
-                if (item.roomOrderId) {
-                    params.roomOrderId = item.roomOrderId;
+                const params = { id: room.roomType, date: startDate, days: duration < 1 ? 1 : duration };
+                if (room.roomOrderId) {
+                    params.roomOrderId = room.roomOrderId;
                 }
                 http.get('/room/getRoomStaus', params)
                     .then(res => {
@@ -445,7 +450,7 @@
                             const discount = this.vipDiscount;
                             res.data.rs.status.forEach((option, index) => {
                                 datePriceList.push({
-                                    date: util.dateFormat(util.diffDate(new Date(item.room.startDate), index)),
+                                    date: util.dateFormat(util.diffDate(new Date(room.room.startDate), index)),
                                     dateFee: option.p,
                                     originDateFee: option.p,
                                     showInput: false
@@ -459,9 +464,9 @@
                             datePriceList.forEach(date => {
                                 price += date.dateFee;
                                 originPrice += date.originDateFee;
-                                if (item.originDatePriceList) {
+                                if (room.originDatePriceList) {
                                     date.hasFind = false;
-                                    item.originDatePriceList.forEach(dat => {
+                                    room.originDatePriceList.forEach(dat => {
                                         if (date.date === dat.date) {
                                             date.hasFind = true;
                                             oldPrice += dat.dateFee;
@@ -471,42 +476,66 @@
                                     });
                                 }
                             });
-                            item.price = Number((Number((price * discount).toFixed(2)) + oldPrice).toFixed(2));
-                            item.originPrice = Number(originPrice.toFixed(2));
-                            item.datePriceList = datePriceList;
-                            item.priceScale = priceScale;
-                            if (!item.originDatePriceList) {
-                                this.setDateFee(item);
+                            room.price = Number((Number((price * discount).toFixed(2)) + oldPrice).toFixed(2));
+                            room.originPrice = Number(originPrice.toFixed(2));
+                            room.datePriceList = datePriceList;
+                            room.priceScale = priceScale;
+                            // 打折逻辑
+                            if (!room.originDatePriceList) {
+                                this.setDateFee(room);
                             } else {
-                                item.datePriceList.forEach(date => {
+                                room.datePriceList.forEach(date => {
                                     if (!date.hasFind) {
                                         date.dateFee = Number((date.dateFee * discount).toFixed(2));
                                     }
                                 });
-                                const index = item.datePriceList.findIndex(dat => {
+                                const index = room.datePriceList.findIndex(dat => {
                                     return !dat.hasFind;
                                 });
                                 if (index >= 0) {
-                                    const totalPrice = item.datePriceList.reduce((a, b) => {
+                                    const totalPrice = room.datePriceList.reduce((a, b) => {
                                         return a + Number(b.dateFee);
                                     }, 0);
-                                    item.datePriceList[index].dateFee = + ((Number(item.datePriceList[index].dateFee) + (item.price - totalPrice)).toFixed(2));
+                                    room.datePriceList[index].dateFee = + ((Number(room.datePriceList[index].dateFee) + (room.price - totalPrice)).toFixed(2));
                                 }
                             }
                         }
                     });
-                const param = { roomId: item.roomType, startDate: startDate, endDate: endDate };
-                if (item.roomOrderId) {
-                    param.roomOrderId = item.roomOrderId;
+                const param = {
+                    roomId: room.roomType,
+                    startDate: startDate,
+                    endDate: endDate,
+                    datePriceList: room.datePriceList
+                };
+                if (room.roomOrderId) {
+                    param.roomOrderId = room.roomOrderId;
                 }
 
                 http.get('/room/getStatusAndTotalPrice', param)
                     .then(res => {
-                        if (res.code === 1) {
-                            item.showTip = !res.data.available;
+                        // 不可用
+                        room.showTip = !res.data.available;
+                        /* room.datePriceList = res.data.datePriceList;
+                        room.datePriceList.map(i => {
+                            i.originDateFee = i.dateFee;
+                            i.showInput = false;
+                        });
+                        // 计算价格比例
+                        room.priceScale = room.datePriceList.map(dat => {
+                            return dat.dateFee / res.data.fee;
+                        });
+                        room.originPrice = res.data.fee;
+                        room.price = this.getPrice(room);
+                        if (!room.originDatePriceList) {
+                            this.setDateFee(room);
                         } else {
-                            modal.alert(res.msg);
-                        }
+                            room.datePriceList.map(date => {
+                                const originDate = this.originDatePriceList.find(i => i.date === date.date);
+                                if (!originDate) {
+                                    date.dateFee = Number((date.dateFee * this.vipDiscount).toFixed(2));
+                                }
+                            });
+                        } */
                     });
             },
             changeRoomFee(room) {
