@@ -3,7 +3,7 @@
         <div class="content-item">
             <p class="content-item-title">
                 <span>娱乐信息</span>
-                <span class="increase-container" @click="addItem(2)" v-if='order.type === ORDER_TYPE.ACCOMMODATION || order.type === ORDER_TYPE.COMBINATION'>
+                <span class="increase-container" @click="addItem(2)" v-if='order.type === ORDER_TYPE.ACCOMMODATION || order.type === ORDER_TYPE.COMBINATION || order.type === undefined'>
                                     <span class="increase-icon"></span> 添加项目
                 </span>
             </p>
@@ -166,47 +166,51 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
-            if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
-                filterEnters = (this.order.playItems || []).filter(enter => {
-                    return enter.state !== 3;
-                });
-                filterEnters.forEach(item => {
-                    const enter = { ...item
-                    };
+            if (this.order.type) {
+                if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
+                    filterEnters = (this.order.playItems || []).filter(enter => {
+                        return enter.state !== 3;
+                    });
+                    filterEnters.forEach(item => {
+                        const enter = { ...item
+                        };
                     // enter.price = Number((item.originPrice).toFixed(2));
-                    enter.price = item.originPrice;
-                    enter.changeTimes = 0;
-                    enter.id = item.categoryId;
-                    enter.count = item.amount;
-                    enter.selfInventory = item.amount;
-                    enter.type = 2;
-                    enter.inventory = undefined;
-                    enter.originPrice = item.originPrice.toFixed(2);
+                        enter.price = item.originPrice;
+                        enter.changeTimes = 0;
+                        enter.id = item.categoryId;
+                        enter.count = item.amount;
+                        enter.selfInventory = item.amount;
+                        enter.type = 2;
+                        enter.inventory = undefined;
+                        enter.originPrice = item.originPrice.toFixed(2);
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
-                    enter.totalPrice = item.totalPrice;
-                    enterItems.push(enter);
-                });
-                return (JSON.parse(JSON.stringify(enterItems)));
+                        enter.totalPrice = item.totalPrice;
+                        enterItems.push(enter);
+                    });
+                    return (JSON.parse(JSON.stringify(enterItems)));
+                } else {
+                    filterEnters = [this.order];
+                    filterEnters.forEach(item => {
+                        const enter = { ...item
+                        };
+                        enter.name = item.customerName;
+                        enter.usedAmount = item.bookNum - item.enableAmount;
+                        enter.unitTime = item.chargeUnitTime;
+                        enter.price = item.originPrice;
+                        enter.changeTimes = 0;
+                        enter.id = item.categoryId;
+                        enter.count = item.bookNum;
+                        enter.selfInventory = item.bookNum;
+                        enter.type = 2;
+                        enter.inventory = undefined;
+                        enter.originPrice = item.originPrice.toFixed(2);
+                        enter.totalPrice = item.totalPrice;
+                        enterItems.push(enter);
+                    });
+                    return (JSON.parse(JSON.stringify(enterItems)));
+                }
             } else {
-                filterEnters = [this.order];
-                filterEnters.forEach(item => {
-                    const enter = { ...item
-                    };
-                    enter.name = item.customerName;
-                    enter.usedAmount = item.bookNum - item.enableAmount;
-                    enter.unitTime = item.chargeUnitTime;
-                    enter.price = item.originPrice;
-                    enter.changeTimes = 0;
-                    enter.id = item.categoryId;
-                    enter.count = item.bookNum;
-                    enter.selfInventory = item.bookNum;
-                    enter.type = 2;
-                    enter.inventory = undefined;
-                    enter.originPrice = item.originPrice.toFixed(2);
-                    enter.totalPrice = item.totalPrice;
-                    enterItems.push(enter);
-                });
-                return (JSON.parse(JSON.stringify(enterItems)));
+                return [];
             }
         },
         addItem() {
