@@ -198,7 +198,7 @@ import {
     DdOption
 } from 'dd-vue-component';
 import categorySelect from './categorySelect.vue';
-import http from '../../common/AJAXService';
+import http from '../../common/http';
 import modal from '../../common/modal';
 export default {
     props: {

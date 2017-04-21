@@ -5,6 +5,7 @@
   "main": "gulpfile.js",
   "dependencies": {
     "angular": "^1.5.3",
+    "axios": "^0.16.1",
     "core-js": "^2.4.1",
     "dd-common-css": "0.2.1",
     "dd-vue-component": "1.0.0",
@@ -12,6 +13,7 @@
     "echarts": "^3.3.2",
     "jquery": "1.12.4",
     "md5": "^2.1.0",
+    "qs": "^6.4.0",
     "raven-js": "^3.12.1",
     "vue": "2.2.5",
     "vue-router": "^2.1.1",

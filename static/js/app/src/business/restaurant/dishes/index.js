@@ -5,7 +5,7 @@
 var Vue = require('vue1');
 var util = require("util");
 var modal = require("modal");
-var AJAXService = require('AJAXService');
+import http from 'http';
 var restaurantMenu = require('../restaurantMenu');
 var showInfo = require("../../category/food/showInfo");
 require("bootstrap");
@@ -40,7 +40,7 @@ $(function() {
     util.bindDomAction(events);
 
     util.bindDomAction(showInfo.events);
-    
+
     var restId = location.search.split('=')[1];
     var main = new Vue({
         el: '.restaurant-container',
@@ -58,17 +58,19 @@ $(function() {
         },
         methods: {
             getPackagesAndDishesFromRestaurant: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getPackagesAndDishesFromRestaurant', { restId: restId }, function(result) {
-                    this.dishesList = result.data.dishesList;
-                    this.packages = result.data.packageList;
-                }.bind(this));
+                http.get('/catering/getPackagesAndDishesFromRestaurant', { restId: restId })
+                    .then(result => {
+                        this.dishesList = result.data.dishesList;
+                        this.packages = result.data.packageList;
+                    });
             },
             getRestaurants: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getRestaurantList', {}, function(result) {
-                    this.restName = result.data.list.filter(function(el) {
-                        return el.restId == restId;
-                    })[0].restName;
-                }.bind(this));
+                http.get('/catering/getRestaurantList', {})
+                    .then(result => {
+                        this.restName = result.data.list.filter(function(el) {
+                            return el.restId == restId;
+                        })[0].restName;
+                    });
             },
             openCreateDishesDialog: function() {
                 $('#dishesDialog').modal('show');
@@ -129,17 +131,13 @@ $(function() {
                     params.categoryId = this.dishesSelected.categoryId;
                     url = '/catering/deleteDishesForRestaurant';
                 }
-                AJAXService.ajaxWithToken('POST', url,
-                    params,
-                    function(res) {
-                        if (res.code === 1) {
+                http.post('POST', url,
+                    params)
+                    .then(res => {
                             this.getPackagesAndDishesFromRestaurant();
                             this.packageSelected = undefined;
                             this.dishesSelected = undefined;
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
-                    }.bind(this))
+                    })
             },
 
             modifyState: function() {
@@ -147,16 +145,12 @@ $(function() {
                 var id = selected.categoryId;
                 var state = 1 - selected.onDirectSaleState;
 
-                AJAXService.ajaxWithToken('POST', '/category/modifyStatePC',
-                    { id: id, state: state, channelId: 5 },
-                    function(res) {
-                        if (res.code === 1) {
+                http.post('/category/modifyStatePC',
+                    { id: id, state: state, channelId: 5 })
+                    .then(res => {
                             this.getPackagesAndDishesFromRestaurant();
                             selected.onDirectSaleState = state;
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
-                    }.bind(this))
+                    });
             },
             openDishesPictureDialog: function(packageModel) {
                 dishesPictureDialog.pictureName = packageModel.name;
@@ -188,7 +182,7 @@ $(function() {
             this.getDishesClassify();
             var that = this;
             $('#uploadDishesPicture').fileupload({
-                url: AJAXService.getUrl2("uploadImageUrl"),
+                url: http.getUrl("uploadImageUrl"),
                 done:  (e, data) => {
                     var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                     result = JSON.parse(result);
@@ -199,13 +193,10 @@ $(function() {
         },
         methods: {
             getDishesClassify: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getDishesClassify', { restId: restId }, function(result) {
-                    if (result.code === 1) {
+                http.get('/catering/getDishesClassify', { restId: restId })
+                    .then(result => {
                         this.dishesClassifyList = result.data.list;
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                }.bind(this));
+                    });
             },
             changeDishes: function() {
                 this.submitted = true;
@@ -218,14 +209,11 @@ $(function() {
                 var params = Object.assign({}, this.dishes);
                 params.restId = restId;
                 var url = this.dishes.categoryId ? '/catering/modifyDishesForRestaurant' : '/catering/addDishesForRestaurant';
-                AJAXService.ajaxWithToken('POST', url, params, function(result) {
-                    if (result.code === 1) {
+                http.post(url, params)
+                    .then(result => {
                         main.getPackagesAndDishesFromRestaurant();
                         this.cancel();
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                }.bind(this));
+                    });
             },
             cancel: function() {
                 this.dishes = {
@@ -249,13 +237,10 @@ $(function() {
         },
         methods: {
             getDishesClassify: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getDishesClassify', { restId: restId }, function(result) {
-                    if (result.code === 1) {
+                http.get('/catering/getDishesClassify', { restId: restId })
+                    .then(result => {
                         this.dishesClassifyList = result.data.list;
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                }.bind(this));
+                    });
             },
             openDishesClassifyCreateDialog: function() {
                 $('#dishesClassifyEditDialog').modal('show');
@@ -280,17 +265,13 @@ $(function() {
                 modal.confirmDialog({ okText: '删除', message: '删除菜品分类后，该菜品分类下的菜都将自动放入其它' }, this.deleteClassify)
             },
             deleteClassify: function() {
-                AJAXService.ajaxWithToken('POST', '/catering/removeDishesClassify',
-                    { restId: restId ,dishesClassifyId: this.dishesClassifySelected.dishesClassifyId },
-                    function(res) {
-                        if (res.code === 1) {
+                http.post('/catering/removeDishesClassify',
+                    { restId: restId ,dishesClassifyId: this.dishesClassifySelected.dishesClassifyId })
+                    .then(res => {
                             dishesClassify.getDishesClassify();
                             main.getPackagesAndDishesFromRestaurant();
                             dishes.getDishesClassify();
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
-                })
+                    });
             },
             cancel: function() {
                 this.dishesClassifySelected = undefined;
@@ -312,34 +293,29 @@ $(function() {
         },
         methods: {
             getAllDishesFromRest: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getAllDishesFromRest',
-                    { restId: restId, packageId: packageVM.packageModel.categoryId },
-                    function(res) {
-                        if (res.code === 1) {
-                            this.dishesInPackageList = res.data.dishesInPackageList;
-                            packageVM.packageModel.dishesReq = this.dishesInPackageList.map(function(el) {
-                                return Object.assign({}, el);
+                http.get('/catering/getAllDishesFromRest',
+                    { restId: restId, packageId: packageVM.packageModel.categoryId })
+                    .then(res => {
+                        this.dishesInPackageList = res.data.dishesInPackageList;
+                        packageVM.packageModel.dishesReq = this.dishesInPackageList.map(function(el) {
+                            return Object.assign({}, el);
+                        });
+                        this.dishesTempList = this.dishesInPackageList.map(function(el) {
+                            return Object.assign({}, el);
+                        });
+                        res.data.dishesNumAndTypeList.map(function(el) {
+                            if (!this.dishesListGroupByClassify[el.dishesClassifyId]) {
+                                this.dishesListGroupByClassify[el.dishesClassifyId] = [];
+                            }
+                            this.dishesListGroupByClassify[el.dishesClassifyId].push(el);
+                        }.bind(this));
+                        http.get('/catering/getDishesClassify', { restId: restId })
+                            .then(result => {
+                                this.dishesClassifyList = result.data.list;
+                                this.currentClassifyId = this.dishesClassifyList[0].dishesClassifyId;
+                                this.dishesInClassify = this.dishesListGroupByClassify[this.dishesClassifyList[0].dishesClassifyId];
                             });
-                            this.dishesTempList = this.dishesInPackageList.map(function(el) {
-                                return Object.assign({}, el);
-                            });
-                            res.data.dishesNumAndTypeList.map(function(el) {
-                                if (!this.dishesListGroupByClassify[el.dishesClassifyId]) {
-                                    this.dishesListGroupByClassify[el.dishesClassifyId] = [];
-                                }
-                                this.dishesListGroupByClassify[el.dishesClassifyId].push(el);
-                            }.bind(this));
-                            AJAXService.ajaxWithToken('GET', '/catering/getDishesClassify', { restId: restId }, function(result) {
-                                if (result.code === 1) {
-                                    this.dishesClassifyList = result.data.list;
-                                    this.currentClassifyId = this.dishesClassifyList[0].dishesClassifyId;
-                                    this.dishesInClassify = this.dishesListGroupByClassify[this.dishesClassifyList[0].dishesClassifyId];
-                                } else {
-                                    modal.somethingAlert(result.msg);
-                                }
-                            }.bind(this));
-                        }
-                }.bind(this));
+                    });
             },
             changeClassify: function(id) {
                 this.dishesInClassify = this.dishesListGroupByClassify[id];
@@ -436,7 +412,7 @@ $(function() {
         created: function() {
             var that = this;
             $('#uploadPackageModelPicture').fileupload ({
-            url: AJAXService.getUrl2("uploadImageUrl"),
+            url: http.getUrl("uploadImageUrl"),
             done:  (e, data) => {
             var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
             result = JSON.parse(result);
@@ -467,14 +443,11 @@ $(function() {
                 var url = this.packageModel.categoryId ? '/catering/modifyPackages' : '/catering/addPackages';
                 var param = Object.assign({}, this.packageModel,
                     { restId: restId, packageId: this.packageModel.categoryId, dishesReq: JSON.stringify(this.packageModel.dishesReq) });
-                AJAXService.ajaxWithToken('POST', url, param, function(res) {
-                    if (res.code === 1) {
+                http.post(url, param)
+                    .then(res => {
                         main.getPackagesAndDishesFromRestaurant();
                         this.cancel();
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                }.bind(this));
+                    });
             },
             cancel: function() {
                 this.submitted = false;
@@ -501,17 +474,14 @@ $(function() {
                 if (this.$isNull(this.dishesClassify.name) || (parseInt(this.dishesClassify.sequence) !== Number(this.dishesClassify.sequence) || parseInt(this.dishesClassify.sequence) < 1 || parseInt(this.dishesClassify.sequence) > 255 )) {
                     return
                 }
-                AJAXService.ajaxWithToken('POST', '/catering/changeDishesClassify', Object.assign({}, this.dishesClassify, { restId: restId }), function(res) {
-                    if (res.code === 1) {
+                http.post('/catering/changeDishesClassify', Object.assign({}, this.dishesClassify, { restId: restId }))
+                    .then(res => {
                         dishesClassify.getDishesClassify();
                         this.dishesClassify = {};
                         this.submitted = false;
                         $('#dishesClassifyEditDialog').modal('hide');
                         dishes.getDishesClassify();
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                }.bind(this))
+                    });
             },
             cancel: function() {
                 this.dishesClassify = {};

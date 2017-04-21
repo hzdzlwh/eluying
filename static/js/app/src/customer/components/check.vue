@@ -101,7 +101,7 @@
 }
 </style>
 <script>
-import http from '../../common/AJAXService';
+import http from '../../common/http';
 import modal from '../../common/modal';
 import getAlipay from './getMoneyWithCode.vue';
 import {
@@ -217,7 +217,7 @@ export default {
                 })[0].name,
                 payChannelId: this.select
             };
-            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.type !== 1) {
+            if ((id === -6 || id === -7 || id === -11 || id === -12) && this.type !== 1) {
                 this.alipay.data = getCodeData;
                 this.alipayshow = true;
             } else {
@@ -227,21 +227,17 @@ export default {
                 modal.confirmDialog({
                     message: msg
                 }, () => {
-                    http.ajaxWithToken('GET', that.content[that.type].url, getCodeData)
+                    http.get(that.content[that.type].url, getCodeData)
                         .then((result) => {
-                            if (result.code === 1) {
-                                if (that.type === 1) {
-                                    modal.somethingAlert('退款成功');
-                                } else {
-                                    modal.somethingAlert('收款成功');
-                                }
-                                that.close();
-                                that.num = 0;
-                                that.select = undefined;
-                                event.$emit('checkSuc');
+                            if (that.type === 1) {
+                                modal.somethingAlert('退款成功');
                             } else {
-                                modal.somethingAlert(result.msg);
+                                modal.somethingAlert('收款成功');
                             }
+                            that.close();
+                            that.num = 0;
+                            that.select = undefined;
+                            event.$emit('checkSuc');
                         });
                 });
             }

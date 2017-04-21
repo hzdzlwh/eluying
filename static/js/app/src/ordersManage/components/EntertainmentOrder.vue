@@ -47,7 +47,7 @@
 <style scoped>
 </style>
 <script>
-import event from '../event';
+import bus from '../../common/eventBus';
 import EntertainmentOrderDetail from './EntertainmentOrderDetail.vue';
 import {
     ORDER_TYPE
@@ -69,7 +69,7 @@ export default {
     data() {
         return {
             ORDER_TYPE
-        }
+        };
     },
     computed: {
         playItems() {
@@ -77,15 +77,15 @@ export default {
                 return this.order.playItems;
             }
             return [this.order];
-        },
+        }
     },
     methods: {
         modalShow(id) {
-            event.$emit('onShowDetail', {
+            bus.$emit('onShowDetail', {
                 orderId: parseInt(id),
-                orderType: ORDER_TYPE.ENTERTAINMENT
-            })
+                type: ORDER_TYPE.ENTERTAINMENT
+            });
         }
     }
-}
+};
 </script>

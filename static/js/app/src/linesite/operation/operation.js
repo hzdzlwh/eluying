@@ -4,7 +4,7 @@
 var Vue = require('vue1');
 var util = require('util');
 var modal = require('modal');
-var AJAXService= require('AJAXService');
+var http= require('http');
 var auth = require('../../common/auth');
 import init from '../../common/init';
 init({
@@ -23,10 +23,11 @@ $(function(){
             linesiteUrl: ''
         },
         created: function(){
-            AJAXService.ajaxWithToken('GET', '/entertainment/getEnterQueueSetting', {}, function(result){
-                this.linesiteQrCode = result.data.enterQueueQrCode;
-                this.linesiteUrl = result.data.enterQueueUrl;
-            }.bind(this));
+            http.get('/entertainment/getEnterQueueSetting', {})
+                .then(result => {
+                    this.linesiteQrCode = result.data.enterQueueQrCode;
+                    this.linesiteUrl = result.data.enterQueueUrl;
+                });
         },
         methods: {
             copyText: function(){

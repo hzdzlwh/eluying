@@ -1,4 +1,4 @@
-// 0-关闭， 1-warn，2-error
+// 0-close， 1-warn，2-error
 {
   "extends": "vue",
   "parser": "babel-eslint",
@@ -46,7 +46,8 @@
         "nonwords": true,
         "overrides": {
           "!": false,
-          "!!": false
+          "!!": false,
+          "-": false
         }
       }
     ]
