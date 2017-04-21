@@ -94,7 +94,7 @@ $(function() {
                         oddType: this.oddType,
                         unit: this.unit,
                         nodeId: 0,
-                        nodeType: 1,
+                        nodeType: 0,
                         quickDiscountList: JSON.stringify(list)
                     })
                     .then(res => {
