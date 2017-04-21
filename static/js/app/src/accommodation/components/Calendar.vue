@@ -698,7 +698,7 @@
                             // 修改库存
                             const index = util.DateDiff(this.startDate, status.date);
                             const oldV = this.leftMap[room.ti][index];
-                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1)
+                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1);
                         } else {
                             modal.somethingAlert(result.msg);
                         }
@@ -737,5 +737,5 @@
                 this.currentAction && (this.currentAction.actionVisible = false);
             });
         }
-    }
+    };
 </script>

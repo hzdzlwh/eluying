@@ -1,25 +1,10 @@
 <template>
     <div class="acc-container">
-        <Search @showOrder="showOrderDetail" />
-        <Calendar
-            @dateChange="handleDateChange"
-            @roomFilterChange="handleRoomFilter"
-            @fold="handleFold"
-            @showOrder="showOrderDetail"
-            :categories="categories"
-            :holidays="holidays"
-            :roomStatus="roomStatus"
-            :defaultStartDate="startDateStr"
-            :orderList="orderList"
-            :startDate="startDate"
-            :dateRange="dateRange"
-            :leftMap="leftMap"
-            :DAYS="DAYS"
-        />
-        <ShopCart
-            :selectedEntries="selectedEntries"
-            @changeCheckState="changeCheckState"
-        />
+        <div class="acc-header">
+            <router-link to="/calendar">前台录入</router-link>
+            <router-link to="/orders">住宿订单</router-link>
+        </div>
+        <router-view></router-view>
         <order-editor
                 :registerRooms="registerRooms"
                 :order-editor-visible="orderEditorVisible"
@@ -53,15 +38,19 @@
     </div>
 </template>
 <style>
-.acc-container {
-    position: absolute;
-    top: 68px;
-    bottom: 0;
-    left: 0;
-    zoom: 1;
-    width: 100%;
-    min-width: 1200px;
-}
+    .acc-container {
+        position: absolute;
+        top: 68px;
+        bottom: 0;
+        left: 0;
+        zoom: 1;
+        width: 100%;
+        min-width: 1200px;
+    }
+    .acc-header {
+        height: 45px;
+        box-shadow: 2px 0 2px 0 #dadada;
+    }
 </style>
 <script>
     import bus from '../common/eventBus';
@@ -203,7 +192,7 @@
                                 }
 
                                 if (s.s === -1) {
-                                    this.leftMap[r.ti][index] ++;
+                                    this.leftMap[r.ti][index] ++; // eslint-disable-line
                                 }
                             });
 

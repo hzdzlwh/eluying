@@ -82,17 +82,17 @@
                     const date = new Date(e.date);
                     if (util.isSameDay(date, today)) {
                         t = true;
-                    } else if(date > today) {
+                    } else if (date > today) {
                         f = true;
-                    } else if(date < today) {
+                    } else if (date < today) {
                         p = true;
                     }
 
                     temp[e.id] = `${e.cName}-${e.rName}`;
                 });
-                this.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
-                this.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
-                this.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
+                this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
+                this.ingShow = p && t && !f || p && t && f || !p && t && !f || !p && t && f;
+                this.bookShow = p && !t && f || !p && t && !f || !p && t && f || !p && !t && f;
                 this.t = t;
                 this.p = p;
                 this.f = f;
@@ -110,7 +110,7 @@
                 finishShow: false,
                 ingShow: false,
                 bookShow: false
-            }
+            };
         },
         watch: {
             selectedRoomsCount(val) {
@@ -201,5 +201,5 @@
                 return temp;
             }
         }
-    }
+    };
 </script>

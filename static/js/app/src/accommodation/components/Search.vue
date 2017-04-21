@@ -173,7 +173,7 @@
     import { ORDER_STATUS } from '../const';
     export default{
         data() {
-            return{
+            return {
                 ORDER_STATUS,
                 page: 1,
                 searchResults: [],
@@ -182,7 +182,7 @@
                 limit: 4,
                 resultsVisible: false,
                 searchResultsNum: 0
-            }
+            };
         },
         methods: {
             showSearch() {
@@ -201,7 +201,7 @@
                     keyword: this.searchKeyword,
                     page: this.page,
                     limit: this.limit,
-                    searchType: 0 //所有订单
+                    searchType: 0 // 所有订单
                 }).then(
                     result => {
                         if (result.code === 1) {
@@ -213,7 +213,6 @@
                         }
                     }
                 );
-
             },
             hideSearch() {
                 this.page = 1;
@@ -231,5 +230,5 @@
         directives: {
             Clickoutside
         }
-    }
+    };
 </script>
