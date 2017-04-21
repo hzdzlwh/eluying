@@ -52,7 +52,7 @@ $(function() {
             getDiscounts() {
                 http.get('/quickDiscount/getList', {
                         nodeId: 0,
-                        nodeType: 1
+                        nodeType: 0
                     })
                     .then(res => {
                         if (res.code === 1) {
