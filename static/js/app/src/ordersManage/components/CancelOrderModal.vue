@@ -98,7 +98,7 @@
             },
             addPenalty() {
                 if (this.subOrderPenaltys.length >= this.subOrders.length) {
-                    modal.somethingAlert('已选择所有违约项目');
+                    modal.alert('已选择所有违约项目');
                     return false;
                 }
                 this.subOrderPenaltys.push({ nodeId: this.subOrders[0].nodeId, penalty: undefined });
@@ -127,7 +127,7 @@
                     valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== ''; });
                 }
                 if (!valid) {
-                    modal.somethingAlert('请输入违约金！');
+                    modal.alert('请输入违约金！');
                     return false;
                 }
                 if (this.penalty && this.order.type !== -1) {
@@ -156,7 +156,7 @@
                 if (this.need - Number(totalPenalty) === 0) {
                     http.get('/order/cancel', business)
                         .then(res => {
-                            modal.somethingAlert('取消成功');
+                            modal.alert('取消成功');
                             this.hideModal();
                             bus.$emit('refreshView');
                             bus.$emit('showOrder', this.orderId);

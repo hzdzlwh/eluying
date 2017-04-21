@@ -209,7 +209,7 @@
                             this.searchResults = result.data.orderList;
                             this.searchResultsNum = result.data.orderAmount;
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                     }
                 );

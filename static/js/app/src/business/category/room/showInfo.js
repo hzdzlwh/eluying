@@ -288,28 +288,28 @@ var showInfo = {
             }
             if ($(".rightTab").parent().hasClass("active")) {
                 if ($("#roomShowFitNum").val() == "") {
-                    modal.somethingAlert("请填写可容纳人数");
+                    modal.alert("请填写可容纳人数");
                     return;
                 }
                 if ($("#roomShowArea").val() == "") {
-                    modal.somethingAlert("请填写房间面积");
+                    modal.alert("请填写房间面积");
                     return;
                 }
                 if ($("#roomShowBed").val() == "") {
-                    modal.somethingAlert("请填写床型");
+                    modal.alert("请填写床型");
                     return;
                 }
             }
             if ($(".cover .photoContainer").html() == "") {
                 $(".coverError").removeClass("hide");
                 if ($(".rightTab").parent().hasClass("active")) {
-                    modal.somethingAlert("请上传封面");
+                    modal.alert("请上传封面");
                 }
                 return
             }
             if ($(".detail .photoContainer").html() == "") {
                 if ($(".rightTab").parent().hasClass("active")) {
-                    modal.somethingAlert("请上传详细图片");
+                    modal.alert("请上传详细图片");
                 }
                 $(".detailError").removeClass("hide");
                 return

@@ -306,7 +306,7 @@ export default {
                         that.detailClose();
                     } else {
                         if (res.code === 10) {
-                            modal.somethingAlert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
+                            modal.alert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
                         } else {
                             modal.alert(res.msg);
                         }

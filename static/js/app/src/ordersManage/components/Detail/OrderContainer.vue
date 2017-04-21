@@ -1223,7 +1223,7 @@
                             this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
                             bus.$emit('refreshView');
                         } else {
-                            modal.somethingAlert(res.msg);
+                            modal.alert(res.msg);
                         }
                     });
             }

@@ -700,7 +700,7 @@
                             const oldV = this.leftMap[room.ti][index];
                             this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1)
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                         status.actionVisible = false;
                     });
@@ -724,7 +724,7 @@
                         if (result.code === 1) {
                             room.isDirty = !room.isDirty;
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                     });
             }
