@@ -23,7 +23,7 @@
     import types from '../store/types';
     export default{
         data() {
-            return{
+            return {
                 DATE_TYPE: [
                     {
                         value: 0,
@@ -59,7 +59,7 @@
                 endDate: undefined,
                 dateDisabled: true,
                 flag: undefined
-            }
+            };
         },
         created() {
             this.type = 0;
@@ -142,19 +142,19 @@
                 this.flag = setTimeout(() => {
                     this.$emit('change', {
                         startDate: this.startDate,
-                        endDate: this.endDate,
+                        endDate: this.endDate
                     });
                     this[types.SET_DATE]({
                         startDate: this.startDate,
-                        endDate: this.endDate,
+                        endDate: this.endDate
                     });
                 }, 300);
             }
         },
-        components:{
+        components: {
             DdDatepicker,
             DdSelect,
             DdOption
         }
-    }
+    };
 </script>
