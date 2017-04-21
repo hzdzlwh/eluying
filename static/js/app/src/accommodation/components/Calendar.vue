@@ -530,6 +530,7 @@
     import http from '../../common/http';
     import modal from '../../common/modal';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
+    import bus from '../../common/eventBus';
     export default{
         props: {
             categories: Array,
@@ -710,7 +711,7 @@
                     });
             },
             showOrder(id) {
-                this.$emit('showOrder', { type: -1, orderId: id });
+                bus.$emit('onShowDetail', { type: -1, orderId: id });
             },
             openAction(status, ev) {
                 ev.preventDefault();

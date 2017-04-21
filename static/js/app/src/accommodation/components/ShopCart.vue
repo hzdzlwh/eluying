@@ -62,6 +62,7 @@
 <script>
     import util from '../../common/util';
     import modal from '../../common/modal';
+    import bus from '../../common/eventBus';
     export default{
         props: {
             selectedEntries: Array
@@ -148,7 +149,7 @@
                     }
                 }
 
-                this.$emit('changeCheckState', type, this.getRoomsWithDate());
+                bus.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
             clear(type) {
                 const today = new Date();

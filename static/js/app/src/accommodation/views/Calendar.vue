@@ -1,11 +1,10 @@
 <template>
     <div>
-        <Search @showOrder="showOrderDetail" />
+        <Search />
         <Calendar
                 @dateChange="handleDateChange"
                 @roomFilterChange="handleRoomFilter"
                 @fold="handleFold"
-                @showOrder="showOrderDetail"
                 :categories="categories"
                 :holidays="holidays"
                 :roomStatus="roomStatus"
@@ -18,7 +17,6 @@
         />
         <ShopCart
                 :selectedEntries="selectedEntries"
-                @changeCheckState="changeCheckState"
         />
     </div>
 </template>

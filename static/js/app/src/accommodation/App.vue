@@ -102,6 +102,7 @@
             bus.$on('hideGetMoney', this.hideGetMoney);
             bus.$on('hideCancelOrder', this.hideCancelOrder);
             bus.$on('showCancelOrder', this.showCancelOrder);
+            bus.$on('changeCheckState', this.changeCheckState);
             this.getRoomsList();
             this.getCategories()
                 .then(() => {
@@ -130,6 +131,7 @@
             bus.$off('hideGetMoney', this.hideGetMoney);
             bus.$off('hideCancelOrder', this.hideCancelOrder);
             bus.$off('showCancelOrder', this.showCancelOrder);
+            bus.$off('changeCheckState', this.changeCheckState);
         },
         data() {
             return {

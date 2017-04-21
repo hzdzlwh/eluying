@@ -1,9 +1,6 @@
 <template>
     <div class="acc-search" v-clickoutside="hideSearch">
-        <div class="eluyun_search-light_outer spriteImg acc-search-switch" v-if="!searchVisible" @click="showSearch">
-            <div class="eluyun_search-light"></div>
-        </div>
-        <div class="acc-search-wrapper" v-if="searchVisible">
+        <div class="acc-search-wrapper">
             <div class="eluyun_search-grey_outer spriteImg acc-search-btn" v-if="searchKeyword === ''">
                 <div class="eluyun_search-grey"></div>
             </div>
@@ -61,8 +58,8 @@
     .acc-search {
         position: absolute;
         right: 242px;
-        top: -42px;
-        z-index: 1061;
+        top: 13px;
+        z-index: 1039;
     }
     .acc-search-switch, .acc-search-btn {
         cursor: pointer;
@@ -71,15 +68,10 @@
     .acc-search-keyword {
         display: block;
         width: 280px;
-        height: 24px;
-        background: #fff;
-        color: #666;
-        border-radius: 2px;
         position: absolute;
         right: -5px;
         top: -3px;
         z-index: -1;
-        border: none;
         padding: 0 8px;
     }
     .acc-search-results {
@@ -177,7 +169,6 @@
                 ORDER_STATUS,
                 page: 1,
                 searchResults: [],
-                searchVisible: false,
                 searchKeyword: '',
                 limit: 4,
                 resultsVisible: false,
@@ -224,7 +215,7 @@
             },
             showOrder(id) {
                 this.resultsVisible = false;
-                this.$emit('showOrder', { type: -1, orderId: id });
+                this.$emit('onShowDetail', { type: -1, orderId: id });
             }
         },
         directives: {
