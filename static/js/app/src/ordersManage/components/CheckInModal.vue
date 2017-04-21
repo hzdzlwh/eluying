@@ -112,7 +112,7 @@
                 this.roomsList.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
-                            modal.somethingAlert('一间房最多添加20个入住人');
+                            modal.alert('一间房最多添加20个入住人');
                             return false;
                         }
                         if (item.idCardList) {
@@ -134,7 +134,7 @@
             finishCheckIn() {
                 const selectedRoom = this.roomsList.filter(room => { return room.selected; });
                 if (selectedRoom.length <= 0) {
-                    modal.somethingAlert('请选择入住的房间！');
+                    modal.alert('请选择入住的房间！');
                     return false;
                 }
                 let roomPersonValid = true;
@@ -148,7 +148,7 @@
                     }
                 });
                 if (!roomPersonValid) {
-                    modal.somethingAlert('请完善入住人信息！');
+                    modal.alert('请完善入住人信息！');
                     return false;
                 }
                 const subOrderIds = [];

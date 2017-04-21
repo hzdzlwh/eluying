@@ -232,7 +232,7 @@
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
                     nodeId: 0,
-                    nodeType: 1
+                    nodeType: 0
                 })
                     .then(res => {
                         this.quickDiscounts = res.data.list.map(item => {

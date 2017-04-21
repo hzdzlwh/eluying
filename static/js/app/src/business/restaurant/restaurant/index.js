@@ -41,7 +41,7 @@ $(function() {
                 http.get('/catering/modifyRestaurant',
                     { restId: this.restIdWillDeleted })
                     .then(result => {
-                        modal.somethingAlert('删除成功');
+                        modal.alert('删除成功');
                         this.getRestaurants();
                     });
             },
@@ -83,7 +83,7 @@ $(function() {
                 })
                     .then(result => {
                         if (result.code !== 1) {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         } else {
                             item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
                         }
@@ -224,7 +224,7 @@ $(function() {
                             this.resturantNotice = '';
                             this.submitted = false;
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                     });
             },

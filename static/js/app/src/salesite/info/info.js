@@ -118,7 +118,7 @@ $(function() {
             },
             uploadNewImg() {
                 if (this.imgUrls.length >= 20) {
-                    modal.somethingAlert('上传图片数量已达上限!');
+                    modal.alert('上传图片数量已达上限!');
                     return false;
                 }
                 this.fileUpload(url => {
@@ -144,7 +144,7 @@ $(function() {
             },
             saveMessage() {
                 if (this.countyType < 0) {
-                    modal.somethingAlert('请把信息填写完整');
+                    modal.alert('请把信息填写完整');
                     return;
                 }
                 http.post('/directNet/editBasicInfo', {
@@ -160,7 +160,7 @@ $(function() {
                     version: 13,
                 })
                     .then(result => {
-                        modal.somethingAlert('保存成功');
+                        modal.alert('保存成功');
                     });
             },
             cancel() {

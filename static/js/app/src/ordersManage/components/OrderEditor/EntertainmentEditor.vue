@@ -215,11 +215,11 @@ export default {
         },
         addItem() {
             if (this.enterItems.length >= 99) {
-                modal.somethingAlert('一次做多添加99个娱乐项目!');
+                modal.alert('一次做多添加99个娱乐项目!');
                 return false;
             }
             if (this.enterList.length <= 0) {
-                modal.somethingAlert('请到"网络设置－业务设置"中添加娱乐项目！');
+                modal.alert('请到"网络设置－业务设置"中添加娱乐项目！');
                 return false;
             }
 

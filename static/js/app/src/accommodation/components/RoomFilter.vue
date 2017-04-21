@@ -105,10 +105,10 @@
             categories: Array
         },
         data() {
-            return{
+            return {
                 visible: false,
                 categoriesTemp: []
-            }
+            };
         },
         methods: {
             toggleSelect() {
@@ -135,16 +135,16 @@
         },
         computed: {
             allSelected: {
-                get: function () {
-                    for (let i = 0; i < this.categoriesTemp.length; i++) {
+                get: function() {
+                    for (let i = 0; i < this.categoriesTemp.length; i ++) {
                         if (this.categoriesTemp[i].selected === false) {
                             return false;
                         }
                     }
                     return true;
                 },
-                set: function (val) {
-                    for (let i = 0; i < this.categoriesTemp.length; i++) {
+                set: function(val) {
+                    for (let i = 0; i < this.categoriesTemp.length; i ++) {
                         this.categoriesTemp[i].selected = val;
                     }
                 }
@@ -153,5 +153,5 @@
         directives: {
             Clickoutside
         }
-    }
+    };
 </script>

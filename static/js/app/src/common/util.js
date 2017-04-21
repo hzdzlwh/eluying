@@ -32,13 +32,13 @@ var util = {
     errorHandler: function(result, msg){
         var modal = require("modal");
         if (result.code != 1) {
-            modal.somethingAlert(result.msg);
+            modal.alert(result.msg);
             return false;
         } else {
             if (msg) {
-                modal.somethingAlert(msg)
+                modal.alert(msg)
             } else {
-                modal.somethingAlert("操作成功");
+                modal.alert("操作成功");
             }
             return true;
         }

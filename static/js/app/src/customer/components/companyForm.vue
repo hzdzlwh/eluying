@@ -277,22 +277,22 @@ export default {
         },
         customerDate: function() {
             if (!this.formdata.companyName) {
-                modal.somethingAlert('请输入企业名称');
+                modal.alert('请输入企业名称');
                 return;
             }
             if (this.formdata.contractNum) {
                 const re = /^[0-9a-zA-Z]*$/g;
                 if (!re.test(this.formdata.contractNum)) {
-                    modal.somethingAlert('请输入正确的协议编号');
+                    modal.alert('请输入正确的协议编号');
                     return;
                 }
             }
             if (!this.formdata.contactName) {
-                modal.somethingAlert('请输入联系人');
+                modal.alert('请输入联系人');
                 return;
             }
             if (!this.formdata.contactPhone) {
-                modal.somethingAlert('请输入联系号码');
+                modal.alert('请输入联系号码');
                 return;
             }
             const data = Object.assign({}, this.formdata);
@@ -312,14 +312,14 @@ export default {
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
                 if (res.code === 1) {
-                    modal.somethingAlert('添加成功');
+                    modal.alert('添加成功');
                     this.$emit('add');
                     if (this.formdata.id) {
-                        modal.somethingAlert('修改成功');
+                        modal.alert('修改成功');
                     }
                     this.close();
                 } else {
-                    modal.somethingAlert(res.msg);
+                    modal.alert(res.msg);
                 }
             });
         },
