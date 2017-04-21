@@ -143,6 +143,10 @@
        height: 100%;
         width: 100%;
     }
+    .calendar-picker {
+        position: absolute;
+        top: 48px;
+    }
     .calendar-header-picker {
         width: 140px;
         position: absolute;
@@ -228,7 +232,7 @@
     }
     .calendar-header {
         position: absolute;
-        top: 0;
+        top: 48px;
         right: 0;
         left: 140px;
         z-index: 1;
@@ -283,7 +287,7 @@
     }
     .calendar-body {
         position: absolute;
-        top: 80px;
+        top: 128px;
         bottom: 0;
         width: 100%;
     }
