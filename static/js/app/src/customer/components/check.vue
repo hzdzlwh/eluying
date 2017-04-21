@@ -42,7 +42,6 @@
     overflow-x: visible;
     position: relative;
     width: 410px;
-    height: 245px;
     margin-top: 0!important;
     position: absolute;
     top: 50%;
@@ -114,7 +113,7 @@ export default {
     props: {
         visible: Boolean,
         type: {
-            default: 2, // 0充值，1退款，2挂帐
+            default: 2, // 0充值，1退款，2挂账
             type: Number
         },
         data: {
@@ -140,13 +139,13 @@ export default {
                 url: ' /contractCompany/refund',
                 msg: '退款'
             }, {
-                name: '挂帐结算',
+                name: '挂账结算',
                 name1: '结算金额：',
                 name2: '支付方式：',
                 url: '/contractCompany/settle',
                 msg: '结算'
             }, {
-                name: '挂帐结算',
+                name: '挂账结算',
                 name1: '结算金额(退款)：',
                 name2: '支付方式：',
                 url: '/contractCompany/settle',

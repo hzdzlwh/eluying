@@ -33,7 +33,7 @@
         <div class="footer-container">
             <span class="orders-total">共计<b>{{count}}个企业</b></span>
             <span class="orders-total">充值金额<b>¥{{totalRechargeFee}}</b></span>
-            <span class="orders-total">挂帐金额<b>¥{{totalLedgerFee}}</b></span>
+            <span class="orders-total">挂账金额<b>¥{{totalLedgerFee}}</b></span>
             <div class="dd-pagination-container">
                 <DdPagination @currentchange="handlePageChange" :current-page="currentPage" :page-count="pages">
                 </DdPagination>
@@ -200,10 +200,9 @@ export default {
             }, {
                 title: '折扣',
                 render: (h, row) => < span title = {
-                        row.discount &&
-                        row.discounts.map(function(item) {
+                        row.discounts ? row.discounts.map(function(item) {
                             return item.nodeName + '-' + item.discount + '折';
-                        }).join('\n')
+                        }).join('\n') : ''
                     } > {
                         row.discounts &&
                         row.discounts.length ? row.discounts[0].nodeName + '-' + row.discounts[0].discount + '折' + (row.discounts.length === 1 ? '' : '...') : '无'
@@ -230,15 +229,15 @@ export default {
             }, {
                 title: '操作',
                 render: (h, row) =>
-                    < span >
-                    < span onClick = {
+                    <span>
+                    <span onClick = {
                         () => this.openDetailDialog(row, 0, 1)
-                    } > 详情 < /span> / < span onClick = {
+                    } > 详情 </span> / < span onClick = {
                         () => this.openDetailDialog(row, 0, 2)
-                    } > 查单 < /span> {
-                    (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? < span onClick = {
+                    } > 查单 </span> {
+                    (row.ledgerFee !== 0 && this.contral.COMPANY_CHARGE_ID) ? <span onClick = {
                         () => this.openDetailDialog(row, 1, 2)
-                    } > / 结算 < /span > : ''
+                    }> / 结算 </span> : ''
             } < /span >,
                 width: '140px'
             }],
@@ -252,20 +251,20 @@ export default {
             selecttype: 2,
             CustomerStatus: 2,
             formCustomerType: [{
-                name: '可挂帐',
+                name: '可挂账',
                 value: 1
             }, {
-                name: '不可挂帐',
+                name: '不可挂账',
                 value: 0
             }],
             optionsCustomer: [{
                 name: '全部企业客户',
                 value: 2
             }, {
-                name: '可挂帐',
+                name: '可挂账',
                 value: 1
             }, {
-                name: '不可挂帐',
+                name: '不可挂账',
                 value: 0
             }],
             check: {
@@ -327,7 +326,7 @@ export default {
                     orderType: -1,
                     type: 1,
                     origin: 1,
-                    originRelatedId: this.detailData.cid
+                    originRelatedId: date.cid
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
                     if (res.code === 1) {
@@ -362,7 +361,7 @@ export default {
                                     name: '退款至企业'
                                 });
                             } else {
-                                if (res.data.contractCompany.companyPay) {
+                                if (res.data.contractCompany && res.data.contractCompany.companyPay) {
                                     moreChannel.push({
                                         id: -15,
                                         name: '企业扣款'
