@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/1/25.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var floatInfo = require("floatInfo");
@@ -16,37 +16,19 @@ var shopList = {
 
     //读取商超列表
     loadShopList: function () {
-        /*$.ajax({
-            url: AJAXService.getUrl('getShopList'),
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
+        http.get('getShopList',{})
+            .then(function (result) {
                 shopList.list = result.data.list;
                 shopList.render();
-            }
-        });*/
-        AJAXService.ajaxWithToken('get','getShopList',{},function (result) {
-            shopList.list = result.data.list;
-            shopList.render();
-        });
+            });
     },
 
     loadShopCategory: function() {
-        /*$.ajax({
-            url: AJAXService.getUrl('getShopCategory'),
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
+        http.get('getShopCategory',{})
+            .then(function (result) {
                 shopList.categoryList = result.data.list;
                 shopList.renderCategory();
-            }
-        });*/
-        AJAXService.ajaxWithToken('get','getShopCategory',{},function (result) {
-            shopList.categoryList = result.data.list;
-            shopList.renderCategory();
-        });
+            });
     },
 
     render: function() {
@@ -88,7 +70,7 @@ var shopList = {
     deleteGood: function () {
         var id = $(".mainActive").attr('data-id');
         /*$.ajax({
-            url: AJAXService.getUrl("deleteGood"),
+            url: http.getUrl("deleteGood"),
             data: {id: id},
             success: function (result) {
                 if (!util.errorHandler(result)) {
@@ -103,21 +85,19 @@ var shopList = {
                 shopList.render();
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             }
         });*/
-        AJAXService.ajaxWithToken('get','deleteGood',{id: id},function (result) {
-            if (!util.errorHandler(result)) {
-                return;
-            }
-            $.each(shopList.list, function (index, element) {
-                if (element.id == id) {
-                    shopList.list.splice(index, 1);
-                    return false; //等于break
-                }
+        http.get('deleteGood',{id: id})
+            .then(function (result) {
+                $.each(shopList.list, function (index, element) {
+                    if (element.id == id) {
+                        shopList.list.splice(index, 1);
+                        return false; //等于break
+                    }
+                });
+                shopList.render();
             });
-            shopList.render();
-        });
     },
 
     renderCategory: function() {

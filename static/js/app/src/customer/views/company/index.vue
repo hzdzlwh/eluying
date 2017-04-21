@@ -135,7 +135,7 @@ import {
     DdOption,
     DdTable
 } from 'dd-vue-component';
-import http from '../../../common/AJAXService';
+import http from '../../../common/http';
 import company from '../../components/companyForm.vue';
 import check from '../../components/check.vue';
 import detail from '../../components/detail.vue';
@@ -323,7 +323,7 @@ export default {
         openDetailDialog: function(date, type, checkType) {
             if (type) {
                 const dataobject = {
-                    orderType: - 1,
+                    orderType: -1,
                     type: 1,
                     origin: 1,
                     originRelatedId: date.cid
@@ -349,21 +349,21 @@ export default {
                             // }
                             this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
                                 const id = element.id;
-                                return !(id === - 6 || id === - 7 || id === - 11 || id === - 12);
+                                return !(id === -6 || id === -7 || id === -11 || id === -12);
                             }));
                         }
                         if (checkType === 2) {
                             if (date.ledgerFee < 0) {
-                                date.ledgerFee = - date.ledgerFee;
+                                date.ledgerFee = -date.ledgerFee;
                                 this.check.type = 3;
                                 moreChannel.push({
-                                    id: - 15,
+                                    id: -15,
                                     name: '退款至企业'
                                 });
                             } else {
                                 if (res.data.contractCompany && res.data.contractCompany.companyPay) {
                                     moreChannel.push({
-                                        id: - 15,
+                                        id: -15,
                                         name: '企业扣款'
                                     });
                                 }
@@ -407,7 +407,7 @@ export default {
         outPutText(num) {
             const paramsObj = this.getParams();
             paramsObj.exportType = num;
-            const host = http.getUrl2('/contractCompany/exportCompanyList');
+            const host = http.getUrl('/contractCompany/exportCompanyList');
             const pa = http.getDataWithToken(paramsObj);
             // pa.map = JSON.parse(pa.map);
             const params = http.paramsToString(pa);

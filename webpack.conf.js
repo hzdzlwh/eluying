@@ -1,17 +1,17 @@
 /**
  * Created by lingchenxuan on 16/6/12.
  */
-var webpack = require('webpack'),
-    config = require('./config'),
-    path = require('path');
-var webpackConf =  {
+var webpack = require('webpack');
+var config = require('./config');
+var path = require('path');
+var webpackConf = {
     devtool: 'inline-source-map',
     plugins: [
         new webpack.ProvidePlugin({
             '$': 'jquery',
             'jQuery': 'jquery'
         }),
-        new webpack.optimize.CommonsChunkPlugin('common.js'),
+        new webpack.optimize.CommonsChunkPlugin('common.js')
     ],
     entry: config.js,
     output: {
@@ -24,16 +24,23 @@ var webpackConf =  {
     },
     module: {
         preLoaders: [
-            { test: /\.js$/, loader: 'eslint', include: path.join(__dirname, './static/js/app/src/customer') },
-            { test: /\.vue$/, loader: 'eslint', include: path.join(__dirname, './static/js/app/src/customer') }
+            {
+                test: /\.(js|vue)$/,
+                loader: 'eslint',
+                include: [path.join(__dirname, './static/js/app/src/customer'), path.join(__dirname, './static/js/app/src/ordersManage')]
+            }
         ],
         loaders: [
-            {test: /\.js$/, loader: 'babel', include: [path.join(__dirname, './static/js/app/src'), path.join(__dirname, './node_modules/dd-vue-component/src')]},
-            {test: /\.html$/,  loader: 'raw-loader', exclude: [ path.join(__dirname, './view')] },
-            {test: /\.vue$/, loader: 'vue'},
-            {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
-            {test: /\.css$/, loaders: ['style', 'css']},
-            {test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000'}
+            {
+                test: /\.js$/,
+                loader: 'babel',
+                include: [path.join(__dirname, './static/js/app/src'), path.join(__dirname, './node_modules/dd-vue-component/src')]
+            },
+            { test: /\.html$/, loader: 'raw-loader', exclude: [path.join(__dirname, './view')] },
+            { test: /\.vue$/, loader: 'vue' },
+            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+            { test: /\.css$/, loaders: ['style', 'css'] },
+            { test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000' }
         ]
     },
     vue: {
@@ -54,7 +61,7 @@ var webpackConf =  {
             leftMenu: path.join(__dirname, './static/js/app/src/common/leftMenu'),
             util: path.join(__dirname, './static/js/app/src/common/util.js'),
             logout: path.join(__dirname, './static/js/app/src/common/logout.js'),
-            AJAXService: path.join(__dirname, './static/js/app/src/common/AJAXService.js'),
+            http: path.join(__dirname, './static/js/app/src/common/http.js'),
             accommodationPriceList: path.join(__dirname, './static/js/app/src/business/price/accommodationPriceList.js'),
             foodETPriceList: path.join(__dirname, './static/js/app/src/business/price/foodETPriceList.js'),
             trToggle: path.join(__dirname, './static/js/app/src/common/trToggle.js'),
@@ -71,7 +78,7 @@ var webpackConf =  {
             iframe: path.join(__dirname, './static/js/lib/jquery.iframe-transport.js'),
             networkAction: path.join(__dirname, './static/js/app/src/common/networkAction.js'),
             dsy: path.join(__dirname, './static/js/app/src/common/dsy.js'),
-            angular: path.join(__dirname, './node_modules/angular/angular.min.js'),
+            angular: path.join(__dirname, './node_modules/angular/angular.min.js')
         }
     }
 };

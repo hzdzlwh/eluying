@@ -1,7 +1,7 @@
-var AJAXService = require("AJAXService");
+import http from './http';
 var logout = {
     logout: function() {
-        $.get(AJAXService.getUrl2("logoutUrl"));
+        $.get(http.getUrl("logoutUrl"));
         localStorage.clear();
         var keys = document.cookie.match(/[^ =;]+(?=\=)/g); 
 		if (keys) {

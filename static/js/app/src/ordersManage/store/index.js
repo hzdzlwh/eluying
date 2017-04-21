@@ -3,7 +3,7 @@
  */
 import Vuex from 'vuex';
 import Vue from 'vue';
-import AJAXService from '../../common/AJAXService';
+import http from '../../common/http';
 import types from './types';
 import { ORDER_TYPE } from '../constant';
 
@@ -36,10 +36,10 @@ const store = new Vuex.Store({
     actions: {
         [types.LOAD_SHOP_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/shop/list', {})
+                http.get('/shop/list', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let shopList = [];
+                            const shopList = [];
                             res.data.list.forEach((d) => {
                                 shopList.push(d);
                             });
@@ -49,14 +49,14 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ENTER_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/entertainment/getCategoryListPC' , {})
+                http.get('/entertainment/getCategoryListPC', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let enterList = [];
+                            const enterList = [];
                             res.data.list.map(el => {
                                 if (el.categoryList && el.categoryList.length > 0) {
                                     el.categoryList.map(item => {
@@ -73,11 +73,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getOrderDetail', { orderId })
+                http.get('/order/getOrderDetail', { orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -86,11 +86,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ROOM_BUSINESS_INFO]({ state, commit }, { businessType }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getRoomBusinessInfo', { orderId: state.orderDetail.orderId, businessType })
+                http.get('/order/getRoomBusinessInfo', { orderId: state.orderDetail.orderId, businessType })
                     .then((res) => {
                         if (res.code === 1) {
                             res.data.businessType = businessType;
@@ -100,11 +100,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_CATER_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/catering/getCaterOrderDetail', { caterOrderId: orderId })
+                http.get('/catering/getCaterOrderDetail', { caterOrderId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -113,11 +113,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_ENTER_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getEnterOrderDetail', { enterOrderId: orderId })
+                http.get('/order/getEnterOrderDetail', { enterOrderId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -126,11 +126,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_GOODS_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getGoodsOrderDetail', { goodsOrderId: orderId })
+                http.get('/order/getGoodsOrderDetail', { goodsOrderId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -139,11 +139,11 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.GET_ROOM_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
-                AJAXService.ajaxWithToken('get', '/order/getRoomOrderDetail', { serviceId: orderId })
+                http.get('/order/getRoomOrderDetail', { serviceId: orderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });
@@ -152,9 +152,10 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
-        [types.GET_ORDER_DETAIL]({ dispatch }, { orderId, orderType }) {
+        [types.GET_ORDER_DETAIL]({ dispatch, commit }, { orderId, orderType }) {
+            commit(types.SET_ORDER_DETAIL, { orderDetail: {}});
             switch (orderType) {
                 case ORDER_TYPE.COMBINATION:
                     return dispatch(types.LOAD_ORDER_DETAIL, { orderId });

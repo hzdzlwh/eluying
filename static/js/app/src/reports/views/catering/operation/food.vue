@@ -21,7 +21,7 @@
 </style>
 <script>
     import {mapState} from 'vuex';
-    import AJAXService from '../../../../common/AJAXService';
+    import http from '../../../../common/http';
     import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable, DdSelect, DdOption } from 'dd-vue-component';
@@ -63,16 +63,16 @@
                         nodeId: this.restaurantId
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         },
         methods: {
             getRestaurantList() {
-                AJAXService.ajaxWithToken('get', '/restaurant/listSimple', {})
+                http.get('/restaurant/listSimple', {})
                     .then(res => {
                         if (res.code === 1) {
                             this.restaurantList = res.data.list;
@@ -84,7 +84,7 @@
                     })
             },
             getFoodConsumeDetail() {
-                AJAXService.ajaxWithToken('get', '/stat/getFoodConsumeDetail', {
+                http.get('/stat/getFoodConsumeDetail', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     nodeId: this.restaurantId

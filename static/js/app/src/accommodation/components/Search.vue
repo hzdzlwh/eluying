@@ -168,11 +168,11 @@
 </style>
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import { ORDER_STATUS } from '../const';
     export default{
-        data(){
+        data() {
             return{
                 ORDER_STATUS,
                 page: 1,
@@ -197,7 +197,7 @@
             },
             search(page) {
                 this.page = page;
-                AJAXService.ajaxWithToken('GET', 'orderSearchPCUrl', {
+                http.get('orderSearchPCUrl', {
                     keyword: this.searchKeyword,
                     page: this.page,
                     limit: this.limit,
@@ -225,7 +225,7 @@
             },
             showOrder(id) {
                 this.resultsVisible = false;
-                this.$emit('showOrder', id);
+                this.$emit('showOrder', { type: -1, orderId: id });
             }
         },
         directives: {

@@ -38,7 +38,7 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import AJAXService from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import { setBar } from '../../utils/chartHelper';
     export default{
@@ -132,7 +132,7 @@
         },
         methods: {
             getSaleStatistics() {
-                AJAXService.ajaxWithToken('get', '/stat/getStatisticsByType', {
+                http.get('/stat/getStatisticsByType', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     statTypes: JSON.stringify([1])
@@ -147,7 +147,7 @@
             getSalesRecordList(page) {
                 this.page = page ? page : this.page;
 
-                AJAXService.ajaxWithToken('get', '/stat/getSalesRecordList', {
+                http.get('/stat/getSalesRecordList', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     page: this.page,
@@ -164,7 +164,7 @@
                     });
             },
             getEmployeeList() {
-                AJAXService.ajaxWithToken('get', '/user/getEmployeeList', {})
+                http.get('/user/getEmployeeList', {})
                     .then(res => {
                         if (res.code === 1) {
                             this.employeeList = [...this.employeeList, ...res.data.list];
@@ -172,7 +172,7 @@
                 })
             },
             getChannels() {
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 2, isAll: true })
+                http.get('/user/getChannels', { type: 2, isAll: true })
                     .then(res => {
                         if (res.code === 1) {
                             this.origins = [...this.origins, ...res.data.list];
@@ -188,10 +188,10 @@
                         endDate: this.date.endDate
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         }

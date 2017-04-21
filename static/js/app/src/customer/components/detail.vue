@@ -170,7 +170,7 @@
         DdDropdownItem,
         DdDatepicker
     } from 'dd-vue-component';
-    import http from '../../common/AJAXService';
+    import http from '../../common/http';
     import modal from '../../common/modal';
     import auth from '../../common/auth';
 
@@ -361,7 +361,7 @@
             outPutText(num) {
                 const paramsObj = this.getParams();
                 paramsObj.exportType = num;
-                const host = http.getUrl2(OutputUrl[this.type]);
+                const host = http.getUrl(OutputUrl[this.type]);
                 const pa = http.getDataWithToken(paramsObj);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;

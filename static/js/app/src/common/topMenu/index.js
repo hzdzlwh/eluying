@@ -15,9 +15,11 @@ var topMenu = {
             inventory:'库存管理',
             inventoryDisplay: (option && option.showInventory === false) ? 'none' : 'block',
             price:'价格维护',
+            other:'其他设置',
             categoryPath:'/view/settings/business/category/'+ path +'.html',
             inventoryPath:'/view/settings/business/inventory/'+ path +'.html',
-            pricePath:'/view/settings/business/price/'+ path +'.html'
+            pricePath:'/view/settings/business/price/'+ path +'.html',
+            otherPath: '/view/settings/business/other/'+ path +'.html'
         };
         if (path === 'food') {
             data.categoryPath = '/view/settings/business/restaurant/dishes.html?' + query;
