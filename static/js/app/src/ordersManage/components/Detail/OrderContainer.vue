@@ -989,7 +989,7 @@
     import { mapActions } from 'vuex';
     import type from '../../store/types';
     import http from '../../../common/http';
-    import Insurance from '../../../accommodation/components/Insurance.vue';
+    import Insurance from './Insurance.vue';
     import types from '../../store/types';
     import modal from '../../../common/modal';
     export default{

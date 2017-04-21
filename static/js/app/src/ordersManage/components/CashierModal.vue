@@ -279,7 +279,7 @@
                     params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
                 } else {
                     let operationType;
-                    let penalty;
+                    let penalty; // eslint-disable-line
                     if (this.type === 'checkOut') {
                         operationType = 1;
                         penalty = this.business.penalty;

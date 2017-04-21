@@ -551,7 +551,7 @@
                 const param = {
                     roomId: room.roomType,
                     startDate: startDate,
-                    endDate: endDate,
+                    endDate: endDate
                 };
                 if (room.roomOrderId) {
                     param.roomOrderId = room.roomOrderId;

@@ -17,9 +17,6 @@
     import ShopOrder from './ShopOrder.vue';
     import EntertainmentOrder from './EntertainmentOrder.vue';
     import AccommodationOrder from './AccommodationOrder.vue';
-    import bus from '../../../common/eventBus';
-    import http from 'http';
-    import modal from 'modal';
     export default{
         data() {
             return {
