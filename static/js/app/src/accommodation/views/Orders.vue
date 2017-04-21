@@ -3,5 +3,5 @@
 <script>
     export default {
 
-    }
+    };
 </script>
