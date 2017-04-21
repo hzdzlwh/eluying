@@ -63,7 +63,7 @@ var header = {
                             localStorage.setItem('campId', campId);
                             localStorage.setItem('campName', campName);
                             auth.saveUserInfo(data.data);
-                            window.location.href = '/view/accommodation/calender/calender.html';
+                            window.location.href = '/view/accommodation';
                         });
                 });
             });

@@ -394,7 +394,7 @@ $(document).ready(function(){
                                 localStorage.setItem("campId", el.campId);
                             }
                         });
-                        setTimeout("window.location.href = '/view/accommodation/calender/calender.html';", 1000);
+                        setTimeout("window.location.href = '/view/accommodation';", 1000);
                     }
                     auth.saveUserInfo(data.data);
                     localStorage.removeItem('maintenanceClosed');

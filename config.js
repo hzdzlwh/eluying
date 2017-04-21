@@ -43,6 +43,7 @@ module.exports = {
     testServer: '//www.dingdandao.com:1443',
     SPA: [
         { url: '/view/reports', path: '/view/reports/index.html' },
-        { url: '/view/customer', path: '/view/customer/index.html' }
+        { url: '/view/customer', path: '/view/customer/index.html' },
+        { url: '/view/accommodation', path: '/view/accommodation/index.html' }
     ]
 };
