@@ -1,8 +1,12 @@
 <template>
     <div class="acc-container">
         <div class="acc-header">
-            <router-link to="/calendar">前台录入</router-link>
-            <router-link to="/orders">住宿订单</router-link>
+            <span class="acc-header-link">
+                <router-link to="/calendar">前台录入</router-link>
+            </span>
+            <span class="acc-header-link">
+               <router-link to="/orders">住宿订单</router-link>
+            </span>
         </div>
         <router-view></router-view>
         <order-editor
@@ -37,7 +41,7 @@
         ></Get-Money-With-Code>
     </div>
 </template>
-<style>
+<style lang="scss">
     .acc-container {
         position: absolute;
         top: 68px;
@@ -50,6 +54,22 @@
     .acc-header {
         height: 45px;
         box-shadow: 2px 0 2px 0 #dadada;
+        padding-left: 405px;
+    }
+    .acc-header-link {
+        height: 100%;
+        display: inline-block;
+        line-height: 45px;
+        margin-right: 20px;
+        a {
+            color: #999;
+            height: 100%;
+            display: inline-block;
+            &.active {
+                color: #178ce6;
+                border-bottom: 2px solid #178ce6;
+            }
+        }
     }
 </style>
 <script>
