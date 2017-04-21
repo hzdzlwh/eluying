@@ -53,7 +53,7 @@
     }
     .acc-header {
         height: 45px;
-        box-shadow: 2px 0 2px 0 #dadada;
+        box-shadow: 0 2px 2px 0 #dadada;
         padding-left: 405px;
     }
     .acc-header-link {
@@ -65,6 +65,7 @@
             color: #999;
             height: 100%;
             display: inline-block;
+            text-decoration: none;
             &.active {
                 color: #178ce6;
                 border-bottom: 2px solid #178ce6;
