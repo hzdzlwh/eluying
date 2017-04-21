@@ -8,7 +8,6 @@ const md5 = require('md5');
 
 const spin = new modal.Spin();
 const host = process.env.NODE_ENV === 'production' ? '/ws' : (process.env.serverUrl + '/ws');
-axios.defaults.baseURL = host;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.response.use(function(response) {
     spin.removePending();
