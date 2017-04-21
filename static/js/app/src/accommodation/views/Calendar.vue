@@ -26,7 +26,19 @@
 
 </style>
 <script>
-export default {
+    import Search from '../components/Search.vue';
+    import Calendar from '../components/Calendar.vue';
+    import ShopCart from '../components/ShopCart.vue';
+    export default {
+        data() {
+            return {
 
-};
+            };
+        },
+        components: {
+            Search,
+            Calendar,
+            ShopCart
+        }
+    };
 </script>

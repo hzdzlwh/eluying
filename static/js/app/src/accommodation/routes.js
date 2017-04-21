@@ -12,11 +12,11 @@ export const routes = [
     },
     {
         path: '/calendar',
-        components: Calendar
+        component: Calendar
     },
     {
         path: '/orders',
-        components: Orders
+        component: Orders
     }
 ];
 

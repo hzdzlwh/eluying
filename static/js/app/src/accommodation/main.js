@@ -12,17 +12,16 @@ import { router } from './routes';
 import Router from 'vue-router';
 
 Vue.use(Router);
+const app = new Vue({
+    store,
+    router,
+    ...App
+});
 document.addEventListener('DOMContentLoaded', () => {
     init({
         leftMenu: false,
         id: auth.ACCOMMODATION_ID,
         noAuthUrl: auth.NO_AUTH_FOR_A_URL
-    });
-
-    const app = new Vue({
-        store,
-        router,
-        ...App
     });
 
     const events = {
