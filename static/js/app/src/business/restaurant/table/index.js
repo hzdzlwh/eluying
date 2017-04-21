@@ -72,7 +72,7 @@ $(function(){
                 http.get('/catering/deleteBoardsForRestaurant',
                     { restId: restId, boardId: this.boardIdWillDeleted })
                     .then(result => {
-                        modal.somethingAlert('删除成功');
+                        modal.alert('删除成功');
                         this.getBoards();
                     });
             },

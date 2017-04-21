@@ -143,6 +143,10 @@
        height: 100%;
         width: 100%;
     }
+    .calendar-picker {
+        position: absolute;
+        top: 48px;
+    }
     .calendar-header-picker {
         width: 140px;
         position: absolute;
@@ -228,7 +232,7 @@
     }
     .calendar-header {
         position: absolute;
-        top: 0;
+        top: 48px;
         right: 0;
         left: 140px;
         z-index: 1;
@@ -283,7 +287,7 @@
     }
     .calendar-body {
         position: absolute;
-        top: 80px;
+        top: 128px;
         bottom: 0;
         width: 100%;
     }
@@ -526,6 +530,7 @@
     import http from '../../common/http';
     import modal from '../../common/modal';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
+    import bus from '../../common/eventBus';
     export default{
         props: {
             categories: Array,
@@ -698,15 +703,15 @@
                             // 修改库存
                             const index = util.DateDiff(this.startDate, status.date);
                             const oldV = this.leftMap[room.ti][index];
-                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1)
+                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1);
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                         status.actionVisible = false;
                     });
             },
             showOrder(id) {
-                this.$emit('showOrder', { type: -1, orderId: id });
+                bus.$emit('onShowDetail', { type: -1, orderId: id });
             },
             openAction(status, ev) {
                 ev.preventDefault();
@@ -724,7 +729,7 @@
                         if (result.code === 1) {
                             room.isDirty = !room.isDirty;
                         } else {
-                            modal.somethingAlert(result.msg);
+                            modal.alert(result.msg);
                         }
                     });
             }
@@ -737,5 +742,5 @@
                 this.currentAction && (this.currentAction.actionVisible = false);
             });
         }
-    }
+    };
 </script>

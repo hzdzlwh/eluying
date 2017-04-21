@@ -224,7 +224,7 @@ $(function() {
                     case 'web-c':
                         http.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 1, status: (this.c_webPayStatus === 'close' ? 1 : 0) }, function(result) {
                             if (result.code !== 1) {
-                                modal.somethingAlert(result.msg);
+                                modal.alert(result.msg);
                             } else {
                                 this.c_webPayStatus = (this.c_webPayStatus === 'open') ? 'close' : 'open';
                             }
@@ -233,7 +233,7 @@ $(function() {
                     case 'face-c':
                         http.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 2, status: (this.c_facePayStatus === 'close' ? 1 : 0) }, function(result) {
                             if (result.code !== 1) {
-                                modal.somethingAlert(result.msg);
+                                modal.alert(result.msg);
                             } else {
                                 this.c_facePayStatus = (this.c_facePayStatus === 'open') ? 'close' : 'open';
                             }
@@ -242,7 +242,7 @@ $(function() {
                     case 'immedia-c':
                         http.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 3, status: (this.c_immediaPayStatus === 'close' ? 1 : 0) }, function(result) {
                             if (result.code !== 1) {
-                                modal.somethingAlert(result.msg);
+                                modal.alert(result.msg);
                             } else {
                                 this.c_immediaPayStatus = (this.c_immediaPayStatus === 'open') ? 'close' : 'open';
                             }
@@ -251,7 +251,7 @@ $(function() {
                     case 'card-c':
                         http.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 4, status: (this.c_cardPayStatus === 'close' ? 1 : 0) }, result => {
                             if (result.code !== 1) {
-                                modal.somethingAlert(result.msg);
+                                modal.alert(result.msg);
                             } else {
                                 this.c_cardPayStatus = (this.c_cardPayStatus === 'open') ? 'close' : 'open';
                             }
@@ -260,7 +260,7 @@ $(function() {
                     case 'code-c':
                         http.ajaxWithToken('get', '/collectionMethod/useOrNotUseOnlinePay', { accountType: 2, onlineType: 5, status: (this.c_codePayStatus === 'close' ? 1 : 0) }, result => {
                             if (result.code !== 1) {
-                                modal.somethingAlert(result.msg);
+                                modal.alert(result.msg);
                             } else {
                                 this.c_codePayStatus = (this.c_codePayStatus === 'open') ? 'close' : 'open';
                             }

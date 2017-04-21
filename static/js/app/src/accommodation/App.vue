@@ -1,25 +1,14 @@
 <template>
     <div class="acc-container">
-        <Search @showOrder="showOrderDetail" />
-        <Calendar
-            @dateChange="handleDateChange"
-            @roomFilterChange="handleRoomFilter"
-            @fold="handleFold"
-            @showOrder="showOrderDetail"
-            :categories="categories"
-            :holidays="holidays"
-            :roomStatus="roomStatus"
-            :defaultStartDate="startDateStr"
-            :orderList="orderList"
-            :startDate="startDate"
-            :dateRange="dateRange"
-            :leftMap="leftMap"
-            :DAYS="DAYS"
-        />
-        <ShopCart
-            :selectedEntries="selectedEntries"
-            @changeCheckState="changeCheckState"
-        />
+        <div class="acc-header">
+            <span class="acc-header-link">
+                <router-link to="/calendar">前台录入</router-link>
+            </span>
+            <span class="acc-header-link">
+               <router-link to="/orders">住宿订单</router-link>
+            </span>
+        </div>
+        <router-view></router-view>
         <order-editor
                 :registerRooms="registerRooms"
                 :order-editor-visible="orderEditorVisible"
@@ -52,16 +41,37 @@
         ></Get-Money-With-Code>
     </div>
 </template>
-<style>
-.acc-container {
-    position: absolute;
-    top: 68px;
-    bottom: 0;
-    left: 0;
-    zoom: 1;
-    width: 100%;
-    min-width: 1200px;
-}
+<style lang="scss">
+    .acc-container {
+        position: absolute;
+        top: 68px;
+        bottom: 0;
+        left: 0;
+        zoom: 1;
+        width: 100%;
+        min-width: 1200px;
+    }
+    .acc-header {
+        height: 45px;
+        box-shadow: 0 2px 2px 0 #dadada;
+        padding-left: 405px;
+    }
+    .acc-header-link {
+        height: 100%;
+        display: inline-block;
+        line-height: 45px;
+        margin-right: 20px;
+        a {
+            color: #999;
+            height: 100%;
+            display: inline-block;
+            text-decoration: none;
+            &.active {
+                color: #178ce6;
+                border-bottom: 2px solid #178ce6;
+            }
+        }
+    }
 </style>
 <script>
     import bus from '../common/eventBus';
@@ -92,6 +102,7 @@
             bus.$on('hideGetMoney', this.hideGetMoney);
             bus.$on('hideCancelOrder', this.hideCancelOrder);
             bus.$on('showCancelOrder', this.showCancelOrder);
+            bus.$on('changeCheckState', this.changeCheckState);
             this.getRoomsList();
             this.getCategories()
                 .then(() => {
@@ -120,6 +131,7 @@
             bus.$off('hideGetMoney', this.hideGetMoney);
             bus.$off('hideCancelOrder', this.hideCancelOrder);
             bus.$off('showCancelOrder', this.showCancelOrder);
+            bus.$off('changeCheckState', this.changeCheckState);
         },
         data() {
             return {
@@ -203,7 +215,7 @@
                                 }
 
                                 if (s.s === -1) {
-                                    this.leftMap[r.ti][index] ++;
+                                    this.leftMap[r.ti][index] ++; // eslint-disable-line
                                 }
                             });
 

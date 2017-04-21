@@ -27,7 +27,7 @@ var webpackConf = {
             {
                 test: /\.(js|vue)$/,
                 loader: 'eslint',
-                include: [path.join(__dirname, './static/js/app/src/customer'), path.join(__dirname, './static/js/app/src/ordersManage')]
+                include: [path.join(__dirname, './static/js/app/src/customer'), path.join(__dirname, './static/js/app/src/ordersManage'), path.join(__dirname, './static/js/app/src/accommodation')]
             }
         ],
         loaders: [

@@ -501,11 +501,11 @@
                             this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
                             this.userOriginType = this.userSelfOrigins[0].originType;
                         } else {
-                            modal.somethingAlert(res.msg);
+                            modal.alert(res.msg);
                         }
                     });
-                this[types.LOAD_SHOP_LIST]().catch(e => { modal.somethingAlert(e.msg); });
-                this[types.LOAD_ENTER_LIST]().catch(e => { modal.somethingAlert(e.msg); });
+                this[types.LOAD_SHOP_LIST]().catch(e => { modal.alert(e.msg); });
+                this[types.LOAD_ENTER_LIST]().catch(e => { modal.alert(e.msg); });
             },
             refreshData() {
                 this.name = '';
@@ -531,7 +531,7 @@
                 let roomPersonValid = true;
 
                 if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
-                    modal.somethingAlert('请输入联系人或手机号!');
+                    modal.alert('请输入联系人或手机号!');
                     return false;
                 }
 
@@ -561,27 +561,27 @@
                 const shopGoodsItemsValid = this.shopGoodsItems.every(good => { return good.id; });
 
                 if (!valid) {
-                    modal.somethingAlert('订单信息有误，请核对信息后再提交！');
+                    modal.alert('订单信息有误，请核对信息后再提交！');
                     return false;
                 }
 
                 if (!durationValid) {
-                    modal.somethingAlert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
+                    modal.alert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
                     return false;
                 }
 
                 if (!roomPersonValid) {
-                    modal.somethingAlert('请完善入住人信息！');
+                    modal.alert('请完善入住人信息！');
                     return false;
                 }
 
                 if (!enterItemsValid) {
-                    modal.somethingAlert('请完善娱乐信息！');
+                    modal.alert('请完善娱乐信息！');
                     return false;
                 }
 
                 if (!shopGoodsItemsValid) {
-                    modal.somethingAlert('请完善商超信息！');
+                    modal.alert('请完善商超信息！');
                     return false;
                 }
 
