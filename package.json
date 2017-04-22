@@ -7,7 +7,7 @@
     "axios": "^0.16.1",
     "core-js": "^2.4.1",
     "dd-common-css": "0.2.1",
-    "dd-vue-component": "1.0.0",
+    "dd-vue-component": "1.0.1",
     "dot": "^1.0.3",
     "echarts": "^3.3.2",
     "jquery": "1.12.4",

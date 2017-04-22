@@ -104,20 +104,6 @@
             bus.$on('showCancelOrder', this.showCancelOrder);
             bus.$on('changeCheckState', this.changeCheckState);
             this.getRoomsList();
-            this.getCategories()
-                .then(() => {
-                    return this.getRoomAndStatus();
-                })
-                .then(() => {
-                    this.mapRoomsToCategory();
-                    // 去除没有房间的房型
-                    this.categories = this.categories.filter(c => c.rooms && c.rooms.length > 0);
-                    // 筛选房型标志
-                    this.categories.map(c => {
-                        this.$set(c, 'selected', true);
-                        this.$set(c, 'folded', false);
-                    });
-                });
         },
         beforeDestroy: function() {
             bus.$off('onClose', this.hideDetail);
