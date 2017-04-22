@@ -58,10 +58,10 @@ const http = {
             .then(res => {
                 if (res.data.code !== 1) {
                     if (config.notify && res.data.code !== 5) {
-                        modal.alert(res.data.msg);
+                        modal.error(res.data.msg);
                     } else if (res.data.code === 5) {
                         window.localStorage.clear();
-                        modal.alert('账号在别处登录。');
+                        modal.error('账号在别处登录。');
                         setTimeout(() => {
                             window.location.href = '/login.html';
                         }, 3000);

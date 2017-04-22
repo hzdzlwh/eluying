@@ -228,7 +228,7 @@ var monthManage = {
                 var cancelCallback = function(){
                     monthManage.showPrevMonth();
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
             } else {
                 monthManage.showPrevMonth();
             }
@@ -248,7 +248,7 @@ var monthManage = {
                 var cancelCallback = function(){
                     monthManage.showNextMonth();
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
             } else {
                 monthManage.showNextMonth();
             }
@@ -293,7 +293,7 @@ var monthManage = {
                     $(that).tab("show");
                     //TODO 把修改过的值复原 T T
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
                 return false;
             } else {
                 $("#editMonth .selected").removeClass("selected");
@@ -356,7 +356,7 @@ var monthManage = {
                     modal.clearModal(that);
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);

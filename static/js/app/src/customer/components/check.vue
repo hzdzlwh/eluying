@@ -224,7 +224,7 @@ export default {
                 const that = this;
                 let msg = '';
                 this.type === 1 ? msg = '确认进行退款吗' : this.type === 3 ? msg = '请确保金额已退！' : msg = '请确保金额已收到！';
-                modal.confirmDialog({
+                modal.confirm({
                     message: msg
                 }, () => {
                     http.get(that.content[that.type].url, getCodeData)

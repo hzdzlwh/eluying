@@ -115,7 +115,7 @@ $(function() {
                 if (!this.dishesSelected && !this.packageSelected) {
                     return
                 }
-                modal.confirmDialog({ okText: '删除', message: '您确定要删除吗？' }, this.deleteCategory)
+                modal.confirm({ okText: '删除', message: '您确定要删除吗？' }, this.deleteCategory)
             },
 
             deleteCategory: function() {
@@ -262,7 +262,7 @@ $(function() {
                 if (!this.dishesClassifySelected) {
                     return
                 }
-                modal.confirmDialog({ okText: '删除', message: '删除菜品分类后，该菜品分类下的菜都将自动放入其它' }, this.deleteClassify)
+                modal.confirm({ okText: '删除', message: '删除菜品分类后，该菜品分类下的菜都将自动放入其它' }, this.deleteClassify)
             },
             deleteClassify: function() {
                 http.post('/catering/removeDishesClassify',

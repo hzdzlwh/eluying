@@ -193,7 +193,7 @@ var roomCategoryList = {
         "click #deleteRoomButton": function () {
             var confirmCallback = roomCategoryList.deleteRoom;
             var dialogConfig = {title: "提示", message: "您确定要删除吗？"};
-            modal.confirmDialog(dialogConfig, confirmCallback);
+            modal.confirm(dialogConfig, confirmCallback);
         },
 
         //上架或下架
