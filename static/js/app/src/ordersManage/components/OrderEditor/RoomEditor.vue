@@ -81,15 +81,11 @@
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
-                          v-if="(vipDiscountDetail.vipDetail
-                                && vipDiscount < 1) || item.quickDiscountId">
+                          v-if="item.showDiscount && !item.priceModified">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
                               v-if="item.showDiscount">
                             {{item.showDiscount}}
-                        </span>
-                        <span class="discount-num" v-if="item.quickDiscountId">
-                            {{getQuickDiscountById(item.quickDiscountId).description}}{{getQuickDiscountById(item.quickDiscountId).discount}}折
                         </span>
                     </span>
                 </div>
@@ -169,26 +165,19 @@
             }
         },
         watch: {
-            order(order) {
-                // this.initRooms(order);
-            },
-            registerRooms() {
-
+            userOriginType(origin) {
+                if (this.rooms.length > 0) {
+                    this.modifyRooms(this.rooms);
+                }
             },
             vipDiscountDetail(newVal, oldVal) {
-                if (!newVal.vipDetail && !oldVal.vipDetail) {
+                if (!newVal.vipDetail || !oldVal.vipDetail) {
                     return false;
                 }
 
-                this.rooms.forEach(room => {
-                    // 快捷折扣优先级最高
-                    if (room.quickDiscountId) {
-                        return false;
-                    }
-
-                    room.price = this.getVipPrice(room);
-                    this.setDayFee(room);
-                });
+                if (newVal.vipDetail.vipId !== oldVal.vipDetail.vipId) {
+                    this.modifyRooms(this.rooms);
+                }
             }
         },
         computed: {
@@ -253,21 +242,11 @@
                 return this.quickDiscounts.find(i => id === i.id) || {};
             },
             quickDiscountIdChange(room) {
-                room.price = this.getPrice(room);
-                this.setDayFee(room);
+                this.modifyRooms([room]);
             },
             // 计算vip折扣价，如果没有vip折扣价返回原价
             getVipPrice(room) {
                 return Number((room.originPrice * this.vipDiscount).toFixed(2));
-            },
-            // 计算折扣后房间总价，考虑快捷折扣和vip折扣
-            getPrice(room) {
-                if (!room.quickDiscountId) {
-                    return this.getVipPrice(room);
-                }
-
-                const quickDiscount = this.quickDiscounts.find(i => i.id === room.quickDiscountId);
-                return Number((room.originPrice * (quickDiscount.discount / 10)).toFixed(2));
             },
             initRooms() {
                 const order = this.order;
@@ -526,6 +505,8 @@
                                 currentRoom.priceScale = item.datePriceList.map(i => {
                                     return i.dateFee / item.totalFee;
                                 });
+                                currentRoom.showDiscount = item.showDiscount;
+                                currentRoom.priceModified = false;
                             });
                         }
                     });
@@ -534,6 +515,7 @@
                 // 手动修改价格需要把快捷折扣置为无
                 room.quickDiscountId = '';
                 this.setDayFee(room);
+                room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             // 设置每日房价
             setDayFee(room) {
