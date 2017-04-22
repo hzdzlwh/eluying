@@ -315,7 +315,7 @@ var seasonManage = {
                     modal.clearModal(that);
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);

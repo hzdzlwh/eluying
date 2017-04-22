@@ -62,26 +62,8 @@ function alert(message) {
     }, 2500);
 }
 
-function ajaxWaiting(message) {
-    $('body').prepend(
-        "<div class='modal fade' role='dialog' id='waitingModal'>" +
-        "<div class='modal-dialog modal-w392'>" +
-        "<div class='modal-content clearfloat'>" +
-        "<div class='modal-header'>" +
-        '<p>' + '请稍后' + '</p>' +
-        '</div>' +
-        "<div class='modal-body'>" +
-        '<p>' + message + '</p>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>');
-    $('#errorAlert').modal('show');
-    centerModals();
-}
-
 // 确认弹出框
-function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
+function confirm(dialogConfig, confirmCallback, cancelCallback) {
     var title = dialogConfig.title || '提醒';
     var message = dialogConfig.message || '您确定要这么做吗';
     var okText = dialogConfig.okText || '确认';
@@ -98,7 +80,7 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
         $('body').prepend('<div class="confirm-dialog-container"></div>');
     }
     $('.confirm-dialog-container').html(
-        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
+        "<div class='modal fade' role='dialog' id='confirm'>" +
         "<div class='modal-dialog' style='width: 300px'>" +
         "<div class='modal-content clearfloat'>" +
         header +
@@ -112,20 +94,20 @@ function confirmDialog(dialogConfig, confirmCallback, cancelCallback) {
         '</div>' +
         '</div>' +
         '</div>');
-    $('#confirmDialog').modal('show');
+    $('#confirm').modal('show');
     centerModals();
     hasOk !== false && $('#confirmDialogOk').on('click', function() {
-        $('#confirmDialog').modal('hide');
+        $('#confirm').modal('hide');
         // bootstrap 去遮罩要再fade动画完成后执行，时间是300ms
         confirmCallback && setTimeout(confirmCallback, 301);
         // $(".modal-backdrop").remove();
-        // $("#confirmDialog").remove();
+        // $("#confirm").remove();
     });
     hasCancel !== false && $('#confirmDialogCancel').on('click', function() {
-        $('#confirmDialog').modal('hide');
+        $('#confirm').modal('hide');
         cancelCallback && setTimeout(cancelCallback, 301);
         // $(".modal-backdrop").remove();
-        // $("#confirmDialog").remove();
+        // $("#confirm").remove();
     });
 }
 
@@ -158,10 +140,47 @@ class Spin {
     }
 }
 
+class Notify {
+    constructor() {
+        this.createContainer();
+        this.duration = 3000;
+    }
+
+    createContainer() {
+        this.container = document.createElement('div');
+        this.container.className = 'dd-notifies';
+        document.body.appendChild(this.container);
+    }
+
+    add(msg) {
+        const notify = document.createElement('div');
+        notify.className = 'dd-notify dd-notify-active';
+        const msgNode = document.createTextNode(msg);
+        notify.appendChild(msgNode);
+        this.container.appendChild(notify);
+        setTimeout(() => notify.classList.remove('dd-notify-active'), 0);
+        setTimeout(() => {
+            notify.classList.add('dd-notify-active');
+            setTimeout(() => this.container.removeChild(notify), 240);
+        }, this.duration);
+    }
+}
+
+let notifyInstance;
+function getNotifyInstance() {
+    notifyInstance = notifyInstance || new Notify();
+    return notifyInstance;
+}
+
+function error(msg) {
+    const notify = getNotifyInstance();
+    notify.add(msg);
+}
+
+exports.error = error;
 exports.Spin = Spin;
 exports.centerModals = centerModals;
 exports.clearModal = clearModal;
 exports.modalInit = modalInit;
-exports.confirmDialog = confirmDialog;
-exports.ajaxWaiting = ajaxWaiting;
+exports.confirm = confirm;
 exports.alert = alert;

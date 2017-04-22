@@ -148,7 +148,7 @@ var shopList = {
         'click .deleteGoodButton': function () {
             var confirmCallback = shopList.deleteGood;
             var dialogConfig = {title: "提示", message: "您确定要删除吗？"};
-            modal.confirmDialog(dialogConfig, confirmCallback);
+            modal.confirm(dialogConfig, confirmCallback);
         }
     }
 

@@ -95,7 +95,7 @@
                 <div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart, 'glyph-book': g.roomState === 0, 'glyph-ing': g.roomState === 1, 'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
-                     @click="showOrder(g.orderId)"
+                     @click="showOrder(g)"
                      :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}">
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
@@ -710,8 +710,8 @@
                         status.actionVisible = false;
                     });
             },
-            showOrder(id) {
-                bus.$emit('onShowDetail', { type: -1, orderId: id });
+            showOrder(room) {
+                bus.$emit('onShowDetail', { type: room.orderType, orderId: room.orderType === -1 ? room.orderId : room.roomOrderId });
             },
             openAction(status, ev) {
                 ev.preventDefault();

@@ -95,7 +95,7 @@ var foodCategoryList = {
         "click #deleteFoodButton": function () {
             confirmCallback = foodCategoryList.deleteFoodCategory;
             dialogConfig = {title: "提示", message: "您确定要删除吗？"};
-            modal.confirmDialog(dialogConfig, confirmCallback);
+            modal.confirm(dialogConfig, confirmCallback);
         },
 //上架或下架
         "click .modifyStateButton": function () {

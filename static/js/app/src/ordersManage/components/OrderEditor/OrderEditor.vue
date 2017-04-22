@@ -52,14 +52,14 @@
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))">
-                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
-                                                       :value="origin.originType" :label="origin.name">
+                                            <dd-option :key="origin" v-for="origin in userSelfOrigins"
+                                                       :value="origin" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
                                             <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
                                                              :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType"
-                                                           :value="origin.originType" :label="`企业(${origin.name})`">
+                                                <dd-option v-for="origin in item.origins" :key="origin"
+                                                           :value="origin" :label="`企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
@@ -86,6 +86,7 @@
                                     :categories="categories"
                                     :vipDiscountDetail="vipDiscountDetail"
                                     :checkState="checkState"
+                                    :userOriginType="userOriginType"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
@@ -261,7 +262,7 @@
             return {
                 name: '',
                 phone: '',
-                userOriginType: '-1~-1',
+                userOriginType: undefined,
                 userOrigins: [],
                 userSelfOrigins: [],
                 userGroupOrigins: [],
@@ -351,8 +352,7 @@
                 return {};
             },
             showCompanyOriginTip() {
-                const originType = Number(this.userOriginType.split('~')[1]);
-                return originType === -5;
+                return this.userOriginType && this.userOriginType.id === -5;
             },
             totalPrice() {
                 return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
@@ -362,18 +362,23 @@
             this.getData();
         },
         watch: {
-            userOriginType(newVal) {
-                const originType = Number(newVal.split('~')[1]);
-                const originId = Number(newVal.split('~')[0]);
-                if (originType === -5) {
-                    this.getCompanyDiscount({ contractCompanyId: originId });
+            userOriginType(origin) {
+                if (!origin) {
+                    return false;
                 }
+                const originType = origin.id;
+                const companyId = origin.companyId;
+                if (originType === -5) {
+                    this.getCompanyDiscount({ contractCompanyId: companyId });
+                }
+
                 if (originType === -4 && this.phone.length === 11) {
                     const params = this.checkState === 'editOrder'
                         ? { phone: this.phone, orderId: getOrderId(this.order), orderType: this.order.type }
                         : { phone: this.phone };
                     this.getVipDiscount(params);
                 }
+
                 if (originType !== -5 && originType !== -4) {
                     this.vipDiscountDetail = {};
                 }
@@ -383,8 +388,7 @@
                     return false;
                 }
 
-                const originType = Number(this.userOriginType.split('~')[1]);
-                if (originType === -5 && this.checkState === 'editOrder') {
+                if (this.userOriginType && this.userOriginType.id === -5 && this.checkState === 'editOrder') {
                     return false;
                 }
 
@@ -394,7 +398,7 @@
                 if (newVal.length === 11) {
                     this.checkPhone();
                     this.getVipDiscount(params);
-                } else if (newVal.length !== 11) {
+                } else {
                     this.vipDiscountDetail = {};
                 }
             },
@@ -405,11 +409,13 @@
                         this.phone = this.order.customerPhone;
                         this.remark = this.order.remark || '';
 
-                        // -5企业，-4会员
-                        if (this.order.originId === -5) {
-                            this.userOriginType = `${this.order.discountRelatedId}~${this.order.originId}`;
-                        } else {
-                            this.userOriginType = `${this.order.originId}~${this.order.originId}`;
+                        this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
+                        if (this.order.originId === -4) {
+                            this.vipDiscountDetail = {
+                                vipDetail: {
+                                    vipId: this.order.discountRelatedId
+                                }
+                            };
                         }
                     }
 
@@ -454,9 +460,9 @@
                     .then(res => {
                         this.vipDiscountDetail = { ...res.data };
                         if (!this.vipDiscountDetail.isVip) {
-                            this.userOriginType = '-1~-1';
+                            this.userOriginType = this.getOrigin(-1);
                         } else {
-                            this.userOriginType = '-4~-4';
+                            this.userOriginType = this.getOrigin(-4);
                         }
                     });
             },
@@ -472,45 +478,52 @@
             getData() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
-                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                        if (res.code === 1) {
-                            const originsList = res.data.list;
-                            const otherOrigins = [];
-                            this.userOrigins = originsList;
-                            originsList.forEach(origin => {
-                                if (origin.id === -1 || origin.id === -4) {
-                                    origin.originType = `${origin.id}~${origin.id}`;
-                                    this.userSelfOrigins.push(origin);
-                                } else if (origin.id === -5) {
-                                    origin.companyList.forEach(company => {
-                                        const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                        const number = `企业编号:${company.contractNum || ''}`;
-                                        const name = `联系人:${company.contactName || ''}`;
-                                        const phone = `联系人电话:${company.contactPhone || ''}`;
-                                        company.name = company.companyName;
-                                        company.originType = `${company.id}~${origin.id}`;
-                                        company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                    });
-                                    this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                } else if (origin.id > 0) {
-                                    origin.originType = `${origin.id}~${origin.id}`;
-                                    origin.info = origin.name;
-                                    otherOrigins.push(origin);
-                                }
-                            });
-                            this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                            this.userOriginType = this.userSelfOrigins[0].originType;
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        const originsList = res.data.list;
+                        const otherOrigins = [];
+                        this.userOrigins = originsList;
+                        originsList.forEach(origin => {
+                            if (origin.id === -1 || origin.id === -4) {
+                                this.userSelfOrigins.push(origin);
+                            }
+
+                            if (origin.id === -5) {
+                                origin.companyList.forEach(company => {
+                                    const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                    const number = `企业编号:${company.contractNum || ''}`;
+                                    const name = `联系人:${company.contactName || ''}`;
+                                    const phone = `联系人电话:${company.contactPhone || ''}`;
+                                    company.name = company.companyName;
+                                    company.companyId = company.id;
+                                    company.id = origin.id;
+                                    company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                });
+                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                            }
+
+                            if (origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        this.userOriginType = this.userSelfOrigins[0];
                     });
-                this[types.LOAD_SHOP_LIST]().catch(e => { modal.alert(e.msg); });
-                this[types.LOAD_ENTER_LIST]().catch(e => { modal.alert(e.msg); });
+                this[types.LOAD_SHOP_LIST]();
+                this[types.LOAD_ENTER_LIST]();
+            },
+            getOrigin(id, companyId) {
+                // -5企业，-4会员
+                if (id === -5) {
+                    return this.userGroupOrigins[0].origins.find(i => companyId === i.companyId);
+                } else {
+                    return this.userSelfOrigins.find(i => id === i.id) || this.userGroupOrigins[1].find(i => id === i.id);
+                }
             },
             refreshData() {
                 this.name = '';
                 this.phone = '';
-                this.userOriginType = '-1~-1';
+                this.userOriginType = undefined;
                 this.remark = '';
                 this.vipDiscountDetail = {};
                 this.phoneValid = true;
@@ -523,7 +536,7 @@
                 this.name = vip.name;
                 this.phone = vip.phone;
                 this.vipListShow = false;
-                this.userOriginType = '-4~-4';
+                this.userOriginType = this.getOrigin(-4);
             },
             validate() {
                 let valid = true;
@@ -744,28 +757,18 @@
             },
             // 获取 originId origin discountRelatedId
             getDiscountRelatedIdAndOrigin() {
-                const params = {};
-                if (Number(this.userOriginType.split('~')[1]) === -5) {
-                    params.originId = -5;
-                    params.discountRelatedId = Number(this.userOriginType.split('~')[0]);
-                } else {
-                    params.originId = Number(this.userOriginType.split('~')[0]);
-                }
-
-                if (this.vipDiscountDetail.isVip) {
-                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
-                }
-
-                if (Number(this.userOriginType.split('~')[0]) === -3) {
-                    params.origin = '微官网';
-                } else if (Number(this.userOriginType.split('~')[1]) === -5) {
+                const params = {
+                    originId: this.userOriginType.id
+                };
+                if (this.userOriginType.id === -5) {
+                    params.discountRelatedId = this.userOriginType.companyId;
                     params.origin = '企业';
+                } else if (this.userOriginType.id === -4) {
+                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                } else if (this.userOriginType.id === -3) {
+                    params.origin = '微官网';
                 } else {
-                    this.userOrigins.forEach(origin => {
-                        if (origin.id === Number(this.userOriginType.split('~')[0])) {
-                            params.origin = origin.name;
-                        }
-                    });
+                    params.origin = this.userOriginType.name;
                 }
 
                 return params;

@@ -331,7 +331,7 @@
                 $('#vipForm').modal('show');
             },
             deleteVip() {
-                modal.confirmDialog({ message: '删除会员之后不可找回，您确定要删除吗？' }, () => {
+                modal.confirm({ message: '删除会员之后不可找回，您确定要删除吗？' }, () => {
                     http.post('/vipUser/removeVip', { vipUserId: this.vip.vipUserId })
                         .then(res => {
                             if (res.code === 1) {

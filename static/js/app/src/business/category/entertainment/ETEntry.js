@@ -90,7 +90,7 @@ $(function(){
              * 删除娱乐
              */
             openDeleteET() {
-                modal.confirmDialog({title: '提醒', message: '删除娱乐项目有之后娱乐项目里面的所有规格将一起被删除，确认要删除吗？', okText: '确认删除'}, this.deleteET);
+                modal.confirm({title: '提醒', message: '删除娱乐项目有之后娱乐项目里面的所有规格将一起被删除，确认要删除吗？', okText: '确认删除'}, this.deleteET);
             },
             /**
              * 删除娱乐
@@ -115,7 +115,7 @@ $(function(){
                     length = this.originData.filter(el => el.entertainmentId === this.selectedETCategory.entertainmentId)[0].entertainmentCategoryList.length;
                 }
                 const message = length === 1 ? '删除最后一个娱乐规格，将把娱乐项目一起删除，确认要删除吗？' : '删除娱乐规格后，不可找回，确认要删除吗？'
-                modal.confirmDialog({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
+                modal.confirm({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
             },
             deleteETCategory() {
                 http.post('/category/deleteOtherCategory',

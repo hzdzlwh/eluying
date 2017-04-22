@@ -64,7 +64,7 @@ $(function() {
             },
             openDeleteDialog: function(restId) {
                 this.restIdWillDeleted = restId;
-                modal.confirmDialog({
+                modal.confirm({
                     okText: '删除',
                     message: '删除餐厅之后，餐厅里的菜品和桌子将一起被删除。',
                     showTitle: false

@@ -60,7 +60,7 @@ $(function(){
             },
             openDeleteDialog: function(id) {
                 this.boardIdWillDeleted = id;
-                modal.confirmDialog(
+                modal.confirm(
                     {
                         okText: '删除',
                         message: '删除桌子之后，不可找回。',
