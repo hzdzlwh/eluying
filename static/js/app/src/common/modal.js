@@ -158,6 +158,45 @@ class Spin {
     }
 }
 
+class Notify {
+    constructor() {
+        this.notifies = [];
+        this.createContainer();
+        this.duration = 3000;
+    }
+
+    createContainer() {
+        this.container = document.createElement('div');
+        this.container.className = 'dd-notifies';
+        document.body.appendChild(this.container);
+    }
+
+    add(msg) {
+        const notify = document.createElement('div');
+        notify.className = 'dd-notify dd-notify-active';
+        const msgNode = document.createTextNode(msg);
+        notify.appendChild(msgNode);
+        this.container.appendChild(notify);
+        setTimeout(() => notify.classList.remove('dd-notify-active'), 0);
+        setTimeout(() => {
+            notify.classList.add('dd-notify-active');
+            setTimeout(() => this.container.removeChild(notify), 240);
+        }, this.duration);
+    }
+}
+
+let notifyInstance;
+function getNotifyInstance() {
+    notifyInstance = notifyInstance || new Notify();
+    return notifyInstance;
+}
+
+function error(msg) {
+    const notify = getNotifyInstance();
+    notify.add(msg);
+}
+
+exports.error = error;
 exports.Spin = Spin;
 exports.centerModals = centerModals;
 exports.clearModal = clearModal;
