@@ -81,8 +81,7 @@
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
-                          v-if="(vipDiscountDetail.vipDetail
-                                && vipDiscount < 1) || item.quickDiscountId">
+                          v-if="item.showDiscount && !item.priceModified">
                         <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                         <span class="discount-num"
                               v-if="item.showDiscount">
@@ -507,6 +506,7 @@
                                     return i.dateFee / item.totalFee;
                                 });
                                 currentRoom.showDiscount = item.showDiscount;
+                                currentRoom.priceModified = false;
                             });
                         }
                     });
@@ -515,6 +515,7 @@
                 // 手动修改价格需要把快捷折扣置为无
                 room.quickDiscountId = '';
                 this.setDayFee(room);
+                room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             // 设置每日房价
             setDayFee(room) {
