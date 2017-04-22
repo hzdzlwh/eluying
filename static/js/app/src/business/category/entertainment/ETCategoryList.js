@@ -94,7 +94,7 @@ var ETCategoryList = {
         'click #deleteETButton': function() {
             var confirmCallback = ETCategoryList.deleteETCategory;
             var dialogConfig = { title: '提示', message: '您确定要删除吗？' };
-            modal.confirmDialog(dialogConfig, confirmCallback);
+            modal.confirm(dialogConfig, confirmCallback);
         },
 // 上架或下架
         'click .modifyStateButton': function() {

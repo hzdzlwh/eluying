@@ -132,19 +132,19 @@
                 if (type === 'finish') {
                     if (this.t || this.f) {
                         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
                 } else if (type === 'ing') {
                     if (this.p) {
                         dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
                 } else if (type === 'book') {
                     if (this.p) {
                         dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
                 }

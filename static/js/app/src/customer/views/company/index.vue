@@ -293,7 +293,7 @@ export default {
             this.formvisible = true;
         },
         detailDelete: function(id) {
-            modal.confirmDialog({
+            modal.confirm({
                 message: '您将会删除该企业客户信息，删除后信息不可恢复，且不能对该企业客户挂账进行结算，确认删除么？'
             }, () => {
                 const that = this;

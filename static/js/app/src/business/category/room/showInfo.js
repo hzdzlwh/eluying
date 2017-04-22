@@ -419,7 +419,7 @@ var showInfo = {
                     showInfo.changed = false
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);
