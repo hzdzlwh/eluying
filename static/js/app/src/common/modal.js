@@ -142,7 +142,6 @@ class Spin {
 
 class Notify {
     constructor() {
-        this.notifies = [];
         this.createContainer();
         this.duration = 3000;
     }
@@ -184,5 +183,4 @@ exports.centerModals = centerModals;
 exports.clearModal = clearModal;
 exports.modalInit = modalInit;
 exports.confirm = confirm;
-exports.ajaxWaiting = ajaxWaiting;
 exports.alert = alert;
