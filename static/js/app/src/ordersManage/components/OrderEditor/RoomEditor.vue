@@ -175,7 +175,7 @@
 
                 if (this.rooms.length > 0) {
                     // 更改渠道
-                    this.modifyRooms(this.rooms);
+                    this.modifyRooms(this.rooms, true);
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
@@ -488,7 +488,12 @@
 
                 this.modifyRooms([room]);
             },
-            modifyRooms(rooms) {
+            /**
+             * 根据条件获取价格
+             * @param rooms
+             * @param forceChangePrice 修改渠道导致的价格更新传true
+             */
+            modifyRooms(rooms, forceChangePrice) {
                 // 会员-1，企业-2
                 const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
                 let discountRelatedId; // eslint-disable-line
@@ -510,7 +515,8 @@
                             roomOrderId: room.roomOrderId,
                             roomId: room.roomType
                         };
-                    }))
+                    })),
+                    forceChangePrice: forceChangePrice
                 };
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
