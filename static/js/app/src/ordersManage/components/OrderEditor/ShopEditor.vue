@@ -250,7 +250,7 @@
                     this.shopGoodsItems.splice(index, 1);
                 } else {
                     if (this.editShopList[shopOrderId].items.length <= 1) {
-                        modal.alert('已经是最后一个项目了， 不允许删除！');
+                        modal.alert('最后一个商品不可删除，请到商超订单中取消订单！');
                         return false;
                     }
                     this.editShopList[shopOrderId].items.splice(index, 1);
