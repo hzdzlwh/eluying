@@ -686,7 +686,7 @@
                     idCardsList: JSON.stringify(room.idCardList),
                     fee: room.price,
                     roomId: room.roomType,
-                    datePriceList: room.datePriceList,
+                    datePriceList: JSON.stringify(room.datePriceList),
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: !room.priceModified,
