@@ -12,7 +12,7 @@
                    v-model="searchKeyword" @keyup.enter="search(1)">
             <div class="acc-search-results" v-if="resultsVisible">
                 <div class="acc-search-count">{{searchResultsNum === 0 ? '没有搜索结果' : `共有${searchResultsNum}条搜索结果`}}</div>
-                <div v-for="g in searchResults" @click="showOrder(g.orderId)">
+                <div v-for="g in searchResults" @click="showOrder(g)">
                     <div class="acc-search-item" :orderId="g.orderId">
                         <div>
                             <span class="search-label">开始于:</span>
@@ -205,9 +205,9 @@
                 this.searchResultsNum = 0;
                 this.searchKeyword = '';
             },
-            showOrder(id) {
+            showOrder(order) {
                 this.resultsVisible = false;
-                bus.$emit('onShowDetail', { type: -1, orderId: id });
+                bus.$emit('onShowDetail', { type: order.orderType, orderId: order.orderType === -1 ? order.orderId : order.serviceId });
             }
         },
         directives: {

@@ -87,6 +87,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     :checkState="checkState"
                                     :userOriginType="userOriginType"
+                                    :vipId="vipId"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
@@ -277,6 +278,7 @@
                 vipDiscountDetail: {},
                 vipListShow: false,
                 vipList: [],
+                vipId: undefined,
                 timeCount: 0,
                 roomPrice: 0,
                 enterPrice: 0,
@@ -411,11 +413,7 @@
 
                         this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
                         if (this.order.originId === -4) {
-                            this.vipDiscountDetail = {
-                                vipDetail: {
-                                    vipId: this.order.discountRelatedId
-                                }
-                            };
+                            this.vipId = this.order.discountRelatedId;
                         }
                     }
 
@@ -536,7 +534,6 @@
                 this.name = vip.name;
                 this.phone = vip.phone;
                 this.vipId = vip.vipId;
-                this.vipDiscountDetail = { vipDetail: { vipId: vip.vipId } };
                 this.vipListShow = false;
                 this.userOriginType = this.getOrigin(-4);
             },
@@ -630,7 +627,8 @@
                         fee: room.price,
                         sub: true,
                         roomOrderId: room.roomOrderId,
-                        quickDiscountId: room.quickDiscountId
+                        quickDiscountId: room.quickDiscountId,
+                        useDiscount: !room.priceModified
                     };
                 });
             },
@@ -687,6 +685,7 @@
                     datePriceList: room.datePriceList,
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
+                    useDiscount: !room.priceModified,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)

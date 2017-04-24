@@ -160,13 +160,20 @@
             vipDiscountDetail: Object,
             registerRooms: Array,
             userOriginType: Object,
+            vipId: Number,
             order: {
                 type: Object,
                 default: {}
             }
         },
         watch: {
-            userOriginType(origin) {
+            userOriginType(origin, oldOrigin) {
+                // 如果之前的渠道是undefined，代表初始化
+                console.log(oldOrigin);
+                if (!oldOrigin) {
+                    return false;
+                }
+
                 if (this.rooms.length > 0) {
                     this.modifyRooms(this.rooms);
                 }
@@ -310,7 +317,7 @@
                         priceScale: order.datePriceList.map(dat => {
                             return dat.dateFee / roomInfo.totalPrice;
                         }),
-                        showDiscount: order.discountRelatedName
+                        showDiscount: order.roomInfo.showDiscount
                     };
 
                     this.rooms = [room];
@@ -479,7 +486,7 @@
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
-                    discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                    discountRelatedId = this.vipId;
                 }
 
                 const params = {
@@ -565,6 +572,7 @@
                 room.price = + (room.datePriceList.reduce((a, b) => {
                     return a + Number(b.dateFee);
                 }, 0).toFixed(2));
+                room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             deleteRoom(index) {
                 this.rooms.splice(index, 1);
