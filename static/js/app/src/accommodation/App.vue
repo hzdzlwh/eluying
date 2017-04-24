@@ -85,7 +85,6 @@
     import http from 'http';
     import { mapMutations } from 'vuex';
     import types from '../ordersManage/store/types';
-
     export default{
         created() {
             bus.$on('onClose', this.hideDetail);
