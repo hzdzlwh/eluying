@@ -1224,7 +1224,7 @@
                     });
             },
             resetOrder() {
-                http.post('/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
+                http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
                     .then(res => {
                         if (res.code === 1) {
                             this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });

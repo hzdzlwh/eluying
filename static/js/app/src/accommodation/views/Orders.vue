@@ -368,20 +368,16 @@ default {
        created() {
            this.getData();
            this.fetchDate();
-           eventbus.$on('refreshView', function() {
-               this.fetchDate();
-           });
+           eventbus.$on('refreshView', this.fetchDate());
        },
        mounted() {
            $('#roomsOrderTable tbody').on('click', 'tr', function(e) {
                const el = $(this).find('.trData');
-               eventbus.$emit('onShowDetail', { type: el.attr('data-id'), orderId: el.attr('data-type') });
+               eventbus.$emit('onShowDetail', { type: Number(el.attr('data-type')), orderId: Number(el.attr('data-id')) });
            });
        },
        beforeDestroy: function() {
-           eventbus.$off('refreshView', function() {
-               this.fetchDate();
-           });
+           eventbus.$off('refreshView', this.fetchDate());
            $('#roomsOrderTable tbody').off('click');
        },
        watch: {
