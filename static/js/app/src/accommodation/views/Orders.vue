@@ -373,7 +373,7 @@ default {
        mounted() {
            $('#roomsOrderTable tbody').on('click', 'tr', function(e) {
                const el = $(this).find('.trData');
-               eventbus.$emit('onShowDetail', { type: Number(el.attr('data-id')), orderId: Number(el.attr('data-type')) });
+               eventbus.$emit('onShowDetail', { type: Number(el.attr('data-type')), orderId: Number(el.attr('data-id')) });
            });
        },
        beforeDestroy: function() {
