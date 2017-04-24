@@ -415,6 +415,10 @@
                         if (this.order.originId === -4) {
                             this.vipId = this.order.discountRelatedId;
                         }
+                    } else {
+                        if (this.userSelfOrigins[0]) {
+                            this.userOriginType = this.userSelfOrigins[0];
+                        }
                     }
 
                     $('#orderEditor').modal('show');
@@ -505,7 +509,6 @@
                             }
                         });
                         this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                        this.userOriginType = this.userSelfOrigins[0];
                     });
                 this[types.LOAD_SHOP_LIST]();
                 this[types.LOAD_ENTER_LIST]();
@@ -525,6 +528,7 @@
                 this.remark = '';
                 this.vipDiscountDetail = {};
                 this.phoneValid = true;
+                this.vipId = undefined;
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');

@@ -169,12 +169,12 @@
         watch: {
             userOriginType(origin, oldOrigin) {
                 // 如果之前的渠道是undefined，代表初始化
-                console.log(oldOrigin);
                 if (!oldOrigin) {
                     return false;
                 }
 
                 if (this.rooms.length > 0) {
+                    // 更改渠道
                     this.modifyRooms(this.rooms);
                 }
             },
@@ -184,6 +184,15 @@
                 }
 
                 if (newVal.vipDetail.vipId !== oldVal.vipDetail.vipId) {
+                    this.modifyRooms(this.rooms);
+                }
+            },
+            vipId(id, oldId) {
+                if (!oldId) {
+                    return false;
+                }
+
+                if (this.rooms.length > 0) {
                     this.modifyRooms(this.rooms);
                 }
             }
