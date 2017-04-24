@@ -15,39 +15,7 @@
                     <dd-option :key="item.id" v-for="item in timeTypeList" :value="item.id" :label="item.name"></dd-option>
                 </DdSelect>
             </div>
-            <div style="margin-right:183px;">
-                <span>使用时间：</span>
-                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
-                <span>～</span>
-                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
-            </div>
-            <div style="margin-right:20px;width: 100px;">
-                <dd-select v-model="state">
-                    <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
-                </dd-select>
-            </div>
-             <div class="select-component-container">
-                                        <dd-select v-model="userOriginType">
-                                            <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
-                                                       :value="origin.originType" :label="origin.name">
-                                                <span :title="origin.name">{{origin.name}}</span>
-                                            </dd-option>
-                                            <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
-                                                             :key="item" v-if="item.origins.length > 0">
-                                                <dd-option v-for="origin in item.origins" :key="origin.originType"
-                                                           :value="origin.originType" :label="`企业(${origin.name})`">
-                                                    <div class="user-group-origin">
-                                                        <span class="user-group-company" :title="origin.name">
-                                                            {{ origin.name }}
-                                                        </span>
-                                                        <span class="user-group-img" v-if="!origin.type"
-                                                              :title="origin.info"></span>
-                                                    </div>
-                                                </dd-option>
-                                            </dd-group-option>
-                                        </dd-select>
-                                    </div>
-            <div class="add-button">
+                    <div class="add-button fr">
                 <div class="dd-dropdown">
                     <DdDropdown text="导出明细" trigger="click">
                         <dd-dropdown-item>
@@ -58,6 +26,38 @@
                         </dd-dropdown-item>
                     </DdDropdown>
                 </div>
+            </div>
+               <div class="select-component-container fr">
+                <dd-select v-model="userOriginType">
+                    <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
+                               :value="origin.originType" :label="origin.name">
+                        <span :title="origin.name">{{origin.name}}</span>
+                    </dd-option>
+                    <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
+                                     :key="item" v-if="item.origins.length > 0">
+                        <dd-option v-for="origin in item.origins" :key="origin.originType"
+                                   :value="origin.originType" :label="`企业(${origin.name})`">
+                            <div class="user-group-origin">
+                                <span class="user-group-company" :title="origin.name">
+                                    {{ origin.name }}
+                                </span>
+                                <span class="user-group-img" v-if="!origin.type"
+                                      :title="origin.info"></span>
+                            </div>
+                        </dd-option>
+                    </dd-group-option>
+                </dd-select>
+            </div>
+            <div style="margin-right:183px;">
+                <span>使用时间：</span>
+                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
+                <span>～</span>
+                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
+            </div>
+            <div style="margin-right:20px;width: 120px;" class="fr">
+                <dd-select v-model="state">
+                    <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
+                </dd-select>
             </div>
         </div>
         <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='roomsOrderTable'></dd-table>
@@ -74,6 +74,7 @@
 }
 </style>
 <style lang="scss" scoped>
+
 .footfix{
       position: fixed;
     bottom: 0;
@@ -86,7 +87,7 @@
     top: 20px;
 }
 .select-component-container{
-    width:150px;
+    width:120px;
     margin-right:20px;
 }
 .detail-content-filter {
@@ -95,7 +96,9 @@
         position: relative;
     z-index: 1;
 }
-
+.detail-content-filter .fr {
+  float:right
+}
 .restaurant-head-nav .active {
     background-color: #178ce6;
     color: #ffffff;
@@ -103,7 +106,9 @@
 .detail-content-filter > div {
     display: inline-block;
 }
-
+.detail-content-filter .dd-datepicker {
+  width:150px;
+}
 .restaurant-head-nav {
     border-right: none;
 }
@@ -240,7 +245,7 @@ default {
                stateList: [
                    {
                        id: -1,
-                       name: '全部'
+                       name: '全部订单状态'
                    },
                    {
                        id: 0,
@@ -286,7 +291,7 @@ default {
                userOrigins: [],
                userSelfOrigins: [{
                    id: -2,
-                   name: '全部',
+                   name: '全部客源渠道',
                    originType: '-2~-2',
                    type: 2
                }],
@@ -351,7 +356,7 @@ default {
                    },
                    {
                        title: '',
-                       render: (h, row) => <span data-id = {row.orderNum} data-type = {row.orderNum} class = "trData"></span>,
+                       render: (h, row) => <span data-id = {row.subOrderType === 3 ? row.subOrderId : row.orderId} data-type = {row.subOrderType} class = "trData"></span>,
                        width: 0
                    }
                ],
