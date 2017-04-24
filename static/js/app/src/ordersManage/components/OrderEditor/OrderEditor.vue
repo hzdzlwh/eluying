@@ -87,6 +87,7 @@
                                     :vipDiscountDetail="vipDiscountDetail"
                                     :checkState="checkState"
                                     :userOriginType="userOriginType"
+                                    :vipId="vipId"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
@@ -277,6 +278,7 @@
                 vipDiscountDetail: {},
                 vipListShow: false,
                 vipList: [],
+                vipId: undefined,
                 timeCount: 0,
                 roomPrice: 0,
                 enterPrice: 0,
@@ -411,11 +413,11 @@
 
                         this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
                         if (this.order.originId === -4) {
-                            this.vipDiscountDetail = {
-                                vipDetail: {
-                                    vipId: this.order.discountRelatedId
-                                }
-                            };
+                            this.vipId = this.order.discountRelatedId;
+                        }
+                    } else {
+                        if (this.userSelfOrigins[0]) {
+                            this.userOriginType = this.userSelfOrigins[0];
                         }
                     }
 
@@ -507,7 +509,6 @@
                             }
                         });
                         this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                        this.userOriginType = this.userSelfOrigins[0];
                     });
                 this[types.LOAD_SHOP_LIST]();
                 this[types.LOAD_ENTER_LIST]();
@@ -527,6 +528,7 @@
                 this.remark = '';
                 this.vipDiscountDetail = {};
                 this.phoneValid = true;
+                this.vipId = undefined;
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
@@ -536,7 +538,6 @@
                 this.name = vip.name;
                 this.phone = vip.phone;
                 this.vipId = vip.vipId;
-                this.vipDiscountDetail = { vipDetail: { vipId: vip.vipId } };
                 this.vipListShow = false;
                 this.userOriginType = this.getOrigin(-4);
             },
@@ -630,7 +631,8 @@
                         fee: room.price,
                         sub: true,
                         roomOrderId: room.roomOrderId,
-                        quickDiscountId: room.quickDiscountId
+                        quickDiscountId: room.quickDiscountId,
+                        useDiscount: !room.priceModified
                     };
                 });
             },
@@ -684,9 +686,10 @@
                     idCardsList: JSON.stringify(room.idCardList),
                     fee: room.price,
                     roomId: room.roomType,
-                    datePriceList: room.datePriceList,
+                    datePriceList: JSON.stringify(room.datePriceList),
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
+                    useDiscount: !room.priceModified,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)
