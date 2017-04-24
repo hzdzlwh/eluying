@@ -306,7 +306,7 @@ default {
                        dataIndex: 'orderNum'
                    },
                    {
-                       title: '床号',
+                       title: '房号',
                         // render: (h, row) => row.rooms.map(function(room){
                         //     return <div>{room}</div>
                         // })
@@ -322,8 +322,7 @@ default {
                    },
                    {
                        title: '联系人',
-                       dataIndex: 'customerName',
-                       sorter: true
+                       dataIndex: 'customerName'
                    },
                    {
                        title: '手机号',
