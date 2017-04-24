@@ -116,7 +116,7 @@
                                                 findTypePrice(order.payments, 14))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
-                                           v-for="item in filterPayMents(order.payments, 0, 2)">
+                                           v-for="item in filterPayMents(order.payments, 0, 2, 6)">
                                             <span class="money-type">{{`${dateFormat(
                                                 item.creationTime)} ${item.payChannel}`}}</span>
                                             <span class="money-num">{{`${item.type === 2 ? '-'
@@ -997,7 +997,14 @@
             return {
                 readOnly: true,
                 ORDER_STATUS_ICON,
-                ORDER_TYPE
+                ORDER_TYPE,
+                reseturl: {
+                    '-1': 'resettleCombinedOrder',
+                    '3': 'resettleRoomOrder',
+                    '1': 'resettleEnterOrder',
+                    '2': 'resettleCaterOrder',
+                    '0': 'resettleGoodsOrder'
+                }
             };
         },
         components: {
@@ -1151,11 +1158,11 @@
                 }
                 return Number(price.toFixed(2));
             },
-            filterPayMents(arr, type1, type2) {
+            filterPayMents(arr, type1, type2, type3) {
                 const newPayMents = [];
                 if (arr) {
                     arr.forEach(item => {
-                        if (item.type === type1 || item.type === type2) {
+                        if (item.type === type1 || item.type === type2 || item.type === type3) {
                             newPayMents.push(item);
                         }
                     });
@@ -1217,7 +1224,7 @@
                     });
             },
             resetOrder() {
-                http.post('/order/resettle', { orderId: this.id, orderType: this.type })
+                http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
                     .then(res => {
                         if (res.code === 1) {
                             this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });

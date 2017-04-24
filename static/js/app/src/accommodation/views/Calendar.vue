@@ -29,6 +29,7 @@
     import ShopCart from '../components/ShopCart.vue';
     import util from '../../common/util';
     import http from 'http';
+    import bus from '../../common/eventBus';
     export default {
         data() {
             return {
@@ -39,26 +40,7 @@
                 startDate: util.diffDate(new Date(), -2),
                 DAYS: 30,
                 dateRange: [],
-                leftMap: {},
-                orderDetailShow: false,
-                orderEditorVisible: false,
-                orderId: undefined,
-                orderDetail: {},
-                checkState: undefined,
-                registerRooms: [],
-                cashierType: '',
-                cashierShow: false,
-                cancelOrderShow: false,
-                getMoneyShow: false,
-                getMoneyType: '',
-                getMoneyBusiness: {},
-                getMoneyParams: {},
-                payWithAlipay: 0,
-                cashierBusiness: {},
-                detailType: undefined,
-                detailId: undefined,
-                detailVisible: false,
-                roomCategory: [] // 订单编辑中使用
+                leftMap: {}
             };
         },
         created() {
@@ -76,6 +58,10 @@
                         this.$set(c, 'folded', false);
                     });
                 });
+            bus.$on('refreshView', this.refreshView);
+        },
+        beforeDestroy() {
+            bus.$off('refreshView', this.refreshView);
         },
         computed: {
             startDateStr() {
@@ -139,11 +125,9 @@
                         this.roomStatus = rs;
                     });
             },
-            getRoomsList() {
-                return http.get('/room/getRoomsList', {})
-                    .then(res => {
-                        this.roomCategory = res.data.list;
-                    });
+            refreshView() {
+                this.getRoomAndStatus()
+                    .then(() => { this.mapRoomsToCategory(); });
             },
             mapRoomsToCategory() {
                 this.categories.map(c => this.$set(c, 'rooms', []));
@@ -167,10 +151,6 @@
 
                 this.startDate = util.stringToDate(date);
                 this.getRoomAndStatus();
-            },
-            refreshView() {
-                this.getRoomAndStatus()
-                    .then(() => { this.mapRoomsToCategory(); });
             },
             handleRoomFilter(data) {
                 this.categories = data;

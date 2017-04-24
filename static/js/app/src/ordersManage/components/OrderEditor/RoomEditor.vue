@@ -128,7 +128,8 @@
         data() {
             return {
                 rooms: [],
-                quickDiscounts: []
+                quickDiscounts: [],
+                lastRoomsToken: {}
             };
         },
         created() {
@@ -314,6 +315,9 @@
 
                     this.rooms = [room];
                 }
+                this.rooms.map(room => {
+                    this.lastRoomsToken[room.roomType] = JSON.stringify(room);
+                });
             },
             initRegisterRooms(rooms) {
                 rooms.forEach(item => {
@@ -349,6 +353,9 @@
                                 quickDiscountId: ''
                             });
                         });
+                });
+                this.rooms.map(room => {
+                    this.lastRoomsToken[room.roomType] = JSON.stringify(room);
                 });
             },
             addRoom() {
@@ -443,8 +450,7 @@
                 this.vipList = [];
             },
             handleRoomChange(room) {
-                if (room.haveRequest) {
-                    room.haveRequest = false;
+                if (JSON.stringify(room) === this.lastRoomsToken[room.roomType]) {
                     return false;
                 }
 
@@ -467,6 +473,7 @@
                 this.modifyRooms([room]);
             },
             modifyRooms(rooms) {
+                // 会员-1，企业-2
                 const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
                 let discountRelatedId; // eslint-disable-line
                 if (this.userOriginType && this.userOriginType.id === -5) {
@@ -474,6 +481,7 @@
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
                     discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
                 }
+
                 const params = {
                     discountChannel: discountChannel,
                     discountRelatedId: discountRelatedId,
