@@ -64,7 +64,7 @@ function forgetVCOnClick(){
         if (phone !== currentPhone) {
             currentPhone = phone;
             $("#loginForgetPwd .picture_container").css('display', 'block');
-            $("#loginForgetPwd .get_picture img").attr('src', http.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            $("#loginForgetPwd .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone=' + phone));
             return false;
         }
         if (!picture) {
@@ -111,7 +111,7 @@ function registerVCOnClick(){
         if (phone !== currentPhone) {
            currentPhone = phone;
             $("#loginRegister .picture_container").css('display', 'block');
-            $("#loginRegister .get_picture img").attr('src', http.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            $("#loginRegister .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone=' + phone));
             return false;
         }
         if (!picture) {
@@ -217,7 +217,7 @@ $(document).ready(function(){
     $("#loginForgetPwd .get_picture img").on("click", function(){
         var phone = $("#loginForgetPwd .phone").val();
         captchaTime ++;
-        $("#loginForgetPwd .get_picture img").attr('src', http.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+        $("#loginForgetPwd .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone='+ phone + '&t=' +captchaTime));
     });
 
     $("#loginModal .log .forget").on("click", function(){
@@ -293,7 +293,7 @@ $(document).ready(function(){
     $("#loginRegister .get_picture img").on("click", function(){
         var phone = $("#loginRegister .phone").val();
         captchaTime ++;
-        $("#loginRegister .get_picture img").attr('src', http.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+        $("#loginRegister .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone='+ phone + '&t=' +captchaTime));
     });
 
     /*

@@ -535,6 +535,8 @@
             setVipInfo(vip) {
                 this.name = vip.name;
                 this.phone = vip.phone;
+                this.vipId = vip.vipId;
+                this.vipDiscountDetail = { vipDetail: { vipId: vip.vipId } };
                 this.vipListShow = false;
                 this.userOriginType = this.getOrigin(-4);
             },
@@ -765,6 +767,7 @@
                     params.origin = '企业';
                 } else if (this.userOriginType.id === -4) {
                     params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
+                    params.origin = '会员';
                 } else if (this.userOriginType.id === -3) {
                     params.origin = '微官网';
                 } else {
