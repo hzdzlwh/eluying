@@ -154,7 +154,7 @@
                 this.detailVisible = false;
             },
             changeCheckState(type, rooms) {
-                this[types.SET_ORDER_DETAIL]({ orderDetail: {}});
+                this[types.SET_ORDER_DETAIL]({ orderDetail: {} });
                 this.checkState = type;
                 this.registerRooms = rooms;
                 this.orderEditorVisible = true;

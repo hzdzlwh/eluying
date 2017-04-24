@@ -155,7 +155,7 @@ const store = new Vuex.Store({
             });
         },
         [types.GET_ORDER_DETAIL]({ dispatch, commit }, { orderId, orderType }) {
-            commit(types.SET_ORDER_DETAIL, { orderDetail: {}});
+            commit(types.SET_ORDER_DETAIL, { orderDetail: {} });
             switch (orderType) {
                 case ORDER_TYPE.COMBINATION:
                     return dispatch(types.LOAD_ORDER_DETAIL, { orderId });
