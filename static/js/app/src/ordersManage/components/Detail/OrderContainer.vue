@@ -116,7 +116,7 @@
                                                 findTypePrice(order.payments, 14))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
-                                           v-for="item in filterPayMents(order.payments, 0, 2)">
+                                           v-for="item in filterPayMents(order.payments, 0, 2, 6)">
                                             <span class="money-type">{{`${dateFormat(
                                                 item.creationTime)} ${item.payChannel}`}}</span>
                                             <span class="money-num">{{`${item.type === 2 ? '-'
@@ -1151,11 +1151,11 @@
                 }
                 return Number(price.toFixed(2));
             },
-            filterPayMents(arr, type1, type2) {
+            filterPayMents(arr, type1, type2, type3) {
                 const newPayMents = [];
                 if (arr) {
                     arr.forEach(item => {
-                        if (item.type === type1 || item.type === type2) {
+                        if (item.type === type1 || item.type === type2 || item.type === type3) {
                             newPayMents.push(item);
                         }
                     });
