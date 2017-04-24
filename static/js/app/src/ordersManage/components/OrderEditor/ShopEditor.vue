@@ -199,15 +199,17 @@
                     const orderId = this.order.goodsOrderId;
                     this.editShopList[orderId]['items'].forEach(item => {
                         goodsList.forEach((good, index) => {
-                            item.amount += good.amount;
-                            goodsList.splice(index, 1);
+                            if (item.id === Number(good.id)) {
+                                item.amount += good.amount;
+                                goodsList.splice(index, 1);
+                            }
                         });
                     });
                     this.editShopList[orderId]['items'] = this.editShopList[orderId]['items'].concat(goodsList);
                 } else {
                     this.shopGoodsItems.forEach(item => {
                         goodsList.forEach((good, index) => {
-                            if (good.id === item.id) {
+                            if (good.id === Number(good.id)) {
                                 item.amount += good.amount;
                                 goodsList.splice(index, 1);
                             }
