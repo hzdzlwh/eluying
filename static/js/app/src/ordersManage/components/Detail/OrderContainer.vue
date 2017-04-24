@@ -997,7 +997,14 @@
             return {
                 readOnly: true,
                 ORDER_STATUS_ICON,
-                ORDER_TYPE
+                ORDER_TYPE,
+                reseturl: {
+                    '-1': 'resettleCombinedOrder',
+                    '3': 'resettleRoomOrder',
+                    '1': 'resettleEnterOrder',
+                    '2': 'resettleCaterOrder',
+                    '0': 'resettleGoodsOrder'
+                }
             };
         },
         components: {
@@ -1217,7 +1224,7 @@
                     });
             },
             resetOrder() {
-                http.post('/order/resettle', { orderId: this.id, orderType: this.type })
+                http.post('/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
                     .then(res => {
                         if (res.code === 1) {
                             this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
