@@ -39,26 +39,7 @@
                 startDate: util.diffDate(new Date(), -2),
                 DAYS: 30,
                 dateRange: [],
-                leftMap: {},
-                orderDetailShow: false,
-                orderEditorVisible: false,
-                orderId: undefined,
-                orderDetail: {},
-                checkState: undefined,
-                registerRooms: [],
-                cashierType: '',
-                cashierShow: false,
-                cancelOrderShow: false,
-                getMoneyShow: false,
-                getMoneyType: '',
-                getMoneyBusiness: {},
-                getMoneyParams: {},
-                payWithAlipay: 0,
-                cashierBusiness: {},
-                detailType: undefined,
-                detailId: undefined,
-                detailVisible: false,
-                roomCategory: [] // 订单编辑中使用
+                leftMap: {}
             };
         },
         created() {
@@ -137,12 +118,6 @@
                             }
                         });
                         this.roomStatus = rs;
-                    });
-            },
-            getRoomsList() {
-                return http.get('/room/getRoomsList', {})
-                    .then(res => {
-                        this.roomCategory = res.data.list;
                     });
             },
             mapRoomsToCategory() {
