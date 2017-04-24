@@ -91,7 +91,6 @@
             bus.$on('onShowDetail', this.showOrderDetail);
             bus.$on('editOrder', this.editOrder);
             bus.$on('hideOrderEditor', this.hideOrderEditor);
-            bus.$on('refreshView', this.refreshView);
             bus.$on('showCashier', this.showCashier);
             bus.$on('hideCashier', this.hideCashier);
             bus.$on('showGetMoney', this.showGetMoney);
@@ -101,12 +100,11 @@
             bus.$on('changeCheckState', this.changeCheckState);
             this.getRoomsList();
         },
-        beforeDestroy: function() {
+        beforeDestroy() {
             bus.$off('onClose', this.hideDetail);
             bus.$off('onShowDetail', this.showOrderDetail);
             bus.$off('editOrder', this.editOrder);
             bus.$off('hideOrderEditor', this.hideOrderEditor);
-            bus.$off('refreshView', this.refreshView);
             bus.$off('showCashier', this.showCashier);
             bus.$off('hideCashier', this.hideCashier);
             bus.$off('showGetMoney', this.showGetMoney);

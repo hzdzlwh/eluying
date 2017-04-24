@@ -29,6 +29,7 @@
     import ShopCart from '../components/ShopCart.vue';
     import util from '../../common/util';
     import http from 'http';
+    import bus from '../../common/eventBus';
     export default {
         data() {
             return {
@@ -57,6 +58,10 @@
                         this.$set(c, 'folded', false);
                     });
                 });
+            bus.$on('refreshView', this.refreshView);
+        },
+        beforeDestroy() {
+            bus.$off('refreshView', this.refreshView);
         },
         computed: {
             startDateStr() {
@@ -120,6 +125,10 @@
                         this.roomStatus = rs;
                     });
             },
+            refreshView() {
+                this.getRoomAndStatus()
+                    .then(() => { this.mapRoomsToCategory(); });
+            },
             mapRoomsToCategory() {
                 this.categories.map(c => this.$set(c, 'rooms', []));
                 this.roomStatus.map(room => {
@@ -142,10 +151,6 @@
 
                 this.startDate = util.stringToDate(date);
                 this.getRoomAndStatus();
-            },
-            refreshView() {
-                this.getRoomAndStatus()
-                    .then(() => { this.mapRoomsToCategory(); });
             },
             handleRoomFilter(data) {
                 this.categories = data;
