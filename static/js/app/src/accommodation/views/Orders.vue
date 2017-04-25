@@ -11,16 +11,16 @@
         </div>
         <div class="detail-content-filter">
             <div style="width: 88px;margin-right:20px;">
-                <DdSelect v-model="timeType">
+                <DdSelect v-model="timeType" :disabled='tag !== 0'>
                     <dd-option :key="item.id" v-for="item in timeTypeList" :value="item.id" :label="item.name"></dd-option>
                 </DdSelect>
             </div>
              
             <div style="margin-right:183px;">
                 <span>使用时间：</span>
-                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
+                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" :disabled='tag !== 0'/>
                 <span>～</span>
-                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
+                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" :disabled='tag !== 0'/>
             </div>
                    <div class="add-button fr">
                 <div class="dd-dropdown">
@@ -35,7 +35,7 @@
                 </div>
             </div>
                <div class="select-component-container fr">
-                <dd-select v-model="userOriginType">
+                <dd-select v-model="userOriginType" >
                     <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                :value="origin.originType" :label="origin.name">
                         <span :title="origin.name">{{origin.name}}</span>
@@ -56,7 +56,7 @@
                 </dd-select>
             </div>
             <div style="margin-right:20px;width: 120px;" class="fr">
-                <dd-select v-model="state">
+                <dd-select v-model="state" :disabled='tag === 1 || tag === 2'>
                     <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
