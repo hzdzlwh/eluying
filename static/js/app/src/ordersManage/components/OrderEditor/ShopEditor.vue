@@ -138,10 +138,12 @@
         created() {
             bus.$on('submitOrder', this.changeGoods);
             bus.$on('refreshView', this.resetShop);
+            bus.$on('onClose', this.resetShop);
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeGoods);
             bus.$off('refreshView', this.resetShop);
+            bus.$off('onClose', this.resetShop);
         },
         computed: {
             ...mapState({ shopList: 'shopList' }),
@@ -278,19 +280,17 @@
                 const shopList = {};
                 if (newVal.pcGoodsItems && newVal.pcGoodsItems.length > 0) {
                     newVal.pcGoodsItems.forEach(item => {
-                        if (item.state === 1) {
-                            item.id = item.goodsId;
-                            if (shopList[item.goodsOrderId]) {
-                                shopList[item.goodsOrderId]['items'].push(item);
-                            } else {
-                                shopList[item.goodsOrderId] = {};
-                                shopList[item.goodsOrderId]['time'] = item.date;
-                                shopList[item.goodsOrderId]['items'] = [];
-                                shopList[item.goodsOrderId]['items'].push(item);
-                            }
+                        item.id = item.goodsId;
+                        if (shopList[item.goodsOrderId]) {
+                            shopList[item.goodsOrderId]['items'].push(item);
+                        } else {
+                            shopList[item.goodsOrderId] = {};
+                            shopList[item.goodsOrderId]['time'] = item.date;
+                            shopList[item.goodsOrderId]['items'] = [];
+                            shopList[item.goodsOrderId]['items'].push(item);
                         }
                     });
-                } else if (newVal.goodsOrderId && newVal.goodsOrderId.state === 1) {
+                } else if (newVal.goodsOrderId) {
                     const orderId = newVal.goodsOrderId;
                     shopList[orderId] = {};
                     shopList[orderId]['time'] = this.order.creationTime;
