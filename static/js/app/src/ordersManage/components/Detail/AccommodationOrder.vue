@@ -41,12 +41,12 @@
                                   :class="(showMoadl && !order.roonInfo) ? 'cursor' : ''">查看</span>
                         </div>
                         <span class="discount-info"
-                              v-if="(item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount))"
+                              v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))"
                               style="top: 14px">
                                             <span>原价<span
                                                     class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
                         <span class="discount-num">
-                                                {{ item.vipShowDiscount || (item.roomInfo && item.roomInfo.vipShowDiscount)}}
+                                                {{ item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)}}
                                             </span>
                         </span>
                     </div>
