@@ -523,17 +523,12 @@
                 if (payWithAlipay <= 0) {
                     http.post('/order/addOrderPayment', params)
                         .then(result => {
-                            if (result.code === 1) {
-                                modal.alert('收银成功');
-                                this.resetData();
-                                bus.$emit('hideCashier');
-                                $('#cashier').modal('hide');
-                                const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
-                                bus.$emit('refreshView');
-                                bus.$emit('showOrder', orderId);
-                            } else {
-                                modal.alert(result.msg);
-                            }
+                            modal.alert('收银成功');
+                            this.resetData();
+                            bus.$emit('hideCashier');
+                            $('#cashier').modal('hide');
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', { type: this.orderDetail.type, orderId: getOrderId(this.orderDetail) });
                         });
                 } else {
                     this.resetData();
