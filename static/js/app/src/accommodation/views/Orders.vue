@@ -488,8 +488,8 @@ default {
                         //     this.timeType = 1;
                         //     $("#search").val('');
                         // }
-                       this.flag = true;
                    }
+                   this.flag = true;
                });
            },
            disableEndDate(date) {

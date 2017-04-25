@@ -130,7 +130,7 @@
             return {
                 rooms: [],
                 quickDiscounts: [],
-                lastRoomsToken: {}
+                lastRoomsToken: {} // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
             };
         },
         created() {
@@ -331,7 +331,7 @@
                     this.rooms = [room];
                 }
                 this.rooms.map(room => {
-                    this.lastRoomsToken[room.roomType] = JSON.stringify(room);
+                    this.lastRoomsToken[room.roomType + room.room.startDate] = JSON.stringify(room);
                 });
             },
             initRegisterRooms(rooms) {
@@ -448,11 +448,11 @@
                 this.vipList = [];
             },
             handleRoomChange(room) {
-                if (JSON.stringify(room) === this.lastRoomsToken[room.roomType]) {
+                if (JSON.stringify(room) === this.lastRoomsToken[room.roomType + room.room.startDate]) {
                     return false;
                 }
 
-                this.lastRoomsToken[room.roomType] = JSON.stringify(room);
+                this.lastRoomsToken[room.roomType + room.room.startDate] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
