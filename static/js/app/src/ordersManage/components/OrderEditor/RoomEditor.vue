@@ -218,7 +218,9 @@
                 set(val) {
                     if (val === true) {
                         const firstId = this.rooms[0].quickDiscountId;
+                        const request = !this.rooms.every(i => i.quickDiscountId === firstId);
                         this.rooms.map(room => room.quickDiscountId = firstId);
+                        request && this.modifyRooms(this.rooms);
                     }
                 }
             },
