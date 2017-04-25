@@ -726,7 +726,7 @@
                     customerPhone: this.phone,
                     remark: this.remark,
                     amount: enterItems.count,
-                    enterOrderId: enterItems.id,
+                    enterOrderId: enterItems.id || enterItems.enterOrderId,
                     timeAmount: enterItems.unitTime,
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
