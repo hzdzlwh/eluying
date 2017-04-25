@@ -2,7 +2,7 @@
     <div class="content-item">
         <p class="content-item-title">
             <span>房间信息</span>
-            <span class="increase-container" @click="addRoom" v-if="order.rooms || (order.roomInfo && !order.isCombinationOrder)">
+            <span class="increase-container" @click="addRoom" v-if="checkState !=='editOrder' || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
                 <span class="increase-icon"></span>添加房间
             </span>
         </p>
@@ -256,9 +256,6 @@
                         });
                     });
             },
-            getQuickDiscountById(id) {
-                return this.quickDiscounts.find(i => id === i.id) || {};
-            },
             quickDiscountIdChange(room) {
                 this.modifyRooms([room]);
             },
@@ -267,6 +264,7 @@
                 return Number((room.originPrice * this.vipDiscount).toFixed(2));
             },
             initRooms() {
+                this.lastRoomsToken = {};
                 const order = this.order;
 
                 // 组合订单
@@ -337,42 +335,25 @@
                 });
             },
             initRegisterRooms(rooms) {
-                rooms.forEach(item => {
-                    item.endDate = util.diffDate(item.endDate, 1);
-                    const duration = this.dateDiff(item.startDate, item.endDate);
-                    http.get('/room/getRoomStaus', { id: item.roomId,
-                        date: util.dateFormat(item.startDate),
-                        days: duration })
-                        .then(res => {
-                            const datePriceList = [];
-                            let price = 0;
-                            res.data.rs.status.forEach((option, index) => {
-                                const fee = option.p;
-                                datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
-                                price += option.p;
-                            });
-                            // 每日房价分配比例
-                            const priceScale = datePriceList.map(dat => {
-                                return dat.dateFee / price;
-                            });
-                            this.rooms.push({
-                                categoryType: item.categoryType,
-                                roomType: item.roomId,
-                                price: Number(price.toFixed(2)),
-                                originPrice: Number(price.toFixed(2)),
-                                room: item, idCardList: [],
-                                changeTimes: 0,
-                                showPriceList: false,
-                                datePriceList: datePriceList,
-                                haveRequest: true,
-                                priceScale: priceScale,
-                                showTip: false,
-                                quickDiscountId: ''
-                            });
-                        });
-                });
-                this.rooms.map(room => {
-                    this.lastRoomsToken[room.roomType] = JSON.stringify(room);
+                this.lastRoomsToken = {};
+                this.rooms = rooms.map(room => {
+                    room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
+
+                    return {
+                        categoryType: room.categoryType,
+                        roomType: room.roomId,
+                        price: undefined,
+                        originPrice: undefined,
+                        room: room,
+                        idCardList: [],
+                        changeTimes: 0,
+                        showPriceList: false,
+                        datePriceList: [],
+                        haveRequest: true,
+                        priceScale: [],
+                        showTip: false,
+                        quickDiscountId: ''
+                    };
                 });
             },
             addRoom() {
@@ -471,6 +452,7 @@
                     return false;
                 }
 
+                this.lastRoomsToken[room.roomType] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
