@@ -138,12 +138,12 @@
         created() {
             bus.$on('submitOrder', this.changeGoods);
             bus.$on('refreshView', this.resetShop);
-            bus.$on('onClose', this.resetShop);
+            bus.$on('hideOrderEditor', this.resetShop);
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeGoods);
             bus.$off('refreshView', this.resetShop);
-            bus.$off('onClose', this.resetShop);
+            bus.$off('hideOrderEditor', this.resetShop);
         },
         computed: {
             ...mapState({ shopList: 'shopList' }),
