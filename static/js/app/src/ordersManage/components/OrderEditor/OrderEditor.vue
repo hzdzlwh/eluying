@@ -459,10 +459,10 @@
                     : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        this.vipId = res.data.vipDetail.vipId;
                         this.vipDiscountDetail = { ...res.data };
                         if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
+                            this.vipId = res.data.vipDetail.vipId;
                         } else {
                             this.userOriginType = this.getOrigin(-1);
                         }
