@@ -42,7 +42,7 @@
                         </div>
                         <span class="discount-info"
                               v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))"
-                              style="top: 14px">
+                              style="top: 17px">
                                             <span>原价<span
                                                     class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
                         <span class="discount-num">
