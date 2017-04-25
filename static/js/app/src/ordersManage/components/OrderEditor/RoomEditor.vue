@@ -2,7 +2,7 @@
     <div class="content-item">
         <p class="content-item-title">
             <span>房间信息</span>
-            <span class="increase-container" @click="addRoom" v-if="order.rooms || (order.roomInfo && !order.isCombinationOrder)">
+            <span class="increase-container" @click="addRoom" v-if="checkState !=='editOrder' || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
                 <span class="increase-icon"></span>添加房间
             </span>
         </p>
@@ -256,9 +256,6 @@
                         });
                     });
             },
-            getQuickDiscountById(id) {
-                return this.quickDiscounts.find(i => id === i.id) || {};
-            },
             quickDiscountIdChange(room) {
                 this.modifyRooms([room]);
             },
@@ -267,6 +264,7 @@
                 return Number((room.originPrice * this.vipDiscount).toFixed(2));
             },
             initRooms() {
+                this.lastRoomsToken = {};
                 const order = this.order;
 
                 // 组合订单
@@ -337,6 +335,7 @@
                 });
             },
             initRegisterRooms(rooms) {
+                this.lastRoomsToken = {};
                 this.rooms = rooms.map(room => {
                     room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
 
@@ -453,6 +452,7 @@
                     return false;
                 }
 
+                this.lastRoomsToken[room.roomType] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
