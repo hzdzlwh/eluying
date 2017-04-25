@@ -37,12 +37,13 @@
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
                                                @input="handleRoomChange(item)"
                                                :disabled-date="disabledStartDate(new Date())"
-                                               :disabled="item.state === 1"/>
+                                               :disabled="item.state === 1 || order.orderState === 8"/>
                             </div>
                             <span>~</span>
                             <div class="enterDate">
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
                                                @input="handleRoomChange(item)"
+                                               :disabled="order.orderState === 8"
                                                :disabled-date="disabledEndDate(item.room.startDate)"/>
                             </div>
                             <label class="label-text">
@@ -175,7 +176,7 @@
 
                 if (this.rooms.length > 0) {
                     // 更改渠道
-                    this.modifyRooms(this.rooms);
+                    this.modifyRooms(this.rooms, true);
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
@@ -488,7 +489,12 @@
 
                 this.modifyRooms([room]);
             },
-            modifyRooms(rooms) {
+            /**
+             * 根据条件获取价格
+             * @param rooms
+             * @param forceChangePrice 修改渠道导致的价格更新传true
+             */
+            modifyRooms(rooms, forceChangePrice) {
                 // 会员-1，企业-2
                 const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
                 let discountRelatedId; // eslint-disable-line
@@ -510,7 +516,8 @@
                             roomOrderId: room.roomOrderId,
                             roomId: room.roomType
                         };
-                    }))
+                    })),
+                    forceChangePrice: forceChangePrice
                 };
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
