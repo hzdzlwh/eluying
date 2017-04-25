@@ -166,9 +166,6 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
-            if (this.order.orderType && (this.order.orderType === 2)) {
-                return [];
-            }
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
@@ -192,7 +189,7 @@ export default {
                         enterItems.push(enter);
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
-                } else {
+                } else if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
                     filterEnters = [this.order];
                     filterEnters.forEach(item => {
                         const enter = { ...item
@@ -213,9 +210,8 @@ export default {
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
                 }
-            } else {
-                return [];
             }
+            return [];
         },
         addItem() {
             if (this.enterItems.length >= 99) {
