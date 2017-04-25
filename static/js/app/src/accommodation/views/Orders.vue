@@ -368,7 +368,7 @@ default {
        created() {
            this.getData();
            this.fetchDate();
-           eventbus.$on('refreshView', this.fetchDate());
+           eventbus.$on('refreshView', this.fetchDate);
        },
        mounted() {
            $('#roomsOrderTable tbody').on('click', 'tr', function(e) {
@@ -377,7 +377,7 @@ default {
            });
        },
        beforeDestroy: function() {
-           eventbus.$off('refreshView', this.fetchDate());
+           eventbus.$off('refreshView', this.fetchDate);
            $('#roomsOrderTable tbody').off('click');
        },
        watch: {
@@ -443,13 +443,13 @@ default {
            },
            fetchDate(keyword) {
                const obj = {
-                   discountRelatedId: this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] === -5 ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
                    originId: this.userOriginType.split('~')[1] === '-2' ? undefined : this.userOriginType.split('~')[1],
                    startDate: this.startTime,
-                   state: this.state,
+                   state: this.state === -1 ? undefined : this.state,
                    tag: this.tag,
                    timeType: this.timeType
                };
@@ -513,6 +513,7 @@ default {
            },
            search() {
                this.searchPattern = this.$refs.searchInput.value;
+               this.tag = 0;
                this.fetchDate(this.searchPattern);
            },
            handlePageChange: function(internalCurrentPage) {

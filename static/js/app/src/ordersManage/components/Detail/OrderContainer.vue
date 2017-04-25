@@ -205,9 +205,9 @@
                                     </div>
                                 </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
-                                     v-if="order.state || order.orderState === 8">重新结账</div>
+                                     v-if="orderState === 8">重新结账</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
-                                     v-if="findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0">
+                                     v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8">
                                     结账
                                 </div>
                             </div>
@@ -1002,8 +1002,8 @@
                     '-1': 'resettleCombinedOrder',
                     '3': 'resettleRoomOrder',
                     '1': 'resettleEnterOrder',
-                    '2': 'resettleCaterOrder',
-                    '0': 'resettleGoodsOrder'
+                    '2': 'resettleGoodsOrder',
+                    '0': 'resettleCaterOrder'
                 }
             };
         },
@@ -1042,19 +1042,20 @@
                 params = http.paramsToString(params);
                 return http.getUrl('/printer/getOrderDetailJsp?') + params;
             },
+            orderState() {
+                return this.order.orderState === undefined ? this.order.state : this.order.orderState;
+            },
             orderStateText() {
-                const state = this.order.orderState === undefined ? this.order.state : this.order.orderState;
-                if (this.order.type === undefined || state === undefined || !ORDER_STATE_TEXT[this.order.type][state]) {
+                if (this.order.type === undefined || this.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.orderState]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.order.type][state].text;
+                return ORDER_STATE_TEXT[this.order.type][this.orderState].text;
             },
             orderStateColor() {
-                const state = this.order.orderState === undefined ? this.order.state : this.order.orderState;
-                if (this.order.type === undefined || state === undefined || !ORDER_STATE_TEXT[this.order.type][state]) {
+                if (this.order.type === undefined || this.orderState === undefined || !ORDER_STATE_TEXT[this.order.type][this.orderState]) {
                     return '';
                 }
-                return ORDER_STATE_TEXT[this.order.type][state].color;
+                return ORDER_STATE_TEXT[this.order.type][this.orderState].color;
             },
             orderDates() {
                 switch (this.order.type) {

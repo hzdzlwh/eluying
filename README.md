@@ -1,7 +1,17 @@
 #订单来了主站!
 本项目为vue + jquery 多页+单页应用
+## 安装依赖
+```shell
+set SASS_BINARY_SITE=https://npm.taobao.org/mirrors/node-sass/
+yarn config set registry https://registry.npm.taobao.org
+yarn
+```
+
+
 ##启动
+```shell
 npm start
+```
 
 ## 模块
 使用es6模块

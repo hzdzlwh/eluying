@@ -152,7 +152,6 @@ $(function() {
             getOrdersList(obj, pageChange) {
                 // const objStr = JSON.stringify(obj);
                 this.currentPage = pageChange ? this.currentPage : 1;
-                this.orderItems = [];
                 this.isLoading = true;
                 http.get('/order/listPc', obj)
                     .then((result) => {
