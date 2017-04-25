@@ -375,10 +375,7 @@
                 }
 
                 if (originType === -4 && this.phone.length === 11) {
-                    const params = this.checkState === 'editOrder'
-                        ? { phone: this.phone, orderId: getOrderId(this.order), orderType: this.order.type }
-                        : { phone: this.phone };
-                    this.getVipDiscount(params);
+                    this.getVipDiscount(this.phone);
                 }
 
                 if (originType !== -5 && originType !== -4) {
@@ -394,12 +391,8 @@
                     return false;
                 }
 
-                const params = this.checkState === 'editOrder'
-                    ? { phone: newVal, orderId: getOrderId(this.order), orderType: this.order.type }
-                    : { phone: newVal };
                 if (newVal.length === 11) {
                     this.checkPhone();
-                    this.getVipDiscount(params);
                 } else {
                     this.vipDiscountDetail = {};
                 }
@@ -433,6 +426,9 @@
                 types.LOAD_ENTER_LIST
             ]),
             changeVipList(num) {
+                if (num === 2 && this.phone.length === 11) {
+                    this.getVipDiscount(this.phone);
+                }
                 const params = num === 1 ? { name: this.name } : { phone: this.phone };
                 if ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4)) {
                     clearTimeout(this.timeCount);
@@ -457,14 +453,17 @@
                 const phoneReg = /^1[34578]\d{9}$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
-            getVipDiscount(params) {
+            getVipDiscount(phone) {
+                const params = this.checkState === 'editOrder'
+                    ? { phone: phone, orderId: getOrderId(this.order), orderType: this.order.type }
+                    : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         this.vipDiscountDetail = { ...res.data };
-                        if (!this.vipDiscountDetail.isVip) {
-                            this.userOriginType = this.getOrigin(-1);
-                        } else {
+                        if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
+                        } else {
+                            this.userOriginType = this.getOrigin(-1);
                         }
                     });
             },
@@ -539,6 +538,7 @@
                 this.phone = vip.phone;
                 this.vipId = vip.vipId;
                 this.vipListShow = false;
+                this.getVipDiscount(vip.phone);
                 this.userOriginType = this.getOrigin(-4);
             },
             validate() {
