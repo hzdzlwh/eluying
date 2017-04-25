@@ -642,7 +642,7 @@
                         amount: item.amount,
                         id: Number(item.id),
                         name: item.name,
-                        price: item.price,
+                        price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2),
                         type: 3
                     };
                 });
@@ -653,7 +653,7 @@
                         return {
                             amount: item.amount,
                             id: item.id,
-                            price: item.price
+                            price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2)
                         };
                     });
                     this.previousGoods.push(previousItem);
@@ -726,7 +726,7 @@
                     customerPhone: this.phone,
                     remark: this.remark,
                     amount: enterItems.count,
-                    enterOrderId: enterItems.id,
+                    enterOrderId: enterItems.id || enterItems.enterOrderId,
                     timeAmount: enterItems.unitTime,
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()

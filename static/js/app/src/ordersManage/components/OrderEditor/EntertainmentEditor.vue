@@ -8,7 +8,7 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orderType || item.state === 0 || item.state === undefined' :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType || item.state === 0 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
