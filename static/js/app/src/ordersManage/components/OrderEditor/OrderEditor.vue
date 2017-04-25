@@ -103,10 +103,10 @@
                              @change="handleEnterChange"
                              @priceChange="handlEnterPriceChange"/>
                         <ShopEditor v-show="this.checkState !== 'editOrder' || (order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
-                                    :order="order"
-                                    :vipDiscountDetail="vipDiscountDetail"
-                                    @change="handleShopChange"
-                                    @priceChange="handleShopPriceChange">
+                                :order="order"
+                                :vipDiscountDetail="vipDiscountDetail"
+                                @change="handleShopChange"
+                                @priceChange="handleShopPriceChange">
                         </ShopEditor>
                         <div class="content-item">
                             <p class="content-item-title"><span>备注信息</span></p>
