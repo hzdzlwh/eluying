@@ -133,7 +133,7 @@
                     </tr>
                     <tr :key="item.orderId"
                         v-for="(item, index) in orderItems"
-                        v-if="orderItems.length > 0 && !isLoading"
+                        v-if="orderItems.length > 0"
                         :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
                         @click="handleClickTr(item, $event)"
                     >

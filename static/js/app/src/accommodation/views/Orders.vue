@@ -368,7 +368,7 @@ default {
        created() {
            this.getData();
            this.fetchDate();
-           eventbus.$on('refreshView', this.fetchDate());
+           eventbus.$on('refreshView', this.fetchDate);
        },
        mounted() {
            $('#roomsOrderTable tbody').on('click', 'tr', function(e) {
@@ -377,7 +377,7 @@ default {
            });
        },
        beforeDestroy: function() {
-           eventbus.$off('refreshView', this.fetchDate());
+           eventbus.$off('refreshView', this.fetchDate);
            $('#roomsOrderTable tbody').off('click');
        },
        watch: {
