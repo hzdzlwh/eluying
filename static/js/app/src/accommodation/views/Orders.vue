@@ -15,7 +15,14 @@
                     <dd-option :key="item.id" v-for="item in timeTypeList" :value="item.id" :label="item.name"></dd-option>
                 </DdSelect>
             </div>
-                    <div class="add-button fr">
+             
+            <div style="margin-right:183px;">
+                <span>使用时间：</span>
+                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
+                <span>～</span>
+                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
+            </div>
+                   <div class="add-button fr">
                 <div class="dd-dropdown">
                     <DdDropdown text="导出明细" trigger="click">
                         <dd-dropdown-item>
@@ -47,12 +54,6 @@
                         </dd-option>
                     </dd-group-option>
                 </dd-select>
-            </div>
-            <div style="margin-right:183px;">
-                <span>使用时间：</span>
-                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
-                <span>～</span>
-                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
             </div>
             <div style="margin-right:20px;width: 120px;" class="fr">
                 <dd-select v-model="state">
@@ -364,9 +365,7 @@ default {
                        width: 0
                    }
                ],
-               detailTab: undefined,
-               detailId: undefined,
-               detailTitle: undefined
+               flag: true
            };
        },
        created() {
@@ -386,25 +385,39 @@ default {
        },
        watch: {
            userOriginType() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            state() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            endTime() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            pageNo() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            startTime() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            tag() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            },
            timeType() {
-               this.fetchDate();
+               if (this.flag) {
+                   this.fetchDate();
+               }
            }
        },
        methods: {
@@ -475,6 +488,7 @@ default {
                         //     this.timeType = 1;
                         //     $("#search").val('');
                         // }
+                       this.flag = true;
                    }
                });
            },
@@ -517,7 +531,16 @@ default {
            },
            search() {
                this.searchPattern = this.$refs.searchInput.value;
+               this.flag = false;
                this.tag = 0;
+               this.discountRelatedId = undefined;
+               this.endTime = '';
+               this.pageNo = 1;
+               this.originId = undefined;
+               this.startTime = '';
+               this.state = -1;
+               this.timeType = 1;
+               this.userOriginType = '-2~-2';
                this.fetchDate(this.searchPattern);
            },
            handlePageChange: function(internalCurrentPage) {
