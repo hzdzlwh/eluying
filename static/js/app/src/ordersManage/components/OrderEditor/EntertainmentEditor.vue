@@ -166,6 +166,9 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
+            if (this.order.orderType && (this.order.orderType === 2)) {
+                return [];
+            }
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
@@ -175,6 +178,7 @@ export default {
                         const enter = { ...item
                         };
                     // enter.price = Number((item.originPrice).toFixed(2));
+                        enter.name = item.name || item.itemName;
                         enter.price = item.originPrice;
                         enter.changeTimes = 0;
                         enter.id = item.categoryId;
@@ -193,7 +197,7 @@ export default {
                     filterEnters.forEach(item => {
                         const enter = { ...item
                         };
-                        enter.name = item.customerName;
+                        enter.name = item.itemName;
                         enter.usedAmount = item.bookNum - item.enableAmount;
                         enter.unitTime = item.chargeUnitTime;
                         enter.price = item.originPrice;

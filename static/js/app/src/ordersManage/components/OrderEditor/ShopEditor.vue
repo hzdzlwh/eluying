@@ -8,7 +8,7 @@
                     添加项目
                 </span>
             </p>
-            <div v-if="order.creationTime" class="items">
+            <div  class="items">
                 <div class="shop-item"
                      :class="shopGoodsItems.length > 0 ? 'shopItem-border-style' : ''"
                      style="align-items: stretch;flex-direction: column"
@@ -137,9 +137,11 @@
         },
         created() {
             bus.$on('submitOrder', this.changeGoods);
+            bus.$on('refreshView', this.resetShop);
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeGoods);
+            bus.$off('refreshView', this.resetShop);
         },
         computed: {
             ...mapState({ shopList: 'shopList' }),
@@ -199,7 +201,7 @@
                     const orderId = this.order.goodsOrderId;
                     this.editShopList[orderId]['items'].forEach(item => {
                         goodsList.forEach((good, index) => {
-                            if (item.id === Number(good.id)) {
+                            if (Number(item.id) === Number(good.id)) {
                                 item.amount += good.amount;
                                 goodsList.splice(index, 1);
                             }
@@ -209,7 +211,7 @@
                 } else {
                     this.shopGoodsItems.forEach(item => {
                         goodsList.forEach((good, index) => {
-                            if (good.id === Number(good.id)) {
+                            if (Number(item.id) === Number(good.id)) {
                                 item.amount += good.amount;
                                 goodsList.splice(index, 1);
                             }
@@ -262,6 +264,9 @@
                 const goods = JSON.parse(JSON.stringify(this.editShopList));
                 const items = JSON.parse(JSON.stringify(this.shopGoodsItems));
                 this.$emit('change', { goods: goods, items: items });
+            },
+            resetShop() {
+                this.shopGoodsItems = [];
             }
         },
         components: {
@@ -273,17 +278,19 @@
                 const shopList = {};
                 if (newVal.pcGoodsItems && newVal.pcGoodsItems.length > 0) {
                     newVal.pcGoodsItems.forEach(item => {
-                        item.id = item.goodsId;
-                        if (shopList[item.goodsOrderId]) {
-                            shopList[item.goodsOrderId]['items'].push(item);
-                        } else {
-                            shopList[item.goodsOrderId] = {};
-                            shopList[item.goodsOrderId]['time'] = item.date;
-                            shopList[item.goodsOrderId]['items'] = [];
-                            shopList[item.goodsOrderId]['items'].push(item);
+                        if (item.state === 1) {
+                            item.id = item.goodsId;
+                            if (shopList[item.goodsOrderId]) {
+                                shopList[item.goodsOrderId]['items'].push(item);
+                            } else {
+                                shopList[item.goodsOrderId] = {};
+                                shopList[item.goodsOrderId]['time'] = item.date;
+                                shopList[item.goodsOrderId]['items'] = [];
+                                shopList[item.goodsOrderId]['items'].push(item);
+                            }
                         }
                     });
-                } else if (newVal.goodsOrderId) {
+                } else if (newVal.goodsOrderId && newVal.goodsOrderId.state === 1) {
                     const orderId = newVal.goodsOrderId;
                     shopList[orderId] = {};
                     shopList[orderId]['time'] = this.order.creationTime;

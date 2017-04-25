@@ -1002,8 +1002,8 @@
                     '-1': 'resettleCombinedOrder',
                     '3': 'resettleRoomOrder',
                     '1': 'resettleEnterOrder',
-                    '2': 'resettleCaterOrder',
-                    '0': 'resettleGoodsOrder'
+                    '2': 'resettleGoodsOrder',
+                    '0': 'resettleCaterOrder'
                 }
             };
         },
