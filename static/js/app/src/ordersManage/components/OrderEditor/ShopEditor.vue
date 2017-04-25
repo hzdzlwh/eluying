@@ -280,14 +280,16 @@
                 const shopList = {};
                 if (newVal.pcGoodsItems && newVal.pcGoodsItems.length > 0) {
                     newVal.pcGoodsItems.forEach(item => {
-                        item.id = item.goodsId;
-                        if (shopList[item.goodsOrderId]) {
-                            shopList[item.goodsOrderId]['items'].push(item);
-                        } else {
-                            shopList[item.goodsOrderId] = {};
-                            shopList[item.goodsOrderId]['time'] = item.date;
-                            shopList[item.goodsOrderId]['items'] = [];
-                            shopList[item.goodsOrderId]['items'].push(item);
+                        if (item.state === 1 || item.state === 8) {
+                            item.id = item.goodsId;
+                            if (shopList[item.goodsOrderId]) {
+                                shopList[item.goodsOrderId]['items'].push(item);
+                            } else {
+                                shopList[item.goodsOrderId] = {};
+                                shopList[item.goodsOrderId]['time'] = item.date;
+                                shopList[item.goodsOrderId]['items'] = [];
+                                shopList[item.goodsOrderId]['items'].push(item);
+                            }
                         }
                     });
                 } else if (newVal.goodsOrderId) {

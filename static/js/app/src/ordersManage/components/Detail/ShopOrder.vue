@@ -49,15 +49,13 @@
                 const shopList = {};
                 if (this.order.pcGoodsItems) {
                     this.order.pcGoodsItems.forEach(item => {
-                        if (item.state === 1) {
-                            if (shopList[item.goodsOrderId]) {
-                                shopList[item.goodsOrderId]['items'].push(item);
-                            } else {
-                                shopList[item.goodsOrderId] = {};
-                                shopList[item.goodsOrderId]['time'] = item.date;
-                                shopList[item.goodsOrderId]['items'] = [];
-                                shopList[item.goodsOrderId]['items'].push(item);
-                            }
+                        if (shopList[item.goodsOrderId]) {
+                            shopList[item.goodsOrderId]['items'].push(item);
+                        } else {
+                            shopList[item.goodsOrderId] = {};
+                            shopList[item.goodsOrderId]['time'] = item.date;
+                            shopList[item.goodsOrderId]['items'] = [];
+                            shopList[item.goodsOrderId]['items'].push(item);
                         }
                     });
                 } else if (this.order.goodsOrderId) {
