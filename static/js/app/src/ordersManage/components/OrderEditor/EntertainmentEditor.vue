@@ -166,7 +166,7 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
-            if (this.order.orderType && (this.order.orderType === 2)) {
+            if (this.order.type && (this.order.type === ORDER_TYPE.RETAIL)) {
                 return [];
             }
             if (this.order.type) {
