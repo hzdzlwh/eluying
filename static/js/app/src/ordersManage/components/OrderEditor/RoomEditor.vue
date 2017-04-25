@@ -520,6 +520,7 @@
                                 });
                                 currentRoom.showDiscount = item.showDiscount;
                                 currentRoom.priceModified = false;
+                                currentRoom.originPrice = item.originTotalFee;
                             });
                         }
                     });
