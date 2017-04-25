@@ -337,42 +337,24 @@
                 });
             },
             initRegisterRooms(rooms) {
-                rooms.forEach(item => {
-                    item.endDate = util.diffDate(item.endDate, 1);
-                    const duration = this.dateDiff(item.startDate, item.endDate);
-                    http.get('/room/getRoomStaus', { id: item.roomId,
-                        date: util.dateFormat(item.startDate),
-                        days: duration })
-                        .then(res => {
-                            const datePriceList = [];
-                            let price = 0;
-                            res.data.rs.status.forEach((option, index) => {
-                                const fee = option.p;
-                                datePriceList.push({ date: util.dateFormat(util.diffDate(item.startDate, index)), dateFee: fee, showInput: false });
-                                price += option.p;
-                            });
-                            // 每日房价分配比例
-                            const priceScale = datePriceList.map(dat => {
-                                return dat.dateFee / price;
-                            });
-                            this.rooms.push({
-                                categoryType: item.categoryType,
-                                roomType: item.roomId,
-                                price: Number(price.toFixed(2)),
-                                originPrice: Number(price.toFixed(2)),
-                                room: item, idCardList: [],
-                                changeTimes: 0,
-                                showPriceList: false,
-                                datePriceList: datePriceList,
-                                haveRequest: true,
-                                priceScale: priceScale,
-                                showTip: false,
-                                quickDiscountId: ''
-                            });
-                        });
-                });
-                this.rooms.map(room => {
-                    this.lastRoomsToken[room.roomType] = JSON.stringify(room);
+                this.rooms = rooms.map(room => {
+                    room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
+
+                    return {
+                        categoryType: room.categoryType,
+                        roomType: room.roomId,
+                        price: undefined,
+                        originPrice: undefined,
+                        room: room,
+                        idCardList: [],
+                        changeTimes: 0,
+                        showPriceList: false,
+                        datePriceList: [],
+                        haveRequest: true,
+                        priceScale: [],
+                        showTip: false,
+                        quickDiscountId: ''
+                    };
                 });
             },
             addRoom() {
