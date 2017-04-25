@@ -308,22 +308,26 @@ default {
                col: [
                    {
                        title: '订单号',
-                       dataIndex: 'orderNum'
+                       dataIndex: 'orderNum',
+                       width: 180
                    },
                    {
                        title: '房号',
-                        // render: (h, row) => row.rooms.map(function(room){
-                        //     return <div>{room}</div>
-                        // })
-                       render: (h, row) => row.rooms
+                       render: (h, row) => row.rooms.map(function(room) {
+                           return <div style="textAlign:center">{room.roomName}</div>;
+                       })
                    },
                    {
                        title: '入住时间',
-                       dataIndex: 'startDate'
+                       render: (h, row) => row.rooms.map(function(room) {
+                           return <div style="textAlign:center">{room.startDate}</div>;
+                       })
                    },
                    {
                        title: '退房时间',
-                       dataIndex: 'endDate'
+                       render: (h, row) => row.rooms.map(function(room) {
+                           return <div style="textAlign:center">{room.endDate}</div>;
+                       })
                    },
                    {
                        title: '联系人',
