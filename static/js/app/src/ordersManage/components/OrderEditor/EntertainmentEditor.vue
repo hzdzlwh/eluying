@@ -8,7 +8,7 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" v-if='!orderType || item.state === 0 || item.state === undefined' :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType || item.state === 0 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
@@ -166,9 +166,6 @@ export default {
         getplayItems() {
             const enterItems = [];
             let filterEnters = [];
-            if (this.order.orderType && (this.order.orderType === 2)) {
-                return [];
-            }
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
@@ -192,7 +189,7 @@ export default {
                         enterItems.push(enter);
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
-                } else {
+                } else if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
                     filterEnters = [this.order];
                     filterEnters.forEach(item => {
                         const enter = { ...item
@@ -213,9 +210,8 @@ export default {
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
                 }
-            } else {
-                return [];
             }
+            return [];
         },
         addItem() {
             if (this.enterItems.length >= 99) {
