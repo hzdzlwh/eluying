@@ -210,9 +210,8 @@ export default {
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
                 }
-            } else {
-                return [];
             }
+            return [];
         },
         addItem() {
             if (this.enterItems.length >= 99) {
