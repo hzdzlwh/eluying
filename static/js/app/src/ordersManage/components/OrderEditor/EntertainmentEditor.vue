@@ -15,14 +15,14 @@
                             <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0" />
                         </div>
                         <!-- <span v-if="item.usedAmount > 0">{{item.name}}</span> -->
-                        <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
-                        </div>
+                      <!--   <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
+                        </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit']}}）</label>
                             <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']">
                             </counter>
                         </div>
-                        <span v-if="item.usedAmount > 0 && item.chargeUnit" style="position: absolute; right: 466px;">
+                        <span v-if="item.usedAmount > 0 && item.chargeUnit" >
                                             {{`时长(${item.chargeUnit})`}}
                                             <span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span>
                         </span>
@@ -187,6 +187,9 @@ export default {
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                         enter.totalPrice = item.totalPrice;
                         enterItems.push(enter);
+                        if (enter.unitTime === undefined) {
+                            enter.unitTime = item.chargeUnitTime;
+                        }
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));
                 } else if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
