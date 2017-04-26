@@ -659,7 +659,7 @@
                             price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2)
                         };
                     });
-                    this.previousGoods.push(previousItem);
+                    this.previousGoods.unshift(previousItem);
                 }
             },
 
