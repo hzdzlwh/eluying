@@ -72,7 +72,7 @@ modal.confirm(dialogConfig, confirmCallback, cancelCallback);
 // 默认值
 dialogConfig = {
     title: '提醒',
-    message '您确定要这么做吗',
+    message: '您确定要这么做吗',
     okText: '确认',
     cancelText: '取消',
     showTitle: true,
