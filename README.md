@@ -81,6 +81,7 @@ dialogConfig = {
 }
 ```
 soucre: common\modal.js
+
 ##init
 ```js
 init(option);
