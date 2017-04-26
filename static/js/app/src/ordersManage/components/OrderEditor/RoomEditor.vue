@@ -189,7 +189,8 @@
                 }
             },
             vipId(id, oldId) {
-                if (!oldId) {
+                // 防止初始化的时候调接口
+                if (!oldId && !this.userOriginType) {
                     return false;
                 }
 
@@ -272,7 +273,7 @@
                 // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
-                        return room.state === 0 || room.state === 1;
+                        return room.state === 0 || room.state === 1 || room.state === 8;
                     });
                     this.rooms = filterRooms.map(item => {
                         return {
@@ -485,6 +486,10 @@
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
+                    if (!this.vipId) {
+                        return false;
+                    }
+
                     discountRelatedId = this.vipId;
                 }
 
