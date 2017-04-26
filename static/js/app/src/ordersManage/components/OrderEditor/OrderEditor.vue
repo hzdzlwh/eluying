@@ -108,7 +108,7 @@
                                 @change="handleShopChange"
                                 @priceChange="handleShopPriceChange">
                         </ShopEditor>
-                        <div class="content-item">
+                        <div class="content-item" v-if="order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
                                 <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark"
