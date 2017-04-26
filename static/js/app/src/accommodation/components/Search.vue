@@ -161,7 +161,7 @@
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../common/http';
-    import { ORDER_STATUS } from '../const';
+    import { ORDER_STATUS } from '../../ordersManage/constant';
     import bus from '../../common/eventBus';
     export default{
         data() {
