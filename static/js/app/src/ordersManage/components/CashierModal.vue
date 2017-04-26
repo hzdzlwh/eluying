@@ -527,8 +527,8 @@
                             this.resetData();
                             bus.$emit('hideCashier');
                             $('#cashier').modal('hide');
+                            bus.$emit('onShowDetail', { type: params.orderType, orderId: params.orderId });
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { type: this.orderDetail.type, orderId: getOrderId(this.orderDetail) });
                         });
                 } else {
                     this.resetData();
