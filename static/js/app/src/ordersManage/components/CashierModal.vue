@@ -484,6 +484,14 @@
                     };
                     if (this.business.subOrderPenaltys) {
                         businessJson.subOrderPenaltys = JSON.parse(this.business.subOrderPenaltys);
+                    } else if (this.business.penalty) {
+                        payments.push({
+                            fee: Number(this.business.penalty),
+                            payChannelId: -5,
+                            payChannel: '违约金',
+                            type: 4
+                        });
+                        businessJson.payments = [{ fee: Number(this.business.penalty), type: 4 }];
                     }
 
                     params = {
