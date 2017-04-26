@@ -63,6 +63,10 @@
             orderId: {
                 type: Number,
                 default: -1
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
         data(){
@@ -72,9 +76,12 @@
         },
         computed: {},
         methods: {
-            decreaseNum(){
+            decreaseNum() {
+                if (this.disabled) {
+                    return false;
+                }
                 if (this.value <= this.min || this.value <= this.step) {
-                    return;
+                    return false;
                 }
                 this.value -= this.step;
                 if (this.orderId === -1) {
@@ -83,7 +90,10 @@
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
             },
-            increaseNum(){
+            increaseNum() {
+                if (this.disabled) {
+                    return false;
+                }
                 if (this.value >= this.max) {
                     return;
                 }
