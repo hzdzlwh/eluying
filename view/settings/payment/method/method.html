@@ -239,12 +239,12 @@
     <div class="content clearfloat">
         <div class="code-container">
             <p class="c-text">一码通</p>
-            <span class="m-btn-code right back-{{ codeStatus }}" @click="toggleStatus('code')"></span>
+            <span class="m-btn-code right back-{{ codeStatus ? 'open' : 'close' }}" @click="toggleOneCodeStatus"></span>
         </div>
         <div class="method-container">
             <div class="stitle">
                 <p class="c-text">订单钱包<span class="c-text-inner">(订单来了代收,用于微官网、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
-                <span class="m-btn-wallet right back-{{ walletStatus }}" @click="toggleStatus('wallet')"></span>
+                <span class="m-btn-wallet right back-{{ walletStatus }}" @click="toggleWalletStatus"></span>
             </div>
             <div class="s-m-box" v-show="walletShow" transition="show">
                 <div class="hr"></div>
@@ -257,31 +257,21 @@
                                 <th class="col-last">启用</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于微官网、一码通在线充值</span></div></td>
-                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-last"><span class="site-btn back-{{ w_webPayStatus }}" @click="toggleStatus('web-w')"></span></td>
-                            </tr>
-                            <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝当面付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
-                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-last"><span class="site-btn back-{{ w_facePayStatus }}" @click="toggleStatus('face-w')"></span></td>
-                            </tr>
-                            <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信刷卡支付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
-                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-last"><span class="site-btn back-{{ w_cardPayStatus }}" @click="toggleStatus('card-w')"></span></td>
-                            </tr>
-                            <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝即时到账</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
-                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-last"><span class="site-btn back-{{ w_immediaPayStatus }}" @click="toggleStatus('immedia-w')"></span></td>
-                            </tr>
-                            <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信扫码支付</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
-                                <td class="col-second"><div class="dot dot-blue"></div><span>已开通</span></td>
-                                <td class="col-last"><span class="site-btn back-{{ w_codePayStatus }}" @click="toggleStatus('code-w')"></span></td>
+                        <tbody v-if="walletChannels.length > 0">
+                            <tr class="tr-origin" v-for="channel in walletChannels">
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">{{ channel.onlineTypeName }}</span>
+                                        <span class="c-text-sub">{{ channel.tip }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-second">
+                                    <div class="dot dot-blue"></div>
+                                    <span>已开通</span>
+                                </td>
+                                <td class="col-last">
+                                    <span class="site-btn back-{{ channel.useState ? 'open' : 'close' }}" @click="toggleChannelStatus(channel)"></span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -289,7 +279,7 @@
             </div>
             <div class="stitle company-top">
                 <p class="c-text">企业账户<span class="c-text-inner">(用于微官网、一码通在线充值、APP扫码支付、PC条码支付)</span></p>
-                <span class="m-btn-company right back-{{ companyStatus }}" @click="toggleStatus('company')"></span>
+                <span class="m-btn-company right back-{{ companyStatus }}" @click="toggleCompanyStatus"></span>
             </div>
             <div class="s-m-box" v-show="companyShow" transition="fade">
                 <div class="hr"></div>
@@ -305,46 +295,150 @@
                         </thead>
                         <tbody>
                             <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">手机网站支付</span><span class="c-text-sub">用于微官网、一码通在线充值</span></div></td>
-                                <td class="col-not-first"><div class="dot-{{ c_webObj.typeStyle }} dot"></div><span v-text="c_webObj.typeStr"></span></td>
-                                <td class="col-not-first"><div class="hr2"></div></td>
-                                <td class="col-not-first"><span class="site-btn back-{{ c_webPayStatus }}" @click="toggleStatus('web-c')"></span></td>
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">手机网站支付</span>
+                                        <span class="c-text-sub">用于微官网、一码通在线充值</span>
+                                    </div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="dot-{{ companyStatusStyle[1].typeStyle }} dot"></div>
+                                    <span v-text="companyStatusStyle[1].typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="hr2"></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="site-btn back-{{ companyChannelsStatus[1] ? 'open' : 'close' }}"
+                                          @click="toggleChannelStatus(companyChannels[0])">
+                                    </span>
+                                </td>
                             </tr>
                             <tr class="tr-special">
                                 <td class="col-first">企业支付宝</td>
-                                <td class="col-not-first"><div class="dot-{{ c_aliObj.typeStyle }} dot"></div><span v-text="c_aliObj.typeStr"></span></td>
-                                <td class="col-not-first"><span class="company-alipay" data-toggle="modal" data-target="#company-aliPay" v-text="c_aliObj.operationStr" v-if="c_aliObj.typeId !== 0"></span><div class="hr2" v-if="c_aliObj.typeId === 0"></div></td>
-                                <td class="col-not-first"><div class="hr2"></div></td>
+                                <td class="col-not-first">
+                                    <div class="dot-{{ companyStatusStyle.aliPay.typeStyle }} dot"></div>
+                                    <span v-text="companyStatusStyle.aliPay.typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="company-alipay"
+                                          data-toggle="modal"
+                                          data-target="#company-aliPay"
+                                          v-text="companyStatusStyle.aliPay.operationStr"
+                                          v-if="companyStatusStyle.aliPay.typeId !== 0"></span>
+                                    <div class="hr2" v-if="companyStatusStyle.aliPay.typeId === 0"></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="hr2"></div>
+                                </td>
                             </tr>
                             <tr class="tr-special">
                                 <td class="col-first">企业微信支付</td>
-                                <td class="col-not-first"><div class="dot-{{ c_weChatObj.typeStyle }} dot"></div><span v-text="c_weChatObj.typeStr"></span></td>
-                                <td class="col-not-first"><span class="company-wechat" data-toggle="modal" data-target="#method-wechatMethod" v-text="c_weChatObj.operationStr" v-if="c_weChatObj.typeId !== 0"></span><div class="hr2" v-if="c_weChatObj.typeId === 0"></div></td>
-                                <td class="col-not-first"><div class="hr2"></div></td>
+                                <td class="col-not-first">
+                                    <div class="dot-{{ companyStatusStyle.weChatPay.typeStyle }} dot"></div>
+                                    <span v-text="companyStatusStyle.weChatPay.typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="company-wechat"
+                                          data-toggle="modal"
+                                          data-target="#method-wechatMethod"
+                                          v-text="companyStatusStyle.weChatPay.operationStr"
+                                          v-if="companyStatusStyle.weChatPay.typeId !== 0"></span>
+                                    <div class="hr2" v-if="companyStatusStyle.weChatPay.typeId === 0"></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="hr2"></div>
+                                </td>
                             </tr>
                             <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝当面付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-{{ c_faceObj.typeStyle }}"></div><span v-text="c_faceObj.typeStr"></span></td>
-                                <td class="col-not-first"><span class="face-pay-account" data-toggle="modal" data-target="#ali-facePay" v-text="c_faceObj.operationStr" v-if="c_faceObj.typeId !==0"></span><div class="hr2" v-if="c_faceObj.typeId ===0 "></div></td>
-                                <td class="col-not-first"><span class="alipay-btn back-{{ c_facePayStatus }}" @click="toggleStatus('face-c')"></span></td>
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">支付宝当面付</span>
+                                        <span class="c-text-sub">用于PC条码支付</span>
+                                    </div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="dot dot-{{ companyStatusStyle[2].typeStyle }}"></div>
+                                    <span v-text="companyStatusStyle[2].typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="face-pay-account"
+                                          data-toggle="modal"
+                                          data-target="#ali-facePay"
+                                          v-text="companyStatusStyle[2].operationStr"
+                                          v-if="companyStatusStyle[2].typeId !==0"></span>
+                                    <div class="hr2" v-if="companyStatusStyle[2].typeId ===0 "></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="alipay-btn back-{{ companyChannelsStatus[2] ? 'open' : 'close' }}"
+                                          @click="toggleChannelStatus(companyChannels[1])">
+                                    </span>
+                                </td>
                             </tr>
                             <tr class="tr-origin">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">支付宝即时到账</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-{{ c_immediaObj.typeStyle }}"></div><span v-text="c_immediaObj.typeStr"></span></td>
-                                <td class="col-not-first"><span class="immedia-pay-account" data-toggle="modal" data-target="#ali-immediaPay" v-text="c_immediaObj.operationStr" v-if="c_immediaObj.typeId !==0"></span><div class="hr2" v-if="c_immediaObj.typeId ===0 "></div></td>
-                                <td class="col-not-first"><span class="immedia-btn back-{{ c_immediaPayStatus }}" @click="toggleStatus('immedia-c')"></span></td>
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">支付宝即时到账</span>
+                                        <span class="c-text-sub">用于APP扫码支付</span>
+                                    </div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="dot dot-{{ companyStatusStyle[3].typeStyle }}"></div>
+                                    <span v-text="companyStatusStyle[3].typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="immedia-pay-account"
+                                          data-toggle="modal"
+                                          data-target="#ali-immediaPay"
+                                          v-text="companyStatusStyle[3].operationStr"
+                                          v-if="companyStatusStyle[3].typeId !==0"></span>
+                                    <div class="hr2" v-if="companyStatusStyle[3].typeId ===0 "></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="immedia-btn back-{{ companyChannelsStatus[3] ? 'open' : 'close' }}"
+                                          @click="toggleChannelStatus(companyChannels[3])">
+                                    </span>
+                                </td>
                             </tr>
-                            <tr class="tr-origin" v-if="c_weChatObj.typeId === 1">
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信刷卡支付</span><span class="c-text-sub">用于PC条码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-{{ c_weChatObj.typeStyle }}"></div><span v-text="c_weChatObj.typeStr"></span></td>
-                                <td class="col-not-first"><div class="hr2"></div></td>
-                                <td class="col-not-first"><span class="card-btn back-{{ c_cardPayStatus }}" @click="toggleStatus('card-c')"></span></td>
+                            <tr class="tr-origin" v-if="companyStatusStyle.weChatPay.typeId === 1">
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">微信刷卡支付</span>
+                                        <span class="c-text-sub">用于PC条码支付</span>
+                                    </div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="dot dot-{{ companyStatusStyle.weChatPay.typeStyle }}"></div>
+                                    <span v-text="companyStatusStyle.weChatPay.typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="hr2"></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="card-btn back-{{ companyChannelsStatus[4] ? 'open' : 'close' }}"
+                                          @click="toggleChannelStatus(companyChannels[2])">
+                                    </span>
+                                </td>
                             </tr>
-                            <tr class="tr-origin"v-if="c_weChatObj.typeId === 1" >
-                                <td class="col-first"><div class="c-text-container"><span class="c-text-par">微信扫码支付</span><span class="c-text-sub">用于APP扫码支付</span></div></td>
-                                <td class="col-not-first"><div class="dot dot-{{ c_weChatObj.typeStyle }}"></div><span v-text="c_weChatObj.typeStr"></span></td>
-                                <td class="col-not-first"><div class="hr2"></div></td>
-                                <td class="col-not-first"><span class="code-btn back-{{ c_codePayStatus }}" @click="toggleStatus('code-c')"></span></td>
+                            <tr class="tr-origin" v-if="companyStatusStyle.weChatPay.typeId === 1">
+                                <td class="col-first">
+                                    <div class="c-text-container">
+                                        <span class="c-text-par">微信扫码支付</span>
+                                        <span class="c-text-sub">用于APP扫码支付</span>
+                                    </div>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="dot dot-{{ companyStatusStyle.weChatPay.typeStyle }}"></div>
+                                    <span v-text="companyStatusStyle.weChatPay.typeStr"></span>
+                                </td>
+                                <td class="col-not-first">
+                                    <div class="hr2"></div>
+                                </td>
+                                <td class="col-not-first">
+                                    <span class="code-btn back-{{ companyChannelsStatus[5] ? 'open' : 'close' }}"
+                                          @click="toggleChannelStatus(companyChannels[4])">
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

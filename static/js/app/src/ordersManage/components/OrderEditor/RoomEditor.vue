@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <span class="delete-icon" @click="deleteRoom(index)"
-                          v-if="(!item.state || item.state !== 1) && ((order.roomInfo && !order.isCombinationOrde) || order.rooms)">
+                          v-if="(!item.state || (item.state !== 1 && item.state !== 8)) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms)">
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
