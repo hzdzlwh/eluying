@@ -130,6 +130,7 @@
             return {
                 rooms: [],
                 quickDiscounts: [],
+                forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
                 lastRoomsToken: {} // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
             };
         },
@@ -175,8 +176,9 @@
                 }
 
                 if (this.rooms.length > 0) {
+                    this.forceChangePrice = true;
                     // 更改渠道
-                    this.modifyRooms(this.rooms, true);
+                    this.modifyRooms(this.rooms);
                 }
             },
             vipDiscountDetail(newVal, oldVal) {
@@ -267,6 +269,7 @@
                 return Number((room.originPrice * this.vipDiscount).toFixed(2));
             },
             initRooms() {
+                this.forceChangePrice = false;
                 this.lastRoomsToken = {};
                 const order = this.order;
 
@@ -338,6 +341,7 @@
                 });
             },
             initRegisterRooms(rooms) {
+                this.forceChangePrice = false;
                 this.lastRoomsToken = {};
                 this.rooms = rooms.map(room => {
                     room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
@@ -479,7 +483,7 @@
              * @param rooms
              * @param forceChangePrice 修改渠道导致的价格更新传true
              */
-            modifyRooms(rooms, forceChangePrice) {
+            modifyRooms(rooms) {
                 // 会员-1，企业-2
                 const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
                 let discountRelatedId; // eslint-disable-line
@@ -506,7 +510,7 @@
                             roomId: room.roomType
                         };
                     })),
-                    forceChangePrice: forceChangePrice
+                    forceChangePrice: this.forceChangePrice
                 };
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
