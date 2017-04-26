@@ -13,8 +13,8 @@
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>¥{{(orderPayment.paidFee - orderPayment.refundFee).toFixed(2)}}</span></span>
-                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}</span></span>
+                                <span class="cashier-money-text">已付金额:<span>¥{{ paiedMoney }}</span></span>
+                                <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span>
                             </div>
                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
                                 <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
@@ -75,7 +75,7 @@
                             <span class="footer-label">
                                 {{orderState ? '需补金额:' : '需退金额:'}}
                                 <span class="order-price-num" :class="orderState ? 'green' : 'red'">
-                                    ¥{{Math.abs((type === 'cancel' ? 0 : orderPayment.payableFee) - (orderPayment.paidFee - orderPayment.refundFee) + penalty).toFixed(2)}}
+                                    ¥{{ notPay }}
                                 </span>
                             </span>
                             <span v-if="totalDeposit != 0" class="footer-label">
@@ -183,14 +183,21 @@
                 uniqueId: 0,
                 isCompany: false,
                 companyCityLedger: false,
-                companyBalance: undefined
+                companyBalance: undefined,
+                hasPayHistory: false
             };
         },
         computed: {
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
+                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
+                    if (this.type === 'resetOrder' && this.hasPayHistory) {
+                        let paidFee = this.paylogs.reduce((a, b) => {
+                            return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee))
+                        }, 0);
+                        return Number(this.orderPayment.payableFee - paidFee).toFixed(2) >= 0;
+                    }
                     return income >= 0;
                 }
                 return false;
@@ -206,6 +213,26 @@
                 const cashierType = this.business.cashierType;
                 const deposit = this.totalDeposit;
                 return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
+            },
+            notPay() { // 需补或或需退金额
+                let payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2);
+                if (this.type === 'resetOrder' && this.hasPayHistory) {
+                    let payFee = this.paylogs.reduce((a, b) => {
+                        return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
+                    }, 0);
+                    return Math.abs(Number(this.orderPayment.payableFee - payFee).toFixed(2));
+                }
+                return Math.abs(Number(payMoney).toFixed(2));
+            },
+            paiedMoney() { // 已付金额
+                let paiedFee = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
+                if (this.type === 'resetOrder' && this.hasPayHistory) {
+                    let paiedMoney = this.paylogs.reduce((a, b) => {
+                        return a + (b.type === 0 ? Number(b.fee) : 0);
+                    }, 0);
+                    return Number(paiedMoney).toFixed(2);
+                }
+                return Number(paiedFee).toFixed(2);
             }
         },
         created() {
@@ -248,6 +275,7 @@
                 this.isCompany = false;
                 this.companyCityLedger = false;
                 this.companyBalance = undefined;
+                this.hasPayHistory = false;
             },
             getPayChannels(index) {
                 if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
@@ -314,6 +342,9 @@
                             this.orderPayment = res.data;
                             if (res.data.payments && res.data.payments.length > 0) {
                                 this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
+                                if (this.paylogs.length > 0) {
+                                    this.hasPayHistory = true;
+                                }
                             }
                             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                             if (Number(payMoney) !== 0) {
