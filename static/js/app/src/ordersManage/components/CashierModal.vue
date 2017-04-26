@@ -424,7 +424,7 @@
                     const newReceiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                     const shouldReceiveMoney = this.orderPayment.payableFee;
                     if (oldReceiveMoney + newReceiveMoney !== Number(shouldReceiveMoney)) {
-                        modal.alert('反结账有误!');
+                        modal.alert('订单未结清!');
                         return false;
                     }
                 }
