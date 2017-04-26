@@ -174,18 +174,15 @@ function getNotifyInstance() {
     return notifyInstance;
 }
 
-function error(msg) {
-    const notify = getNotifyInstance();
-    notify.add(msg, { type: 'error' });
-}
+const notifyTypes = ['error', 'warn', 'success'];
 
-function warn(msg) {
-    const notify = getNotifyInstance();
-    notify.add(msg, { type: 'warn' });
-}
+notifyTypes.map(type => {
+    exports[type] = function(msg) {
+        const notify = getNotifyInstance();
+        notify.add(msg, { type: type });
+    };
+});
 
-exports.error = error;
-exports.warn = warn;
 exports.Spin = Spin;
 exports.centerModals = centerModals;
 exports.clearModal = clearModal;

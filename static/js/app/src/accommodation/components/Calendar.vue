@@ -528,7 +528,6 @@
     import RoomFilter from './RoomFilter.vue';
     import util from 'util';
     import http from '../../common/http';
-    import modal from '../../common/modal';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
     export default{

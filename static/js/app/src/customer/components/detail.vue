@@ -171,7 +171,6 @@
         DdDatepicker
     } from 'dd-vue-component';
     import http from '../../common/http';
-    import modal from '../../common/modal';
     import auth from '../../common/auth';
 
     const states = [

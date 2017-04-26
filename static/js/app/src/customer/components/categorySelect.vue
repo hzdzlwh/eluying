@@ -73,7 +73,6 @@
     }
 </style>
 <script>
-    import modal from '../../common/modal';
     import http from '../../common/http';
 
     export default{
