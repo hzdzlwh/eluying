@@ -69,7 +69,7 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: [],
+                subOrders: []
             };
         },
         computed: {
@@ -129,14 +129,7 @@
                     modal.warn('请输入违约金！');
                     return false;
                 }
-                if (this.penalty && this.order.type !== -1) {
-                    this.subOrderPenaltys[0] = {};
-                    this.subOrderPenaltys[0].nodeId = this.subOrders[0].nodeId;
-                    this.subOrderPenaltys[0].nodeName = this.subOrders[0].nodeName;
-                    this.subOrderPenaltys[0].subOrderType = this.subOrders[0].subOrderType;
-                    this.subOrderPenaltys[0].penalty = this.penalty;
-                    business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
-                } else if (this.subOrderPenaltys.length > 0 && this.order.type === -1) {
+                if (this.subOrderPenaltys.length > 0 && this.order.type === -1) {
                     this.subOrderPenaltys.forEach(subOrderPenalty => {
                         this.subOrders.forEach(subOrder => {
                             if (subOrderPenalty.nodeId === subOrder.nodeId) {
