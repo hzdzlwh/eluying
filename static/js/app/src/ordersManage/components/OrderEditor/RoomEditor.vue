@@ -269,6 +269,7 @@
                 return Number((room.originPrice * this.vipDiscount).toFixed(2));
             },
             initRooms() {
+                this.forceChangePrice = false;
                 this.lastRoomsToken = {};
                 const order = this.order;
 
@@ -340,6 +341,7 @@
                 });
             },
             initRegisterRooms(rooms) {
+                this.forceChangePrice = false;
                 this.lastRoomsToken = {};
                 this.rooms = rooms.map(room => {
                     room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
