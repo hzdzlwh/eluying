@@ -51,7 +51,7 @@
                                 <div class="userInfo-item">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))">
+                                        <dd-select v-model="userOriginType" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :key="origin" v-for="origin in userSelfOrigins"
                                                        :value="origin" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
@@ -59,7 +59,7 @@
                                             <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
                                                              :key="item" v-if="item.origins.length > 0">
                                                 <dd-option v-for="origin in item.origins" :key="origin"
-                                                           :value="origin" :label="`企业(${origin.name})`">
+                                                           :value="origin" :label="origin.id > 0 ? origin.name : `企业(${origin.name})`">
                                                     <div class="user-group-origin">
                                                         <span class="user-group-company" :title="origin.name">
                                                             {{ origin.name }}
@@ -503,7 +503,6 @@
                             }
 
                             if (origin.id > 0) {
-                                origin.originType = `${origin.id}~${origin.id}`;
                                 origin.info = origin.name;
                                 otherOrigins.push(origin);
                             }
