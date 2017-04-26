@@ -80,7 +80,7 @@ function confirm(dialogConfig, confirmCallback, cancelCallback) {
         $('body').prepend('<div class="confirm-dialog-container"></div>');
     }
     $('.confirm-dialog-container').html(
-        "<div class='modal fade' role='dialog' id='confirm'>" +
+        "<div class='modal fade' role='dialog' id='confirmDialog'>" +
         "<div class='modal-dialog' style='width: 300px'>" +
         "<div class='modal-content clearfloat'>" +
         header +
@@ -94,20 +94,16 @@ function confirm(dialogConfig, confirmCallback, cancelCallback) {
         '</div>' +
         '</div>' +
         '</div>');
-    $('#confirm').modal('show');
+    $('#confirmDialog').modal('show');
     centerModals();
     hasOk !== false && $('#confirmDialogOk').on('click', function() {
-        $('#confirm').modal('hide');
+        $('#confirmDialog').modal('hide');
         // bootstrap 去遮罩要再fade动画完成后执行，时间是300ms
         confirmCallback && setTimeout(confirmCallback, 301);
-        // $(".modal-backdrop").remove();
-        // $("#confirm").remove();
     });
     hasCancel !== false && $('#confirmDialogCancel').on('click', function() {
-        $('#confirm').modal('hide');
+        $('#confirmDialog').modal('hide');
         cancelCallback && setTimeout(cancelCallback, 301);
-        // $(".modal-backdrop").remove();
-        // $("#confirm").remove();
     });
 }
 
