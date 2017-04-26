@@ -300,17 +300,9 @@ export default {
                 http.get('/contractCompany/removeCompany', {
                     cid: id
                 }).then(res => {
-                    if (res.code === 1) {
-                        modal.alert('删除成功');
-                        that.fetchDate();
-                        that.detailClose();
-                    } else {
-                        if (res.code === 10) {
-                            modal.alert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
-                        } else {
-                            modal.alert(res.msg);
-                        }
-                    }
+                    modal.success('删除成功');
+                    that.fetchDate();
+                    that.detailClose();
                 });
             });
         },
@@ -329,57 +321,53 @@ export default {
                     originRelatedId: date.cid
                 };
                 http.get('/user/getChannels', dataobject).then(res => {
-                    if (res.code === 1) {
-                        this.check.type = checkType;
-                        const moreChannel = [];
-                        if (checkType === 0) {
-                            // if (res.data.contractCompany.companyPay) {
-                            //     moreChannel.push({
-                            //         id: - 15,
-                            //         name: '企业扣费'
-                            //     });
-                            // }
-                        }
-                        if (checkType === 1) {
-                            // if (res.data.contractCompany.companyPay) {
-                            //     moreChannel = [{
-                            //         id: - 15,
-                            //         name: '退款至企业'
-                            //     }];
-                            // }
-                            this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
-                                const id = element.id;
-                                return !(id === -6 || id === -7 || id === -11 || id === -12);
-                            }));
-                        }
-                        if (checkType === 2) {
-                            if (date.ledgerFee < 0) {
-                                date.ledgerFee = -date.ledgerFee;
-                                this.check.type = 3;
+                    this.check.type = checkType;
+                    const moreChannel = [];
+                    if (checkType === 0) {
+                        // if (res.data.contractCompany.companyPay) {
+                        //     moreChannel.push({
+                        //         id: - 15,
+                        //         name: '企业扣费'
+                        //     });
+                        // }
+                    }
+                    if (checkType === 1) {
+                        // if (res.data.contractCompany.companyPay) {
+                        //     moreChannel = [{
+                        //         id: - 15,
+                        //         name: '退款至企业'
+                        //     }];
+                        // }
+                        this.check.chekcType = moreChannel.concat(res.data.list.filter(function(element) {
+                            const id = element.id;
+                            return !(id === -6 || id === -7 || id === -11 || id === -12);
+                        }));
+                    }
+                    if (checkType === 2) {
+                        if (date.ledgerFee < 0) {
+                            date.ledgerFee = -date.ledgerFee;
+                            this.check.type = 3;
+                            moreChannel.push({
+                                id: -15,
+                                name: '退款至企业'
+                            });
+                        } else {
+                            if (res.data.contractCompany && res.data.contractCompany.companyPay) {
                                 moreChannel.push({
                                     id: -15,
-                                    name: '退款至企业'
+                                    name: '企业扣款'
                                 });
-                            } else {
-                                if (res.data.contractCompany && res.data.contractCompany.companyPay) {
-                                    moreChannel.push({
-                                        id: -15,
-                                        name: '企业扣款'
-                                    });
-                                }
                             }
                         }
-                        this.check.chekcType = moreChannel.concat(res.data.list);
-                        this.check.show = true;
-                        this.check.data = {
-                            rechargeFee: date.rechargeFee,
-                            ledgerFee: date.ledgerFee,
-                            cid: date.cid,
-                            name: date.companyName
-                        };
-                    } else {
-                        modal.alert(res.msg);
                     }
+                    this.check.chekcType = moreChannel.concat(res.data.list);
+                    this.check.show = true;
+                    this.check.data = {
+                        rechargeFee: date.rechargeFee,
+                        ledgerFee: date.ledgerFee,
+                        cid: date.cid,
+                        name: date.companyName
+                    };
                 });
             } else {
                 this.detailid = date.cid;
@@ -389,11 +377,7 @@ export default {
                 http.get('/contractCompany/getDetail', {
                     cid: date.cid
                 }).then(res => {
-                    if (res.code === 1) {
-                        this.detailData = res.data;
-                    } else {
-                        modal.alert(res.msg);
-                    }
+                    this.detailData = res.data;
                 });
             }
         },

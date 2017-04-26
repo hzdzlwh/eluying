@@ -642,7 +642,7 @@
             }
         }
         .content-item {
-            padding: 16px 24px;
+            padding: 18px 24px;
             border-top: 1px solid $gary-light;
         }
         .increase-container {
@@ -1211,7 +1211,7 @@
                             if (haveToday) {
                                 $('#checkIn').modal({ backdrop: 'static' });
                             } else {
-                                modal.alert('未到办理入住的时间，无法入住！');
+                                modal.warn('未到办理入住的时间，无法入住！');
                                 return false;
                             }
                         } else {
@@ -1219,20 +1219,13 @@
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
                         this.hideModal();
-                    })
-                    .catch(res => {
-                        modal.alert(res.msg);
                     });
             },
             resetOrder() {
                 http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
                     .then(res => {
-                        if (res.code === 1) {
-                            this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
-                            bus.$emit('refreshView');
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        bus.$emit('refreshView');
                     });
             }
         }

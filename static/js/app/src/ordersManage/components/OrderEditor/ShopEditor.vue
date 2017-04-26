@@ -169,12 +169,12 @@
             // 添加商超项目
             addItem() {
                 if (this.shopGoodsItems.length >= 99) {
-                    modal.alert('一次最多添加99个商超项目!');
+                    modal.warn('一次最多添加99个商超项目!');
                     return false;
                 }
 
                 if (this.shopList.length <= 0) {
-                    modal.alert('请到"网络设置－业务设置"中添加商超项目！');
+                    modal.warn('请到"网络设置－业务设置"中添加商超项目！');
                     return false;
                 }
 
@@ -256,7 +256,7 @@
                     this.shopGoodsItems.splice(index, 1);
                 } else {
                     if (this.editShopList[shopOrderId].items.length <= 1) {
-                        modal.alert('最后一个商品不可删除，请到商超订单中取消订单！');
+                        modal.warn('最后一个商品不可删除，请到商超订单中取消订单！');
                         return false;
                     }
                     this.editShopList[shopOrderId].items.splice(index, 1);

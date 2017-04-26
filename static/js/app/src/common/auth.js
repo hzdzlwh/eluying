@@ -123,7 +123,7 @@ function checkAccess(moduleId) {
             return moduleAuth;
         }
     } catch (e) {
-        modal.alert('请重新登录');
+        modal.warn('请重新登录');
         setTimeout(() => {
             location.href = '/';
         }, 3000);
@@ -148,7 +148,7 @@ function checkSwitch(id) {
         const switchStatus = switches.find(i => i.id === id);
         return switchStatus && !!switchStatus.status;
     } catch (e) {
-        modal.alert('请重新登录');
+        modal.warn('请重新登录');
         setTimeout(() => {
             location.href = '/';
         }, 3000);

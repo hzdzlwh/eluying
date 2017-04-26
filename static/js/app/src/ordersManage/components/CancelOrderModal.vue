@@ -70,7 +70,6 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                isLoading: false
             };
         },
         computed: {
@@ -98,7 +97,7 @@
             },
             addPenalty() {
                 if (this.subOrderPenaltys.length >= this.subOrders.length) {
-                    modal.alert('已选择所有违约项目');
+                    modal.warn('已选择所有违约项目');
                     return false;
                 }
                 this.subOrderPenaltys.push({ nodeId: this.subOrders[0].nodeId, penalty: undefined });
@@ -127,7 +126,7 @@
                     valid = this.subOrderPenaltys.every(subOrderPenalty => { return subOrderPenalty.penalty >= 0 && subOrderPenalty.penalty !== ''; });
                 }
                 if (!valid) {
-                    modal.alert('请输入违约金！');
+                    modal.warn('请输入违约金！');
                     return false;
                 }
                 if (this.penalty && this.order.type !== -1) {
@@ -149,14 +148,10 @@
 
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
-                if (this.isLoading) {
-                    return false;
-                }
-                this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
                     http.get('/order/cancel', business)
                         .then(res => {
-                            modal.alert('取消成功');
+                            modal.success('取消成功');
                             this.hideModal();
                             bus.$emit('refreshView');
                             bus.$emit('showOrder', this.orderId);
@@ -166,7 +161,6 @@
                     business.functionType = 0;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
-                    this.isLoading = false;
                 }
             }
         },
