@@ -19,13 +19,12 @@
   position: relative;
   margin-bottom: 10px;
   min-width: 500px;
-  transition: all 240ms;
+  transition: all 240ms ease;
   &:first-of-type {
     border-radius: 0 0 4px 4px;
   }
 }
 .dd-notify-active {
-  opacity: 0.5;
   transform: translateY(-100%);
 }
 .dd-notify-leave {
