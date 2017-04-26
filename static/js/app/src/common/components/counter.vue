@@ -1,8 +1,8 @@
 <template>
-    <div class="counter-container">
-        <span class="decrease-btn" @click="decreaseNum">-</span>
+    <div class="counter-container" :class="{'notChange': disabled}">
+        <span class="decrease-btn" :class="{'notChange': disabled}" @click="decreaseNum">-</span>
         <span class="value" v-text="value"></span>
-        <span class="increase-btn" @click="increaseNum">+</span>
+        <span class="increase-btn" :class="{'notChange': disabled}" @click="increaseNum">+</span>
         <slot></slot>
     </div>
 </template>
@@ -31,6 +31,9 @@
         border: 1px solid #cccccc;
         padding: 0 4px;
         cursor: pointer;
+    }
+    .notChange {
+        cursor: not-allowed !important;
     }
 </style>
 <script>
