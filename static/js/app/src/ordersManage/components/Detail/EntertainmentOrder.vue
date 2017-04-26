@@ -45,6 +45,9 @@
     </div>
 </template>
 <style scoped>
+.item-name{
+    width: 180px;
+}
 </style>
 <script>
 import bus from '../../../common/eventBus';

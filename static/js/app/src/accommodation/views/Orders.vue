@@ -454,7 +454,7 @@ default {
                                 }
                             });
                             this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                            this.userOriginType = this.userSelfOrigins[0].originType;
+                            // this.userOriginType = this.userSelfOrigins[0].originType;
                         }
                     });
            },
