@@ -121,3 +121,6 @@ defaultOption = {
 类名使用BEM命名方式。 .room-header .room-header-tab
 
 id名驼峰
+
+##git commit提交
+http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
