@@ -189,7 +189,8 @@
                 }
             },
             vipId(id, oldId) {
-                if (!oldId) {
+                // 防止初始化的时候调接口
+                if (!oldId && !this.userOriginType) {
                     return false;
                 }
 
@@ -485,6 +486,10 @@
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
+                    if (!this.vipId) {
+                        return false;
+                    }
+
                     discountRelatedId = this.vipId;
                 }
 
