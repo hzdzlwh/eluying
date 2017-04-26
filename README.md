@@ -118,5 +118,6 @@ defaultOption = {
 缩进：4个空格
 
 ###css
-类名使用BEM命名方式。
+类名使用BEM命名方式。 .room-header .room-header-tab
 
+id名驼峰
