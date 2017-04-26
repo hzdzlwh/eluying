@@ -88,12 +88,6 @@
                                                 findTypePrice(order.payments, 5))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
-                                           v-if="findTypePrice(order.payments, 17) > 0">
-                                            <span class="money-type">零头处理</span>
-                                            <span class="money-num">-¥{{Math.abs(
-                                                findTypePrice(order.payments, 17))}}</span>
-                                        </p>
-                                        <p class="money-item item-indent money-sub-item"
                                            v-if="findTypePrice(order.payments, 11) > 0">
                                             <span class="money-type">取消订单</span>
                                             <span class="money-num">-¥{{Math.abs(
