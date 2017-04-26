@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade roomModals" id="orderEditor" role="dialog" data-backdrop="static">
+        <div class="modal fade roomModals selectComponentModal" id="orderEditor" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- header start -->
@@ -134,6 +134,9 @@
     </div>
 </template>
 <style lang="scss">
+    .selectComponentModal {
+        overflow: visible !important;
+    }
     .userInfo-item:last-child, .select-component-container {
         display: inline-block;
     }

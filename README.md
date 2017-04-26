@@ -8,19 +8,19 @@ yarn
 ```
 
 
-##启动
+## 启动
 ```shell
 npm start
 ```
 
 ## 模块
 使用es6模块
-###导出
+### 导出
 ```js
 export foo;
 export default bar;
 ```
-###导入
+### 导入
 ```js
 import { foo } from './foo';
 import bar from './bar';
@@ -48,7 +48,7 @@ http.post(url, data, config)
     });
 ```
 ```js
-config: {
+config = {
     notify: Boolean // 是否modal.error后端错误信息，默认为true
 }
 ````
@@ -81,7 +81,8 @@ dialogConfig = {
 }
 ```
 soucre: common\modal.js
-##init
+
+## init
 ```js
 init(option);
 defaultOption = {
@@ -95,12 +96,39 @@ defaultOption = {
     clearModal: false
 };
 ```
-##auth
+## auth
+待
 
-##首页的静态页面
+## 首页的静态页面
+
 源文件目录在/static/tpl下。一个页面由gulp-file-include引入不同的模板，再加上页面的内容，最终拼凑成一个页面。
 
 开发新的页面需要先在/static/tpl下创建一个*.html, 然后在/config.js配置文件中的html里添加新页面的路径/static/tpl/*.html。
 然后将需要引入的模板引入，具体可参考feature.html，再编写新页面的代码。
 最后在homeHead.html中加入对应的链接（/view/home/*.html）。
 
+## css
+尽量使用flex，不用float
+
+## 代码风格
+
+### js
+变量名驼峰，清晰有意义。
+
+句尾;
+
+一段if后空1行。
+
+使用单引号。
+
+缩进：4个空格。
+
+注释清晰有意义，尽可能给大部分if判断写注释。
+
+### css
+类名使用BEM命名方式。 .room-header .room-header-tab
+
+id名驼峰
+
+## git commit提交
+http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html

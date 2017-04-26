@@ -12,14 +12,14 @@
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
-                            <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0" />
+                            <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0 || order.orderState === 8" />
                         </div>
                         <!-- <span v-if="item.usedAmount > 0">{{item.name}}</span> -->
                       <!--   <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit']}}）</label>
-                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']">
+                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" :disabled='order.orderState === 8'>
                             </counter>
                         </div>
                         <span v-if="item.usedAmount > 0 && item.chargeUnit" >
@@ -34,7 +34,7 @@
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999">
+                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" :disabled='order.orderState === 8'>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
                                 </p>

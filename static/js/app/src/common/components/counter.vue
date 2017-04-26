@@ -1,8 +1,8 @@
 <template>
-    <div class="counter-container">
-        <span class="decrease-btn" @click="decreaseNum">-</span>
+    <div class="counter-container" :class="{'notChange': disabled}">
+        <span class="decrease-btn" :class="{'notChange': disabled}" @click="decreaseNum">-</span>
         <span class="value" v-text="value"></span>
-        <span class="increase-btn" @click="increaseNum">+</span>
+        <span class="increase-btn" :class="{'notChange': disabled}" @click="increaseNum">+</span>
         <slot></slot>
     </div>
 </template>
@@ -31,6 +31,9 @@
         border: 1px solid #cccccc;
         padding: 0 4px;
         cursor: pointer;
+    }
+    .notChange {
+        cursor: not-allowed !important;
     }
 </style>
 <script>
@@ -63,6 +66,10 @@
             orderId: {
                 type: Number,
                 default: -1
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
         data(){
@@ -72,9 +79,12 @@
         },
         computed: {},
         methods: {
-            decreaseNum(){
+            decreaseNum() {
+                if (this.disabled) {
+                    return false;
+                }
                 if (this.value <= this.min || this.value <= this.step) {
-                    return;
+                    return false;
                 }
                 this.value -= this.step;
                 if (this.orderId === -1) {
@@ -83,7 +93,10 @@
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
             },
-            increaseNum(){
+            increaseNum() {
+                if (this.disabled) {
+                    return false;
+                }
                 if (this.value >= this.max) {
                     return;
                 }

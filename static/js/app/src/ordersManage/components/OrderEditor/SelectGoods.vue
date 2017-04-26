@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade " id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal">
+    <div class="modal fade selectComponentModal" id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal">
         <div class="modal-dialog goodsdialog" v-if='bill'>
             <div class="modal-content">
                 <div class="goodsModals-header">
