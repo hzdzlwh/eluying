@@ -122,7 +122,7 @@ const http = {
 
                 if (result.code === 5) {
                     window.localStorage.clear();
-                    modal.alert('账号在别处登录。');
+                    modal.warn('账号在别处登录。');
                     setTimeout(() => {
                         window.location.href = '/login.html';
                     }, 3000);

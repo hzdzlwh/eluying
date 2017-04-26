@@ -362,7 +362,7 @@
             addRoom() {
                 const len = this.rooms.length;
                 if (this.rooms.length >= 99) {
-                    modal.alert('一个订单最多添加99间房!');
+                    modal.warn('一个订单最多添加99间房!');
                     return false;
                 }
 
@@ -466,7 +466,7 @@
                 if (duration > 400) {
                     const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.alert('入住上限最大为400天，请重新选择入住时间！');
+                        modal.warn('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
@@ -587,7 +587,7 @@
                 this.rooms.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
-                            modal.alert('一间房最多添加20个入住人');
+                            modal.warn('一间房最多添加20个入住人');
                             return false;
                         }
 

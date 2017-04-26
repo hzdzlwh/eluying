@@ -139,7 +139,11 @@ class Spin {
 class Notify {
     constructor() {
         this.createContainer();
-        this.duration = 3000;
+        this.defaultOption = {
+            duration: 3000,
+            type: 'warn'
+        };
+        this.animationDuration = 240;
     }
 
     createContainer() {
@@ -148,17 +152,19 @@ class Notify {
         document.body.appendChild(this.container);
     }
 
-    add(msg) {
+    add(msg, opt) {
+        const option = { ...this.defaultOption, ...opt };
         const notify = document.createElement('div');
-        notify.className = 'dd-notify dd-notify-active';
+        const typeClassName = 'dd-notify-' + option.type;
+        notify.className = 'dd-notify dd-notify-active ' + typeClassName;
         const msgNode = document.createTextNode(msg);
         notify.appendChild(msgNode);
         this.container.appendChild(notify);
         setTimeout(() => notify.classList.remove('dd-notify-active'), 0);
         setTimeout(() => {
             notify.classList.add('dd-notify-active');
-            setTimeout(() => this.container.removeChild(notify), 240);
-        }, this.duration);
+            setTimeout(() => this.container.removeChild(notify), this.animationDuration);
+        }, option.duration);
     }
 }
 
@@ -168,12 +174,15 @@ function getNotifyInstance() {
     return notifyInstance;
 }
 
-function error(msg) {
-    const notify = getNotifyInstance();
-    notify.add(msg);
-}
+const notifyTypes = ['error', 'warn', 'success'];
 
-exports.error = error;
+notifyTypes.map(type => {
+    exports[type] = function(msg) {
+        const notify = getNotifyInstance();
+        notify.add(msg, { type: type });
+    };
+});
+
 exports.Spin = Spin;
 exports.centerModals = centerModals;
 exports.clearModal = clearModal;

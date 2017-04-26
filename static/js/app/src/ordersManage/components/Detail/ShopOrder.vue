@@ -16,7 +16,7 @@
                                   @click="showSingleOrder(item['items'][0])">
                             </span>
                         </div>
-                        <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 14px">
+                        <span class="discount-info" v-if="item.items[0].vipShowDiscount" style="top: 20px">
                             <span>原价<span class="origin-price">¥{{ getTotalPrice(item['items'], false) }}</span></span>
                             <span class="discount-num">
                                 {{ item.items[0].vipShowDiscount }}

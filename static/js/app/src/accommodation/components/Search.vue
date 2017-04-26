@@ -142,6 +142,12 @@
                 border-right: solid #82beff 11px;
             }
         }
+        &.reset {
+            background: #f27979;
+            &::before {
+                border-right: solid #f27979 11px;
+            }
+        }
         &::before {
              content: '';
              position: absolute;
