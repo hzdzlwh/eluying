@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <span class="delete-icon" @click="deleteRoom(index)"
-                          v-if="(!item.state || (item.state !== 1 && item.state !== 8)) && ((order.roomInfo && !order.isCombinationOrde) || order.rooms)">
+                          v-if="(!item.state || (item.state !== 1 && item.state !== 8)) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms)">
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info"
@@ -189,7 +189,8 @@
                 }
             },
             vipId(id, oldId) {
-                if (!oldId) {
+                // 防止初始化的时候调接口
+                if (!oldId && !this.userOriginType) {
                     return false;
                 }
 
@@ -272,7 +273,7 @@
                 // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
-                        return room.state === 0 || room.state === 1;
+                        return room.state === 0 || room.state === 1 || room.state === 8;
                     });
                     this.rooms = filterRooms.map(item => {
                         return {
@@ -361,7 +362,7 @@
             addRoom() {
                 const len = this.rooms.length;
                 if (this.rooms.length >= 99) {
-                    modal.alert('一个订单最多添加99间房!');
+                    modal.warn('一个订单最多添加99间房!');
                     return false;
                 }
 
@@ -465,7 +466,7 @@
                 if (duration > 400) {
                     const currentTime = + new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.alert('入住上限最大为400天，请重新选择入住时间！');
+                        modal.warn('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
                     }
                     return false;
@@ -485,6 +486,10 @@
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
+                    if (!this.vipId) {
+                        return false;
+                    }
+
                     discountRelatedId = this.vipId;
                 }
 
@@ -582,7 +587,7 @@
                 this.rooms.forEach((item, index) => {
                     if (index === id) {
                         if (item.idCardList && item.idCardList.length >= 20) {
-                            modal.alert('一间房最多添加20个入住人');
+                            modal.warn('一间房最多添加20个入住人');
                             return false;
                         }
 

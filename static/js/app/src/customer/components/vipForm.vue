@@ -279,7 +279,6 @@
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import http from '../../common/http';
     import { dsyForComponent } from '../../common/dsy';
-    import modal from '../../common/modal';
 
     export default{
         props: {
@@ -391,12 +390,8 @@
                 }
                 http.post(url, data)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.close();
-                            this.$emit('onSuccess');
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.close();
+                        this.$emit('onSuccess');
                     });
             }
         },

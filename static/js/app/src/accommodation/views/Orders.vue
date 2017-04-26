@@ -288,12 +288,12 @@ default {
                ORDER_STATE_LIST,
                ORDER_TYPE,
                state: -1,
-               userOriginType: '-1~-1',
+               userOriginType: '-2~',
                userOrigins: [],
                userSelfOrigins: [{
-                   id: -2,
+                   id: '',
                    name: '全部客源渠道',
-                   originType: '-2~-2',
+                   originType: '-2~',
                    type: 2
                }],
                userGroupOrigins: [],
@@ -454,7 +454,7 @@ default {
                                 }
                             });
                             this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                            this.userOriginType = this.userSelfOrigins[0].originType;
+                            // this.userOriginType = this.userSelfOrigins[0].originType;
                         }
                     });
            },
@@ -464,7 +464,7 @@ default {
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
-                   originId: this.userOriginType.split('~')[1] === '-2' ? undefined : this.userOriginType.split('~')[1],
+                   originId: this.userOriginType.split('~')[1],
                    startDate: this.startTime,
                    state: this.state === -1 ? undefined : this.state,
                    tag: this.tag,
@@ -472,6 +472,12 @@ default {
                };
                if (keyword) {
                    obj.keyword = this.searchPattern;
+               }
+               // 后台要求如果为空就不传
+               for (const ob in obj) {
+                   if (obj[ob] === undefined || obj[ob] === '') {
+                       delete obj[ob];
+                   }
                }
                http.get('/order/getAccoOrderPc', obj).then(res => {
                    if (res.code === 1) {

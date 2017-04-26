@@ -105,7 +105,7 @@ $(function(){
                     notice: scope.notice2
                 })
                     .then(function(result){
-                        modal.alert(result.msg);
+                        modal.warn(result.msg);
                         http.get('getOperationInfoUrl', {})
                             .then(function(result){
                                 scope.campQrCode = result.data.campQrCode;

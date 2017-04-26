@@ -86,7 +86,7 @@ $(function() {
             },
             uploadImg() {
                 if (this.imgNum >= 10) {
-                    modal.alert('上传图片数量已达上限!');
+                    modal.warn('上传图片数量已达上限!');
                     return false;
                 }
 
@@ -100,7 +100,7 @@ $(function() {
                     remark: this.content
                 })
                     .then(result => {
-                        modal.alert('保存成功');
+                        modal.warn('保存成功');
                     });
             },
             cancel() {

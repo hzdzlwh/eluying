@@ -548,7 +548,7 @@
                 let roomPersonValid = true;
 
                 if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
-                    modal.alert('请输入联系人或手机号!');
+                    modal.warn('请输入联系人或手机号!');
                     return false;
                 }
 
@@ -578,27 +578,27 @@
                 const shopGoodsItemsValid = this.shopGoodsItems.every(good => { return good.id; });
 
                 if (!valid) {
-                    modal.alert('订单信息有误，请核对信息后再提交！');
+                    modal.warn('订单信息有误，请核对信息后再提交！');
                     return false;
                 }
 
                 if (!durationValid) {
-                    modal.alert('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
+                    modal.warn('所选择房间的入住时间超过了400天，请核对入住信息后再提交！');
                     return false;
                 }
 
                 if (!roomPersonValid) {
-                    modal.alert('请完善入住人信息！');
+                    modal.warn('请完善入住人信息！');
                     return false;
                 }
 
                 if (!enterItemsValid) {
-                    modal.alert('请完善娱乐信息！');
+                    modal.warn('请完善娱乐信息！');
                     return false;
                 }
 
                 if (!shopGoodsItemsValid) {
-                    modal.alert('请完善商超信息！');
+                    modal.warn('请完善商超信息！');
                     return false;
                 }
 
@@ -695,13 +695,9 @@
                 };
                 http.post('/order/modifyRoomOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyFoodOrder() {
@@ -711,13 +707,9 @@
                 };
                 http.get('/order/modifyCaterOrderRemark', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyEntertainmentOrder() {
@@ -734,13 +726,9 @@
                 };
                 http.post('/order/modifyEnterOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyShopOrder() {
@@ -752,13 +740,9 @@
                 };
                 http.post('/order/modifyGoodsOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             // 获取 originId origin discountRelatedId
@@ -799,13 +783,9 @@
                 };
                 http.post('/order/modify', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             handleRoomBusiness() {
