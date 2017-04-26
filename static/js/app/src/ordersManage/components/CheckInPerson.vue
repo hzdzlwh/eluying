@@ -131,7 +131,7 @@
 
                         this.$emit('addPerson', this.personsObj.id, { idCardType: 0, idCardNum, name });
                     } catch (e) {
-                        modal.alert(e);
+                        modal.warn(e);
                     }
                 }
             },

@@ -157,14 +157,14 @@ export default {
                     const status = result.data.status;
                     const tradeNum = result.data.tradeNum;
                     if (status === 0) {
-                        modal.alert('收银成功');
+                        modal.success('收银成功');
                         this.authCode = '';
                         setTimeout(() => {
                             this.hideModal(1);
                             event.$emit('checkSuc');
                         }, 1500);
                     } else if (status === 1) {
-                        modal.alert('收款失败');
+                        modal.warn('收款失败');
                         this.hideModal(2);
                     } else if (status === 2) {
                         const inter = setInterval(() => {
@@ -178,14 +178,14 @@ export default {
                                             clearInterval(inter);
                                         }
                                         if (status1 === 0) {
-                                            modal.alert('收银成功');
+                                            modal.success('收银成功');
                                             this.authCode = '';
                                             setTimeout(() => {
                                                 this.hideModal(1);
                                                 event.$emit('checkSuc');
                                             }, 2500);
                                         } else if (status1 === 1) {
-                                            modal.alert('收款失败');
+                                            modal.warn('收款失败');
                                             this.hideModal(2);
                                         }
                                     }

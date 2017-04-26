@@ -402,7 +402,7 @@ $(function() {
                 this.errorTips = '';
                 http.get('newDeleteCollectionMethodUrl', { channelName: newMethod.value })
                     .then(result => {
-                        modal.alert(result.msg);
+                        modal.success(result.msg);
                         $('#method-newMethod').modal('hide');
                         newMethod.value = '';
                         http.get('getPaymentMethodAndStateUrl', {})

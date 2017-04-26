@@ -170,7 +170,7 @@
                         const status = result.data.status;
                         const tradeNum = result.data.tradeNum;
                         if (status === 0) {
-                            modal.alert('收银成功');
+                            modal.success('收银成功');
                             bus.$emit('hideGetMoney');
                             this.authCode = '';
                             $('#payWithCode').modal('hide');
@@ -180,7 +180,7 @@
                                 bus.$emit('onShowDetail', orderId);
                             }, 2500);
                         } else if (status === 1) {
-                            modal.alert('收款失败');
+                            modal.warn('收款失败');
                             this.hideModal();
                         } else if (status === 2) {
                             const inter = setInterval(() => {
@@ -193,7 +193,7 @@
                                             clearInterval(inter);
                                         }
                                         if (status1 === 0) {
-                                            modal.alert('收银成功');
+                                            modal.success('收银成功');
                                             bus.$emit('hideGetMoney');
                                             this.authCode = '';
                                             $('#payWithCode').modal('hide');
@@ -203,7 +203,7 @@
                                                 bus.$emit('onShowDetail', orderId);
                                             }, 2500);
                                         } else if (status1 === 1) {
-                                            modal.alert('收款失败');
+                                            modal.warn('收款失败');
                                             this.hideModal();
                                         }
                                     });

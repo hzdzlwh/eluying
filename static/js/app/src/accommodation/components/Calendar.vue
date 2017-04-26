@@ -528,7 +528,6 @@
     import RoomFilter from './RoomFilter.vue';
     import util from 'util';
     import http from '../../common/http';
-    import modal from '../../common/modal';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
     export default{
@@ -698,15 +697,14 @@
                     roomId: room.i
                 }).then(
                     result => {
-                        if (result.code === 1) {
-                            status.s = status.s === 100 ? -1 : 100;
-                            // 修改库存
-                            const index = util.DateDiff(this.startDate, status.date);
-                            const oldV = this.leftMap[room.ti][index];
-                            this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1);
-                        } else {
-                            modal.alert(result.msg);
-                        }
+                        status.s = status.s === 100 ? -1 : 100;
+                        // 修改库存
+                        const index = util.DateDiff(this.startDate, status.date);
+                        const oldV = this.leftMap[room.ti][index];
+                        this.$set(this.leftMap[room.ti], index, status.s === -1 ? oldV + 1 : oldV - 1);
+                        status.actionVisible = false;
+                    })
+                    .catch(() => {
                         status.actionVisible = false;
                     });
             },
@@ -726,11 +724,7 @@
                     roomId: room.i
                 })
                     .then(result => {
-                        if (result.code === 1) {
-                            room.isDirty = !room.isDirty;
-                        } else {
-                            modal.alert(result.msg);
-                        }
+                        room.isDirty = !room.isDirty;
                     });
             }
         },
