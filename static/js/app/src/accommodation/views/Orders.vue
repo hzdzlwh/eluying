@@ -26,10 +26,10 @@
                 <div class="dd-dropdown">
                     <DdDropdown text="导出明细" trigger="click">
                         <dd-dropdown-item>
-                            <span><a :href="outPutText(1)" download>导出PDF</a></span>
+                            <span><a :href="outPutText(2)" download>导出PDF</a></span>
                         </dd-dropdown-item>
                         <dd-dropdown-item>
-                            <span><a :href="outPutText(0)" download>导出Excel</a></span>
+                            <span><a :href="outPutText(1)" download>导出Excel</a></span>
                         </dd-dropdown-item>
                     </DdDropdown>
                 </div>
@@ -211,7 +211,6 @@
 }
 from 'dd-vue-component';
 import http from '../../common/http';
-import util from '../../common/util';
 import eventbus from '../../common/eventBus';
 import { ORDER_STATE_LIST, ORDER_TYPE } from '../../ordersManage/constant';
 export
@@ -522,14 +521,32 @@ default {
                }
            },
            outPutText(num) {
-               return num;
-           },
-           outPutExcel() {
-               const campId = localStorage.getItem('campId');
-               const uid = localStorage.getItem('uid');
-               const host = http.getUrl('/vipUser/vipUserListToExcel');
-               const url = host + '?' + 'campId=' + campId + '&uid=' + uid + '&terminal=1&version=10&timestamp=' + (new Date()).valueOf() + '&sign=' + util.getSign();
-               return url;
+               const paramsObj = {
+                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
+                   endDate: this.endTime,
+                   pageNo: this.pageNo,
+                   keyword: this.searchPattern,
+                   originId: this.userOriginType.split('~')[1],
+                   startDate: this.startTime,
+                   state: this.state === -1 ? undefined : this.state,
+                   tag: this.tag,
+                   timeType: this.timeType
+               };
+               if (this.searchPattern) {
+                   paramsObj.keyword = this.searchPattern;
+               }
+               // 后台要求如果为空就不传
+               for (const ob in paramsObj) {
+                   if (paramsObj[ob] === undefined || paramsObj[ob] === '') {
+                       delete paramsObj[ob];
+                   }
+               }
+               paramsObj.type = num;
+               const host = http.getUrl('/order/exportAccOrderPc');
+               const pa = http.getDataWithToken(paramsObj);
+            // pa.map = JSON.parse(pa.map);
+               const params = http.paramsToString(pa);
+               return `${host}?${params}`;
            },
            search() {
                this.searchPattern = this.$refs.searchInput.value;
