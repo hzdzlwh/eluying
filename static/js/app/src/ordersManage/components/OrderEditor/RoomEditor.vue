@@ -272,7 +272,7 @@
                 // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
-                        return room.state === 0 || room.state === 1;
+                        return room.state === 0 || room.state === 1 || room.state === 8;
                     });
                     this.rooms = filterRooms.map(item => {
                         return {
