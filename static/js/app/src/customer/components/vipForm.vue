@@ -395,7 +395,7 @@
                             this.close();
                             this.$emit('onSuccess');
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             }

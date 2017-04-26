@@ -277,22 +277,22 @@ export default {
         },
         customerDate: function() {
             if (!this.formdata.companyName) {
-                modal.alert('请输入企业名称');
+                modal.warn('请输入企业名称');
                 return;
             }
             if (this.formdata.contractNum) {
                 const re = /^[0-9a-zA-Z]*$/g;
                 if (!re.test(this.formdata.contractNum)) {
-                    modal.alert('请输入正确的协议编号');
+                    modal.warn('请输入正确的协议编号');
                     return;
                 }
             }
             if (!this.formdata.contactName) {
-                modal.alert('请输入联系人');
+                modal.warn('请输入联系人');
                 return;
             }
             if (!this.formdata.contactPhone) {
-                modal.alert('请输入联系号码');
+                modal.warn('请输入联系号码');
                 return;
             }
             const data = Object.assign({}, this.formdata);
@@ -300,7 +300,7 @@ export default {
                 for (let i = 0; i < this.formdata.discounts.length; i ++) {
                     this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
-                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        modal.warn('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
                 }
@@ -312,14 +312,14 @@ export default {
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
                 if (res.code === 1) {
-                    modal.alert('添加成功');
+                    modal.warn('添加成功');
                     this.$emit('add');
                     if (this.formdata.id) {
-                        modal.alert('修改成功');
+                        modal.warn('修改成功');
                     }
                     this.close();
                 } else {
-                    modal.alert(res.msg);
+                    modal.warn(res.msg);
                 }
             });
         },

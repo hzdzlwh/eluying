@@ -167,7 +167,7 @@ export default {
                     this.historyRefunds = res.data.historyRefunds;
                     this.historySettle = res.data.historySettle;
                 } else {
-                    modal.alert(res.msg);
+                    modal.warn(res.msg);
                 }
             });
         },

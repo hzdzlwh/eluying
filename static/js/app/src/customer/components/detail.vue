@@ -386,7 +386,7 @@
                             this.ordersTotalPrice = res.data.ordersTotalPrice;
                             this.ledgerFeeSum = res.data.ledgerFeeSum;
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },

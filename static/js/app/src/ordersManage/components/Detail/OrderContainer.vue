@@ -1211,7 +1211,7 @@
                             if (haveToday) {
                                 $('#checkIn').modal({ backdrop: 'static' });
                             } else {
-                                modal.alert('未到办理入住的时间，无法入住！');
+                                modal.warn('未到办理入住的时间，无法入住！');
                                 return false;
                             }
                         } else {
@@ -1221,7 +1221,7 @@
                         this.hideModal();
                     })
                     .catch(res => {
-                        modal.alert(res.msg);
+                        modal.warn(res.msg);
                     });
             },
             resetOrder() {
@@ -1231,7 +1231,7 @@
                             this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
                             bus.$emit('refreshView');
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             }

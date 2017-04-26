@@ -144,7 +144,7 @@
                                 this.$set(i, 'discount', undefined);
                             });
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },

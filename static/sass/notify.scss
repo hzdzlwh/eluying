@@ -13,8 +13,6 @@
   border: 0;
   height: 50px;
   text-align: center;
-  color: #fff;
-  background: #f75659;
   vertical-align: middle;
   position: relative;
   margin-bottom: 10px;
@@ -22,6 +20,14 @@
   transition: all 240ms ease;
   &:first-of-type {
     border-radius: 0 0 4px 4px;
+  }
+  &.dd-notify-error {
+    color: #fff;
+    background: #f75659;
+  }
+  &.dd-notify-warn {
+    color: #fff;
+    background: #ffac59;
   }
 }
 .dd-notify-active {

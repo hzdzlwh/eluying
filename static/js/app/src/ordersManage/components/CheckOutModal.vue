@@ -159,7 +159,7 @@
                 });
                 const filterRooms = rooms.filter(room => { return room; });
                 if (filterRooms.length <= 0) {
-                    modal.alert('请选择房间！');
+                    modal.warn('请选择房间！');
                     return false;
                 }
                 const business = {
@@ -178,7 +178,7 @@
                     })
                         .then(res => {
                             this.hideModal();
-                            modal.alert('退房成功');
+                            modal.warn('退房成功');
                             bus.$emit('refreshView');
                             bus.$emit('showOrder', this.orderDetail.orderId);
                         });

@@ -102,7 +102,7 @@ $(function(){
                             this.selectedETId = undefined;
                             this.loadETList();
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },
@@ -127,7 +127,7 @@ $(function(){
                             this.selectedETCategoryId = undefined;
                             this.loadETList();
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },
@@ -142,7 +142,7 @@ $(function(){
                         if (res.code === 1) {
                             this.loadETList();
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },
@@ -239,7 +239,7 @@ $(function(){
                             $('#createETDialog').modal('hide');
                             setTimeout(this.rest, 300);
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },
@@ -315,7 +315,7 @@ $(function(){
             },
             setIcon() {
                 if (!this.iconSelected.entertainmentIconId) {
-                    modal.alert('请选择图标');
+                    modal.warn('请选择图标');
                     return false;
                 }
 

@@ -301,14 +301,14 @@ export default {
                     cid: id
                 }).then(res => {
                     if (res.code === 1) {
-                        modal.alert('删除成功');
+                        modal.warn('删除成功');
                         that.fetchDate();
                         that.detailClose();
                     } else {
                         if (res.code === 10) {
-                            modal.alert('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
+                            modal.warn('您还有进行中的订单，暂不能删除，请将订单结束后再试！');
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     }
                 });
@@ -378,7 +378,7 @@ export default {
                             name: date.companyName
                         };
                     } else {
-                        modal.alert(res.msg);
+                        modal.warn(res.msg);
                     }
                 });
             } else {
@@ -392,7 +392,7 @@ export default {
                     if (res.code === 1) {
                         this.detailData = res.data;
                     } else {
-                        modal.alert(res.msg);
+                        modal.warn(res.msg);
                     }
                 });
             }

@@ -324,7 +324,7 @@
                                 this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                             }
                         } else {
-                            modal.alert(res.msg);
+                            modal.warn(res.msg);
                         }
                     });
             },
@@ -410,13 +410,13 @@
                 }
                 if (invalid) {
                     const loss = !this.orderState || (this.totalDeposit > 0 && this.type !== 'checkIn');
-                    modal.alert(`请选择${loss ? '退款' : '收款'}方式！`);
+                    modal.warn(`请选择${loss ? '退款' : '收款'}方式！`);
                     return false;
                 }
                 const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                 if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder') {
-                    modal.alert('订单未结清，无法完成收银！');
+                    modal.warn('订单未结清，无法完成收银！');
                     return false;
                 }
                 if (this.type === 'resetOrder') {
@@ -424,13 +424,13 @@
                     const newReceiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                     const shouldReceiveMoney = this.orderPayment.payableFee;
                     if (oldReceiveMoney + newReceiveMoney !== Number(shouldReceiveMoney)) {
-                        modal.alert('订单未结清!');
+                        modal.warn('订单未结清!');
                         return false;
                     }
                 }
                 const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                 if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
-                    modal.alert('退款押金无法大于已付押金！');
+                    modal.warn('退款押金无法大于已付押金！');
                     return false;
                 }
                 const payments = this.payments.map(payment => {
@@ -517,13 +517,13 @@
                 });
                 if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
                     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
-                    modal.alert(payStr);
+                    modal.warn(payStr);
                     return false;
                 }
                 if (payWithAlipay <= 0) {
                     http.post('/order/addOrderPayment', params)
                         .then(result => {
-                            modal.alert('收银成功');
+                            modal.warn('收银成功');
                             this.resetData();
                             bus.$emit('hideCashier');
                             $('#cashier').modal('hide');
