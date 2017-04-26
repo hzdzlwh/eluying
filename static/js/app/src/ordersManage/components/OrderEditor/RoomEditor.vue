@@ -221,9 +221,13 @@
                 set(val) {
                     if (val === true) {
                         const firstId = this.rooms[0].quickDiscountId;
+                        // 如果本来每个快捷折扣都是第一个，就不需要处理
                         const request = !this.rooms.every(i => i.quickDiscountId === firstId);
-                        this.rooms.map(room => room.quickDiscountId = firstId);
-                        request && this.modifyRooms(this.rooms);
+                        if (request) {
+                            this.rooms.map(room => room.quickDiscountId = firstId);
+                            this.forceChangePrice = true;
+                            this.modifyRooms(this.rooms);
+                        }
                     }
                 }
             },
@@ -262,6 +266,7 @@
                     });
             },
             quickDiscountIdChange(room) {
+                this.forceChangePrice = true;
                 this.modifyRooms([room]);
             },
             // 计算vip折扣价，如果没有vip折扣价返回原价
