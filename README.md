@@ -104,3 +104,17 @@ defaultOption = {
 然后将需要引入的模板引入，具体可参考feature.html，再编写新页面的代码。
 最后在homeHead.html中加入对应的链接（/view/home/*.html）。
 
+##代码风格
+
+###js
+变量名驼峰，清晰有意义。
+
+句尾;
+
+一段if后空1行。
+
+使用单引号。
+
+###css
+类名使用BEM命名方式。
+
