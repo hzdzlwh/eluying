@@ -142,6 +142,12 @@
                 border-right: solid #82beff 11px;
             }
         }
+        &.reset {
+            background: #f27979;
+            &::before {
+                border-right: solid #f27979 11px;
+            }
+        }
         &::before {
              content: '';
              position: absolute;
@@ -161,7 +167,7 @@
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../common/http';
-    import { ORDER_STATUS } from '../const';
+    import { ORDER_STATUS } from '../../ordersManage/constant';
     import bus from '../../common/eventBus';
     export default{
         data() {
