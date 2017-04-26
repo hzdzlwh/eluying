@@ -321,19 +321,19 @@ default {
                    {
                        title: '房号',
                        render: (h, row) => row.rooms.map(function(room) {
-                           return <div style="textAlign:center">{room.roomName}</div>;
+                           return <div >{room.roomName}</div>;
                        })
                    },
                    {
                        title: '入住时间',
                        render: (h, row) => row.rooms.map(function(room) {
-                           return <div style="textAlign:center">{room.startDate}</div>;
+                           return <div >{room.startDate}</div>;
                        })
                    },
                    {
                        title: '退房时间',
                        render: (h, row) => row.rooms.map(function(room) {
-                           return <div style="textAlign:center">{room.endDate}</div>;
+                           return <div >{room.endDate}</div>;
                        })
                    },
                    {
