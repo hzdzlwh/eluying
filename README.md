@@ -48,7 +48,7 @@ http.post(url, data, config)
     });
 ```
 ```js
-config: {
+config = {
     notify: Boolean // 是否modal.error后端错误信息，默认为true
 }
 ````
@@ -103,6 +103,9 @@ defaultOption = {
 开发新的页面需要先在/static/tpl下创建一个*.html, 然后在/config.js配置文件中的html里添加新页面的路径/static/tpl/*.html。
 然后将需要引入的模板引入，具体可参考feature.html，再编写新页面的代码。
 最后在homeHead.html中加入对应的链接（/view/home/*.html）。
+
+##css
+尽量使用flex，不用float
 
 ##代码风格
 
