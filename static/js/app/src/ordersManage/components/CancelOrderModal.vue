@@ -70,7 +70,6 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                isLoading: false
             };
         },
         computed: {
@@ -149,10 +148,6 @@
 
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
-                if (this.isLoading) {
-                    return false;
-                }
-                this.isLoading = true;
                 if (this.need - Number(totalPenalty) === 0) {
                     http.get('/order/cancel', business)
                         .then(res => {
@@ -166,7 +161,6 @@
                     business.functionType = 0;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
-                    this.isLoading = false;
                 }
             }
         },
