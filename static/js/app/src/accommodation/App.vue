@@ -55,6 +55,8 @@
         height: 45px;
         box-shadow: 0 2px 2px 0 #dadada;
         padding-left: 405px;
+        position: fixed;
+        width: 100%;
     }
     .acc-header-link {
         height: 100%;
