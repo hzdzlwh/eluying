@@ -69,7 +69,7 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: [],
+                subOrders: []
             };
         },
         computed: {

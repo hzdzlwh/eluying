@@ -542,7 +542,7 @@ default {
                this.startTime = '';
                this.state = -1;
                this.timeType = 1;
-               this.userOriginType = '-2~-2';
+               this.userOriginType = '-2~';
                this.fetchDate(this.searchPattern);
            },
            handlePageChange: function(internalCurrentPage) {
