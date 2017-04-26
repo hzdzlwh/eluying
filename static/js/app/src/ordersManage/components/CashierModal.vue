@@ -184,17 +184,18 @@
                 isCompany: false,
                 companyCityLedger: false,
                 companyBalance: undefined,
-                hasPayHistory: false
+                hasPayHistory: false,
+                paiedMoney: 0
             };
         },
         computed: {
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    let income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
+                    const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
                     if (this.type === 'resetOrder' && this.hasPayHistory) {
-                        let paidFee = this.paylogs.reduce((a, b) => {
-                            return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee))
+                        const paidFee = this.paylogs.reduce((a, b) => {
+                            return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
                         }, 0);
                         return Number(this.orderPayment.payableFee - paidFee).toFixed(2) >= 0;
                     }
@@ -215,24 +216,14 @@
                 return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
             },
             notPay() { // 需补或或需退金额
-                let payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2);
+                const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2);
                 if (this.type === 'resetOrder' && this.hasPayHistory) {
-                    let payFee = this.paylogs.reduce((a, b) => {
+                    const payFee = this.paylogs.reduce((a, b) => {
                         return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
                     }, 0);
                     return Math.abs(Number(this.orderPayment.payableFee - payFee).toFixed(2));
                 }
                 return Math.abs(Number(payMoney).toFixed(2));
-            },
-            paiedMoney() { // 已付金额
-                let paiedFee = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
-                if (this.type === 'resetOrder' && this.hasPayHistory) {
-                    let paiedMoney = this.paylogs.reduce((a, b) => {
-                        return a + (b.type === 0 ? Number(b.fee) : 0);
-                    }, 0);
-                    return Number(paiedMoney).toFixed(2);
-                }
-                return Number(paiedFee).toFixed(2);
             }
         },
         created() {
@@ -346,6 +337,7 @@
                                     this.hasPayHistory = true;
                                 }
                             }
+                            this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
                             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                             if (Number(payMoney) !== 0) {
                                 this.payments.push({ fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2 });
@@ -413,6 +405,7 @@
             deletePayLog(index) {
                 const log = this.paylogs[index];
                 this.deleteIds.push(log['payId']);
+                this.paiedMoney = (Number(this.paiedMoney) + (log['type'] === 2 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
                 if (log['payChannelId'] === -15) { // 支付方式为企业挂帐，删除后企业账户余额要变化
                     this.companyBalance += Number(log['fee']);
                 }
@@ -451,10 +444,9 @@
                     return false;
                 }
                 if (this.type === 'resetOrder') {
-                    const oldReceiveMoney = this.paylogs.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : -Number(b.fee)); }, 0);
-                    const newReceiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
+                    const newReceiveMoney = this.payments.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee)); }, 0);
                     const shouldReceiveMoney = this.orderPayment.payableFee;
-                    if (oldReceiveMoney + newReceiveMoney !== Number(shouldReceiveMoney)) {
+                    if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney)) {
                         modal.alert('订单未结清!');
                         return false;
                     }
