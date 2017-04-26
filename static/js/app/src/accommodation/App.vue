@@ -57,6 +57,8 @@
         padding-left: 405px;
         position: fixed;
         width: 100%;
+        z-index: 9;
+        background: #fff;
     }
     .acc-header-link {
         height: 100%;
