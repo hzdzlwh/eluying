@@ -300,7 +300,7 @@ export default {
                 http.get('/contractCompany/removeCompany', {
                     cid: id
                 }).then(res => {
-                    modal.warn('删除成功');
+                    modal.success('删除成功');
                     that.fetchDate();
                     that.detailClose();
                 });

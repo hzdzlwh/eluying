@@ -65,7 +65,8 @@ source: common\http.js
 ## modal
 ```js
 modal.alert(msg); // 不建议用
-modal.warn(msg); // 业务中使用
+modal.warn(msg); // 业务中使用，举例：请填写姓名
+modal.success(msg); // 业务中使用，处理成功反馈，举例：删除成功，添加成功
 modal.error(msg); // 业务中不使用，专门处理后端错误信息
 modal.confirm(dialogConfig, confirmCallback, cancelCallback);
 默认值

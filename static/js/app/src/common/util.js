@@ -38,7 +38,7 @@ var util = {
             if (msg) {
                 modal.warn(msg)
             } else {
-                modal.warn("操作成功");
+                modal.success("操作成功");
             }
             return true;
         }

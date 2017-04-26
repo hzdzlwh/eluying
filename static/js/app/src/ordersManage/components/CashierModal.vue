@@ -519,7 +519,7 @@
                 if (payWithAlipay <= 0) {
                     http.post('/order/addOrderPayment', params)
                         .then(result => {
-                            modal.warn('收银成功');
+                            modal.success('收银成功');
                             this.resetData();
                             bus.$emit('hideCashier');
                             $('#cashier').modal('hide');

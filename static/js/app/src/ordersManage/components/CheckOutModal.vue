@@ -178,7 +178,7 @@
                     })
                         .then(res => {
                             this.hideModal();
-                            modal.warn('退房成功');
+                            modal.success('退房成功');
                             bus.$emit('refreshView');
                             bus.$emit('showOrder', this.orderDetail.orderId);
                         });

@@ -230,9 +230,9 @@ export default {
                     http.get(that.content[that.type].url, getCodeData)
                         .then((result) => {
                             if (that.type === 1) {
-                                modal.warn('退款成功');
+                                modal.success('退款成功');
                             } else {
-                                modal.warn('收款成功');
+                                modal.success('收款成功');
                             }
                             that.close();
                             that.num = 0;

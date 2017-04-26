@@ -170,7 +170,7 @@
                         const status = result.data.status;
                         const tradeNum = result.data.tradeNum;
                         if (status === 0) {
-                            modal.warn('收银成功');
+                            modal.success('收银成功');
                             bus.$emit('hideGetMoney');
                             this.authCode = '';
                             $('#payWithCode').modal('hide');
@@ -193,7 +193,7 @@
                                             clearInterval(inter);
                                         }
                                         if (status1 === 0) {
-                                            modal.warn('收银成功');
+                                            modal.success('收银成功');
                                             bus.$emit('hideGetMoney');
                                             this.authCode = '';
                                             $('#payWithCode').modal('hide');
