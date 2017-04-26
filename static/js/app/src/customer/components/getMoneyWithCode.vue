@@ -157,7 +157,7 @@ export default {
                     const status = result.data.status;
                     const tradeNum = result.data.tradeNum;
                     if (status === 0) {
-                        modal.warn('收银成功');
+                        modal.success('收银成功');
                         this.authCode = '';
                         setTimeout(() => {
                             this.hideModal(1);
@@ -178,7 +178,7 @@ export default {
                                             clearInterval(inter);
                                         }
                                         if (status1 === 0) {
-                                            modal.warn('收银成功');
+                                            modal.success('收银成功');
                                             this.authCode = '';
                                             setTimeout(() => {
                                                 this.hideModal(1);

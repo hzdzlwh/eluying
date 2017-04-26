@@ -63,7 +63,9 @@
         </div>
         <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='roomsOrderTable'></dd-table>
         <div class="foot footfix">
-            <span><small>共计</small> {{count}}位会员</span>
+            <span><small>共计</small> {{count}}个订单<span style="padding: 0 30px;">|</span>
+            <span> <small>订单金额</small> ¥{{totalMany}} </span></span>
+
             <dd-pagination @currentchange="fetchDate" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
@@ -72,6 +74,9 @@
 .detail-content-filter .dd-select-menu {
     overflow-y: auto;
     max-height: 120px;
+}
+#roomsOrderTable .dd-table tbody tr {
+    cursor: pointer;
 }
 </style>
 <style lang="scss" scoped>
@@ -85,7 +90,7 @@
   width: 1129px;
     margin: 0 auto;
     position: relative;
-    top: 20px;
+    top: 64px;
 }
 .select-component-container{
     width:120px;
@@ -208,7 +213,7 @@ from 'dd-vue-component';
 import http from '../../common/http';
 import util from '../../common/util';
 import eventbus from '../../common/eventBus';
-import { ORDER_STATE_LIST, ORDER_TYPE } from '../const';
+import { ORDER_STATE_LIST, ORDER_TYPE } from '../../ordersManage/constant';
 export
 default {
        data() {
@@ -301,6 +306,7 @@ default {
                vip: {},
                pages: 0,
                count: 0,
+               totalMany: 0,
                pageNo: 1,
                startTime: '',
                endTime: '',
@@ -344,14 +350,14 @@ default {
                    },
                    {
                        title: '订单金额',
-                       render: (h, row) => <span>{row.totalPrice}</span>
+                       render: (h, row) => <span>¥{row.totalPrice}</span>
                    },
                    {
                        title: '订单状态',
                        render: (h, row) =>
                             <span>
                             {ORDER_STATE_LIST[ORDER_TYPE.ACCOMMODATION].find(function(el) {
-                                return el.id === row.orderState;
+                                return Number(el.id) === row.orderState;
                             }).name}
                             </span>
                    },
@@ -460,7 +466,7 @@ default {
            },
            fetchDate(keyword) {
                const obj = {
-                   discountRelatedId: this.userOriginType.split('~')[1] === -5 ? undefined : this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
@@ -482,6 +488,7 @@ default {
                http.get('/order/getAccoOrderPc', obj).then(res => {
                    if (res.code === 1) {
                        this.vips = res.data.list;
+                       this.totalMany = res.data.orderTotalPrice;
                        this.count = res.data.orderAmount;
                        this.pages = Math.ceil(res.data.orderAmount / 30);
                         // if (keyword) {
@@ -513,17 +520,6 @@ default {
                } else {
                    return false;
                }
-           },
-           openVipForm() {
-               this.vip = {
-                   name: '',
-                   phone: '',
-                   idCardType: 0,
-                   vipLevelId: '',
-                   gender: undefined,
-                   birthday: undefined
-               };
-               $('#vipForm').modal('show');
            },
            outPutText(num) {
                return num;

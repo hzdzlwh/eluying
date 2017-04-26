@@ -719,7 +719,7 @@
                     customerPhone: this.phone,
                     remark: this.remark,
                     amount: enterItems.count,
-                    enterOrderId: enterItems.id || enterItems.enterOrderId,
+                    enterOrderId: enterItems.enterOrderId || enterItems.id,
                     timeAmount: enterItems.unitTime,
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()

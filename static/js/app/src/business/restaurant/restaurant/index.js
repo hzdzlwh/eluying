@@ -41,7 +41,7 @@ $(function() {
                 http.get('/catering/modifyRestaurant',
                     { restId: this.restIdWillDeleted })
                     .then(result => {
-                        modal.warn('删除成功');
+                        modal.success('删除成功');
                         this.getRestaurants();
                     });
             },

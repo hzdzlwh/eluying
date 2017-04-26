@@ -160,7 +160,7 @@ $(function() {
                     version: 13,
                 })
                     .then(result => {
-                        modal.warn('保存成功');
+                        modal.success('保存成功');
                     });
             },
             cancel() {

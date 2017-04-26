@@ -156,7 +156,7 @@
                 if (this.need - Number(totalPenalty) === 0) {
                     http.get('/order/cancel', business)
                         .then(res => {
-                            modal.warn('取消成功');
+                            modal.success('取消成功');
                             this.hideModal();
                             bus.$emit('refreshView');
                             bus.$emit('showOrder', this.orderId);

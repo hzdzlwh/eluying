@@ -65,13 +65,14 @@ source: common\http.js
 ## modal
 ```js
 modal.alert(msg); // 不建议用
-modal.warn(msg); // 业务中使用
+modal.warn(msg); // 业务中使用，举例：请填写姓名
+modal.success(msg); // 业务中使用，处理成功反馈，举例：删除成功，添加成功
 modal.error(msg); // 业务中不使用，专门处理后端错误信息
 modal.confirm(dialogConfig, confirmCallback, cancelCallback);
-默认值
+// 默认值
 dialogConfig = {
-    title: '提醒';
-    message '您确定要这么做吗';
+    title: '提醒',
+    message: '您确定要这么做吗',
     okText: '确认',
     cancelText: '取消',
     showTitle: true,
@@ -82,7 +83,7 @@ dialogConfig = {
 soucre: common\modal.js
 ##init
 ```js
-init(option)
+init(option);
 defaultOption = {
     header: true, // 顶部导航栏
     leftMenu: true, // 网络设置左侧菜单
