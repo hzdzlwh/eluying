@@ -94,3 +94,11 @@ defaultOption = {
 };
 ```
 ##auth
+
+##首页的静态页面
+源文件目录在/static/tpl下。一个页面由gulp-file-include引入不同的模板，再加上页面的内容，最终拼凑成一个页面。
+
+开发新的页面需要先在/static/tpl下创建一个*.html, 然后在/config.js配置文件中的html里添加新页面的路径/static/tpl/*.html。
+然后将需要引入的模板引入，具体可参考feature.html，再编写新页面的代码。
+最后在homeHead.html中加入对应的链接（/view/home/*.html）。
+
