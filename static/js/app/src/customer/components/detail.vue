@@ -380,14 +380,10 @@
                 const params = this.getParams();
                 http.get(OrdersUrls[this.type], params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.orders = res.data.list;
-                            this.orderCount = res.data.orderCount;
-                            this.ordersTotalPrice = res.data.ordersTotalPrice;
-                            this.ledgerFeeSum = res.data.ledgerFeeSum;
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.orders = res.data.list;
+                        this.orderCount = res.data.orderCount;
+                        this.ordersTotalPrice = res.data.ordersTotalPrice;
+                        this.ledgerFeeSum = res.data.ledgerFeeSum;
                     });
             },
             getParams() {

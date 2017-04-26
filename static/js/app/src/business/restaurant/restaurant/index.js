@@ -82,11 +82,7 @@ $(function() {
                     isOpenCaterScan: (item.isOpenCaterScan === 1 ? 0 : 1)
                 })
                     .then(result => {
-                        if (result.code !== 1) {
-                            modal.warn(result.msg);
-                        } else {
-                            item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
-                        }
+                        item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
                     });
             }
         }
@@ -126,13 +122,9 @@ $(function() {
                     nodeType: 1
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.discounts = res.data.list;
-                            this.oddType = res.data.oddSetting.oddType;
-                            this.unit = res.data.oddSetting.unit;
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.discounts = res.data.list;
+                        this.oddType = res.data.oddSetting.oddType;
+                        this.unit = res.data.oddSetting.unit;
                     });
             },
             confirm() {
@@ -169,12 +161,8 @@ $(function() {
                     quickDiscountList: JSON.stringify(list)
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.close();
-                            table.getRestaurants();
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.close();
+                        table.getRestaurants();
                     });
             }
         }
@@ -217,15 +205,11 @@ $(function() {
                         caterScanAnnouncement: this.resturantNotice
                     })
                     .then(result => {
-                        if (result.code === 1) {
-                            $('#restaurantDialog').modal('hide');
-                            table.getRestaurants();
-                            this.restaurantName = '';
-                            this.resturantNotice = '';
-                            this.submitted = false;
-                        } else {
-                            modal.warn(result.msg);
-                        }
+                        $('#restaurantDialog').modal('hide');
+                        table.getRestaurants();
+                        this.restaurantName = '';
+                        this.resturantNotice = '';
+                        this.submitted = false;
                     });
             },
             cancel: function() {

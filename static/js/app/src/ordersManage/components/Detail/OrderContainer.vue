@@ -1219,20 +1219,13 @@
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
                         this.hideModal();
-                    })
-                    .catch(res => {
-                        modal.warn(res.msg);
                     });
             },
             resetOrder() {
                 http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
                     .then(res => {
-                        if (res.code === 1) {
-                            this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
-                            bus.$emit('refreshView');
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        bus.$emit('refreshView');
                     });
             }
         }

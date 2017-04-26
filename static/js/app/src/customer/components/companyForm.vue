@@ -311,16 +311,12 @@ export default {
                 delete data.id;
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
-                if (res.code === 1) {
-                    modal.warn('添加成功');
-                    this.$emit('add');
-                    if (this.formdata.id) {
-                        modal.warn('修改成功');
-                    }
-                    this.close();
-                } else {
-                    modal.warn(res.msg);
+                modal.warn('添加成功');
+                this.$emit('add');
+                if (this.formdata.id) {
+                    modal.warn('修改成功');
                 }
+                this.close();
             });
         },
         handleCategorySelect(list) {

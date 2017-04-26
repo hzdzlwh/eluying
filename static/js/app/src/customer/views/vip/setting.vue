@@ -328,11 +328,7 @@
                 }, () => {
                     http.post('/vipUser/removeVipLevel', { vipLevelId: id })
                         .then(res => {
-                            if (res.code === 1) {
-                                this.getLevelList();
-                            } else {
-                                modal.warn(res.msg);
-                            }
+                            this.getLevelList();
                         });
                 });
             },
@@ -391,12 +387,8 @@
                     vipLevelSettingId: this.id
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.getLevelList();
-                            $('#settingModal').modal('hide');
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.getLevelList();
+                        $('#settingModal').modal('hide');
                     });
             },
             deleteNode(item) {

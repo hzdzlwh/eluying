@@ -161,14 +161,10 @@ export default {
             http.get(this.url[this.checkListType], {
                 cid: this.id
             }).then(res => {
-                if (res.code === 1) {
-                    this.datalist = res.data.list;
-                    this.historyRecharge = res.data.historyRecharge;
-                    this.historyRefunds = res.data.historyRefunds;
-                    this.historySettle = res.data.historySettle;
-                } else {
-                    modal.warn(res.msg);
-                }
+                this.datalist = res.data.list;
+                this.historyRecharge = res.data.historyRecharge;
+                this.historyRefunds = res.data.historyRefunds;
+                this.historySettle = res.data.historySettle;
             });
         },
         close() {

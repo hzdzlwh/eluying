@@ -695,13 +695,9 @@
                 };
                 http.post('/order/modifyRoomOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyFoodOrder() {
@@ -711,13 +707,9 @@
                 };
                 http.get('/order/modifyCaterOrderRemark', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyEntertainmentOrder() {
@@ -734,13 +726,9 @@
                 };
                 http.post('/order/modifyEnterOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             modifyShopOrder() {
@@ -752,13 +740,9 @@
                 };
                 http.post('/order/modifyGoodsOrder', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             // 获取 originId origin discountRelatedId
@@ -799,13 +783,9 @@
                 };
                 http.post('/order/modify', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.hideModal();
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
             handleRoomBusiness() {

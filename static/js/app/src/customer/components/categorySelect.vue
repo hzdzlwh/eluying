@@ -132,20 +132,16 @@
             getCategories() {
                 http.get('/vipUser/getNodeInfo', {})
                     .then(res => {
-                        if (res.code === 1) {
-                            this.enterNodeList = res.data.enterNodeList;
-                            this.restNodeList = res.data.restNodeList;
-                            this.enterNodeList.map(i => {
-                                this.$set(i, 'selected', false);
-                                this.$set(i, 'discount', undefined);
-                            });
-                            this.restNodeList.map(i => {
-                                this.$set(i, 'selected', false);
-                                this.$set(i, 'discount', undefined);
-                            });
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.enterNodeList = res.data.enterNodeList;
+                        this.restNodeList = res.data.restNodeList;
+                        this.enterNodeList.map(i => {
+                            this.$set(i, 'selected', false);
+                            this.$set(i, 'discount', undefined);
+                        });
+                        this.restNodeList.map(i => {
+                            this.$set(i, 'selected', false);
+                            this.$set(i, 'discount', undefined);
+                        });
                     });
             },
             confirmSelect() {

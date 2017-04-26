@@ -391,12 +391,8 @@
                 }
                 http.post(url, data)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.close();
-                            this.$emit('onSuccess');
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.close();
+                        this.$emit('onSuccess');
                     });
             }
         },

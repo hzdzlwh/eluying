@@ -55,13 +55,9 @@ $(function() {
                         nodeType: 0
                     })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.discounts = res.data.list;
-                            this.oddType = res.data.oddSetting.oddType;
-                            this.unit = res.data.oddSetting.unit;
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.discounts = res.data.list;
+                        this.oddType = res.data.oddSetting.oddType;
+                        this.unit = res.data.oddSetting.unit;
                     });
             },
             confirm() {
@@ -98,12 +94,8 @@ $(function() {
                         quickDiscountList: JSON.stringify(list)
                     })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.newDiscounts = []
-                            this.getDiscounts();
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.newDiscounts = []
+                        this.getDiscounts();
                     });
             }
         },

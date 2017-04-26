@@ -310,21 +310,17 @@
                 }
                 return http.get('/order/getOrderPayment', params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.orderPayment = res.data;
-                            if (res.data.payments && res.data.payments.length > 0) {
-                                this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
-                            }
-                            const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
-                            if (Number(payMoney) !== 0) {
-                                this.payments.push({ fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2 });
-                            }
-                            if ((this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0)) !== 0 && this.type !== 'checkIn') {
-                                this.showDeposit = true;
-                                this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
-                            }
-                        } else {
-                            modal.warn(res.msg);
+                        this.orderPayment = res.data;
+                        if (res.data.payments && res.data.payments.length > 0) {
+                            this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
+                        }
+                        const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
+                        if (Number(payMoney) !== 0) {
+                            this.payments.push({ fee: Math.abs(payMoney).toFixed(2), payChannelId: undefined, type: this.orderState ? 0 : 2 });
+                        }
+                        if ((this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0)) !== 0 && this.type !== 'checkIn') {
+                            this.showDeposit = true;
+                            this.deposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
                         }
                     });
             },

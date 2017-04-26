@@ -98,12 +98,8 @@ $(function(){
             deleteET() {
                 http.post('/entertainment/deleteEntertainment', { entertainmentId: this.selectedETId })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.selectedETId = undefined;
-                            this.loadETList();
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.selectedETId = undefined;
+                        this.loadETList();
                     });
             },
             /**
@@ -123,12 +119,8 @@ $(function(){
                       entertainmentId: this.selectedETCategory.deleteId }
                 )
                     .then(res => {
-                        if (res.code === 1) {
-                            this.selectedETCategoryId = undefined;
-                            this.loadETList();
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.selectedETCategoryId = undefined;
+                        this.loadETList();
                     });
             },
             modifyState() {
@@ -139,11 +131,7 @@ $(function(){
                 }
                 http.post('/category/modifyStatePC', data)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.loadETList();
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                        this.loadETList();
                     });
             },
             loadETList() {
@@ -233,14 +221,10 @@ $(function(){
                 }
                 const data = Object.assign({}, this.ETType, {entertainmentId: this.ETType.deleteId || this.entertainmentId});
                 http.post('/entertainment/addOrEditEntertainmentCategory', data)
-                    .then( res => {
-                        if (res.code === 1) {
-                            ETList.loadETList();
-                            $('#createETDialog').modal('hide');
-                            setTimeout(this.rest, 300);
-                        } else {
-                            modal.warn(res.msg);
-                        }
+                    .then(res => {
+                        ETList.loadETList();
+                        $('#createETDialog').modal('hide');
+                        setTimeout(this.rest, 300);
                     });
             },
             closeCreateETDialog() {
