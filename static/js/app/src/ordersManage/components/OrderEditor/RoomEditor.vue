@@ -61,7 +61,7 @@
                                        style="width: 80px"
                                        @click.stop="showPriceList(index)"/>
                             </p>
-                            <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList" v-clickoutside="hidePriceList">
+                            <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList && item.datePriceList.length > 1" v-clickoutside="hidePriceList">
                                 <dl class="price-item" v-for="priceItem in item.datePriceList">
                                     <dt>{{priceItem.date.slice(5)}}</dt>
                                     <dd v-show="!priceItem.showInput"
@@ -204,7 +204,7 @@
         computed: {
             totalPrice() {
                 const price = this.rooms.reduce((sum, room) => {
-                    return sum + room.price;
+                    return sum + room.price || 0;
                 }, 0);
                 this.$emit('priceChange', price);
                 return price;
@@ -375,14 +375,39 @@
                     return false;
                 }
 
-                // 新增房间，房型时间同上一间
-                const room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
-                room.idCardList = [];
-                if (room.roomOrderId) {
-                    delete room.roomOrderId;
-                    delete room.state;
-                    delete room.originDatePriceList;
-                    delete room.haveRequest;
+                let room;
+                if (len === 0) {
+                    room = {
+                        categoryType: undefined,
+                        roomType: undefined,
+                        originPrice: undefined,
+                        price: undefined,
+                        room: {
+                            roomId: undefined,
+                            startDate: util.dateFormat(new Date()),
+                            endDate: util.dateFormat(util.diffDate(new Date(), 1))
+                        },
+                        idCardList: [],
+                        datePriceList: [],
+                        originDatePriceList: [],
+                        showPriceList: false,
+                        showTip: false,
+                        state: undefined,
+                        roomOrderId: undefined,
+                        quickDiscountId: '',
+                        priceScale: [],
+                        showDiscount: undefined
+                    };
+                } else {
+                    // 新增房间，房型时间同上一间
+                    room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
+                    room.idCardList = [];
+                    if (room.roomOrderId) {
+                        delete room.roomOrderId;
+                        delete room.state;
+                        delete room.originDatePriceList;
+                        delete room.haveRequest;
+                    }
                 }
 
                 this.rooms.push(room);
@@ -441,6 +466,10 @@
                 }
             },
             getRoomsList(id) {
+                if (!id) {
+                    return [];
+                }
+
                 const category = this.categories.find(c => c.typeId === id);
                 return category.rooms.map(r => {
                     return { id: r.roomId, name: r.serialNum };
@@ -486,9 +515,14 @@
             /**
              * 根据条件获取价格
              * @param rooms
-             * @param forceChangePrice 修改渠道导致的价格更新传true
              */
             modifyRooms(rooms) {
+                // 过滤没有房间id的房间
+                rooms = rooms.filter(r => r.roomType);
+                if (rooms.length === 0) {
+                    return false;
+                }
+
                 // 会员-1，企业-2
                 const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
                 let discountRelatedId; // eslint-disable-line
@@ -559,6 +593,10 @@
             // 误差处理，将误差加至第一天
             setFirstDayFee(room) {
                 const price = room.price;
+                if (price === undefined || price === '') {
+                    return false;
+                }
+
                 // 每日房价相加
                 const totalPrice = room.datePriceList.reduce((a, b) => {
                     return a + Number(b.dateFee);
