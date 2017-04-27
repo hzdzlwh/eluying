@@ -42,7 +42,7 @@
                     <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
                                      :key="item" v-if="item.origins.length > 0">
                         <dd-option v-for="origin in item.origins" :key="origin.originType"
-                                   :value="origin.originType" :label="`企业(${origin.name})`">
+                                   :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
                             <div class="user-group-origin">
                                 <span class="user-group-company" :title="origin.name">
                                     {{ origin.name }}
