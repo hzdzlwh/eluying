@@ -55,7 +55,7 @@
                             <div class="cashier-deposit-container">
                                 <div class="cashier-deposit-info" v-if="showDeposit">
                                     <span>押金:</span>
-                                    <input type="number" class="dd-input" v-model="deposit" placeholder="请输入押金金额">
+                                    <input type="number" class="dd-input" v-model.number="deposit" placeholder="请输入押金金额">
                                     <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
                                     <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
                                         <dd-option v-for="payChannel in depositPayChannels" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
@@ -449,8 +449,8 @@
                         pay.type = this.orderState ? 0 : 2;
                     });
                     const newReceiveMoney = this.payments.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee)); }, 0);
-                    const shouldReceiveMoney = this.orderPayment.payableFee;
-                    if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney)) {
+                    const shouldReceiveMoney = this.orderPayment.payableFee + this.penalty;
+                    if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney.toFixed(2))) {
                         modal.warn('订单未结清!');
                         return false;
                     }
