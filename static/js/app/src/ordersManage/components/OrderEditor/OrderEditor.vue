@@ -533,6 +533,10 @@
                 this.vipId = undefined;
                 this.newGoodItems = [];
                 this.previousGoods = [];
+                this.roomPrice = 0;
+                this.enterPrice = 0;
+                this.goodsPrice = 0;
+                this.foodPrice = 0;
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
