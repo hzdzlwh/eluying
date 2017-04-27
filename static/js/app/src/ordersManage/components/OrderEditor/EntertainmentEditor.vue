@@ -143,7 +143,7 @@ export default {
         },
         vipDiscountDetail: {
             handler(c, o) {
-                if (!c.vipDetail ) {
+                if (!c.vipDetail) {
                     return false;
                 }
                 const _this = this;
