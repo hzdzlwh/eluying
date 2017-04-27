@@ -463,7 +463,7 @@ default {
            },
            fetchDate(keyword) {
                const obj = {
-                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
@@ -520,7 +520,7 @@ default {
            },
            outPutText(num) {
                const paramsObj = {
-                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
