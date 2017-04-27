@@ -37,7 +37,7 @@ module.exports = {
         'reports/reports': './static/js/app/src/reports/main.js',
         'customer/customer': './static/js/app/src/customer/main.js'
     },
-    html: ['./static/tpl/feature.html'],
+    html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,
     devServer: '//www.dingdandao.com:3443',
     testServer: '//www.dingdandao.com:1443',
