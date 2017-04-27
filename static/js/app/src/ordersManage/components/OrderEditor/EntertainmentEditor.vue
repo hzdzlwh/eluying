@@ -353,7 +353,7 @@ export default {
             } else {
                 const str = util.dateFormat(new Date(startDate));
                 const arr = str.split('-');
-                if (item.state === 0) {
+                if (item.state === 0 || item.state === undefined) {
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
