@@ -17,9 +17,8 @@
             </div>
              
             <div style="margin-right:183px;">
-                <span>使用时间：</span>
                 <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" :disabled='tag !== 0'/>
-                <span>～</span>
+                <span style="color:#999;font-size:14px;">～</span>
                 <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" :disabled='tag !== 0'/>
             </div>
                    <div class="add-button fr">
@@ -63,7 +62,7 @@
         </div>
         <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='roomsOrderTable'></dd-table>
         <div class="foot footfix">
-            <span><small>共计</small> {{count}}个订单<span style="padding: 0 30px;">|</span>
+            <span><small>共计</small> {{count}}个订单<span style="padding: 0 30px;color:#e6e6e6;font-size:15px;">|</span>
             <span> <small>订单金额</small> ¥{{totalMany}} </span></span>
 
             <dd-pagination @currentchange="fetchDate" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
@@ -81,6 +80,26 @@
 </style>
 <style lang="scss" scoped>
 
+
+.search{
+  input::-webkit-input-placeholder {
+    color:    #ccc;
+}
+input:-moz-placeholder { 
+   color:    #ccc;
+}
+input::-moz-placeholder { 
+   color:    #ccc;
+}
+input:-ms-input-placeholder { 
+   color:    #ccc;
+}
+}
+
+.foot small{
+  color:#999;
+
+}
 .footfix{
       position: fixed;
     bottom: 0;
@@ -253,14 +272,6 @@ default {
                        name: '全部订单状态'
                    },
                    {
-                       id: 0,
-                       name: '待处理'
-                   },
-                   {
-                       id: 1,
-                       name: '已拒绝 '
-                   },
-                   {
                        id: 2,
                        name: '已预订'
                    },
@@ -274,7 +285,7 @@ default {
                    },
                    {
                        id: 5,
-                       name: '已结束'
+                       name: '已退房'
                    },
                    {
                        id: 6,
@@ -349,13 +360,13 @@ default {
                    },
                    {
                        title: '订单金额',
-                       render: (h, row) => <span>¥{row.totalPrice}</span>
+                       render: (h, row) => <span>{row.totalPrice}</span>
                    },
                    {
                        title: '订单状态',
                        render: (h, row) =>
                             <span>
-                            {ORDER_STATE_LIST[ORDER_TYPE.ACCOMMODATION].find(function(el) {
+                            {ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
                                 return Number(el.id) === row.orderState;
                             }).name}
                             </span>

@@ -184,7 +184,6 @@
                 isCompany: false,
                 companyCityLedger: false,
                 companyBalance: undefined,
-                hasPayHistory: false,
                 paiedMoney: 0
             };
         },
@@ -192,13 +191,7 @@
             ...mapState(['orderDetail', 'roomBusinessInfo']),
             orderState() {
                 if (this.orderPayment) {
-                    const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - (this.orderPayment.paidFee - this.orderPayment.refundFee);
-                    if (this.type === 'resetOrder' && this.hasPayHistory) {
-                        const paidFee = this.paylogs.reduce((a, b) => {
-                            return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
-                        }, 0);
-                        return Number(this.orderPayment.payableFee - paidFee).toFixed(2) >= 0;
-                    }
+                    const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - Number(this.paiedMoney);
                     return income >= 0;
                 }
                 return false;
@@ -216,13 +209,7 @@
                 return (type === 'checkIn' || cashierType === 'ing' || deposit !== 0);
             },
             notPay() { // 需补或或需退金额
-                const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2);
-                if (this.type === 'resetOrder' && this.hasPayHistory) {
-                    const payFee = this.paylogs.reduce((a, b) => {
-                        return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
-                    }, 0);
-                    return Math.abs(Number(this.orderPayment.payableFee - payFee).toFixed(2));
-                }
+                const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
                 return Math.abs(Number(payMoney).toFixed(2));
             }
         },
@@ -266,7 +253,7 @@
                 this.isCompany = false;
                 this.companyCityLedger = false;
                 this.companyBalance = undefined;
-                this.hasPayHistory = false;
+                this.deleteIds = [];
             },
             getPayChannels(index) {
                 if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
@@ -332,7 +319,6 @@
                         this.orderPayment = res.data;
                         if (res.data.payments && res.data.payments.length > 0) {
                             this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
-                            this.hasPayHistory = this.paylogs.length > 0;
                         }
                         this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
                         const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
@@ -383,7 +369,7 @@
                 }
             },
             addPayMent() {
-                const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + this.penalty).toFixed(2));
+                const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2));
                 let paidMoney = 0;
                 if (this.payments.length > 0) {
                     this.payments.forEach(pay => {
@@ -400,6 +386,11 @@
                 const log = this.paylogs[index];
                 this.deleteIds.push(log['payId']);
                 this.paiedMoney = (Number(this.paiedMoney) + (log['type'] === 2 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
+                if (Number(this.paiedMoney) === this.orderPayment.payableFee) {
+                    this.$nextTick(() => {
+                        this.payments = [];
+                    });
+                }
                 if (log['payChannelId'] === -15) { // 支付方式为企业挂帐，删除后企业账户余额要变化
                     this.companyBalance += Number(log['fee']);
                 }
@@ -438,6 +429,9 @@
                     return false;
                 }
                 if (this.type === 'resetOrder') {
+                    this.payments.map(pay => {
+                        pay.type = this.orderState ? 0 : 2;
+                    });
                     const newReceiveMoney = this.payments.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee)); }, 0);
                     const shouldReceiveMoney = this.orderPayment.payableFee;
                     if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney)) {
