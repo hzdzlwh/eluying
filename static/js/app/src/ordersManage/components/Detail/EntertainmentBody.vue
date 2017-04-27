@@ -131,7 +131,7 @@
             }
         },
         created() {
-            bus.$on('hideOrderEditor', this.clear);
+            bus.$on('onClose', this.clear);
         },
         mounted() {
             window.inter = [];
@@ -142,7 +142,7 @@
             }
         },
         beforeDestroy() {
-            bus.$off('hideOrderEditor', this.clear);
+            bus.$off('onClose', this.clear);
         }
     };
 </script>
