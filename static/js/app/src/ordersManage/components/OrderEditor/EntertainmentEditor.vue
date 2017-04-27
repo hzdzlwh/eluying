@@ -19,7 +19,7 @@
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit'] || item.chargeUnit}}）</label>
-                            <span v-if='order.orderState === 1 || order.state === 1  && !item.isnew' class="counterSpan">{{item.timeAmount * item['unitTime']}}</span>
+                            <span v-if='item.orderState === 1 || item.state === 1  && !item.isnew' class="counterSpan">{{item.timeAmount * item['unitTime']}}</span>
                             <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" v-else>
                             </counter>
 
@@ -37,7 +37,7 @@
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <span v-if='order.orderState === 8 || order.state === 8 && !item.isnew' class="counterSpan">{{item.count}}</span>
+                            <span v-if='item.state === 8 && !item.isnew' class="counterSpan">{{item.count}}{{order.state}}</span>
                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" v-else>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
