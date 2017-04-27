@@ -112,7 +112,8 @@ export default {
         order: {
             handler(c, o) {
                 this.enterItems = this.getplayItems();
-                this.orderType = this.order.playItems ? 1 : 0;
+                this.orderType = (this.order.playItems || this.order.campName === undefined) ? 1 : 0;
+                // 如果是预定order为空的也判断为组合订单
             },
             deep: true
         },
