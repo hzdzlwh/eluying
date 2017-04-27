@@ -113,7 +113,7 @@ export default {
     props: {
         visible: Boolean,
         type: {
-            default: 2, // 0充值，1退款，2挂账
+            default: 2, // 0充值，1退款，2挂账,3负数的挂帐
             type: Number
         },
         data: {
@@ -163,8 +163,8 @@ export default {
         visible(val) {
             this.select = undefined;
             this.num = undefined;
-            if (this.type === 2) {
-                this.num = this.data.ledgerFee;
+            if (this.type === 2 || this.type === 3) {
+                this.num = Math.abs(this.data.ledgerFee);
             }
             if (val) {
                 $('#checkForm').modal('show');
@@ -210,7 +210,7 @@ export default {
             // 判断是否进行扫码收款
             const id = this.select;
             const getCodeData = {
-                amount: parseFloat(this.num),
+                amount: this.type === 3 ? this.num = -this.num : this.num,
                 cid: this.data.cid,
                 payChannel: this.checkType.filter(function(val) {
                     return val.id === id;

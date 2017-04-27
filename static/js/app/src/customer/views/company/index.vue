@@ -345,7 +345,6 @@ export default {
                     }
                     if (checkType === 2) {
                         if (date.ledgerFee < 0) {
-                            date.ledgerFee = -date.ledgerFee;
                             this.check.type = 3;
                             moreChannel.push({
                                 id: -15,
