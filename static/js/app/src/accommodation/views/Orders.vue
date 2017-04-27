@@ -366,7 +366,7 @@ default {
                        title: '订单状态',
                        render: (h, row) =>
                             <span>
-                            {ORDER_STATE_LIST[ORDER_TYPE.ACCOMMODATION].find(function(el) {
+                            {ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
                                 return Number(el.id) === row.orderState;
                             }).name}
                             </span>
