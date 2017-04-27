@@ -722,7 +722,7 @@
                     remark: this.remark,
                     amount: enterItems.count,
                     enterOrderId: enterItems.enterOrderId || enterItems.id,
-                    timeAmount: enterItems.unitTime,
+                    timeAmount: enterItems.timeAmount,
                     totalPrice: enterItems.totalPrice,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
