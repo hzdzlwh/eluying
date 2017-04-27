@@ -384,16 +384,19 @@ default {
        },
        watch: {
            userOriginType() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            state() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            endTime() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
@@ -404,16 +407,19 @@ default {
                }
            },
            startTime() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            tag() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            timeType() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
