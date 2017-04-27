@@ -2,7 +2,7 @@
  * Created by lingchenxuan on 16/6/14.
  */
 
-var $ajax = require('./AJAXService');
+var $ajax = require('./http');
 import modal from './modal';
 
 const ACCOMMODATION_ID = 2;
@@ -80,7 +80,7 @@ function checkModule(moduleId, subId) {
 }
 
 function showMaintenance(announcement) {
-    var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:11;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
+    var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:1040;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
     var html = '<div class="maintenance" ' + style + '>' + announcement
         + '<img class="maintenance-close" style="position: absolute;right: 16px;top:2px;cursor: pointer" src="//static.dingdandao.com/99003D43-530F-428A-BC34-6EF8608636D9@1x.png">'
         + '</div>';
@@ -123,7 +123,7 @@ function checkAccess(moduleId) {
             return moduleAuth;
         }
     } catch (e) {
-        modal.alert('请重新登录');
+        modal.warn('请重新登录');
         setTimeout(() => {
             location.href = '/';
         }, 3000);
@@ -148,7 +148,7 @@ function checkSwitch(id) {
         const switchStatus = switches.find(i => i.id === id);
         return switchStatus && !!switchStatus.status;
     } catch (e) {
-        modal.alert('请重新登录');
+        modal.warn('请重新登录');
         setTimeout(() => {
             location.href = '/';
         }, 3000);

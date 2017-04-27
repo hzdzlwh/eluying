@@ -17,7 +17,7 @@
 <script>
     import { mapState } from 'vuex';
     import { DdTable, DdPagination } from 'dd-vue-component';
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import util from '../../common/util';
     const sexMap = {
         '1': '男',
@@ -177,7 +177,7 @@
 
                 this.page = page ? page : this.page;
 
-                AJAXService.ajaxWithToken('get', '/order/listInsurancePC', {
+                http.get('/order/listInsurancePC', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     page: this.page,
@@ -200,9 +200,9 @@
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
-                const host = AJAXService.getUrl2('/order/xlsInsurance');
-                const pa = AJAXService.getDataWithToken(paramsObj);
-                const params = AJAXService.paramsToString(pa);
+                const host = http.getUrl('/order/xlsInsurance');
+                const pa = http.getDataWithToken(paramsObj);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         }

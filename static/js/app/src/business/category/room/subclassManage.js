@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var roomCategoryList = require("roomCategoryList");
@@ -7,14 +7,14 @@ var subclassManage = {
     //子类管理
     subclassManage: function (that, item) {
         /*$.ajax({
-            url: AJAXService.getUrl("subclassManageUrl"),
+            url: http.getUrl("subclassManageUrl"),
             type: "POST",
             data: {
                 id: item.id,
                 subTypeList: JSON.stringify(item.subTypeList)
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -32,24 +32,21 @@ var subclassManage = {
                 roomCategoryList.render();
             }
         })*/
-        AJAXService.ajaxWithToken("POST","subclassManageUrl",{
+        http.post("subclassManageUrl",{
             id: item.id,
             subTypeList: JSON.stringify(item.subTypeList)
-        },function (result) {
-            if (util.errorHandler(result)) {
-                modal.clearModal(that);
-            } else {
-                return;
-            }
-            $.each(roomCategoryList.list, function (index, element) {
-                if (element.id == item.id) {
-                    roomCategoryList.list[index].subTypeList = result.data.list;
-                    return false; //等于break
-                }
-            });
-            roomCategoryList.countInventory(item.id);
-            roomCategoryList.render();
         })
+            .then(function (result) {
+                modal.clearModal(that);
+                $.each(roomCategoryList.list, function (index, element) {
+                    if (element.id == item.id) {
+                        roomCategoryList.list[index].subTypeList = result.data.list;
+                        return false; //等于break
+                    }
+                });
+                roomCategoryList.countInventory(item.id);
+                roomCategoryList.render();
+            });
     },
     events: {
         //点击子类管理按钮

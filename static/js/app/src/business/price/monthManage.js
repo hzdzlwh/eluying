@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var accommodationPriceList = require("accommodationPriceList");
@@ -11,14 +11,14 @@ var monthManage = {
         startDate = util.dateFormat(startDate);
         $("#editMonth .month").attr("start-date", startDate);
         /*$.ajax({
-            url: AJAXService.getUrl("getAccommodationMonthPriceList"),
+            url: http.getUrl("getAccommodationMonthPriceList"),
             data: {
                 startDate: startDate,
                 endDate: endDate,
                 categoryId: $(".priceGrid .selected").attr("category-id")
             },
             dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 var channelArray = [];
@@ -34,23 +34,23 @@ var monthManage = {
 
             }
         })*/
-        AJAXService.ajaxWithToken("GET","getAccommodationMonthPriceList",{
+        http.get("getAccommodationMonthPriceList",{
             startDate: startDate,
             endDate: endDate,
             categoryId: $('#editMonth').attr('data-category-id')
-        },function(result){
-            var channelArray = [];
-            for (var name in result.data) {
-                channelArray.push({
-                    name: result.data[name][0].channelName,
-                    id: result.data[name][0].channelId
-                });
-            }
-            $(".monthCategory").html("月份管理-" + result.data["0"][0].name);
-            monthManage.tab(channelArray);
-            monthManage.priceGrid(result.data);
-
         })
+            .then(function(result){
+                var channelArray = [];
+                for (var name in result.data) {
+                    channelArray.push({
+                        name: result.data[name][0].channelName,
+                        id: result.data[name][0].channelId
+                    });
+                }
+                $(".monthCategory").html("月份管理-" + result.data["0"][0].name);
+                monthManage.tab(channelArray);
+                monthManage.priceGrid(result.data);
+            });
     },
 
     tab: function(channelArray){
@@ -183,11 +183,11 @@ var monthManage = {
     },
     batchModifyAccommodationSpecialPrice: function(data, that){
         /*$.ajax({
-            url: AJAXService.getUrl("batchModifyAccommodationSpecialPrice"),
+            url: http.getUrl("batchModifyAccommodationSpecialPrice"),
             type: "POST",
             data: data,
             dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -197,16 +197,15 @@ var monthManage = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("POST","batchModifyAccommodationSpecialPrice",data,function(result){
-            if (util.errorHandler(result)) {
+        http.post("batchModifyAccommodationSpecialPrice",data)
+            .then(function(result){
                 accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
                 $('.priceOperate .second').addClass('hide');
                 $('.priceOperate .first .operateItem ').addClass('hide');
                 if (that) {
                     modal.clearModal(that);
                 }
-            }
-        })
+            })
     },
     events: {
         "click #editMonthButton": function(){
@@ -229,7 +228,7 @@ var monthManage = {
                 var cancelCallback = function(){
                     monthManage.showPrevMonth();
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
             } else {
                 monthManage.showPrevMonth();
             }
@@ -249,7 +248,7 @@ var monthManage = {
                 var cancelCallback = function(){
                     monthManage.showNextMonth();
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
             } else {
                 monthManage.showNextMonth();
             }
@@ -294,7 +293,7 @@ var monthManage = {
                     $(that).tab("show");
                     //TODO 把修改过的值复原 T T
                 };
-                modal.confirmDialog(dialogConfig, confirmCallback, cancelCallback);
+                modal.confirm(dialogConfig, confirmCallback, cancelCallback);
                 return false;
             } else {
                 $("#editMonth .selected").removeClass("selected");
@@ -357,7 +356,7 @@ var monthManage = {
                     modal.clearModal(that);
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);

@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/1/10.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var floatInfo = require("floatInfo");
@@ -31,35 +31,17 @@ var foodCategoryList = {
 
     //读取餐饮品类列表
     loadFoodCategoryList: function () {
-        /*$.ajax({
-            url: AJAXService.getUrl("pullOtherCategoryListUrl"),
-            data: {type: 1},
-            success: function (result) {
+        http.get("pullOtherCategoryListUrl",{type: 1})
+            .then(function (result) {
                 foodCategoryList.list = result.data.list;
                 foodCategoryList.render();
-            },
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            }
-        })*/
-        AJAXService.ajaxWithToken("get","pullOtherCategoryListUrl",{type: 1},function (result) {
-            foodCategoryList.list = result.data.list;
-            foodCategoryList.render();
-        });
+            });
     },
 
     //上架或者下架
     modifyState: function (item) {
-        /*$.ajax({
-            url: AJAXService.getUrl("modifyStateUrl"),
-            data: item,
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
-                if (!util.errorHandler(result)) {
-                    return;
-                }
+        http.get('/category/modifyStatePC',item)
+            .then(function (result) {
                 $.each(foodCategoryList.list, function (index, element) {
                     if (element.id == item.id) {
                         foodCategoryList.list[index].state = item.state;
@@ -67,35 +49,14 @@ var foodCategoryList = {
                     }
                 });
                 foodCategoryList.render();
-            }
-        })*/
-        AJAXService.ajaxWithToken('get','/category/modifyStatePC',item,function (result) {
-            if (!util.errorHandler(result)) {
-                return;
-            }
-            $.each(foodCategoryList.list, function (index, element) {
-                if (element.id == item.id) {
-                    foodCategoryList.list[index].state = item.state;
-                    return false; //等于break
-                }
             });
-            foodCategoryList.render();
-        });
     },
 
     //删除
     deleteFoodCategory: function () {
         var id = $(".mainActive .id").val();
-        /*$.ajax({
-            url: AJAXService.getUrl("deleteOtherCategoryUrl"),
-            data: {id: id},
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function (result) {
-                if (!util.errorHandler(result)) {
-                    return;
-                }
+        http.post("deleteOtherCategoryUrl",{id: id})
+            .then(function (result) {
                 $.each(foodCategoryList.list, function (index, element) {
                     if (element.id == id) {
                         foodCategoryList.list.splice(index, 1);
@@ -103,20 +64,7 @@ var foodCategoryList = {
                     }
                 });
                 foodCategoryList.render();
-            }
-        })*/
-        AJAXService.ajaxWithToken("POST","deleteOtherCategoryUrl",{id: id},function (result) {
-            if (!util.errorHandler(result)) {
-                return;
-            }
-            $.each(foodCategoryList.list, function (index, element) {
-                if (element.id == id) {
-                    foodCategoryList.list.splice(index, 1);
-                    return false; //等于break
-                }
             });
-            foodCategoryList.render();
-        });
     },
     events: {
         "click .categoryGrid .mainClass": function () {
@@ -147,7 +95,7 @@ var foodCategoryList = {
         "click #deleteFoodButton": function () {
             confirmCallback = foodCategoryList.deleteFoodCategory;
             dialogConfig = {title: "提示", message: "您确定要删除吗？"};
-            modal.confirmDialog(dialogConfig, confirmCallback);
+            modal.confirm(dialogConfig, confirmCallback);
         },
 //上架或下架
         "click .modifyStateButton": function () {

@@ -114,7 +114,7 @@
 }
 </style>
 <script>
-import AJAXService from 'AJAXService';
+import http from 'http';
 import modal from 'modal';
 import event from '../event.js';
 export default {
@@ -152,53 +152,45 @@ export default {
         payMoney() {
             const params = JSON.parse(JSON.stringify(this.data.data));
             params.authCode = this.authCode;
-            AJAXService.ajaxWithToken('GET', this.url[this.paytype], params)
+            http.get(this.url[this.paytype], params)
                 .then(result => {
-                    if (result.code === 1) {
-                        const status = result.data.status;
-                        const tradeNum = result.data.tradeNum;
-                        if (status === 0) {
-                            modal.somethingAlert('收银成功');
-                            this.authCode = '';
-                            setTimeout(() => {
-                                this.hideModal(1);
-                                event.$emit('checkSuc');
-                            }, 1500);
-                        } else if (status === 1) {
-                            modal.somethingAlert('收款失败');
-                            this.hideModal(2);
-                        } else if (status === 2) {
-                            const inter = setInterval(() => {
-                                AJAXService.ajaxWithToken('GET', 'getPayStatus4BarcodeUrl', {
-                                    tradeNum: tradeNum
-                                }, (result1) => {
+                    const status = result.data.status;
+                    const tradeNum = result.data.tradeNum;
+                    if (status === 0) {
+                        modal.success('收银成功');
+                        this.authCode = '';
+                        setTimeout(() => {
+                            this.hideModal(1);
+                            event.$emit('checkSuc');
+                        }, 1500);
+                    } else if (status === 1) {
+                        modal.warn('收款失败');
+                        this.hideModal(2);
+                    } else if (status === 2) {
+                        const inter = setInterval(() => {
+                            http.get('getPayStatus4BarcodeUrl', {
+                                tradeNum: tradeNum
+                            })
+                                .then((result1) => {
                                     if (result1.code === 1) {
                                         var status1 = result1.data.status;
                                         if (status1 !== 2) {
                                             clearInterval(inter);
                                         }
                                         if (status1 === 0) {
-                                            modal.somethingAlert('收银成功');
+                                            modal.success('收银成功');
                                             this.authCode = '';
                                             setTimeout(() => {
                                                 this.hideModal(1);
                                                 event.$emit('checkSuc');
                                             }, 2500);
                                         } else if (status1 === 1) {
-                                            modal.somethingAlert('收款失败');
+                                            modal.warn('收款失败');
                                             this.hideModal(2);
                                         }
                                     }
                                 });
-                            }, 5000);
-                        }
-                    } else {
-                        modal.somethingAlert(result.msg);
-                        // modal.somethingAlert('收银失败');
-                        //     this.authCode = '';
-                        //     setTimeout(() => {
-                        //         this.hideModal(2);
-                        //     }, 2500);
+                        }, 5000);
                     }
                 });
         }

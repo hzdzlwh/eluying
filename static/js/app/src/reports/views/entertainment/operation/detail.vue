@@ -32,7 +32,7 @@
 </style>
 <script>
     import {mapState} from 'vuex';
-    import AJAXService from '../../../../common/AJAXService';
+    import http from '../../../../common/http';
     import util from '../../../../common/util';
     import { DdTable, DdSelect, DdOption } from 'dd-vue-component';
     import { getTableData } from '../../../utils/tableHelper';
@@ -77,16 +77,16 @@
                     paramsObj.params.nodeId = this.entertainmentId;
                 }
                 paramsObj.params = JSON.stringify(paramsObj.params);
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         },
         methods: {
             getEntertainmentList() {
-                AJAXService.ajaxWithToken('get', '/stat/getAllEntertainment', {})
+                http.get('/stat/getAllEntertainment', {})
                     .then(res => {
                         if (res.code === 1) {
                             this.entertainmentList = res.data.entertainmentList;
@@ -100,7 +100,7 @@
             },
             getEnterConsumeDetail() {
                 const params = this.entertainmentId === -1 ? { ...this.date } : { ...this.date, nodeId: this.entertainmentId };
-                AJAXService.ajaxWithToken('get', '/stat/getEnterConsumeDetail', params)
+                http.get('/stat/getEnterConsumeDetail', params)
                     .then(res => {
                         if (res.code === 1) {
                             const tableData = getTableData({

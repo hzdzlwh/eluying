@@ -1,6 +1,6 @@
 var logout = require('logout');
 var util = require('util');
-var AJAXService = require('AJAXService');
+import http from 'http';
 var networkAction = require('networkAction');
 var modal = require('modal');
 var headerHtml = require('./header.html');
@@ -21,57 +21,52 @@ var header = {
         var entry = pathArray[2];
         $('[data-entry=' + entry + ']').addClass('selected');
         util.bindDomAction(this.events);
-        AJAXService.ajaxWithToken('get', '/user/getPersonalInfoInNetwork', {}, function(data) {
-            localStorage.setItem('camps', JSON.stringify(data.data.camps));
-            var campId = localStorage.getItem('campId');
-            if (data.code === 1) {
-                var result = data.data.camps;
-                var key = '';
-                var flag = false;
-                var object = {
-                    created: '',
-                    joined: ''
-                };
-                for (var i = 0; i < result.length; i ++) {
-                    var item = result[i];
-                    if (item.userType === 1) {
-                        key = 'created';
-                    } else {
-                        key = 'joined';
+        http.get('/user/getPersonalInfoInNetwork', {})
+            .then( function(data) {
+                localStorage.setItem('camps', JSON.stringify(data.data.camps));
+                var campId = localStorage.getItem('campId');
+                if (data.code === 1) {
+                    var result = data.data.camps;
+                    var key = '';
+                    var flag = false;
+                    var object = {
+                        created: '',
+                        joined: ''
+                    };
+                    for (var i = 0; i < result.length; i ++) {
+                        var item = result[i];
+                        if (item.userType === 1) {
+                            key = 'created';
+                        } else {
+                            key = 'joined';
+                        }
+                        if (item.campId === campId) {
+                            flag = true;
+                        } else {
+                            flag = false;
+                        }
+                        object[key] += that.getItemHtml(item, flag);
                     }
-                    if (item.campId === campId) {
-                        flag = true;
-                    } else {
-                        flag = false;
+                    if (object.created) {
+                        object.created = '<dt>我创建的</dt>' + object.created + '<hr>';
                     }
-                    object[key] += that.getItemHtml(item, flag);
-                }
-                if (object.created) {
-                    object.created = '<dt>我创建的</dt>' + object.created + '<hr>';
-                }
-                if (object.joined) {
-                    object.joined = '<dt>我加入的</dt>' + object.joined + '<hr>';
-                }
-            }
-            $('#headerSwitchCamp .network-list').html(object.created + object.joined);
-            $('#headerSwitchCamp .networkButton').click(function() {
-                var campId = $(this).attr('data-campId');
-                var campName = $(this).attr('data-campName');
-                AJAXService.ajaxWithToken('GET', '/homepage/changeCamp', { campId: campId }, function(data) {
-                    if (data.code === 1) {
-                        localStorage.setItem('campId', campId);
-                        localStorage.setItem('campName', campName);
-                        auth.saveUserInfo(data.data);
-                        window.location.href = '/view/accommodation/calender/calender.html';
-                    } else if (data.code === 11002) {
-                        modal.somethingAlert(data.msg);
-                        logout.logout();
-                    } else {
-                        modal.somethingAlert(data.msg);
+                    if (object.joined) {
+                        object.joined = '<dt>我加入的</dt>' + object.joined + '<hr>';
                     }
+                }
+                $('#headerSwitchCamp .network-list').html(object.created + object.joined);
+                $('#headerSwitchCamp .networkButton').click(function() {
+                    var campId = $(this).attr('data-campId');
+                    var campName = $(this).attr('data-campName');
+                    http.get('/homepage/changeCamp', { campId: campId })
+                        .then(function(data) {
+                            localStorage.setItem('campId', campId);
+                            localStorage.setItem('campName', campName);
+                            auth.saveUserInfo(data.data);
+                            window.location.href = '/view/accommodation';
+                        });
                 });
             });
-        });
     },
     events: {
         'click #logout': function(e) {

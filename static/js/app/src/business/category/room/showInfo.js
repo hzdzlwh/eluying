@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 require("fileupload");
@@ -15,10 +15,10 @@ var showInfo = {
     //读取展示信息
     pullRoomShowInfo: function (id) {
         /*$.ajax({
-            url: AJAXService.getUrl("pullShowInfoUrl"),
+            url: http.getUrl("pullShowInfoUrl"),
             data: {id: id},
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 showInfo.showRoomShowInfo(result.data);
@@ -26,16 +26,17 @@ var showInfo = {
         })*/
         var counter1;
         var counter2;
-        AJAXService.ajaxWithToken('get', '/category/pullShowInfoPC', {id: id}, function (result) {
-            showInfo.isLoading = false;
-            showInfo.coverIsLoading = false;
-            showInfo.detailIsLoading = false;
-            showInfo.showRoomShowInfo(result.data);
-            counter1 = $("#roomShowDescription").val().length;
-            counter2 = $("#roomShowPolicy").val().length;
-            $(".subNumDescription").html(counter1+"/70");
-            $(".subNumPolicy").html(counter2+"/140");
-        });
+        http.get('/category/pullShowInfoPC', {id: id})
+            .then(function (result) {
+                showInfo.isLoading = false;
+                showInfo.coverIsLoading = false;
+                showInfo.detailIsLoading = false;
+                showInfo.showRoomShowInfo(result.data);
+                counter1 = $("#roomShowDescription").val().length;
+                counter2 = $("#roomShowPolicy").val().length;
+                $(".subNumDescription").html(counter1+"/70");
+                $(".subNumPolicy").html(counter2+"/140");
+            });
 
         $(document).keyup(function(){
             counter1 = $("#roomShowDescription").val().length;
@@ -135,7 +136,7 @@ var showInfo = {
         }
         //上传图片
         $("#cover").fileupload({
-            url: AJAXService.getUrl2("uploadImageUrl"),
+            url: http.getUrl("uploadImageUrl"),
             send: function(){
                 showInfo.coverIsLoading = true;
             },
@@ -150,7 +151,7 @@ var showInfo = {
             }
         });
         $("#detail").fileupload({
-            url: AJAXService.getUrl2("uploadImageUrl"),
+            url: http.getUrl("uploadImageUrl"),
             send: function(){
                 showInfo.detailIsLoading = true;
             },
@@ -238,10 +239,10 @@ var showInfo = {
     //发送展示信息
     sendRoomShowInfo: function (item, that) {
         /*$.ajax({
-            url: AJAXService.getUrl("editShowInfoUrl"),
+            url: http.getUrl("editShowInfoUrl"),
             data: item,
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -249,11 +250,10 @@ var showInfo = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken('post','/category/modifyShowInfoPC',item,function (result) {
-            if (util.errorHandler(result)) {
+        http.post('/category/modifyShowInfoPC',item)
+            .then(function(result) {
                 modal.clearModal(that);
-            }
-        });
+            });
     },
 
     events: {
@@ -288,28 +288,28 @@ var showInfo = {
             }
             if ($(".rightTab").parent().hasClass("active")) {
                 if ($("#roomShowFitNum").val() == "") {
-                    modal.somethingAlert("请填写可容纳人数");
+                    modal.warn("请填写可容纳人数");
                     return;
                 }
                 if ($("#roomShowArea").val() == "") {
-                    modal.somethingAlert("请填写房间面积");
+                    modal.warn("请填写房间面积");
                     return;
                 }
                 if ($("#roomShowBed").val() == "") {
-                    modal.somethingAlert("请填写床型");
+                    modal.warn("请填写床型");
                     return;
                 }
             }
             if ($(".cover .photoContainer").html() == "") {
                 $(".coverError").removeClass("hide");
                 if ($(".rightTab").parent().hasClass("active")) {
-                    modal.somethingAlert("请上传封面");
+                    modal.warn("请上传封面");
                 }
                 return
             }
             if ($(".detail .photoContainer").html() == "") {
                 if ($(".rightTab").parent().hasClass("active")) {
-                    modal.somethingAlert("请上传详细图片");
+                    modal.warn("请上传详细图片");
                 }
                 $(".detailError").removeClass("hide");
                 return
@@ -392,7 +392,7 @@ var showInfo = {
 //替换详细图片
         "click #replaceDetail": function () {
             $("#replaceDetailImg").fileupload({
-                url: AJAXService.getUrl2("uploadImageUrl"),
+                url: http.getUrl("uploadImageUrl"),
                 done: function (e, data) {
                     var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                     result = JSON.parse(result);
@@ -419,7 +419,7 @@ var showInfo = {
                     showInfo.changed = false
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);

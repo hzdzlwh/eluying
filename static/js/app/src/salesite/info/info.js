@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 require("fileupload");
@@ -69,8 +69,8 @@ $(function() {
         },
         methods: {
             getShopList () {
-                AJAXService.ajaxWithToken('get', '/directNet/getBasicInfo', {}, result => {
-                    if (result.code === 1 && result.data) {
+                http.get('/directNet/getBasicInfo', {})
+                    .then(result => {
                         this.campName = result.data.campName;
                         this.shopType = result.data.type;
                         this.shopPhone = result.data.recePhone;
@@ -104,14 +104,11 @@ $(function() {
                                 this.lat = null;
                                 this.lon = null;
                             });
-                    } else if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    }
-                })
+                    })
             },
             fileUpload(callback) {
                 $('#saleSite-uploadBtn').fileupload({
-                    url: AJAXService.getUrl2("uploadImageUrl"),
+                    url: http.getUrl("uploadImageUrl"),
                     done: (e, data) => {
                         var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                         result = JSON.parse(result);
@@ -121,7 +118,7 @@ $(function() {
             },
             uploadNewImg() {
                 if (this.imgUrls.length >= 20) {
-                    modal.somethingAlert('上传图片数量已达上限!');
+                    modal.warn('上传图片数量已达上限!');
                     return false;
                 }
                 this.fileUpload(url => {
@@ -147,10 +144,10 @@ $(function() {
             },
             saveMessage() {
                 if (this.countyType < 0) {
-                    modal.somethingAlert('请把信息填写完整');
+                    modal.warn('请把信息填写完整');
                     return;
                 }
-                AJAXService.ajaxWithToken('get', '/directNet/editBasicInfo', {
+                http.post('/directNet/editBasicInfo', {
                     address: this.address,
                     campType: this.shopType,
                     recePhone: this.shopPhone,
@@ -161,13 +158,10 @@ $(function() {
                     lat: this.lat,
                     lon: this.lon,
                     version: 13,
-                }, result => {
-                    if (result.code === 1) {
-                        modal.somethingAlert('保存成功');
-                    } else if (result.code !== 1) {
-                        modal.somethingAlert('请把信息填写完整');
-                    }
                 })
+                    .then(result => {
+                        modal.success('保存成功');
+                    });
             },
             cancel() {
                 this.getShopList();

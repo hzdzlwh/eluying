@@ -4,8 +4,7 @@
 var modal = require('modal');
 var util = require('util');
 var loginValidate = require('loginValidate');
-var AJAXService = require('AJAXService');
-var baseUrl = AJAXService.urls.host;
+import http from 'http';
 var networkAction = require("networkAction");
 var auth = require('../common/auth');
 require('bootstrap');
@@ -65,7 +64,7 @@ function forgetVCOnClick(){
         if (phone !== currentPhone) {
             currentPhone = phone;
             $("#loginForgetPwd .picture_container").css('display', 'block');
-            $("#loginForgetPwd .get_picture img").attr('src', AJAXService.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            $("#loginForgetPwd .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone=' + phone));
             return false;
         }
         if (!picture) {
@@ -75,7 +74,7 @@ function forgetVCOnClick(){
         var that = this;
         $.ajax({
             type: "GET",
-            url: AJAXService.getUrl2('/user/sendVerify'),
+            url: http.getUrl('/user/sendVerify'),
             data: {
                 phone: phone,
                 origin: 2,
@@ -112,7 +111,7 @@ function registerVCOnClick(){
         if (phone !== currentPhone) {
            currentPhone = phone;
             $("#loginRegister .picture_container").css('display', 'block');
-            $("#loginRegister .get_picture img").attr('src', AJAXService.urls.host2 + '/user/getCaptcha?phone=' + phone);
+            $("#loginRegister .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone=' + phone));
             return false;
         }
         if (!picture) {
@@ -122,7 +121,7 @@ function registerVCOnClick(){
         var that = this;
         $.ajax({
             type: "GET",
-            url: AJAXService.getUrl2('/user/sendVerify'),
+            url: http.getUrl('/user/sendVerify'),
             data: {
                 origin: 1,
                 phone: phone,
@@ -164,6 +163,9 @@ $(document).ready(function(){
             break;
         case '/view/home/feature.html':
             $('#js-navbar-feat').addClass('active');
+            break;
+        case '/view/home/customerCase.html':
+            $('#customerCase').addClass('active');
             break;
         default:
             $('#js-navbar-home').addClass('active');
@@ -218,7 +220,7 @@ $(document).ready(function(){
     $("#loginForgetPwd .get_picture img").on("click", function(){
         var phone = $("#loginForgetPwd .phone").val();
         captchaTime ++;
-        $("#loginForgetPwd .get_picture img").attr('src', AJAXService.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+        $("#loginForgetPwd .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone='+ phone + '&t=' +captchaTime));
     });
 
     $("#loginModal .log .forget").on("click", function(){
@@ -259,7 +261,7 @@ $(document).ready(function(){
         if(result === true){
             $.ajax({
                 type: 'GET',
-                url: AJAXService.getUrl2('/user/modifyPassword'),
+                url: http.getUrl('/user/modifyPassword'),
                 data: {
                     newPassword: pwd,
                     phone: phone,
@@ -294,7 +296,7 @@ $(document).ready(function(){
     $("#loginRegister .get_picture img").on("click", function(){
         var phone = $("#loginRegister .phone").val();
         captchaTime ++;
-        $("#loginRegister .get_picture img").attr('src', AJAXService.urls.host2+'/user/getCaptcha?phone='+ phone + '&t=' +captchaTime);
+        $("#loginRegister .get_picture img").attr('src', http.getUrl('/user/getCaptcha?phone='+ phone + '&t=' +captchaTime));
     });
 
     /*
@@ -329,7 +331,7 @@ $(document).ready(function(){
                 .html('注册中。。。');
             $.ajax({
                 type: 'POST',
-                url: AJAXService.getUrl2('/user/register'),
+                url: http.getUrl('/user/register'),
                 data: {
                     realName: realName,
                     password: pwd,
@@ -373,13 +375,16 @@ $(document).ready(function(){
          result = loginValidate.passwordValidate(password);
          }*/
         if(result === true){
-            AJAXService.ajaxWithToken("POST", "loginUrl", {
+            http.post("loginUrl", {
                 terminal: 1,
                 version: 17,
                 password: password,
                 phone: loginName
-            }, function(data){
-                if(data.code == 1){
+            },
+                {
+                    notify: false
+                })
+                .then(function(data){
                     SetPwdAndChk(); //记住密码和账号
                     $('#loginModal').modal('hide');
                     if (data.data.camps.length === 0) {
@@ -392,17 +397,15 @@ $(document).ready(function(){
                                 localStorage.setItem("campId", el.campId);
                             }
                         });
-                        setTimeout("window.location.href = '/view/accommodation/calender/calender.html';", 1000);
+                        setTimeout("window.location.href = '/view/accommodation';", 1000);
                     }
                     auth.saveUserInfo(data.data);
                     localStorage.removeItem('maintenanceClosed');
-                    //setTimeout(util.checkAuth, 900);
-                    //util.checkAuth();
-                }else{
+                })
+                .catch(data => {
                     $("#loginModal .log .errorTips").html(data.msg);
                     $("#loginModal .log .errorTips").show();
-                }
-            });
+                });
             $("#loginModal .log .errorTips").hide();
         }else{
             $("#loginModal .log .errorTips").html(result);
@@ -533,7 +536,7 @@ $(document).ready(function(){
             //验证用户名是否存在
             $.ajax({
                 type: 'GET',
-                url: baseUrl + '/user/verifyUserName',
+                url: http.getUrl('/user/verifyUserName'),
                 data: {
                     userName: loginName
                 },

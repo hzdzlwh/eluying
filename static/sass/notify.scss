@@ -1,0 +1,42 @@
+.dd-notifies {
+  position: fixed;
+  z-index: 100001;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+.dd-notify {
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  border: 0;
+  height: 50px;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+  margin-bottom: 10px;
+  min-width: 500px;
+  transition: all 240ms ease;
+  &:first-of-type {
+    border-radius: 0 0 4px 4px;
+  }
+  &.dd-notify-error {
+    color: #fff;
+    background: #f75659;
+  }
+  &.dd-notify-warn {
+    color: #fff;
+    background: #ffac59;
+  }
+  &.dd-notify-success {
+    color: #fff;
+    background: #62d99d;
+  }
+}
+.dd-notify-active {
+  transform: translateY(-100%);
+}
+.dd-notify-leave {
+
+}
