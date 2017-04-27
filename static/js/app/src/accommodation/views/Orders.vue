@@ -11,15 +11,15 @@
         </div>
         <div class="detail-content-filter">
             <div style="width: 88px;margin-right:20px;">
-                <DdSelect v-model="timeType" :disabled='tag !== 0'>
+                <DdSelect v-model="timeType"  v-show='tag === 0'>
                     <dd-option :key="item.id" v-for="item in timeTypeList" :value="item.id" :label="item.name"></dd-option>
                 </DdSelect>
             </div>
              
-            <div style="margin-right:183px;">
-                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" :disabled='tag !== 0'/>
+            <div style="margin-right:183px;" v-show='tag === 0'>
+                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate"/>
                 <span style="color:#999;font-size:14px;">～</span>
-                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" :disabled='tag !== 0'/>
+                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
             </div>
                    <div class="add-button fr">
                 <div class="dd-dropdown">
@@ -54,8 +54,8 @@
                     </dd-group-option>
                 </dd-select>
             </div>
-            <div style="margin-right:20px;width: 120px;" class="fr">
-                <dd-select v-model="state" :disabled='tag === 1 || tag === 2'>
+            <div style="margin-right:20px;width: 120px;" class="fr" v-show='tag === 0 || tag === 3'>
+                <dd-select v-model="state" >
                     <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
@@ -384,16 +384,19 @@ default {
        },
        watch: {
            userOriginType() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            state() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            endTime() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
@@ -404,16 +407,19 @@ default {
                }
            },
            startTime() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            tag() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }
            },
            timeType() {
+               this.pageNo = 1;
                if (this.flag) {
                    this.fetchDate();
                }

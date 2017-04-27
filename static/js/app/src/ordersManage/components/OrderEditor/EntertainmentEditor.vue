@@ -19,7 +19,7 @@
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit'] || item.chargeUnit}}）</label>
-                            <span v-if='order.orderState === 8 && !item.isnew' class="counterSpan">{{item.timeAmount * item['unitTime']}}</span>
+                            <span v-if='order.orderState === 1 || order.state === 1  && !item.isnew' class="counterSpan">{{item.timeAmount * item['unitTime']}}</span>
                             <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" v-else>
                             </counter>
 
@@ -37,7 +37,7 @@
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <span v-if='order.orderState === 8 && !item.isnew' class="counterSpan">{{item.count}}</span>
+                            <span v-if='order.orderState === 8 || order.state === 8 && !item.isnew' class="counterSpan">{{item.count}}</span>
                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" v-else>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
@@ -201,6 +201,7 @@ export default {
                         enter.originPrice = item.originPrice.toFixed(2);
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                         enter.totalPrice = item.totalPrice;
+                        enter.unitTime = item.chargeUnitTime;
                         enterItems.push(enter);
                         if (enter.unitTime === undefined) {
                             enter.unitTime = item.chargeUnitTime;
