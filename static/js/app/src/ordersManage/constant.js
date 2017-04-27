@@ -96,7 +96,6 @@ export const ORDER_STATE_LIST = {
         { id: '8', name: '反结账' }],
 
     '0': [{ id: '-1', name: '全部状态' },
-        { id: '0', name: '待处理' },
         { id: '2', name: '已预订' },
         { id: '3', name: '就餐中' },
         { id: '4', name: '已取消' },
