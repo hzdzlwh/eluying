@@ -114,7 +114,8 @@ export default {
             modifyEnterOrShopIndex: -1,
             enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
-            ORDER_TYPE
+            ORDER_TYPE,
+            totalprice:0
         };
     },
     watch: {
@@ -135,6 +136,7 @@ export default {
                 }).forEach(function(el) {
                     totalprice += Number(el.totalPrice);
                 });
+                this.totalprice = totalprice;
                 this.$emit('priceChange', totalprice);
             },
             deep: true
