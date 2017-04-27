@@ -37,7 +37,7 @@
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <span v-if='item.state === 8 && !item.isnew' class="counterSpan">{{item.count}}{{order.state}}</span>
+                            <span v-if='item.state === 8 && !item.isnew' class="counterSpan">{{item.count}}</span>
                             <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" v-else>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
@@ -253,23 +253,12 @@ export default {
             this.enterSelectModalShow = value;
         },
         handleNumChange(type, tag, num) {
-            if (type === 2) {
-                this.enterItems.forEach((item, index) => {
-                    const price = item['price'];
-                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                    item.count = (index === tag) ? num : item.count;
-                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
-                    item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
-                });
-            } else if (type === -2) {
-                this.enterItems.forEach((item, index) => {
-                    const price = item['price'];
-                    const discount = this.getItemDiscountInfo(item.nodeId, item.type, this.vipDiscountDetail).discount;
-                    item.timeAmount = (index === tag) ? num : item.timeAmount;
-                    item.totalPrice = Number(((price * discount).toFixed(2) * (item.count || item.amount) * item.timeAmount).toFixed(2));
-                    item.originPrice = (price * (item.count || item.amount) * item.timeAmount).toFixed(2);
-                });
-            }
+            const _this = this;
+            this.enterItems.forEach((item, index) => {
+                item.count = (index === tag) ? num : item.count;
+                item.amount = (index === tag) ? num : item.amount;
+                item.totalPrice = (index === tag) ? Number(((item['price'] * _this.getItemDiscountInfo(item.nodeId).discount).toFixed(2) * item.count * item.timeAmount).toFixed(2)) : item.totalPrice;
+            });
         },
         /**
          * 获取单个项目的优惠信息

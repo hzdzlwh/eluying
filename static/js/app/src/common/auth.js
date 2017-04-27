@@ -80,7 +80,7 @@ function checkModule(moduleId, subId) {
 }
 
 function showMaintenance(announcement) {
-    var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:11;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
+    var style = 'style="background:#ffba75;width:100%;color:#fff;z-index:1040;font-size:14px;position:absolute;top:68px;padding:2px 16px"';
     var html = '<div class="maintenance" ' + style + '>' + announcement
         + '<img class="maintenance-close" style="position: absolute;right: 16px;top:2px;cursor: pointer" src="//static.dingdandao.com/99003D43-530F-428A-BC34-6EF8608636D9@1x.png">'
         + '</div>';
