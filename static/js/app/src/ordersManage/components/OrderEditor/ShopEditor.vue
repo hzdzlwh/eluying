@@ -282,6 +282,7 @@
                     newVal.pcGoodsItems.forEach(item => {
                         if (item.state === 1 || item.state === 8) {
                             item.id = item.goodsId;
+                            item.type = 3;
                             if (shopList[item.goodsOrderId]) {
                                 shopList[item.goodsOrderId]['items'].push(item);
                             } else {
@@ -300,6 +301,7 @@
                     shopList[orderId]['items'].map(good => {
                         good.goodsOrderId = orderId;
                         good.id = good.goodsId;
+                        good.type = 3;
                     });
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
