@@ -35,7 +35,7 @@
                                       @click="showSingleOrder(item)">
                                 </span>
                             </div>
-                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 20px">
                                 <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                 <span class="discount-num">
                                     {{ item.vipShowDiscount }}
