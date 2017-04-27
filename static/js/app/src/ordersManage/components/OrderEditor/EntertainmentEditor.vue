@@ -12,14 +12,14 @@
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
-                            <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0 || (order.orderState === 8 && order.isnew)" />
+                            <input class="dd-input" :value="item.name " @click="showEnterSelectModal(index)" :disabled="orderType === 0 || item.usedAmount > 0 || order.orderState === 8 && !item.isnew" />
                         </div>
                         <!-- <span v-if="item.usedAmount > 0">{{item.name}}</span> -->
                       <!--   <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit'] || item.chargeUnit}}）</label>
-                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" :disabled='order.orderState === 8 && order.isnew'>
+                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" :disabled='order.orderState === 8 && !item.isnew'>
                             </counter>
                         </div>
                         <span v-if="item.usedAmount > 0 && item.chargeUnit" >
@@ -29,12 +29,13 @@
                         <div class="enterDate-container">
                             <label>时间</label>
                             <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())" :disabled="item.usedAmount > 0" />
+                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())"  />
+                                <!-- :disabled="item.usedAmount > 0" 如果有项目开了也可以编辑 -->
                             </div>
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" :disabled='order.orderState === 8 && order.isnew'>
+                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" :disabled='order.orderState === 8 && !item.isnew'>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
                                 </p>
@@ -135,7 +136,7 @@ export default {
                 let totalprice = 0;
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
-                    if (el.totalPrice !== newPrice && o.vipDetail) { // 判断是改变了折扣信息
+                    if (Number(el.totalPrice) !== newPrice && !!o.vipDetail) { // 判断是改变了折扣信息
                         el.totalPrice = newPrice;
                     }
                     if (el.state === 0 || el.state === undefined) {
@@ -282,7 +283,7 @@ export default {
                 item
                 .changeTimes++;
             }
-            if (item.playOrderId && item.changeTimes < 2) {
+            if (item.type === 2 && item.changeTimes < 2) {
                 return false;
             }
             /* if (item.id) {

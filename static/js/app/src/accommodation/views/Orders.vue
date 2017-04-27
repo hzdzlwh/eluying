@@ -260,7 +260,7 @@ default {
                    },
                    {
                        id: 3,
-                       name: '进行中 '
+                       name: '已入住'
                    },
                    {
                        id: 4,
