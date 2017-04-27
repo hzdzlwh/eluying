@@ -376,6 +376,7 @@
                     case ORDER_TYPE.CATERING:
                         return this.foodPrice.toFixed(2);
                 }
+                return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
             }
         },
         created() {
