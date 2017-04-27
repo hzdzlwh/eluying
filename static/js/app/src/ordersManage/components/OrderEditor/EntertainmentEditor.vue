@@ -340,7 +340,16 @@ export default {
                     return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
             }
-            return true;
+            if (this.order.orderState === 0) {
+                const str = util.dateFormat(new Date(startDate));
+                const arr = str.split('-');
+                return (date) => {
+                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                };
+            }
+            return (date) => {
+                return true;
+            };
         },
         setEnterItems(data) {
             if (this.modifyEnterOrShopIndex === -1) {
