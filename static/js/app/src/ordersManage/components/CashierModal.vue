@@ -546,7 +546,7 @@
                     if (id === -6 || id === -7 || id === -11 || id === -12) {
                         payWithAlipay += Number(pay.fee);
                     }
-                    if (id === -14 || id === -15) {
+                    if (id === -15) {
                         payWithCompany += Number(pay.fee);
                     }
                 });
