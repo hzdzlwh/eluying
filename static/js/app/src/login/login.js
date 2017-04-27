@@ -164,6 +164,9 @@ $(document).ready(function(){
         case '/view/home/feature.html':
             $('#js-navbar-feat').addClass('active');
             break;
+        case '/view/home/customerCase.html':
+            $('#customerCase').addClass('active');
+            break;
         default:
             $('#js-navbar-home').addClass('active');
     }
