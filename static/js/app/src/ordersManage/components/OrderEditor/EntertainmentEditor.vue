@@ -8,7 +8,7 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType ||  item.state === undefined' :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType || item.state === 0 ||item.state === 8 || item.state === 1 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
@@ -183,7 +183,6 @@ export default {
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
-                        window.console.log(enter.state);
                         return enter.state !== 3 && enter.state !== 2;
                     });
                     filterEnters.forEach(item => {
