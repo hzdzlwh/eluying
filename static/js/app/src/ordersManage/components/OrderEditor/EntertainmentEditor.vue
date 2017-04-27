@@ -31,7 +31,7 @@
                         <div class="enterDate-container">
                             <label>时间</label>
                             <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())"  />
+                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date(), item)"  />
                                 <!-- :disabled="item.usedAmount > 0" 如果有项目开了也可以编辑 -->
                             </div>
                         </div>
@@ -333,7 +333,7 @@ export default {
             this.modifyEnterOrShopIndex = -1;
             this.enterSelectModalShow = false;
         },
-        disabledEndDate(startDate) {
+        disabledEndDate(startDate, item) {
             if (this.checkState === 'finish') {
                 if (util.isSameDay(new Date(startDate), new Date())) {
                     const str1 = util.dateFormat(new Date());
@@ -353,9 +353,15 @@ export default {
             } else {
                 const str = util.dateFormat(new Date(startDate));
                 const arr = str.split('-');
-                return (date) => {
-                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
+                if (item.state === 0) {
+                    return (date) => {
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    };
+                } else {
+                    return (date) => {
+                        return false;
+                    };
+                }
             }
             // if (this.order.orderState === 8) {
             //     const str = util.dateFormat(new Date(startDate));
