@@ -129,13 +129,13 @@ export default {
         enterItems: {
             handler(c, o) {
                 let totalprice = 0;
-                this.enterItems.filter(function(el) {
-                    // 统计预定中和新加项目的总价
-                    return el.state === 0 || el.state === undefined;
-                })
-                    .forEach(function(el) {
-                        totalprice += Number(el.totalPrice);
-                    });
+                // this.enterItems.filter(function(el) {
+                //     // 统计预定中和新加项目的总价
+                //     return el.state === 0 || el.state === undefined;
+                // })产品说结束的也加进来
+                this.enterItems.forEach(function(el) {
+                    totalprice += Number(el.totalPrice);
+                });
                 this.$emit('priceChange', totalprice);
             },
             deep: true
@@ -183,7 +183,7 @@ export default {
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
-                        return enter.state !== 3;
+                        return enter.state !== 3 && enter.state !== 2;
                     });
                     filterEnters.forEach(item => {
                         const enter = { ...item
