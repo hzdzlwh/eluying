@@ -18,7 +18,7 @@
                       <!--   <div class="time-container" style="width: 145px" v-if="!item['unitTime'] && item.usedAmount <= 0">
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
-                            <label>时长({{item['timeUnit']}}）</label>
+                            <label>时长({{item['timeUnit'] || item.chargeUnit}}）</label>
                             <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" :disabled='order.orderState === 8'>
                             </counter>
                         </div>
