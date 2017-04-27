@@ -449,8 +449,8 @@
                         pay.type = this.orderState ? 0 : 2;
                     });
                     const newReceiveMoney = this.payments.reduce((a, b) => { return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee)); }, 0);
-                    const shouldReceiveMoney = this.orderPayment.payableFee;
-                    if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney)) {
+                    const shouldReceiveMoney = this.orderPayment.payableFee + this.penalty;
+                    if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney.toFixed(2))) {
                         modal.warn('订单未结清!');
                         return false;
                     }
