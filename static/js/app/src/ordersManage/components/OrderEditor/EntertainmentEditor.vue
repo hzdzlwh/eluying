@@ -31,7 +31,7 @@
                         <div class="enterDate-container">
                             <label>时间</label>
                             <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date())"  />
+                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date(), item)"  />
                                 <!-- :disabled="item.usedAmount > 0" 如果有项目开了也可以编辑 -->
                             </div>
                         </div>
@@ -115,7 +115,7 @@ export default {
             enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
             ORDER_TYPE,
-            totalprice:0
+            totalprice: 0
         };
     },
     watch: {
@@ -333,24 +333,57 @@ export default {
             this.modifyEnterOrShopIndex = -1;
             this.enterSelectModalShow = false;
         },
-        disabledEndDate(startDate) {
-            if (this.order.orderState === 8) {
+        disabledEndDate(startDate, item) {
+            if (this.checkState === 'finish') {
+                if (util.isSameDay(new Date(startDate), new Date())) {
+                    const str1 = util.dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        return (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                    };
+                } else {
+                    const str = util.dateFormat(new Date(startDate));
+                    const arr = str.split('-');
+                    const str1 = util.dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        return (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                    };
+                }
+            } else {
                 const str = util.dateFormat(new Date(startDate));
                 const arr = str.split('-');
+                if (item.state === undefined) {
+                    return (date) => {
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    };
+                };
+                if (item.state === 8) {
+                    return (date) => {
+                        return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    };
+                };
                 return (date) => {
-                    return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    return false;
                 };
             }
-            if (this.order.orderState === 0) {
-                const str = util.dateFormat(new Date(startDate));
-                const arr = str.split('-');
-                return (date) => {
-                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
-            }
-            return (date) => {
-                return true;
-            };
+            // if (this.order.orderState === 8) {
+            //     const str = util.dateFormat(new Date(startDate));
+            //     const arr = str.split('-');
+            //     return (date) => {
+            //         return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+            //     };
+            // }
+            // if (this.order.orderState === 0) {
+            //     const str = util.dateFormat(new Date(startDate));
+            //     const arr = str.split('-');
+            //     return (date) => {
+            //         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+            //     };
+            // }
+            // return (date) => {
+            //     return true;
+            // };
         },
         setEnterItems(data) {
             if (this.modifyEnterOrShopIndex === -1) {

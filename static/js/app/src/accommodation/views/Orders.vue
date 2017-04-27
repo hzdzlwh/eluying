@@ -65,7 +65,7 @@
             <span><small>共计</small> {{count}}个订单<span style="padding: 0 30px;color:#e6e6e6;font-size:15px;">|</span>
             <span> <small>订单金额</small> ¥{{totalMany}} </span></span>
 
-            <dd-pagination @currentchange="fetchDate" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -423,6 +423,10 @@ default {
            changeTag(id) {
                this.tag = id;
            },
+           handlePageChange: function(internalCurrentPage) {
+               this.pageNo = internalCurrentPage;
+               this.fetchDate();
+           },
            getData() {
                http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
@@ -459,7 +463,7 @@ default {
            },
            fetchDate(keyword) {
                const obj = {
-                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
@@ -516,7 +520,7 @@ default {
            },
            outPutText(num) {
                const paramsObj = {
-                   discountRelatedId: this.userOriginType.split('~')[1] !== -5 ? undefined : this.userOriginType.split('~')[0],
+                   discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                    endDate: this.endTime,
                    pageNo: this.pageNo,
                    keyword: this.searchPattern,
@@ -555,10 +559,6 @@ default {
                this.timeType = 1;
                this.userOriginType = '-2~';
                this.fetchDate(this.searchPattern);
-           },
-           handlePageChange: function(internalCurrentPage) {
-               this.currentPage = internalCurrentPage;
-               this.fetchDate();
            }
        },
        components: {
