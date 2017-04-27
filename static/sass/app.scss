@@ -451,3 +451,7 @@ label {
 .modal-backdrop {
   z-index: 1900;
 }
+
+input::placeholder, textarea::placeholder {
+  color: #ccc;
+}
