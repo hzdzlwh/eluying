@@ -253,6 +253,7 @@
                 this.isCompany = false;
                 this.companyCityLedger = false;
                 this.companyBalance = undefined;
+                this.deleteIds = [];
             },
             getPayChannels(index) {
                 if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
