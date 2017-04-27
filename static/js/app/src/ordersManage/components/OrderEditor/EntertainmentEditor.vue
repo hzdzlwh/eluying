@@ -114,7 +114,8 @@ export default {
             modifyEnterOrShopIndex: -1,
             enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
-            ORDER_TYPE
+            ORDER_TYPE,
+            totalprice:0
         };
     },
     watch: {
@@ -129,13 +130,13 @@ export default {
         enterItems: {
             handler(c, o) {
                 let totalprice = 0;
-                // this.enterItems.filter(function(el) {
-                //     // 统计预定中和新加项目的总价
-                //     return el.state === 0 || el.state === undefined;
-                // })产品说结束的也加进来
-                this.enterItems.forEach(function(el) {
+                this.enterItems.filter(function(el) {
+                    // 统计预定中和新加项目的总价
+                    return el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined;
+                }).forEach(function(el) {
                     totalprice += Number(el.totalPrice);
                 });
+                this.totalprice = totalprice;
                 this.$emit('priceChange', totalprice);
             },
             deep: true
