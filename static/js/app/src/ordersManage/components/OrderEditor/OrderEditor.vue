@@ -360,7 +360,22 @@
                 return this.userOriginType && this.userOriginType.id === -5;
             },
             totalPrice() {
-                return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
+                switch (this.order.type) {
+                    case ORDER_TYPE.COMBINATION:
+                        return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
+                    case ORDER_TYPE.ACCOMMODATION:
+                        if (this.order.isCombinationOrder) {
+                            return this.roomPrice.toFixed(2);
+                        } else {
+                            return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
+                        }
+                    case ORDER_TYPE.RETAIL:
+                        return this.goodsPrice.toFixed(2);
+                    case ORDER_TYPE.ENTERTAINMENT:
+                        return this.enterPrice.toFixed(2);
+                    case ORDER_TYPE.CATERING:
+                        return this.foodPrice.toFixed(2);
+                }
             }
         },
         created() {
