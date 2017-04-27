@@ -184,15 +184,11 @@
         position: absolute;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .calendar-category-name-text {
-        width: 42px;
-        height: 40px;
-        margin-left: -21px;
-        margin-top: -20px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
         cursor: pointer;
     }
     .calendar-category-list {

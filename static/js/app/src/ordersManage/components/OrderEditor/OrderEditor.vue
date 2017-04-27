@@ -531,6 +531,8 @@
                 this.vipDiscountDetail = {};
                 this.phoneValid = true;
                 this.vipId = undefined;
+                this.newGoodItems = [];
+                this.previousGoods = [];
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
