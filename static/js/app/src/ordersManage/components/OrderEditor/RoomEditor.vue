@@ -37,13 +37,13 @@
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
                                                @input="handleRoomChange(item)"
                                                :disabled-date="disabledStartDate(new Date())"
-                                               :disabled="item.state === 1 || order.orderState === 8"/>
+                                               :disabled="item.state === 1 || item.state === 8"/>
                             </div>
                             <span>~</span>
                             <div class="enterDate">
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
                                                @input="handleRoomChange(item)"
-                                               :disabled="order.orderState === 8"
+                                               :disabled="item.state === 8"
                                                :disabled-date="disabledEndDate(item.room.startDate)"/>
                             </div>
                             <label class="label-text">
