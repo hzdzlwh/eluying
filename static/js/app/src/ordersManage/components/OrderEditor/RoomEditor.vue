@@ -363,7 +363,8 @@
                         datePriceList: [],
                         priceScale: [],
                         showTip: false,
-                        quickDiscountId: ''
+                        quickDiscountId: '',
+                        showDiscount: undefined
                     };
                 });
             },
