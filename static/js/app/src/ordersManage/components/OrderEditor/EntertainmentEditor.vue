@@ -143,6 +143,9 @@ export default {
         },
         vipDiscountDetail: {
             handler(c, o) {
+                if (!c.vipDetail || !o.vipDetail) {
+                    return false;
+                }
                 const _this = this;
                 let totalprice = 0;
                 this.enterItems.forEach((el) => {
