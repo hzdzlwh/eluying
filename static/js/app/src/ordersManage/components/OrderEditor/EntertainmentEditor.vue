@@ -131,7 +131,7 @@ export default {
                 let totalprice = 0;
                 this.enterItems.filter(function(el) {
                     // 统计预定中和新加项目的总价
-                    return el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined;
+                    return el.state === 0 || el.state === 1 || el.state === 8  || el.state === undefined;
                 }).forEach(function(el) {
                     totalprice += Number(el.totalPrice);
                 });
