@@ -184,7 +184,9 @@
                 isCompany: false,
                 companyCityLedger: false,
                 companyBalance: undefined,
-                paiedMoney: 0
+                paiedMoney: 0,
+                onePassAmount: 0,
+                companyAmount: 0
             };
         },
         computed: {
@@ -317,6 +319,8 @@
                 return http.get('/order/getOrderPayment', params)
                     .then(res => {
                         this.orderPayment = res.data;
+                        this.onePassAmount = res.data.onePassAmount || 0;
+                        this.companyAmount = res.data.companyAmount || 0;
                         if (res.data.payments && res.data.payments.length > 0) {
                             this.paylogs = res.data.payments.filter(pay => { return pay.payId; });
                         }
@@ -384,16 +388,28 @@
             },
             deletePayLog(index) {
                 const log = this.paylogs[index];
-                this.deleteIds.push(log['payId']);
+                if (log['payChannelId'] === -15) { // 支付方式为企业挂帐，删除后企业账户余额要变化
+                    if (log.type === 2 && Number(this.companyAmount) - log.fee < 0) {
+                        modal.warn('该企业账户余额不足');
+                        return false;
+                    }
+                    this.companyAmount = (Number(this.companyAmount) + (log.type === 0 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
+                    this.companyBalance = (Number(this.companyBalance) + (log.type === 0 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
+                }
+                if (log['payChannelId'] === -10) { // 支付方式为一码通，删除后一码通余额要变化
+                    if (log.type === 2 && Number(this.onePassAmount) - log.fee < 0) {
+                        modal.warn('该一码通账户余额不足');
+                        return false;
+                    }
+                    this.onePassAmount = (Number(this.onePassAmount) + (log.type === 0 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
+                }
                 this.paiedMoney = (Number(this.paiedMoney) + (log['type'] === 2 ? Number(log.fee) : Number(-log.fee))).toFixed(2);
                 if (Number(this.paiedMoney) === this.orderPayment.payableFee) {
                     this.$nextTick(() => {
                         this.payments = [];
                     });
                 }
-                if (log['payChannelId'] === -15) { // 支付方式为企业挂帐，删除后企业账户余额要变化
-                    this.companyBalance += Number(log['fee']);
-                }
+                this.deleteIds.push(log['payId']);
                 this.paylogs.splice(index, 1);
             },
             addDeposit() {
@@ -530,7 +546,7 @@
                     if (id === -6 || id === -7 || id === -11 || id === -12) {
                         payWithAlipay += Number(pay.fee);
                     }
-                    if (id === -14 || id === -15) {
+                    if (id === -15) {
                         payWithCompany += Number(pay.fee);
                     }
                 });

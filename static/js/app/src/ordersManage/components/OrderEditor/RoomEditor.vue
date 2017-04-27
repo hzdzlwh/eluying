@@ -70,7 +70,7 @@
                                     </dd>
                                     <dd v-show="priceItem.showInput">
                                         <input class="dd-input" style="width: 60px;"
-                                               v-model="priceItem.dateFee"
+                                               v-model.number="priceItem.dateFee"
                                                @input="setTotalPrice(item)">
                                     </dd>
                                 </dl>
@@ -204,7 +204,7 @@
         computed: {
             totalPrice() {
                 const price = this.rooms.reduce((sum, room) => {
-                    return sum + room.price || 0;
+                    return sum + (room.price || 0);
                 }, 0);
                 this.$emit('priceChange', price);
                 return price;
@@ -600,7 +600,7 @@
                 const totalPrice = room.datePriceList.reduce((a, b) => {
                     return a + Number(b.dateFee);
                 }, 0);
-                room.datePriceList[0].dateFee = (Number(room.datePriceList[0].dateFee) + (price - totalPrice)).toFixed(2);
+                room.datePriceList[0].dateFee = Number((room.datePriceList[0].dateFee + price - totalPrice).toFixed(2));
             },
             showPriceList(id) {
                 this.rooms.forEach((item, index) => {
@@ -621,6 +621,8 @@
                 option.showInput = true;
             },
             setTotalPrice(room) {
+                // 手动修改价格需要把快捷折扣置为无
+                room.quickDiscountId = '';
                 room.price = + (room.datePriceList.reduce((a, b) => {
                     return a + Number(b.dateFee);
                 }, 0).toFixed(2));
