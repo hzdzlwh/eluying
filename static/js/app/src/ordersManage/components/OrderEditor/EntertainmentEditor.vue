@@ -115,7 +115,7 @@ export default {
             enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
             ORDER_TYPE,
-            totalprice:0
+            totalprice: 0
         };
     },
     watch: {
