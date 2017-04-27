@@ -7,7 +7,6 @@
 .customer-map .text{
 	width: 447px;
 	padding-right: 69px;
-	display: relative;
 }
 .customer-map .text .tip{
 	position: absolute;
@@ -37,11 +36,11 @@
 .image-1{
 	width: 428px;
 	height: 345px;
-	background: url('../image/customer-map.png');
+	background: url('/static/image/customer-map.png');
 }
 .content{
 	margin-top: 93px;
-	padding-top: 16px;
+	padding: 16px 0 64px 0;
 	background: #f5f8fa;
 }
 .customer-content{
@@ -60,7 +59,7 @@
 	letter-spacing: 3px;
 }
 .image-2{
-	background: url('../image/customer-yijing.png');
+	background: url('/static/image/customer-yijing.png');
 }
 .customer-content .text{
 	width: 500px;
@@ -105,19 +104,19 @@
     line-height: 60px;
 }
 .image-3{
-	background: url('../image/customer-wowo.png');
+	background: url('/static/image/customer-wowo.png');
 }
 .image-4{
-	background: url('../image/customer-lion.png');
+	background: url('/static/image/customer-lion.png');
 }
 .image-5{
-	background: url('../image/customer-sun.png');
+	background: url('/static/image/customer-sun.png');
 }
 .image-6{
-	background: url('../image/customer-moganshan.png');
+	background: url('/static/image/customer-moganshan.png');
 }
 .image-7{
-	background: url('../image/customer-palm.png');
+	background: url('/static/image/customer-palm.png');
 }
 .text:nth-child(2){
 	border-left: none;
