@@ -34,6 +34,7 @@
     }
     .notChange {
         cursor: not-allowed !important;
+        background: #cccccc;
     }
 </style>
 <script>
