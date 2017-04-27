@@ -62,6 +62,7 @@
 <script>
     import util from '../../common/util';
     import modal from '../../common/modal';
+    import bus from '../../common/eventBus';
     export default{
         props: {
             selectedEntries: Array
@@ -82,17 +83,17 @@
                     const date = new Date(e.date);
                     if (util.isSameDay(date, today)) {
                         t = true;
-                    } else if(date > today) {
+                    } else if (date > today) {
                         f = true;
-                    } else if(date < today) {
+                    } else if (date < today) {
                         p = true;
                     }
 
                     temp[e.id] = `${e.cName}-${e.rName}`;
                 });
-                this.finishShow = p&&!t&&!f || p&&t&&!f || p&&t&&f || p&&!t&&f;
-                this.ingShow = p&&t&&!f || p&&t&&f || !p&&t&&!f || !p&&t&&f;
-                this.bookShow = p&&!t&&f || !p&&t&&!f || !p&&t&&f || !p&&!t&&f;
+                this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
+                this.ingShow = p && t && !f || p && t && f || !p && t && !f || !p && t && f;
+                this.bookShow = p && !t && f || !p && t && !f || !p && t && f || !p && !t && f;
                 this.t = t;
                 this.p = p;
                 this.f = f;
@@ -102,7 +103,7 @@
                 return Object.keys(this.selectedRooms).length;
             }
         },
-        data(){
+        data() {
             return {
                 p: false,
                 t: false,
@@ -110,7 +111,7 @@
                 finishShow: false,
                 ingShow: false,
                 bookShow: false
-            }
+            };
         },
         watch: {
             selectedRoomsCount(val) {
@@ -128,27 +129,27 @@
                     this.clear(type);
                     this.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
-                if (type == 'finish') {
+                if (type === 'finish') {
                     if (this.t || this.f) {
                         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
-                } else if(type == 'ing') {
+                } else if (type === 'ing') {
                     if (this.p) {
                         dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
-                } else if(type == 'book') {
+                } else if (type === 'book') {
                     if (this.p) {
                         dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
-                        modal.confirmDialog(dialogConfig, callback);
+                        modal.confirm(dialogConfig, callback);
                         return false;
                     }
                 }
 
-                this.$emit('changeCheckState', type, this.getRoomsWithDate());
+                bus.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
             clear(type) {
                 const today = new Date();
@@ -180,7 +181,8 @@
                         temp.push({
                             roomId: e.id,
                             startDate: e.date,
-                            endDate: e.date
+                            endDate: e.date,
+                            categoryType: e.cId
                         });
                     } else {
                         const lastItem = temp[temp.length - 1];
@@ -191,7 +193,8 @@
                             temp.push({
                                 roomId: e.id,
                                 startDate: e.date,
-                                endDate: e.date
+                                endDate: e.date,
+                                categoryType: e.cId
                             });
                         }
                     }
@@ -199,5 +202,5 @@
                 return temp;
             }
         }
-    }
+    };
 </script>

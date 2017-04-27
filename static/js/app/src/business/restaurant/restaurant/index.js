@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/6/16.
  */
-import http from 'AJAXService';
+import http from 'http';
 import modal from 'modal';
 import util from 'util';
 import Vue from 'vue1';
@@ -38,22 +38,18 @@ $(function() {
         },
         methods: {
             deleteRestaurant: function() {
-                http.ajaxWithToken('GET',
-                    '/catering/modifyRestaurant',
-                    { restId: this.restIdWillDeleted },
-                    function(result) {
-                        if (result.code === 1) {
-                            modal.somethingAlert('删除成功');
-                            this.getRestaurants();
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                http.get('/catering/modifyRestaurant',
+                    { restId: this.restIdWillDeleted })
+                    .then(result => {
+                        modal.success('删除成功');
+                        this.getRestaurants();
+                    });
             },
             getRestaurants: function() {
-                http.ajaxWithToken('GET', '/catering/getRestaurantList', {}, function(result) {
-                    this.restaurants = result.data.list;
-                }.bind(this));
+                http.get('/catering/getRestaurantList', {})
+                    .then(result => {
+                        this.restaurants = result.data.list;
+                    });
             },
             openCreateDialog: function() {
                 restaurantDialog.status = 'create';
@@ -68,7 +64,7 @@ $(function() {
             },
             openDeleteDialog: function(restId) {
                 this.restIdWillDeleted = restId;
-                modal.confirmDialog({
+                modal.confirm({
                     okText: '删除',
                     message: '删除餐厅之后，餐厅里的菜品和桌子将一起被删除。',
                     showTitle: false
@@ -81,16 +77,13 @@ $(function() {
                 $('#settingDialog').modal('show');
             },
             toggleStatus: function(item) {
-                http.ajaxWithToken('get', '/catering/openCloseCaterScan', {
+                http.get('/catering/openCloseCaterScan', {
                     restId: item.restId,
                     isOpenCaterScan: (item.isOpenCaterScan === 1 ? 0 : 1)
-                }, result => {
-                    if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    } else {
+                })
+                    .then(result => {
                         item.isOpenCaterScan = item.isOpenCaterScan === 1 ? 0 : 1;
-                    }
-                });
+                    });
             }
         }
     });
@@ -129,36 +122,32 @@ $(function() {
                     nodeType: 1
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.discounts = res.data.list;
-                            this.oddType = res.data.oddSetting.oddType;
-                            this.unit = res.data.oddSetting.unit;
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.discounts = res.data.list;
+                        this.oddType = res.data.oddSetting.oddType;
+                        this.unit = res.data.oddSetting.unit;
                     });
             },
             confirm() {
                 for (let i = 0; i < this.newDiscounts.length; i ++) {
                     if (!this.newDiscounts[i].description) {
-                        modal.alert('请填写折扣名称');
+                        modal.warn('请填写折扣名称');
                         return false;
                     }
 
                     if (!this.newDiscounts[i].discount) {
-                        modal.alert('请填写优惠折扣');
+                        modal.warn('请填写优惠折扣');
                         return false;
                     }
 
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.newDiscounts[i].discount)) {
-                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        modal.warn('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
                 }
 
                 if ((Number(this.oddType) === 1 || Number(this.oddType) === 2) &&
                     !this.unit) {
-                    modal.alert('请选择精确单位');
+                    modal.warn('请选择精确单位');
                     return false;
                 }
 
@@ -167,16 +156,13 @@ $(function() {
                 http.post('/quickDiscount/discountAndOddSettingEdit', {
                     oddType: this.oddType,
                     unit: this.unit,
-                    restId: this.id,
+                    nodeId: this.id,
+                    nodeType: 1,
                     quickDiscountList: JSON.stringify(list)
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.close();
-                            table.getRestaurants();
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.close();
+                        table.getRestaurants();
                     });
             }
         }
@@ -197,44 +183,34 @@ $(function() {
                 if (this.restaurantName === '') {
                     return;
                 }
-                http.ajaxWithToken('POST',
-                    '/catering/addRestaurant',
-                    { restName: this.restaurantName, caterScanAnnouncement: this.resturantNotice },
-                    function(result) {
-                        if (result.code === 1) {
-                            $('#restaurantDialog').modal('hide');
-                            table.getRestaurants();
-                            this.restaurantName = '';
-                            this.resturantNotice = '';
-                            this.submitted = false;
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                http.post('/catering/addRestaurant',
+                    { restName: this.restaurantName, caterScanAnnouncement: this.resturantNotice })
+                    .then(result => {
+                        $('#restaurantDialog').modal('hide');
+                        table.getRestaurants();
+                        this.restaurantName = '';
+                        this.resturantNotice = '';
+                        this.submitted = false;
+                    });
             },
             editRestaurant: function() {
                 this.submitted = true;
                 if (this.restaurantName === '') {
                     return;
                 }
-                http.ajaxWithToken('POST',
-                    '/catering/modifyRestaurant',
+                http.post('/catering/modifyRestaurant',
                     {
                         restName: this.restaurantName,
                         restId: this.restaurantId,
                         caterScanAnnouncement: this.resturantNotice
-                    },
-                    function(result) {
-                        if (result.code === 1) {
-                            $('#restaurantDialog').modal('hide');
-                            table.getRestaurants();
-                            this.restaurantName = '';
-                            this.resturantNotice = '';
-                            this.submitted = false;
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                    })
+                    .then(result => {
+                        $('#restaurantDialog').modal('hide');
+                        table.getRestaurants();
+                        this.restaurantName = '';
+                        this.resturantNotice = '';
+                        this.submitted = false;
+                    });
             },
             cancel: function() {
                 this.restaurantName = '';

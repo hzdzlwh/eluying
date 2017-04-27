@@ -5,7 +5,7 @@
 var Vue = require('vue1');
 var util = require("util");
 var modal = require("modal");
-var AJAXService = require('AJAXService');
+import http from 'http';
 var restaurantMenu = require('../restaurantMenu');
 require("bootstrap");
 require("validation");
@@ -34,16 +34,18 @@ $(function(){
         },
         methods: {
             getBoards: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getBoardListFromRestaurant', { restId: restId }, function(result) {
-                    this.boards = result.data.list;
-                }.bind(this));
+                http.get('/catering/getBoardListFromRestaurant', { restId: restId })
+                    .then(result => {
+                        this.boards = result.data.list;
+                    });
             },
             getRestaurants: function() {
-                AJAXService.ajaxWithToken('GET', '/catering/getRestaurantList', {}, function(result) {
-                    this.restName = result.data.list.filter(function(el) {
-                        return el.restId == restId;
-                    })[0].restName;
-                }.bind(this));
+                http.get('/catering/getRestaurantList', {})
+                    .then(result => {
+                        this.restName = result.data.list.filter(function(el) {
+                            return el.restId == restId;
+                        })[0].restName;
+                    });
             },
             openCreateDialog: function() {
                 boardDialog.status = 'create';
@@ -58,7 +60,7 @@ $(function(){
             },
             openDeleteDialog: function(id) {
                 this.boardIdWillDeleted = id;
-                modal.confirmDialog(
+                modal.confirm(
                     {
                         okText: '删除',
                         message: '删除桌子之后，不可找回。',
@@ -67,17 +69,12 @@ $(function(){
                     this.deleteBoard.bind(this))
             },
             deleteBoard: function() {
-                AJAXService.ajaxWithToken('GET',
-                    '/catering/deleteBoardsForRestaurant',
-                    { restId: restId, boardId: this.boardIdWillDeleted },
-                    function(result) {
-                        if (result.code === 1) {
-                            modal.somethingAlert('删除成功');
-                            this.getBoards();
-                        } else {
-                            modal.confirmDialog({okText: '我知道了', message: result.msg, hasCancel: false});
-                        }
-                    }.bind(this));
+                http.get('/catering/deleteBoardsForRestaurant',
+                    { restId: restId, boardId: this.boardIdWillDeleted })
+                    .then(result => {
+                        modal.success('删除成功');
+                        this.getBoards();
+                    });
             },
             openResetDialog: function(board) {
                 var restNames = this.getRestaurants();
@@ -98,7 +95,7 @@ $(function(){
                 var restId = location.search.split('=')[1];
                 var campId = localStorage.getItem("campId");
                 var uid = localStorage.getItem("uid");
-                var host = AJAXService.getUrl2('/catering/downloadAllBoardQrCodes');
+                var host = http.getUrl('/catering/downloadAllBoardQrCodes');
                 let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=12&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}&restId=${restId}`;
                 return url;
             }
@@ -130,21 +127,16 @@ $(function(){
                 } else {
                     nameList = [this.boardName];
                 }
-                AJAXService.ajaxWithToken('POST',
-                    '/catering/addBoardsForRestaurant',
+                http.post('/catering/addBoardsForRestaurant',
                     {
                         nameList: JSON.stringify(nameList),
                         restId: restId,
                         seatNum: this.seatNum
-                    },
-                    function (result) {
-                        if (result.code === 1) {
-                            this.cancel();
-                            table.getBoards();
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                    })
+                    .then(result => {
+                        this.cancel();
+                        table.getBoards();
+                    });
             },
             boardNumCheck: function(index) {
                 this.nameList.$set(index, this.nameList[index].replace(/\D/g,''));
@@ -154,22 +146,17 @@ $(function(){
                 if (this.boardName === '' || this.seatNum === '') {
                     return;
                 }
-                AJAXService.ajaxWithToken('POST',
-                    '/catering/modifyBoardsForRestaurant',
+                http.post('/catering/modifyBoardsForRestaurant',
                     {
                         boardName: this.boardName,
                         restId: restId,
                         seatNum: this.seatNum,
                         boardId: this.boardId
-                    },
-                    function (result) {
-                        if (result.code === 1) {
-                            this.cancel();
-                            table.getBoards();
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
-                    }.bind(this));
+                    })
+                    .then(result => {
+                        this.cancel();
+                        table.getBoards();
+                    });
             },
             addBoardNum: function() {
                 var name;
@@ -236,14 +223,11 @@ $(function(){
                     params = params;
                     url = '/catering/resetAllBoardQrCode';
                 }
-                AJAXService.ajaxWithToken('GET', url, params, result => {
-                    if(result.code === 1){
+                http.get(url, params)
+                    .then(result => {
                         table.getBoards();
                         $('#confirmResetDialog').modal('hide');
-                    } else {
-                        modal.somethingAlert(result.msg);
-                    }
-                })
+                    });
             },
             closeResetTwoCode: function() {
                 $('#confirmResetDialog').modal('hide');

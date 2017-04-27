@@ -185,7 +185,7 @@
 </style>
 <script type="text/babel">
     import { DdTable, DdPagination } from 'dd-vue-component';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import vipForm from '../../components/vipForm.vue';
     import util from '../../../common/util';
     import detail from '../../components/detail.vue';
@@ -286,7 +286,7 @@
             outPutExcel() {
                 const campId = localStorage.getItem('campId');
                 const uid = localStorage.getItem('uid');
-                const host = http.getUrl2('/vipUser/vipUserListToExcel');
+                const host = http.getUrl('/vipUser/vipUserListToExcel');
                 const url = host + '?' + 'campId=' + campId + '&uid=' + uid + '&terminal=1&version=10&timestamp=' + (new Date()).valueOf() + '&sign=' + util.getSign();
                 return url;
             },
@@ -331,7 +331,7 @@
                 $('#vipForm').modal('show');
             },
             deleteVip() {
-                modal.confirmDialog({ message: '删除会员之后不可找回，您确定要删除吗？' }, () => {
+                modal.confirm({ message: '删除会员之后不可找回，您确定要删除吗？' }, () => {
                     http.post('/vipUser/removeVip', { vipUserId: this.vip.vipUserId })
                         .then(res => {
                             if (res.code === 1) {

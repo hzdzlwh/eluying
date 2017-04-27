@@ -11,7 +11,7 @@ var addET = require("./addET");
 var editETBasic = require("./editETBasic");
 var showInfo = require("./showInfo");
 var auth = require('../../../common/auth');
-var AJAXService = require('../../../common/AJAXService');
+var http = require('../../../common/http');
 
 require("bootstrap");
 require("validation");
@@ -90,20 +90,17 @@ $(function(){
              * 删除娱乐
              */
             openDeleteET() {
-                modal.confirmDialog({title: '提醒', message: '删除娱乐项目有之后娱乐项目里面的所有规格将一起被删除，确认要删除吗？', okText: '确认删除'}, this.deleteET);
+                modal.confirm({title: '提醒', message: '删除娱乐项目有之后娱乐项目里面的所有规格将一起被删除，确认要删除吗？', okText: '确认删除'}, this.deleteET);
             },
             /**
              * 删除娱乐
              */
             deleteET() {
-                AJAXService.ajaxWithToken('post', '/entertainment/deleteEntertainment', { entertainmentId: this.selectedETId }, res => {
-                    if (res.code === 1) {
+                http.post('/entertainment/deleteEntertainment', { entertainmentId: this.selectedETId })
+                    .then(res => {
                         this.selectedETId = undefined;
                         this.loadETList();
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })
+                    });
             },
             /**
              * 删除娱乐规格
@@ -114,20 +111,16 @@ $(function(){
                     length = this.originData.filter(el => el.entertainmentId === this.selectedETCategory.entertainmentId)[0].entertainmentCategoryList.length;
                 }
                 const message = length === 1 ? '删除最后一个娱乐规格，将把娱乐项目一起删除，确认要删除吗？' : '删除娱乐规格后，不可找回，确认要删除吗？'
-                modal.confirmDialog({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
+                modal.confirm({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
             },
             deleteETCategory() {
-                AJAXService.ajaxWithToken('post',
-                    '/category/deleteOtherCategory',
+                http.post('/category/deleteOtherCategory',
                     { id: this.selectedETCategory.entertainmentCategoryId,
-                      entertainmentId: this.selectedETCategory.deleteId },
-                    res => {
-                        if (res.code === 1) {
-                            this.selectedETCategoryId = undefined;
-                            this.loadETList();
-                        } else {
-                            modal.somethingAlert(res.msg);
-                        }
+                      entertainmentId: this.selectedETCategory.deleteId }
+                )
+                    .then(res => {
+                        this.selectedETCategoryId = undefined;
+                        this.loadETList();
                     });
             },
             modifyState() {
@@ -136,36 +129,30 @@ $(function(){
                     state: 1 - this.selectedETCategory.directNetState,
                     channelId: 5
                 }
-                AJAXService.ajaxWithToken('post','/category/modifyStatePC', data, res => {
-                    if (res.code === 1) {
+                http.post('/category/modifyStatePC', data)
+                    .then(res => {
                         this.loadETList();
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                });
+                    });
             },
             loadETList() {
-                 AJAXService.ajaxWithToken('get', '/entertainment/getEntertainmentManagementList', {}, res => {
-                    if (res.code === 1) {
-                        this.ETTypeList = [];
-                        this.originData = res.data.list;
-                        res.data.list.map(ET => {
-                            ET.entertainmentCategoryList.map((el, index) => {
-                                el.deleteId = ET.entertainmentId;
-                                if (index === 0) {
-                                    el.entertainmentIconId = ET.entertainmentIconId;
-                                    el.entertainmentId = ET.entertainmentId;
-                                    el.entertainmentImgUrl = ET.entertainmentImgUrl;
-                                    el.entertainmentName = ET.entertainmentName;
-                                    el.amount = ET.entertainmentCategoryList.length;
-                                }
-                                this.ETTypeList.push(el);
-                            })
-                        })
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })         
+                 http.get('/entertainment/getEntertainmentManagementList', {})
+                     .then(res => {
+                         this.ETTypeList = [];
+                         this.originData = res.data.list;
+                         res.data.list.map(ET => {
+                             ET.entertainmentCategoryList.map((el, index) => {
+                                 el.deleteId = ET.entertainmentId;
+                                 if (index === 0) {
+                                     el.entertainmentIconId = ET.entertainmentIconId;
+                                     el.entertainmentId = ET.entertainmentId;
+                                     el.entertainmentImgUrl = ET.entertainmentImgUrl;
+                                     el.entertainmentName = ET.entertainmentName;
+                                     el.amount = ET.entertainmentCategoryList.length;
+                                 }
+                                 this.ETTypeList.push(el);
+                             })
+                         })
+                     })
             }
         }
     });
@@ -215,16 +202,12 @@ $(function(){
                     entertainmentId,
                     entertainmentName
                 } = this.ETType
-                AJAXService.ajaxWithToken('post', '/entertainment/editEntertainment', { entertainmentIconId,entertainmentId,entertainmentName }, res => {
-                    if (res.code === 1) {
+                http.post('/entertainment/editEntertainment', { entertainmentIconId,entertainmentId,entertainmentName })
+                    .then(res => {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
                         setTimeout(this.rest, 300);
-                        // this.rest();
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })
+                    });
             },
             addOrEditEntertainmentCategory() {
                 this.ETType.price = this.ETType.chargeMode == 0 ? this.perPay : this.timePay;                
@@ -237,15 +220,12 @@ $(function(){
                     return
                 }
                 const data = Object.assign({}, this.ETType, {entertainmentId: this.ETType.deleteId || this.entertainmentId});
-                AJAXService.ajaxWithToken('post', '/entertainment/addOrEditEntertainmentCategory', data, res => {
-                    if (res.code === 1) {
+                http.post('/entertainment/addOrEditEntertainmentCategory', data)
+                    .then(res => {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
                         setTimeout(this.rest, 300);
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })
+                    });
             },
             closeCreateETDialog() {
                 $('#createETDialog').modal('hide');
@@ -272,15 +252,12 @@ $(function(){
                     return
                 }
                 
-                AJAXService.ajaxWithToken('post', '/entertainment/addEntertainment', this.ETType, res => {
-                    if (res.code === 1) {
+                http.post('/entertainment/addEntertainment', this.ETType)
+                    .then(res => {
                         ETList.loadETList();
                         $('#createETDialog').modal('hide');
                         setTimeout(this.rest, 300);
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })
+                    });
             },
             getIcon() {
                 return this.ETType.entertainmentImgUrl || '//static.dingdandao.com/eluyun/image/Group%203.png';
@@ -308,13 +285,10 @@ $(function(){
         },
         methods: {
             loadIcons() {
-                AJAXService.ajaxWithToken('get', '/entertainment/getEntertainmentIcons', {}, res => {
-                    if (res.code === 1) {
+                http.get('/entertainment/getEntertainmentIcons', {})
+                    .then(res => {
                         this.icons = res.data;
-                    } else {
-                        modal.somethingAlert(res.msg);
-                    }
-                })
+                    });
             },
             closeIconDialog() {
                 this.iconSelected = {};
@@ -325,7 +299,7 @@ $(function(){
             },
             setIcon() {
                 if (!this.iconSelected.entertainmentIconId) {
-                    modal.somethingAlert('请选择图标');
+                    modal.warn('请选择图标');
                     return false;
                 }
 

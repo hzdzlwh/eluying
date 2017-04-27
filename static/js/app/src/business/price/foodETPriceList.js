@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var trToggle = require("trToggle");
 var modal = require("modal");
@@ -6,12 +6,12 @@ require("validate");
 var foodETPriceList = {
     getFoodETPriceList: function(path){
         /*$.ajax({
-            url: path == "food" ? AJAXService.getUrl("getFoodCategoryPriceList") : AJAXService.getUrl("getPlayCategoryPriceList"),
+            url: path == "food" ? http.getUrl("getFoodCategoryPriceList") : http.getUrl("getPlayCategoryPriceList"),
             data: {
                 campId: localStorage.getItem("campId")
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 foodETPriceList.render(result)
@@ -23,13 +23,14 @@ var foodETPriceList = {
         if (path === 'food') {
             params.version = 7;
         }
-        AJAXService.ajaxWithToken("GET", url, params, function(result) {
-            if (path == "food") {
-                foodETPriceList.renderFood(result);
-            } else {
-                foodETPriceList.renderET(result);
-            }
-        })
+        http.get(url, params)
+            .then(function(result) {
+                if (path == "food") {
+                    foodETPriceList.renderFood(result);
+                } else {
+                    foodETPriceList.renderET(result);
+                }
+            });
     },
     renderFood: function(result){
         var dishesTbody = "<tbody>";
@@ -87,7 +88,7 @@ var foodETPriceList = {
     },
     editSalePrice: function(that){
         /*$.ajax({
-            url: AJAXService.getUrl("modifyDefaultPrice"),
+            url: http.getUrl("modifyDefaultPrice"),
             data: {
                 newSalePrice: $("#retailPrice").val(),
                 newNetPrice: 0,
@@ -96,7 +97,7 @@ var foodETPriceList = {
                 channelId: 0
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -105,22 +106,21 @@ var foodETPriceList = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
+        http.get("modifyDefaultPrice",{
             newSalePrice: $("#retailPrice").val(),
             newNetPrice: 0,
             newAgreementPrice: 0,
             categoryId: $("td.selected").attr("category-id"),
             channelId: 0
-        },function(result){
-            if (util.errorHandler(result)) {
+        })
+            .then(function(result){
                 $("td.selected").find('.j-price').html($("#retailPrice").val());
                 modal.clearModal(that);
-            }
-        });
+            });
     },
     editNetAgreePrice: function(that){
         /*$.ajax({
-            url: AJAXService.getUrl("modifyDefaultPrice"),
+            url: http.getUrl("modifyDefaultPrice"),
             data: {
                 newSalePrice: 0,
                 newNetPrice: $("#netPrice").val(),
@@ -129,7 +129,7 @@ var foodETPriceList = {
                 channelId: $(".selected").attr("channel-id")
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -139,18 +139,17 @@ var foodETPriceList = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","modifyDefaultPrice",{
+        http.get("modifyDefaultPrice",{
             newSalePrice: $("#netPrice").val(),
             newNetPrice: $("#netPrice").val(),
             newAgreementPrice: $("#netPrice").val(),
             categoryId: $("td.selected").attr("category-id"),
             channelId: $("td.selected").attr("channel-id")
-        },function(result){
-            if (util.errorHandler(result)) {
+        })
+            .then(function(result){
                 $("td.selected").find('.j-price').html($("#netPrice").val());
                 modal.clearModal(that);
-            }
-        })
+            })
     },
     eventBind: function(){
         var events = {

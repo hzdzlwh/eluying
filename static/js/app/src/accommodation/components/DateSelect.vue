@@ -41,14 +41,14 @@
         props: {
             defaultDate: {
                 type: String,
-                default: dateFormat(new Date()),
+                default: dateFormat(new Date())
             },
-            onChange: Function,
+            onChange: Function
         },
-        data(){
-            return{
-                date: undefined,
-            }
+        data() {
+            return {
+                date: undefined
+            };
         },
         watch: {
             date(v) {
@@ -70,7 +70,7 @@
             }
         },
         components: {
-            DdDatepicker,
+            DdDatepicker
         }
-    }
+    };
 </script>

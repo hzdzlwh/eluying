@@ -1,7 +1,7 @@
 /**
  * Created by lingchenxuan on 16/1/10.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var foodCategoryList = require("./foodCategoryList");
@@ -21,11 +21,11 @@ var editFoodBasic = {
             type: 1
         };
         /*$.ajax({
-            url: AJAXService.getUrl("addOrEditExtraCategoryUrl"),
+            url: http.getUrl("addOrEditExtraCategoryUrl"),
             type: "POST",
             data: item,
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function (result) {
                 if (util.errorHandler(result)) {
@@ -44,22 +44,19 @@ var editFoodBasic = {
                 foodCategoryList.render();
             }
         })*/
-        AJAXService.ajaxWithToken("POST","addOrEditExtraCategoryUrl",item,function (result) {
-            if (util.errorHandler(result)) {
+        http.post("addOrEditExtraCategoryUrl",item)
+            .then(function (result) {
                 modal.clearModal(that);
-            } else {
-                return;
-            }
-            $.each(foodCategoryList.list, function (index, element) {
-                if (element.id == item.id) {
-                    var state = foodCategoryList.list[index].state;
-                    foodCategoryList.list[index] = item;
-                    foodCategoryList.list[index].state = state;
-                    return false; //等于break
-                }
+                $.each(foodCategoryList.list, function (index, element) {
+                    if (element.id == item.id) {
+                        var state = foodCategoryList.list[index].state;
+                        foodCategoryList.list[index] = item;
+                        foodCategoryList.list[index].state = state;
+                        return false; //等于break
+                    }
+                });
+                foodCategoryList.render();
             });
-            foodCategoryList.render();
-        });
     },
     events: {
         "click #editFoodOk": function () {

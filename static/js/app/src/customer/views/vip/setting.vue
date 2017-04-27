@@ -218,7 +218,7 @@
 </style>
 <script>
     import modal from '../../../common/modal';
-    import http from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import { DdTable } from 'dd-vue-component';
     import categorySelect from '../../components/categorySelect.vue';
     import auth from '../../../common/auth';
@@ -286,7 +286,8 @@
                                     {
                                         title: '操作',
                                         render: (h, row) => (
-                                            this.contral.VIP_EDIT_ID ? <span>
+                                            this.contral.VIP_EDIT_ID
+                                            ? <span>
                                                 <span class="list-action" onClick={() => this.openEdit(row)}>编辑</span>／
                                                 <span class="list-action" onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
                                             </span>
@@ -322,16 +323,12 @@
                         ? '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？'
                         : '删除该会员等级后，该等级的会员降低一等级，确认删除么？')
                     : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
-                modal.confirmDialog({
+                modal.confirm({
                     message
                 }, () => {
                     http.post('/vipUser/removeVipLevel', { vipLevelId: id })
                         .then(res => {
-                            if (res.code === 1) {
-                                this.getLevelList();
-                            } else {
-                                modal.alert(res.msg);
-                            }
+                            this.getLevelList();
                         });
                 });
             },
@@ -353,28 +350,28 @@
             },
             createLevel() {
                 if (!this.levelName) {
-                    modal.alert('请填写会员等级名称');
+                    modal.warn('请填写会员等级名称');
                     return false;
                 }
 
                 if (Number(this.autoUpgrade) === 1 && this.thresholdFee === undefined) {
-                    modal.alert('请输入升级条件');
+                    modal.warn('请输入升级条件');
                     return false;
                 }
 
                 if (Number(this.autoUpgrade) === 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
-                    modal.alert('升级条件只能为整数');
+                    modal.warn('升级条件只能为整数');
                     return false;
                 }
 
                 if (Number(this.autoUpgrade) === 1 && this.consume.length === 0) {
-                    modal.alert('请选择消费累计项目');
+                    modal.warn('请选择消费累计项目');
                     return false;
                 }
 
                 for (let i = 0; i < this.discount.length; i ++) {
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
-                        modal.alert('请输入0.1-9.9之间正确的折扣数字');
+                        modal.warn('请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
                 }
@@ -390,12 +387,8 @@
                     vipLevelSettingId: this.id
                 })
                     .then(res => {
-                        if (res.code === 1) {
-                            this.getLevelList();
-                            $('#settingModal').modal('hide');
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.getLevelList();
+                        $('#settingModal').modal('hide');
                     });
             },
             deleteNode(item) {

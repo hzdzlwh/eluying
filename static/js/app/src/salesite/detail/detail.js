@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/11/21.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");
@@ -35,21 +35,18 @@ $(function() {
         },
         methods: {
             getData()  {
-                AJAXService.ajaxWithToken('get', '/directNet/getRemark4DirectNet', {}, result => {
-                    if (result.code === 1 && result.data) {
+                http.get('/directNet/getRemark4DirectNet', {})
+                    .then(result => {
                         this.content = result.data.remark;
                         this.createEditor();
-                    } else if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    }
-                })
+                    })
             },
             createEditor() {
                 const self = this;
                 this.editor = new WangEditor('editor');
                 const editor = this.editor;
                 editor.config.menus = [];
-                editor.config.uploadImgUrl = AJAXService.getUrl2('uploadImageUrl');
+                editor.config.uploadImgUrl = http.getUrl('uploadImageUrl');
                 editor.onchange = function() {
                     self.imgNum = this.$txt.find('img').length;
                     self.textNum = this.$txt.text().length;
@@ -79,7 +76,7 @@ $(function() {
             initFileUpload() {
                 const self = this;
                 $('#upload').fileupload({
-                    url: AJAXService.getUrl2("uploadImageUrl"),
+                    url: http.getUrl("uploadImageUrl"),
                     done: (e, data) => {
                         var result = data.result[0].body ? data.result[0].body.innerHTML : data.result;
                         result = JSON.parse(result);
@@ -89,7 +86,7 @@ $(function() {
             },
             uploadImg() {
                 if (this.imgNum >= 10) {
-                    modal.somethingAlert('上传图片数量已达上限!');
+                    modal.warn('上传图片数量已达上限!');
                     return false;
                 }
 
@@ -99,25 +96,19 @@ $(function() {
                 this.editor.command(null, 'insertHtml', '<img src="' + url + '" style="max-width:100%;"/>');
             },
             saveData() {
-                AJAXService.ajaxWithToken('get', '/directNet/editRemark4DirectNet', {
+                http.get('/directNet/editRemark4DirectNet', {
                     remark: this.content
-                }, result => {
-                    if (result.code === 1) {
-                        modal.somethingAlert('保存成功');
-                    } else if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    }
                 })
+                    .then(result => {
+                        modal.success('保存成功');
+                    });
             },
             cancel() {
-                AJAXService.ajaxWithToken('get', '/directNet/getRemark4DirectNet', {}, result => {
-                    if (result.code === 1 && result.data) {
+                http.get('/directNet/getRemark4DirectNet', {})
+                    .then(result => {
                         this.content = result.data.remark;
                         this.editor.$txt.html(this.content);
-                    } else if (result.code !== 1) {
-                        modal.somethingAlert(result.msg);
-                    }
-                })
+                    });
             }
         }
 

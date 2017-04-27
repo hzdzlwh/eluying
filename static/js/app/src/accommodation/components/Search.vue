@@ -1,9 +1,6 @@
 <template>
     <div class="acc-search" v-clickoutside="hideSearch">
-        <div class="eluyun_search-light_outer spriteImg acc-search-switch" v-if="!searchVisible" @click="showSearch">
-            <div class="eluyun_search-light"></div>
-        </div>
-        <div class="acc-search-wrapper" v-if="searchVisible">
+        <div class="acc-search-wrapper">
             <div class="eluyun_search-grey_outer spriteImg acc-search-btn" v-if="searchKeyword === ''">
                 <div class="eluyun_search-grey"></div>
             </div>
@@ -11,11 +8,11 @@
                  @click="search(1)">
                 <div class="eluyun_search-blue"></div>
             </div>
-            <input class="acc-search-keyword dd-input" type="text" placeholder="搜索客户姓名/手机号/订单号"
+            <input class="acc-search-keyword dd-input" type="text" placeholder="搜索房间号/客户姓名/手机号/订单号"
                    v-model="searchKeyword" @keyup.enter="search(1)">
             <div class="acc-search-results" v-if="resultsVisible">
                 <div class="acc-search-count">{{searchResultsNum === 0 ? '没有搜索结果' : `共有${searchResultsNum}条搜索结果`}}</div>
-                <div v-for="g in searchResults" @click="showOrder(g.orderId)">
+                <div v-for="g in searchResults" @click="showOrder(g)">
                     <div class="acc-search-item" :orderId="g.orderId">
                         <div>
                             <span class="search-label">开始于:</span>
@@ -60,9 +57,9 @@
 <style lang="scss" rel="stylesheet/scss">
     .acc-search {
         position: absolute;
-        right: 242px;
-        top: -42px;
-        z-index: 1061;
+        right: 54px;
+        top: 13px;
+        z-index: 1039;
     }
     .acc-search-switch, .acc-search-btn {
         cursor: pointer;
@@ -71,15 +68,10 @@
     .acc-search-keyword {
         display: block;
         width: 280px;
-        height: 24px;
-        background: #fff;
-        color: #666;
-        border-radius: 2px;
         position: absolute;
         right: -5px;
         top: -3px;
         z-index: -1;
-        border: none;
         padding: 0 8px;
     }
     .acc-search-results {
@@ -150,6 +142,12 @@
                 border-right: solid #82beff 11px;
             }
         }
+        &.reset {
+            background: #f27979;
+            &::before {
+                border-right: solid #f27979 11px;
+            }
+        }
         &::before {
              content: '';
              position: absolute;
@@ -168,26 +166,22 @@
 </style>
 <script>
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import AJAXService from '../../common/AJAXService';
-    import modal from '../../common/modal';
-    import { ORDER_STATUS } from '../const';
+    import http from '../../common/http';
+    import { ORDER_STATUS } from '../../ordersManage/constant';
+    import bus from '../../common/eventBus';
     export default{
-        data(){
-            return{
+        data() {
+            return {
                 ORDER_STATUS,
                 page: 1,
                 searchResults: [],
-                searchVisible: false,
                 searchKeyword: '',
                 limit: 4,
                 resultsVisible: false,
                 searchResultsNum: 0
-            }
+            };
         },
         methods: {
-            showSearch() {
-                this.searchVisible = true;
-            },
             changePage(page) {
                 if (page < 1 || page > Math.ceil(this.searchResultsNum / this.limit)) {
                     return false;
@@ -197,39 +191,33 @@
             },
             search(page) {
                 this.page = page;
-                AJAXService.ajaxWithToken('GET', 'orderSearchPCUrl', {
+                http.get('/order/searchOrder', {
                     keyword: this.searchKeyword,
-                    page: this.page,
+                    pageNo: this.page,
                     limit: this.limit,
-                    searchType: 0 //所有订单
+                    searchType: 0 // 所有订单
                 }).then(
                     result => {
-                        if (result.code === 1) {
-                            this.resultsVisible = true;
-                            this.searchResults = result.data.orderList;
-                            this.searchResultsNum = result.data.orderAmount;
-                        } else {
-                            modal.somethingAlert(result.msg);
-                        }
+                        this.resultsVisible = true;
+                        this.searchResults = result.data.list;
+                        this.searchResultsNum = result.data.orderAmount;
                     }
                 );
-
             },
             hideSearch() {
                 this.page = 1;
-                this.searchVisible = false;
                 this.resultsVisible = false;
                 this.searchResults = [];
                 this.searchResultsNum = 0;
                 this.searchKeyword = '';
             },
-            showOrder(id) {
+            showOrder(order) {
                 this.resultsVisible = false;
-                this.$emit('showOrder', id);
+                bus.$emit('onShowDetail', { type: order.orderType, orderId: order.orderType === -1 ? order.orderId : order.serviceId });
             }
         },
         directives: {
             Clickoutside
         }
-    }
+    };
 </script>

@@ -170,8 +170,7 @@
         DdDropdownItem,
         DdDatepicker
     } from 'dd-vue-component';
-    import http from '../../common/AJAXService';
-    import modal from '../../common/modal';
+    import http from '../../common/http';
     import auth from '../../common/auth';
 
     const states = [
@@ -361,7 +360,7 @@
             outPutText(num) {
                 const paramsObj = this.getParams();
                 paramsObj.exportType = num;
-                const host = http.getUrl2(OutputUrl[this.type]);
+                const host = http.getUrl(OutputUrl[this.type]);
                 const pa = http.getDataWithToken(paramsObj);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
@@ -380,14 +379,10 @@
                 const params = this.getParams();
                 http.get(OrdersUrls[this.type], params)
                     .then(res => {
-                        if (res.code === 1) {
-                            this.orders = res.data.list;
-                            this.orderCount = res.data.orderCount;
-                            this.ordersTotalPrice = res.data.ordersTotalPrice;
-                            this.ledgerFeeSum = res.data.ledgerFeeSum;
-                        } else {
-                            modal.alert(res.msg);
-                        }
+                        this.orders = res.data.list;
+                        this.orderCount = res.data.orderCount;
+                        this.ordersTotalPrice = res.data.ordersTotalPrice;
+                        this.ledgerFeeSum = res.data.ledgerFeeSum;
                     });
             },
             getParams() {

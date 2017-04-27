@@ -101,7 +101,7 @@
 }
 </style>
 <script>
-import http from '../../common/AJAXService';
+import http from '../../common/http';
 import modal from '../../common/modal';
 import getAlipay from './getMoneyWithCode.vue';
 import {
@@ -113,7 +113,7 @@ export default {
     props: {
         visible: Boolean,
         type: {
-            default: 2, // 0充值，1退款，2挂账
+            default: 2, // 0充值，1退款，2挂账,3负数的挂帐
             type: Number
         },
         data: {
@@ -163,8 +163,8 @@ export default {
         visible(val) {
             this.select = undefined;
             this.num = undefined;
-            if (this.type === 2) {
-                this.num = this.data.ledgerFee;
+            if (this.type === 2 || this.type === 3) {
+                this.num = Math.abs(this.data.ledgerFee);
             }
             if (val) {
                 $('#checkForm').modal('show');
@@ -192,56 +192,52 @@ export default {
         },
         subCheck() {
             if (this.num === '' || this.num === undefined || parseFloat(this.num) === 0) {
-                modal.somethingAlert('请输入' + this.content[this.type].msg + '金额！');
+                modal.warn('请输入' + this.content[this.type].msg + '金额！');
                 return false;
             }
             if (!this.select) {
-                modal.somethingAlert('请选择' + this.content[this.type].msg + '方式！');
+                modal.warn('请选择' + this.content[this.type].msg + '方式！');
                 return false;
             }
             if (this.type === 2 && Number(this.num).toFixed(2) > Number(this.data.ledgerFee)) {
-                modal.somethingAlert('结算金额不能大于挂账金额！');
+                modal.warn('结算金额不能大于挂账金额！');
                 return false;
             }
             if (this.type === 1 && Number(this.num).toFixed(2) > Number(this.data.rechargeFee)) {
-                modal.somethingAlert('退款金额不能大于充值余额！');
+                modal.warn('退款金额不能大于充值余额！');
                 return false;
             }
             // 判断是否进行扫码收款
             const id = this.select;
             const getCodeData = {
-                amount: parseFloat(this.num),
+                amount: this.type === 3 ? this.num = -this.num : this.num,
                 cid: this.data.cid,
                 payChannel: this.checkType.filter(function(val) {
                     return val.id === id;
                 })[0].name,
                 payChannelId: this.select
             };
-            if ((id === - 6 || id === - 7 || id === - 11 || id === - 12) && this.type !== 1) {
+            if ((id === -6 || id === -7 || id === -11 || id === -12) && this.type !== 1) {
                 this.alipay.data = getCodeData;
                 this.alipayshow = true;
             } else {
                 const that = this;
                 let msg = '';
                 this.type === 1 ? msg = '确认进行退款吗' : this.type === 3 ? msg = '请确保金额已退！' : msg = '请确保金额已收到！';
-                modal.confirmDialog({
+                modal.confirm({
                     message: msg
                 }, () => {
-                    http.ajaxWithToken('GET', that.content[that.type].url, getCodeData)
+                    http.get(that.content[that.type].url, getCodeData)
                         .then((result) => {
-                            if (result.code === 1) {
-                                if (that.type === 1) {
-                                    modal.somethingAlert('退款成功');
-                                } else {
-                                    modal.somethingAlert('收款成功');
-                                }
-                                that.close();
-                                that.num = 0;
-                                that.select = undefined;
-                                event.$emit('checkSuc');
+                            if (that.type === 1) {
+                                modal.success('退款成功');
                             } else {
-                                modal.somethingAlert(result.msg);
+                                modal.success('收款成功');
                             }
+                            that.close();
+                            that.num = 0;
+                            that.select = undefined;
+                            event.$emit('checkSuc');
                         });
                 });
             }

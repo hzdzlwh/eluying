@@ -1,4 +1,4 @@
-// 0-关闭， 1-warn，2-error
+// 0-close， 1-warn，2-error
 {
   "extends": "vue",
   "parser": "babel-eslint",
@@ -41,12 +41,14 @@
     "arrow-parens": 0,
     "semi": [2, "always"],
     "jsx-quotes": [2, "prefer-double"],
+    "object-curly-spacing": [2, "always"],
     "space-unary-ops": [2, {
         "words": true,
         "nonwords": true,
         "overrides": {
           "!": false,
-          "!!": false
+          "!!": false,
+          "-": false
         }
       }
     ]

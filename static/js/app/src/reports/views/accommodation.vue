@@ -55,7 +55,7 @@
 </style>
 <script>
     import {mapState} from 'vuex';
-    import AJAXService from '../../common/AJAXService';
+    import http from '../../common/http';
     import util from '../../common/util';
     import { getTableData } from '../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
@@ -87,10 +87,10 @@
                         endDate: this.date.endDate
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         },
@@ -104,58 +104,56 @@
         },
         methods: {
             getRoomStatistics() {
-                AJAXService.ajaxWithToken('get', '/stat/getRoomStatistics', {
+                http.get('/stat/getRoomStatistics', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 }).then(res => {
-                    if (res.code === 1) {
-                        const data = res.data;
-                        setLine([
-                            {
-                                name: '房费(元)',
-                                type: 'line',
-                                data: data.roomFee.map(i => i.value)
-                            },
-                            {
-                                name: '间夜量(间夜)',
-                                type: 'line',
-                                data: data.roomNights.map(i => i.value)
-                            },
-                            {
-                                name: '入住率(％)',
-                                type: 'line',
-                                data: data.occupancyRate.map(i => i.value * 100)
-                            },
-                            {
-                                name: '平均房价(元)',
-                                type: 'line',
-                                data: data.avgPrice.map(i => i.value)
-                            }
-                        ],
-                            data.avgPrice.map(i => i.date.substr(5, 5)),
-                        '',
-                        'line',
-                        'single');
-                        this.avgPrice = res.data.summary.avgPrice;
-                        this.occupancyRate = res.data.summary.occupancyRate;
-                        this.penalty = res.data.summary.penalty;
-                        this.roomFee = res.data.summary.roomFee;
-                        this.consumeAmount = res.data.summary.consumeAmount;
-                        this.roomNights = res.data.summary.roomNights;
-                        const penalty = {
-                            name: '违约金',
-                            dateValues: res.data.penaltys
-                        };
-                        res.data.roomFeeDetail.push(penalty);
-                        const tableData = getTableData({
-                            list: res.data.roomFeeDetail,
-                            firstTitle: '房间名称',
-                            secondTitle: '合计',
-                            foot: true
-                        });
-                        this.dataSource = tableData.dataSource;
-                        this.columns = tableData.columns;
-                    }
+                    const data = res.data;
+                    setLine([
+                        {
+                            name: '房费(元)',
+                            type: 'line',
+                            data: data.roomFee.map(i => i.value)
+                        },
+                        {
+                            name: '间夜量(间夜)',
+                            type: 'line',
+                            data: data.roomNights.map(i => i.value)
+                        },
+                        {
+                            name: '入住率(％)',
+                            type: 'line',
+                            data: data.occupancyRate.map(i => i.value * 100)
+                        },
+                        {
+                            name: '平均房价(元)',
+                            type: 'line',
+                            data: data.avgPrice.map(i => i.value)
+                        }
+                    ],
+                        data.avgPrice.map(i => i.date.substr(5, 5)),
+                    '',
+                    'line',
+                    'single');
+                    this.avgPrice = res.data.summary.avgPrice;
+                    this.occupancyRate = res.data.summary.occupancyRate;
+                    this.penalty = res.data.summary.penalty;
+                    this.roomFee = res.data.summary.roomFee;
+                    this.consumeAmount = res.data.summary.consumeAmount;
+                    this.roomNights = res.data.summary.roomNights;
+                    const penalty = {
+                        name: '违约金',
+                        dateValues: res.data.penaltys
+                    };
+                    res.data.roomFeeDetail.push(penalty);
+                    const tableData = getTableData({
+                        list: res.data.roomFeeDetail,
+                        firstTitle: '房间名称',
+                        secondTitle: '合计',
+                        foot: true
+                    });
+                    this.dataSource = tableData.dataSource;
+                    this.columns = tableData.columns;
                 })
             }
         }

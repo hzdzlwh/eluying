@@ -1,7 +1,7 @@
 /**
  * Created by huwanqi on 15/12/26.
  */
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var trToggle = require("trToggle");
 require("jqueryui");
@@ -41,16 +41,11 @@ var IVENTORY = {
     },
     update: function(){
         var that = this;
-        /*$.ajax({
-            url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
-            data:{
-                date: that.start,
-                type: 0
-            },
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
+        http.get("getCategoriesAndInventoriesUrl",{
+            date: that.start,
+            type: 0
+        })
+            .then(function(result){
                 var data = that.data = result.data.list;
                 var html = '';
                 data.forEach(function(i){
@@ -66,28 +61,7 @@ var IVENTORY = {
                     html += '</tr>'
                 });
                 $(".inventoryGrid table tbody").html(html);
-            }
-        })*/
-        AJAXService.ajaxWithToken("GET","getCategoriesAndInventoriesUrl",{
-            date: that.start,
-            type: 0
-        },function(result){
-            var data = that.data = result.data.list;
-            var html = '';
-            data.forEach(function(i){
-                html += '<tr class="mainClass" cid="' + i.id + '" scid="' + i.subTypeId + '"> ' +
-                    '<td> ' +
-                    '<span>' + i.name + '</span> ' +
-                    '<img src="/static/image/rotate.png" /> ' +
-                    '</td> ' +
-                    '<td><p>剩余</p><p>总量</p></td> ';
-                i.inventories.forEach(function(d){
-                    html += '<td date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
-                });
-                html += '</tr>'
             });
-            $(".inventoryGrid table tbody").html(html);
-        });
     },
     changeStart: function(start){
         this.start = start;
@@ -96,13 +70,13 @@ var IVENTORY = {
     },
     updateLeft: function(){
         /*$.ajax({
-            url: AJAXService.getUrl("getCategoriesAndInventoriesUrl"),
+            url: http.getUrl("getCategoriesAndInventoriesUrl"),
             data:{
                 date: IVENTORY.start,
                 type: 0
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 result.data.list.forEach(function(d){
@@ -112,16 +86,17 @@ var IVENTORY = {
                 });
             }
         })*/
-        AJAXService.ajaxWithToken("GET","getCategoriesAndInventoriesUrl",{
+        http.get("getCategoriesAndInventoriesUrl",{
             date: IVENTORY.start,
             type: 0
-        },function(result){
-            result.data.list.forEach(function(d){
-                d.inventories.forEach(function(i){
-                    $("tr[scid=" + d.subTypeId + "]").find("td[date=" + i.date + "]").find('p:first-child').html(i.remain);
+        })
+            .then(function(result){
+                result.data.list.forEach(function(d){
+                    d.inventories.forEach(function(i){
+                        $("tr[scid=" + d.subTypeId + "]").find("td[date=" + i.date + "]").find('p:first-child').html(i.remain);
+                    });
                 });
             });
-        });
     },
     setPatchGrid: function(){
         $("#delPatch .monthPick .month").html( (parseInt(this.patchMonth)+1) + "月");
@@ -135,14 +110,14 @@ var IVENTORY = {
         start = util.dateFormat(startDate);
         end = util.dateFormat(endDate);
         /*$.ajax({
-            url: AJAXService.getUrl("getRoomStatusUrl"),
+            url: http.getUrl("getRoomStatusUrl"),
             data:{
                 startDate: start,
                 endDate	: end,
                 roomId: this.selectedRoom.id
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 var statusList = [{
@@ -209,74 +184,61 @@ var IVENTORY = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","getRoomStatusUrl",{
+        http.get("getRoomStatusUrl",{
             startDate: start,
             endDate	: end,
             roomId: this.selectedRoom.id
-        },function(result){
-            var statusList = [{
-                classStr: 'shut',
-                text: '已关闭'
-            },{
-                classStr: 'sale',
-                text: '已售'
-            },{
-                classStr: 'notsale',
-                text: '未售'
-            }];
-            if(result.code == 1){
-                var html = '';
-                //处理每个月第一天之前的
-                var firstDate = util.stringToDate(result.data.list[0].date);
-                var diff1 = firstDate.getDay() == 0 ? -6 : -(firstDate.getDay() - 1);
-                var firstDay = util.diffDate(firstDate, diff1);
-                var tempDate = firstDay;
-                if(tempDate < firstDate){
-                    html += '<tr>'
-                }
-                while(tempDate < firstDate){
-                    html += '<td class="empty"><p>' + tempDate.getDate() + '日</p><p>' + '' + '</p></td>';
-                    tempDate = util.diffDate(tempDate, 1);
-                }
-                var today = new Date();
-                result.data.list.forEach(function(d){
-                    tempDate = util.stringToDate(d.date);
-                    var status = d.status;
-                    var classStr = "roomDayItem " + statusList[status].classStr;
-                    if(!util.isSameDay(today, tempDate) && util.compareDates(today, tempDate)){
-                        classStr = "empty";
+        })
+            .then(function(result){
+                var statusList = [{
+                    classStr: 'shut',
+                    text: '已关闭'
+                },{
+                    classStr: 'sale',
+                    text: '已售'
+                },{
+                    classStr: 'notsale',
+                    text: '未售'
+                }];
+                    var html = '';
+                    //处理每个月第一天之前的
+                    var firstDate = util.stringToDate(result.data.list[0].date);
+                    var diff1 = firstDate.getDay() == 0 ? -6 : -(firstDate.getDay() - 1);
+                    var firstDay = util.diffDate(firstDate, diff1);
+                    var tempDate = firstDay;
+                    if(tempDate < firstDate){
+                        html += '<tr>'
                     }
-                    if(tempDate.getDay() == 1){
-                        html += '<tr>';
+                    while(tempDate < firstDate){
+                        html += '<td class="empty"><p>' + tempDate.getDate() + '日</p><p>' + '' + '</p></td>';
+                        tempDate = util.diffDate(tempDate, 1);
                     }
-                    html += '<td status="' + d.status + '" date="' + d.date + '" class="' + classStr + '"><p>' + tempDate.getDate()
-                        + '日</p><p>' + statusList[status].text + '</p></td>';
-                    if(tempDate.getDay() == 0){
-                        html += '</tr>'
+                    var today = new Date();
+                    result.data.list.forEach(function(d){
+                        tempDate = util.stringToDate(d.date);
+                        var status = d.status;
+                        var classStr = "roomDayItem " + statusList[status].classStr;
+                        if(!util.isSameDay(today, tempDate) && util.compareDates(today, tempDate)){
+                            classStr = "empty";
+                        }
+                        if(tempDate.getDay() == 1){
+                            html += '<tr>';
+                        }
+                        html += '<td status="' + d.status + '" date="' + d.date + '" class="' + classStr + '"><p>' + tempDate.getDate()
+                            + '日</p><p>' + statusList[status].text + '</p></td>';
+                        if(tempDate.getDay() == 0){
+                            html += '</tr>'
+                        }
+                    });
+                    //处理每个月最后一天之后的
+                    var lastDate = util.stringToDate(result.data.list[result.data.list.length-1].date);
+                    lastDate = util.diffDate(lastDate, 1);
+                    if(lastDate.getDay() != 0){
+                        html += '</tr>';
                     }
-                });
-                //处理每个月最后一天之后的
-                var lastDate = util.stringToDate(result.data.list[result.data.list.length-1].date);
-                lastDate = util.diffDate(lastDate, 1);
-                if(lastDate.getDay() != 0){
-                    //var diff2 = 7 - lastDate.getDay();
-                    //var lastDay = util.diffDate(lastDate, diff2);
-                    //var tempDate = lastDate;
-                    //while(tempDate <= lastDay){
-                    //    html += '<td class="empty"><p>' + tempDate.getDate() + '日</p><p>' + '' + '</p></td>';
-                    //    if(tempDate == lastDay){
-                    //        html += '</tr>';
-                    //    }
-                    //    tempDate = util.diffDate(tempDate, 1);
-                    //}
-                    html += '</tr>';
-                }
-                $("#delPatch .patchGrid tbody").html(html);
-                $(".modal#delPatch").modal("show");
-            }else{
-                alert(result.msg);
-            }
-        });
+                    $("#delPatch .patchGrid tbody").html(html);
+                    $(".modal#delPatch").modal("show");
+            });
     }
 };
 
@@ -323,14 +285,14 @@ var events = {
         var that = this;
         if($(this).nextUntil(".mainClass").length == 0){
             /*$.ajax({
-                url: AJAXService.getUrl("getRoomsAndStatusUrl"),
+                url: http.getUrl("getRoomsAndStatusUrl"),
                 data:{
                     date: IVENTORY.start,
                     categoryId: cid,
                     subTypeId: scid
                 },
                 dataFilter: function (result) {
-                    return AJAXService.sessionValidate(result);
+                    return http.sessionValidate(result);
                 },
                 success: function(result){
                     if(result.code == 1){
@@ -370,12 +332,12 @@ var events = {
                     }
                 }
             })*/
-            AJAXService.ajaxWithToken("POST","getRoomsAndStatusUrl",{
+            http.post("getRoomsAndStatusUrl",{
                 date: IVENTORY.start,
                 categoryId: cid,
                 subTypeId: scid
-            },function(result){
-                if(result.code == 1){
+            })
+                .then(function(result){
                     if(result.data.list.length == 0){
                         alert('这个房型还没有房间！');
                     }else{
@@ -407,10 +369,7 @@ var events = {
                         $(that).find("img").addClass("rotate");
                         $(that).nextUntil(".mainClass").removeClass("hide");
                     }
-                }else{
-                    alert(result.msg);
-                }
-            });
+                });
         }else{
             if ($(this).nextUntil(".mainClass").hasClass("hide")) {
                 $(this).find("img").addClass("rotate");
@@ -527,7 +486,7 @@ var events = {
                 return false;
             }//如果选中的房间有已出售的，停止
             /*$.ajax({
-                url: AJAXService.getUrl("modifyRoomStatusUrl"),
+                url: http.getUrl("modifyRoomStatusUrl"),
                 data:{
                     isAll: false,
                     dateList: JSON.stringify(dateList),
@@ -535,7 +494,7 @@ var events = {
                     roomId: IVENTORY.selectedRoom.id
                 },
                 dataFilter: function (result) {
-                    return AJAXService.sessionValidate(result);
+                    return http.sessionValidate(result);
                 },
                 success: function(result){
                     if(util.errorHandler(result)){
@@ -556,13 +515,13 @@ var events = {
                     }
                 }
             })*/
-            AJAXService.ajaxWithToken("GET","modifyRoomStatusUrl",{
+            http.get("modifyRoomStatusUrl",{
                 isAll: false,
                 dateList: JSON.stringify(dateList),
                 open: open,
                 roomId: IVENTORY.selectedRoom.id
-            },function(result){
-                if(util.errorHandler(result)){
+            })
+                .then(function(result){
                     IVENTORY.setPatchGrid();
                     dateList.forEach(function(date){
                         var dom = $(".statusitem[date=" + date + "][room=" + IVENTORY.selectedRoom.id + "]");
@@ -577,8 +536,7 @@ var events = {
                         }
                     });
                     IVENTORY.updateLeft();
-                }
-            });
+                });
         }
     },
     'click body #delButton': function(){
@@ -597,7 +555,7 @@ var events = {
             open = 1;
         }
         /*$.ajax({
-            url: AJAXService.getUrl("modifyRoomStatusUrl"),
+            url: http.getUrl("modifyRoomStatusUrl"),
             data:{
                 isAll: false,
                 dateList: JSON.stringify(dateList),
@@ -605,7 +563,7 @@ var events = {
                 roomId: roomId
             },
             dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if(util.errorHandler(result)){
@@ -624,27 +582,28 @@ var events = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("GET","modifyRoomStatusUrl",{
+        http.get("modifyRoomStatusUrl",{
             isAll: false,
             dateList: JSON.stringify(dateList),
             open: open,
             roomId: roomId
-        },function(result){
-            if(util.errorHandler(result)){
-                if(status == 2){
-                    itemDom.attr("status", '0');
-                    itemDom.removeClass("notsale").addClass("shut");
-                    itemDom.html('已关闭');
-                }else if(status == 1){
+        })
+            .then(function(result){
+                if(util.errorHandler(result)){
+                    if(status == 2){
+                        itemDom.attr("status", '0');
+                        itemDom.removeClass("notsale").addClass("shut");
+                        itemDom.html('已关闭');
+                    }else if(status == 1){
 
-                }else if(status == 0){
-                    itemDom.attr("status", '2');
-                    itemDom.removeClass("shut").addClass("notsale");
-                    itemDom.html('未售');
+                    }else if(status == 0){
+                        itemDom.attr("status", '2');
+                        itemDom.removeClass("shut").addClass("notsale");
+                        itemDom.html('未售');
+                    }
+                    IVENTORY.updateLeft();
                 }
-                IVENTORY.updateLeft();
-            }
-        });
+            });
     },
     "resize window": util.mainContainer,
     "show.bs.modal .modal": modal.centerModals,

@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var util = require("util");
 var modal = require("modal");
 var accommodationPriceList = require("accommodationPriceList");
@@ -11,12 +11,8 @@ var seasonManage = {
     toSlackDate: "",
     //获取淡旺季的时间范围
     getSeasons: function(){
-        /*$.ajax({
-            url: AJAXService.getUrl2("getCampSeasons"),
-            dataFilter: function (result) {
-                return AJAXServicesessionValidate(result);
-            },
-            success: function(result){
+        http.get("getCampSeasons",{})
+            .then(function(result){
                 $.each(result.data.list, function(index, element){
                     if (element.type === 1) {
                         $("#busyStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
@@ -35,45 +31,18 @@ var seasonManage = {
                     }
                 });
                 seasonManage.getAccommodationPeriodicalPrice();
-            }
-        })*/
-        AJAXService.ajaxWithToken("GET","getCampSeasons",{},function(result){
-            $.each(result.data.list, function(index, element){
-                if (element.type === 1) {
-                    $("#busyStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
-                    $("#busyStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
-                    $("#busyEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
-                    $("#busyEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
-                    seasonManage.fromBusyDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
-                    seasonManage.toBusyDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
-                } else{
-                    $("#slackStartMonth option[value=" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "]").prop("selected", true);
-                    $("#slackStartDay option[value=" + (element.startDay < 10 ? "0" + element.startDay : element.startDay) + "]").prop("selected", true);
-                    $("#slackEndMonth option[value=" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "]").prop("selected", true);
-                    $("#slackEndDay option[value=" + (element.endDay < 10 ? "0" + element.endDay : element.endDay) + "]").prop("selected", true);
-                    seasonManage.fromSlackDate = "2000-" + (element.startMonth < 10 ? "0" + element.startMonth : element.startMonth) + "-" + (element.startDay < 10 ? "0" + element.startDay : element.startDay);
-                    seasonManage.toSlackDate = "2000-" + (element.endMonth < 10 ? "0" + element.endMonth : element.endMonth) + "-" + (element.endDay < 10 ? "0" + element.endDay : element.endDay);
-                }
             });
-            seasonManage.getAccommodationPeriodicalPrice();
-        });
     },
 
     //获取价格
     getAccommodationPeriodicalPrice: function(){
         //拉旺季价格
-        /*$.ajax({
-            url: AJAXService.getUrl("getAccommodationPeriodicalPrice"),
-            async: false,
-            data: {
-                categoryId: $(".selected").attr("category-id"),
-                startDate: seasonManage.fromBusyDate,
-                endDate: seasonManage.toBusyDate
-            },
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
+        http.get("getAccommodationPeriodicalPrice",{
+            categoryId: $("td.selected").attr("category-id"),
+            startDate: seasonManage.fromBusyDate,
+            endDate: seasonManage.toBusyDate
+        })
+            .then(function(result){
                 var channelArray = [];
                 for (var name in result.data) {
                     channelArray.push({
@@ -85,51 +54,17 @@ var seasonManage = {
                 seasonManage.tab(channelArray);
 
                 seasonManage.priceGrid(result.data, true);
-            }
-        })*/
-        AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
-            categoryId: $("td.selected").attr("category-id"),
-            startDate: seasonManage.fromBusyDate,
-            endDate: seasonManage.toBusyDate
-        },function(result){
-            var channelArray = [];
-            for (var name in result.data) {
-                channelArray.push({
-                    name: result.data[name][0].channelName,
-                    id: result.data[name][0].channelId
+                //拉淡季价格
+                return http.get("getAccommodationPeriodicalPrice",{
+                    categoryId: $("td.selected").attr("category-id"),
+                    startDate: seasonManage.fromSlackDate,
+                    endDate: seasonManage.toSlackDate
                 });
-            }
-            $(".seasonCategory").html("淡旺季管理-" + result.data["0"][0].name);
-            seasonManage.tab(channelArray);
-
-            seasonManage.priceGrid(result.data, true);
-        },undefined,false);
-        //拉淡季价格
-        /*$.ajax({
-            url: AJAXService.getUrl("getAccommodationPeriodicalPrice"),
-            data: {
-                categoryId: $(".selected").attr("category-id"),
-                startDate: seasonManage.fromSlackDate,
-                endDate: seasonManage.toSlackDate
-            },
-            dataFilter: function (result) {
-                return AJAXService.sessionValidate(result);
-            },
-            success: function(result){
+            })
+            .then(function(result) {
                 seasonManage.priceGrid(result.data, false);
-
-
-            }
-        });*/
-        AJAXService.ajaxWithToken("GET","getAccommodationPeriodicalPrice",{
-            categoryId: $("td.selected").attr("category-id"),
-            startDate: seasonManage.fromSlackDate,
-            endDate: seasonManage.toSlackDate
-        },function(result) {
-            seasonManage.priceGrid(result.data, false);
-        },undefined,false)
+            });
     },
-
 
     tab: function(channelArray){
         //拼接渠道tab
@@ -232,10 +167,10 @@ var seasonManage = {
     //修改价格和周期
     modifyAccommodationPeriodicalPrice: function(data,that) {
         /*$.ajax({
-            url: AJAXService.getUrl("modifyAccommodationPeriodicalPrice"),
+            url: http.getUrl("modifyAccommodationPeriodicalPrice"),
             data: data,
             dataFilter: function(result) {
-                return AJAXService.sessionValidate(result);
+                return http.sessionValidate(result);
             },
             success: function(result){
                 if (util.errorHandler(result)) {
@@ -243,14 +178,13 @@ var seasonManage = {
                 }
             }
         })*/
-        AJAXService.ajaxWithToken("POST", "modifyAccommodationPeriodicalPrice", data, function(result) {
-            if (util.errorHandler(result)) {
+        http.post("modifyAccommodationPeriodicalPrice", data)
+            .then(function(result) {
                 accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
                 $('.priceOperate .second').addClass('hide');
                 $('.priceOperate .first .operateItem ').addClass('hide');
                 modal.clearModal(that)
-            }
-        })
+            });
     },
 
     setDaySelect: function(monthSelect, daySelect){
@@ -381,7 +315,7 @@ var seasonManage = {
                     modal.clearModal(that);
                 };
 
-                modal.confirmDialog(dialogConfig, confirmCallback);
+                modal.confirm(dialogConfig, confirmCallback);
 
             } else {
                 modal.clearModal(that);

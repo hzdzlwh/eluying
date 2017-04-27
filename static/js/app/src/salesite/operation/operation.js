@@ -1,4 +1,4 @@
-var AJAXService = require("AJAXService");
+import http from 'http';
 var header = require("header");
 var leftMenu = require("leftMenu");
 var util = require("util");
@@ -74,36 +74,20 @@ $(function(){
         };
         scope.changeSiteState = function(){
             var data = scope.directNetStatus ? 0 : 1;
-            AJAXService.ajaxWithToken('GET', 'openCloseDirectNetUrl', {
+            http.get('openCloseDirectNetUrl', {
                 directNetStatus: data
-            }, function(result){
-                AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
-                    version: 5
-                }, function(result){
-                    scope.status.isOnlinePay.status = result.data.isOnlinePay;
-                    scope.status.campBasicInfo.status = result.data.campBasicInfo;
-                    scope.$apply();
-                });
-                AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
-                    scope.campQrCode = result.data.campQrCode;
-                    scope.campUrl = result.data.campUrl;
-                    scope.directNetStatus = result.data.directNetStatus;
-                    scope.notice = result.data.notice;
-                    scope.notice2 = result.data.notice;
-                    scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
-                    scope.noticeTime = result.data.noticeTime;
-                    scope.$apply();
-                });
-            });
-        };
-        scope.publishNotice = function(){
-            if(scope.noticeLength <= 140){
-                AJAXService.ajaxWithToken('GET', 'modifyNoticeUrl', {
-                    notice: scope.notice2
-                }, function(result){
-                    modal.somethingAlert(result.msg);
-                    if(result.code === 1){
-                        AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
+            })
+                .then(function(result){
+                    http.get('checkDirectNetOnlineUrl', {
+                        version: 5
+                    })
+                        .then(function(result){
+                            scope.status.isOnlinePay.status = result.data.isOnlinePay;
+                            scope.status.campBasicInfo.status = result.data.campBasicInfo;
+                            scope.$apply();
+                        });
+                    http.get('getOperationInfoUrl', {})
+                        .then(function(result){
                             scope.campQrCode = result.data.campQrCode;
                             scope.campUrl = result.data.campUrl;
                             scope.directNetStatus = result.data.directNetStatus;
@@ -113,9 +97,28 @@ $(function(){
                             scope.noticeTime = result.data.noticeTime;
                             scope.$apply();
                         });
-                        $("#announcement").modal("hide");
-                    }
                 });
+        };
+        scope.publishNotice = function(){
+            if(scope.noticeLength <= 140){
+                http.post('modifyNoticeUrl', {
+                    notice: scope.notice2
+                })
+                    .then(function(result){
+                        modal.success(result.msg);
+                        http.get('getOperationInfoUrl', {})
+                            .then(function(result){
+                                scope.campQrCode = result.data.campQrCode;
+                                scope.campUrl = result.data.campUrl;
+                                scope.directNetStatus = result.data.directNetStatus;
+                                scope.notice = result.data.notice;
+                                scope.notice2 = result.data.notice;
+                                scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
+                                scope.noticeTime = result.data.noticeTime;
+                                scope.$apply();
+                            });
+                        $("#announcement").modal("hide");
+                    });
             }
         };
         scope.copySite = function(){
@@ -126,23 +129,27 @@ $(function(){
                 $(".copy-success").css('display', 'none');
             }, 3000);
         };
-        AJAXService.ajaxWithToken('GET', 'checkDirectNetOnlineUrl', {
+        http.get('checkDirectNetOnlineUrl', {
             version: 5
-        }, function(result){
-            scope.status.isOnlinePay.status = result.data.isOnlinePay;
-            scope.status.campBasicInfo.status = result.data.campBasicInfo;
-            // console.log(scope.status);
-            scope.$apply();
-        });
-        AJAXService.ajaxWithToken('GET', 'getOperationInfoUrl', {}, function(result){
-            scope.campQrCode = result.data.campQrCode;
-            scope.campUrl = result.data.campUrl;
-            scope.directNetStatus = result.data.directNetStatus;
-            scope.notice = result.data.notice;
-            scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
-            scope.noticeTime = result.data.noticeTime;
-            scope.$apply();
-        });
+        })
+            .then(function(result){
+                scope.status.isOnlinePay.status = result.data.isOnlinePay;
+                scope.status.campBasicInfo.status = result.data.campBasicInfo;
+                // console.log(scope.status);
+                scope.$apply();
+            });
+        http.get('getOperationInfoUrl', {})
+            .then(
+                function(result){
+                    scope.campQrCode = result.data.campQrCode;
+                    scope.campUrl = result.data.campUrl;
+                    scope.directNetStatus = result.data.directNetStatus;
+                    scope.notice = result.data.notice;
+                    scope.noticeLength = scope.notice2 ? scope.notice2.length : 0;
+                    scope.noticeTime = result.data.noticeTime;
+                    scope.$apply();
+                }
+            );
     }]);
 
 });

@@ -29,7 +29,7 @@
 <script>
     import { mapState } from 'vuex';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
-    import AJAXService from '../../../../common/AJAXService';
+    import http from '../../../../common/http';
     import util from '../../../../common/util';
     export default{
         computed: {
@@ -166,7 +166,7 @@
                         break;
                 }
 
-                AJAXService.ajaxWithToken('get', '/stat/queryCashierInfoPC', {
+                http.get('/stat/queryCashierInfoPC', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     page: this.page,
@@ -184,7 +184,7 @@
                     });
             },
             getEmployeeList() {
-                AJAXService.ajaxWithToken('get', '/user/getEmployeeList', {})
+                http.get('/user/getEmployeeList', {})
                     .then(res => {
                             if (res.code === 1) {
                                 this.employeeList = [...this.employeeList, ...res.data.list]
@@ -192,7 +192,7 @@
                         })
             },
             getChannels() {
-                AJAXService.ajaxWithToken('get', '/user/getChannels', { type: 1, isAll: true })
+                http.get('/user/getChannels', { type: 1, isAll: true })
                     .then(res => {
                         if (res.code === 1) {
                             this.channels = [...this.channels, ...res.data.list]
@@ -208,10 +208,10 @@
                         endDate: this.date.endDate
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         }

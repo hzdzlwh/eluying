@@ -2,16 +2,17 @@
   "name": "dingdanlaile",
   "version": "0.0.1",
   "description": "dingdanlaile",
-  "main": "gulpfile.js",
   "dependencies": {
     "angular": "^1.5.3",
+    "axios": "^0.16.1",
     "core-js": "^2.4.1",
-    "dd-common-css": "0.2.1",
-    "dd-vue-component": "1.0.0",
+    "dd-common-css": "0.2.2",
+    "dd-vue-component": "^1.0.1",
     "dot": "^1.0.3",
     "echarts": "^3.3.2",
     "jquery": "1.12.4",
     "md5": "^2.1.0",
+    "qs": "^6.4.0",
     "raven-js": "^3.12.1",
     "vue": "2.2.5",
     "vue-router": "^2.1.1",
@@ -69,12 +70,9 @@
   },
   "scripts": {
     "start": "gulp start",
-    "build:prod": "gulp build:prod && gulp rev && gulp zip",
-    "build:dev": "gulp build:dev && gulp rev && gulp zip",
-    "build-and-update": "gulp build && gulp rev && gulp zip && scp ./eluyun.war root@120.26.83.168:/opt/apache-tomcat-7.0.59/webapps/"
+    "build:prod": "gulp build:prod && gulp rev && gulp zip"
   },
   "author": "lcx,hjj",
-  "license": "ISC",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

@@ -24,7 +24,7 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import AJAXService from '../../../common/AJAXService';
+    import http from '../../../common/http';
     import { setPie, setLine } from '../../utils/chartHelper';
     import { getTableData } from '../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
@@ -41,10 +41,10 @@
                         endDate: this.date.endDate
                     })
                 };
-                const host = AJAXService.getUrl2('/stat/exportReport');
-                const pa = AJAXService.getDataWithToken(paramsObj);
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
-                const params = AJAXService.paramsToString(pa);
+                const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             }
         },
@@ -67,7 +67,7 @@
         },
         methods: {
             getChannelStatistics() {
-                AJAXService.ajaxWithToken('get', '/stat/getStatisticsByType', {
+                http.get('/stat/getStatisticsByType', {
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
                     statTypes: JSON.stringify([7])

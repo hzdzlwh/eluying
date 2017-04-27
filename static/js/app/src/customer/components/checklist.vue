@@ -93,8 +93,7 @@
 import {
     DdTable
 } from 'dd-vue-component';
-import http from '../../common/AJAXService';
-import modal from '../../common/modal';
+import http from '../../common/http';
 export default {
     props: {
         visible: Boolean,
@@ -161,14 +160,10 @@ export default {
             http.get(this.url[this.checkListType], {
                 cid: this.id
             }).then(res => {
-                if (res.code === 1) {
-                    this.datalist = res.data.list;
-                    this.historyRecharge = res.data.historyRecharge;
-                    this.historyRefunds = res.data.historyRefunds;
-                    this.historySettle = res.data.historySettle;
-                } else {
-                    modal.alert(res.msg);
-                }
+                this.datalist = res.data.list;
+                this.historyRecharge = res.data.historyRecharge;
+                this.historyRefunds = res.data.historyRefunds;
+                this.historySettle = res.data.historySettle;
             });
         },
         close() {

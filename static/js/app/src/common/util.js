@@ -32,13 +32,13 @@ var util = {
     errorHandler: function(result, msg){
         var modal = require("modal");
         if (result.code != 1) {
-            modal.somethingAlert(result.msg);
+            modal.warn(result.msg);
             return false;
         } else {
             if (msg) {
-                modal.somethingAlert(msg)
+                modal.warn(msg)
             } else {
-                modal.somethingAlert("操作成功");
+                modal.success("操作成功");
             }
             return true;
         }
@@ -108,10 +108,12 @@ var util = {
         return date;
     },
 
+    // 将日期增加diff天
     diffDate: function(date, diff){
         return new Date(date.valueOf() + diff*24*60*60*1000);
     },
 
+    // 计算日期相差天数
     DateDiff: function(date1, date2){
         const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
         const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
