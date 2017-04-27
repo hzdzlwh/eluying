@@ -1,0 +1,134 @@
+.customer-map{
+	display: flex;
+	justify-content: center;
+	margin-top: 156px;
+	
+}
+.customer-map .text{
+	width: 447px;
+	padding-right: 69px;
+	display: relative;
+}
+.customer-map .text .tip{
+	position: absolute;
+	top: 28px;
+    font-size: 56px;
+    height: 108px;
+    line-height: 108px;
+    color: rgba(204, 231, 234, 0.5);
+}
+.customer-map .text .case{
+	padding-left: 17px;
+}
+.customer-map .text h2{
+	height: 120px;
+	line-height: 120px;
+	padding-left: 17px;
+	font-size: 36px;
+	color: #364254;
+	font-family: "Microsoft YaHei";
+}
+.customer-map .text p{
+	font-size: 24px;
+	height: 46px;
+	line-height: 46px;
+	color: #364254;
+}
+.image-1{
+	width: 428px;
+	height: 345px;
+	background: url('../image/customer-map.png');
+}
+.content{
+	margin-top: 93px;
+	padding-top: 16px;
+	background: #f5f8fa;
+}
+.customer-content{
+	display: flex;
+	margin-top: 64px;
+	align-items: center;
+	justify-content: center;
+}
+.customer-content .image{
+	width: 656px;
+	height: 376px;
+	color: #fff;
+}
+.customer-content .image h2{
+	color: #fff;
+	letter-spacing: 3px;
+}
+.image-2{
+	background: url('../image/customer-yijing.png');
+}
+.customer-content .text{
+	width: 500px;
+	height: 300px;
+	border: 1px solid #6b93a9;
+	padding-top: 11px;
+	padding-right: 41px;
+	padding-left: 40px;
+}
+.customer-content .text h2{
+	font-size: 24px;
+	line-height: 50px;
+	padding-bottom: 5px;
+	color: #6b93a9;
+}
+.customer-content .text p{
+	font-size: 16px;
+	line-height: 22px;
+	color: #666666;
+}
+.image-text{
+	width: 400px;
+	margin: 97px auto;
+}
+.image-text h3{
+	text-align: center;
+	font-size: 16px;
+	line-height: 20px;
+	padding-bottom: 17px;
+}
+.image-text p{
+	line-height: 26px;
+	font-size: 16px;
+}
+.image-text h3 em{
+	background-color: rgba(23, 140, 230, 0.6);
+}
+.image-text h2{
+	text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 60px;
+}
+.image-3{
+	background: url('../image/customer-wowo.png');
+}
+.image-4{
+	background: url('../image/customer-lion.png');
+}
+.image-5{
+	background: url('../image/customer-sun.png');
+}
+.image-6{
+	background: url('../image/customer-moganshan.png');
+}
+.image-7{
+	background: url('../image/customer-palm.png');
+}
+.text:nth-child(2){
+	border-left: none;
+	border-radius: 0 6px 6px 0;
+}
+.text:nth-child(1){
+	border-right: none;
+	border-radius: 6px 0 0 6px;
+}
+.image-text em{
+	border-radius: 20px;
+    display: inline-block;
+    padding: 7px 10px;
+}
