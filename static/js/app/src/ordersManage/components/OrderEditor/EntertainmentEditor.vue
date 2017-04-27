@@ -58,7 +58,7 @@
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
                                           && getItemDiscountInfo(item.nodeId).discount < 1">
-                                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                                            <span>原价<span class="origin-price">¥{{ item.originPrice * item.count * item.timeAmount}}</span></span>
                     <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
@@ -143,16 +143,15 @@ export default {
         },
         vipDiscountDetail: {
             handler(c, o) {
-                if (!c.vipDetail || !o.vipDetail) {
+                if (!c.vipDetail ) {
                     return false;
                 }
                 const _this = this;
                 let totalprice = 0;
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
-                    if (Number(el.totalPrice) !== newPrice) { // 判断是改变了折扣信息
-                        el.totalPrice = newPrice;
-                    }
+                    window.console.log(newPrice);
+                    el.totalPrice = newPrice;
                     if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
                         totalprice += Number(el.totalPrice);
                     }
