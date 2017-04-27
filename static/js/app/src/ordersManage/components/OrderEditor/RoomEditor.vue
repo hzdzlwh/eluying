@@ -13,14 +13,14 @@
                     <div class="shop-item-content">
                         <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                         <dd-select v-model="item.categoryType" placeholder="请选择房型"
-                                   @input="changeRoomType(item)">
+                                   @input="changeRoomType(item ,index)">
                             <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
                                        :label="category.name">
                             </dd-option>
                         </dd-select>
                         <div class="room-category">
                             <dd-select v-model="item.roomType" placeholder="请选择房间"
-                                       @input="handleRoomChange(item)">
+                                       @input="handleRoomChange(item, index)">
                                 <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
                                            :key="room.id"
                                            :label="room.name">
@@ -35,14 +35,14 @@
                             <label class="label-text">入住</label>
                             <div class="enterDate">
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
-                                               @input="handleRoomChange(item)"
+                                               @input="handleRoomChange(item, index)"
                                                :disabled-date="disabledStartDate(new Date())"
                                                :disabled="item.state === 1 || item.state === 8"/>
                             </div>
                             <span>~</span>
                             <div class="enterDate">
                                 <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
-                                               @input="handleRoomChange(item)"
+                                               @input="handleRoomChange(item, index)"
                                                :disabled="item.state === 8"
                                                :disabled-date="disabledEndDate(item.room.startDate)"/>
                             </div>
@@ -341,8 +341,8 @@
 
                     this.rooms = [room];
                 }
-                this.rooms.map(room => {
-                    this.lastRoomsToken[room.roomType + room.room.startDate] = JSON.stringify(room);
+                this.rooms.map((room, index) => {
+                    this.lastRoomsToken[index] = JSON.stringify(room);
                 });
             },
             initRegisterRooms(rooms) {
@@ -416,10 +416,10 @@
                 const d2 = new Date(date2);
                 return util.DateDiff(d1, d2);
             },
-            changeRoomType(item) {
+            changeRoomType(item, index) {
                 this.$nextTick(function() {
                     item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.handleRoomChange(item);
+                    this.handleRoomChange(item, index);
                 });
             },
             disabledStartDate(endDate) {
@@ -487,12 +487,12 @@
                 this.vipListShow = false;
                 this.vipList = [];
             },
-            handleRoomChange(room) {
-                if (JSON.stringify(room) === this.lastRoomsToken[room.roomType + room.room.startDate]) {
+            handleRoomChange(room, index) {
+                if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                     return false;
                 }
 
-                this.lastRoomsToken[room.roomType + room.room.startDate] = JSON.stringify(room);
+                this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
