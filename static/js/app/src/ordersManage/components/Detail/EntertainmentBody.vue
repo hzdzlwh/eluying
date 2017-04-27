@@ -90,6 +90,7 @@
     }
 </style>
 <script>
+    import bus from '../../../common/eventBus';
     export default {
         props: {
             order: {
@@ -107,6 +108,11 @@
         methods: {
             add(i) {
                 this.order.enterItems[i].timer += 1000;
+            },
+            clear() {
+                for (let i = window.inter.length - 1; i >= 0; i --) {
+                    window.clearInterval(window.inter[i]);
+                }
             }
         },
         filters: {
@@ -124,6 +130,9 @@
                 return '';
             }
         },
+        created() {
+            bus.$on('hideOrderEditor', this.clear);
+        },
         mounted() {
             window.inter = [];
             for (let i = this.order.enterItems.length - 1; i >= 0; i --) {
@@ -133,9 +142,7 @@
             }
         },
         beforeDestroy() {
-            for (let i = window.inter.length - 1; i >= 0; i --) {
-                window.clearInterval(window.inter[i]);
-            }
+            bus.$off('hideOrderEditor', this.clear);
         }
     };
 </script>
