@@ -361,7 +361,6 @@
                         changeTimes: 0,
                         showPriceList: false,
                         datePriceList: [],
-                        haveRequest: true,
                         priceScale: [],
                         showTip: false,
                         quickDiscountId: ''
@@ -376,7 +375,7 @@
                 }
 
                 let room;
-                if (len === 0) {
+                if (len === 0 || !this.rooms[len - 1].roomType) {
                     room = {
                         categoryType: undefined,
                         roomType: undefined,
@@ -406,7 +405,6 @@
                         delete room.roomOrderId;
                         delete room.state;
                         delete room.originDatePriceList;
-                        delete room.haveRequest;
                     }
                 }
 
