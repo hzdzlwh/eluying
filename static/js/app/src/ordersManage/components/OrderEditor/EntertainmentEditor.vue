@@ -201,6 +201,7 @@ export default {
                         enter.originPrice = item.originPrice.toFixed(2);
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
                         enter.totalPrice = item.totalPrice;
+                        enter.unitTime = item.chargeUnitTime;
                         enterItems.push(enter);
                         if (enter.unitTime === undefined) {
                             enter.unitTime = item.chargeUnitTime;
