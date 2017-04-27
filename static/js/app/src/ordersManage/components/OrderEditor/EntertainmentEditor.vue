@@ -183,6 +183,7 @@ export default {
             if (this.order.type) {
                 if (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION) {
                     filterEnters = (this.order.playItems || []).filter(enter => {
+                        window.console.log(enter.state);
                         return enter.state !== 3 && enter.state !== 2;
                     });
                     filterEnters.forEach(item => {
