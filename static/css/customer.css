@@ -1,20 +1,22 @@
 .customer-map{
 	display: flex;
 	justify-content: center;
-	margin-top: 156px;
-	
+	margin-top: 70px;
+	height: 524px;
 }
 .customer-map .text{
 	width: 447px;
 	padding-right: 69px;
+	padding-top: 92px;
 }
 .customer-map .text .tip{
 	position: absolute;
-	top: 28px;
+	top: 110px;
     font-size: 56px;
     height: 108px;
     line-height: 108px;
-    color: rgba(204, 231, 234, 0.5);
+	color: #e7eaef;
+	z-index: -1;
 }
 .customer-map .text .case{
 	padding-left: 17px;
@@ -34,12 +36,13 @@
 	color: #364254;
 }
 .image-1{
-	width: 428px;
-	height: 345px;
+	width: 707px;
+	height: 570px;
 	background: url('/static/image/customer-map.png');
+	position: relative;
+	top: 42px;
 }
 .content{
-	margin-top: 93px;
 	padding: 16px 0 64px 0;
 	background: #f5f8fa;
 }
@@ -53,6 +56,9 @@
 	width: 656px;
 	height: 376px;
 	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .customer-content .image h2{
 	color: #fff;
@@ -81,8 +87,8 @@
 	color: #666666;
 }
 .image-text{
-	width: 400px;
-	margin: 97px auto;
+	width: 437px;
+	text-align: center;
 }
 .image-text h3{
 	text-align: center;
