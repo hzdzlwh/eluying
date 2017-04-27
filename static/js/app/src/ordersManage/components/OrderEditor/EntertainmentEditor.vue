@@ -8,7 +8,7 @@
                 </span>
             </p>
             <div class="shop-items">
-                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType || item.state === 0 || item.state === undefined' :key="index">
+                <div class="shop-item" v-for="(item, index) in enterItems" v-if='order.orderState === 8 || !orderType || item.state === 0 ||item.state === 8 || item.state === 1 || item.state === undefined' :key="index">
                     <span class="enter-icon"></span>
                     <div class="shop-item-content">
                         <div>
@@ -129,11 +129,10 @@ export default {
         enterItems: {
             handler(c, o) {
                 let totalprice = 0;
-                // this.enterItems.filter(function(el) {
-                //     // 统计预定中和新加项目的总价
-                //     return el.state === 0 || el.state === undefined;
-                // })产品说结束的也加进来
-                this.enterItems.forEach(function(el) {
+                this.enterItems.filter(function(el) {
+                    // 统计预定中和新加项目的总价
+                    return el.state === 0 || el.state === 1 || el.state === 8  || el.state === undefined;
+                }).forEach(function(el) {
                     totalprice += Number(el.totalPrice);
                 });
                 this.$emit('priceChange', totalprice);
@@ -340,7 +339,16 @@ export default {
                     return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
             }
-            return true;
+            if (this.order.orderState === 0) {
+                const str = util.dateFormat(new Date(startDate));
+                const arr = str.split('-');
+                return (date) => {
+                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                };
+            }
+            return (date) => {
+                return true;
+            };
         },
         setEnterItems(data) {
             if (this.modifyEnterOrShopIndex === -1) {
