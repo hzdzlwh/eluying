@@ -147,7 +147,7 @@ export default {
                 let totalprice = 0;
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
-                    if (Number(el.totalPrice) !== newPrice && !!o.vipDetail) { // 判断是改变了折扣信息
+                    if (Number(el.totalPrice) !== newPrice) { // 判断是改变了折扣信息
                         el.totalPrice = newPrice;
                     }
                     if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
