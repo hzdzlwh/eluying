@@ -19,8 +19,10 @@
                         </div> -->
                         <div class="time-container" v-if="!!item['unitTime'] && item.usedAmount <= 0">
                             <label>时长({{item['timeUnit'] || item.chargeUnit}}）</label>
-                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" :disabled='order.orderState === 8 && !item.isnew'>
+                            <span v-if='order.orderState === 8 && !item.isnew' class="counterSpan">{{item.timeAmount * item['unitTime']}}</span>
+                            <counter @numChange="handleNumChange" :num="item.timeAmount * item['unitTime']" :id="index" :type="-2" :step="item['unitTime']" v-else>
                             </counter>
+
                         </div>
                         <span v-if="item.usedAmount > 0 && item.chargeUnit" >
                                             {{`时长(${item.chargeUnit})`}}
@@ -35,11 +37,13 @@
                         </div>
                         <div class="shop-item-count">
                             <label>数量</label>
-                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" :disabled='order.orderState === 8 && !item.isnew'>
+                            <span v-if='order.orderState === 8 && !item.isnew' class="counterSpan">{{item.count}}</span>
+                            <counter @numChange="handleNumChange" :num="item.count" :id="index" :type="2" :min="item.usedAmount >=1 ? item.usedAmount : 1" :max="(item.inventory + item.selfInventory) >= 0 ? (item.inventory + item.selfInventory) : 999" v-else>
                                 <p class="valid" v-if="(item.inventory + item.selfInventory) >= 0 && checkState !== 'finish'" :class="(item.inventory + item.selfInventory) <= 0 ? 'error' : ''">
                                     <span style="vertical-align: text-bottom">&uarr;</span> 服务上限剩余{{item.inventory + item.selfInventory}}
                                 </p>
                             </counter>
+
                             <p class="shop-item-price">
                                 <label>小计</label>
                                 <p class="fee-container">
@@ -69,7 +73,12 @@
         </div>
     </div>
 </template>
-<style>
+<style scoped>
+.counterSpan{
+    width: 66px;
+    text-align: center;
+    display: inline-block;
+}
 </style>
 <script>
 import {
@@ -112,7 +121,8 @@ export default {
         order: {
             handler(c, o) {
                 this.enterItems = this.getplayItems();
-                this.orderType = this.order.playItems ? 1 : 0;
+                this.orderType = (this.order.playItems || this.order.campName === undefined) ? 1 : 0;
+                // 如果是预定order为空的也判断为组合订单
             },
             deep: true
         },
@@ -323,31 +333,14 @@ export default {
             this.enterSelectModalShow = false;
         },
         disabledEndDate(startDate) {
-            if (this.checkState === 'finish') {
-                if (util.isSameDay(new Date(startDate), new Date())) {
-                    const str1 = util.dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        const disable = (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                        return disable;
-                    };
-                } else {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    const str1 = util.dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        const disable = (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                        return disable;
-                    };
-                }
-            } else {
+            if (this.order.orderState === 8) {
                 const str = util.dateFormat(new Date(startDate));
                 const arr = str.split('-');
                 return (date) => {
-                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
             }
+            return true;
         },
         setEnterItems(data) {
             if (this.modifyEnterOrShopIndex === -1) {
