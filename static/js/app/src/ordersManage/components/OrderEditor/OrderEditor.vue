@@ -726,6 +726,7 @@
                     enterOrderId: enterItems.enterOrderId || enterItems.id,
                     timeAmount: enterItems.timeAmount,
                     totalPrice: enterItems.totalPrice,
+                    date: enterItems.date,
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyEnterOrder', params)
