@@ -79,23 +79,6 @@
 }
 </style>
 <style lang="scss" scoped>
-
-
-.search{
-  input::-webkit-input-placeholder {
-    color:    #ccc;
-}
-input:-moz-placeholder { 
-   color:    #ccc;
-}
-input::-moz-placeholder { 
-   color:    #ccc;
-}
-input:-ms-input-placeholder { 
-   color:    #ccc;
-}
-}
-
 .foot small{
   color:#999;
 
