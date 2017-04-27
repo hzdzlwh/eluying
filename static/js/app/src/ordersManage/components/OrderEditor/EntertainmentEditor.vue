@@ -150,7 +150,7 @@ export default {
                     if (Number(el.totalPrice) !== newPrice && !!o.vipDetail) { // 判断是改变了折扣信息
                         el.totalPrice = newPrice;
                     }
-                    if (el.state === 0 || el.state === undefined) {
+                    if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
                         totalprice += Number(el.totalPrice);
                     }
                 });
