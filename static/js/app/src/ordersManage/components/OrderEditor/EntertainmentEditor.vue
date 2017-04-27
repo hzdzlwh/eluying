@@ -124,8 +124,7 @@ export default {
                 this.enterItems = this.getplayItems();
                 this.orderType = (this.order.playItems || this.order.campName === undefined) ? 1 : 0;
                 // 如果是预定order为空的也判断为组合订单
-            },
-            deep: true
+            }
         },
         enterItems: {
             handler(c, o) {
@@ -143,14 +142,18 @@ export default {
         },
         vipDiscountDetail: {
             handler(c, o) {
-                if (!c.vipDetail) {
-                    return false;
-                }
                 const _this = this;
                 let totalprice = 0;
+                if (!c.vipDetail) {
+                    this.enterItems.forEach((el) => {
+                        el.totalPrice = el.originPrice * el.amount * el.count;
+                        if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
+                            totalprice += Number(el.totalPrice);
+                        }
+                    });
+                }
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
-                    window.console.log(newPrice);
                     el.totalPrice = newPrice;
                     if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
                         totalprice += Number(el.totalPrice);
@@ -314,7 +317,7 @@ export default {
                         item.inventory = res.data.inventory;
                         item.count = (item.inventory + item.selfInventory) === 0 ? 0 : item.count;
                         item.totalPrice = ((price * discount).toFixed(2) * item.count * item.timeAmount).toFixed(2);
-                        item.originPrice = (price * item.count * item.timeAmount).toFixed(2);
+                        item.originPrice = (price).toFixed(2);
                     });
             }
         },
