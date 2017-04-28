@@ -16,6 +16,7 @@ var topMenu = {
             inventoryDisplay: (option && option.showInventory === false) ? 'none' : 'block',
             price:'价格维护',
             other:'其他设置',
+            otherDisplay: (option && option.showOther === false) ? 'none' : 'block',
             categoryPath:'/view/settings/business/category/'+ path +'.html',
             inventoryPath:'/view/settings/business/inventory/'+ path +'.html',
             pricePath:'/view/settings/business/price/'+ path +'.html',
