@@ -502,6 +502,8 @@
                         const originsList = res.data.list;
                         const otherOrigins = [];
                         this.userOrigins = originsList;
+                        this.userGroupOrigins.push({ label: '企业', origins: [] });
+                        this.userGroupOrigins.push({ label: '其他', origins: [] });
                         originsList.forEach(origin => {
                             if (origin.id === -1 || origin.id === -4) {
                                 this.userSelfOrigins.push(origin);
@@ -518,7 +520,7 @@
                                     company.id = origin.id;
                                     company.info = `${companyName}\n${number}\n${name}\n${phone}`;
                                 });
-                                this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                this.userGroupOrigins[0].origins = origin.companyList;
                             }
 
                             if (origin.id > 0) {
@@ -526,7 +528,7 @@
                                 otherOrigins.push(origin);
                             }
                         });
-                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        this.userGroupOrigins[1].origins = otherOrigins;
                     });
                 this[types.LOAD_SHOP_LIST]();
                 this[types.LOAD_ENTER_LIST]();
@@ -536,7 +538,7 @@
                 if (id === -5) {
                     return this.userGroupOrigins[0].origins.find(i => companyId === i.companyId);
                 } else {
-                    return this.userSelfOrigins.find(i => id === i.id) || this.userGroupOrigins[1].find(i => id === i.id);
+                    return this.userSelfOrigins.find(i => id === i.id) || this.userGroupOrigins[1].origins.find(i => id === i.id);
                 }
             },
             refreshData() {
