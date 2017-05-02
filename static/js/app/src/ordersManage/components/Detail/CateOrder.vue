@@ -9,9 +9,10 @@
                         <div class="item-content">
                             <div class="item-name">
                                 <span class="item-name">{{item.restName}}</span>
-                                <span class="food-state-icon" v-if="!order.caterOrderId"
-                                      :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
-                                    {{getRoomOrFoodState(0, item.foodState).text}}
+                                <span class="state-icon" v-if="!order.caterOrderId"
+                                      :class="getOrderState(item, 'color')"
+                                >
+                                    {{getOrderState(item, 'text')}}
                                 </span>
                             </div>
                             <div class="item-desks">
@@ -75,7 +76,7 @@
         </div>
     </div>
 </template>
-<style lang="scss" type="text/css" rel="stylesheet/scss">
+<style lang="scss">
     .item-price {
         display: inline-flex;
         align-items: center;
@@ -166,6 +167,10 @@
 </style>
 <script>
     import bus from '../../../common/eventBus.js';
+    import {
+        ORDER_TYPE,
+        ORDER_STATE_TEXT
+    } from '../../constant';
     export default{
         props: {
             order: Object
@@ -196,19 +201,12 @@
             }
         },
         methods: {
-            getRoomOrFoodState(type, state) {
-                switch (state) {
-                    case 0:
-                        return { text: '预', backgroundColor: '#ffba75' };
-                    case 1:
-                        return { text: type === 0 ? '餐' : '住', backgroundColor: '#82beff' };
-                    case 2:
-                        return { text: type === 0 ? '完' : '退', backgroundColor: '#bfbfbf' };
-                    case 3:
-                        return { text: '消', backgroundColor: '#bfbfbf' };
-                    default:
-                        return {};
+            getOrderState(food, prop) {
+                if (food.foodState === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.CATERING][food.foodState]) {
+                    return '';
                 }
+
+                return ORDER_STATE_TEXT[ORDER_TYPE.CATERING][food.foodState][prop];
             },
             getDesks(item) {
                 let desksStr = '';
