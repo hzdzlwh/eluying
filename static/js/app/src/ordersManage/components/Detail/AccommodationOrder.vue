@@ -11,11 +11,11 @@
                             && item.roomInfo.roomNum) || item.serialNum
                                 }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
 
-                            <span class="room-state-icon"
-                                  :style="{background: getRoomOrFoodState(3, item).backgroundColor}"
+                            <span class="state-icon"
+                                  :class="getOrderState(item, 'color')"
                             >
-                                                {{getRoomOrFoodState(3, item).text}}
-                                            </span>
+                                {{getOrderState(item, 'text')}}
+                            </span>
                         </div>
                         <div class="room-date">
                             <label class="label-text">入住</label>
@@ -72,7 +72,8 @@
 <script>
     import {
         ID_CARD_TYPE,
-        ORDER_TYPE
+        ORDER_TYPE,
+        ORDER_STATE_TEXT
     } from '../../constant';
     import bus from '../../../common/eventBus';
     export default {
@@ -101,37 +102,13 @@
             }
         },
         methods: {
-            getRoomOrFoodState(type, item) {
-                let state;
-                if (item.roomInfo) {
-                    state = item.roomInfo.state;
-                } else {
-                    state = item.state;
+            getOrderState(room, prop) {
+                const state = room.roomInfo ? room.roomInfo.state : room.state;
+                if (state === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.ACCOMMODATION][state]) {
+                    return '';
                 }
-                switch (state) {
-                    case 0:
-                        return {
-                            text: '预',
-                            backgroundColor: '#ffba75'
-                        };
-                    case 1:
-                        return {
-                            text: '住',
-                            backgroundColor: '#82beff'
-                        };
-                    case 2:
-                        return {
-                            text: '退',
-                            backgroundColor: '#bfbfbf'
-                        };
-                    case 3:
-                        return {
-                            text: '消',
-                            backgroundColor: '#bfbfbf'
-                        };
-                    default:
-                        return {};
-                }
+
+                return ORDER_STATE_TEXT[ORDER_TYPE.ACCOMMODATION][state][prop];
             },
             modalShow(id) {
                 bus.$emit('onShowDetail', {

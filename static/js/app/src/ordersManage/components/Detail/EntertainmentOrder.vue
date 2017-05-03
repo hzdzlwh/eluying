@@ -8,8 +8,13 @@
                         <span class="enter-icon"></span>
                         <div class="item-content">
                             <span class="item-name">
-                                                    {{item.name || item.itemName}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}
-                                                </span>
+                                {{item.name || item.itemName}}{{item.chargeUnit ? `(${item.timeAmount * item.chargeUnitTime}${item.chargeUnit})` : ''}}
+                                <span class="state-icon" v-if="!order.caterOrderId"
+                                      :class="getOrderState(item, 'color')"
+                                >
+                                    {{getOrderState(item, 'text')}}
+                                </span>
+                            </span>
                             <div class="item-date">
                                 <label class="label-text">时间</label>
                                 <span>{{item.date}}</span>
@@ -53,7 +58,8 @@
 import bus from '../../../common/eventBus';
 import EntertainmentOrderDetail from './EntertainmentOrderDetail.vue';
 import {
-    ORDER_TYPE
+    ORDER_TYPE,
+    ORDER_STATE_TEXT
 } from '../../constant';
 export default {
     props: {
@@ -83,6 +89,14 @@ export default {
         }
     },
     methods: {
+        getOrderState(item, prop) {
+            const state = item.state !== undefined ? item.state : item.orderState;
+            if (state === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.ENTERTAINMENT][state]) {
+                return '';
+            }
+
+            return ORDER_STATE_TEXT[ORDER_TYPE.ENTERTAINMENT][state][prop];
+        },
         modalShow(id) {
             bus.$emit('onShowDetail', {
                 orderId: parseInt(id),
