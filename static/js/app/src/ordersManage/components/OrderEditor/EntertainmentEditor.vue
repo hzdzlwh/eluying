@@ -160,7 +160,7 @@ export default {
                         totalprice += Number(el.totalPrice);
                     }
                 });
-                if (c.isVip === undefined || o.isVip === undefined) {
+                if (o.isVip === undefined) {
                     this.$emit('priceChange', totalprice);
                     return false;
                 }
