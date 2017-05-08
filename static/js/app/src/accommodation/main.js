@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const clientY = ev.clientY;
             const detail = $(this).find('.calendar-glyph-detail');
             const height = detail.height();
-            if (height + 200 > clientY) {
+            if (height + 245 > clientY) {
                 detail.removeClass('up');
                 detail.addClass('down');
             } else {
