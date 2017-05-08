@@ -8,9 +8,14 @@
                         <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
                     </dd-select>
                 </div>
-                <div style="width: 120px">
+                <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="channelId">
                         <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="width: 120px">
+                    <dd-select v-modal="cashierId">
+                        <dd-option v-for="cashier in cashierList" :key="cashier.id" :value="cashier.id" :label="cashier.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -45,6 +50,10 @@
                 this.queryCashierInfo();
             },
             operatorId() {
+                this.page = 1;
+                this.queryCashierInfo();
+            },
+            cashierId() {
                 this.page = 1;
                 this.queryCashierInfo();
             }
@@ -103,7 +112,7 @@
                         width: 122
                     },
                     {
-                        title: '支付宝账号',
+                        title: '支付账号',
                         dataIndex: 'payAccount',
                         width: 122
                     },
@@ -137,7 +146,34 @@
                 ],
                 operatorId: 'ALL',
                 channels: [{id: 'ALL', name: '全部收款方式'}],
-                channelId: 'ALL'
+                channelId: 'ALL',
+                cashierList: [
+                    {
+                        id: -1,
+                        name: '全部收银类型'
+                    },
+                    {
+                        id: 0,
+                        name: '订单收款'
+                    },
+                    {
+                        id: 1,
+                        name: '订单退款'
+                    },
+                    {
+                        id: 2,
+                        name: '押金收款'
+                    },
+                    {
+                        id: 3,
+                        name: '押金退款'
+                    },
+                    {
+                        id: 4,
+                        name: '卡费收款'
+                    }
+                ],
+                cashierId: -1
             }
         },
         methods: {
