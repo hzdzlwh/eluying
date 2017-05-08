@@ -25,6 +25,10 @@
                 <p><i><small>商超</small></i></p>
                 <h4>¥ {{goodsTotalAmount}}</h4>
             </div>
+            <div>
+                <p><i><small>会员卡费</small></i></p>
+                <h4>¥ {{goodsTotalAmount}}</h4>
+            </div>
         </div>
         <div class="card">
             <h5 class="card-title"><em>业态来源分析</em></h5>
@@ -66,9 +70,10 @@
                 playTotalAmount: undefined,
                 goodsTotalAmount: undefined,
                 allTotalAmount: undefined,
+                vipCardFeeAmount: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
@@ -113,12 +118,14 @@
                             this.caterTotalAmount = operationStat.caterStat.totalAmount;
                             this.playTotalAmount = operationStat.playStat.totalAmount;
                             this.goodsTotalAmount = operationStat.goodsStat.totalAmount;
+                            this.vipCardFeeAmount = operationStat.vipCardFeeStat.totalAmount;
                             this.allTotalAmount = operationStat.allStat.totalAmount;
                             setPie([
-                                {value: operationStat.roomStat.totalAmount, name:'住宿'},
-                                {value: operationStat.caterStat.totalAmount, name:'餐饮'},
-                                {value: operationStat.playStat.totalAmount, name:'娱乐'},
-                                {value: operationStat.goodsStat.totalAmount, name:'商超'},
+                                { value: operationStat.roomStat.totalAmount, name: '住宿' },
+                                { value: operationStat.caterStat.totalAmount, name: '餐饮' },
+                                { value: operationStat.playStat.totalAmount, name: '娱乐' },
+                                { value: operationStat.goodsStat.totalAmount, name: '商超' },
+                                { value: operationStat.vipCardFeeStat.totalAmount, name: '会员卡费' }
                             ]);
                             setLine([
                                 {
@@ -138,9 +145,13 @@
                                     data: operationStat.goodsStat.items.map(i => i.value)
                                 },
                                 {
+                                    name: '会员卡费',
+                                    data: operationStat.vipCardFeeStat.items.map(i => i.value)
+                                },
+                                {
                                     name: '总消费金额',
                                     data: operationStat.allStat.items.map(i => i.value)
-                                },
+                                }
                             ],
                                 operationStat.roomStat.items.map(i => i.date.substr(5, 5)),
                                 '金额（元）'
@@ -162,6 +173,10 @@
                                     {
                                         name: '商超',
                                         dateValues: operationStat.goodsStat.items
+                                    },
+                                    {
+                                        name: '会员卡费',
+                                        dateValues: operationStat.vipCardFeeStat.items
                                     }
                                 ],
                                 firstTitle: '',
@@ -171,8 +186,8 @@
                             this.dataSource = tableData.dataSource;
                             this.columns = tableData.columns;
                         }
-                    })
-            },
+                    });
+            }
         }
-    }
+    };
 </script>
