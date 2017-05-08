@@ -10,7 +10,7 @@ import store from '../ordersManage/store';
 import init from '../common/init';
 import { router } from './routes';
 import Router from 'vue-router';
-
+require('jquery-ui-dist/jquery-ui.js');
 Vue.use(Router);
 document.addEventListener('DOMContentLoaded', () => {
     init({

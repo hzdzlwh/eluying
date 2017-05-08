@@ -6,7 +6,13 @@
                 <div class="orderDetailModal-shop-item">
                     <span class="shop-icon"></span>
                     <div class="item-content">
-                        <span class="shop-time small-font">{{item.time.slice(0, 16)}}</span>
+                        <span class="shop-time small-font">{{item.time.slice(0, 16)}}
+                            <span class="state-icon" v-if="!order.caterOrderId"
+                                  :class="getOrderState(item, 'color')"
+                            >
+                                {{getOrderState(item, 'text')}}
+                            </span>
+                        </span>
                         <div style="display: inline-flex; align-items: center;">
                             <label class="label-text">小计</label>
                             <span>¥{{getTotalPrice(item['items'], true)}}</span>
@@ -37,6 +43,10 @@
 </style>
 <script>
     import bus from '../../../common/eventBus.js';
+    import {
+        ORDER_TYPE,
+        ORDER_STATE_TEXT
+    } from '../../constant';
     export default{
         props: {
             order: Object
@@ -54,6 +64,7 @@
                         } else {
                             shopList[item.goodsOrderId] = {};
                             shopList[item.goodsOrderId]['time'] = item.date;
+                            shopList[item.goodsOrderId]['state'] = item.state;
                             shopList[item.goodsOrderId]['items'] = [];
                             shopList[item.goodsOrderId]['items'].push(item);
                         }
@@ -62,6 +73,7 @@
                     const orderId = this.order.goodsOrderId;
                     shopList[orderId] = {};
                     shopList[orderId]['time'] = this.order.creationTime;
+                    shopList[orderId]['state'] = this.order.state;
                     shopList[orderId]['items'] = this.order.itemList;
                     shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
                 }
@@ -88,6 +100,13 @@
                 } else {
                     return false;
                 }
+            },
+            getOrderState(item, prop) {
+                if (item.state === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.RETAIL][item.state]) {
+                    return '';
+                }
+
+                return ORDER_STATE_TEXT[ORDER_TYPE.RETAIL][item.state][prop];
             }
         }
     };
