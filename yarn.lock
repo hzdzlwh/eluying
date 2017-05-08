@@ -1634,6 +1634,10 @@ dd-common-css@0.2.1:
   version "0.2.1"
   resolved "http://registry.npm.taobao.org/dd-common-css/download/dd-common-css-0.2.1.tgz#56af5f79ebec2584a2b58c3de1e81a67f307f4db"
 
+dd-common-css@0.2.2:
+  version "0.2.2"
+  resolved "http://registry.npm.taobao.org/dd-common-css/download/dd-common-css-0.2.2.tgz#6ed3f1b6952463f41e0b08ebe106bbc7713133ac"
+
 dd-vue-component@^1.0.1:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/dd-vue-component/download/dd-vue-component-1.0.1.tgz#76747b99bd18c6c44e5950fc09efb8cc16f2154d"
@@ -3283,6 +3287,14 @@ jodid25519@^1.0.0:
   resolved "http://registry.npm.taobao.org/jodid25519/download/jodid25519-1.0.2.tgz#06d4912255093419477d425633606e0e90782967"
   dependencies:
     jsbn "~0.1.0"
+
+jquery-ui-dist@^1.12.1:
+  version "1.12.1"
+  resolved "http://registry.npm.taobao.org/jquery-ui-dist/download/jquery-ui-dist-1.12.1.tgz#5c0815d3cc6f90ff5faaf5b268a6e23b4ca904fa"
+
+jquery-ui@^1.12.1:
+  version "1.12.1"
+  resolved "http://registry.npm.taobao.org/jquery-ui/download/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
 
 jquery@1.12.4:
   version "1.12.4"
