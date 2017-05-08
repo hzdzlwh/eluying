@@ -14,7 +14,7 @@
                     </dd-select>
                 </div>
                 <div style="width: 120px">
-                    <dd-select v-modal="cashierId">
+                    <dd-select v-model="cashierId">
                         <dd-option v-for="cashier in cashierList" :key="cashier.id" :value="cashier.id" :label="cashier.name"></dd-option>
                     </dd-select>
                 </div>
