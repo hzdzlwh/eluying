@@ -8,6 +8,11 @@
                         <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
                     </dd-select>
                 </div>
+                <div style="width: 120px;margin-right: 10px">
+                    <dd-select v-model="channelId">
+                        <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
+                    </dd-select>
+                </div>
                 <div style="width: 120px">
                     <dd-select v-model="channelId">
                         <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
@@ -103,7 +108,7 @@
                         width: 122
                     },
                     {
-                        title: '支付宝账号',
+                        title: '支付账号',
                         dataIndex: 'payAccount',
                         width: 122
                     },
@@ -186,18 +191,18 @@
             getEmployeeList() {
                 http.get('/user/getEmployeeList', {})
                     .then(res => {
-                            if (res.code === 1) {
-                                this.employeeList = [...this.employeeList, ...res.data.list]
-                            }
-                        })
+                        if (res.code === 1) {
+                            this.employeeList = [...this.employeeList, ...res.data.list];
+                        }
+                    });
             },
             getChannels() {
                 http.get('/user/getChannels', { type: 1, isAll: true })
                     .then(res => {
                         if (res.code === 1) {
-                            this.channels = [...this.channels, ...res.data.list]
+                            this.channels = [...this.channels, ...res.data.list];
                         }
-                    })
+                    });
             },
             exportUrl(type) {
                 const paramsObj = {
