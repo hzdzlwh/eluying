@@ -758,7 +758,7 @@
                     });
                 });
             },
-            dragRoom() {
+            bindDragRoom() {
                 const that = this;
                 $(document).on('mousedown', '.calendar-glyph', function() {
                     that.isDrag = false;
@@ -865,11 +865,15 @@
         directives: {
             Clickoutside
         },
-        created: function() {
+        created() {
             document.body.addEventListener('click', () => {
                 this.currentAction && (this.currentAction.actionVisible = false);
             });
-            this.dragRoom();
+            this.bindDragRoom();
+        },
+        beforeDestroy() {
+            $(document).off('mousedown', '.calendar-glyph');
+            $(document).off('mouseover', '.calendar-glyph.draggable');
         }
     };
 </script>
