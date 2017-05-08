@@ -292,6 +292,9 @@
                         operationType = 1;
                         penalty = this.business.penalty;
                     }
+                    if (this.type === 'cancel') {
+                        operationType = 4;
+                    }
 
                     const orderId = getOrderId(this.orderDetail);
 
@@ -508,6 +511,7 @@
                         orderId: this.business.orderId,
                         orderType: this.business.orderType,
                         payments: JSON.stringify(payments),
+                        operationType: 4,
                         businessJson: JSON.stringify(businessJson)
                     };
                 } else if (this.type === 'resetOrder') { // 反结账
