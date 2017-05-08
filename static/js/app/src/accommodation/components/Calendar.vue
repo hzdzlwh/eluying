@@ -99,6 +99,7 @@
                         'glyph-ing': g.roomState === 1,
                         'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
+                     :key="g.roomOrderId"
                      @click="showOrder(g)"
                      :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}"
                      :date="g.checkInDate"
