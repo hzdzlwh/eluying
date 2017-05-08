@@ -355,16 +355,27 @@
         .room-user {
             margin-top: 12px;
         }
-        .room-state-icon, .food-state-icon {
-            width: 16px;
-            height: 16px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            color: #ffffff;
-            font-size: 10px;
+        .state-icon {
+            padding: 2px 4px;;
+            color: #fff;
             border-radius: 2px;
             margin-left: 4px;
+            font-size: 12px;
+            &.yellow {
+                background: #ffba75;
+            }
+            &.grey {
+                background: #bfbfbf;
+            }
+            &.blue {
+                background: #82beff;
+            }
+            &.red {
+                background: #f27979;
+            }
+            &.green {
+                background: #62d99d;
+            }
         }
         .orderDetailModal-shop-item {
             display: flex;

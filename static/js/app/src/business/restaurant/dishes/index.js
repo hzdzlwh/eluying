@@ -131,13 +131,13 @@ $(function() {
                     params.categoryId = this.dishesSelected.categoryId;
                     url = '/catering/deleteDishesForRestaurant';
                 }
-                http.post('POST', url,
+                http.post(url,
                     params)
                     .then(res => {
-                            this.getPackagesAndDishesFromRestaurant();
-                            this.packageSelected = undefined;
-                            this.dishesSelected = undefined;
-                    })
+                        this.getPackagesAndDishesFromRestaurant();
+                        this.packageSelected = undefined;
+                        this.dishesSelected = undefined;
+                    });
             },
 
             modifyState: function() {

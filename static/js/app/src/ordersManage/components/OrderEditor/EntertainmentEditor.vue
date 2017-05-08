@@ -49,6 +49,16 @@
                                 <p class="fee-container">
                                     <span class="fee-symbol">¥</span>
                                     <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice" />
+                                    <span style="display:none">¥{{ item.originPrice * item.count * item.timeAmount}}</span>
+                                    <span style="display:none">¥{{ vipDiscountDetail.vipDetail
+                                          && getItemDiscountInfo(item.nodeId).discount < 1}}</span>
+                                    <span style="display:none">¥{{ !!vipDiscountDetail.vipDetail
+                                          }}</span>
+<span style="display:none">¥{{ getItemDiscountInfo(item.nodeId).discount
+                                          }}</span>
+
+<span style="display:none">¥{{ item.nodeId
+                                          }}</span>
                                 </p>
                             </p>
                         </div>
@@ -144,14 +154,17 @@ export default {
             handler(c, o) {
                 const _this = this;
                 let totalprice = 0;
-                if (!c.vipDetail) {
-                    this.enterItems.forEach((el) => {
-                        el.totalPrice = el.originPrice * el.amount * el.count;
-                        if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
-                            totalprice += Number(el.totalPrice);
-                        }
-                    });
+                this.enterItems.forEach((el) => {
+                        // el.totalPrice = el.originPrice * el.amount * el.count;
+                    if (el.state === 0 || el.state === 1 || el.state === 8 || el.state === undefined) {
+                        totalprice += Number(el.totalPrice);
+                    }
+                });
+                if (o.isVip === undefined) {
+                    this.$emit('priceChange', totalprice);
+                    return false;
                 }
+                // if (c.vipDetail.vipId !== o.vipDetail.vipId) {
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
                     el.totalPrice = newPrice;
@@ -159,9 +172,9 @@ export default {
                         totalprice += Number(el.totalPrice);
                     }
                 });
+                // }
                 this.$emit('priceChange', totalprice);
-            },
-            deep: true
+            }
         }
     },
     created() {
@@ -205,7 +218,6 @@ export default {
                         enter.inventory = undefined;
                         enter.originPrice = item.originPrice.toFixed(2);
                     // enter.originPrice = (item.originPrice * item.amount * item.timeAmount).toFixed(2);
-                        enter.totalPrice = item.totalPrice;
                         enter.unitTime = item.chargeUnitTime;
                         enterItems.push(enter);
                         if (enter.unitTime === undefined) {
@@ -218,6 +230,7 @@ export default {
                     filterEnters.forEach(item => {
                         const enter = { ...item
                         };
+                        item.nodeId ? enter.nodeId = item.nodeId : enter.nodeId = item.enterItems[0].entertainmentId;
                         enter.name = item.itemName;
                         enter.usedAmount = item.bookNum - item.enableAmount;
                         enter.unitTime = item.chargeUnitTime;
@@ -229,7 +242,6 @@ export default {
                         enter.type = 2;
                         enter.inventory = undefined;
                         enter.originPrice = item.originPrice.toFixed(2);
-                        enter.totalPrice = item.totalPrice;
                         enterItems.push(enter);
                     });
                     return (JSON.parse(JSON.stringify(enterItems)));

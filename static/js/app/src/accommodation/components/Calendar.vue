@@ -93,10 +93,19 @@
                     </tbody>
                 </table>
                 <div class="calendar-glyph"
-                     :class="{'glyph-start': g.seeStart, 'glyph-book': g.roomState === 0, 'glyph-ing': g.roomState === 1, 'glyph-finish': g.roomState === 2}"
+                     :class="{'glyph-start': g.seeStart,
+                        'draggable': g.draggable,
+                        'glyph-book': g.roomState === 0,
+                        'glyph-ing': g.roomState === 1,
+                        'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
+                     :key="g.roomOrderId"
                      @click="showOrder(g)"
-                     :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}">
+                     :style="{left: `${g.left}px`, width: `${g.width}px`, top: `${g.top}px`}"
+                     :date="g.checkInDate"
+                     :room="g.accommodationId"
+                     :roomOrderId="g.roomOrderId"
+                >
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
                         <span class="calendar-glyph-channel">{{g.channelName}}</span>
@@ -422,6 +431,11 @@
         color: white;
         padding-left: 8px;
         cursor: pointer;
+        user-select: none;
+        &.ui-draggable-dragging {
+            cursor: move;
+            transform: rotate(3deg);
+        }
     }
     .glyph-book {
         background: #ffba75;
@@ -527,6 +541,7 @@
     import http from '../../common/http';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
+    import modal from '../../common/modal';
     export default{
         props: {
             categories: Array,
@@ -543,7 +558,8 @@
                 scrollTicking: false,
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
-                currentAction: undefined
+                currentAction: undefined,
+                isDrag: false
             };
         },
         components: {
@@ -633,8 +649,10 @@
                     }
 
                     let checkOutDate = new Date(order.checkOutDate);
+                    let seeEnd = true;
                     if (checkOutDate > util.diffDate(startDate, 29)) {
                         checkOutDate = util.diffDate(startDate, 29);
+                        seeEnd = false;
                     }
 
                     let diff = util.DateDiff(checkInDate, checkOutDate);
@@ -654,6 +672,7 @@
                     glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                     glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
                     glyph.seeStart = seeStart;
+                    glyph.draggable = seeStart && seeEnd && order.roomState !== 2; // 已退房的不能拖拽
                     glyphs.push(glyph);
                 });
                 return glyphs;
@@ -706,7 +725,13 @@
                     });
             },
             showOrder(room) {
-                bus.$emit('onShowDetail', { type: room.orderType, orderId: room.orderType === -1 ? room.orderId : room.roomOrderId });
+                if (this.isDrag) {
+                    return false;
+                }
+                bus.$emit('onShowDetail', {
+                    type: room.orderType,
+                    orderId: room.orderType === -1 ? room.orderId : room.roomOrderId
+                });
             },
             openAction(status, ev) {
                 ev.preventDefault();
@@ -723,15 +748,132 @@
                     .then(result => {
                         room.isDirty = !room.isDirty;
                     });
+            },
+            clearAllSelected() {
+                this.roomStatus.map(r => {
+                    r.st.map(s => {
+                        if (s.selected) {
+                            s.selected = false;
+                        }
+                    });
+                });
+            },
+            bindDragRoom() {
+                const that = this;
+                $(document).on('mousedown', '.calendar-glyph', function() {
+                    that.isDrag = false;
+                });
+                $(document).on('mouseover', '.calendar-glyph.draggable', function() {
+                    const $element = $(this);
+                    let startX = 0;
+                    let startY = 0;
+                    $element.data('init_draggable') || $element.data('init_draggable', true).draggable({
+                        containment: '.calendar-status-table',
+                        cursor: 'move',
+                        addClasses: false,
+                        zIndex: 1,
+                        start: function(e, ui) {
+                            if (!ui.helper.is('.draggable')) {
+                                return false;
+                            }
+                            that.clearAllSelected();
+                            startX = Number(ui.helper.css('left').replace(/px/, ''));
+                            startY = Number(ui.helper.css('top').replace(/px/, ''));
+                        },
+                        drag: function() {
+                            that.isDrag = true;
+                        },
+                        stop: function(e, ui) {
+                            const box = $('.calendar-status');
+                            const width = box.width() + 1;
+                            const height = box.height() + 1;
+                            const offsetLeft = Math.round(ui.position.left / width);
+                            const offsetTop = Math.round(ui.position.top / height);
+                            const originalOffsetLeft = Math.round(ui.originalPosition.left / width);
+                            const originalOffsetTop = Math.round(ui.originalPosition.top / height);
+                            const tr = $('.calendar-status-row').eq(offsetTop);
+                            const td = tr.find('td').eq(offsetLeft);
+                            const date = td.attr('date');
+                            const room = td.attr('room');
+
+                            function rest() {
+                                ui.helper.css({
+                                    top: startY + 'px',
+                                    left: startX + 'px'
+                                });
+                                targetOrder && targetOrder.css({
+                                    top: targetStartY + 'px',
+                                    left: targetStartX + 'px'
+                                });
+                            }
+                            if (offsetLeft === originalOffsetLeft && offsetTop === originalOffsetTop) {
+                                rest();
+                                return;
+                            }
+                            let targetOrder;
+                            let targetStartX;
+                            let targetStartY;
+                            // 第一次先检验能否拖拽，可以的话预览，并提示确认框，不行的话重置
+                            http.post('/room/dragChangeRoom', {
+                                checkRoomOnly: true,
+                                roomId: room,
+                                startDate: date,
+                                roomOrderId: ui.helper.attr('roomOrderId')
+                            })
+                                .then(res => {
+                                    $('.calendar-glyph').each(function(index, el) {
+                                        if ($(el).attr('date') === date && $(el).attr('room') === room) {
+                                            targetOrder = $(el);
+                                        }
+                                    });
+                                    // 调换房间
+                                    if (targetOrder) {
+                                        targetStartX = Number(targetOrder.css('left').replace(/px/, ''));
+                                        targetStartY = Number(targetOrder.css('top').replace(/px/, ''));
+                                        targetOrder.css({
+                                            top: startY + 'px',
+                                            left: startX + 'px'
+                                        });
+                                    }
+                                    // 修正位置
+                                    ui.helper.css({
+                                        top: offsetTop * height + 2 + 'px',
+                                        left: offsetLeft * width + 2 + 'px'
+                                    });
+                                    modal.confirm({ message: `确定要换房至${date}吗？` },
+                                        function() {
+                                            http.post('/room/dragChangeRoom', {
+                                                checkRoomOnly: false,
+                                                roomId: room,
+                                                startDate: date,
+                                                roomOrderId: ui.helper.attr('roomOrderId')
+                                            })
+                                                .then(res => {
+                                                    bus.$emit('refreshView');
+                                                })
+                                                .catch(rest);
+                                        },
+                                        rest
+                                    );
+                                })
+                                .catch(rest);
+                        }
+                    });
+                });
             }
         },
         directives: {
             Clickoutside
         },
-        created: function() {
+        created() {
             document.body.addEventListener('click', () => {
                 this.currentAction && (this.currentAction.actionVisible = false);
             });
+            this.bindDragRoom();
+        },
+        beforeDestroy() {
+            $(document).off('mousedown', '.calendar-glyph');
+            $(document).off('mouseover', '.calendar-glyph.draggable');
         }
     };
 </script>
