@@ -168,7 +168,6 @@ const http = {
         data.campId = data.campId || localStorage.getItem('campId');
         data.uid = localStorage.getItem('uid');
         data.terminal = 1;
-        data.version = data.version || 18;
         data.kick = true;
         const array = [];
         for (const key in data) {
