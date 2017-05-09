@@ -15,24 +15,41 @@ const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 export const routes = [
     {
         path: '/',
-        redirect: '/vip'
+        redirect: '/vip',
+        meta: {
+            invisible: true
+        }
+    },
+    {
+        path: '/non-vip',
+        component: nonVip,
+        meta: {
+            name: '客户'
+        }
     },
     {
         path: '/vip',
         redirect: '/vip/list',
         component: vip,
+        meta: {
+            name: '会员'
+        },
         children: [
             {
                 path: '/vip/list',
                 component: list,
                 meta: {
                     auth: hasAuth,
-                    authName: '会员查看'
+                    authName: '会员查看',
+                    name: '会员列表'
                 }
             },
             {
                 path: '/vip/setting',
-                component: setting
+                component: setting,
+                meta: {
+                    name: '会员设置'
+                }
             }
         ]
     },
@@ -42,18 +59,27 @@ export const routes = [
         meta: {
             auth: hasCompanyAuth,
             // auth: false,
-            authName: '企业查看'
+            authName: '企业查看',
+            name: '企业客户'
         }
     },
     {
-        path: '/non-vip',
-        component: nonVip
-    },
-    {
         path: '/non-auth',
-        component: NoAuth
+        component: NoAuth,
+        meta: {
+            invisible: true
+        }
     }
 ];
+
+(function mapChildren(routes) {
+    routes.map( route => {
+        if (route.children) {
+            route.meta.children = route.children;
+            mapChildren(route.children);
+        }
+    });
+})(routes);
 
 const router = new Router({
     mode: 'history',

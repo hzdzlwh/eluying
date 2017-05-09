@@ -125,7 +125,7 @@
     .search {
         width: 256px;
         position: absolute;
-        top: 0;
+        top: -34px;
         right: 0;
     }
     .search-icon {

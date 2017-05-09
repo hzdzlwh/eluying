@@ -1,14 +1,13 @@
 <template>
 <div class="customer-container">
-    <ul class="leftMenu">
-        <li class="leftMenu-item">
-            <router-link to="/vip">会员客户</router-link>
-        </li>
-        <li class="leftMenu-item">
-            <router-link to="/company">企业客户</router-link>
-        </li>
-        <li class="leftMenu-item">
-            <router-link to="/non-vip">非会员客户</router-link>
+    <ul class='leftMenu'>
+        <li v-if="!route.meta.invisible" v-for="route in $router.options.routes" class="leftMenu-item">
+            <router-link :to="route.path">{{route.meta.name}}</router-link>
+            <ul v-if="route.children && $route.path.indexOf(route.path) > -1" id="leftMenu-children">
+                <li v-for="child in route.children">
+                    <router-link :to="child.path">{{child.meta.name}}</router-link>
+                </li>
+            </ul>
         </li>
     </ul>
     <div class="view-container">
@@ -63,6 +62,12 @@
     }
 </style>
 <script>
-export default {
-};
+    export default {
+        data() {
+            return {};
+        },
+        created() {
+            console.log(this.$router);
+        }
+    };
 </script>

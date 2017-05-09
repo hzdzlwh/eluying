@@ -26,7 +26,7 @@ export const routes = [
         redirect: '/overview',
         meta: {
             invisible: true
-        },
+        }
     },
     {
         path: '/overview',
@@ -41,7 +41,7 @@ export const routes = [
                 component: operation,
                 meta: {
                     name: '运营'
-                },
+                }
             },
             {
                 path: '/overview/flow',
@@ -86,7 +86,7 @@ export const routes = [
                 component: channel,
                 meta: {
                     name: '渠道'
-                },
+                }
             }
         ]
     },
