@@ -54,9 +54,8 @@
 <style>
 </style>
 <script>
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
     import { setLine } from '../../../utils/chartHelper';
@@ -72,14 +71,14 @@
                 peopleCount: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 3,
@@ -153,9 +152,8 @@
                         this.dataSource = tableData.dataSource;
                         this.columns = tableData.columns;
                     }
-                })
-            },
-
+                });
+            }
         }
-    }
+    };
 </script>

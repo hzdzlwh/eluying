@@ -1,11 +1,11 @@
 <template>
     <div class="vip-setting-container">
-        <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
+        <div class="clearfix" v-if="settings && settings.length > 0">
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
             <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
-            <div style="margin-top:12px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
+            <div style="margin-top:18px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
                 <dd-Table :columns="columns" :data-source="settings"></dd-Table>
             </div>
         </div>

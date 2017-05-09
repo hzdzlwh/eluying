@@ -20,20 +20,19 @@
 <style>
 </style>
 <script>
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable, DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
         data() {
-            return{
+            return {
                 columns: [],
                 dataSource: [],
                 restaurantList: [],
                 restaurantId: undefined
-            }
+            };
         },
         components: {
             DdTable,
@@ -53,7 +52,7 @@
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 4,
@@ -81,7 +80,7 @@
                     })
                     .then(() => {
                         this.getFoodConsumeDetail();
-                    })
+                    });
             },
             getFoodConsumeDetail() {
                 http.get('/stat/getFoodConsumeDetail', {
@@ -99,8 +98,8 @@
                         this.dataSource = tableData.dataSource;
                         this.columns = tableData.columns;
                     }
-                })
-            },
+                });
+            }
         }
-    }
+    };
 </script>

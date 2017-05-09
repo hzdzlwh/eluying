@@ -60,7 +60,7 @@
             return {
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
@@ -86,7 +86,7 @@
                             data: i.channelsStatByDate.map(i => i.value)
                         })),
                             days.map(d => util.dateFormatWithoutYear(d)),
-                            '金额（元）')
+                            '金额（元）');
                         const tableData = getTableData({
                             list: channelsStatByDate.map(i => ({ ...i, dateValues: i.channelsStatByDate })),
                             firstTitle: '客源渠道',
@@ -96,8 +96,8 @@
                         this.dataSource = tableData.dataSource;
                         this.columns = tableData.columns;
                     }
-                })
+                });
             }
         }
-    }
+    };
 </script>

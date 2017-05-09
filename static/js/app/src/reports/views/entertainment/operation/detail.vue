@@ -31,20 +31,19 @@
     }
 </style>
 <script>
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     import { DdTable, DdSelect, DdOption } from 'dd-vue-component';
     import { getTableData } from '../../../utils/tableHelper';
 
     export default{
         data() {
-            return{
+            return {
                 columns: [],
                 dataSource: [],
                 entertainmentList: [],
                 entertainmentId: undefined
-            }
+            };
         },
         components: {
             DdTable,
@@ -64,13 +63,13 @@
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 6,
                     params: {
                         startDate: this.date.startDate,
-                        endDate: this.date.endDate,
+                        endDate: this.date.endDate
                     }
                 };
                 if (this.entertainmentId !== -1) {
@@ -96,7 +95,7 @@
                     })
                     .then(() => {
                         this.getEnterConsumeDetail();
-                    })
+                    });
             },
             getEnterConsumeDetail() {
                 const params = this.entertainmentId === -1 ? { ...this.date } : { ...this.date, nodeId: this.entertainmentId };
@@ -113,7 +112,7 @@
                             this.columns = tableData.columns;
                         }
                     });
-            },
+            }
         }
-    }
+    };
 </script>

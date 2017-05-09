@@ -18,7 +18,7 @@ export function setLine(series, xAxisData, yAxisName, id = 'line', legendMode = 
         dataZoom: [{
             type: 'slider',
             filterMode: 'filter'
-        },],
+        }],
         legend: {
             top: 0,
             data: series.map(i => i.name),
@@ -26,7 +26,7 @@ export function setLine(series, xAxisData, yAxisName, id = 'line', legendMode = 
         },
         tooltip: {
             ...tooltip,
-            formatter: "{b}<br>{a}: {c}"
+            formatter: '{b}<br>{a}: {c}'
         },
         xAxis: {
             boundaryGap: false,
@@ -75,7 +75,7 @@ export function setPie(data, title, id = 'pie') {
         },
         tooltip: {
             ...tooltip,
-            formatter: "{b}: ¥{c}<br>所占比例{d}%"
+            formatter: '{b}: ¥{c}<br>所占比例{d}%'
         },
         legend: {
             bottom: 0,
@@ -87,7 +87,7 @@ export function setPie(data, title, id = 'pie') {
             data
         }],
         color
-    })
+    });
 }
 
 export function setBar(data, yAxisName, xAxisData, id = 'bar') {
@@ -95,12 +95,12 @@ export function setBar(data, yAxisName, xAxisData, id = 'bar') {
     chart.setOption({
         tooltip: {
             ...tooltip,
-            formatter: "{b}: {c}"
+            formatter: '{b}: {c}'
         },
         dataZoom: [{
             type: 'slider',
             filterMode: 'filter'
-        },],
+        }],
         xAxis: {
             type: 'category',
             splitLine: {
