@@ -41,7 +41,7 @@ export function getTableData({ list, firstTitle, secondTitle, foot }) {
             name: '综合合计',
             dateValues: dates.map((d, i) => {
                 const value = list.reduce((a, b) => {
-                    return a + b.dateValues[i].value
+                    return a + b.dateValues[i].value;
                 }, 0);
 
                 return {

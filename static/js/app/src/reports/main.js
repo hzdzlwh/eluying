@@ -4,7 +4,7 @@
 import Vue from 'vue';
 import 'bootstrap';
 import App from './App';
-import {router} from './routes';
+import { router } from './routes';
 import Router from 'vue-router';
 import store from './store';
 import auth from '../common/auth';

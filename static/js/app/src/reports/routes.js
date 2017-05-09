@@ -79,7 +79,7 @@ export const routes = [
                 component: sale,
                 meta: {
                     name: '销售'
-                },
+                }
             },
             {
                 path: '/overview/channel',
@@ -118,7 +118,7 @@ export const routes = [
                         meta: {
                             name: '餐厅统计'
                         },
-                        component: restaurant,
+                        component: restaurant
                     },
                     {
                         path: '/catering/operation/food',
@@ -183,7 +183,7 @@ export const routes = [
 ];
 
 (function mapChildren(routes) {
-    routes.map( route => {
+    routes.map(route => {
         if (route.children) {
             route.meta.children = route.children;
             mapChildren(route.children);
@@ -193,8 +193,8 @@ export const routes = [
 
 export const router = new Router({
     mode: 'history',
-    scrollBehavior (to, from, savedPosition) {
-        return savedPosition ? savedPosition : { x: 0, y: 0 };
+    scrollBehavior(to, from, savedPosition) {
+        return savedPosition || { x: 0, y: 0 };
     },
     base: '/view/reports/',
     linkActiveClass: 'active',
