@@ -27,7 +27,7 @@
             </div>
             <div>
                 <p><i><small>会员卡费</small></i></p>
-                <h4>¥ {{goodsTotalAmount}}</h4>
+                <h4>¥ {{vipCardFeeAmount}}</h4>
             </div>
         </div>
         <div class="card">
