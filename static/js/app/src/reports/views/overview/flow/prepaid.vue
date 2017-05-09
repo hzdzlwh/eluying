@@ -42,7 +42,6 @@
     import { mapState } from 'vuex';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     export default{
         data() {
             return {
