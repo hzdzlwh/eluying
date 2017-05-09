@@ -25,87 +25,91 @@
             :onEdit="openEdit"
         >
             <div class="vip-detail-container">
-                <div style="margin-right: 75px;width: 250px">
+                <div>
+                    <div class="vip-detail-header">客户信息</div>
                     <div class="vip-detail-row">
-                        <span class="vip-detail-filed">手机号</span>
-                        <span>{{vip.phone}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">会员等级</span>
-                        <span>{{vip.levelName}}</span>
-                        <div v-if="vip.levelName !== '—' && vip.consumeAndDiscount  && vip.consumeAndDiscount.length > 0" class="tip-img-container">
-                            <img src="/static/image/modal/room_modal_info.png" >
-                            <div class="vip-leavelUpgrade-tip">
-                                <div>
-                                    {{vip.levelName}}
-                                </div>
-                                <div v-for="item in vip.consumeAndDiscount" class="discount-item">
-                                    <span>{{item.name}}</span>
-                                    <span>{{item.discount}}折</span>
-                                </div>
-                            </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">姓名</span>
+                            <span>{{vip.name}}</span>
+                        </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">性别</span>
+                            <span>{{['男', '女'][vip.gender]}}</span>
+                        </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">生日</span>
+                            <span>{{vip.birthday}}</span>
+                        </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">手机号</span>
+                            <span>{{vip.phone}}</span>
                         </div>
                     </div>
                     <div class="vip-detail-row">
-                        <span class="vip-detail-filed">会员卡号</span>
-                        <span>{{vip.vipCardNum}}</span>
+                        <div style="width: 50%">
+                            <span class="vip-detail-filed">邮箱</span>
+                            <span style="flex: 1;word-break: break-all;">{{vip.email}}</span>
+                        </div>
+                        <div style="width: 50%">
+                            <span class="vip-detail-filed">证件号</span>
+                            <span>{{vip.idCardNum}}</span>
+                        </div>
                     </div>
                     <div class="vip-detail-row">
-                        <span class="vip-detail-filed">证件号</span>
-                        <span>{{vip.idCardNum}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">地区</span>
-                        <span>{{(vip.province || '') + (vip.city || '') + (vip.county || '')}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">生日</span>
-                        <span>{{vip.birthday}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">性别</span>
-                        <span>{{['男', '女'][vip.gender]}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">邮箱</span>
-                        <span style="flex: 1;word-break: break-all;">{{vip.email}}</span>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">创建渠道</span>
+                            <span>{{vip.vipChannel}}</span>
+                        </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">创建人</span>
+                            <span>{{vip.operatorName}}</span>
+                        </div>
+                        <div style="width: 25%">
+                            <span class="vip-detail-filed">地区</span>
+                            <span>{{(vip.province || '') + (vip.city || '') + (vip.county || '')}}</span>
+                        </div>
+                        <div style="width: 25%"></div>
                     </div>
                 </div>
-                <div style="width:350px">
-                    <div class="vip-detail-row" style="display: block">
-                        <div style="display: flex; margin-bottom: 12px">
-                            <span class="vip-detail-filed">累计金额</span>
+                <div>
+                    <div class="vip-detail-header">会员信息</div>
+                    <div class="vip-detail-row">
+                        <div style="width: 33%">
+                            <span class="vip-detail-filed" style="width: 84px">累计消费金额</span>
                             <span>¥{{vip.totalConsume}}</span>
-                            <div class="tip-img-container" v-if="vip.isAutoUpgrade === 1 && vip.nextVipLevelName">
-                                <img src="/static/image/modal/room_modal_info.png" >
-                                <div class="vip-leavelUpgrade-tip">
-                                    <div>升级下一级别还需在以下项目消费{{vip.upgradeFee}}元</div>
-                                    <div>{{vip.vipConsumeList.join('、')}}</div>
-                                </div>
-                            </div>
                         </div>
-                        <i>成为会员之后对相关业态的累计消费金额（不含违约金）</i>
+                        <div style="width: 33%">
+                            <span class="vip-detail-filed" style="width: 84px">总消费金额</span>
+                            <span>¥{{vip.entireTotalConsume}}</span>
+                        </div>
+                        <div style="width: 33%">
+                            <span class="vip-detail-filed">会员等级</span>
+                            <span>{{vip.levelName}}</span>
+                        </div>
                     </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">消费金额</span>
-                        <span>¥{{vip.entireTotalConsume}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">创建时间</span>
-                        <span>{{vip.creationTime}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">创建人</span>
-                        <span>{{vip.operatorName}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">创建渠道</span>
-                        <span>{{vip.vipChannel}}</span>
-                    </div>
-                    <div class="vip-detail-row">
-                        <span class="vip-detail-filed">备注</span>
-                        <span style="flex: 1">{{vip.remark}}</span>
-                    </div>
+                </div>
+                <div>
+                    <div class="vip-detail-header">会员卡</div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>卡号</th>
+                            <th>余额</th>
+                            <th>办理日期</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="vip-detail-header">备注信息</div>
+                    <div>{{vip.remark || '无'}}</div>
                 </div>
             </div>
         </detail>
@@ -134,9 +138,13 @@
         top: 6px;
     }
     .vip-detail-container {
-        display: flex;
+        .vip-detail-header {
+            margin-bottom: 18px;
+            font-weight: bold;
+            font-size: 12px;
+        }
         .vip-detail-row {
-            margin-bottom: 24px;
+            margin-bottom: 19px;
             display: flex;
         }
         .vip-detail-filed {
@@ -144,6 +152,7 @@
             width: 56px;
             margin-right: 9px;
             display: inline-block;
+            color: #999;
         }
         .vip-leavelUpgrade-tip {
             position: absolute;
