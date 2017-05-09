@@ -840,7 +840,7 @@
                                         top: offsetTop * height + 2 + 'px',
                                         left: offsetLeft * width + 2 + 'px'
                                     });
-                                    modal.confirm({ message: `确定要换房至${date}吗？` },
+                                    modal.confirm({ title: '换房', message: '确定要换房吗？' },
                                         function() {
                                             http.post('/room/dragChangeRoom', {
                                                 checkRoomOnly: false,
