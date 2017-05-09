@@ -14,11 +14,12 @@ axios.interceptors.response.use(function(response) {
     return response;
 }, function(error) {
     spin.removePending();
-    Raven.captureMessage('ajax请求失败', {
+    Raven.captureMessage('网络请求失败', {
         extra: {
             error
         }
     });
+    modal.error('服务器请求失败，请稍后再试。');
     return Promise.reject(error);
 });
 

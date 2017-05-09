@@ -150,7 +150,7 @@
                 }
 
                 this.startDate = util.stringToDate(date);
-                this.getRoomAndStatus();
+                this.refreshView();
             },
             handleRoomFilter(data) {
                 this.categories = data;
