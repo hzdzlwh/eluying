@@ -116,7 +116,7 @@
 }
 
 .box-head {
-    margin-bottom: 8px;
+    margin-bottom: 21px;
 }
 
 .vip-search,
