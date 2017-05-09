@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="search">
-            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
-            <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
-        </div>
-        <div style="display: flex;flex-direction: row-reverse;margin-bottom: 8px;margin-top: 24px">
+        <div style="display: flex;flex-direction: row-reverse;margin-bottom: 21px;">
             <a :href="outPutExcel()"><button class="dd-btn dd-btn-primary" >导出明细</button></a>
-            <button class="dd-btn dd-btn-primary" style="margin-right: 8px" v-if='contral.VIP_EDIT_ID' @click="openVipForm">新增会员</button>
+            <button class="dd-btn dd-btn-primary" style="margin-right: 16px" v-if='contral.VIP_EDIT_ID' @click="openVipForm">新增会员</button>
+            <div class="search">
+                <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
+                <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
+            </div>
         </div>
         <dd-table :on-change="handleTableChange" :columns="col" :data-source="vips"></dd-table>
         <div class="foot">
@@ -128,9 +128,8 @@
     }
     .search {
         width: 256px;
-        position: absolute;
-        top: -34px;
-        right: 0;
+        position: relative;
+        margin-right: 16px;
     }
     .search-icon {
         position: absolute;

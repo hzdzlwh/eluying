@@ -1,12 +1,10 @@
 <template>
     <div class="listbox">
-        <div class="vip-search">
+        <div class="box-head">
             <div class="vip-search-container">
                 <input type="text" v-model='search' placeholder="搜索姓名/手机号" class="order-search dd-input">
                 <span class="vip-search-icon" @click='fetchDate'><img src="//static.dingdandao.com/order_manage_search_grey.png" alt=""></span>
             </div>
-        </div>
-        <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
                         <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出明细</a></span>
@@ -100,8 +98,9 @@
 }
 
 .box-head {
-    margin-bottom: 8px;
-    clear: both;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 21px;
     overflow: auto;
 }
 
@@ -109,9 +108,7 @@
     margin-bottom: 20px;
 }
 
-.vip-search,
 .add-button {
-    float: right;
     display: inline-block;
     margin-left: 15px;
 }
