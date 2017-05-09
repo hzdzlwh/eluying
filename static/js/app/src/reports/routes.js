@@ -15,6 +15,7 @@ import detail from './views/entertainment/operation/detail.vue';
 import retail from './views/retail.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
+import flowPrepiad from './views/overview/flow/prepaid.vue';
 import insurance from './views/insurance.vue';
 import auth from '../common/auth';
 
@@ -62,6 +63,13 @@ export const routes = [
                         component: flowRecords,
                         meta: {
                             name: '收款记录'
+                        }
+                    },
+                    {
+                        path: '/overview/flow/prepaid',
+                        component: flowPrepiad,
+                        meta: {
+                            name: '预收账款'
                         }
                     }
                 ]

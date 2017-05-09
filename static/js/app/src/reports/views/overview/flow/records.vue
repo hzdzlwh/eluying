@@ -2,7 +2,7 @@
     <div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
-                <span>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
+                <span style="display: flex;align-items: center">收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
                 <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="operatorId">
                         <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
