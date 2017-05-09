@@ -439,12 +439,12 @@
                     return false;
                 }
                 // 功能一次结清，现在改为允许多次收款
-                /* const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
+                const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
-                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder') {
+                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && this.type !== 'orderDetail') {
                     modal.warn('订单未结清，无法完成收银！');
                     return false;
-                } */
+                }
                 if (this.type === 'resetOrder') {
                     this.payments.map(pay => {
                         pay.type = this.orderState ? 0 : 2;
