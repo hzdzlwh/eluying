@@ -1,4 +1,11 @@
 .board-table {
+    .board-table-name{
+        width: 100px;
+        display:block;
+        white-space:nowrap; 
+        overflow:hidden; 
+        text-overflow:ellipsis;
+    }
     border-radius: 2px;
     th {
         width: 173.67px;
@@ -41,6 +48,14 @@
     padding: 0 20px;
     background: #f0f0f0;
     font-size: 16px;
+    display: flex;
+    .restaurant-box-name{
+        width: 270px;
+        display:block;
+        white-space:nowrap; 
+        overflow:hidden; 
+        text-overflow:ellipsis;
+    }
     .changearea {
         font-size: 14px;
         color: #178ce6;
