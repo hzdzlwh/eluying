@@ -18,7 +18,6 @@
     import { mapState } from 'vuex';
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from '../../common/http';
-    import util from '../../common/util';
     const sexMap = {
         '1': '男',
         '2': '女'
@@ -54,7 +53,7 @@
         },
         components: {
             DdTable,
-            DdPagination,
+            DdPagination
         },
         data() {
             return {
@@ -167,7 +166,7 @@
                 num: undefined,
                 totalPrice: undefined,
                 pages: undefined
-            }
+            };
         },
         methods: {
             query(page) {
@@ -175,7 +174,7 @@
                     return false;
                 }
 
-                this.page = page ? page : this.page;
+                this.page = page || this.page;
 
                 http.get('/order/listInsurancePC', {
                     startDate: this.date.startDate,
@@ -206,5 +205,5 @@
                 return `${host}?${params}`;
             }
         }
-    }
+    };
 </script>

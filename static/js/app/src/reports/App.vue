@@ -58,13 +58,13 @@
     import DateSelect from './components/DateSelect.vue';
     export default{
         data() {
-            return{
-                msg:'hello vue'
-            }
+            return {
+                msg: 'hello vue'
+            };
         },
-        components:{
+        components: {
             LeftMenu,
             DateSelect
         }
-    }
+    };
 </script>

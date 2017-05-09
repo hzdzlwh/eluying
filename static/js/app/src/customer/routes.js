@@ -73,7 +73,7 @@ export const routes = [
 ];
 
 (function mapChildren(routes) {
-    routes.map( route => {
+    routes.map(route => {
         if (route.children) {
             route.meta.children = route.children;
             mapChildren(route.children);

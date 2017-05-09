@@ -35,7 +35,6 @@
     import { mapState } from 'vuex';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     export default{
         computed: {
             ...mapState(['date'])
@@ -120,7 +119,7 @@
                         title: '交易号',
                         dataIndex: 'payNum',
                         width: 191
-                    },
+                    }
                 ],
                 dataSource: [],
                 num: undefined,
@@ -145,7 +144,7 @@
                     }
                 ],
                 operatorId: 'ALL',
-                channels: [{id: 'ALL', name: '全部收款方式'}],
+                channels: [{ id: 'ALL', name: '全部收款方式' }],
                 channelId: 'ALL',
                 cashierList: [
                     {
@@ -174,7 +173,7 @@
                     }
                 ],
                 cashierId: -1
-            }
+            };
         },
         methods: {
             queryCashierInfo(page) {
@@ -182,7 +181,7 @@
                     return false;
                 }
 
-                this.page = page ? page : this.page;
+                this.page = page || this.page;
 
                 let cashierType, operatorId;
                 switch (this.operatorId) {
@@ -208,7 +207,7 @@
                     page: this.page,
                     channelId: this.channelId === 'ALL' ? '' : this.channelId,
                     operaterId: operatorId,
-                    cashierType,
+                    cashierType
                 })
                     .then(res => {
                         if (res.code === 1) {
@@ -251,5 +250,5 @@
                 return `${host}?${params}`;
             }
         }
-    }
+    };
 </script>
