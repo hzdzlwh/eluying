@@ -13,6 +13,9 @@ import restaurant from './views/catering/operation/restaurant.vue';
 import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
 import retail from './views/retail.vue';
+import overallRank from './views/membership/overallRank.vue';
+import chargeDetail from './views/membership/chargeDetail.vue';
+import payStatistics from './views/membership/payStatistics.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
 import flowPrepiad from './views/overview/flow/prepaid.vue';
@@ -171,6 +174,37 @@ export const routes = [
             name: '商超'
         },
         component: retail
+    },
+    {
+        path: '/membership',
+        meta: {
+            name: '会员卡'
+        },
+        component: container,
+        redirect: '/membership/overallRank',
+        children: [
+            {
+                path: '/membership/overallRank',
+                meta: {
+                    name: '汇总排名'
+                },
+                component: overallRank
+            },
+            {
+                path: '/membership/chargeDetail',
+                meta: {
+                    name: '充值支付明细'
+                },
+                component: chargeDetail
+            },
+            {
+                path: '/membership/payStatistics',
+                meta: {
+                    name: '支付统计'
+                },
+                component: payStatistics
+            }
+        ]
     },
     {
         path: '/insurance',

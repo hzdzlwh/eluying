@@ -23,9 +23,10 @@
             :onClose="handleDetailClose"
             :onDelete="deleteVip"
             :onEdit="openEdit"
+            :phone="vip.phone"
         >
             <div class="vip-detail-container">
-                <div>
+                <div class="bottom-line">
                     <div class="vip-detail-header">客户信息</div>
                     <div class="vip-detail-row">
                         <div style="width: 25%">
@@ -66,12 +67,12 @@
                         </div>
                         <div style="width: 25%">
                             <span class="vip-detail-filed">地区</span>
-                            <span>{{(vip.province || '') + (vip.city || '') + (vip.county || '')}}</span>
+                            <span>{{(vip.province || '')}} - {{(vip.city || '')}} - {{(vip.county || '')}}</span>
                         </div>
                         <div style="width: 25%"></div>
                     </div>
                 </div>
-                <div>
+                <div class="bottom-line">
                     <div class="vip-detail-header">会员信息</div>
                     <div class="vip-detail-row">
                         <div style="width: 33%">
@@ -88,26 +89,38 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="bottom-line">
                     <div class="vip-detail-header">会员卡</div>
-                    <table>
+                    <table class="vip-card-table">
                         <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>卡号</th>
-                            <th>余额</th>
-                            <th>办理日期</th>
-                            <th>操作</th>
+                            <th style="width: 20%">名称</th>
+                            <th style="width: 20%">卡号</th>
+                            <th style="width: 20%">余额</th>
+                            <th style="width: 20%">办理日期</th>
+                            <th style="width: 20%">操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td></td>
+                            <td>金卡</td>
+                            <td>325552166954210258</td>
+                            <td>5000.00</td>
+                            <td>1990-03-07</td>
+                            <td><a href="#">充值</a></td>
+                        </tr>
+                        <tr>
+                            <td>副卡<br><span style="font-size:12px">(金卡325552166954210258)</span></td>
+                            <td>325552166954210258</td>
+                            <td>5000.00</td>
+                            <td>1990-03-07</td>
+                            <td><a href="">充值</a></td>
                         </tr>
                         </tbody>
                     </table>
+                    <div class="check-vip-card"><a href="#"><span>+</span> 办理会员卡</a></div>
                 </div>
-                <div>
+                <div class="bottom-line-last">
                     <div class="vip-detail-header">备注信息</div>
                     <div>{{vip.remark || '无'}}</div>
                 </div>
@@ -137,10 +150,35 @@
         top: 6px;
     }
     .vip-detail-container {
+        .bottom-line{
+            padding: 15px 0 0 20px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .bottom-line-last{
+            padding: 15px 0 16px 20px;
+        }
         .vip-detail-header {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             font-weight: bold;
             font-size: 12px;
+        }
+        .vip-card-table{
+            width: 100%;
+            tr{
+                height: 27px;
+            }
+        }
+        .check-vip-card{
+            font-size: 14px;
+            margin: 16px 0;
+            span{
+                border: 1px solid;
+                width: 16px;
+                line-height: 16px;
+                display: inline-block;
+                text-align: center;
+                border-radius: 3px;
+            }
         }
         .vip-detail-row {
             margin-bottom: 19px;
@@ -219,27 +257,26 @@
                         dataIndex: 'name'
                     },
                     {
+                        title: '手机号',
+                        dataIndex: 'phone'
+                    },
+                    {
+                        title: '消费总金额',
+                        dataIndex: 'entireTotalConsume',
+                        sorter: true
+                    },
+                    {
                         title: '会员等级',
                         dataIndex: 'levelName',
                         sorter: true
                     },
                     {
-                        title: '会员卡号',
+                        title: '会员卡',
                         dataIndex: 'vipCardNum'
                     },
                     {
-                        title: '手机号',
-                        dataIndex: 'phone'
-                    },
-                    {
-                        title: '消费金额',
-                        dataIndex: 'entireTotalConsume',
-                        sorter: true
-                    },
-                    {
-                        title: '累计金额',
-                        dataIndex: 'totalConsume',
-                        sorter: true
+                        title: '余额',
+                        dataIndex: ''
                     },
                     {
                         title: '证件号',
