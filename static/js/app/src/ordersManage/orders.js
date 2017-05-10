@@ -7,12 +7,12 @@ import Vue from 'vue';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
-import OrderSystem from './components/OrderSystem.vue';
 
 import { ORDER_STATE_LIST } from './constant';
 import bus from '../common/eventBus';
 import store from './store';
-
+import { install, OrderSystem } from '../common/orderSystem';
+install(store);
 init({
     leftMenu: false
 });

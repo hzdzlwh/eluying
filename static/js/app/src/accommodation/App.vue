@@ -49,7 +49,7 @@
     }
 </style>
 <script>
-    import OrderSystem from '../ordersManage/components/OrderSystem.vue';
+    import { OrderSystem } from '../common/orderSystem';
 
     export default{
         created() {

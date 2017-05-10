@@ -41,8 +41,8 @@
     import CancelOrderModal from './CancelOrderModal.vue';
     import CashierModal from './CashierModal.vue';
     import GetMoneyWithCode from './GetMoneyWithCode.vue';
-    import bus from '../../common/eventBus';
-    import http from '../../common/http';
+    import bus from '../../eventBus';
+    import http from '../../http';
     import { mapMutations } from 'vuex';
     import types from '../store/types';
 

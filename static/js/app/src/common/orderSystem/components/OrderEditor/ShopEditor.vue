@@ -113,10 +113,10 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import counter from '../../../common/components/counter.vue';
+    import counter from '../../../components/counter.vue';
     import selectGoods from './SelectGoods.vue';
     import modal from 'modal';
-    import bus from '../../../common/eventBus';
+    import bus from '../../../eventBus';
     export default{
         props: {
             vipDiscountDetail: {
@@ -146,7 +146,7 @@
             bus.$off('hideOrderEditor', this.resetShop);
         },
         computed: {
-            ...mapState({ shopList: 'shopList' }),
+            ...mapState({ shopList: state => state.orderSystem.shopList }),
             totalPrice() {
                 let totalPrice = 0;
                 for (const key in this.editShopList) {

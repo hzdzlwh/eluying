@@ -65,10 +65,10 @@
 <style>
 </style>
 <script>
-    import http from '../../common/http';
-    import modal from '../../common/modal';
+    import http from '../../http';
+    import modal from '../../modal';
     import { mapState } from 'vuex';
-    import bus from '../../common/eventBus';
+    import bus from '../../eventBus';
     export default{
         data() {
             return {
@@ -76,7 +76,10 @@
             };
         },
         computed: {
-            ...mapState(['roomBusinessInfo', 'orderDetail']),
+            ...mapState({
+                orderDetail: state => state.orderSystem.orderDetail,
+                roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
+            }),
             totalPrice() {
                 let sum = 0;
                 if (!this.roomBusinessInfo.roomOrderInfoList) {

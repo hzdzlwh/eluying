@@ -166,11 +166,11 @@
     }
 </style>
 <script>
-    import bus from '../../../common/eventBus.js';
+    import bus from '../../../eventBus.js';
     import {
         ORDER_TYPE,
         ORDER_STATE_TEXT
-    } from '../../constant';
+    } from '../../../../ordersManage/constant';
     export default{
         props: {
             order: Object

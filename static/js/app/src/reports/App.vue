@@ -57,7 +57,7 @@
 <script>
     import LeftMenu from './components/LeftMenu.vue';
     import DateSelect from './components/DateSelect.vue';
-    import OrderSystem from '../ordersManage/components/OrderSystem.vue';
+    import OrderSystem from '../common/orderSystem/components/OrderSystem.vue';
     export default{
         data() {
             return {

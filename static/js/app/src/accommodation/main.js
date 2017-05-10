@@ -11,6 +11,8 @@ import init from '../common/init';
 import { router } from './routes';
 import Router from 'vue-router';
 require('jquery-ui-dist/jquery-ui.js');
+import { install } from '../common/orderSystem';
+install(store);
 Vue.use(Router);
 document.addEventListener('DOMContentLoaded', () => {
     init({
