@@ -47,11 +47,11 @@
 <style scoped>
 </style>
 <script>
-import bus from '../../common/eventBus';
+import bus from '../../eventBus';
 import EntertainmentOrderDetail from './EntertainmentOrderDetail.vue';
 import {
     ORDER_TYPE
-} from '../constant';
+} from '../../../ordersManage/constant';
 export default {
     props: {
         order: {

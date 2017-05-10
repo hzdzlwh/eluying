@@ -10,6 +10,9 @@ import store from './store';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
+import { install } from '../common/orderSystem';
+
+install(store);
 init({
     leftMenu: false
 });

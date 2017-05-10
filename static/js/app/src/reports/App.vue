@@ -7,9 +7,10 @@
             </div>
             <router-view></router-view>
         </div>
+        <OrderSystem></OrderSystem>
     </div>
 </template>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss">
     @import "~dd-common-css/src/variables";
     .reports-container {
         padding-top: 89px;
@@ -56,15 +57,12 @@
 <script>
     import LeftMenu from './components/LeftMenu.vue';
     import DateSelect from './components/DateSelect.vue';
+    import { OrderSystem } from '../common/orderSystem';
     export default{
-        data() {
-            return {
-                msg: 'hello vue'
-            };
-        },
         components: {
             LeftMenu,
-            DateSelect
+            DateSelect,
+            OrderSystem
         }
     };
 </script>

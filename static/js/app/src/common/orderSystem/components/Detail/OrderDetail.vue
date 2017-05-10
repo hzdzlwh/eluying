@@ -10,7 +10,7 @@
 </style>
 <script>
     import OrderContainer from './OrderContainer.vue';
-    import { ORDER_TYPE } from '../../constant';
+    import { ORDER_TYPE } from '../../../../ordersManage/constant';
     import { mapActions, mapState } from 'vuex';
     import types from '../../store/types';
     import CateOrder from './CateOrder.vue';
@@ -50,7 +50,7 @@
             }
         },
         computed: {
-            ...mapState({ order: 'orderDetail' }),
+            ...mapState({ order: state => state.orderSystem.orderDetail }),
             showShopOrderComponent() {
                 const combineShow = this.order.pcGoodsItems && this.order.pcGoodsItems.length > 0;
                 const singleShow = this.order.itemList && this.order.itemList.length > 0;

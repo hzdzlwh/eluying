@@ -66,7 +66,7 @@
                 display: inline-block;
                 width: 14px;
                 height: 14px;
-                background: url("../../../../../image/modal/room_modal_close.png");
+                background: url("../../../../../../image/modal/room_modal_close.png");
                 background-size: contain;
                 cursor: pointer;
             }
@@ -88,7 +88,7 @@
             .payWithCodeModal-picture-container {
                 width: 50px;
                 height: 52px;
-                background: url("../../../../../image/modal/room_modal_code.png");
+                background: url("../../../../../../image/modal/room_modal_code.png");
                 background-size: contain;
             }
             .payWithCodeModal-codeNum {
@@ -119,7 +119,7 @@
 <script>
     import { mapState } from 'vuex';
     import http from 'http';
-    import bus from '../../common/eventBus';
+    import bus from '../../eventBus';
     import modal from 'modal';
     export default{
         props: {
@@ -146,7 +146,9 @@
             };
         },
         computed: {
-            ...mapState(['orderDetail']),
+            ...mapState({
+                orderDetail: state => state.orderSystem.orderDetail
+            }),
             operator() {
                 if (this.type === 'register') {
                     return this.business.orderDetail.user;

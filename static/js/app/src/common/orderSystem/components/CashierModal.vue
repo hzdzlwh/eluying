@@ -133,7 +133,7 @@
     .cashier-addBtn-icon {
         width: 16px;
         height: 16px;
-        background: url("../../../../../image/modal/room_modal_add.png");
+        background: url("../../../../../../image/modal/room_modal_add.png");
         background-size: contain;
         margin-right: 4px;
         cursor: pointer;
@@ -141,7 +141,7 @@
     .cashier-delBtn-icon {
         width: 16px;
         height: 16px;
-        background: url("../../../../../image/modal/room_modal_min.png");
+        background: url("../../../../../../image/modal/room_modal_min.png");
         background-size: contain;
         margin-left: 8px;
         margin-right: 24px;
@@ -153,8 +153,8 @@
     import http from 'http';
     import modal from 'modal';
     import { mapState } from 'vuex';
-    import bus from '../../common/eventBus';
-    import { getOrderId } from '../utils/order';
+    import bus from '../../eventBus';
+    import { getOrderId } from '../../../ordersManage/utils/order';
     export default{
         props: {
             type: {
@@ -190,7 +190,10 @@
             };
         },
         computed: {
-            ...mapState(['orderDetail', 'roomBusinessInfo']),
+            ...mapState({
+                orderDetail: state => state.orderSystem.orderDetail,
+                roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
+            }),
             orderState() {
                 if (this.orderPayment) {
                     const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - Number(this.paiedMoney);

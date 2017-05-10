@@ -156,7 +156,7 @@
         width: 16px;
         height: 16px;
         margin-left: 12px;
-        background: url("../../../../../../image/modal/room_modal_info.png");
+        background: url("../../../../../../../image/modal/room_modal_info.png");
         background-size: contain;
     }
 
@@ -196,7 +196,7 @@
         cursor: pointer;
         width: 16px;
         height: 16px;
-        background: url("../../../../../../image/modal/room_modal_info.png");
+        background: url("../../../../../../../image/modal/room_modal_info.png");
         background-size: contain;
     }
 
@@ -241,7 +241,7 @@
 </style>
 <script>
     import { mapActions, mapState } from 'vuex';
-    import bus from '../../../common/eventBus';
+    import bus from '../../../eventBus';
     import {
         DdDropdown,
         DdDropdownItem,
@@ -250,16 +250,16 @@
         DdGroupOption,
         DdOption
     } from 'dd-vue-component';
-    import http from '../../../common/http';
-    import { ORDER_TYPE } from '../../constant';
-    import modal from '../../../common/modal';
+    import http from '../../../http';
+    import { ORDER_TYPE } from '../../../../ordersManage/constant';
+    import modal from '../../../modal';
     import types from '../../store/types';
     import RoomEditor from './RoomEditor.vue';
-    import util from '../../../common/util';
+    import util from '../../../util';
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
-    import { getOrderId } from '../../utils/order';
+    import { getOrderId } from '../../../../ordersManage/utils/order';
     export default{
         name: 'OrderEditor',
         data() {
@@ -320,7 +320,7 @@
             CateEditor
         },
         computed: {
-            ...mapState({ order: 'orderDetail' }),
+            ...mapState({ order: state => state.orderSystem.orderDetail }),
             titleAndBtn() {
                 switch (this.checkState) {
                     case 'ing':

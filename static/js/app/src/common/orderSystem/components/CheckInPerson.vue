@@ -67,14 +67,14 @@
     .checkInPerson-person-icon {
         width: 16px;
         height: 15px;
-        background: url("../../../../../image/modal/room_modal_user.png");
+        background: url("../../../../../../image/modal/room_modal_user.png");
         background-size: contain;
         margin-right: 17px;
     }
     .checkInPerson-delete-icon {
         width: 16px;
         height: 16px;
-        background: url("../../../../../image/modal/room_modal_min.png");
+        background: url("../../../../../../image/modal/room_modal_min.png");
         background-size: contain;
         margin-left: 8px;
         cursor: pointer;
@@ -82,7 +82,7 @@
     .checkInPerson-add-icon {
         width: 16px;
         height: 16px;
-        background: url("../../../../../image/modal/room_modal_add.png");
+        background: url("../../../../../../image/modal/room_modal_add.png");
         background-size: contain;
         margin-right: 4px;
         cursor: pointer;
@@ -90,7 +90,7 @@
     .checkInPerson-card-icon {
         width: 24px;
         height: 17px;
-        background: url("../../../../../image/modal/room_modal_card.png");
+        background: url("../../../../../../image/modal/room_modal_card.png");
         background-size: contain;
         margin-right: 4px;
         cursor: pointer;
@@ -98,9 +98,9 @@
 </style>
 <script>
     import { DdSelect, DdOption } from 'dd-vue-component';
-    import { ID_CARD_TYPE } from '../constant';
+    import { ID_CARD_TYPE } from '../../../ordersManage/constant';
     import modal from 'modal';
-    import ieidc from '../utils/ieidc';
+    import ieidc from '../../../ordersManage/utils/ieidc';
     export default{
         props: {
             personsObj: {

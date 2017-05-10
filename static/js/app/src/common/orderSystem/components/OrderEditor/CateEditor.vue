@@ -166,7 +166,7 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import bus from '../../../common/eventBus';
+    import bus from '../../../eventBus';
     export default{
         props: {
             vipDiscountDetail: {
@@ -184,7 +184,7 @@
             bus.$off('submitOrder', this.changeFood);
         },
         computed: {
-            ...mapState({ order: 'orderDetail' }),
+            ...mapState({ order: state => state.orderSystem.orderDetail }),
             foodItems() {
                 let foodItems = [];
                 if (this.order.caterOrderId) {
