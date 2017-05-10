@@ -1,5 +1,17 @@
 <template>
     <div>
+        <OBJECT ID="ieIdc"
+                CLASSID="clsid:63CAB467-5BB8-4CB2-8C87-C8F3B66040C0"
+                WIDTH="0" HEIGHT="0" style="float:left;width:0px; height:0px; padding:0px; margin:0px"
+        >
+            <embed id="myIdc"
+                   TYPE="application/x-itst-activex"
+                   style="float:left;width:20px; height:20px; visibility: hidden"
+                   clsid="{63CAB467-5BB8-4CB2-8C87-C8F3B66040C0}"
+                   event_OnStatus="onStatus"
+                   event_OnMessage="onMessage"
+            >
+        </OBJECT>
         <order-editor
                 :order-editor-visible="orderEditorVisible"
                 :check-state="checkState"
