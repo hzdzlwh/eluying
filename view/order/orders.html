@@ -206,35 +206,7 @@
             </div>
         </div>
     </div >
-    <order-editor
-            :order-editor-visible="orderEditorVisible"
-            :check-state="checkState"
-            :categories="categories"
-    ></order-editor>
-    <order-detail
-            :id="detailId"
-            :type="detailType"
-            :visible="detailVisible"
-    ></order-detail>
-    <Check-Out-Modal
-    ></Check-Out-Modal>
-    <Check-In-Modal
-    ></Check-In-Modal>
-    <Cashier-Modal
-            :show="cashierShow"
-            :type="cashierType"
-            :business="cashierBusiness"
-    ></Cashier-Modal>
-    <Cancel-Order-Modal
-            :show="cancelOrderShow"
-    ></Cancel-Order-Modal>
-    <Get-Money-With-Code
-            :show="getMoneyShow"
-            :type="getMoneyType"
-            :business="getMoneyBusiness"
-            :params="getMoneyParams"
-            :total-price="payWithAlipay"
-    ></Get-Money-With-Code>
+    <order-system></order-system>
 </div>
 </body>
 </html>
