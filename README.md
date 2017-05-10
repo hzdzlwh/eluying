@@ -140,6 +140,11 @@ http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
 import { install, OrderSystem } '../common/orderSystem';
 install(store);
 
+// .vue
+<template>
+<OrderSystem />
+</template>
+
 // 事件
 bus.$on('refreshView')
 ```
