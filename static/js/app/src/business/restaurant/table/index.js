@@ -127,11 +127,8 @@ $(function() {
                 http.get(this.deletArr[this.deleatType].url, parms)
                     .then(result => {
                         modal.success('删除成功');
-                        if (this.deleatType) {
                             this.getDes();
-                        } else {
                             this.getBoards();
-                        }
                     });
             },
             deleteNoConfirm: function (id) {
@@ -139,6 +136,7 @@ $(function() {
                     .then(result => {
                         modal.success('删除成功');
                             this.getBoards();
+                            this.getDes();
                     });
             },
             openResetDialog: function(board) {
