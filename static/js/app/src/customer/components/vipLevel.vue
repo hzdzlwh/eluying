@@ -1,30 +1,34 @@
 <template>
-    <div class="vipLevel">
-        <div class="vipLevelTitle"><span class="vipLevelRed"> <span v-show='namewarn && edit'>*</span></span>
-            <input type="text" v-model='vipLevel.name' placeholder="请输入会员卡等级名称" v-if='edit' maxlength='16'>
-            <span v-else>{{vipLevel.name}}</span>
+    <div class="vipCard">
+        <div class="vipCardTitle"><span class="vipCardRed"> <span v-show='namewarn && edit'>*</span></span>
+            <input type="text" v-model='vipCard.name' placeholder="请输入会员卡等级名称" v-if='edit' maxlength='16'>
+            <span v-else>{{vipCard.name}}</span>
             <span>
-                <div class="vipLevelWarn" v-if='namewarn && edit' >↑必填字段</div>
+                <div class="vipCardWarn" v-if='namewarn && edit' >↑必填字段</div>
             </span>
             <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
-        <div class="vipLevelCantain" :class='toggle ? "vipLevelMore" : ""'>
-            <div class="vipLevelBox">
-                <div class="vipLevelBoxtitle">优惠折扣 <span v-if='edit'><span class="vipLevelBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipLevelBoxSwitch"><switchbtn v-model='vipLevel.discountAble'></switchbtn></span></span>
+        <div class="vipCardCantain" :class='toggle ? "vipCardMore" : ""'>
+            <div class="vipCardBox">
+                <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
                 </div>
-                <div class="vipLevelBoxCantain">
-                    <div class="df" v-for='(item, index) in vipLevel["discountItems"]'>
-                        <label for="" class="vipLevelRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" v-model='item.discount' class="vipLevelSInput"/>折<img @click='deleteNode(vipLevel["discountItems"], index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                <div class="vipCardBoxCantain">
+                    <div style="inline-block">
+                        <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
+                            <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                        </div>
                     </div>
-                    <div class="vipLevelChose" @click='openSelectNode("discountItems")' v-if='edit'>选择项目</div>
+                    <div class="vipCardChose" @click='openSelectNode("discountItems")' v-if='edit'>选择项目</div>
                 </div>
             </div>
-            <div class="vipLevelBox">
-                <div class="vipLevelBoxtitle">累计消费金额<span v-if='edit' class="vipLevelBoxSwitch"><switchbtn v-model='vipLevel.payAble'></switchbtn></span></div>
-                <div class="vipLevelBoxCantain">
-                    <div class="df" v-for='(item, index) in vipLevel["payableItems"]'>
-                        <label for="" class="vipLevelRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode(vipLevel[payableItems], index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
-                    <div class="vipLevelChose" v-if='edit' @click='openSelectNode("payableItems", vipLevel)'>选择项目</div>
+            <div class="vipCardBox">
+                <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
+                <div class="vipCardBoxCantain">
+                <div style="display:inline-block">
+                    <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
+                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
+                        </div>
+                    <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
                 </div>
             </div>
             <div v-if='edit' style="text-align:right">
@@ -32,24 +36,24 @@
                 <div class="dd-btn  dd-btn-primary" @click='subDate'>保存</div>
             </div>
         </div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="'consume'" :list="nodes" />
+        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
     </div>
 </template>
 <style lang='sass' scoped>
-.vipLevel {
-    .vipLevelRed {
-        font-size: 12px;
+.vipCard {
+    .vipCardRed {
+        font-size: 14px;
         color: #f24949;
         width: 14px;
         display: inline-block;
         margin-left: 6px;
     }
-    .vipLevelBoxWarn {
+    .vipCardBoxWarn {
         font-size: 12px;
         color: #f24949;
         line-height: 12px;
     }
-    .vipLevelWarn {
+    .vipCardWarn {
         font-size: 12px;
         color: #f24949;
         margin-left: 25px;
@@ -61,49 +65,50 @@
         border-radius: 2px;
         height: 24px;
         outline: none!important;
+        font-size: 14px;
     }
     background:#ffffff;
     box-shadow:0px 0px 5px 0px rgba(0, 0, 0, 0.15);
     border-radius:2px;
     border-top:4px solid #178ce6;
     width: 730px;
-    .vipLevelTitle {
+    .vipCardTitle {
         padding: 15px 0;
         background: #f0f0f0;
     }
-    .vipLevelCantain {
+    .vipCardCantain {
         padding: 20px;
-        .vipLevelBox {
+        .vipCardBox {
             background: #ffffff;
             box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
             border-radius: 2px 2px 2px 2px;
             margin-bottom: 15px;
-            .vipLevelBoxtitle {
+            .vipCardBoxtitle {
                 background: #f0f0f0;
                 height: 32px;
                 line-height: 32px;
                 padding: 0 15px;
                 color: #666;
-                .vipLevelBoxSwitch {
+                .vipCardBoxSwitch {
                     float: right;
                 }
-                .vipLevelBoxtitleTip {
+                .vipCardBoxtitleTip {
                     color: #999;
                     margin-left: 10px;
                     font-size: 12px;
                 }
             }
-            .vipLevelRule {
+            .vipCardRule {
                 padding-bottom: 15px!important;
             }
-            .vipLevelBoxCantain {
+            .vipCardBoxCantain {
                 color: #666;
                 padding: 10px 20px 0;
-                .vipLevelSInput {
+                .vipCardSInput {
                     width: 50px;
                     margin-right: 5px;
                 }
-                .vipLevelMInput {
+                .vipCardMInput {
                     width: 100px;
                     margin-right: 5px;
                 }
@@ -111,12 +116,18 @@
                     display: flex;
                     line-height: 24px;
                 }
-                .vipLevelChose {
+                .vipCardChose {
                     font-size: 14px;
                     color: #178ce6;
+                    padding-top: 0px;
+                    position: relative;
+                    top: 2px;
                     padding-bottom: 10px;
+                    cursor: pointer;
+                    margin-left: 30px;
+                    display: inline-block;
                 }
-                .vipLevelRoomLabel {
+                .vipCardRoomLabel {
                     width: 240px;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -124,7 +135,7 @@
                     height: 24px;
                     line-height: 24px;
                 }
-                .vipLevelMoreShow {
+                .vipCardMoreShow {
                     font-size: 14px;
                     color: #178ce6;
                 }
@@ -141,17 +152,7 @@ import modal from '../../common/modal';
 export default {
     props: {
         data: {
-            type: Object,
-            default: function() {
-                return {
-                    discountItems: [],
-                    payableItems: [],
-                    rechargeItems: [],
-                    applyStrategy: {}
-                    // payAble:true
-                };
-            }
-
+            type: Object
         },
         toggleShow: {
             type: Boolean,
@@ -167,11 +168,11 @@ export default {
             applyStrategyWarn: false,
             nodes: [],
             consume: [],
-            selectType: 'discount',
+            selectType: undefined,
             selectItem: undefined,
-            vipLevel: this.getdata(),
+            vipCard: this.getdata(),
             namewarn: false,
-            edit: this.editor
+            edit: this.editor,
         };
     },
     components: {
@@ -180,21 +181,19 @@ export default {
     },
     methods: {
         canel() {
-            this.vipLevel = this.getdata();
+            this.vipCard = this.getdata();
             this.edit = false;
         },
         getdata() {
             const cardData = JSON.parse(JSON.stringify(this.data));
             for (const key in cardData) {
                 if (cardData[key] === null) {
-                    switch (key) {
-                        case 'discountItems':
-                            cardData[key] = [];
-                            break;
-                        default:
-                            cardData[key] = {};
+                    if (key === 'applyStrategy') {
+                        cardData[key] = {};
                     }
-                    cardData[key] = {};
+                    if (key === 'discountItems' || key === 'payableItems' || key === 'rechargeItems') {
+                        cardData[key] = [];
+                    }
                 }
             }
             return cardData;
@@ -204,8 +203,8 @@ export default {
         },
         delet() {
             const callback = () => {
-                http.get('/vipLevel/deleteVipCardCategory', {
-                    categoryId: this.vipLevel.categoryId
+                http.get('/vipCard/deleteVipCardCategory', {
+                    categoryId: this.vipCard.categoryId
                 })
                     .then(res => {
                         this.$emit('delet');
@@ -218,54 +217,59 @@ export default {
         },
         subDate() {
             this.namewarn = false;
+            this.applyStrategyWarn = false;
+            this.thresholdFeeWarn = false;
+            this.reapplyMasterFeeWarn = false;
+            this.givingIntervalWarn = false;
             this.viceApplyFeeWarn = false;
-            if (!this.vipLevel.name) {
+            if (!this.vipCard.name) {
                 this.namewarn = true;
                 return;
             }
-            if (!(Number(this.vipLevel.viceApplyFee) >= 0 && this.vipLevel.viceApplyFee !== '' && Number(this.vipLevel.viceMaxAmount) >= 0 && this.vipLevel.viceMaxAmount !== '' && Number(this.vipLevel.viceMaxAmount) <= 20 && this.vipLevel.viceMaxAmount !== '')) {
-                this.viceApplyFeeWarn = true;
-                return;
+            if (this.vipCard.discountItems) {
+                for (let i = 0; i < this.vipCard.discountItems.length; i ++) {
+                    this.vipCard.discountItems[i].discount = parseFloat(this.vipCard.discountItems[i].discount);
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipCard.discountItems[i].discount)) {
+                        modal.warn('优惠折扣 请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
+                }
             }
-            const data = Object.assign({}, this.vipLevel);
-            data.rechargeItems = JSON.stringify(data.rechargeItems);
-            data.applyStrategy = JSON.stringify(data.applyStrategy);
-            http.get('/vipLevel/addOrEditVipCardSettings', data).then(res => {
+            const data = Object.assign({}, this.vipCard);
+            data.discountItems = JSON.stringify(data.discountItems);
+            http.get('/vipCard/addOrEditVipCardSettings', data).then(res => {
                 this.edit = false;
                 this.$emit('addCard');
             });
         },
         handleCategorySelect(list) {
-            if (this.selectType === 'consume') {
-                this.consume = list;
-            } else {
-                if (this.vipLevel[this.selectType]) {
-                    const newList = [];
-                    list.map(item => {
-                        const result = this.vipLevel[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
-                        if (result) {
-                            if (item.selected) {
-                                newList.push({ ...result
-                                });
-                            }
-                        } else {
-                            newList.push({ ...item
+            if (this.vipCard[this.selectType].lenght) {
+                const newList = [];
+                list.map(item => {
+                    const result = this.vipCard[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
+                    if (result) {
+                        if (item.selected) {
+                            newList.push({ ...result
                             });
                         }
-                    });
-                    this.vipLevel[this.selectType] = newList;
-                } else {
-                    this.vipLevel[this.selectType] = list;
-                }
+                    } else {
+                        newList.push({ ...item
+                        });
+                    }
+                });
+                this.vipCard[this.selectType] = newList;
+            } else {
+                this.vipCard[this.selectType] = list;
             }
         },
         deleteNode(item, index) {
-            item.splice(index, 1);
+            this.vipCard[item].splice(index, 1);
         },
         // type:可支付项目或优惠折扣，item
         openSelectNode(type) {
             this.selectType = type;
-            this.nodes = this.vipLevel[type];
+            this.nodes = this.vipCard[type];
+            this.selectItem = type;
             // this.nodes = item[type];
             $('#categorySelectModal').modal('show');
         }
