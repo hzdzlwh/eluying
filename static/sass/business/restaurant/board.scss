@@ -1,4 +1,11 @@
 .board-table {
+    .board-table-name{
+        width: 100px;
+        display:block;
+        white-space:nowrap; 
+        overflow:hidden; 
+        text-overflow:ellipsis;
+    }
     border-radius: 2px;
     th {
         width: 173.67px;
@@ -41,6 +48,14 @@
     padding: 0 20px;
     background: #f0f0f0;
     font-size: 16px;
+    display: flex;
+    .restaurant-box-name{
+        width: 270px;
+        display:block;
+        white-space:nowrap; 
+        overflow:hidden; 
+        text-overflow:ellipsis;
+    }
     .changearea {
         font-size: 14px;
         color: #178ce6;
@@ -65,6 +80,7 @@
 .rest-area-contain {
     display: flex;
     color:#666;
+    align-items:baseline;
     .restaurant-area-box {
         background: #ffffff;
         box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
@@ -119,7 +135,6 @@
     display: inline-block;
     width: 215px;
     margin-left: 20px;
-    height: 300px;
     border-top: 4px solid #178ce6;
 }
 #boardDialog{
