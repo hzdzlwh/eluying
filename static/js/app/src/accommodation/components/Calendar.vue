@@ -650,8 +650,8 @@
 
                     let checkOutDate = new Date(order.checkOutDate);
                     let seeEnd = true;
-                    if (checkOutDate > util.diffDate(startDate, 29)) {
-                        checkOutDate = util.diffDate(startDate, 29);
+                    if (checkOutDate > util.diffDate(startDate, this.DAYS)) {
+                        checkOutDate = util.diffDate(startDate, this.DAYS);
                         seeEnd = false;
                     }
 
