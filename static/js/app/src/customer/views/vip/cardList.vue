@@ -205,7 +205,8 @@
                     },
                     {
                         title: '余额',
-                        dataIndex: 'accountMoney'
+                        dataIndex: 'accountMoney',
+                        className: 'text-right'
                     },
                     {
                         title: '办理日期',
