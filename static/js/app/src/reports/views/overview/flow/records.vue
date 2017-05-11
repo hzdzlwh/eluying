@@ -130,10 +130,10 @@
                         realName: '全部操作人',
                         employeeId: 'ALL'
                     },
-                    {
+                    /* {
                         realName: '一码通自助充值',
                         employeeId: 'ONE'
-                    },
+                    }, */
                     {
                         realName: '游客线上付款',
                         employeeId: 'VISITOR'
@@ -156,11 +156,11 @@
                         name: '订单收款'
                     },
                     {
-                        id: 1,
+                        id: 2,
                         name: '订单退款'
                     },
                     {
-                        id: 2,
+                        id: 1,
                         name: '押金收款'
                     },
                     {
@@ -168,7 +168,7 @@
                         name: '押金退款'
                     },
                     {
-                        id: 4,
+                        id: 10,
                         name: '卡费收款'
                     }
                 ],
@@ -183,7 +183,10 @@
 
                 this.page = page || this.page;
 
-                let cashierType, operatorId;
+                let cashierType, operatorId, operateType;
+                if (this.cashierId !== -1) {
+                    operateType = this.cashierId;
+                }
                 switch (this.operatorId) {
                     case 'ALL':
                         break;
@@ -207,7 +210,8 @@
                     page: this.page,
                     channelId: this.channelId === 'ALL' ? '' : this.channelId,
                     operaterId: operatorId,
-                    cashierType
+                    cashierType,
+                    operateType
                 })
                     .then(res => {
                         if (res.code === 1) {
