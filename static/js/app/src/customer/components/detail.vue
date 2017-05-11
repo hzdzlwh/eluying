@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="detail-header">
                     <div class="detail-header-title">
-                        <h4>{{title + ' ' + phone}}</h4>
+                        <h4>{{title}}</h4>
                         <button type="button" class="close" @click="onClose"><span>&times;</span></button>
                     </div>
                     <div class="detail-header-action" v-if="type !== 'nonvip'">
@@ -26,7 +26,7 @@
                     <div v-if="innerTab === 1">
                         <slot></slot>
                     </div>
-                    <div v-if="innerTab === 2">
+                    <div v-if="innerTab === 2" style="padding: 24px 24px 0 24px">
                         <div class="detail-content-filter">
                             <div style="width: 88px" v-if="type !== 'company'">
                                 <dd-select v-model="state">
@@ -81,7 +81,7 @@
             background: #fafafa;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
             border-radius: 2px;
-            height: 705px;
+            height: 609px;
             padding: 0;
         }
         .detail-header {
