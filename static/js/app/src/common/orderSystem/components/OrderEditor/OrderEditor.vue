@@ -111,12 +111,12 @@
                         <div class="content-item" v-if="order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div class="remark-items">
-                                <textarea name="remark" placeholder="请输入备注信息" maxlength="140" v-model="remark"
+                                <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark"
                                           class="dd-input">
                                 </textarea>
                                 <span class="valid-remark-tip"
-                                      :style="{color: remark.length >= 140 ? '#f24949' : '#999999'}">
-                                    {{remark.length}}/140
+                                      :style="{color: remark.length >= 500 ? '#f24949' : '#999999'}">
+                                    {{remark.length}}/500
                                 </span>
                             </div>
                         </div>
