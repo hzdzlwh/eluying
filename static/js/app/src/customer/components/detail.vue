@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="detail-header">
                     <div class="detail-header-title">
-                        <h4>{{title}}</h4>
+                        <h4>{{title + ' ' + phone}}</h4>
                         <button type="button" class="close" @click="onClose"><span>&times;</span></button>
                     </div>
                     <div class="detail-header-action" v-if="type !== 'nonvip'">
@@ -17,8 +17,8 @@
                             </li>
                         </ul>
                         <div v-if="innerTab === 1 && hasEditAuth">
-                            <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
-                            <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
+                            <a style="margin-right:12px" @click="onDelete(id)">删除</a>
+                            <a @click="onEdit(id)">编辑</a>
                         </div>
                     </div>
                 </div>
@@ -82,22 +82,24 @@
             box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
             border-radius: 2px;
             height: 705px;
-            padding: 24px;
+            padding: 0;
         }
         .detail-header {
             border-bottom: #e6e6e6 solid 1px;
-            margin: 0 -24px;
-            padding: 0 24px 24px;
+            padding: 20px 20px 16px 20px;
         }
         .detail-header-title {
             margin-bottom: 18px;
+            h4{
+                font-size: 16px;
+            }
         }
         .detail-header-title, .detail-header-action {
             display: flex;
             justify-content: space-between;
         }
         .detail-content-box {
-            padding-top: 24px;
+
         }
         .detail-content-filter {
             display: flex;
