@@ -444,7 +444,9 @@
                 // 功能一次结清，现在改为允许多次收款
                 const receiveMoney = this.payments.reduce((a, b) => { return a + Number(b.fee); }, 0);
                 const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
-                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && this.type !== 'orderDetail') {
+                // 订单详情允许多次收银条件
+                const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
+                if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
                     modal.warn('订单未结清，无法完成收银！');
                     return false;
                 }
