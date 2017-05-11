@@ -87,8 +87,8 @@ export default {
     name: 'switch',
     props: {
         value: {
-            type: Boolean,
-            default: false
+            type: Number,
+            default: 0
         },
         label: {
             type: String,
@@ -110,7 +110,8 @@ export default {
         //     this.inputValue = val;
         // },
         inputValue(val, newval) {
-            this.$emit('input', newval);
+            const value = newval ? 1 : 0;
+            this.$emit('input', value);
         }
     }
 };

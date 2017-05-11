@@ -193,7 +193,7 @@ export const routes = [
             {
                 path: '/membership/chargeDetail',
                 meta: {
-                    name: '充值支付明细'
+                    name: '交易明细'
                 },
                 component: chargeDetail
             },
