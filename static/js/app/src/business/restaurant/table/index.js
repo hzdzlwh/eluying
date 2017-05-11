@@ -93,6 +93,7 @@ $(function() {
                 boardDialog.selectType = this.desList;
                 boardDialog.boardId = areas.boardId;
                 boardDialog.areaName = areas.areaName;
+                boardDialog.areaselect = this.boards;
                 $('#boardDialog').modal('show');
             },
             openEditDialog: function(board) {
@@ -105,11 +106,12 @@ $(function() {
                 boardDialog.seatNum = board.seatNum;
                 boardDialog.nameList = [board.serialNum];
                 boardDialog.selectType = this.desList;
+                boardDialog.areaselect = this.boards;
                 $('#boardDialog').modal('show');
             },
             openDeleteDialog: function(type, id) {
                 this.deleatType = type;
-                this.deleteId = id
+                this.deleteId = id;
                 modal.confirm({
                         okText: '确定',
                         message: this.deletArr[type].text,
@@ -193,7 +195,8 @@ $(function() {
             seatNum: '',
             selectType: [],
             selectDes: undefined,
-            boardId: undefined
+            boardId: undefined,
+            areaselect: []
         },
         watch: {
             selectType(val) {
@@ -231,6 +234,7 @@ $(function() {
                     return;
                 }
                 http.post('/catering/modifyBoardsForRestaurant', {
+                        areaId: this.areaId,
                         boardId: this.boardId,
                         boardName: this.boardName,
                         kindId: this.selectDes,

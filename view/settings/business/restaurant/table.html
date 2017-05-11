@@ -97,7 +97,13 @@
                 </p>
                 <!-- <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6> -->
                 <label for="boardName"> 区域:</label>
-                <span class="areaName"> {{areaName}} </span>
+                <select  v-model='areaId'>
+                    <option value="" v-for='sele in areaselect' :value='sele.areaId'>{{sele.areaName}}</option>
+                </select>
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label>
+                </p>
+                <!-- <span class="areaName"> {{areaName}} </span> -->
                 <label for="boardName">桌子/包厢名称:</label>
                 <input type="text" id="boardName" v-model="boardName" maxlength="6">
                 <p class="rest-tips" style="margin-left: 0">
