@@ -221,13 +221,13 @@
                         title: '操作',
                         render: (h, row) =>
                             <span>
-                                {row.status === 0 && <span class='list-action-button' onClick={() => this.openModal(row, 'recharge')}>充值/</span>}
-                                {row.status === 0 && <span class='list-action-button' onClick={() => {this.openModal(row, 'operate');this.type='lose'}}>挂失/</span>}
-                                {row.status === 0 && <span class='list-action-button' onClick={() => this.openModal(row, 'given')}>转赠/</span>}
-                                {row.status === 0 && <span class='list-action-button' onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
-                                {row.status === 2 && <span class='list-action-button' onClick={() => this.openModal(row, 'repair')}>补办/</span>}
-                                {row.status === 2 && <span class='list-action-button' onClick={() => {this.openModal(row, 'operate');this.type='recover'}}>恢复/</span>}
-                                {row.status === 2 && <span class='list-action-button' onClick={() => {this.openModal(row, 'operate');this.type='useless'}}>失效</span>}
+                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'recharge')}>充值/</span>}
+                                {row.status === 0 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失/</span>}
+                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'given')}>转赠/</span>}
+                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
+                                {row.status === 2 && <span class="list-action-button" onClick={() => this.openModal(row, 'repair')}>补办/</span>}
+                                {row.status === 2 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'recover'; }}>恢复/</span>}
+                                {row.status === 2 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'useless'; }}>失效</span>}
                             </span>,
                         width: 200
                     }
