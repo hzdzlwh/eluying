@@ -13,8 +13,10 @@
                 <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
                 </div>
                 <div class="vipCardBoxCantain">
-                    <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
-                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                    <div style="inline-block">
+                        <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
+                            <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                        </div>
                     </div>
                     <div class="vipCardChose" @click='openSelectNode("discountItems")' v-if='edit'>选择项目</div>
                 </div>
@@ -22,8 +24,10 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
+                <div style="display:inline-block">
                     <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
                         <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
+                        </div>
                     <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
                 </div>
             </div>
@@ -57,9 +61,11 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">充值<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.rechargeAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
+                <div style="display:inline-block">
                     <div class="df" v-for='(item,index) in vipCard.rechargeItems'>
                         <span>充<input type="number" v-model='item.rechargeFee' class=" vipCardMInput" v-if='edit'> <span v-else>{{item.rechargeFee}}</span>元，送
                         <input type="number" v-model='item.freeFee' class="vipCardMInput" v-if='edit'> <span v-else>{{item.freeFee}}</span>元 <img src="/static/image/modal/room_modal_delete.png" v-if='edit' alt="" style="cursor: pointer;margin-left:50px;" @click='deletRule(index)'></span>
+                    </div>
                     </div>
                     <div class="vipCardChose" v-if='edit' @click='addRule' style="margin-top:10px;">添加规则</div>
                 </div>
@@ -151,7 +157,7 @@
 
 .vipCard {
     .vipCardRed {
-        font-size: 12px;
+        font-size: 14px;
         color: #f24949;
         width: 14px;
         display: inline-block;
@@ -174,6 +180,7 @@
         border-radius: 2px;
         height: 24px;
         outline: none!important;
+        font-size: 14px;
     }
     background:#ffffff;
     box-shadow:0px 0px 5px 0px rgba(0, 0, 0, 0.15);
@@ -227,8 +234,12 @@
                 .vipCardChose {
                     font-size: 14px;
                     color: #178ce6;
+                    padding-top: 0px;
+                    position: relative;
+                    top: 2px;
                     padding-bottom: 10px;
                     cursor: pointer;
+                    margin-left: 30px;
                     display: inline-block;
                 }
                 .vipCardRoomLabel {
