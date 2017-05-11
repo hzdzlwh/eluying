@@ -6,7 +6,7 @@
             <span>
                 <div class="vipCardWarn" v-if='namewarn && edit' >↑必填字段</div>
             </span>
-            <span v-if='!edit'><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
+            <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
         <div class="vipCardCantain" :class='toggle ? "vipCardMore" : ""'>
             <div class="vipCardBox">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="vipCardBoxCantain">
                     <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
-                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="Number" v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode(vipCard["discountItems"], index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode(vipCard["discountItems"], index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
                     </div>
                     <div class="vipCardChose" @click='openSelectNode("discountItems")' v-if='edit'>选择项目</div>
                 </div>
@@ -28,68 +28,78 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">办卡方案<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.applyAble'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">办卡方案<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.applyAble'></switchbtn></span>
+                    <div class="vipCardBoxWarn" v-if='applyStrategyWarn && edit'>↑必填字段</div>
+                </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">卡费</label>
-                        <span v-if='edit'><input type="Number" v-model='vipCard.applyStrategy.cardFee' class="vipCardMInput">元</span> <span v-else></span>{{vipCard.applyStrategy.cardFee}}元</div>
+                        <span v-if='edit'><input type="number" v-model='vipCard.applyStrategy.cardFee' class="vipCardMInput">元</span> <span v-else>{{vipCard.applyStrategy.cardFee}}元</span></div>
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">充值金额</label>
                         <span v-if='edit'>
-                        <input type="Number" v-model='vipCard.applyStrategy.rechargeFee' class="vipCardMInput">元</span><span v-else>{{vipCard.applyStrategy.rechargeFee}}</span></div>
+                        <input type="number" v-model='vipCard.applyStrategy.rechargeFee' class="vipCardMInput">元</span><span v-else>{{vipCard.applyStrategy.rechargeFee}}元</span></div>
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">赠送金额</label>
                         <span v-if='edit'>
-                        <input type="text" v-model='vipCard.applyStrategy.freeFee' class="vipCardMInput">元</span><span v-else>{{vipCard.applyStrategy.freeFee}}</span></div>
+                        <input type="text" v-model='vipCard.applyStrategy.freeFee' class="vipCardMInput">元</span><span v-else>{{vipCard.applyStrategy.freeFee}}元</span></div>
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">使用规则<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.thresholdAble'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">使用规则<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.thresholdAble'></switchbtn></span>
+                    <div class="vipCardBoxWarn" v-if='thresholdFeeWarn && edit'>↑必填字段</div>
+                </div>
                 <div class="vipCardBoxCantain vipCardRule">
                     账户余额小于等于
-                    <input type="Number" v-model='vipCard.thresholdFee' v-if='edit'> <span v-else>{{vipCard.thresholdFee}}</span>元时不可用
+                    <input type="number" v-model='vipCard.thresholdFee' v-if='edit'> <span v-else>{{vipCard.thresholdFee}}</span>元时不可用
                 </div>
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">充值<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.rechargeAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
                     <div class="df" v-for='(item,index) in vipCard.rechargeItems'>
-                        <span>充<input type="Number" v-model='item.rechargeFee' class=" vipCardMInput" v-if='edit'> <span v-else>{{item.rechargeFee}}</span>元，送
-                        <input type="Number" v-model='item.freeFee' class="vipCardMInput" v-if='edit'> <span v-else>{{item.freeFee}}</span>元 <img src="/static/image/modal/room_modal_delete.png" v-if='edit' alt="" style="cursor: pointer;margin-left:50px;"></span>
+                        <span>充<input type="number" v-model='item.rechargeFee' class=" vipCardMInput" v-if='edit'> <span v-else>{{item.rechargeFee}}</span>元，送
+                        <input type="number" v-model='item.freeFee' class="vipCardMInput" v-if='edit'> <span v-else>{{item.freeFee}}</span>元 <img src="/static/image/modal/room_modal_delete.png" v-if='edit' alt="" style="cursor: pointer;margin-left:50px;"></span>
                     </div>
                     <div class="vipCardChose" v-if='edit' @click='addRule' style="margin-top:10px;">添加规则</div>
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">补办<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.reapplyAble'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">补办<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.reapplyAble'></switchbtn></span>
+                    <div class="vipCardBoxWarn" v-if='reapplyMasterFeeWarn && edit'>↑必填字段</div>
+                </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">主卡补办费用：</label>
                         <span v-if='edit'>
-                        <input type="Number" v-model='vipCard.reapplyMasterFee' class="vipCardMInput">元</span><span v-else>{{vipCard.reapplyMasterFee}}</span></div>
+                        <input type="number" v-model='vipCard.reapplyMasterFee' class="vipCardMInput">元</span><span v-else>{{vipCard.reapplyMasterFee}}</span></div>
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">副卡补办费用：</label>
                         <span v-if='edit'>
-                        <input type="Number" v-model='vipCard.reapplyViceFee' class="vipCardMInput">元</span> <span v-else>{{vipCard.reapplyViceFee}}</span></div>
+                        <input type="number" v-model='vipCard.reapplyViceFee' class="vipCardMInput">元</span> <span v-else>{{vipCard.reapplyViceFee}}</span></div>
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">转赠<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.givingAble'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">转赠<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.givingAble'></switchbtn></span>
+                    <div class="vipCardBoxWarn" v-if='givingIntervalWarn && edit'>↑必填字段</div>
+                </div>
                 <div class="vipCardBoxCantain">
                     <div class="df" style="margin-bottom:10px">规则：每
-                        <input type="text" v-model='vipCard.givingInterval' v-if='edit' class="vipCardSInput"> <span v-else>{{vipCard.givingInterval}</span>天，可转赠
-                        <input type="Number" v-model='vipCard.givingAmount' v-if='edit' class="vipCardSInput"> <span v-else>{{vipCard.givingAmount}}</span>次</div>
+                        <input type="text" v-model='vipCard.givingInterval' v-if='edit' class="vipCardSInput"> <span v-else>{{vipCard.givingInterval}}</span>天，可转赠
+                        <input type="number" v-model='vipCard.givingAmount' v-if='edit' class="vipCardSInput"> <span v-else>{{vipCard.givingAmount}}</span>次</div>
                     <div style="padding-bottom:10px">费用：
-                        <input type="Number" v-model='vipCard.givingFee' v-if='edit' class="vipCardMInput"> <span v-else>{{vipCard.givingFee}}</span>元／次</div>
+                        <input type="number" v-model='vipCard.givingFee' v-if='edit' class="vipCardMInput"> <span v-else>{{vipCard.givingFee}}</span>元／次</div>
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn  v-if='edit' v-model='vipCard.discountAble'></switchbtn></span>
+                    <div class="vipCardBoxWarn" v-if='viceApplyFeeWarn && edit'>↑必填字段</div>
+                </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">费用：
-                        <input type="Number" v-model='vipCard.viceApplyFee' v-if='edit' class="vipCardMInput"> <span v-else>{{vipCard.viceApplyFee}}</span>元</div>
+                        <input type="number" v-model='vipCard.viceApplyFee' v-if='edit' class="vipCardMInput"> <span v-else>{{vipCard.viceApplyFee}}</span>元</div>
                     <div>数量：一张主卡最多可办理
-                        <input type="Number" v-model='vipCard.viceMaxAmount' max=20 class="vipCardSInput" v-if='edit'><span v-else>{{vipCard.viceMaxAmount}}</span>张副卡<span v-if='edit'>请输入1-20之间的数字</span></div>
+                        <input type="number" v-model='vipCard.viceMaxAmount' class="vipCardSInput" v-if='edit'><span v-else>{{vipCard.viceMaxAmount}}</span>张副卡<span v-if='edit'>请输入1-20之间的数字</span></div>
                 </div>
             </div>
             <div><span :class='toggle ? "vipCardMoreShow" : "vipCardMoreHide"' @click='toggle = !toggle'>{{toggle ? "显示" : "隐藏"}}高级设置</span></div>
@@ -146,6 +156,11 @@
         width: 14px;
         display: inline-block;
         margin-left: 6px;
+    }
+    .vipCardBoxWarn {
+        font-size: 12px;
+        color: #f24949;
+        line-height: 12px;
     }
     .vipCardWarn {
         font-size: 12px;
@@ -235,6 +250,7 @@
 import categorySelect from './categorySelect.vue';
 import http from '../../common/http';
 import switchbtn from '../../common/components/switch.vue';
+import modal from '../../common/modal';
 export default {
     props: {
         data: {
@@ -261,6 +277,11 @@ export default {
     },
     data() {
         return {
+            viceApplyFeeWarn: false,
+            givingIntervalWarn: false,
+            reapplyMasterFeeWarn: false,
+            thresholdFeeWarn: false,
+            applyStrategyWarn: false,
             nodes: [],
             consume: [],
             selectType: 'discount',
@@ -300,25 +321,48 @@ export default {
             this.edit = true;
         },
         delet() {
-            http.get('/vipCard/deleteVipCardCategory', {
-                categoryId: this.vipCard.categoryId
-            })
-                .then(res => {
-                    this.enterNodeList = res.data.enterNodeList;
-                    this.restNodeList = res.data.restNodeList;
-                    this.enterNodeList.map(i => {
-                        this.$set(i, 'selected', false);
-                        this.$set(i, 'discount', undefined);
+            const callback = () => {
+                http.get('/vipCard/deleteVipCardCategory', {
+                    categoryId: this.vipCard.categoryId
+                })
+                    .then(res => {
+                        this.$emit('delet');
                     });
-                    this.restNodeList.map(i => {
-                        this.$set(i, 'selected', false);
-                        this.$set(i, 'discount', undefined);
-                    });
-                });
+            };
+            modal.confirm({
+                message: '删除后，所有该类型会员卡将会被删除，请先将它们置于失效状态',
+                title: '删除会员卡'
+            }, callback);
         },
         subDate() {
+            this.namewarn = false;
+            this.applyStrategyWarn = false;
+            this.thresholdFeeWarn = false;
+            this.reapplyMasterFeeWarn = false;
+            this.givingIntervalWarn = false;
+            this.viceApplyFeeWarn = false;
             if (!this.vipCard.name) {
                 this.namewarn = true;
+                return;
+            }
+            if (!(Number(this.vipCard.applyStrategy.cardFee) >= 0 && this.vipCard.applyStrategy.cardFee !== '' && this.vipCard.applyStrategy.freeFee !== '' && Number(this.vipCard.applyStrategy.freeFee) >= 0 && this.vipCard.applyStrategy.rechargeFee !== '' && Number(this.vipCard.applyStrategy.rechargeFee) >= 0)) {
+                this.applyStrategyWarn = true;
+                return;
+            }
+            if (!(Number(this.vipCard.thresholdFee) >= 0 && this.vipCard.thresholdFee !== '')) {
+                this.thresholdFeeWarn = true;
+                return;
+            }
+            if (!(Number(this.vipCard.reapplyMasterFee) >= 0 && this.vipCard.reapplyMasterFee !== '' && Number(this.vipCard.reapplyViceFee) >= 0 && this.vipCard.reapplyViceFee !== '')) {
+                this.reapplyMasterFeeWarn = true;
+                return;
+            }
+            if (!(Number(this.vipCard.givingInterval) >= 0 && this.vipCard.givingInterval !== '' && Number(this.vipCard.givingFee) >= 0 && this.vipCard.givingFee !== '' && Number(this.vipCard.givingAmount) >= 0 && this.vipCard.givingAmount !== '')) {
+                this.givingIntervalWarn = true;
+                return;
+            }
+            if (!(Number(this.vipCard.viceApplyFee) >= 0 && this.vipCard.viceApplyFee !== '' && Number(this.vipCard.viceMaxAmount) >= 0 && this.vipCard.viceMaxAmount !== '' && Number(this.vipCard.viceMaxAmount) <= 20 && this.vipCard.viceMaxAmount !== '')) {
+                this.viceApplyFeeWarn = true;
                 return;
             }
             const data = Object.assign({}, this.vipCard);
@@ -328,6 +372,7 @@ export default {
             data.applyStrategy = JSON.stringify(data.applyStrategy);
             http.get('/vipCard/addOrEditVipCardSettings', data).then(res => {
                 this.edit = false;
+                this.$emit('addCard');
             });
         },
         addRule() {

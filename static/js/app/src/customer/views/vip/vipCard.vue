@@ -2,7 +2,7 @@
     <!-- <div v-for 'item in data'> -->
     <div class="view-container">
         <div class="vipCard"><span>最多可以创建10种卡</span><span class="dd-btn dd-btn-sm dd-btn-primary" @click='add' style="float:right;">新增会员卡</span></div>
-        <vipCardSet v-for='dd in data' :data='dd' :key="dd" :editor='dd.addType === 1' :toggleShow='!(dd.addType === 1)'></vipCardSet>
+        <vipCardSet v-for='(dd ,index) in data' :data='dd' :key="dd" :editor='dd.addType === 1' :toggleShow='!(dd.addType === 1)' @delet='deletCard(index)' @addCard='fetchDate'></vipCardSet>
     </div>
     <!-- </div> -->
 </template>
@@ -41,6 +41,9 @@ export default {
                 applyStrategy: {},
                 addType: 1
             });
+        },
+        deletCard(index) {
+            this.data.splice(index, 1);
         }
     },
     created() {
