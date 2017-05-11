@@ -40,10 +40,9 @@
 <script>
     import { mapState } from 'vuex';
     import http from '../../common/http';
-    import util from '../../common/util';
     import { getTableData } from '../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
-    import {setLine} from '../utils/chartHelper';
+    import { setLine } from '../utils/chartHelper';
 
     export default{
         data() {
@@ -52,14 +51,14 @@
                 orderPrice: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 7,
@@ -92,17 +91,17 @@
                     if (res.code === 1) {
                         const data = res.data;
                         setLine([
-                                {
-                                    name: '订单金额(元)',
-                                    type: 'line',
-                                    data: data.orderPriceList.map(i => i.value)
-                                },
-                                {
-                                    name: '订单数(个)',
-                                    type: 'line',
-                                    data: data.orderNumList.map(i => i.orderNum)
-                                }
-                            ],
+                            {
+                                name: '订单金额(元)',
+                                type: 'line',
+                                data: data.orderPriceList.map(i => i.value)
+                            },
+                            {
+                                name: '订单数(个)',
+                                type: 'line',
+                                data: data.orderNumList.map(i => i.orderNum)
+                            }
+                        ],
                             data.orderPriceList.map(i => i.date.substr(5, 5)),
                             '',
                             'line',
@@ -118,8 +117,8 @@
                         this.dataSource = tableData.dataSource;
                         this.columns = tableData.columns;
                     }
-                })
+                });
             }
         }
-    }
+    };
 </script>

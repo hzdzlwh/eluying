@@ -27,13 +27,12 @@
     import { mapState } from 'vuex';
     import { DdTable } from 'dd-vue-component';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { setPie } from '../../../utils/chartHelper';
     export default{
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 8,
@@ -64,7 +63,7 @@
                 totalExpense: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
@@ -73,7 +72,7 @@
             getFlowStatsByChannel() {
                 http.get('/stat/getFlowStatsByChannel', {
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate,
+                    endDate: this.date.endDate
                 })
                     .then(res => {
                         if (res.code === 1) {
@@ -81,7 +80,7 @@
                             this.totalFlow = res.data.totalFlow;
                             this.totalIncome = res.data.totalIncome;
                             this.totalExpense = res.data.totalExpense;
-                            setPie(collectList, '总收入',  'collect');
+                            setPie(collectList, '总收入', 'collect');
                             setPie(refundList, '总支出', 'refund');
                             listByChannels.forEach(channel => {
                                 channel.name = channel.channelName;
@@ -96,8 +95,8 @@
                             this.dataSource = tableData.dataSource;
                             this.columns = tableData.columns;
                         }
-                    })
+                    });
             }
         }
-    }
+    };
 </script>

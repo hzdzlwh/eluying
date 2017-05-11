@@ -41,12 +41,12 @@ export function getTableData({ list, firstTitle, secondTitle, foot }) {
             name: '综合合计',
             dateValues: dates.map((d, i) => {
                 const value = list.reduce((a, b) => {
-                    return a + b.dateValues[i].value
+                    return a + b.dateValues[i].value;
                 }, 0);
 
                 return {
                     date: util.dateFormat(d),
-                    value: value.toFixed(2) == value ? value : Number(value.toFixed(2))
+                    value: Number(value.toFixed(2)) === value ? value : Number(value.toFixed(2))
                 };
             })
         });
@@ -61,7 +61,7 @@ export function getTableData({ list, firstTitle, secondTitle, foot }) {
                 data[b.date] = b.value;
                 return a + b.value;
             }, 0);
-            data.total = total.toFixed(2) == total ? total : total.toFixed(2);
+            data.total = Number(total.toFixed(2)) === total ? total : total.toFixed(2);
             if (i.children && i.children.length > 0) {
                 data.children = format(i.children);
             }

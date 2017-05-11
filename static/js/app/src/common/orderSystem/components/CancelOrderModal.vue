@@ -52,10 +52,10 @@
 <style>
 </style>
 <script>
-    import http from '../../common/http';
-    import modal from '../../common/modal';
-    import bus from '../../common/eventBus';
-    import { getOrderId } from '../utils/order';
+    import http from '../../http';
+    import modal from '../../modal';
+    import bus from '../../eventBus';
+    import { getOrderId } from '../../../ordersManage/utils/order';
     import { mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
@@ -73,7 +73,7 @@
             };
         },
         computed: {
-            ...mapState({ order: 'orderDetail' }),
+            ...mapState({ order: state => state.orderSystem.orderDetail }),
             need() {
                 const penalty = this.subOrderPenaltys.reduce((a, b) => { return a + (Number(b.penalty) || 0); }, 0);
                 return this.paid - (this.oldPenalty || 0) - (this.penalty || 0) - penalty;

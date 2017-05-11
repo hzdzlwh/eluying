@@ -119,12 +119,12 @@
 </style>
 <script>
     import CheckInPerson from '../CheckInPerson.vue';
-    import modal from '../../../common/modal';
+    import modal from '../../../modal';
     import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import http from '../../../common/http';
-    import util from '../../../common/util';
-    import bus from '../../../common/eventBus';
+    import http from '../../../http';
+    import util from '../../../util';
+    import bus from '../../../eventBus';
     export default{
         data() {
             return {

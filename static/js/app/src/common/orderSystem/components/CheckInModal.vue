@@ -62,13 +62,16 @@
     import util from 'util';
     import CheckInPerson from './CheckInPerson.vue';
     import { mapState } from 'vuex';
-    import bus from '../../common/eventBus';
+    import bus from '../../eventBus';
     export default{
         data() {
             return {};
         },
         computed: {
-            ...mapState(['roomBusinessInfo', 'orderDetail']),
+            ...mapState({
+                orderDetail: state => state.orderSystem.orderDetail,
+                roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
+            }),
             roomsList() {
                 if (this.roomBusinessInfo.roomOrderInfoList) {
                     const rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {

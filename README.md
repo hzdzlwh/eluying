@@ -134,3 +134,17 @@ id名驼峰
 
 ## git commit提交
 http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
+
+### orderSystem
+```js
+import { install, OrderSystem } '../common/orderSystem';
+install(store);
+
+// .vue
+<template>
+<OrderSystem />
+</template>
+
+// 事件
+bus.$on('refreshView')
+```

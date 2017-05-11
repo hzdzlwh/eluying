@@ -90,7 +90,7 @@
     }
 </style>
 <script>
-    import bus from '../../../common/eventBus';
+    import bus from '../../../eventBus';
     export default {
         props: {
             order: {

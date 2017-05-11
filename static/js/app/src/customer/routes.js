@@ -8,6 +8,7 @@ import Router from 'vue-router';
 import list from './views/vip/list.vue';
 import cardList from './views/vip/cardList.vue';
 import setting from './views/vip/setting.vue';
+import vipCard from './views/vip/vipCard.vue';
 import auth from '../common/auth';
 import NoAuth from './components/no-auth.vue';
 const hasAuth = auth.checkModule(auth.VIP_ID);
@@ -58,6 +59,13 @@ export const routes = [
                 meta: {
                     name: '会员设置'
                 }
+            },
+            {
+                path: '/vip/vipCardSet',
+                component: vipCard,
+                meta: {
+                    name: '会员卡设置'
+                }
             }
         ]
     },
@@ -81,7 +89,7 @@ export const routes = [
 ];
 
 (function mapChildren(routes) {
-    routes.map( route => {
+    routes.map(route => {
         if (route.children) {
             route.meta.children = route.children;
             mapChildren(route.children);

@@ -54,9 +54,8 @@
 <style>
 </style>
 <script>
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import http from '../../common/http';
-    import util from '../../common/util';
     import { getTableData } from '../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
     import { setLine } from '../utils/chartHelper';
@@ -71,7 +70,7 @@
                 consumeAmount: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
@@ -154,8 +153,8 @@
                     });
                     this.dataSource = tableData.dataSource;
                     this.columns = tableData.columns;
-                })
+                });
             }
         }
-    }
+    };
 </script>

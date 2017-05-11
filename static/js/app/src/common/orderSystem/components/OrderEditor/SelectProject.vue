@@ -64,7 +64,7 @@
         display: inline-block;
         width: 14px;
         height: 14px;
-        background: url("../../../../../../image/modal/room_modal_close.png");
+        background: url("../../../../../../../image/modal/room_modal_close.png");
         background-size: contain;
         cursor: pointer;
     }

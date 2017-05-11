@@ -74,8 +74,8 @@
         ID_CARD_TYPE,
         ORDER_TYPE,
         ORDER_STATE_TEXT
-    } from '../../constant';
-    import bus from '../../../common/eventBus';
+    } from '../../../../ordersManage/constant';
+    import bus from '../../../eventBus';
     export default {
         props: {
             order: {

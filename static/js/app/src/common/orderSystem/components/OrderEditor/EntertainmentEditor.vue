@@ -97,13 +97,13 @@ import {
 import {
     mapState
 } from 'vuex';
-import counter from '../../../common/components/counter.vue';
+import counter from '../../../components/counter.vue';
 import SelectProject from './SelectProject.vue';
 import http from 'http';
 import modal from 'modal';
-import bus from '../../../common/eventBus';
-import util from '../../../common/util';
-import { ORDER_TYPE } from '../../constant';
+import bus from '../../../eventBus';
+import util from '../../../util';
+import { ORDER_TYPE } from '../../../../ordersManage/constant';
 export default {
     props: {
         checkState: {
@@ -187,9 +187,7 @@ export default {
         SelectProject
     },
     computed: {
-        ...mapState({
-            enterList: 'enterList'
-        })
+        ...mapState({ enterList: state => state.orderSystem.enterList })
     },
     methods: {
         emitchange() {
