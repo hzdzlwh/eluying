@@ -3,6 +3,7 @@
     <div class="view-container">
         <div class="vipCard"><span>最多可以创建10种卡</span><span class="dd-btn dd-btn-sm dd-btn-primary" @click='add' style="float:right;">新增会员卡</span></div>
         <vipCardSet v-for='(dd ,index) in data' :data='dd' :key="dd" :editor='dd.addType === 1' :toggleShow='!(dd.addType === 1)' @delet='deletCard(index)' @addCard='fetchDate'></vipCardSet>
+        <div v-if="data.length === 0" style="text-aligin:center;margin-top:200px;">您还没有会员卡</div>
     </div>
     <!-- </div> -->
 </template>
