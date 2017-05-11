@@ -672,7 +672,7 @@
                     glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                     glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
                     glyph.seeStart = seeStart;
-                    glyph.draggable = seeStart && seeEnd && order.roomState !== 2; // 已退房的不能拖拽
+                    glyph.draggable = seeStart && seeEnd; // 已退房的不能拖拽
                     glyphs.push(glyph);
                 });
                 return glyphs;
