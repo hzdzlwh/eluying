@@ -6,6 +6,7 @@ import company from './views/company/index.vue';
 import nonVip from './views/non-vip/index.vue';
 import Router from 'vue-router';
 import list from './views/vip/list.vue';
+import cardList from './views/vip/cardList.vue';
 import setting from './views/vip/setting.vue';
 import vipCard from './views/vip/vipCard.vue';
 import auth from '../common/auth';
@@ -43,6 +44,13 @@ export const routes = [
                     auth: hasAuth,
                     authName: '会员查看',
                     name: '会员列表'
+                }
+            },
+            {
+                path: '/vip/cardList',
+                component: cardList,
+                meta: {
+                    name: '会员卡列表'
                 }
             },
             {
