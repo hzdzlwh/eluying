@@ -17,6 +17,7 @@
                                        class="dd-input normal-input"
                                        maxlength="11"
                                        placeholder="请输入手机号"
+                                       :disabled="editable"
                                        v-model="phone" />
                                 <span class="error-phone-tip" v-show="!phoneValid">
                                     <span style="vertical-align: text-bottom">&uarr;</span>
@@ -80,7 +81,8 @@
 <script>
     export default{
         props: {
-            visible: Boolean
+            visible: Boolean,
+            oldPhone: ''
         },
         data() {
             return {
@@ -89,6 +91,7 @@
                 cardNum: '',
                 phoneValid: true,
                 phoneErrorTip: '',
+                editable: false,
                 cardTypes: [
                     {
                         selected: false,
@@ -128,6 +131,7 @@
                 $('#mainCardModal').modal('hide');
                 this.resetData();
                 this.$emit('closeModal');
+                this.editable = false;
             },
             selectCardType(item) {
                 this.cardTypes.map(type => {
@@ -166,6 +170,10 @@
                 if (newVal) {
                     $('#mainCardModal').modal('show');
                 }
+            },
+            oldPhone(newVal) {
+                this.phone = newVal;
+                this.editable = true;
             }
         }
     };

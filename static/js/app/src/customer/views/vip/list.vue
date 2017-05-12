@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="cardList-container">
         <div style="display: flex;flex-direction: row-reverse;margin-bottom: 21px;">
             <a :href="outPutExcel()"><button class="dd-btn dd-btn-primary" >导出明细</button></a>
             <button class="dd-btn dd-btn-primary" style="margin-right: 16px" v-if='contral.VIP_EDIT_ID' @click="openVipForm">新增会员</button>
@@ -14,6 +14,8 @@
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
         <vip-form :vip-props="vip" @onSuccess="getVips" />
+        <recharge-card-form :visible="rechargeVisible" :card="card" @closeModal="hideModel"></recharge-card-form>
+        <main-card-form :visible="mainCardVisible" :oldPhone="vip.phone" @closeModal="hideModel"></main-card-form>
         <detail
             :tab="detailTab"
             :id="detailId"
@@ -107,17 +109,18 @@
                             <td>{{item.vipCardNum}}</td>
                             <td>{{item.balanceFee}}</td>
                             <td>{{item.creationTime}}</td>
-                            <td><a href="#">充值</a></td>
+                            <td><a @click="charge(item)">充值</a></td>
                         </tr>
                         </tbody>
                     </table>
-                    <div class="check-vip-card"><a href="#"><span>+</span> 办理会员卡</a></div>
+                    <div class="check-vip-card"><a @click="checkCard"><span>+</span> 办理会员卡</a></div>
                 </div>
                 <div class="bottom-line-last">
                     <div class="vip-detail-header">备注信息</div>
                     <div>{{vip.remark || '无'}}</div>
                 </div>
             </div>
+            
         </detail>
     </div>
 </template>
@@ -146,6 +149,10 @@
         .bottom-line{
             padding: 15px 0 0 20px;
             border-bottom: 1px solid #e6e6e6;
+            a:hover{
+                cursor: pointer;
+                text-decoration:none
+            }
         }
         .bottom-line-last{
             padding: 15px 0 16px 20px;
@@ -229,6 +236,8 @@
     import util from '../../../common/util';
     import detail from '../../components/detail.vue';
     import modal from '../../../common/modal';
+    import rechargeCardForm from '../../components/rechargeCardForm.vue';
+    import mainCardForm from '../../components/mainCardForm.vue';
     const idCardType = [
         '身', '军', '通', '护', '其'
     ];
@@ -293,7 +302,10 @@
                 ],
                 detailTab: undefined,
                 detailId: undefined,
-                detailTitle: undefined
+                detailTitle: undefined,
+                rechargeVisible: false,
+                card: null,
+                mainCardVisible: false
             };
         },
         created() {
@@ -380,13 +392,29 @@
                             }
                         });
                 });
+            },
+            charge(card) {
+                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡' };
+                this.handleDetailClose();
+                this.rechargeVisible = true;
+            },
+            checkCard() {
+                this.handleDetailClose();
+                this.mainCardVisible = true;
+            },
+            hideModel() {
+                this.rechargeVisible = false;
+                this.mainCardVisible = false;
+                this.vip.phone = '';
             }
         },
         components: {
             DdTable,
             DdPagination,
             vipForm,
-            detail
+            detail,
+            rechargeCardForm,
+            mainCardForm
         }
     };
 </script>
