@@ -8,7 +8,7 @@
             </span>
             <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
-        <div class="vipCardCantain" :class='toggle ? "vipCardMore" : ""'>
+        <div class="vipCardCantain">
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
                 </div>
@@ -24,10 +24,13 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
-                <div style="display:inline-block">
-                    <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
-                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
-                        </div>
+                    <div>累计消费金额：达到该等级需要累计消费金额
+                        <input type="number" class="vipCardMInput" v-model='vipCard.levlefee' v-if='edit'><span>{{vipCard.levlefee}}</span>元</div>
+                    <div class="level-tip">成为会员后，在【消费业态】中累计消费金额达到【升级条件】后自动升级为该级别会员</div>
+                    <div style="display:inline-block">
+                        <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
+                            <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
+                    </div>
                     <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
                 </div>
             </div>
@@ -98,6 +101,10 @@
                     font-size: 12px;
                 }
             }
+            .level-tip {
+                font-size: 12px;
+                color: #999999;
+            }
             .vipCardRule {
                 padding-bottom: 15px!important;
             }
@@ -154,10 +161,6 @@ export default {
         data: {
             type: Object
         },
-        toggleShow: {
-            type: Boolean,
-            default: true
-        },
         editor: {
             type: Boolean,
             default: true
@@ -172,7 +175,7 @@ export default {
             selectItem: undefined,
             vipCard: this.getdata(),
             namewarn: false,
-            edit: this.editor,
+            edit: this.editor
         };
     },
     components: {
@@ -204,8 +207,8 @@ export default {
         delet() {
             const callback = () => {
                 http.get('/vipCard/deleteVipCardCategory', {
-                    categoryId: this.vipCard.categoryId
-                })
+                        categoryId: this.vipCard.categoryId
+                    })
                     .then(res => {
                         this.$emit('delet');
                     });
@@ -227,7 +230,7 @@ export default {
                 return;
             }
             if (this.vipCard.discountItems) {
-                for (let i = 0; i < this.vipCard.discountItems.length; i ++) {
+                for (let i = 0; i < this.vipCard.discountItems.length; i++) {
                     this.vipCard.discountItems[i].discount = parseFloat(this.vipCard.discountItems[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipCard.discountItems[i].discount)) {
                         modal.warn('优惠折扣 请输入0.1-9.9之间正确的折扣数字');
@@ -249,11 +252,11 @@ export default {
                     const result = this.vipCard[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
                     if (result) {
                         if (item.selected) {
-                            newList.push({ ...result
+                            newList.push({...result
                             });
                         }
                     } else {
-                        newList.push({ ...item
+                        newList.push({...item
                         });
                     }
                 });
