@@ -26,6 +26,7 @@
                                    class="dd-input normal-input"
                                    maxlength="11"
                                    placeholder="请输入手机号"
+                                   :disabled='disableNameInput'
                                    v-model="phone" />
                             <span class="error-phone-tip" v-show="!phoneValid">
                                     <span style="vertical-align: text-bottom">&uarr;</span>
@@ -74,6 +75,8 @@
     }
 </style>
 <script>
+    import http from '../../common/http';
+
     export default{
         props: {
             visible: Boolean,
@@ -81,10 +84,11 @@
         },
         data() {
             return {
-                phone: '',
+                phone: undefined,
                 name: '',
                 cardNum: '',
                 phoneValid: true,
+                disableNameInput: false,
                 phoneErrorTip: ''
             };
         },
@@ -95,11 +99,21 @@
                 this.$emit('closeModal');
             },
             resetData() {
-                this.phone = '';
+                this.phone = undefined;
                 this.name = '';
                 this.cardNum = '';
                 this.phoneValid = true;
+                this.disableNameInput = false;
                 this.phoneErrorTip = '';
+            },
+            getPhoneInfo() {
+                http.get('/vipCard/checkPhoneBeforeApplyVipCard', { phone: this.phone })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.name = res.data.name;
+                            this.disableNameInput = !!res.data.name;
+                        }
+                    });
             },
             checkPhone() {
                 const phoneReg = /^1[34578]\d{9}$/;
@@ -114,6 +128,18 @@
                 if (!this.phoneValid) {
                     return false;
                 }
+                const params = {
+                    vipCardId: this.card.id,
+                    name: this.name,
+                    phone: this.phone,
+                    vipCardNum: this.cardNum
+                };
+                http.get('/vipCard/registViceVipCard', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                        }
+                    });
             }
         },
         watch: {
@@ -123,15 +149,18 @@
                 }
             },
             phone(newVal) {
-                if (newVal.length > 0) {
+                if (newVal && newVal.length > 0) {
                     this.phoneErrorTip = '格式有误';
                 }
-                if (newVal.length === 0) {
+                if (newVal && newVal.length === 0) {
                     this.phoneValid = false;
                     this.phoneErrorTip = '必填字段';
                 }
                 if (newVal.length === 11) {
                     this.checkPhone();
+                    if (this.phoneValid) {
+                        this.getPhoneInfo();
+                    }
                 }
             }
         }

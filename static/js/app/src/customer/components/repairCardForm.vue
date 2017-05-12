@@ -46,6 +46,8 @@
     }
 </style>
 <script>
+    import http from '../../common/http';
+
     export default{
         props: {
             visible: Boolean,
@@ -66,6 +68,16 @@
                 this.cardNum = '';
             },
             repairCard() {
+                const params = {
+                    vipCardId: this.card.id,
+                    vipCardNum: this.cardNum
+                };
+                http.get('/vipCard/reapplyVipCard', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                        }
+                    });
             }
         },
         watch: {

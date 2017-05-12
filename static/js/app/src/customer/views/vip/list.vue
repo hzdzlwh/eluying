@@ -102,19 +102,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>金卡</td>
-                            <td>325552166954210258</td>
-                            <td>5000.00</td>
-                            <td>1990-03-07</td>
+                        <tr v-for="item in vip.vipCards">
+                            <td>{{item.name}}</td>
+                            <td>{{item.vipCardNum}}</td>
+                            <td>{{item.balanceFee}}</td>
+                            <td>{{item.creationTime}}</td>
                             <td><a href="#">充值</a></td>
-                        </tr>
-                        <tr>
-                            <td>副卡<br><span style="font-size:12px">(金卡325552166954210258)</span></td>
-                            <td>325552166954210258</td>
-                            <td>5000.00</td>
-                            <td>1990-03-07</td>
-                            <td><a href="">充值</a></td>
                         </tr>
                         </tbody>
                     </table>

@@ -31,6 +31,8 @@
 <style lang="scss" type="text/css" rel="stylesheet/scss">
 </style>
 <script>
+    import http from '../../common/http';
+
     export default{
         props: {
             visible: Boolean,
@@ -62,6 +64,25 @@
                 this.$emit('closeModal');
             },
             operateCard() {
+                const params = {
+                    status: this.card.status,
+                    vipCardId: this.card.id
+                };
+                if (this.type === 'lose') {
+                    params.type = 5;
+                }
+                if (this.type === 'recover') {
+                    params.type = 6;
+                }
+                if (this.type === 'useless') {
+                    params.type = 7;
+                }
+                http.get('/vipCard/modifyVipCardState', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                        }
+                    });
             }
         },
         watch: {
