@@ -16,7 +16,7 @@
                     <div class="cardList-body-item">
                         <span class="cardList-body-itemLeft">会员卡</span>
                         <div class="cardList-body-itemRight repairModal-body-itemRight">
-                            {{card.cardType}} {{card.cardNum}}
+                            {{card.cardType}} {{card.vipCardNum}}
                         </div>
                     </div>
                     <div class="cardList-body-item">
@@ -37,6 +37,7 @@
                                        class="dd-input normal-input"
                                        maxlength="16"
                                        placeholder="请输入姓名"
+                                       :disabled='disableNameInput'
                                        v-model="name" />
                             </div>
                         </div>
@@ -53,13 +54,22 @@
                     <div class="cardList-body-item">
                             <span>
                                 <strong class="body-bottom-priceTitle">转赠费用:</strong>
-                                <span><strong class="body-bottom-price">¥30000.00</strong></span>
+                                <span><strong class="body-bottom-price">¥{{card.givingFee}}</strong></span>
                             </span>
+                            <div style="display: inline-flex;align-items: center">
+                                <span style="margin-right: 4px">收款方式:</span>
+                                <div style="width: 130px;">
+                                    <dd-select v-model="payChannelId" placeholder="请选择收款方式">
+                                        <dd-option v-for="payChannel in channels" :key="payChannel.id" :value="payChannel.id" :label="payChannel.name">
+                                        </dd-option>
+                                    </dd-select>
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="cardList-modal-foot">
                     <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
-                    <button class="dd-btn dd-btn-primary" @click="createAdditionalCard">完成</button>
+                    <button class="dd-btn dd-btn-primary" @click="giveOther">完成</button>
                 </div>
             </div>
         </div>
@@ -72,10 +82,13 @@
     }
 </style>
 <script>
+    import http from '../../common/http';
+    import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
         props: {
             visible: Boolean,
-            card: Object
+            card: Object,
+            channels: Array
         },
         data() {
             return {
@@ -83,7 +96,10 @@
                 name: '',
                 phoneValid: true,
                 phoneErrorTip: '',
-                checked: true
+                disableNameInput: false,
+                checked: true,
+                payChannelId: undefined,
+                payChannel: undefined
             };
         },
         methods: {
@@ -98,13 +114,25 @@
                 this.checked = true;
                 this.phoneValid = true;
                 this.phoneErrorTip = '';
+                this.disableNameInput = false;
+                this.payChannelId = undefined;
+                this.payChannel = undefined;
+            },
+            getPhoneInfo() {
+                http.get('/vipCard/checkPhoneBeforeApplyVipCard', { phone: this.phone })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.name = res.data.name;
+                            this.disableNameInput = !!res.data.name;
+                        }
+                    });
             },
             checkPhone() {
                 const phoneReg = /^1[34578]\d{9}$/;
                 this.phoneValid = phoneReg.test(this.phone);
                 this.phoneErrorTip = '格式有误';
             },
-            createAdditionalCard() {
+            giveOther() {
                 this.checkPhone();
                 if (this.phone.length === 0) {
                     this.phoneErrorTip = '必填字段';
@@ -112,6 +140,21 @@
                 if (!this.phoneValid) {
                     return false;
                 }
+                const params = {
+                    name: this.name,
+                    payChannel: this.payChannel,
+                    payChannelId: this.payChannelId,
+                    phone: this.phone,
+                    vipCardId: this.card.id,
+                    invalidAble: this.checked ? 1 : 0
+                };
+                http.get('/vipCard/presentVipCard', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.hideModal();
+                            this.$emit('refreshView');
+                        }
+                    });
             }
         },
         watch: {
@@ -119,6 +162,13 @@
                 if (newVal) {
                     $('#givenCardModal').modal('show');
                 }
+            },
+            payChannelId(newVal) {
+                this.channels.map(channel => {
+                    if (channel.id === newVal) {
+                        this.payChannel = channel.name;
+                    }
+                });
             },
             phone(newVal) {
                 if (newVal.length > 0) {
@@ -130,8 +180,15 @@
                 }
                 if (newVal.length === 11) {
                     this.checkPhone();
+                    if (this.phoneValid) {
+                        this.getPhoneInfo();
+                    }
                 }
             }
+        },
+        components: {
+            DdSelect,
+            DdOption
         }
     };
 </script>

@@ -2,31 +2,68 @@
     <div class="cardList-container">
         <div style="display: flex;flex-direction: row-reverse;margin-bottom: 21px;">
             <button class="dd-btn dd-btn-primary" @click="createCard">办理会员卡</button>
-            <a style="margin-right: 16px"><button class="dd-btn dd-btn-primary">导出明细</button></a>
+            <a style="margin-right: 16px" :href="outPutExcel()" download><button class="dd-btn dd-btn-primary">导出明细</button></a>
             <div class="search">
-                <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" ref="searchInput">
-                <img class="search-icon" src="//static.dingdandao.com/vipSearch.png">
+                <input type="text"
+                       class="dd-input"
+                       placeholder="搜索姓名/手机号/证件号/会员卡号"
+                       @keyup.enter="search"
+                       v-model="keyword" />
+                <img class="search-icon" src="//static.dingdandao.com/vipSearch.png" @click="search">
             </div>
         </div>
         <dd-table :on-change="handleTableChange" :columns="col" :data-source="cardList"></dd-table>
         <div class="foot">
-            <span><small>共计</small> {{7}}位会员</span>
-            <dd-pagination @currentchange="getCardList" :visible-pager-count="6" :show-one-page="false" :page-count="30" :current-page="pageNo" />
+            <span><small>共计</small>{{count}}位会员</span>
+            <dd-pagination
+                    @currentchange="getCardList"
+                    :visible-pager-count="6"
+                    :show-one-page="false"
+                    :page-count="pages"
+                    :current-page="pageNo" />
         </div>
-        <main-card-form :visible="modalList['main']" @closeModal="hideModal"></main-card-form>
-        <additional-card-form :visible="modalList['additional']" :card="card" @closeModal="hideModal"></additional-card-form>
-        <repair-card-form :visible="modalList['repair']" :card="card" @closeModal="hideModal"></repair-card-form>
-        <recharge-card-form :visible="modalList['recharge']" :card="card" @closeModal="hideModal"></recharge-card-form>
-        <given-card-form :visible="modalList['given']" :card="card" @closeModal="hideModal"></given-card-form>
+        <main-card-form :visible="modalList['main']"
+                        @closeModal="hideModal"
+                        :channels="payChannels"
+                        @refreshView="getCardList">
+        </main-card-form>
+        <additional-card-form :visible="modalList['additional']"
+                              :card="card"
+                              :channels="payChannels"
+                              @refreshView="getCardList"
+                              @closeModal="hideModal">
+        </additional-card-form>
+        <repair-card-form :visible="modalList['repair']"
+                          :card="card"
+                          :channels="payChannels"
+                          @refreshView="getCardList"
+                          @closeModal="hideModal">
+        </repair-card-form>
+        <recharge-card-form :visible="modalList['recharge']"
+                            :card="card"
+                            :channels="payChannels"
+                            @refreshView="getCardList"
+                            @closeModal="hideModal">
+        </recharge-card-form>
+        <given-card-form :visible="modalList['given']"
+                         :card="card"
+                         :channels="payChannels"
+                         @refreshView="getCardList"
+                         @closeModal="hideModal">
+        </given-card-form>
         <simple-card-form :visible="modalList['operate']"
                           :card="card"
                           :type="type"
+                          @refreshView="getCardList"
                           @closeModal="hideModal">
         </simple-card-form>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
     .cardList-container {
+        .card-operation-btn:not(:last-child)::after {
+            content: '/';
+        }
         .error-phone-tip {
             position: absolute;
             font-size: 12px;
@@ -87,6 +124,7 @@
             display: flex;
             padding: 0 20px;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 16px;
         }
         .cardList-body-itemLeft {
@@ -138,6 +176,9 @@
                  margin-top: 10px;
              }
         }
+        .recharge-type-selected {
+            border: 1px solid #178ce6;
+        }
         .normal-input {
             width: 110px;
         }
@@ -170,14 +211,18 @@
     import givenCardForm from '../../components/givenCardForm.vue';
     import simpleCardForm from '../../components/simpleCardForm.vue';
     import http from '../../../common/http';
-    const cardStatusText = ['正常', '失效', '挂失'];
+    const cardStatusText = ['正常', '挂失', '失效'];
 
     export default{
         data() {
             return {
                 pageNo: 1,
+                pages: 0,
+                count: 0,
                 card: undefined,
                 type: undefined,
+                keyword: undefined,
+                payChannels: [],
                 modalList: {
                     additional: false,
                     main: false,
@@ -189,16 +234,16 @@
                 col: [
                     {
                         title: '卡号',
-                        dataIndex: 'cardNum',
+                        dataIndex: 'vipCardNum',
                         width: 200
                     },
                     {
                         title: '类型',
-                        dataIndex: 'cardType'
+                        render: (h, row) => <span title={(row.type === 0 ? row.categoryName : '副卡') + (row.lastCardNum ? `(补${row.lastCardNum}）` : '')}>{(row.type === 0 ? row.categoryName : '副卡') + (row.lastCardNum ? `(补${row.lastCardNum}）` : '')}</span>
                     },
                     {
                         title: '姓名',
-                        dataIndex: 'name'
+                        dataIndex: 'vipName'
                     },
                     {
                         title: '手机号',
@@ -206,12 +251,12 @@
                     },
                     {
                         title: '余额',
-                        dataIndex: 'accountMoney',
+                        render: (h, row) => <span>{row.type === 0 ? row.balanceFee : ''}</span>,
                         className: 'text-right'
                     },
                     {
                         title: '办理日期',
-                        dataIndex: 'date',
+                        render: (h, row) => <span>{row.creationTime.split(' ')[0]}</span>,
                         sorter: true
                     },
                     {
@@ -223,69 +268,53 @@
                         title: '操作',
                         render: (h, row) =>
                             <span>
-                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'recharge')}>充值/</span>}
-                                {row.status === 0 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失/</span>}
-                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'given')}>转赠/</span>}
-                                {row.status === 0 && <span class="list-action-button" onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
-                                {row.status === 2 && <span class="list-action-button" onClick={() => this.openModal(row, 'repair')}>补办/</span>}
-                                {row.status === 2 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'recover'; }}>恢复/</span>}
-                                {row.status === 2 && <span class="list-action-button" onClick={() => { this.openModal(row, 'operate'); this.type = 'useless'; }}>失效</span>}
+                                {row.rechargeAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'recharge')}>充值</span>}
+                                {row.status === 0 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失</span>}
+                                {row.givingAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'given')}>转赠</span>}
+                                {row.viceAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
+                                {row.reapplyAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'repair')}>补办</span>}
+                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'recover'; }}>恢复</span>}
+                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'useless'; }}>失效</span>}
                             </span>,
                         width: 200
                     }
                 ],
-                cardList: [
-                    {
-                        cardNum: '330009999999999990',
-                        cardType: '金卡',
-                        name: '毛利兰',
-                        phone: 23099999999,
-                        accountMoney: 9000,
-                        date: '1994-03-22',
-                        status: 0,
-                        id: 1,
-                        children: [
-                            {
-                                cardNum: '330009999999999991',
-                                cardType: '金卡',
-                                name: '毛利兰',
-                                phone: 23099999999,
-                                accountMoney: 9000,
-                                date: '1994-03-22',
-                                status: 1,
-                                id: 2
-                            },
-                            {
-                                cardNum: '330009999999999992',
-                                cardType: '金卡',
-                                name: '毛利兰',
-                                phone: 23099999999,
-                                accountMoney: 9000,
-                                date: '1994-03-22',
-                                status: 2,
-                                id: 3
-                            }
-                        ]
-                    },
-                    {
-                        cardNum: '330009999999999993',
-                        cardType: '银卡',
-                        name: '工藤新一',
-                        phone: 23099999993,
-                        accountMoney: 8000,
-                        date: '1994-03-22',
-                        status: 0,
-                        id: 4
-                    }
-                ]
+                cardList: []
             };
+        },
+        created() {
+            this.getCardList();
+            this.getPayChannels();
         },
         methods: {
             getCardList(page) {
-                console.log(page || this.pageNo);
+                this.pageNo = page || this.pageNo;
+                const params = {
+                    pageNo: this.pageNo,
+                    keyword: this.keyword,
+                    sortType: this.sortType
+                };
+                http.get('/vipCard/getVipCardList', params)
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.cardList = res.data.vipCardList;
+                            this.count = res.data.vipCardsCount;
+                            this.pages = Math.ceil(res.data.vipUserListSize / 30);
+                        }
+                    });
+            },
+            getPayChannels() {
+                http.get('/user/getChannels', { type: 1 })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.payChannels = res.data.list;
+                        }
+                    });
             },
             handleTableChange(data) {
-                console.log(data);
+                this.pageNo = 1;
+                this.sortType = data.sortType;
+                this.getCardList();
             },
             createCard() {
                 this.modalList['main'] = true;
@@ -298,6 +327,20 @@
             openModal(card, type) {
                 this.card = card;
                 this.modalList[type] = true;
+            },
+            search() {
+                this.pageNo = 1;
+                this.getCardList();
+            },
+            outPutExcel() {
+                const originParam = {};
+                if (this.keyword) {
+                    originParam.keyword = this.keyword;
+                }
+                const host = http.getUrl('/vipCard/vipCardsExport');
+                const pa = http.getDataWithToken(originParam);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
             }
         },
         components: {

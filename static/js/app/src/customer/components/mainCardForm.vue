@@ -45,9 +45,9 @@
                                     v-model="cardNum" />
                         </div>
                     </div>
-                    <div class="cardList-body-item">
+                    <div class="cardList-body-item" v-if="cardTypes">
                         <span class="cardList-body-itemLeft">会员卡</span>
-                        <div class="cardList-body-itemRight" v-if="cardTypes">
+                        <div class="cardList-body-itemRight">
                             <div class="card-type"
                                  v-for="type in cardTypes"
                                  :key="type.id"
@@ -71,6 +71,15 @@
                                     </strong>
                                 </span>
                             </span>
+                            <div style="display: inline-flex;align-items: center">
+                                <span style="margin-right: 4px">收款方式:</span>
+                                <div style="width: 130px;">
+                                    <dd-select v-model="payChannelId" placeholder="请选择收款方式">
+                                        <dd-option v-for="payChannel in channels" :key="payChannel.id" :value="payChannel.id" :label="payChannel.name">
+                                        </dd-option>
+                                    </dd-select>
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="cardList-modal-foot">
@@ -85,11 +94,13 @@
 </style>
 <script>
     import http from '../../common/http';
+    import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
         props: {
             visible: Boolean,
-            oldPhone: ''
+            oldPhone: '',
+            channels: Array
         },
         data() {
             return {
@@ -101,6 +112,8 @@
                 phoneErrorTip: '',
                 editable: false,
                 cardTypes: undefined,
+                payChannelId: undefined,
+                payChannel: undefined,
                 selectedCard: {
                     cardFee: 0,
                     rechargeFee: 0,
@@ -122,6 +135,8 @@
                 this.disableNameInput = false;
                 this.phoneValid = true;
                 this.phoneErrorTip = '';
+                this.payChannelId = undefined;
+                this.payChannel = undefined;
                 this.selectedCard = {
                     cardFee: 0,
                     rechargeFee: 0,
@@ -190,12 +205,15 @@
                     categoryId: this.selectedCard.categoryId,
                     name: this.name,
                     phone: this.phone,
-                    vipCardNum: this.cardNum
+                    vipCardNum: this.cardNum,
+                    payChannel: this.payChannel,
+                    payChannelId: this.payChannelId
                 };
                 http.get('/vipCard/registVipCard', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
+                            this.$emit('refreshView');
                         }
                     });
             }
@@ -216,6 +234,13 @@
                     }
                 }
             },
+            payChannelId(newVal) {
+                this.channels.map(channel => {
+                    if (channel.id === newVal) {
+                        this.payChannel = channel.name;
+                    }
+                });
+            },
             visible(newVal) {
                 if (newVal) {
                     $('#mainCardModal').modal('show');
@@ -225,6 +250,10 @@
                 this.phone = newVal;
                 this.editable = true;
             }
+        },
+        components: {
+            DdSelect,
+            DdOption
         }
     };
 </script>
