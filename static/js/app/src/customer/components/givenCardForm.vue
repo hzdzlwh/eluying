@@ -148,18 +148,25 @@
                     vipCardId: this.card.id,
                     invalidAble: this.checked ? 1 : 0
                 };
-                http.get('/vipCard/presentVipCard', params)
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            this.$emit('refreshView');
-                        }
-                    });
+                const id = this.payChannelId;
+                if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    params.totalPrice = this.card.givingFee;
+                    this.$emit('changeParams', { params, url: '/vipCard/presentVipCard' });
+                } else {
+                    http.get('/vipCard/presentVipCard', params)
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.hideModal();
+                                this.$emit('refreshView');
+                            }
+                        });
+                }
             }
         },
         watch: {
             visible(newVal) {
                 if (newVal) {
+                    this.resetData();
                     $('#givenCardModal').modal('show');
                 }
             },

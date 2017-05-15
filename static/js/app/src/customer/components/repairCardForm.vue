@@ -25,7 +25,7 @@
                             <input
                                     type="text"
                                     class="dd-input"
-                                    maxlength="20"
+                                    maxlength="18"
                                     placeholder="请输入会员卡卡号"
                                     v-model="cardNum" />
                         </div>
@@ -95,18 +95,25 @@
                     payChannel: this.payChannel,
                     payChannelId: this.payChannelId
                 };
-                http.get('/vipCard/reapplyVipCard', params)
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            this.$emit('refreshView');
-                        }
-                    });
+                const id = this.payChannelId;
+                if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    params.totalPrice = this.card.reapplyFee;
+                    this.$emit('changeParams', { params, url: '/vipCard/reapplyVipCard' });
+                } else {
+                    http.get('/vipCard/reapplyVipCard', params)
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.hideModal();
+                                this.$emit('refreshView');
+                            }
+                        });
+                }
             }
         },
         watch: {
             visible(newVal) {
                 if (newVal) {
+                    this.resetData();
                     $('#repairCardModal').modal('show');
                 }
             },

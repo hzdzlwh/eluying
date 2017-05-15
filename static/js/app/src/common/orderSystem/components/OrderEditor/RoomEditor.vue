@@ -1,9 +1,20 @@
 <template>
     <div class="content-item">
-        <p class="content-item-title">
-            <span>房间信息</span>
-            <span class="increase-container" @click="addRoom" v-if="checkState !=='editOrder' || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
-                <span class="increase-icon"></span>添加房间
+        <p class="content-item-title dashed">
+            <span>房间信息
+                <span class="increase-container" @click="addRoom" v-if="checkState !=='editOrder' || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
+                    <span class="increase-icon"></span>添加房间
+                </span>
+            </span>
+            <span>
+                折扣方案：
+                <span style="width: 120px">
+                    <dd-select>
+                        <dd-option>
+
+                        </dd-option>
+                    </dd-select>
+                </span>
             </span>
         </p>
         <div class="registerRoom-items">

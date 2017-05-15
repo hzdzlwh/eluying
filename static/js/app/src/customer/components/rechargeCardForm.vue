@@ -52,7 +52,7 @@
                             <strong class="body-bottom-priceTitle">销售价格:</strong>
                             <span>
                                 <strong class="body-bottom-price">
-                                    ¥{{rechargeStrategyId ? rechargeInfo.rechargeFee : (rechargeMoney ? rechargeMoney : 0)}}
+                                    ¥{{ sellPrice }}
                                 </strong>
                             </span>
                         </span>
@@ -96,10 +96,16 @@
                 givingMoney: undefined,
                 cardTypes: undefined,
                 payChannelId: undefined,
+                payChannel: undefined,
                 rechargeTypes: undefined,
                 rechargeStrategyId: undefined,
                 rechargeInfo: {}
             };
+        },
+        computed: {
+            sellPrice() {
+                return this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : (this.rechargeMoney ? this.rechargeMoney : 0);
+            }
         },
         methods: {
             hideModal() {
@@ -150,22 +156,48 @@
                 }
             },
             rechargeCard() {
-                const params = {};
-                http.get('/vipCard/rechargeVipCard', params)
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            this.$emit('refreshView');
-                        }
-                    });
+                const params = {
+                    vipCardId: this.card.id,
+                    payChannel: this.payChannel,
+                    payChannelId: this.payChannelId
+                };
+                if (this.rechargeStrategyId) {
+                    params.rechargeStrategyId = this.rechargeStrategyId;
+                    params.rechargeFee = this.rechargeInfo.rechargeFee;
+                    params.freeFee = this.rechargeInfo.freeFee;
+                } else {
+                    params.rechargeFee = this.rechargeMoney;
+                    params.freeFee = this.givingMoney;
+                }
+                const id = this.payChannelId;
+                if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    params.totalPrice = this.sellPrice;
+                    this.$emit('changeParams', { params, url: '/vipCard/rechargeVipCard' });
+                } else {
+                    http.get('/vipCard/rechargeVipCard', params)
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.hideModal();
+                                this.$emit('refreshView');
+                            }
+                        });
+                }
             }
         },
         watch: {
             visible(newVal) {
                 if (newVal) {
+                    this.resetData();
                     $('#rechargeCardModal').modal('show');
                     this.getRechargeTypes();
                 }
+            },
+            payChannelId(newVal) {
+                this.channels.map(channel => {
+                    if (channel.id === newVal) {
+                        this.payChannel = channel.name;
+                    }
+                });
             },
             rechargeMoney(newVal) {
                 if (newVal) {
