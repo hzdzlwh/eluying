@@ -14,7 +14,7 @@ import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
 import retail from './views/retail.vue';
 import overallRank from './views/membership/overallRank.vue';
-import chargeDetail from './views/membership/chargeDetail.vue';
+import dealDetail from './views/membership/dealDetail.vue';
 import payStatistics from './views/membership/payStatistics.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
@@ -191,11 +191,11 @@ export const routes = [
                 component: overallRank
             },
             {
-                path: '/membership/chargeDetail',
+                path: '/membership/dealDetail',
                 meta: {
                     name: '交易明细'
                 },
-                component: chargeDetail
+                component: dealDetail
             },
             {
                 path: '/membership/payStatistics',

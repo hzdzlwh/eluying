@@ -1,8 +1,8 @@
 <template>
-	<div class="overall-rank">
+	<div class="deal-detail">
 		<div class="header-wrap">
 			<div>
-                <h4>汇总排名(2016-08-22~2016-08-28)</h4>
+                <h4>交易明细(2016-08-22~2016-08-28)</h4>         
             </div>
             <div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
@@ -11,11 +11,11 @@
 	        </div>
         </div>
         <div>
-            <dd-table :on-change="handleTableChange" :columns="col" :data-source="memberCards"></dd-table>
+            <dd-table :on-change="handleTableChange" :columns="col" :data-source="dealDetailList"></dd-table>
         </div>
         <div class="foot">
-            <span><small>共计</small> {{count}}位会员</span>
-            <dd-pagination @currentchange="getCards" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <span><small>共计</small> {{count}}条记录</span>
+            <dd-pagination @currentchange="getLists" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
 	</div>
 </template>
@@ -26,10 +26,9 @@
     export default {
         data() {
             return {
-                searchPattern: undefined,
-                count: 20,
-                pages: 5,
+                count: 11,
                 pageNo: 1,
+                pages: 5,
                 col: [
                     {
                         title: '序号',
@@ -55,53 +54,48 @@
                         width: 107
                     },
                     {
-                        title: '总充值金额',
-                        dataIndex: 'f',
-                        sorter: true
+                        title: '渠道',
+                        dataIndex: 'f'
                     },
                     {
-                        title: '总赠送金额',
-                        dataIndex: 'g',
-                        sorter: true
+                        title: '类型',
+                        dataIndex: 'g'
                     },
                     {
-                        title: '总消费金额',
-                        dataIndex: 'h',
-                        sorter: true
+                        title: '金额',
+                        dataIndex: 'h'
                     },
                     {
-                        title: '余额',
-                        dataIndex: 'i',
-                        sorter: true
+                        title: '时间',
+                        dataIndex: 'i'
+                    },
+                    {
+                        title: '操作人员',
+                        dataIndex: 'j'
                     }
                 ],
-                memberCards: [
+                dealDetailList: [
                     {
                         a: 1,
                         b: '超级白金卡',
                         c: 123456789012345678,
-                        d: '啊啊啊',
+                        d: '得到是',
                         e: 12345678901,
-                        f: 99999,
-                        g: 99999,
-                        h: 10000,
-                        i: 10000
+                        f: '微官网',
+                        g: '充值',
+                        h: 44444,
+                        i: '2017-09-04',
+                        j: '几所示'
                     }
                 ]
             };
         },
         methods: {
             search() {
-                this.searchPattern = this.$refs.searchInput.value;
-                this.pageNo = 1;
             },
-            handleTableChange(data) {
-                this.pageNo = 1;
-                this.sortColumn = data.sortField;
-                this.sortType = data.sortType;
-                this.getCards();
+            getLists() {
             },
-            getCards() {
+            handleTableChange() {
             }
         },
         components: {
@@ -112,7 +106,7 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-	.overall-rank{
+	.deal-detail{
         padding-top: 47px;
         .header-wrap{
             display: flex;
@@ -150,6 +144,5 @@
             align-items: center;
         }
     }
-    
 </style>
 
