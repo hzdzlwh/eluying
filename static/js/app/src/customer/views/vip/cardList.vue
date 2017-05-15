@@ -254,7 +254,10 @@
                     },
                     {
                         title: '类型',
-                        render: (h, row) => <span title={(row.type === 0 ? row.categoryName : '副卡') + (row.lastCardNum ? `(补${row.lastCardNum}）` : '')}>{(row.type === 0 ? row.categoryName : '副卡') + (row.lastCardNum ? `(补${row.lastCardNum}）` : '')}</span>
+                        render: (h, row) => <div>
+                                                <span>{row.type === 0 ? row.categoryName : '副卡'}</span>
+                                                {row.lastCardNum && <div style="font-size: 12px">补({row.lastCardNum}）</div>}
+                                            </div>
                     },
                     {
                         title: '姓名',
