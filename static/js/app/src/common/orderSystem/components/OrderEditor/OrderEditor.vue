@@ -267,7 +267,6 @@
                 name: '',
                 phone: '',
                 userOriginType: undefined,
-                userOrigins: [],
                 userSelfOrigins: [],
                 userGroupOrigins: [],
                 phoneValid: true,
@@ -427,6 +426,11 @@
                         if (this.order.originId === -4) {
                             this.vipId = this.order.discountRelatedId;
                         }
+
+                        if (this.userOriginType === undefined) {
+                            this.userSelfOrigins.push({ id: this.order.originId, name: this.order.origin, unknown: true });
+                            this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
+                        }
                     } else {
                         if (this.userSelfOrigins[0]) {
                             this.userOriginType = this.userSelfOrigins[0];
@@ -435,6 +439,9 @@
 
                     $('#orderEditor').modal('show');
                 } else {
+                    const unknown = this.userSelfOrigins.find(i => i.unknown);
+                    const index = this.userSelfOrigins.indexOf(unknown);
+                    this.userSelfOrigins.splice(index, 1);
                     $('#orderEditor').modal('hide');
                 }
             }
@@ -501,7 +508,6 @@
                     .then((res) => {
                         const originsList = res.data.list;
                         const otherOrigins = [];
-                        this.userOrigins = originsList;
                         this.userGroupOrigins.push({ label: '企业', origins: [] });
                         this.userGroupOrigins.push({ label: '其他', origins: [] });
                         originsList.forEach(origin => {

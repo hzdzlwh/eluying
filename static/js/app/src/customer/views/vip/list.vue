@@ -274,11 +274,15 @@
                     },
                     {
                         title: '会员卡',
-                        dataIndex: 'vipCardNum'
+                        render: (h, row) => <div>{row.vipCards.map(function (item) {
+                            return <div key={item.vipUserId}>{item.name}</div>
+                        })}</div>
                     },
                     {
                         title: '余额',
-                        dataIndex: ''
+                        render: (h, row) => <div>{row.vipCards.map(function (item) {
+                            return <div key={item.vipUserId}>{item.balanceFee}</div>
+                        })}</div>
                     },
                     {
                         title: '证件号',

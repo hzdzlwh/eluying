@@ -8,12 +8,12 @@
             </span>
             <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
-        <div class="vipCardCantain" :class='toggle ? "vipCardMore" : ""'>
+        <div class="vipCardCantain">
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
                 </div>
                 <div class="vipCardBoxCantain">
-                    <div style="inline-block">
+                    <div class="vipCardCantainLeft" v-if='vipCard["discountItems"].length'>
                         <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
                             <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
                         </div>
@@ -24,11 +24,29 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
-                <div style="display:inline-block">
-                    <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
-                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
+                    <div>累计消费金额：达到该等级需要累计消费金额
+                        <input type="number" class="vipCardMInput" v-model='vipCard.levlefee' v-if='edit'><span>{{vipCard.levlefee}}</span>元</div>
+                    <div class="level-tip">成为会员后，在【消费业态】中累计消费金额达到【升级条件】后自动升级为该级别会员</div>
+                </div>
+                <div class="vipCardTipBoxCantain">
+                    <div>累计项目：</div>
+                    <div class="vipCardTipBoxList">
+                        <div style="display:inline-block" v-for='list in vipLevelList'>
+                            <div v-if='vipCard["payableItems"].filter(function(item){ return item.nodeType === list.id }).length'>
+                                {{list.name}}：
+                                <div class="df" v-for='(item, index) in vipCard["payableItems"]' v-if='item.nodeType === list.id'>
+                                    <label for="" class="vipCardRoomLabel"><span class="VipCardListName" :title='item.nodeName'>{{item.nodeName}}</span>：每消费1元，累计消费金额增长</label>
+                                    <span v-if='edit'>
+                            <input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>元
+                            <span class="level-tip">(请输入0.1-9.9之间的数字)</span>
+                                    <img @click='deleteNode("discountItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;">
+                                    </span>
+                                    <span v-else>{{item.discount}}元</span>
+                                </div>
+                            </div>
                         </div>
-                    <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
+                        <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
+                    </div>
                 </div>
             </div>
             <div v-if='edit' style="text-align:right">
@@ -76,8 +94,36 @@
         padding: 15px 0;
         background: #f0f0f0;
     }
+    .vipCardTipBoxCantain {
+        border-top: 1px solid #e6e6e6;
+        padding: 10px 20px;
+        .vipCardTipBoxList {
+            background: #f7f7f7;
+            padding: 15px 10px;
+            .VipCardListName{
+                    max-width: 90px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+            }
+        }
+    }
+    .vipCardChose {
+        font-size: 14px;
+        color: #178ce6;
+        padding-top: 0px;
+        position: relative;
+        top: 2px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        display: inline-block;
+    }
     .vipCardCantain {
         padding: 20px;
+        .vipCardCantainLeft{
+            display: inline-block;
+            margin-right: 30px;
+        }
         .vipCardBox {
             background: #ffffff;
             box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
@@ -98,6 +144,10 @@
                     font-size: 12px;
                 }
             }
+            .level-tip {
+                font-size: 12px;
+                color: #999999;
+            }
             .vipCardRule {
                 padding-bottom: 15px!important;
             }
@@ -115,17 +165,6 @@
                 .df {
                     display: flex;
                     line-height: 24px;
-                }
-                .vipCardChose {
-                    font-size: 14px;
-                    color: #178ce6;
-                    padding-top: 0px;
-                    position: relative;
-                    top: 2px;
-                    padding-bottom: 10px;
-                    cursor: pointer;
-                    margin-left: 30px;
-                    display: inline-block;
                 }
                 .vipCardRoomLabel {
                     width: 240px;
@@ -154,10 +193,6 @@ export default {
         data: {
             type: Object
         },
-        toggleShow: {
-            type: Boolean,
-            default: true
-        },
         editor: {
             type: Boolean,
             default: true
@@ -173,6 +208,25 @@ export default {
             vipCard: this.getdata(),
             namewarn: false,
             edit: this.editor,
+            vipLevelList: [{
+                id: 0,
+                name: '住宿'
+            }, {
+                id: 1,
+                name: '餐饮'
+            }, {
+                id: 2,
+                name: '娱乐'
+            }, {
+                id: 3,
+                name: '商超'
+            }],
+            vipLevelCount: {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0
+            }
         };
     },
     components: {

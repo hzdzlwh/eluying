@@ -26,7 +26,7 @@
                         </div>
                         <span v-if="item.usedAmount > 0 && item.chargeUnit" >
                                             {{`时长(${item.chargeUnit})`}}
-                                            <span style="margin-left: 15px;">{{item.timeAmount * item.chargeUnitTime}}</span>
+                                            <span style="margin-left: 15px;">{{item.timeAmount }}</span>
                         </span>
                         <div class="enterDate-container">
                             <label>时间</label>
@@ -270,8 +270,9 @@ export default {
         handleNumChange(type, tag, num) {
             const _this = this;
             this.enterItems.forEach((item, index) => {
-                item.count = (index === tag) ? num : item.count;
-                item.amount = (index === tag) ? num : item.amount;
+                item.count = (index === tag && type === 2) ? num : item.count;
+                // item.amount = (index === tag) ? num : item.amount;
+                item.timeAmount = (index === tag && type === -2) ? num : item.timeAmount;
                 item.totalPrice = (index === tag) ? Number(((item['price'] * _this.getItemDiscountInfo(item.nodeId).discount).toFixed(2) * item.count * item.timeAmount).toFixed(2)) : item.totalPrice;
             });
         },

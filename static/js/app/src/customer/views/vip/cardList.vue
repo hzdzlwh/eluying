@@ -169,6 +169,7 @@
     import rechargeCardForm from '../../components/rechargeCardForm.vue';
     import givenCardForm from '../../components/givenCardForm.vue';
     import simpleCardForm from '../../components/simpleCardForm.vue';
+    import http from '../../../common/http';
     const cardStatusText = ['正常', '失效', '挂失'];
 
     export default{
@@ -242,6 +243,7 @@
                         accountMoney: 9000,
                         date: '1994-03-22',
                         status: 0,
+                        id: 1,
                         children: [
                             {
                                 cardNum: '330009999999999991',
@@ -250,7 +252,8 @@
                                 phone: 23099999999,
                                 accountMoney: 9000,
                                 date: '1994-03-22',
-                                status: 1
+                                status: 1,
+                                id: 2
                             },
                             {
                                 cardNum: '330009999999999992',
@@ -259,7 +262,8 @@
                                 phone: 23099999999,
                                 accountMoney: 9000,
                                 date: '1994-03-22',
-                                status: 2
+                                status: 2,
+                                id: 3
                             }
                         ]
                     },
@@ -270,7 +274,8 @@
                         phone: 23099999993,
                         accountMoney: 8000,
                         date: '1994-03-22',
-                        status: 0
+                        status: 0,
+                        id: 4
                     }
                 ]
             };
