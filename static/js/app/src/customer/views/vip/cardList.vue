@@ -24,18 +24,21 @@
         </div>
         <main-card-form :visible="modalList['main']"
                         @closeModal="hideModal"
+                        @changeParams="modifyParams"
                         :channels="payChannels"
                         @refreshView="getCardList">
         </main-card-form>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
+                              @changeParams="modifyParams"
                               @refreshView="getCardList"
                               @closeModal="hideModal">
         </additional-card-form>
         <repair-card-form :visible="modalList['repair']"
                           :card="card"
                           :channels="payChannels"
+                          @changeParams="modifyParams"
                           @refreshView="getCardList"
                           @closeModal="hideModal">
         </repair-card-form>
@@ -43,11 +46,13 @@
                             :card="card"
                             :channels="payChannels"
                             @refreshView="getCardList"
+                            @changeParams="modifyParams"
                             @closeModal="hideModal">
         </recharge-card-form>
         <given-card-form :visible="modalList['given']"
                          :card="card"
                          :channels="payChannels"
+                         @changeParams="modifyParams"
                          @refreshView="getCardList"
                          @closeModal="hideModal">
         </given-card-form>
@@ -57,6 +62,12 @@
                           @refreshView="getCardList"
                           @closeModal="hideModal">
         </simple-card-form>
+        <pay-with-code :visible="modalList['payCode']"
+                       :params="payWithCodeParams"
+                       :url="payWithCodeInterfaceUrl"
+                       @closeModal="hideModal"
+                       @refreshView="getCardList">
+        </pay-with-code>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -210,6 +221,7 @@
     import rechargeCardForm from '../../components/rechargeCardForm.vue';
     import givenCardForm from '../../components/givenCardForm.vue';
     import simpleCardForm from '../../components/simpleCardForm.vue';
+    import payWithCode from '../../components/payWithCode.vue';
     import http from '../../../common/http';
     const cardStatusText = ['正常', '挂失', '失效'];
 
@@ -223,19 +235,22 @@
                 type: undefined,
                 keyword: undefined,
                 payChannels: [],
+                payWithCodeParams: undefined,
+                payWithCodeInterfaceUrl: undefined,
                 modalList: {
                     additional: false,
                     main: false,
                     repair: false,
                     recharge: false,
                     given: false,
-                    operate: false
+                    operate: false,
+                    payCode: false
                 },
                 col: [
                     {
                         title: '卡号',
                         dataIndex: 'vipCardNum',
-                        width: 200
+                        width: 240
                     },
                     {
                         title: '类型',
@@ -298,6 +313,11 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.cardList = res.data.vipCardList;
+                            this.cardList.map(card => {
+                                if (card.viceVipCardList && card.viceVipCardList.length > 0) {
+                                    card.children = card.viceVipCardList;
+                                }
+                            });
                             this.count = res.data.vipCardsCount;
                             this.pages = Math.ceil(res.data.vipUserListSize / 30);
                         }
@@ -319,10 +339,19 @@
             createCard() {
                 this.modalList['main'] = true;
             },
-            hideModal() {
-                for (const key in this.modalList) {
-                    this.modalList[key] = false;
+            hideModal(type) {
+                if (type) {
+                    this.modalList[type] = false;
+                } else {
+                    for (const key in this.modalList) {
+                        this.modalList[key] = false;
+                    }
                 }
+            },
+            modifyParams(params) {
+                this.payWithCodeParams = params.params;
+                this.payWithCodeInterfaceUrl = params.url;
+                this.modalList['payCode'] = true;
             },
             openModal(card, type) {
                 this.card = card;
@@ -351,7 +380,8 @@
             repairCardForm,
             rechargeCardForm,
             givenCardForm,
-            simpleCardForm
+            simpleCardForm,
+            payWithCode
         }
     };
 </script>

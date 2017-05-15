@@ -205,13 +205,19 @@
                     payChannel: this.payChannel,
                     payChannelId: this.payChannelId
                 };
-                http.get('/vipCard/registVipCard', params)
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.hideModal();
-                            this.$emit('refreshView');
-                        }
-                    });
+                const id = this.payChannelId;
+                if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    params.totalPrice = (this.selectedCard.cardFee + this.selectedCard.rechargeFee).toFixed(2);
+                    this.$emit('changeParams', { params, url: '/vipCard/registVipCard' });
+                } else {
+                    http.get('/vipCard/registVipCard', params)
+                        .then(res => {
+                            if (res.code === 1) {
+                                this.hideModal();
+                                this.$emit('refreshView');
+                            }
+                        });
+                }
             }
         },
         watch: {
@@ -239,6 +245,7 @@
             },
             visible(newVal) {
                 if (newVal) {
+                    this.resetData();
                     $('#mainCardModal').modal('show');
                 }
             }

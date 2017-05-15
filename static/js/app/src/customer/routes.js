@@ -17,7 +17,7 @@ const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 export const routes = [
     {
         path: '/',
-        redirect: '/vip',
+        redirect: '/non-vip',
         meta: {
             invisible: true
         }
