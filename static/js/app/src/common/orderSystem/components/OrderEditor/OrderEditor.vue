@@ -48,7 +48,7 @@
                                         请输入正确的手机号
                                     </span>
                                 </div>
-                                <div class="userInfo-item">
+                                <div class="userInfo-item" style="position: relative">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
@@ -71,10 +71,27 @@
                                             </dd-group-option>
                                         </dd-select>
                                     </div>
-                                    <span class="company-origin-tipLike" v-show="!showCompanyOriginTip"></span>
-                                    <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
-                                    <div class="company-origin-tips">
-                                        变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+                                    <div style="position: absolute; top: 3px;right: -25px">
+                                        <span class="company-origin-tipImg" v-show="showCompanyOriginTip"></span>
+                                        <div class="company-origin-tips">
+                                            变更客户来源后，该订单中已发生的企业挂帐、企业扣款、退款至企业均将会被取消。
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="userInfo-item" v-if="showVipCardSelect">
+                                    <label>会员卡</label>
+                                    <div class="select-component-container">
+                                        <dd-select v-model="vipCard">
+                                            <dd-option :value="0" label="不使用">
+                                                不使用
+                                            </dd-option>
+                                            <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
+                                                             :key="item" v-if="item.levels && item.levels.length > 0">
+                                                <dd-option v-for="level in item.levels" :key="level"
+                                                           :value="level.id" :label="level.name">
+                                                </dd-option>
+                                            </dd-group-option>
+                                        </dd-select>
                                     </div>
                                 </div>
                             </div>
@@ -286,7 +303,9 @@
                 enterPrice: 0,
                 goodsPrice: 0,
                 foodPrice: 0,
-                ORDER_TYPE
+                ORDER_TYPE,
+                vipCardsAndLevel: [],
+                vipCard: undefined
             };
         },
         props: {
@@ -376,6 +395,9 @@
                         return this.foodPrice.toFixed(2);
                 }
                 return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
+            },
+            showVipCardSelect() {
+                return this.userOriginType && this.userOriginType.id === -4;
             }
         },
         created() {
@@ -441,7 +463,9 @@
                 } else {
                     const unknown = this.userSelfOrigins.find(i => i.unknown);
                     const index = this.userSelfOrigins.indexOf(unknown);
-                    this.userSelfOrigins.splice(index, 1);
+                    if (index > -1) {
+                        this.userSelfOrigins.splice(index, 1);
+                    }
                     $('#orderEditor').modal('hide');
                 }
             }
@@ -472,7 +496,7 @@
             setVipListPosition(position) {
                 const vipList = document.querySelector('.userVip-list');
                 if (vipList) {
-                    vipList.style.left = position === 1 ? 46 + 'px' : 312 + 'px';
+                    vipList.style.left = position === 1 ? 46 + 'px' : 267 + 'px';
                 }
             },
             checkPhone() {
@@ -489,6 +513,30 @@
                         if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
                             this.vipId = res.data.vipDetail.vipId;
+                            // 生成会员卡下拉框,规定不使用-0，会员等级，-1
+                            this.vipCardsAndLevel = [];
+                            this.vipCardsAndLevel.push({
+                                label: '会员',
+                                levels: [{ name: res.data.vipDetail.level, id: -1 }]
+                            });
+                            const cards = res.data.cards.map(card => {
+                                return {
+                                    id: card.id,
+                                    name: card.name
+                                };
+                            });
+                            this.vipCardsAndLevel.push({
+                                label: '会员卡',
+                                levels: cards
+                            });
+                            // 默认选择一个选项，优先级：会员卡（最新办理的优先级高）>等级会员。
+                            this.$nextTick(() => {
+                                if (cards && cards.length > 0) {
+                                    this.vipCard = cards[0].id;
+                                } else {
+                                    this.vipCard = -1;
+                                }
+                            });
                         } else {
                             this.userOriginType = this.getOrigin(-1);
                         }
