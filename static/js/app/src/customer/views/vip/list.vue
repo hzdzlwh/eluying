@@ -274,14 +274,14 @@
                     },
                     {
                         title: '会员卡',
-                        render: (h, row) => <div>{row.vipCards.map(function (item) {
-                            return <div key={item.vipUserId}>{item.name}</div>
+                        render: (h, row) => <div>{row.vipCards.map(function(item) {
+                            return <div key={item.vipUserId}>{item.name}</div>;
                         })}</div>
                     },
                     {
                         title: '余额',
-                        render: (h, row) => <div>{row.vipCards.map(function (item) {
-                            return <div key={item.vipUserId}>{item.balanceFee}</div>
+                        render: (h, row) => <div>{row.vipCards.map(function(item) {
+                            return <div key={item.vipUserId}>{item.balanceFee}</div>;
                         })}</div>
                     },
                     {
