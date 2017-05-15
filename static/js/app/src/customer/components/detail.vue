@@ -81,7 +81,7 @@
             background: #fafafa;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
             border-radius: 2px;
-            height: 609px;
+            min-height: 609px;
             padding: 0;
         }
         .detail-header {
@@ -97,6 +97,10 @@
         .detail-header-title, .detail-header-action {
             display: flex;
             justify-content: space-between;
+            a:hover{
+                cursor: pointer;
+                text-decoration:none
+            }
         }
         .detail-content-box {
 
