@@ -16,7 +16,7 @@
                     <div class="cardList-body-item">
                         <span class="cardList-body-itemLeft">原卡</span>
                         <div class="cardList-body-itemRight repairModal-body-itemRight">
-                            {{card.cardType}} {{card.cardNum}}
+                            {{card.cardType}} {{card.vipCardNum}}
                         </div>
                     </div>
                     <div class="cardList-body-item">
@@ -28,6 +28,21 @@
                                     maxlength="20"
                                     placeholder="请输入会员卡卡号"
                                     v-model="cardNum" />
+                        </div>
+                    </div>
+                    <div class="cardList-body-item">
+                            <span>
+                                <strong class="body-bottom-priceTitle">补办费用:</strong>
+                                <span><strong class="body-bottom-price">¥{{card.reapplyFee}}</strong></span>
+                            </span>
+                        <div style="display: inline-flex;align-items: center">
+                            <span style="margin-right: 4px">收款方式:</span>
+                            <div style="width: 130px;">
+                                <dd-select v-model="payChannelId" placeholder="请选择收款方式">
+                                    <dd-option v-for="payChannel in channels" :key="payChannel.id" :value="payChannel.id" :label="payChannel.name">
+                                    </dd-option>
+                                </dd-select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -47,15 +62,19 @@
 </style>
 <script>
     import http from '../../common/http';
+    import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
         props: {
             visible: Boolean,
-            card: Object
+            card: Object,
+            channels: Array
         },
         data() {
             return {
-                cardNum: ''
+                cardNum: '',
+                payChannelId: undefined,
+                payChannel: undefined
             };
         },
         methods: {
@@ -66,16 +85,21 @@
             },
             resetData() {
                 this.cardNum = '';
+                this.payChannelId = undefined;
+                this.payChannel = undefined;
             },
             repairCard() {
                 const params = {
                     vipCardId: this.card.id,
-                    vipCardNum: this.cardNum
+                    vipCardNum: this.cardNum,
+                    payChannel: this.payChannel,
+                    payChannelId: this.payChannelId
                 };
                 http.get('/vipCard/reapplyVipCard', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
+                            this.$emit('refreshView');
                         }
                     });
             }
@@ -85,7 +109,18 @@
                 if (newVal) {
                     $('#repairCardModal').modal('show');
                 }
+            },
+            payChannelId(newVal) {
+                this.channels.map(channel => {
+                    if (channel.id === newVal) {
+                        this.payChannel = channel.name;
+                    }
+                });
             }
+        },
+        components: {
+            DdSelect,
+            DdOption
         }
     };
 </script>

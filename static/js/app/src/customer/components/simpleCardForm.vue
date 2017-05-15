@@ -16,7 +16,7 @@
                     <div class="cardList-body-item">
                         <span class="cardList-body-itemLeft">原卡</span>
                         <div class="cardList-body-itemRight">
-                            {{card.cardType}} {{card.cardNum}}
+                            {{card.cardType}} {{card.vipCardNum}}
                         </div>
                     </div>
                 </div>
@@ -81,6 +81,7 @@
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
+                            this.$emit('refreshView');
                         }
                     });
             }

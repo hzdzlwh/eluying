@@ -16,7 +16,7 @@
                     <div class="cardList-body-item">
                         <span class="cardList-body-itemLeft">主会员卡</span>
                         <div class="cardList-body-itemRight additionalModal-body-itemRight">
-                            {{card.cardType}} {{card.cardNum}}
+                            {{card.cardType}} {{card.vipCardNum}}
                         </div>
                     </div>
                     <div class="cardList-body-item">
@@ -38,6 +38,7 @@
                                        class="dd-input normal-input"
                                        maxlength="16"
                                        placeholder="请输入姓名"
+                                       :disabled='disableNameInput'
                                        v-model="name" />
                             </div>
                         </div>
@@ -56,8 +57,17 @@
                     <div class="cardList-body-item">
                             <span>
                                 <strong class="body-bottom-priceTitle">办理费用:</strong>
-                                <span><strong class="body-bottom-price">¥30000.00</strong></span>
+                                <span><strong class="body-bottom-price">¥{{card.viceApplyFee}}</strong></span>
                             </span>
+                            <div style="display: inline-flex;align-items: center">
+                                <span style="margin-right: 4px">收款方式:</span>
+                                <div style="width: 130px;">
+                                    <dd-select v-model="payChannelId" placeholder="请选择收款方式">
+                                        <dd-option v-for="payChannel in channels" :key="payChannel.id" :value="payChannel.id" :label="payChannel.name">
+                                        </dd-option>
+                                    </dd-select>
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="cardList-modal-foot">
@@ -76,11 +86,13 @@
 </style>
 <script>
     import http from '../../common/http';
+    import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
         props: {
             visible: Boolean,
-            card: Object
+            card: Object,
+            channels: Array
         },
         data() {
             return {
@@ -89,7 +101,9 @@
                 cardNum: '',
                 phoneValid: true,
                 disableNameInput: false,
-                phoneErrorTip: ''
+                phoneErrorTip: '',
+                payChannelId: undefined,
+                payChannel: undefined
             };
         },
         methods: {
@@ -99,12 +113,14 @@
                 this.$emit('closeModal');
             },
             resetData() {
-                this.phone = undefined;
+                this.phone = '';
                 this.name = '';
                 this.cardNum = '';
                 this.phoneValid = true;
                 this.disableNameInput = false;
                 this.phoneErrorTip = '';
+                this.payChannelId = undefined;
+                this.payChannel = undefined;
             },
             getPhoneInfo() {
                 http.get('/vipCard/checkPhoneBeforeApplyVipCard', { phone: this.phone })
@@ -132,12 +148,15 @@
                     vipCardId: this.card.id,
                     name: this.name,
                     phone: this.phone,
+                    payChannel: this.payChannel,
+                    payChannelId: this.payChannelId,
                     vipCardNum: this.cardNum
                 };
                 http.get('/vipCard/registViceVipCard', params)
                     .then(res => {
                         if (res.code === 1) {
                             this.hideModal();
+                            this.$emit('refreshView');
                         }
                     });
             }
@@ -148,11 +167,18 @@
                     $('#additionalCardModal').modal('show');
                 }
             },
+            payChannelId(newVal) {
+                this.channels.map(channel => {
+                    if (channel.id === newVal) {
+                        this.payChannel = channel.name;
+                    }
+                });
+            },
             phone(newVal) {
-                if (newVal && newVal.length > 0) {
+                if (newVal.length > 0) {
                     this.phoneErrorTip = '格式有误';
                 }
-                if (newVal && newVal.length === 0) {
+                if (newVal.length === 0) {
                     this.phoneValid = false;
                     this.phoneErrorTip = '必填字段';
                 }
@@ -163,6 +189,10 @@
                     }
                 }
             }
+        },
+        components: {
+            DdSelect,
+            DdOption
         }
     };
 </script>
