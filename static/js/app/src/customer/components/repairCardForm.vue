@@ -25,7 +25,7 @@
                             <input
                                     type="text"
                                     class="dd-input"
-                                    maxlength="20"
+                                    maxlength="18"
                                     placeholder="请输入会员卡卡号"
                                     v-model="cardNum" />
                         </div>
