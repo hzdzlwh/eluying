@@ -17,6 +17,7 @@
                                        class="dd-input normal-input"
                                        maxlength="11"
                                        placeholder="请输入手机号"
+                                       :disabled="editable"
                                        v-model="phone" />
                                 <span class="error-phone-tip" v-show="!phoneValid">
                                     <span style="vertical-align: text-bottom">&uarr;</span>
@@ -98,6 +99,7 @@
     export default{
         props: {
             visible: Boolean,
+            oldPhone: '',
             channels: Array
         },
         data() {
@@ -108,6 +110,7 @@
                 phoneValid: true,
                 disableNameInput: false,
                 phoneErrorTip: '',
+                editable: false,
                 cardTypes: undefined,
                 payChannelId: undefined,
                 payChannel: undefined,
@@ -156,6 +159,7 @@
                 $('#mainCardModal').modal('hide');
                 this.resetData();
                 this.$emit('closeModal');
+                this.editable = false;
             },
             selectCardType(item) {
                 this.cardTypes.map(type => {
@@ -248,6 +252,10 @@
                     this.resetData();
                     $('#mainCardModal').modal('show');
                 }
+            },
+            oldPhone(newVal) {
+                this.phone = newVal;
+                this.editable = true;
             }
         },
         components: {
