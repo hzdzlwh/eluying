@@ -190,6 +190,8 @@
                     this.resetData();
                     $('#rechargeCardModal').modal('show');
                     this.getRechargeTypes();
+                } else {
+                    $('#rechargeCardModal').modal('hide');
                 }
             },
             payChannelId(newVal) {

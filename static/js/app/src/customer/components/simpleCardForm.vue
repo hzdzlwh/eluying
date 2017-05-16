@@ -90,6 +90,8 @@
             visible(newVal) {
                 if (newVal) {
                     $('#simpleCardModal').modal('show');
+                } else {
+                    $('#simpleCardModal').modal('hide');
                 }
             }
         }

@@ -172,6 +172,8 @@
                 if (newVal) {
                     this.resetData();
                     $('#additionalCardModal').modal('show');
+                } else {
+                    $('#additionalCardModal').modal('hide');
                 }
             },
             payChannelId(newVal) {

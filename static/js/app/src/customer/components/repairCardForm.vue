@@ -115,6 +115,8 @@
                 if (newVal) {
                     this.resetData();
                     $('#repairCardModal').modal('show');
+                } else {
+                    $('#repairCardModal').modal('hide');
                 }
             },
             payChannelId(newVal) {
