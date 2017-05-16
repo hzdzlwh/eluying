@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <remainder :show='ramainShow' :data='remainderDate' @sub='addParms'></remainder>
+        <remainder :show='ramainShow' :data='remainderDate' @sub='addParms' :total='orderPayment.payableFee'></remainder>
     </div>
 </template>
 <style lang="scss">

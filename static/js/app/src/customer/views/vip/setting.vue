@@ -4,9 +4,9 @@
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
-            <div style="margin-top:18px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
-            <vipLevel v-for='(dd ,index) in settings' :data='dd' :key="dd" :editor='dd.addType === 1' :type='autoUpgrade' ></vipLevel>
+            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="margin-left: 273px" @click="openCreate">新增</button>
+            <div style="margin-top:18px;">
+            <vipLevel v-for='(dd ,index) in settings' :data='dd' :key="dd":type='autoUpgrade' @delet='getLevelList' @addCard='getLevelList' ></vipLevel>
             </div>
         </div>
 
@@ -201,6 +201,12 @@
                             }
                         }
                     });
+            },
+            openCreate() {
+                this.settings.unshift({
+                    consumeItems: [],
+                    discountInfoList: []
+                });
             },
             selectSystem() {
                 if (typeof this.autoUpgrade === 'undefined') {

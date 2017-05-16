@@ -407,7 +407,7 @@ export default {
             this.vipCard.rechargeItems.push({});
         },
         handleCategorySelect(list) {
-            if (this.vipCard[this.selectType].lenght) {
+            if (this.vipCard[this.selectType].length) {
                 const newList = [];
                 list.map(item => {
                     const result = this.vipCard[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);

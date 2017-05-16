@@ -25,7 +25,7 @@
                 <div class="vipLevelBoxtitle">可支付项目</div>
                 <div class="vipLevelBoxCantain">
                     <div>累计消费金额：达到该等级需要累计消费金额
-                        <input type="number" class="vipLevelMInput" v-model='vipLevel.thresholdFee' v-if='edit'><span>{{vipLevel.thresholdFee}}</span>元</div>
+                        <input type="number" class="vipLevelMInput" v-model='vipLevel.thresholdFee' v-if='edit'><span v-else>{{vipLevel.thresholdFee}}</span>元</div>
                     <div class="level-tip">成为会员后，在【消费业态】中累计消费金额达到【升级条件】后自动升级为该级别会员</div>
                 </div>
                 <div class="vipLevelTipBoxCantain">
@@ -39,7 +39,7 @@
                                     <span v-if='edit'>
                             <input type="number" max="9.9" min='0.1' v-model='item.growthValue' class="vipLevelSInput"/>元
                             <span class="level-tip">(请输入0.1-9.9之间的数字)</span>
-                                    <img @click='deleteNode("discountInfoList", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;">
+                                    <img @click='deleteNode("consumeItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;">
                                     </span>
                                     <span v-else>{{item.growthValue}}元</span>
                                 </div>
@@ -241,8 +241,12 @@ export default {
     },
     methods: {
         canel() {
-            this.vipLevel = this.getdata();
-            this.edit = false;
+            if (this.vipLevel.vipLevelSettingId) {
+                this.vipLevel = this.getdata();
+                this.edit = false;
+            } else {
+                this.$emit('delet');
+            }
         },
         getdata() {
             const cardData = JSON.parse(JSON.stringify(this.data));
@@ -263,23 +267,40 @@ export default {
         },
         delet() {
             const callback = () => {
-                http.get('/vipLevel/deleteVipCardCategory', {
-                    categoryId: this.vipLevel.categoryId
+                http.get('/vipUser/removeVipLevel', {
+                    vipLevelId: this.vipLevel.vipLevelSettingId
                 })
                     .then(res => {
                         this.$emit('delet');
                     });
             };
-            modal.confirm({
-                message: '删除后，所有该类型会员卡将会被删除，请先将它们置于失效状态',
-                title: '删除会员卡'
-            }, callback);
+            if (this.vipLevel.vipLevelSettingId) {
+                modal.confirm({
+                    message: '删除后，所有该类型会员卡将会被删除，请先将它们置于失效状态',
+                    title: '删除会员卡'
+                }, callback);
+            } else {
+                this.$emit('delet');
+            }
         },
         subDate() {
             this.namewarn = false;
             if (!this.vipLevel.levelName) {
                 this.namewarn = true;
                 return;
+            }
+            if (this.vipLevel.thresholdFee < 0) {
+                modal.warn('可支付项目累计金额 请输入0及以上的数字');
+                return;
+            }
+            if (this.vipLevel.consumeItems) {
+                for (let i = 0; i < this.vipLevel.consumeItems.length; i ++) {
+                    this.vipLevel.consumeItems[i].growthValue = parseFloat(this.vipLevel.consumeItems[i].growthValue);
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipLevel.consumeItems[i].growthValue)) {
+                        modal.warn('可支付项目 请输入0.1-9.9之间正确的折扣数字');
+                        return false;
+                    }
+                }
             }
             if (this.vipLevel.discountInfoList) {
                 for (let i = 0; i < this.vipLevel.discountInfoList.length; i ++) {
@@ -303,7 +324,7 @@ export default {
             });
         },
         handleCategorySelect(list) {
-            if (this.vipLevel[this.selectType].lenght) {
+            if (this.vipLevel[this.selectType].length) {
                 const newList = [];
                 list.map(item => {
                     const result = this.vipLevel[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
