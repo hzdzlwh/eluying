@@ -251,6 +251,8 @@
                 if (newVal) {
                     this.resetData();
                     $('#mainCardModal').modal('show');
+                } else {
+                    $('#mainCardModal').modal('hide');
                 }
             },
             oldPhone(newVal) {

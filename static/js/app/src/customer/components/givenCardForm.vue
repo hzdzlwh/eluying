@@ -168,6 +168,8 @@
                 if (newVal) {
                     this.resetData();
                     $('#givenCardModal').modal('show');
+                } else {
+                    $('#givenCardModal').modal('hide');
                 }
             },
             payChannelId(newVal) {
