@@ -640,7 +640,7 @@
         }
         .room-category {
             width: 60px;
-            display: inline-block;
+            margin-left: 4px;
             input {
                 width: 100%;
             }
@@ -746,6 +746,13 @@
         }
         .userInfo-phone {
             position: relative;
+        }
+        .content-item-discount {
+            font-size: 14px;
+            font-weight: normal;
+            .dd-select-input::placeholder {
+                color: #666;
+            }
         }
         .enter-icon {
             width: 18px;

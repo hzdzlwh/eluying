@@ -78,10 +78,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="userInfo-item" v-if="showVipCardSelect">
+                                <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="vipCard">
+                                        <dd-select v-model="vipCardId">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
                                             </dd-option>
@@ -105,6 +105,8 @@
                                     :checkState="checkState"
                                     :userOriginType="userOriginType"
                                     :vipId="vipId"
+                                    :vipCardId="vipCardId"
+                                    :vipCardInfo="vipCardInfo"
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
                         <CateEditor
@@ -305,7 +307,8 @@
                 foodPrice: 0,
                 ORDER_TYPE,
                 vipCardsAndLevel: [],
-                vipCard: undefined
+                vipCardId: undefined,
+                vipCardInfo: {}
             };
         },
         props: {
@@ -421,6 +424,34 @@
                 if (originType !== -5 && originType !== -4) {
                     this.vipDiscountDetail = {};
                 }
+
+                if (!origin || (origin.id !== -4 && origin.id !== -5)) {
+                    this.vipCardInfo = {};
+                }
+            },
+            vipCardId(vipCardId) {
+                if (vipCardId === -1) {
+                    const vip = this.vipCardsAndLevel[0].levels[0];
+                    this.vipCardInfo = {
+                        name: vip.name,
+                        discount: this.getRoomDiscount(vip.discountList),
+                        tag: '会员折扣'
+                    };
+                }
+
+                if (vipCardId > 0) {
+                    const card = this.vipCardsAndLevel[1].levels.find(i => i.id === this.vipCardId);
+                    this.vipCardInfo = {
+                        name: card.name,
+                        serialNum: card.serialName,
+                        discount: this.getRoomDiscount(card.discountList),
+                        tag: '会员卡折扣'
+                    };
+                }
+
+                if (vipCardId === 0) {
+                    this.vipCardInfo = {};
+                }
             },
             phone(newVal) {
                 if (!newVal) {
@@ -475,6 +506,10 @@
                 types.LOAD_SHOP_LIST,
                 types.LOAD_ENTER_LIST
             ]),
+            getRoomDiscount(discounts) {
+                const discount = discounts.find(i => i.nodeType === 0);
+                return discount ? discount.discount : 1;
+            },
             changeVipList(num) {
                 if (num === 2 && this.phone.length === 11) {
                     this.getVipDiscount(this.phone);
@@ -517,12 +552,18 @@
                             this.vipCardsAndLevel = [];
                             this.vipCardsAndLevel.push({
                                 label: '会员',
-                                levels: [{ name: res.data.vipDetail.level, id: -1 }]
+                                levels: [{
+                                    name: res.data.vipDetail.level,
+                                    id: -1,
+                                    discountList: res.data.vipDetail.discountList
+                                }]
                             });
                             const cards = res.data.cards.map(card => {
                                 return {
                                     id: card.id,
-                                    name: card.name
+                                    name: card.name,
+                                    serialNum: card.serialNum,
+                                    discountList: card.discountList
                                 };
                             });
                             this.vipCardsAndLevel.push({
@@ -532,9 +573,9 @@
                             // 默认选择一个选项，优先级：会员卡（最新办理的优先级高）>等级会员。
                             this.$nextTick(() => {
                                 if (cards && cards.length > 0) {
-                                    this.vipCard = cards[0].id;
+                                    this.vipCardId = cards[0].id;
                                 } else {
-                                    this.vipCard = -1;
+                                    this.vipCardId = -1;
                                 }
                             });
                         } else {
@@ -549,6 +590,11 @@
                         this.vipDiscountDetail = {};
                         this.vipDiscountDetail.isVip = false;
                         this.vipDiscountDetail.vipDetail = discountList;
+                        this.vipCardInfo = {
+                            name: this.userOriginType.name,
+                            discount: this.getItemDiscountInfo(0, 0).discount,
+                            tag: '企业折扣'
+                        };
                     });
             },
             getData() {
