@@ -135,10 +135,34 @@ import {
 import http from 'http';
 import bus from '../../eventBus';
 export default {
+    props: {
+        data: {
+            type: Object,
+            default: {}
+        },
+        show: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
-            remainder: undefined
+            remainder: {}
         };
+    },
+    watch: {
+        show(val) {
+            if (val) {
+                $('#reaminder').modal({
+                    backdrop: 'static'
+                });
+            } else {
+                $('#reaminder').modal('hide');
+            }
+        },
+        data(val) {
+        	this.reaminder = Object.contact({}, val);
+        }
     },
     computed: {},
     created() {

@@ -293,7 +293,7 @@ export default {
                 };
             }
             http.get('/order/getBalancePayment', params).then(res => {
-                if (res.balancePay) {
+                if (res.data.balancePay) {
                     this.ramainShow = true;
                     this.remainderDate = res.data.balancePay
                 } else {
