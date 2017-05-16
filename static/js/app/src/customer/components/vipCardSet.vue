@@ -290,7 +290,7 @@ export default {
     },
     watch: {
         selectType(o, n) {
-            window.console.log(o + n);
+            // window.console.log(o + n);
         }
     },
     data() {
@@ -398,7 +398,7 @@ export default {
             data.payableItems = JSON.stringify(data.payableItems);
             data.rechargeItems = JSON.stringify(data.rechargeItems);
             data.applyStrategy = JSON.stringify(data.applyStrategy);
-            http.get('/vipCard/addOrEditVipCardSettings', data).then(res => {
+            http.post('/vipCard/addOrEditVipCardSettings', data).then(res => {
                 this.edit = false;
                 this.$emit('addCard');
             });

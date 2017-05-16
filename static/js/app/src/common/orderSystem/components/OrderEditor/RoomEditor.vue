@@ -6,13 +6,17 @@
                     <span class="increase-icon"></span>添加房间
                 </span>
             </span>
-            <span>
+            <span class="content-item-discount">
                 折扣方案：
                 <span style="width: 120px">
-                    <dd-select>
-                        <dd-option>
-
+                    <dd-select placeholder="组合优惠">
+                        <dd-option :value="0" label="不使用">
                         </dd-option>
+                        <dd-group-option v-for="item in discountPlans" :label="item.label"
+                             :key="item" v-if="item.discounts && item.discounts.length > 0">
+                            <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name">
+                            </dd-option>
+                        </dd-group-option>
                     </dd-select>
                 </span>
             </span>
@@ -23,20 +27,22 @@
                     <span class="room-icon"></span>
                     <div class="shop-item-content">
                         <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
-                        <dd-select v-model="item.categoryType" placeholder="请选择房型"
-                                   @input="changeRoomType(item ,index)">
-                            <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
-                                       :label="category.name">
-                            </dd-option>
-                        </dd-select>
-                        <div class="room-category">
-                            <dd-select v-model="item.roomType" placeholder="请选择房间"
-                                       @input="handleRoomChange(item, index)">
-                                <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
-                                           :key="room.id"
-                                           :label="room.name">
+                        <div style="display: flex">
+                            <dd-select v-model="item.categoryType" placeholder="请选择房型"
+                                       @input="changeRoomType(item ,index)">
+                                <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
+                                           :label="category.name">
                                 </dd-option>
                             </dd-select>
+                            <div class="room-category">
+                                <dd-select v-model="item.roomType" placeholder="请选择房间"
+                                           @input="handleRoomChange(item, index)">
+                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
+                                               :key="room.id"
+                                               :label="room.name">
+                                    </dd-option>
+                                </dd-select>
+                            </div>
                         </div>
                         <div class="room-date" style="display: inline-block; position: relative;">
                             <span class="useless-tip error" style="left: 28px;"
@@ -101,22 +107,6 @@
                         </span>
                     </span>
                 </div>
-                <div style="margin-top: 15px;padding-left: 41px">
-                    <span>快捷折扣</span>
-                    <span style="width: 179px;display: inline-block" class="room-category">
-                        <dd-select v-model="item.quickDiscountId" placeholder="请选择快捷折扣" @input="quickDiscountIdChange(item)">
-                            <dd-option v-for="discount in quickDiscounts"
-                                       :value="discount.id"
-                                       :key="discount.id"
-                                       :label="discount.label">
-                            </dd-option>
-                        </dd-select>
-                    </span>
-                    <span v-if="(order.rooms || !order.isCombinationOrder) && index === 0 && rooms.length > 1" style="margin-left: 16px">
-                        <input style="width: auto" v-model="allQuick" type="checkbox" class="dd-checkbox">
-                        <span>应用到所有房间</span>
-                    </span>
-                </div>
                 <CheckInPerson
                         :personsObj="{id: index, persons: item.idCardList}"
                         @addPerson="addPerson"
@@ -131,18 +121,20 @@
 <script>
     import CheckInPerson from '../CheckInPerson.vue';
     import modal from '../../../modal';
-    import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
+    import { DdSelect, DdOption, DdDatepicker, DdGroupOption } from 'dd-vue-component';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../http';
     import util from '../../../util';
     import bus from '../../../eventBus';
+    import Vue from 'vue';
     export default{
         data() {
             return {
                 rooms: [],
                 quickDiscounts: [],
                 forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
-                lastRoomsToken: {} // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
+                lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
+                discountPlans: []
             };
         },
         created() {
@@ -162,7 +154,8 @@
             CheckInPerson,
             DdSelect,
             DdOption,
-            DdDatepicker
+            DdDatepicker,
+            DdGroupOption
         },
         directives: {
             Clickoutside
@@ -174,6 +167,11 @@
             registerRooms: Array,
             userOriginType: Object,
             vipId: Number,
+            vipCardId: Number,
+            vipCardInfo: {
+                type: Object,
+                default: {}
+            },
             order: {
                 type: Object,
                 default: {}
@@ -191,6 +189,31 @@
                     // 更改渠道
                     this.modifyRooms(this.rooms);
                 }
+            },
+            vipCardInfo(vipCardInfo) {
+                const discounts = vipCardInfo.discount && vipCardInfo.discount < 1 ? [{
+                    id: -1,
+                    name: vipCardInfo.name,
+                    serialNum: vipCardInfo.serialNum,
+                    discount: vipCardInfo.discount
+                }] : [];
+                Vue.set(this.discountPlans, 1, {
+                    label: vipCardInfo.tag,
+                    discounts: discounts
+                });
+            },
+            vipCardId(id) {
+                // 会员折扣id为-1
+                const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 1 ? [{
+                    id: -1,
+                    name: this.vipCardInfo.name,
+                    serialNum: this.vipCardInfo.serialNum,
+                    discount: this.vipCardInfo.discount
+                }] : [];
+                Vue.set(this.discountPlans, 1, {
+                    label: this.vipCardInfo.tag,
+                    discounts: discounts
+                });
             },
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail || !oldVal.vipDetail) {
@@ -269,10 +292,16 @@
                                 label: item.description + '  ' + item.discount + '折'
                             };
                         });
-                        // 默认选项
-                        this.quickDiscounts.unshift({
-                            id: '',
-                            label: '无'
+                        this.discountPlans = [];
+                        this.discountPlans.push({
+                            label: '快捷折扣',
+                            discounts: res.data.list.map(item => {
+                                return {
+                                    id: item.id,
+                                    name: item.description,
+                                    discount: item.discount
+                                };
+                            })
                         });
                     });
             },

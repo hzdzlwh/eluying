@@ -1,51 +1,51 @@
 <template>
-    <div class="vipCard">
-        <div class="vipCardTitle"><span class="vipCardRed"> <span v-show='namewarn && edit'>*</span></span>
-            <input type="text" v-model='vipCard.name' placeholder="请输入会员卡等级名称" v-if='edit' maxlength='16'>
-            <span v-else>{{vipCard.name}}</span>
+    <div class="vipLevel">
+        <div class="vipLevelTitle"><span class="vipLevelRed"> <span v-show='namewarn && edit'>*</span></span>
+            <input type="text" v-model='vipLevel.levelName' placeholder="请输入会员卡等级名称" v-if='edit' maxlength='16'>
+            <span v-else>{{vipLevel.levelName}}</span>
             <span>
-                <div class="vipCardWarn" v-if='namewarn && edit' >↑必填字段</div>
+                <div class="vipLevelWarn" v-if='namewarn && edit' >↑必填字段</div>
             </span>
             <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
-        <div class="vipCardCantain">
-            <div class="vipCardBox">
-                <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
+        <div class="vipLevelCantain">
+            <div class="vipLevelBox">
+                <div class="vipLevelBoxtitle">优惠折扣 <span v-if='edit'><span class="vipLevelBoxtitleTip" >请输入0.1-9.9之间的数字</span></span>
                 </div>
-                <div class="vipCardBoxCantain">
-                    <div class="vipCardCantainLeft" v-if='vipCard["discountItems"].length'>
-                        <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
-                            <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
+                <div class="vipLevelBoxCantain">
+                    <div class="vipLevelCantainLeft" v-if='vipLevel["discountInfoList"].length'>
+                        <div class="df" v-for='(item, index) in vipLevel["discountInfoList"]'>
+                            <label for="" class="vipLevelRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipLevelSInput"/>折<img @click='deleteNode("discountInfoList", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
                         </div>
                     </div>
-                    <div class="vipCardChose" @click='openSelectNode("discountItems")' v-if='edit'>选择项目</div>
+                    <div class="vipLevelChose" @click='openSelectNode("discountInfoList")' v-if='edit'>选择项目</div>
                 </div>
             </div>
-            <div class="vipCardBox">
-                <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
-                <div class="vipCardBoxCantain">
+            <div class="vipLevelBox">
+                <div class="vipLevelBoxtitle">可支付项目</div>
+                <div class="vipLevelBoxCantain">
                     <div>累计消费金额：达到该等级需要累计消费金额
-                        <input type="number" class="vipCardMInput" v-model='vipCard.levlefee' v-if='edit'><span>{{vipCard.levlefee}}</span>元</div>
+                        <input type="number" class="vipLevelMInput" v-model='vipLevel.thresholdFee' v-if='edit'><span>{{vipLevel.thresholdFee}}</span>元</div>
                     <div class="level-tip">成为会员后，在【消费业态】中累计消费金额达到【升级条件】后自动升级为该级别会员</div>
                 </div>
-                <div class="vipCardTipBoxCantain">
+                <div class="vipLevelTipBoxCantain">
                     <div>累计项目：</div>
-                    <div class="vipCardTipBoxList">
-                        <div style="display:inline-block" v-for='list in vipLevelList'>
-                            <div v-if='vipCard["payableItems"].filter(function(item){ return item.nodeType === list.id }).length'>
-                                {{list.name}}：
-                                <div class="df" v-for='(item, index) in vipCard["payableItems"]' v-if='item.nodeType === list.id'>
-                                    <label for="" class="vipCardRoomLabel"><span class="VipCardListName" :title='item.nodeName'>{{item.nodeName}}</span>：每消费1元，累计消费金额增长</label>
+                    <div class="vipLevelTipBoxList">
+                        <div style="" v-for='list in vipLevelList'>
+                            <div v-if='vipLevel["consumeItems"].filter(function(item){ return item.nodeType === list.id }).length'>
+                                <span style="display: inline-block;margin: 10px 5px;">{{list.name}}：</span>
+                                <div class="df" v-for='(item, index) in vipLevel["consumeItems"]' v-if='item.nodeType === list.id'>
+                                    <label for="" class="vipLevelRoomLabel"><span class="VipCardListName" :title='item.nodeName'>{{item.nodeName}}</span>：每消费1元，累计消费金额增长</label>
                                     <span v-if='edit'>
-                            <input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>元
+                            <input type="number" max="9.9" min='0.1' v-model='item.growthValue' class="vipLevelSInput"/>元
                             <span class="level-tip">(请输入0.1-9.9之间的数字)</span>
-                                    <img @click='deleteNode("discountItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;">
+                                    <img @click='deleteNode("discountInfoList", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;">
                                     </span>
-                                    <span v-else>{{item.discount}}元</span>
+                                    <span v-else>{{item.growthValue}}元</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
+                        <div class="vipLevelChose" v-if='edit' @click='openSelectNode("consumeItems")'>选择项目</div>
                     </div>
                 </div>
             </div>
@@ -58,20 +58,20 @@
     </div>
 </template>
 <style lang='sass' scoped>
-.vipCard {
-    .vipCardRed {
+.vipLevel {
+    .vipLevelRed {
         font-size: 14px;
         color: #f24949;
         width: 14px;
         display: inline-block;
         margin-left: 6px;
     }
-    .vipCardBoxWarn {
+    .vipLevelBoxWarn {
         font-size: 12px;
         color: #f24949;
         line-height: 12px;
     }
-    .vipCardWarn {
+    .vipLevelWarn {
         font-size: 12px;
         color: #f24949;
         margin-left: 25px;
@@ -90,25 +90,25 @@
     border-radius:2px;
     border-top:4px solid #178ce6;
     width: 730px;
-    .vipCardTitle {
+    .vipLevelTitle {
         padding: 15px 0;
         background: #f0f0f0;
     }
-    .vipCardTipBoxCantain {
+    .vipLevelTipBoxCantain {
         border-top: 1px solid #e6e6e6;
         padding: 10px 20px;
-        .vipCardTipBoxList {
+        .vipLevelTipBoxList {
             background: #f7f7f7;
             padding: 15px 10px;
-            .VipCardListName{
-                    max-width: 90px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+            .VipCardListName {
+                max-width: 90px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
     }
-    .vipCardChose {
+    .vipLevelChose {
         font-size: 14px;
         color: #178ce6;
         padding-top: 0px;
@@ -118,27 +118,27 @@
         cursor: pointer;
         display: inline-block;
     }
-    .vipCardCantain {
+    .vipLevelCantain {
         padding: 20px;
-        .vipCardCantainLeft{
+        .vipLevelCantainLeft {
             display: inline-block;
             margin-right: 30px;
         }
-        .vipCardBox {
+        .vipLevelBox {
             background: #ffffff;
             box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
             border-radius: 2px 2px 2px 2px;
             margin-bottom: 15px;
-            .vipCardBoxtitle {
+            .vipLevelBoxtitle {
                 background: #f0f0f0;
                 height: 32px;
                 line-height: 32px;
                 padding: 0 15px;
                 color: #666;
-                .vipCardBoxSwitch {
+                .vipLevelBoxSwitch {
                     float: right;
                 }
-                .vipCardBoxtitleTip {
+                .vipLevelBoxtitleTip {
                     color: #999;
                     margin-left: 10px;
                     font-size: 12px;
@@ -148,17 +148,17 @@
                 font-size: 12px;
                 color: #999999;
             }
-            .vipCardRule {
+            .vipLevelRule {
                 padding-bottom: 15px!important;
             }
-            .vipCardBoxCantain {
+            .vipLevelBoxCantain {
                 color: #666;
                 padding: 10px 20px 0;
-                .vipCardSInput {
+                .vipLevelSInput {
                     width: 50px;
                     margin-right: 5px;
                 }
-                .vipCardMInput {
+                .vipLevelMInput {
                     width: 100px;
                     margin-right: 5px;
                 }
@@ -166,7 +166,7 @@
                     display: flex;
                     line-height: 24px;
                 }
-                .vipCardRoomLabel {
+                .vipLevelRoomLabel {
                     width: 240px;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -174,7 +174,7 @@
                     height: 24px;
                     line-height: 24px;
                 }
-                .vipCardMoreShow {
+                .vipLevelMoreShow {
                     font-size: 14px;
                     color: #178ce6;
                 }
@@ -196,7 +196,12 @@ export default {
         editor: {
             type: Boolean,
             default: true
+        },
+        type: {
+            type: Number,
+            default: 0
         }
+
     },
     data() {
         return {
@@ -205,7 +210,7 @@ export default {
             consume: [],
             selectType: undefined,
             selectItem: undefined,
-            vipCard: this.getdata(),
+            vipLevel: this.getdata(),
             namewarn: false,
             edit: this.editor,
             vipLevelList: [{
@@ -226,7 +231,8 @@ export default {
                 1: 0,
                 2: 0,
                 3: 0
-            }
+            },
+            url: this.type ? '/vipUser/createEditVipLevel' : ' /vipUser/createEditVipLevelNotAuto'
         };
     },
     components: {
@@ -235,7 +241,7 @@ export default {
     },
     methods: {
         canel() {
-            this.vipCard = this.getdata();
+            this.vipLevel = this.getdata();
             this.edit = false;
         },
         getdata() {
@@ -245,7 +251,7 @@ export default {
                     if (key === 'applyStrategy') {
                         cardData[key] = {};
                     }
-                    if (key === 'discountItems' || key === 'payableItems' || key === 'rechargeItems') {
+                    if (key === 'discountInfoList' || key === 'consumeItems' || key === 'rechargeItems') {
                         cardData[key] = [];
                     }
                 }
@@ -257,8 +263,8 @@ export default {
         },
         delet() {
             const callback = () => {
-                http.get('/vipCard/deleteVipCardCategory', {
-                    categoryId: this.vipCard.categoryId
+                http.get('/vipLevel/deleteVipCardCategory', {
+                    categoryId: this.vipLevel.categoryId
                 })
                     .then(res => {
                         this.$emit('delet');
@@ -271,36 +277,36 @@ export default {
         },
         subDate() {
             this.namewarn = false;
-            this.applyStrategyWarn = false;
-            this.thresholdFeeWarn = false;
-            this.reapplyMasterFeeWarn = false;
-            this.givingIntervalWarn = false;
-            this.viceApplyFeeWarn = false;
-            if (!this.vipCard.name) {
+            if (!this.vipLevel.levelName) {
                 this.namewarn = true;
                 return;
             }
-            if (this.vipCard.discountItems) {
-                for (let i = 0; i < this.vipCard.discountItems.length; i ++) {
-                    this.vipCard.discountItems[i].discount = parseFloat(this.vipCard.discountItems[i].discount);
-                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipCard.discountItems[i].discount)) {
+            if (this.vipLevel.discountInfoList) {
+                for (let i = 0; i < this.vipLevel.discountInfoList.length; i ++) {
+                    this.vipLevel.discountInfoList[i].discount = parseFloat(this.vipLevel.discountInfoList[i].discount);
+                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipLevel.discountInfoList[i].discount)) {
                         modal.warn('优惠折扣 请输入0.1-9.9之间正确的折扣数字');
                         return false;
                     }
                 }
             }
-            const data = Object.assign({}, this.vipCard);
-            data.discountItems = JSON.stringify(data.discountItems);
-            http.get('/vipCard/addOrEditVipCardSettings', data).then(res => {
+            const data = Object.assign({}, this.vipLevel);
+            data.discountListReq = JSON.stringify(data.discountInfoList);
+            delete data.discountInfoList;
+            if (this.type) {
+                data.consumeListReq = JSON.stringify(data.consumeItems);
+                delete data.consumeItems;
+            }
+            http.post(this.url, data).then(res => {
                 this.edit = false;
                 this.$emit('addCard');
             });
         },
         handleCategorySelect(list) {
-            if (this.vipCard[this.selectType].lenght) {
+            if (this.vipLevel[this.selectType].lenght) {
                 const newList = [];
                 list.map(item => {
-                    const result = this.vipCard[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
+                    const result = this.vipLevel[this.selectType].find(i => i.id === item.id && i.nodeType === item.nodeType);
                     if (result) {
                         if (item.selected) {
                             newList.push({ ...result
@@ -311,18 +317,18 @@ export default {
                         });
                     }
                 });
-                this.vipCard[this.selectType] = newList;
+                this.vipLevel[this.selectType] = newList;
             } else {
-                this.vipCard[this.selectType] = list;
+                this.vipLevel[this.selectType] = list;
             }
         },
         deleteNode(item, index) {
-            this.vipCard[item].splice(index, 1);
+            this.vipLevel[item].splice(index, 1);
         },
         // type:可支付项目或优惠折扣，item
         openSelectNode(type) {
             this.selectType = type;
-            this.nodes = this.vipCard[type];
+            this.nodes = this.vipLevel[type];
             this.selectItem = type;
             // this.nodes = item[type];
             $('#categorySelectModal').modal('show');

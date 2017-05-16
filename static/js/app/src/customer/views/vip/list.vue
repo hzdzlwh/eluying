@@ -275,13 +275,13 @@
                     {
                         title: '会员卡',
                         render: (h, row) => <div>{row.vipCards.map(function(item) {
-                            return <div key={item.vipUserId}>{item.name}</div>;
+                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.name} key={item.vipUserId}>{item.name}</div>;
                         })}</div>
                     },
                     {
                         title: '余额',
                         render: (h, row) => <div>{row.vipCards.map(function(item) {
-                            return <div key={item.vipUserId}>{item.balanceFee}</div>;
+                            return <div style="height:19px;" key={item.vipUserId}>{item.balanceFee}</div>;
                         })}</div>
                     },
                     {
@@ -398,7 +398,7 @@
                 });
             },
             charge(card) {
-                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡' };
+                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId };
                 this.handleDetailClose();
                 this.rechargeVisible = true;
             },
