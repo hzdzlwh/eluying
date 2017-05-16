@@ -1,47 +1,91 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:v-on="//www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>订单来了——餐厅管理</title>
-    <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="Shortcut Icon" href="/static/image/favicon.ico">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/dist/main.min.css">
     <script src="/static/js/app/dist/common.js"></script>
     <script src="/static/js/app/dist/restaurant/table.js"></script>
 </head>
+
 <body>
     <div class="mainContainer clearfloat">
         <div class="restaurant-container">
             <div class="restaurant-head clearfloat">
                 <p class="restaurant-head-restName">{{restName}}</p>
                 <span class="restaurant-head-list">桌子列表</span>
-                <span class="create-restaurant" v-on:click="openCreateDialog">新增桌子</span>
-                <span class="volume-production" @click="volumeReset()">批量重置二维码</span>
-                <a :href="`${volumeDownload}`" target="_blank" style="color: #178ce6;" download><span class="volume-download">批量下载二维码</span></a>
+                <span class="create-restaurant" v-on:click="openSingleDialog(0)">新增区域</span>
+                <span class="volume-production" @click="volumeReset()">重置全部二维码</span>
+                <a :href="`${volumeDownload}`" target="_blank" style="color: #178ce6;" download><span class="volume-download">下载全部二维码</span></a>
             </div>
-            <div class="restaurant-box">
-                <div class="hr"></div>
-                <table class="board-table">
-                    <thead>
-                    <tr>
-                        <th>桌子名称</th>
-                        <th>可容纳人数</th>
-                        <th>桌位二维码</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="board in boards" track-by="boardId">
-                        <td>{{board.boardName}}</td>
-                        <td>{{board.seatNum}}</td>
-                        <td><img :src="board.qrCodeUrl" alt="" class="twoCode" @click="openResetDialog(board)"></td>
-                        <td>
-                            <span v-on:click="openEditDialog(board)">修改</span>/<span v-on:click="openDeleteDialog(board.boardId)">删除</span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class='rest-area-contain'>
+            <div>
+                <div class="restaurant-area-box" v-for="areas in boards" track-by="$index">
+                    <div class="restaurant-box-title">
+                        <span class="restaurant-box-name" :title='areas.areaName'>{{areas.areaName}}</span><span class="changearea" @click='openSingleDialog(2,{areaId:areas.areaId}, areas.areaName)'>修改</span><span style="color: #ccc;font-size:16px;margin-left: 3px;">/</span>  <span class="changearea" @click=openDeleteDialog(0,areas.areaId)>删除</span>
+                        <span class="create-restaurant" v-on:click="openCreateDialog(areas)">新增桌子</span>
+                    <a :href="volumeDownload + '&areaId=' + areas.areaId" target="_blank" style="color: #178ce6;" download><span class="volume-download">下载二维码</span></a>
+                    <span class="volume-production" @click="volumeReset(areas.areaId)">重置二维码</span>
+                    </div>
+                    <div class="restaurant-box" v-for="(key,area) in areas.list" v-if='key !== "null"' >
+                        <div class="restaurant-box-title">
+                            {{area.kindName || "无名"}}
+                        </div>
+                        <table class="board-table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>桌型</th>
+                                    <th>桌号</th>
+                                    <th>可容纳人数</th>
+                                    <th>桌位二维码</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="des in area.list">
+                                    <td>{{des.boardName}}</td>
+                                    <td>{{des.kindName}}</td>
+                                    <td>{{des.serialNum}}</td>
+                                    <td>{{des.seatNum}}</td>
+                                    <td><img :src="des.qrCodeUrl" alt="" class="twoCode" @click="openResetDialog(des)"></td>
+                                    <td>
+                                        <span v-on:click="openEditDialog(des)">修改</span>/<span v-on:click.stop="deleteNoConfirm(des.boardId)">删除</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                  
+                </div>
+                </div>
+                <div class="restaurant-right">
+                <div class="restaurant-box-title">
+                        桌型管理
+                        <span class="create-restaurant" v-on:click="openSingleDialog(1)">新增桌型</span>
+
+                    </div>
+                        <table class="board-table">
+                            <thead>
+                                <tr>
+                                    <th>桌型</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="des in desList" >
+                                    <td class="board-table-name" :title='des.name'>{{des.name}}</td>
+                                    <td>
+                                        <span v-on:click="openSingleDialog(3,{kindId:des.kindId}, des.name)">修改</span>/<span v-on:click="openDeleteDialog(1,des.kindId)"">删除</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
             </div>
         </div>
     </div>
@@ -49,37 +93,72 @@
         <div class="modal-dialog modal-w300">
             <div class="modal-content clearfloat v-modal">
                 <p class="board-title">
-                    {{status === 'create' ? '新增桌子' : '修改桌子'}}
+                    {{status === 'create' ? '新增桌子' : '编辑桌子'}}
                 </p>
-                <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6>
-                <label for="boardName">桌子/包厢名称</label>
+                <!-- <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6> -->
+                <label for="boardName"> 区域:</label>
+                <select  v-model='areaId'>
+                    <option value="" v-for='sele in areaselect' :value='sele.areaId'>{{sele.areaName}}</option>
+                </select>
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label>
+                </p>
+                <!-- <span class="areaName"> {{areaName}} </span> -->
+                <label for="boardName">桌子/包厢名称:</label>
                 <input type="text" id="boardName" v-model="boardName" maxlength="6">
                 <p class="rest-tips" style="margin-left: 0">
                     <label></label><span v-if="status === 'edit' && submitted && this.boardName === ''">↑ 必填字段</span>
                 </p>
-                <div v-if="status === 'create'" style="position: relative">
-                    <label style="position: absolute;top: 0;">桌号</label>
+                <label for="boardName">桌型:</label>
+                <select name="" id="" class="" v-model='selectDes'>
+                    <option value="" v-for='select in selectType' :value='select.kindId'>{{select.name}}</option>
+                </select>
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label><span v-if="status === 'edit' && submitted && this.boardName === ''">↑ 必填字段</span>
+                </p>
+                <label for="boardName">客座数:</label>
+                <input type="Number" id="seatNum" v-model="seatNum">
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label>
+                    <span v-if="submitted && seatNum === ''">↑ 必填字段</span>
+                </p>
+                 <div  style="position: relative">
+                    <label style="position: absolute;top: 0;">桌号:</label>
                     <ul class="board-num-container clearfloat">
                         <li class="board-num" v-for="num in nameList" track-by="$index">
-                            <span class="board-num-close" @click="closeBoardNum($index)"></span>
+                            <!-- <span class="board-num-close" @click="closeBoardNum($index)"></span> -->
                             <input class="board-num-edit" type="text" v-model="num" maxlength="4" @keyup="boardNumCheck($index)">
+                            <span class="delete-icon"  @click="closeBoardNum($index)" v-if="status === 'create'">
+                                    </span>
                         </li>
-                        <li class="board-num" @click="addBoardNum">+</li>
+                        <li class="board-num board-add" @click="addBoardNum" v-if="status === 'create'">添加桌号</li>
                     </ul>
                 </div>
                 <p class="rest-tips" style="margin-left: 0" v-if="status === 'create'">
                     <label></label><span v-if="status === 'create' && submitted && this.boardName === '' && !this.nameList.length">桌子名称和桌号至少填一项</span>
                 </p>
-                <label for="boardName">客座数</label>
-                <input type="text" id="seatNum" v-model="seatNum">
-                <p class="rest-tips" style="margin-left: 0">
-                    <label></label>
-                    <span v-if="submitted && seatNum === ''">↑ 必填字段</span>
-                </p>
-                <div class="v-btn-group">
+                <div class="v-btn-group" >
                     <label></label>
                     <button class="v-btn v-blue-btn" v-if="status === 'create'" @click="createBoard">确定</button>
                     <button class="v-btn v-blue-btn" v-if="status === 'edit'" @click="editBoard">确定</button>
+                    <button class="v-btn v-white-btn" v-on:click="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 4合一的表单 -->
+    <div class="modal fade" role="dialog" id="confirmAreaDialog">
+        <div class="modal-dialog modal-w300">
+            <div class="modal-content clearfloat v-modal">
+                <p class="board-title">
+                    {{showtext[selectType].title}}
+                </p>
+                <!-- <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6> -->
+                <label for="inputtext">{{showtext[selectType].msgtitle}}</label>
+                <input type="text" id="inputtext" v-model="inputtext" >
+                <div class="v-btn-group" style="text-align: center;margin-top: 20px;">
+                    <label></label>
+                    <button class="v-btn v-blue-btn" @click="edit" style="margin-right: 30px;">确定</button>
                     <button class="v-btn v-white-btn" v-on:click="cancel">取消</button>
                 </div>
             </div>
@@ -93,7 +172,9 @@
                     <img :src="boardUrl" alt="" style="margin:10px 0;width:100%;height:100%;">
                 </div>
                 <button class="v-btn v-blue-btn" @click="resetTwoCode">重置</button>
-                <a :href="boardUrl" target="_blank" download><button class="v-btn v-blue-btn" style="margin-left:7px;">下载</button></a>
+                <a :href="boardUrl" target="_blank" download>
+                    <button class="v-btn v-blue-btn" style="margin-left:7px;">下载</button>
+                </a>
             </div>
         </div>
     </div>
@@ -107,4 +188,5 @@
         </div>
     </div>
 </body>
+
 </html>
