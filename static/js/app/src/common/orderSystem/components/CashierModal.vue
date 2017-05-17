@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <remainder :show='ramainShow' :data='remainderDate' @sub='addParms' :total='orderPayment.payableFee'></remainder>
+        <remainder v-if='' :show='ramainShow' :data='remainderDate' @sub='addParms' :total='orderPayment.payableFee'></remainder>
     </div>
 </template>
 <style lang="scss">
@@ -294,8 +294,10 @@ export default {
             }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
-                    this.ramainShow = true;
-                    this.remainderDate = res.data.balancePay
+                    this.getOrderPayment().then(() =>{
+                        this.ramainShow = true;
+                        this.remainderDate = res.data.balancePay
+                    })
                 } else {
                     const params = {
                         type: 1
