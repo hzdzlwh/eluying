@@ -380,7 +380,8 @@
 
                 // 0-不使用折扣，-4会员，-5企业，正数-快捷折扣
                 function getMoreDiscount(item) {
-                    if (!item.useDiscount && !item.roomInfo.useDiscount) {
+                    const useDiscount = item.roomInfo ? item.roomInfo.useDiscount : item.useDiscount;
+                    if (!useDiscount) {
                         return 0;
                     }
 
