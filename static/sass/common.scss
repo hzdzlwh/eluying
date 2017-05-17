@@ -33,14 +33,26 @@
     margin-left: auto;
     margin-right: auto;
     height: auto;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.modal {
+    text-align: center;
+    overflow: auto !important;
+}
+
+
+.modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
 }
 
 .modal-content {
     padding: 30px;
-}
-
-.modal {
-    overflow: auto !important;
 }
 
 .btn-ok {

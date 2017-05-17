@@ -434,7 +434,8 @@
                     const vip = this.vipCardsAndLevel[0].levels[0];
                     this.vipCardInfo = {
                         name: vip.name,
-                        discount: this.getRoomDiscount(vip.discountList),
+                        discount: this.getRoomDiscount(vip.discountList) * 10,
+                        id: -4,
                         tag: '会员折扣'
                     };
                 }
@@ -444,7 +445,8 @@
                     this.vipCardInfo = {
                         name: card.name,
                         serialNum: card.serialName,
-                        discount: this.getRoomDiscount(card.discountList),
+                        discount: this.getRoomDiscount(card.discountList) * 10,
+                        id: -4,
                         tag: '会员卡折扣'
                     };
                 }
@@ -572,10 +574,20 @@
                             });
                             // 默认选择一个选项，优先级：会员卡（最新办理的优先级高）>等级会员。
                             this.$nextTick(() => {
-                                if (cards && cards.length > 0) {
-                                    this.vipCardId = cards[0].id;
+                                const flag = this.order.discountChannel === 4 && cards.some(c => c.id === this.order.discountRelatedId);
+                                if (this.order.discountChannel && flag) {
+                                    if (this.order.discountChannel === 1) {
+                                        this.vipCardId = -1;
+                                    }
+                                    if (this.order.discountChannel === 4) {
+                                        this.vipCardId = this.order.discountRelatedId;
+                                    }
                                 } else {
-                                    this.vipCardId = -1;
+                                    if (cards && cards.length > 0) {
+                                        this.vipCardId = cards[0].id;
+                                    } else {
+                                        this.vipCardId = -1;
+                                    }
                                 }
                             });
                         } else {
@@ -592,7 +604,8 @@
                         this.vipDiscountDetail.vipDetail = discountList;
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
-                            discount: this.getItemDiscountInfo(0, 0).discount,
+                            discount: this.getItemDiscountInfo(0, 0).discount * 10,
+                            id: -5,
                             tag: '企业折扣'
                         };
                     });

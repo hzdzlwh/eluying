@@ -9,7 +9,7 @@
             <span class="content-item-discount">
                 折扣方案：
                 <span style="width: 120px">
-                    <dd-select placeholder="组合优惠">
+                    <dd-select placeholder="组合优惠" v-model="discountPlan">
                         <dd-option :value="0" label="不使用">
                         </dd-option>
                         <dd-group-option v-for="item in discountPlans" :label="item.label"
@@ -98,12 +98,30 @@
                           v-if="!item.state || ((item.state !== 1 && item.state !== 8) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms))">
                     </span>
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
-                    <span class="discount-info"
-                          v-if="item.showDiscount && !item.priceModified">
-                        <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                        <span class="discount-num"
-                              v-if="item.showDiscount">
-                            {{item.showDiscount}}
+                    <span class="discount-info">
+                        <span v-if="item.showDiscount && !item.priceModified">
+                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                            <span class="discount-num"
+                                  v-if="item.showDiscount">
+                                {{item.showDiscount}}
+                            </span>
+                        </span>
+                        <span class="more-discount" :id="'js-more-discount-' + index">
+                            <span class="more-discount-handle" @click="handleMoreDiscountClick(index, $event)">
+                                <span>更多折扣</span>
+                                <span class="more-discount-icon"></span>
+                            </span>
+                            <span class="more-discount-select">
+                                <dd-select v-model="item.moreDiscount">
+                                    <dd-option :value="0" label="不使用">
+                                    </dd-option>
+                                    <dd-group-option v-for="item in discountPlans" :label="item.label"
+                                                     :key="item" v-if="item.discounts && item.discounts.length > 0">
+                                        <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name + ' ' + discount.discount + '折'">
+                                        </dd-option>
+                                    </dd-group-option>
+                                </dd-select>
+                            </span>
                         </span>
                     </span>
                 </div>
@@ -117,6 +135,39 @@
     </div>
 </template>
 <style lang="scss">
+    .more-discount {
+        position: relative;
+        color: #666;
+        .more-discount-handle {
+            margin-left: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .more-discount-icon {
+            margin-left: 2px;
+            border-bottom: none;
+            border-top: 3px solid grey;
+            border-left: 3px solid transparent;
+            border-right: 3px solid transparent;
+        }
+        .more-discount-select {
+            position: absolute;
+            top: -18px;
+            left: -55px;
+            width: 0;
+            height: 0;
+        }
+        .dd-select {
+            width: 120px;
+        }
+        .dd-select-input {
+            display: none;
+        }
+        .dd-select-icon {
+            visibility: hidden;
+        }
+    }
 </style>
 <script>
     import CheckInPerson from '../CheckInPerson.vue';
@@ -191,8 +242,8 @@
                 }
             },
             vipCardInfo(vipCardInfo) {
-                const discounts = vipCardInfo.discount && vipCardInfo.discount < 1 ? [{
-                    id: -1,
+                const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
+                    id: -4,
                     name: vipCardInfo.name,
                     serialNum: vipCardInfo.serialNum,
                     discount: vipCardInfo.discount
@@ -203,9 +254,9 @@
                 });
             },
             vipCardId(id) {
-                // 会员折扣id为-1
-                const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 1 ? [{
-                    id: -1,
+                // 会员折扣id为-4
+                const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
+                    id: -4,
                     name: this.vipCardInfo.name,
                     serialNum: this.vipCardInfo.serialNum,
                     discount: this.vipCardInfo.discount
@@ -243,26 +294,23 @@
                 this.$emit('priceChange', price);
                 return price;
             },
-            allQuick: {
+            discountPlan: {
                 get() {
-                    if (this.rooms.length < 2) {
-                        return false;
+                    if (this.rooms.length === 0) {
+                        return undefined;
                     }
 
-                    const firstId = this.rooms[0].quickDiscountId;
-                    return this.rooms.every(room => room.quickDiscountId === firstId);
+                    const flag = this.rooms.every(i => i.moreDiscount === this.rooms[0].moreDiscount);
+                    if (flag) {
+                        return this.rooms[0].moreDiscount;
+                    } else {
+                        return undefined;
+                    }
                 },
                 set(val) {
-                    if (val === true) {
-                        const firstId = this.rooms[0].quickDiscountId;
-                        // 如果本来每个快捷折扣都是第一个，就不需要处理
-                        const request = !this.rooms.every(i => i.quickDiscountId === firstId);
-                        if (request) {
-                            this.rooms.map(room => room.quickDiscountId = firstId);
-                            this.forceChangePrice = true;
-                            this.modifyRooms(this.rooms);
-                        }
-                    }
+                    this.rooms.map(room => room.moreDiscount = val);
+                    this.forceChangePrice = true;
+                    this.modifyRooms(this.rooms);
                 }
             },
             vipDiscount() {
@@ -277,6 +325,10 @@
             }
         },
         methods: {
+            handleMoreDiscountClick(index, ev) {
+                ev.stopPropagation();
+                document.querySelector(`#js-more-discount-${index} .dd-select-input`).click();
+            },
             cleanRooms() {
                 this.rooms = [];
             },
@@ -318,6 +370,22 @@
                 this.lastRoomsToken = {};
                 const order = this.order;
 
+                // 0-不使用折扣，-4会员，-5企业，正数-快捷折扣
+                function getMoreDiscount(item) {
+                    if (!item.useDiscount && !item.roomInfo.useDiscount) {
+                        return 0;
+                    }
+
+                    if (item.qucikDiscountId) {
+                        return item.qucikDiscountId;
+                    }
+
+                    const discountChannel = item.discountChannel || item.roomInfo.discountChannel;
+                    if (discountChannel) {
+                        return discountChannel === 1 ? -4 : -5;
+                    }
+                }
+
                 // 组合订单
                 if (order.rooms) {
                     const filterRooms = order.rooms.filter(room => {
@@ -346,7 +414,8 @@
                             priceScale: item.datePriceList.map(dat => {
                                 return dat.dateFee / item.fee;
                             }),
-                            showDiscount: item.showDiscount
+                            showDiscount: item.showDiscount,
+                            moreDiscount: getMoreDiscount(item)
                         };
                     });
                 }
@@ -376,7 +445,8 @@
                         priceScale: order.datePriceList.map(dat => {
                             return dat.dateFee / roomInfo.totalPrice;
                         }),
-                        showDiscount: order.roomInfo.showDiscount
+                        showDiscount: order.roomInfo.showDiscount,
+                        moreDiscount: getMoreDiscount(order)
                     };
 
                     this.rooms = [room];
@@ -404,7 +474,8 @@
                         priceScale: [],
                         showTip: false,
                         quickDiscountId: '',
-                        showDiscount: undefined
+                        showDiscount: undefined,
+                        moreDiscount: 0
                     };
                 });
             },
@@ -575,6 +646,14 @@
                     discountRelatedId = this.vipId;
                 }
 
+                rooms.map(room => {
+                    if (room.moreDiscount > 0) {
+                        room.quickDiscountId = room.moreDiscount;
+                    } else {
+                        room.quickDiscountId = '';
+                    }
+                });
+
                 const params = {
                     discountChannel: discountChannel,
                     discountRelatedId: discountRelatedId,
@@ -585,7 +664,8 @@
                             endDate: room.room.endDate,
                             quickDiscountId: room.quickDiscountId,
                             roomOrderId: room.roomOrderId,
-                            roomId: room.roomType
+                            roomId: room.roomType,
+                            useDiscount: !!room.moreDiscount
                         };
                     })),
                     forceChangePrice: this.forceChangePrice
