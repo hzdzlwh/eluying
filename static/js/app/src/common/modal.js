@@ -56,7 +56,6 @@ function alert(message) {
     const errorAlert = $('#errorAlert');
     errorAlert.modal({ backdrop: false });
     errorAlert.modal('show');
-    centerModals();
     setTimeout(function() {
         errorAlert.modal('hide');
     }, 2500);
@@ -95,7 +94,6 @@ function confirm(dialogConfig, confirmCallback, cancelCallback) {
         '</div>' +
         '</div>');
     $('#confirmDialog').modal('show');
-    centerModals();
     hasOk !== false && $('#confirmDialogOk').on('click', function() {
         $('#confirmDialog').modal('hide');
         // bootstrap 去遮罩要再fade动画完成后执行，时间是300ms

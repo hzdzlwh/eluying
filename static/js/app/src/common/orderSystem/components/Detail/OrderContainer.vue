@@ -44,13 +44,15 @@
                                 </div>
                                 <div class="userInfo-item vip-level-container">
                                     <label class="label-text">手机号</label>
-                                    <span>{{ order.customerPhone }}</span>
-                                    <span v-if="order.isVip">
-                                        <span class="vip-level-img" style="top: 0;"></span>
-                                        <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
+                                    <span style="position: relative">
+                                        <span>{{ order.customerPhone }}</span>
+                                        <span v-if="order.isVip">
+                                            <span class="vip-level-img" style="top: 0;"></span>
+                                            <span class="vip-level-tip" style="top: 0;">{{ order.vipLevel }}</span>
+                                        </span>
                                     </span>
                                 </div>
-                                <div class="userInfo-item" style="margin-right: 115px">
+                                <div class="userInfo-item">
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
@@ -587,22 +589,14 @@
         font-size: $font-size-base;
         color: $gary-daker;
         .modal-dialog {
-            width: 794px;
-            margin-top: 0 !important;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -webkit-transform: translate(-50%, -50%) !important;
-            -ms-transform: translate(-50%, -50%) !important;
-            transform: translate(-50%, -50%) !important;
+            width: 908px;
         }
         .modal-content {
-            width: 794px;
             border-top: 4px solid #178ce6;
             border-radius: 2px;
             box-shadow: 0 0 5px 0;
             padding: 0;
-            margin-top: 0 !important;
+            // margin-top: 0 !important;
         }
     }
 
@@ -641,7 +635,7 @@
         }
         .room-category {
             width: 60px;
-            display: inline-block;
+            margin-left: 4px;
             input {
                 width: 100%;
             }
@@ -649,6 +643,10 @@
         .content-item {
             padding: 18px 24px;
             border-top: 1px solid $gary-light;
+        }
+        .content-item-discount {
+            font-size: 14px;
+            font-weight: normal;
         }
         .increase-container {
             font-size: $font-size-base;
@@ -693,14 +691,19 @@
             background: #fafafa;
             box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
             height: 19px;
-            justify-content: center;
-            align-items: center;
+            z-index: 1;
         }
         .userInfo-items {
             position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+        }
+        .userInfo-item {
+            margin-right: 55px;
+            min-width: 165px;
+            &:last-of-type {
+                margin-right: 0;
+            }
         }
         .userVip-list {
             position: absolute;
@@ -742,6 +745,13 @@
         }
         .userInfo-phone {
             position: relative;
+        }
+        .content-item-discount {
+            font-size: 14px;
+            font-weight: normal;
+            .dd-select-input::placeholder {
+            color: #666;
+            }
         }
         .enter-icon {
             width: 18px;
@@ -963,6 +973,10 @@
         color: $gary-daker;
         font-weight: bold;
         margin-bottom: 16px;
+        &.dashed {
+            border-bottom: 2px dashed #e6e6e6;
+            padding-bottom: 20px;
+        }
     }
 
     .roomModals-footer {
