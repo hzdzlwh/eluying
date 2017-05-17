@@ -1,7 +1,7 @@
 <template>
     <div id="vipForm" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog vipForm-modal-dialog">
-            <div class="vipForm-modal-content">
+            <div class="modal-content vipForm-modal-content">
                 <div class="vipForm-modal-header">
                     <h4 class="body-mainTitle" v-if="!vip.vipUserId">新增会员</h4>
                     <h4 class="body-mainTitle" v-if="vip.vipUserId">编辑会员</h4>
@@ -131,6 +131,9 @@
         max-height: 300px;
         overflow: auto;
     }
+}
+.modal-content{
+    padding: 0;
 }
 .vipForm-modal-content {
     background: #fafafa;
