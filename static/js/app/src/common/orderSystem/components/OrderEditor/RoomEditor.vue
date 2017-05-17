@@ -265,6 +265,11 @@
                     label: this.vipCardInfo.tag,
                     discounts: discounts
                 });
+                if (id !== 0) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = this.userOriginType.id;
+                    });
+                }
                 if (this.rooms.length > 0) {
                     this.forceChangePrice = true;
                     // 更改渠道
@@ -380,7 +385,8 @@
 
                 // 0-不使用折扣，-4会员，-5企业，正数-快捷折扣
                 function getMoreDiscount(item) {
-                    if (!item.useDiscount && !item.roomInfo.useDiscount) {
+                    const useDiscount = item.roomInfo ? item.roomInfo.useDiscount : item.useDiscount;
+                    if (!useDiscount) {
                         return 0;
                     }
 
@@ -641,14 +647,12 @@
                     return false;
                 }
 
-                // 会员-1，企业-2
-                let discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
-                if (this.vipCardId > 0) {
-                    discountChannel = 4;
-                }
+                // 会员-1，企业-2,会员卡-4
+                let discountChannel;
                 let discountRelatedId; // eslint-disable-line
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
+                    discountChannel = 2;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
                     // 会员渠道分为会员等级和会员卡
                     if (!this.vipId || !this.vipCardId) {
@@ -656,6 +660,7 @@
                     }
 
                     discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipId;
+                    discountChannel = this.vipCardId > 0 ? 4 : 1;
                 }
 
                 rooms.map(room => {
