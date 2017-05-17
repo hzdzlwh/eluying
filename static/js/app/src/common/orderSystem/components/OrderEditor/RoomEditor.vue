@@ -112,7 +112,7 @@
                                 <span class="more-discount-icon"></span>
                             </span>
                             <span class="more-discount-select">
-                                <dd-select v-model="item.moreDiscount">
+                                <dd-select v-model="item.moreDiscount" @input="moreDiscountChange(item)">
                                     <dd-option :value="0" label="不使用">
                                     </dd-option>
                                     <dd-group-option v-for="item in discountPlans" :label="item.label"
@@ -265,6 +265,11 @@
                     label: this.vipCardInfo.tag,
                     discounts: discounts
                 });
+                if (this.rooms.length > 0) {
+                    this.forceChangePrice = true;
+                    // 更改渠道
+                    this.modifyRooms(this.rooms);
+                }
             },
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail || !oldVal.vipDetail) {
@@ -308,6 +313,9 @@
                     }
                 },
                 set(val) {
+                    if (val === undefined) {
+                        return;
+                    }
                     this.rooms.map(room => room.moreDiscount = val);
                     this.forceChangePrice = true;
                     this.modifyRooms(this.rooms);
@@ -634,16 +642,20 @@
                 }
 
                 // 会员-1，企业-2
-                const discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
+                let discountChannel = { '-4': 1, '-5': 2 }[this.userOriginType && this.userOriginType.id];
+                if (this.vipCardId > 0) {
+                    discountChannel = 4;
+                }
                 let discountRelatedId; // eslint-disable-line
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
-                    if (!this.vipId) {
+                    // 会员渠道分为会员等级和会员卡
+                    if (!this.vipId || !this.vipCardId) {
                         return false;
                     }
 
-                    discountRelatedId = this.vipId;
+                    discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipId;
                 }
 
                 rooms.map(room => {
@@ -777,6 +789,10 @@
             },
             changeRooms() {
                 this.$emit('change', this.rooms);
+            },
+            moreDiscountChange(room) {
+                this.forceChangePrice = true;
+                this.modifyRooms([room]);
             }
         }
     };

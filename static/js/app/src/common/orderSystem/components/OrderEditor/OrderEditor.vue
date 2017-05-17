@@ -574,20 +574,21 @@
                             });
                             // 默认选择一个选项，优先级：会员卡（最新办理的优先级高）>等级会员。
                             this.$nextTick(() => {
-                                const flag = this.order.discountChannel === 4 && cards.some(c => c.id === this.order.discountRelatedId);
-                                if (this.order.discountChannel && flag) {
-                                    if (this.order.discountChannel === 1) {
-                                        this.vipCardId = -1;
-                                    }
-                                    if (this.order.discountChannel === 4) {
-                                        this.vipCardId = this.order.discountRelatedId;
-                                    }
+                                // discountChannel 1-会员 2-协议单位，v2.8」4-会员卡
+                                if (this.order.discountChannel === 1) {
+                                    this.vipCardId = -1;
+                                    return;
+                                }
+
+                                if (this.order.discountChannel === 4 && cards.some(c => c.id === this.order.discountRelatedId)) {
+                                    this.vipCardId = this.order.discountRelatedId;
+                                    return;
+                                }
+
+                                if (cards && cards.length > 0) {
+                                    this.vipCardId = cards[0].id;
                                 } else {
-                                    if (cards && cards.length > 0) {
-                                        this.vipCardId = cards[0].id;
-                                    } else {
-                                        this.vipCardId = -1;
-                                    }
+                                    this.vipCardId = -1;
                                 }
                             });
                         } else {
@@ -668,6 +669,8 @@
                 this.enterPrice = 0;
                 this.goodsPrice = 0;
                 this.foodPrice = 0;
+                this.vipCardId = undefined;
+                this.vipCardInfo =  {};
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
@@ -774,7 +777,7 @@
                         sub: true,
                         roomOrderId: room.roomOrderId,
                         quickDiscountId: room.quickDiscountId,
-                        useDiscount: !room.priceModified
+                        useDiscount: room.moreDiscount === 0 || !room.priceModified
                     };
                 });
             },
@@ -887,17 +890,21 @@
                         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
-            // 获取 originId origin discountRelatedId
+            // 获取 originId origin discountRelatedId discountChannel
             getDiscountRelatedIdAndOrigin() {
                 const params = {
                     originId: this.userOriginType.id
                 };
                 if (this.userOriginType.id === -5) {
                     params.discountRelatedId = this.userOriginType.companyId;
+                    params.discountChannel = 2;
                     params.origin = '企业';
                 } else if (this.userOriginType.id === -4) {
-                    params.discountRelatedId = this.vipDiscountDetail.vipDetail.vipId;
                     params.origin = '会员';
+                    if (this.vipCardId !== 0) {
+                        params.discountChannel = this.vipCardId > 0 ? 4 : 1;
+                        params.discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipDiscountDetail.vipDetail.vipId;
+                    }
                 } else if (this.userOriginType.id === -3) {
                     params.origin = '微官网';
                 } else {
