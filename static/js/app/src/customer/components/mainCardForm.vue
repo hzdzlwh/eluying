@@ -99,7 +99,10 @@
     export default{
         props: {
             visible: Boolean,
-            oldPhone: '',
+            oldPhone: {
+                type: String,
+                default: ''
+            },
             channels: Array
         },
         data() {
@@ -129,7 +132,7 @@
                 this.cardTypes.map(type => {
                     type.selected = false;
                 });
-                this.phone = '';
+                this.phone = this.oldPhone;
                 this.name = '';
                 this.cardNum = '';
                 this.disableNameInput = false;

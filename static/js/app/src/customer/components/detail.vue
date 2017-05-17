@@ -26,7 +26,7 @@
                     <div v-if="innerTab === 1">
                         <slot></slot>
                     </div>
-                    <div v-if="innerTab === 2" style="padding: 24px 24px 0 24px">
+                    <div v-if="innerTab === 2" style="padding: 24px 24px 15px 24px">
                         <div class="detail-content-filter">
                             <div style="width: 88px" v-if="type !== 'company'">
                                 <dd-select v-model="state">
