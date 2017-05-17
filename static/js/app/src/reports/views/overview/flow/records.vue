@@ -2,15 +2,20 @@
     <div>
         <div style="margin: 20px 0 10px;display: flex;justify-content: space-between;">
             <div style="display: flex">
-                <span>收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
+                <span style="display: flex;align-items: center">收款记录<i>（{{date.startDate}}~{{date.endDate}}）</i></span>
                 <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="operatorId">
                         <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
                     </dd-select>
                 </div>
-                <div style="width: 120px">
+                <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="channelId">
                         <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="width: 120px">
+                    <dd-select v-model="cashierId">
+                        <dd-option v-for="cashier in cashierList" :key="cashier.id" :value="cashier.id" :label="cashier.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -30,7 +35,6 @@
     import { mapState } from 'vuex';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     export default{
         computed: {
             ...mapState(['date'])
@@ -45,6 +49,10 @@
                 this.queryCashierInfo();
             },
             operatorId() {
+                this.page = 1;
+                this.queryCashierInfo();
+            },
+            cashierId() {
                 this.page = 1;
                 this.queryCashierInfo();
             }
@@ -103,7 +111,7 @@
                         width: 122
                     },
                     {
-                        title: '支付宝账号',
+                        title: '支付账号',
                         dataIndex: 'payAccount',
                         width: 122
                     },
@@ -111,7 +119,7 @@
                         title: '交易号',
                         dataIndex: 'payNum',
                         width: 191
-                    },
+                    }
                 ],
                 dataSource: [],
                 num: undefined,
@@ -122,10 +130,10 @@
                         realName: '全部操作人',
                         employeeId: 'ALL'
                     },
-                    {
+                    /* {
                         realName: '一码通自助充值',
                         employeeId: 'ONE'
-                    },
+                    }, */
                     {
                         realName: '游客线上付款',
                         employeeId: 'VISITOR'
@@ -136,9 +144,36 @@
                     }
                 ],
                 operatorId: 'ALL',
-                channels: [{id: 'ALL', name: '全部收款方式'}],
-                channelId: 'ALL'
-            }
+                channels: [{ id: 'ALL', name: '全部收款方式' }],
+                channelId: 'ALL',
+                cashierList: [
+                    {
+                        id: -1,
+                        name: '全部收银类型'
+                    },
+                    {
+                        id: 0,
+                        name: '订单收款'
+                    },
+                    {
+                        id: 2,
+                        name: '订单退款'
+                    },
+                    {
+                        id: 1,
+                        name: '押金收款'
+                    },
+                    {
+                        id: 3,
+                        name: '押金退款'
+                    },
+                    {
+                        id: 10,
+                        name: '卡费收款'
+                    }
+                ],
+                cashierId: -1
+            };
         },
         methods: {
             queryCashierInfo(page) {
@@ -146,9 +181,12 @@
                     return false;
                 }
 
-                this.page = page ? page : this.page;
+                this.page = page || this.page;
 
-                let cashierType, operatorId;
+                let cashierType, operatorId, operateType;
+                if (this.cashierId !== -1) {
+                    operateType = this.cashierId;
+                }
                 switch (this.operatorId) {
                     case 'ALL':
                         break;
@@ -173,6 +211,7 @@
                     channelId: this.channelId === 'ALL' ? '' : this.channelId,
                     operaterId: operatorId,
                     cashierType,
+                    operateType
                 })
                     .then(res => {
                         if (res.code === 1) {
@@ -186,18 +225,18 @@
             getEmployeeList() {
                 http.get('/user/getEmployeeList', {})
                     .then(res => {
-                            if (res.code === 1) {
-                                this.employeeList = [...this.employeeList, ...res.data.list]
-                            }
-                        })
+                        if (res.code === 1) {
+                            this.employeeList = [...this.employeeList, ...res.data.list];
+                        }
+                    });
             },
             getChannels() {
                 http.get('/user/getChannels', { type: 1, isAll: true })
                     .then(res => {
                         if (res.code === 1) {
-                            this.channels = [...this.channels, ...res.data.list]
+                            this.channels = [...this.channels, ...res.data.list];
                         }
-                    })
+                    });
             },
             exportUrl(type) {
                 const paramsObj = {
@@ -215,5 +254,5 @@
                 return `${host}?${params}`;
             }
         }
-    }
+    };
 </script>

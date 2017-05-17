@@ -176,7 +176,6 @@ $(document).ready(function(){
     }
 
     modal.modalInit();
-    modal.centerModals();
 
     //手机网站适配
     if($(window).width() <= 1200){

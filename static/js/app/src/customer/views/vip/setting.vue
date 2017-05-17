@@ -1,12 +1,12 @@
 <template>
     <div class="vip-setting-container">
-        <div style="margin-top: 23px" class="clearfix" v-if="settings && settings.length > 0">
+        <div class="clearfix" v-if="settings && settings.length > 0">
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float: right" @click="openCreate">新增</button>
-            <div style="margin-top:12px;box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);">
-                <dd-Table :columns="columns" :data-source="settings"></dd-Table>
+            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="margin-left: 273px" @click="openCreate">新增</button>
+            <div style="margin-top:18px;">
+            <vipLevel v-for='(dd ,index) in settings' :data='dd' :key="dd":type='autoUpgrade' @delet='getLevelList' @addCard='getLevelList' ></vipLevel>
             </div>
         </div>
 
@@ -73,55 +73,6 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" role="dialog" id="settingModal" data-backdrop="static">
-            <div class="modal-dialog"  style="width: 486px">
-                <div class="modal-content">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    <h2 v-if="!id" style="margin-bottom: 15px;height: 40px;line-height: 40px">添加会员等级</h2>
-                    <h2 v-if="id" style="margin-bottom: 15px;height: 40px;line-height: 40px">编辑会员等级</h2>
-                    <div class="form-row">
-                        <label for="levelName">会员等级名称：</label>
-                        <input id="levelName" maxlength="8" v-model="levelName" style="width: 208px" class="dd-input" type="text">
-                    </div>
-                    <div v-if="autoUpgrade == 1" class="form-row">
-                        <label for="thresholdFee">升级条件：</label>
-                        <span>累计金额满</span>
-                        <input id="thresholdFee" v-model="thresholdFee" maxlength="10" class="dd-input" style="width: 110px;margin: 0 8px" type="text">
-                        <span>元</span>
-                    </div>
-                    <div style="display: flex" v-if="autoUpgrade == 1" class="form-row">
-                        <label >消费累计项目：</label>
-                        <div style="flex: 1">
-                            <span>{{consume.map(i => i.nodeName).join('、')}}</span>
-                            <span @click="openSelectNode('consume', consume)" class="select-button">选择项目</span>
-                        </div>
-                    </div>
-                    <i class="form-row" style="font-size: 12px" v-if="autoUpgrade == 1">成为会员后，在【消费业态】中累计消费达到【升级条件】后自动升级为该级别会员</i>
-                    <div class="line"></div>
-                    <div class="form-row" style="display: flex">
-                        <label>优惠折扣：</label>
-                        <div style="width: 285px">
-                            <div style="max-height: 78px;overflow: auto">
-                                <div style="margin-bottom: 3px" v-for="item in discount" :key="item.id">
-                                    <span style="display: inline-block;width: 132px">{{item.nodeName}}</span>
-                                    <input style="width: 56px;" type="text" class="dd-input" v-model="item.discount">
-                                    <i style="margin: 0 16px 0 8px">折</i>
-                                    <img style="cursor: pointer" src="/static/image/modal/room_modal_delete.png" alt="" @click="deleteNode(item)">
-                                </div>
-                            </div>
-                            <div>
-                                <span @click="openSelectNode('discount', discount)" class="select-button">选择项目</span>
-                                <small style="margin-left: 76px" v-if="discount.length > 0"><i>请输入0.1-9.9之间的数字</i></small>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-left: 105px">
-                        <button class="dd-btn dd-btn-primary dd-btn-sm" @click="createLevel">确定</button>
-                        <button class="dd-btn dd-btn-ghost dd-btn-sm" data-dismiss="modal">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="modal fade" role="dialog" id="system" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 496px">
@@ -147,7 +98,6 @@
                 </div>
             </div>
         </div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
 <style lang="scss">
@@ -217,11 +167,9 @@
 
 </style>
 <script>
-    import modal from '../../../common/modal';
     import http from '../../../common/http';
-    import { DdTable } from 'dd-vue-component';
-    import categorySelect from '../../components/categorySelect.vue';
     import auth from '../../../common/auth';
+    import vipLevel from '../../components/vipLevel';
     export default{
         data() {
             return {
@@ -233,21 +181,14 @@
                 consume: [],
                 discount: [],
                 columns: [],
-                id: undefined,
-                selectType: undefined
+                id: undefined
             };
+        },
+        components: {
+            vipLevel
         },
         created() {
             this.getLevelList();
-        },
-        computed: {
-            nodes() {
-                return this.selectType === 'consume' ? this.consume : this.discount;
-            }
-        },
-        components: {
-            DdTable,
-            categorySelect
         },
         methods: {
             getLevelList() {
@@ -257,143 +198,15 @@
                             this.settings = res.data.vipSettingItemList;
                             if (this.settings.length > 0) {
                                 this.autoUpgrade = res.data.autoUpgrade;
-                                this.columns = [
-                                    {
-                                        title: '会员等级',
-                                        dataIndex: 'levelName',
-                                        width: 152
-                                    },
-                                    {
-                                        title: '优惠折扣',
-                                        render: (h, row) => {
-                                            return row.discountInfoList.map(i => {
-                                                return (
-                                                    <p
-                                                        style={{
-                                                            display: 'flex',
-                                                            'justify-content': 'space-between',
-                                                            width: '190px'
-                                                        }}
-                                                    >
-                                                        <span>{i.nodeName}</span>
-                                                        <span>{i.discount}折</span>
-                                                    </p>
-                                                );
-                                            });
-                                        },
-                                        width: 252
-                                    },
-                                    {
-                                        title: '操作',
-                                        render: (h, row) => (
-                                            this.contral.VIP_EDIT_ID
-                                            ? <span>
-                                                <span class="list-action" onClick={() => this.openEdit(row)}>编辑</span>／
-                                                <span class="list-action" onClick={() => this.deleteLevel(row.vipLevelSettingId)}>删除</span>
-                                            </span>
-                                            : ''
-                                        ),
-                                        width: 100
-                                    }
-                                ];
-                                if (this.autoUpgrade === 1) {
-                                    this.columns.splice(2, 0,
-                                        {
-                                            title: '升级条件',
-                                            render: (h, row) => {
-                                                return <span>消费满¥{row.thresholdFee}</span>;
-                                            }
-                                        },
-                                        {
-                                            title: '消费累计项目',
-                                            render: (h, row) => {
-                                                return <span>{row.consumeItems.map(i => i.nodeName).join('、')}</span>;
-                                            },
-                                            width: 390
-                                        }
-                                    );
-                                }
                             }
                         }
                     });
             },
-            deleteLevel(id) {
-                const message = Number(this.autoUpgrade) === 1
-                    ? (this.settings.length === 1
-                        ? '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？'
-                        : '删除该会员等级后，该等级的会员降低一等级，确认删除么？')
-                    : '删除该会员等级后，该等级的所有会员将变更为默认等级，确认删除么？';
-                modal.confirm({
-                    message
-                }, () => {
-                    http.post('/vipUser/removeVipLevel', { vipLevelId: id })
-                        .then(res => {
-                            this.getLevelList();
-                        });
-                });
-            },
             openCreate() {
-                this.levelName = undefined;
-                this.id = undefined;
-                this.thresholdFee = undefined;
-                this.consume = [];
-                this.discount = [];
-                $('#settingModal').modal('show');
-            },
-            openEdit(item) {
-                this.levelName = item.levelName;
-                this.id = item.vipLevelSettingId;
-                this.thresholdFee = item.thresholdFee;
-                this.consume = item.consumeItems.map(i => ({ ...i }));
-                this.discount = item.discountInfoList.map(i => ({ ...i }));
-                $('#settingModal').modal('show');
-            },
-            createLevel() {
-                if (!this.levelName) {
-                    modal.warn('请填写会员等级名称');
-                    return false;
-                }
-
-                if (Number(this.autoUpgrade) === 1 && this.thresholdFee === undefined) {
-                    modal.warn('请输入升级条件');
-                    return false;
-                }
-
-                if (Number(this.autoUpgrade) === 1 && !/^\d{1,10}$/.test(this.thresholdFee)) {
-                    modal.warn('升级条件只能为整数');
-                    return false;
-                }
-
-                if (Number(this.autoUpgrade) === 1 && this.consume.length === 0) {
-                    modal.warn('请选择消费累计项目');
-                    return false;
-                }
-
-                for (let i = 0; i < this.discount.length; i ++) {
-                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.discount[i].discount)) {
-                        modal.warn('请输入0.1-9.9之间正确的折扣数字');
-                        return false;
-                    }
-                }
-
-                const url = Number(this.autoUpgrade) === 1
-                    ? '/vipUser/createEditVipLevel'
-                    : '/vipUser/createEditVipLevelNotAuto';
-                http.post(url, {
-                    levelName: this.levelName,
-                    thresholdFee: this.thresholdFee,
-                    consumeListReq: JSON.stringify(this.consume),
-                    discountListReq: JSON.stringify(this.discount),
-                    vipLevelSettingId: this.id
-                })
-                    .then(res => {
-                        this.getLevelList();
-                        $('#settingModal').modal('hide');
-                    });
-            },
-            deleteNode(item) {
-                const index = this.discount.indexOf(item);
-                this.discount.splice(index, 1);
+                this.settings.unshift({
+                    consumeItems: [],
+                    discountInfoList: []
+                });
             },
             selectSystem() {
                 if (typeof this.autoUpgrade === 'undefined') {
@@ -401,55 +214,7 @@
                 }
 
                 $('#system').modal('hide');
-                this.openCreate();
-            },
-            handleCategorySelect(list) {
-                if (this.selectType === 'consume') {
-                    this.consume = list;
-                } else {
-                    const newList = [];
-                    list.map(item => {
-                        const result = this.discount.find(i => i.id === item.id && i.nodeType === item.nodeType);
-                        if (result) {
-                            if (item.selected) {
-                                newList.push({ ...result });
-                            }
-                        } else {
-                            newList.push({ ...item });
-                        }
-                    });
-                    this.discount = newList;
-                }
-            },
-            openSelectNode(type, data) {
-                $('#categorySelectModal').modal('show');
-                this.selectType = type;
-                /* select.type = type;
-                data.map(item => {
-                    if (item.nodeType === 0) {
-                        select.room = true;
-                    }
-
-                    if (item.nodeType === 3) {
-                        select.shop = true;
-                    }
-
-                    if (item.nodeType === 1) {
-                        select.restNodeList.map(i => {
-                            if (i.id === item.id) {
-                                i.selected = true;
-                            }
-                        });
-                    }
-
-                    if (item.nodeType === 2) {
-                        select.enterNodeList.map(i => {
-                            if (i.id === item.id) {
-                                i.selected = true;
-                            }
-                        });
-                    }
-                });*/
+                // this.openCreate();
             }
         }
     };

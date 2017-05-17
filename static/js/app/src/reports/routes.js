@@ -13,8 +13,12 @@ import restaurant from './views/catering/operation/restaurant.vue';
 import statistics from './views/entertainment/operation/statistics.vue';
 import detail from './views/entertainment/operation/detail.vue';
 import retail from './views/retail.vue';
+import overallRank from './views/membership/overallRank.vue';
+import dealDetail from './views/membership/dealDetail.vue';
+import payStatistics from './views/membership/payStatistics.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
+import flowPrepiad from './views/overview/flow/prepaid.vue';
 import insurance from './views/insurance.vue';
 import auth from '../common/auth';
 
@@ -25,7 +29,7 @@ export const routes = [
         redirect: '/overview',
         meta: {
             invisible: true
-        },
+        }
     },
     {
         path: '/overview',
@@ -40,7 +44,7 @@ export const routes = [
                 component: operation,
                 meta: {
                     name: '运营'
-                },
+                }
             },
             {
                 path: '/overview/flow',
@@ -63,6 +67,13 @@ export const routes = [
                         meta: {
                             name: '收款记录'
                         }
+                    },
+                    {
+                        path: '/overview/flow/prepaid',
+                        component: flowPrepiad,
+                        meta: {
+                            name: '预收账款'
+                        }
                     }
                 ]
             },
@@ -71,14 +82,14 @@ export const routes = [
                 component: sale,
                 meta: {
                     name: '销售'
-                },
+                }
             },
             {
                 path: '/overview/channel',
                 component: channel,
                 meta: {
                     name: '渠道'
-                },
+                }
             }
         ]
     },
@@ -110,7 +121,7 @@ export const routes = [
                         meta: {
                             name: '餐厅统计'
                         },
-                        component: restaurant,
+                        component: restaurant
                     },
                     {
                         path: '/catering/operation/food',
@@ -165,6 +176,37 @@ export const routes = [
         component: retail
     },
     {
+        path: '/membership',
+        meta: {
+            name: '会员卡'
+        },
+        component: container,
+        redirect: '/membership/overallRank',
+        children: [
+            {
+                path: '/membership/overallRank',
+                meta: {
+                    name: '汇总排名'
+                },
+                component: overallRank
+            },
+            {
+                path: '/membership/dealDetail',
+                meta: {
+                    name: '交易明细'
+                },
+                component: dealDetail
+            },
+            {
+                path: '/membership/payStatistics',
+                meta: {
+                    name: '支付统计'
+                },
+                component: payStatistics
+            }
+        ]
+    },
+    {
         path: '/insurance',
         meta: {
             name: '保险',
@@ -175,7 +217,7 @@ export const routes = [
 ];
 
 (function mapChildren(routes) {
-    routes.map( route => {
+    routes.map(route => {
         if (route.children) {
             route.meta.children = route.children;
             mapChildren(route.children);
@@ -185,8 +227,8 @@ export const routes = [
 
 export const router = new Router({
     mode: 'history',
-    scrollBehavior (to, from, savedPosition) {
-        return savedPosition ? savedPosition : { x: 0, y: 0 };
+    scrollBehavior(to, from, savedPosition) {
+        return savedPosition || { x: 0, y: 0 };
     },
     base: '/view/reports/',
     linkActiveClass: 'active',

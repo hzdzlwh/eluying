@@ -7,18 +7,12 @@ import Vue from 'vue';
 import auth from '../common/auth';
 import NoAuth from '../common/components/noAuth.vue';
 import init from '../common/init';
-import OrderDetail from './components/Detail/OrderDetail.vue';
-import OrderEditor from './components/OrderEditor/OrderEditor.vue';
-import CheckInModal from './components/CheckInModal.vue';
-import CheckOutModal from './components/CheckOutModal.vue';
-import CancelOrderModal from './components/CancelOrderModal.vue';
-import CashierModal from './components/CashierModal.vue';
-import GetMoneyWithCode from './components/GetMoneyWithCode.vue';
 
 import { ORDER_STATE_LIST } from './constant';
 import bus from '../common/eventBus';
 import store from './store';
-
+import { install, OrderSystem } from '../common/orderSystem';
+install(store);
 init({
     leftMenu: false
 });
@@ -30,7 +24,6 @@ $(function() {
         el: '.orderManage-rootContainer',
         store: store,
         data: {
-            categories: [],
             hasAuth: false,
             isLoading: true,
             currentPage: 1,
@@ -81,36 +74,11 @@ $(function() {
             showBothArrow: true,
             showTopArrow: true,
             showDownArrow: true,
-            searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png',
-            detailVisible: false,
-            detailId: undefined,
-            detailType: undefined,
-            lastParamsObj: '',
-            orderEditorVisible: false,
-            checkState: '',
-            cashierType: '',
-            cashierShow: false,
-            cancelOrderShow: false,
-            getMoneyShow: false,
-            getMoneyType: '',
-            getMoneyBusiness: {},
-            getMoneyParams: {},
-            payWithAlipay: 0,
-            cashierBusiness: {}
+            searchIconUrl: '//static.dingdandao.com/order_manage_search_grey.png'
         },
 
         created() {
-            bus.$on('onClose', this.hideDetail);
-            bus.$on('onShowDetail', this.showOrderDetail);
-            bus.$on('editOrder', this.editOrder);
-            bus.$on('hideOrderEditor', this.hideOrderEditor);
             bus.$on('refreshView', this.refreshView);
-            bus.$on('showCashier', this.showCashier);
-            bus.$on('hideCashier', this.hideCashier);
-            bus.$on('showGetMoney', this.showGetMoney);
-            bus.$on('hideGetMoney', this.hideGetMoney);
-            bus.$on('hideCancelOrder', this.hideCancelOrder);
-            bus.$on('showCancelOrder', this.showCancelOrder);
 
             this.hasAuth = auth.checkAccess(auth.ORDER_ID);
             if (!this.hasAuth) {
@@ -118,20 +86,9 @@ $(function() {
             }
 
             this.getOrdersList({}, false);
-            this.getRoomsList();
         },
         beforeDestroy: function() {
-            bus.$off('onClose', this.hideDetail);
-            bus.$off('onShowDetail', this.showOrderDetail);
-            bus.$off('editOrder', this.editOrder);
-            bus.$off('hideOrderEditor', this.hideOrderEditor);
             bus.$off('refreshView', this.refreshView);
-            bus.$off('showCashier', this.showCashier);
-            bus.$off('hideCashier', this.hideCashier);
-            bus.$off('showGetMoney', this.showGetMoney);
-            bus.$off('hideGetMoney', this.hideGetMoney);
-            bus.$off('hideCancelOrder', this.hideCancelOrder);
-            bus.$off('showCancelOrder', this.showCancelOrder);
         },
         computed: {
             orderParams() {
@@ -167,28 +124,6 @@ $(function() {
                 const params = this.getParams();
                 this.getOrdersList(params, false);
             },
-            showGetMoney({ type, business, params, payWithAlipay }) {
-                this.getMoneyType = type;
-                this.getMoneyBusiness = business;
-                this.getMoneyParams = params;
-                this.payWithAlipay = payWithAlipay;
-                this.getMoneyShow = true;
-            },
-            hideGetMoney() {
-                this.getMoneyShow = false;
-            },
-            hideCancelOrder() {
-                this.cancelOrderShow = false;
-            },
-            showCancelOrder() {
-                this.cancelOrderShow = true;
-            },
-            getRoomsList() {
-                return http.get('/room/getRoomsList', {})
-                    .then(res => {
-                        this.categories = res.data.list;
-                    });
-            },
             /**
              * 延迟获取订单列表
              * @param delayTime
@@ -211,9 +146,6 @@ $(function() {
                 const pa = http.getDataWithToken(paramsObj);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
-            },
-            hideOrderEditor() {
-                this.orderEditorVisible = false;
             },
             getParams() {
                 const obj = {
@@ -272,20 +204,9 @@ $(function() {
                     return this.orderStatusText[item.orderState];
                 }
             },
-
             searchOrders() {
                 const obj = this.getParams();
                 this.getOrdersList(Object.assign({}, obj), false);
-            },
-
-            showOrderDetail(order) {
-                this.detailType = order.type;
-                this.detailId = order.orderId;
-                this.detailVisible = true;
-            },
-            hideDetail() {
-                this.detailId = undefined;
-                this.detailVisible = false;
             },
             handleClickTr(item, event) {
                 item.showSub = !item.showSub;
@@ -295,7 +216,7 @@ $(function() {
                     $(event.currentTarget).addClass('dd-tr-selected');
                 }
 
-                this.showOrderDetail(item);
+                bus.$emit('onShowDetail', item);
             },
 
             changeListByDate() {
@@ -346,19 +267,6 @@ $(function() {
                 } else {
                     return false;
                 }
-            },
-            editOrder(type, order) {
-                this.checkState = type;
-                this.orderEditorVisible = true;
-                this.orderDetail = order;
-            },
-            showCashier({ type, business }) {
-                this.cashierType = type;
-                this.cashierBusiness = business;
-                this.cashierShow = true;
-            },
-            hideCashier() {
-                this.cashierShow = false;
             }
         },
 
@@ -420,13 +328,7 @@ $(function() {
             DdSelect,
             DdDatepicker,
             NoAuth,
-            OrderDetail,
-            OrderEditor,
-            CheckInModal,
-            CheckOutModal,
-            CancelOrderModal,
-            CashierModal,
-            GetMoneyWithCode
+            OrderSystem
         }
     });
 

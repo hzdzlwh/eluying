@@ -56,7 +56,6 @@
 <script>
     import { mapState } from 'vuex';
     import http from '../../../../common/http';
-    import util from '../../../../common/util';
     import { getTableData } from '../../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
     import { setLine } from '../../../utils/chartHelper';
@@ -72,14 +71,14 @@
                 consumeCount: undefined,
                 columns: [],
                 dataSource: []
-            }
+            };
         },
         components: {
             DdTable
         },
         computed: {
             ...mapState(['date']),
-            exportUrl () {
+            exportUrl() {
                 const paramsObj = {
                     exportType: 0,
                     reportType: 5,
@@ -126,8 +125,8 @@
                                 name: '消费次数(次)',
                                 type: 'line',
                                 data: data.consumeCount.map(i => i.value)
-                            },
-                            /*{
+                            }
+                            /* {
                                 name: '均次消费(元)',
                                 type: 'line',
                                 data: data.avgConsume.map(i => i.value)
@@ -153,8 +152,8 @@
                         this.dataSource = tableData.dataSource;
                         this.columns = tableData.columns;
                     }
-                })
-            },
+                });
+            }
         }
-    }
+    };
 </script>
