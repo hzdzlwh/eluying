@@ -420,7 +420,7 @@
                             roomOrderId: item.serviceId,
                             quickDiscountId: item.quickDiscountId || '',
                             priceScale: item.datePriceList.map(dat => {
-                                return dat.dateFee / item.fee;
+                                return item.fee === 0 ? 1 / item.datePriceList.length : dat.dateFee / item.fee;
                             }),
                             showDiscount: item.showDiscount,
                             moreDiscount: getMoreDiscount(item)
@@ -451,7 +451,7 @@
                         roomOrderId: order.roomOrderId,
                         quickDiscountId: order.quickDiscountId || '',
                         priceScale: order.datePriceList.map(dat => {
-                            return dat.dateFee / roomInfo.totalPrice;
+                            return roomInfo.totalPrice === 0 ? 1 / order.datePriceList.length : dat.dateFee / roomInfo.totalPrice;
                         }),
                         showDiscount: order.roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order)
@@ -697,7 +697,7 @@
                                 currentRoom.price = item.totalFee;
                                 // 每日房价分配比例
                                 currentRoom.priceScale = item.datePriceList.map(i => {
-                                    return i.dateFee / item.totalFee;
+                                    return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                                 });
                                 currentRoom.showDiscount = item.showDiscount;
                                 currentRoom.priceModified = false;

@@ -650,8 +650,8 @@
 
                     let checkOutDate = new Date(order.checkOutDate);
                     let seeEnd = true;
-                    if (checkOutDate > util.diffDate(startDate, 29)) {
-                        checkOutDate = util.diffDate(startDate, 29);
+                    if (checkOutDate > util.diffDate(startDate, this.DAYS)) {
+                        checkOutDate = util.diffDate(startDate, this.DAYS);
                         seeEnd = false;
                     }
 
@@ -672,7 +672,7 @@
                     glyph.checkInDateShort = order.checkInDate.substr(5, 5);
                     glyph.checkOutDateShort = order.checkOutDate.substr(5, 5);
                     glyph.seeStart = seeStart;
-                    glyph.draggable = seeStart && seeEnd && order.roomState !== 2; // 已退房的不能拖拽
+                    glyph.draggable = seeStart && seeEnd;
                     glyphs.push(glyph);
                 });
                 return glyphs;
@@ -840,7 +840,7 @@
                                         top: offsetTop * height + 2 + 'px',
                                         left: offsetLeft * width + 2 + 'px'
                                     });
-                                    modal.confirm({ message: `确定要换房至${date}吗？` },
+                                    modal.confirm({ title: '换房', message: '确定要换房吗？' },
                                         function() {
                                             http.post('/room/dragChangeRoom', {
                                                 checkRoomOnly: false,

@@ -93,6 +93,7 @@ $(function() {
                 boardDialog.selectType = this.desList;
                 boardDialog.boardId = areas.boardId;
                 boardDialog.areaName = areas.areaName;
+                boardDialog.areaselect = this.boards;
                 $('#boardDialog').modal('show');
             },
             openEditDialog: function(board) {
@@ -105,11 +106,12 @@ $(function() {
                 boardDialog.seatNum = board.seatNum;
                 boardDialog.nameList = [board.serialNum];
                 boardDialog.selectType = this.desList;
+                boardDialog.areaselect = this.boards;
                 $('#boardDialog').modal('show');
             },
             openDeleteDialog: function(type, id) {
                 this.deleatType = type;
-                this.deleteId = id
+                this.deleteId = id;
                 modal.confirm({
                         okText: '确定',
                         message: this.deletArr[type].text,
@@ -127,11 +129,8 @@ $(function() {
                 http.get(this.deletArr[this.deleatType].url, parms)
                     .then(result => {
                         modal.success('删除成功');
-                        if (this.deleatType) {
                             this.getDes();
-                        } else {
                             this.getBoards();
-                        }
                     });
             },
             deleteNoConfirm: function (id) {
@@ -139,6 +138,7 @@ $(function() {
                     .then(result => {
                         modal.success('删除成功');
                             this.getBoards();
+                            this.getDes();
                     });
             },
             openResetDialog: function(board) {
@@ -195,7 +195,8 @@ $(function() {
             seatNum: '',
             selectType: [],
             selectDes: undefined,
-            boardId: undefined
+            boardId: undefined,
+            areaselect: []
         },
         watch: {
             selectType(val) {
@@ -233,6 +234,7 @@ $(function() {
                     return;
                 }
                 http.post('/catering/modifyBoardsForRestaurant', {
+                        areaId: this.areaId,
                         boardId: this.boardId,
                         boardName: this.boardName,
                         kindId: this.selectDes,

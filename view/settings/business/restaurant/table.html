@@ -26,7 +26,7 @@
             <div>
                 <div class="restaurant-area-box" v-for="areas in boards" track-by="$index">
                     <div class="restaurant-box-title">
-                        {{areas.areaName}}<span class="changearea" @click='openSingleDialog(2,{areaId:areas.areaId}, areas.areaName)'>修改</span><span style="color: #ccc;font-size:16px;margin-left: 3px;">/</span>  <span class="changearea" @click=openDeleteDialog(0,areas.areaId)>删除</span>
+                        <span class="restaurant-box-name" :title='areas.areaName'>{{areas.areaName}}</span><span class="changearea" @click='openSingleDialog(2,{areaId:areas.areaId}, areas.areaName)'>修改</span><span style="color: #ccc;font-size:16px;margin-left: 3px;">/</span>  <span class="changearea" @click=openDeleteDialog(0,areas.areaId)>删除</span>
                         <span class="create-restaurant" v-on:click="openCreateDialog(areas)">新增桌子</span>
                     <a :href="volumeDownload + '&areaId=' + areas.areaId" target="_blank" style="color: #178ce6;" download><span class="volume-download">下载二维码</span></a>
                     <span class="volume-production" @click="volumeReset(areas.areaId)">重置二维码</span>
@@ -66,7 +66,7 @@
                 <div class="restaurant-right">
                 <div class="restaurant-box-title">
                         桌型管理
-                        <span class="create-restaurant" v-on:click="openSingleDialog(1)">新增桌子</span>
+                        <span class="create-restaurant" v-on:click="openSingleDialog(1)">新增桌型</span>
 
                     </div>
                         <table class="board-table">
@@ -78,7 +78,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="des in desList" >
-                                    <td>{{des.name}}</td>
+                                    <td class="board-table-name" :title='des.name'>{{des.name}}</td>
                                     <td>
                                         <span v-on:click="openSingleDialog(3,{kindId:des.kindId}, des.name)">修改</span>/<span v-on:click="openDeleteDialog(1,des.kindId)"">删除</span>
                                     </td>
@@ -97,7 +97,13 @@
                 </p>
                 <!-- <h6 style="font-size: 12px;margin-bottom: 18px;" v-if="status === 'create'">桌子名称和桌号至少填一项</h6> -->
                 <label for="boardName"> 区域:</label>
-                <span class="areaName"> {{areaName}} </span>
+                <select  v-model='areaId'>
+                    <option value="" v-for='sele in areaselect' :value='sele.areaId'>{{sele.areaName}}</option>
+                </select>
+                <p class="rest-tips" style="margin-left: 0">
+                    <label></label>
+                </p>
+                <!-- <span class="areaName"> {{areaName}} </span> -->
                 <label for="boardName">桌子/包厢名称:</label>
                 <input type="text" id="boardName" v-model="boardName" maxlength="6">
                 <p class="rest-tips" style="margin-left: 0">
