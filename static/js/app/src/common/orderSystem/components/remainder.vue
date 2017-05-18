@@ -168,7 +168,7 @@ export default {
             if (this.remainder.cards && this.remainder.cards.length > 0) {
                 // const firstCard = this.remainder.cards[0];
                 this.$set(this.paycard, 0, this.remainder.cards[0]);
-                this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee)));
+                this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee || this.remainder.cards[0].refundFee)));
                 // this.fee.$set(0, );
                 this.payed = this.fee[0];
             }
@@ -188,7 +188,7 @@ export default {
             this.needPay = 0;
             const _this = this;
             this.paycard.forEach(function(item, index) {
-                _this.$set(_this.fee, index, Math.min(Number(_this.remainder.needFee), Number(_this.remainder.cards[0].balanceFee)));
+                _this.$set(_this.fee, index, Math.min(Number(_this.remainder.needFee), Number(_this.remainder.cards[0].balanceFee || _this.remainder.cards[0].refundFee)));
                 // _this.remainder.needFee = (_this.remainder.needFee - _this.fee[index]).toFixed(2);
                 _this.payed = _this.payed + _this.fee[index];
                 _this.needPay = (_this.remainder.needFee * 100 - _this.payed * 100) / 100;
