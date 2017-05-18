@@ -85,8 +85,9 @@
                                 </span>
                             </span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="back">上次去</div>
-                        <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
+                        <div>
+                        <div class="dd-btn dd-btn-primary" @click="back" v-if='this.ReaminderParams' style="margin-right:20px;">上一步</div>
+                        <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div></div>
                     </div>
                 </div>
             </div>
@@ -258,14 +259,10 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
-                if (params.needMorePay === 0) {
-                    this.payMoney();
-                } else {
-                    this.ReaminderParams.params = params.paycard;
-                    this.ReaminderParams.type = params.type;
-                    this.payableFeeBack = this.orderPayment.payableFee;
-                    this.ReaminderParams.total = params.total;
-                }
+                this.ReaminderParams.params = params.paycard;
+                this.ReaminderParams.type = params.type;
+                this.payableFeeBack = this.orderPayment.payableFee;
+                this.ReaminderParams.total = params.total;
             } else {
                 this.ReaminderParams = undefined;
                 this.payableFeeBack = 0;
