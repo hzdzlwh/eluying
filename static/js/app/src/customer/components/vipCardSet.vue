@@ -33,7 +33,7 @@
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">办卡方案<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.applyAble'></switchbtn></span>
-                    <div class="vipCardBoxWarn" v-if='applyStrategyWarn && edit'>↑必填字段</div>
+                    <div class="vipCardBoxWarn" v-if='applyStrategyWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">
@@ -51,7 +51,7 @@
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">使用规则<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.thresholdAble'></switchbtn></span>
-                    <div class="vipCardBoxWarn" v-if='thresholdFeeWarn && edit'>↑必填字段</div>
+                    <div class="vipCardBoxWarn" v-if='thresholdFeeWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain vipCardRule">
                     账户余额小于等于
@@ -72,7 +72,7 @@
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">补办<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.reapplyAble'></switchbtn></span>
-                    <div class="vipCardBoxWarn" v-if='reapplyMasterFeeWarn && edit'>↑必填字段</div>
+                    <div class="vipCardBoxWarn" v-if='reapplyMasterFeeWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">
@@ -87,7 +87,7 @@
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">转赠<span class="vipCardBoxSwitch" v-if='edit'><switchbtn v-model='vipCard.givingAble'></switchbtn></span>
-                    <div class="vipCardBoxWarn" v-if='givingIntervalWarn && edit'>↑必填字段</div>
+                    <div class="vipCardBoxWarn" v-if='givingIntervalWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
                     <div class="df" style="margin-bottom:10px">规则：每
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn  v-if='edit' v-model='vipCard.discountAble'></switchbtn></span>
+                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn  v-if='edit' v-model='vipCard.viceAble'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='viceApplyFeeWarn && edit'>{{viceApplyFeeWarn === 1 ? '费用填写错误' : '数量请输入1-20之间的数字'}}</div>
                 </div>
                 <div class="vipCardBoxCantain">
