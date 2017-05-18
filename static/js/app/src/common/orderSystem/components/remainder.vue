@@ -11,7 +11,7 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>订单信息</span></p>
                             <div class="reaminder-order-item">
-                                <span class="reaminder-money-text">订单金额:<span>¥{{total}}</span></span>
+                                <span class="reaminder-money-text">订单金额:<span>¥{{remainder.payableFee}}</span></span>
                                 <span class="reaminder-money-text">余额应收:<span>¥{{remainder.needFee}}</span></span>
                                 <span class="reaminder-money-text">余额已收:<span>¥{{ payed }}</span></span>
                             </div>
@@ -140,10 +140,6 @@ export default {
         show: {
             type: Boolean,
             default: false
-        },
-        total: {
-            type: Number,
-            default: false
         }
     },
     data() {
@@ -217,7 +213,7 @@ export default {
                 });
                 this.$emit('getReaminderParams', {
                     paycard: cards,
-                    total: this.needPay,
+                    payTotal: this.payed,
                     needMorePay: this.needPay,
                     type: this.remainder.type
                 });
@@ -241,7 +237,7 @@ export default {
             const paycard = this.paycard;
             const selectCards = this.data.cards.filter(function(item) {
                 return !paycard.filter(function(it) {
-                    return it.serialNum === item.serialNum
+                    return it.serialNum === item.serialNum;
                 }).length || item.serialNum === paycard[index].serialNum;
             });
             return selectCards;

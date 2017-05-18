@@ -85,12 +85,13 @@
                                 </span>
                             </span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="back">上次去</div><div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
+                        <div class="dd-btn dd-btn-primary" @click="back">上次去</div>
+                        <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                     </div>
                 </div>
             </div>
         </div>
-        <remainder v-if='orderPayment.payableFee' :show='ramainShow' :data='remainderDate'  :total='orderPayment.payableFee' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
+        <remainder  :show='ramainShow' :data='remainderDate' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
     </div>
 </template>
 <style lang="scss">
@@ -318,51 +319,53 @@ export default {
             }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
-                    this.getOrderPayment().then(() =>{
-                        this.ramainShow = true;
-                        this.remainderDate = res.data.balancePay
-                    })
+                    // this.getOrderPayment().then(() => {
+                    //     this.ramainShow = true;
+                    //     this.remainderDate = res.data.balancePay;
+                    // });
+                    this.ramainShow = true;
+                    this.remainderDate = res.data.balancePay;
                 } else {
                     this.cashierShow();
                 }
             });
         },
         cashierShow() {
-                               const params = {
-                        type: 1
-                    };
-                    if (this.type === 'register') {
-                        params.orderId = this.business.orderDetail.orderId;
-                        params.orderType = this.business.orderDetail.orderType;
-                    } else {
-                        params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
-                        params.orderType = this.orderDetail.orderType;
-                    }
-                    Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
-                        if (this.orderState && this.isCompany && this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -14,
-                                name: '企业挂帐'
-                            }, {
-                                channelId: -15,
-                                name: '企业扣款'
-                            }].concat(this.payChannels);
-                        } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -15,
-                                name: '企业扣款'
-                            }].concat(this.payChannels);
-                        } else if (!this.orderState && this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -15,
-                                name: '退款至企业'
-                            }].concat(this.payChannels);
-                        }
-                        $('#cashier').modal({
-                            backdrop: 'static'
-                        });
-                    });
-                },
+            const params = {
+                type: 1
+            };
+            if (this.type === 'register') {
+                params.orderId = this.business.orderDetail.orderId;
+                params.orderType = this.business.orderDetail.orderType;
+            } else {
+                params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
+                params.orderType = this.orderDetail.orderType;
+            }
+            Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
+                if (this.orderState && this.isCompany && this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -14,
+                        name: '企业挂帐'
+                    }, {
+                        channelId: -15,
+                        name: '企业扣款'
+                    }].concat(this.payChannels);
+                } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -15,
+                        name: '企业扣款'
+                    }].concat(this.payChannels);
+                } else if (!this.orderState && this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -15,
+                        name: '退款至企业'
+                    }].concat(this.payChannels);
+                }
+                $('#cashier').modal({
+                    backdrop: 'static'
+                });
+            });
+        },
         resetData() {
             this.payments = [];
             this.showDeposit = false;
@@ -443,8 +446,9 @@ export default {
                 .then(res => {
                     this.orderPayment = res.data;
                     if (this.payableFeeBack) {
-                        this.orderPayment.payableFee = this.ReaminderParams.total;
+                        this.orderPayment.paidFee = this.ReaminderParams.payTotal + this.orderPayment.paidFee;
                     }
+
                     // 如果是余额过来的余额要改成余额减去后
                     this.onePassAmount = res.data.onePassAmount || 0;
                     this.companyAmount = res.data.companyAmount || 0;
@@ -709,8 +713,10 @@ export default {
                 return false;
             }
             if (this.ReaminderParams) {
-                params.cards = JSON.stringify(this.ReaminderParams.params);
-                params.type = JSON.stringify(this.ReaminderParams.type);
+                params.balancePay = JSON.stringify({
+                    cards: JSON.stringify(this.ReaminderParams.params),
+                    type: JSON.stringify(this.ReaminderParams.type)
+                });
             }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
