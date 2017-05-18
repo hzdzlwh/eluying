@@ -24,20 +24,23 @@
                             <div class="reaminder-getMoney-container">
                                 <div class="reaminder-getMoney-channels">
                                     <div class="reaminder-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.serialNum">
-                                        <span>{{remainder.type === 0 ? '收款会员卡' : '退款会员卡'}}</span>
-                                        <dd-select v-model='payment.serialNum' @input='changePaycard' :placeholder="`请选择${remainder.kindName}`">
+                                        <span class="reaminder-mr20">{{remainder.type === 0 ? '收款会员卡' : '退款会员卡'}}</span>
+                                        <dd-select class='reaminder-mr20' v-model='payment.serialNum' @input='changePaycard' :placeholder="`请选择${remainder.kindName}`" :disabled='remainder.type === 2'>
                                             <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.serialNum" :value="payChannel.serialNum" :label="payChannel.cardName">
                                             </dd-option>
-                                        </dd-select>
-                                        <input type="number" class="dd-input" v-model="fee[index]" disabled=true>
+                                        </dd-select >
+                                        <span class="reaminder-mr20">{{remainder.type === 0  ? '收款' : '退款'}}</span>
+                                        <input type="number" class="dd-input reaminder-mr20" v-model="fee[index]" disabled=true>
                                         <span class="reaminder-delBtn-icon" @click="deletePayMent(index)"></span>
                                     </div>
                                 </div>
+                                <div v-if='remainder.type === 0'>
                                 <div class="reaminder-addBtn" @click="addPayMent" v-if='data.cards && paycard.length < data.cards.length'>
                                     <span class="reaminder-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加{{remainder.kindName}}</span>
                                 </div>
                                 <div class="reaminder-addBtn" v-else>卡已用完</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,8 +60,10 @@
                                 </span>
                             </span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="payMoney(0)">跳过</div>
+                        <div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)">跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,7 +89,9 @@
     display: flex;
     flex-direction: column;
 }
-
+.reaminder-mr20{
+    margin-right:20px
+}
 .reaminder-getMoney-channel {
     display: flex;
     align-items: center;
@@ -167,10 +174,19 @@ export default {
             this.paycard = [];
             if (this.remainder.cards && this.remainder.cards.length > 0) {
                 // const firstCard = this.remainder.cards[0];
-                this.$set(this.paycard, 0, this.remainder.cards[0]);
-                this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee || this.remainder.cards[0].refundFee)));
-                // this.fee.$set(0, );
-                this.payed = this.fee[0];
+                if (this.remainder.type === 0) {
+                    this.$set(this.paycard, 0, this.remainder.cards[0]);
+                    this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee)));
+                    // this.fee.$set(0, );
+                    this.payed = this.fee[0];                    
+                }
+                if (this.remainder.type === 2) {
+                    for (let i = 0; i < this.remainder.cards.length; i++) {
+                        this.$set(this.paycard, i, this.remainder.cards[i]);
+                        this.$set(this.fee, i, this.remainder.cards[i].refundFee);
+                        this.payed = this.payed + this.fee[i]; 
+                    }                 
+                }
             }
             this.needPay = (this.remainder.needFee * 100 - this.fee[0] * 100) / 100;
         }
