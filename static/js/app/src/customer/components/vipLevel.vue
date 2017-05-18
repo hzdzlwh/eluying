@@ -272,22 +272,24 @@ export default {
             this.edit = true;
         },
         delet() {
-            const callback = () => {
-                http.get('/vipUser/removeVipLevel', {
-                    vipLevelId: this.vipLevel.vipLevelSettingId
-                })
-                    .then(res => {
-                        this.$emit('delet');
-                    });
-            };
-            if (this.vipLevel.vipLevelSettingId) {
-                modal.confirm({
-                    message: '删除后，所有该类型会员卡将会被删除，请先将它们置于失效状态',
-                    title: '删除会员卡'
-                }, callback);
-            } else {
-                this.$emit('delet');
-            }
+            this.$emit('delet', this.vipLevel.vipLevelSettingId);
+            // const callback = () => {
+            //     http.get('/vipUser/removeVipLevel', {
+            //         vipLevelId: this.vipLevel.vipLevelSettingId
+            //     })
+            //         .then(res => {
+            //             this.$emit('delet');
+            //         });
+            // };
+            // if (this.vipLevel.vipLevelSettingId) {
+            //     this.$emit('delet', this.vipLevel.vipLevelSettingId);
+            //     modal.confirm({
+            //         message: '删除后，所有该类型会员卡将会被删除，请先将它们置于失效状态',
+            //         title: '删除会员卡'
+            //     }, callback);
+            // } else {
+            //     this.$emit('delet');
+            // }
         },
         subDate() {
             this.namewarn = false;

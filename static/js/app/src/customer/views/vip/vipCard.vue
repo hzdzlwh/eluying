@@ -36,7 +36,11 @@ export default {
         fetchDate() {
             http.get('/vipCard/getVipCardSettings')
                 .then(res => {
-                    this.data = res.data.list;
+                    if (res.data) {
+                        this.data = res.data.list;
+                    } else {
+                        this.data = [];
+                    }
                 });
         },
         select(nodes) {

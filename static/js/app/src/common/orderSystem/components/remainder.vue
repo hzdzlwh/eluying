@@ -184,7 +184,7 @@ export default {
                     for (let i = 0; i < this.remainder.cards.length; i++) {
                         this.$set(this.paycard, i, this.remainder.cards[i]);
                         this.$set(this.fee, i, this.remainder.cards[i].refundFee);
-                        this.payed = this.payed + this.fee[i]; 
+                        this.payed = this.payed - this.fee[i]; 
                     }                 
                 }
             }
