@@ -14,7 +14,7 @@
         </div>
     </div>
 </template>
-<script>
+<script type="text/jsx">
     import { mapState } from 'vuex';
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from '../../common/http';
@@ -61,7 +61,7 @@
                 columns: [
                     {
                         title: '订单号／创建时间',
-                        render: (h, row) => (<span><span>{row.serialNum}</span><br /><small><i>{row.date}</i></small></span>),
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.date}</i></small></span>),
                         width: 188
                     },
                     {

@@ -85,12 +85,13 @@
                                 </span>
                             </span>
                         </div>
+                        <div class="dd-btn dd-btn-primary" @click="back">上次去</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                     </div>
                 </div>
             </div>
         </div>
-        <remainder v-if='' :show='ramainShow' :data='remainderDate' @sub='addParms' :total='orderPayment.payableFee'></remainder>
+        <remainder  :show='ramainShow' :data='remainderDate' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
     </div>
 </template>
 <style lang="scss">
@@ -191,8 +192,6 @@ export default {
     },
     data() {
         return {
-            ramainShow: false,
-            remainderDate: undefined,
             showDeposit: false,
             payments: [],
             deleteIds: [],
@@ -208,7 +207,11 @@ export default {
             companyBalance: undefined,
             paiedMoney: 0,
             onePassAmount: 0,
-            companyAmount: 0
+            companyAmount: 0,
+            ReaminderParams: {}, // 余额付款传来的参数,
+            payableFeeBack: 0, // 储存点击上一步时的总价 0为没有上一步
+            ramainShow: false,
+            remainderDate: undefined
         };
     },
     computed: {
@@ -253,8 +256,30 @@ export default {
         }
     },
     methods: {
-        addParms() {
-
+        getReaminderParams(params) {
+            if (params) {
+                if (params.needMorePay === 0) {
+                    this.payMoney();
+                } else {
+                    this.ReaminderParams.params = params.paycard;
+                    this.ReaminderParams.type = params.type;
+                    this.payableFeeBack = this.orderPayment.payableFee;
+                    this.ReaminderParams.total = params.total;
+                }
+            } else {
+                this.ReaminderParams = undefined;
+                this.payableFeeBack = 0;
+            }
+            this.ramainShow = false;
+            this.cashierShow();
+        },
+        hideReaminder() {
+            this.ramainShow = false;
+            this.hideModal();
+        },
+        back() {
+            $('#cashier').modal('hide');
+            this.ramainShow = true;
         },
         getRemainder() {
             let params;
@@ -294,46 +319,51 @@ export default {
             }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
-                    this.getOrderPayment().then(() =>{
-                        this.ramainShow = true;
-                        this.remainderDate = res.data.balancePay
-                    })
+                    // this.getOrderPayment().then(() => {
+                    //     this.ramainShow = true;
+                    //     this.remainderDate = res.data.balancePay;
+                    // });
+                    this.ramainShow = true;
+                    this.remainderDate = res.data.balancePay;
                 } else {
-                    const params = {
-                        type: 1
-                    };
-                    if (this.type === 'register') {
-                        params.orderId = this.business.orderDetail.orderId;
-                        params.orderType = this.business.orderDetail.orderType;
-                    } else {
-                        params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
-                        params.orderType = this.orderDetail.orderType;
-                    }
-                    Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
-                        if (this.orderState && this.isCompany && this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -14,
-                                name: '企业挂帐'
-                            }, {
-                                channelId: -15,
-                                name: '企业扣款'
-                            }].concat(this.payChannels);
-                        } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -15,
-                                name: '企业扣款'
-                            }].concat(this.payChannels);
-                        } else if (!this.orderState && this.companyCityLedger) {
-                            this.payChannels = [{
-                                channelId: -15,
-                                name: '退款至企业'
-                            }].concat(this.payChannels);
-                        }
-                        $('#cashier').modal({
-                            backdrop: 'static'
-                        });
-                    });
+                    this.cashierShow();
                 }
+            });
+        },
+        cashierShow() {
+            const params = {
+                type: 1
+            };
+            if (this.type === 'register') {
+                params.orderId = this.business.orderDetail.orderId;
+                params.orderType = this.business.orderDetail.orderType;
+            } else {
+                params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
+                params.orderType = this.orderDetail.orderType;
+            }
+            Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
+                if (this.orderState && this.isCompany && this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -14,
+                        name: '企业挂帐'
+                    }, {
+                        channelId: -15,
+                        name: '企业扣款'
+                    }].concat(this.payChannels);
+                } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -15,
+                        name: '企业扣款'
+                    }].concat(this.payChannels);
+                } else if (!this.orderState && this.companyCityLedger) {
+                    this.payChannels = [{
+                        channelId: -15,
+                        name: '退款至企业'
+                    }].concat(this.payChannels);
+                }
+                $('#cashier').modal({
+                    backdrop: 'static'
+                });
             });
         },
         resetData() {
@@ -345,6 +375,10 @@ export default {
             this.companyCityLedger = false;
             this.companyBalance = undefined;
             this.deleteIds = [];
+            this.ReaminderParams = {}; // 余额参数,
+            this.payableFeeBack = 0;
+            this.ramainShow = false;
+            this.remainderDate = undefined;
         },
         getPayChannels(index) {
             if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
@@ -411,6 +445,11 @@ export default {
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
+                    if (this.payableFeeBack) {
+                        this.orderPayment.paidFee = this.ReaminderParams.payTotal + this.orderPayment.paidFee;
+                    }
+
+                    // 如果是余额过来的余额要改成余额减去后
                     this.onePassAmount = res.data.onePassAmount || 0;
                     this.companyAmount = res.data.companyAmount || 0;
                     if (res.data.payments && res.data.payments.length > 0) {
@@ -421,7 +460,12 @@ export default {
                     this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                     if (Number(payMoney) !== 0) {
-                        this.payments.push({
+                        // this.payments.push({
+                        //     fee: Math.abs(payMoney).toFixed(2),
+                        //     payChannelId: undefined,
+                        //     type: this.orderState ? 0 : 2
+                        // });
+                        this.$set(this.payments, 0, {
                             fee: Math.abs(payMoney).toFixed(2),
                             payChannelId: undefined,
                             type: this.orderState ? 0 : 2
@@ -667,6 +711,12 @@ export default {
                 const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
                 modal.warn(payStr);
                 return false;
+            }
+            if (this.ReaminderParams) {
+                params.balancePay = JSON.stringify({
+                    cards: JSON.stringify(this.ReaminderParams.params),
+                    type: JSON.stringify(this.ReaminderParams.type)
+                });
             }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
