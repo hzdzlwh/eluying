@@ -36,6 +36,9 @@
     color:#178ce6;
     text-align:center;
     display: inline-block;
+    &:not(:first-child) {
+      border-left: 1px solid #178CE6;
+    }
     a.active {
       width:100px;
       height:24px;

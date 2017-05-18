@@ -20,7 +20,7 @@
 	</div>
 </template>
 
-<script>
+<script type="text/jsx">
     import { DdTable, DdPagination } from 'dd-vue-component';
 
     export default {
@@ -57,8 +57,8 @@
                     },
                     {
                         title: '订单号',
-                        dataIndex: 'f',
-                        width: 164
+                        width: 164,
+                        render: (h, row) => <span class="js-order-num">{row.f}</span>
                     },
                     {
                         title: '渠道',
