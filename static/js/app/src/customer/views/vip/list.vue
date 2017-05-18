@@ -14,8 +14,24 @@
             <dd-pagination @currentchange="getVips" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
         <vip-form :vip-props="vip" @onSuccess="getVips" />
-        <recharge-card-form :visible="rechargeVisible" :card="card" @closeModal="hideModel"></recharge-card-form>
-        <main-card-form :visible="mainCardVisible" :oldPhone="vip.phone" @closeModal="hideModel"></main-card-form>
+        <recharge-card-form :visible="rechargeVisible"
+                            :card="card"
+                            :channels="payChannels"
+                            @closeModal="hideModel"
+                            @changeParams="modifyParams">
+        </recharge-card-form>
+        <main-card-form :visible="mainCardVisible"
+                        :oldPhone="vip.phone"
+                        :channels="payChannels"
+                        @closeModal="hideModel"
+                        @changeParams="modifyParams">
+        </main-card-form>
+        <pay-with-code :visible="payCodeVisible"
+                       :params="payWithCodeParams"
+                       :url="payWithCodeInterfaceUrl"
+                       @closeModal="hideModel"
+                       @refreshView="">
+        </pay-with-code>
         <detail
             :tab="detailTab"
             :id="detailId"
@@ -238,6 +254,7 @@
     import modal from '../../../common/modal';
     import rechargeCardForm from '../../components/rechargeCardForm.vue';
     import mainCardForm from '../../components/mainCardForm.vue';
+    import payWithCode from '../../components/payWithCode.vue';
     const idCardType = [
         '身', '军', '通', '护', '其'
     ];
@@ -247,12 +264,15 @@
             return {
                 contral: {},
                 vips: [],
+                payChannels: [],
                 vip: {},
                 pages: 0,
                 count: 0,
                 pageNo: 1,
                 searchPattern: undefined,
                 detailVisible: false,
+                payWithCodeParams: undefined,
+                payWithCodeInterfaceUrl: undefined,
                 col: [
                     {
                         title: '姓名',
@@ -274,13 +294,13 @@
                     },
                     {
                         title: '会员卡',
-                        render: (h, row) => <div>{row.vipCards.map(function(item) {
+                        render: (h, row) => <div>{row.vipCards && row.vipCards.map(function(item) {
                             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.name} key={item.vipUserId}>{item.name}</div>;
                         })}</div>
                     },
                     {
                         title: '余额',
-                        render: (h, row) => <div>{row.vipCards.map(function(item) {
+                        render: (h, row) => <div>{row.vipCards && row.vipCards.map(function(item) {
                             return <div style="height:19px;" key={item.vipUserId}>{item.balanceFee}</div>;
                         })}</div>
                     },
@@ -309,11 +329,13 @@
                 detailTitle: undefined,
                 rechargeVisible: false,
                 card: null,
-                mainCardVisible: false
+                mainCardVisible: false,
+                payCodeVisible: false
             };
         },
         created() {
             this.getVips();
+            this.getPayChannels();
             this.contral.VIP_EDIT_ID = auth.checkModule(auth.VIP_ID, auth.VIP_EDIT_ID);
         },
         methods: {
@@ -377,6 +399,19 @@
                         }
                     });
             },
+            getPayChannels() {
+                http.get('/user/getChannels', { type: 1 })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.payChannels = res.data.list;
+                        }
+                    });
+            },
+            modifyParams(params) {
+                this.payWithCodeParams = params.params;
+                this.payWithCodeInterfaceUrl = params.url;
+                this.payCodeVisible = true;
+            },
             handleDetailClose() {
                 this.detailVisible = false;
             },
@@ -398,7 +433,7 @@
                 });
             },
             charge(card) {
-                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId };
+                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId, id: card.vipCardId };
                 this.handleDetailClose();
                 this.rechargeVisible = true;
             },
@@ -409,6 +444,7 @@
             hideModel() {
                 this.rechargeVisible = false;
                 this.mainCardVisible = false;
+                this.payCodeVisible = false;
                 this.vip.phone = '';
             }
         },
@@ -418,7 +454,8 @@
             vipForm,
             detail,
             rechargeCardForm,
-            mainCardForm
+            mainCardForm,
+            payWithCode
         }
     };
 </script>

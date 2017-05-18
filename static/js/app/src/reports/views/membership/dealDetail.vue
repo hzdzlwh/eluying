@@ -7,7 +7,7 @@
             <div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
 	            <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
-                <button class="dd-btn dd-btn-primary">导出Excel</button>
+                <a :href="exportUrl"><button class="dd-btn dd-btn-primary">导出Excel</button></a>
 	        </div>
         </div>
         <div>
@@ -15,87 +15,107 @@
         </div>
         <div class="foot">
             <span><small>共计</small> {{count}}条记录</span>
-            <dd-pagination @currentchange="getLists" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="getDealDetails" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
 	</div>
 </template>
 
 <script>
+    import { mapState } from 'vuex';
+    import http from '../../../common/http';
     import { DdTable, DdPagination } from 'dd-vue-component';
 
     export default {
         data() {
             return {
-                count: 11,
+                searchPattern: undefined,
+                count: 0,
                 pageNo: 1,
-                pages: 5,
+                pages: 0,
                 col: [
                     {
                         title: '序号',
-                        dataIndex: 'a',
+                        dataIndex: 'order',
                         width: 56
                     },
                     {
                         title: '会员卡',
-                        dataIndex: 'b'
+                        dataIndex: 'vipCardName'
                     },
                     {
                         title: '卡号',
-                        dataIndex: 'c',
+                        dataIndex: 'vipCardNum',
                         width: 164
                     },
                     {
                         title: '姓名',
-                        dataIndex: 'd'
+                        dataIndex: 'vipUserName'
                     },
                     {
                         title: '手机号',
-                        dataIndex: 'e',
+                        dataIndex: 'vipUserPhone',
                         width: 107
                     },
                     {
                         title: '渠道',
-                        dataIndex: 'f'
+                        dataIndex: 'channelType'
                     },
                     {
                         title: '类型',
-                        dataIndex: 'g'
+                        dataIndex: 'type'
                     },
                     {
                         title: '金额',
-                        dataIndex: 'h'
+                        dataIndex: 'amount'
                     },
                     {
                         title: '时间',
-                        dataIndex: 'i'
+                        dataIndex: 'creationTime'
                     },
                     {
                         title: '操作人员',
-                        dataIndex: 'j'
+                        dataIndex: 'operator'
                     }
                 ],
-                dealDetailList: [
-                    {
-                        a: 1,
-                        b: '超级白金卡',
-                        c: 123456789012345678,
-                        d: '得到是',
-                        e: 12345678901,
-                        f: '微官网',
-                        g: '充值',
-                        h: 44444,
-                        i: '2017-09-04',
-                        j: '几所示'
-                    }
-                ]
+                dealDetailList: []
             };
+        },
+        computed: {
+            ...mapState(['date']),
+            exportUrl() {
+            }
+        },
+        created() {
+            this.getDealDetails();
         },
         methods: {
             search() {
+                this.searchPattern = this.$refs.searchInput.value;
+                this.getDealDetails();
             },
-            getLists() {
+            getDealDetails(page) {
+                this.pageNo = page || this.pageNo;
+                http.get('/stat/getVipCardWalletDetails', {
+                    endDate: this.date.endDate,
+                    keyword: this.searchPattern,
+                    page: this.pageNo,
+                    startDate: this.date.startDate
+                }).then(res => {
+                    if (res.code === 1) {
+                        this.dealDetailList = res.data.items.map((item, index) => {
+                            return { ...item, order: index + 1 };
+                        });
+                        this.pages = Math.ceil(res.data.totalCount / 30);
+                        this.count = res.data.totalCount;
+                    }
+                });
             },
             handleTableChange() {
+            }
+        },
+        watch: {
+            date() {
+                this.getDealDetails();
             }
         },
         components: {
