@@ -259,10 +259,10 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
-                this.ReaminderParams.params = params.paycard;
-                this.ReaminderParams.type = params.type;
-                this.payableFeeBack = this.orderPayment.payableFee;
-                this.ReaminderParams.total = params.total;
+                    this.ReaminderParams.params = params.paycard;
+                    this.ReaminderParams.type = params.type;
+                    this.payableFeeBack = this.orderPayment.payableFee;
+                    this.ReaminderParams.total = params.total;
             } else {
                 this.ReaminderParams = undefined;
                 this.payableFeeBack = 0;
@@ -442,6 +442,7 @@ export default {
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
+                    window.console.log(this.ReaminderParams.payTotal);
                     if (this.payableFeeBack) {
                         this.orderPayment.paidFee = this.ReaminderParams.payTotal + this.orderPayment.paidFee;
                     }
