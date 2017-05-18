@@ -709,8 +709,8 @@ export default {
                 return false;
             }
             if (this.ReaminderParams) {
-                params.cards = this.ReaminderParams.params;
-                params.type = this.ReaminderParams.type;
+                params.cards = JSON.stringify(this.ReaminderParams.params);
+                params.type = JSON.stringify(this.ReaminderParams.type);
             }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
