@@ -6,7 +6,7 @@
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
             <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="margin-left: 273px" @click="openCreate">新增</button>
             <div style="margin-top:18px;">
-            <vipLevel v-for='(dd ,index) in settings' :data='dd' :key="dd":type='autoUpgrade' @delet='getLevelList' @addCard='getLevelList' ></vipLevel>
+            <vipLevel  v-for='(dd ,index) in settings' :data='dd' :key="dd.vipLevelSettingId" :type='Number(autoUpgrade)' @delet='getLevelList' @addCard='getLevelList' @select='select'></vipLevel>
             </div>
         </div>
 
@@ -98,6 +98,7 @@
                 </div>
             </div>
         </div>
+        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
     </div>
 </template>
 <style lang="scss">
@@ -106,6 +107,10 @@
         cursor: pointer;
     }
     .vip-setting-container {
+        width:730px;
+        .dd-btn-primary{
+            float:right
+        }
         td {
             vertical-align: top !important;
         }
@@ -170,6 +175,8 @@
     import http from '../../../common/http';
     import auth from '../../../common/auth';
     import vipLevel from '../../components/vipLevel';
+    import categorySelect from '../../components/categorySelect.vue';
+    import bus from '../../event.js';
     export default{
         data() {
             return {
@@ -181,16 +188,25 @@
                 consume: [],
                 discount: [],
                 columns: [],
-                id: undefined
+                id: undefined,
+                nodes: []
             };
         },
         components: {
-            vipLevel
+            vipLevel,
+            categorySelect
         },
         created() {
             this.getLevelList();
         },
         methods: {
+            select(nodes) {
+                this.nodes = nodes;
+                $('#categorySelectModal').modal('show');
+            },
+            handleCategorySelect(list) {
+                bus.$emit('vipLevelCategory', list);
+            },
             getLevelList() {
                 http.get('/vipUser/getVipSettings', {})
                     .then(res => {
@@ -212,8 +228,9 @@
                 if (typeof this.autoUpgrade === 'undefined') {
                     return false;
                 }
-
+                this.autoUpgrade = Number(this.autoUpgrade);
                 $('#system').modal('hide');
+                this.openCreate();
                 // this.openCreate();
             }
         }

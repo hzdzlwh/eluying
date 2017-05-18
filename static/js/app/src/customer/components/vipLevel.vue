@@ -6,7 +6,7 @@
             <span>
                 <div class="vipLevelWarn" v-if='namewarn && edit' >↑必填字段</div>
             </span>
-            <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
+            <span v-if='!edit' class="vipLevelEdit"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
         <div class="vipLevelCantain">
             <div class="vipLevelBox">
@@ -21,7 +21,7 @@
                     <div class="vipLevelChose" @click='openSelectNode("discountInfoList")' v-if='edit'>选择项目</div>
                 </div>
             </div>
-            <div class="vipLevelBox">
+            <div class="vipLevelBox" v-if='type'>
                 <div class="vipLevelBoxtitle">可支付项目</div>
                 <div class="vipLevelBoxCantain">
                     <div>累计消费金额：达到该等级需要累计消费金额
@@ -54,11 +54,18 @@
                 <div class="dd-btn  dd-btn-primary" @click='subDate'>保存</div>
             </div>
         </div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
+        
     </div>
 </template>
 <style lang='sass' scoped>
 .vipLevel {
+    .vipLevelEdit{
+        font-size: 14px;
+        color: #178ce6;
+        float: right;
+        margin-right: 20px;
+        cursor: pointer;
+    }
     .vipLevelRed {
         font-size: 14px;
         color: #f24949;
@@ -184,10 +191,10 @@
 }
 </style>
 <script>
-import categorySelect from './categorySelect.vue';
 import http from '../../common/http';
 import switchbtn from '../../common/components/switch.vue';
 import modal from '../../common/modal';
+import bus from '../event.js';
 export default {
     props: {
         data: {
@@ -209,7 +216,7 @@ export default {
             nodes: [],
             consume: [],
             selectType: undefined,
-            selectItem: undefined,
+            categoryOpen: false,
             vipLevel: this.getdata(),
             namewarn: false,
             edit: this.editor,
@@ -236,7 +243,6 @@ export default {
         };
     },
     components: {
-        categorySelect,
         switchbtn
     },
     methods: {
@@ -342,17 +348,17 @@ export default {
             } else {
                 this.vipLevel[this.selectType] = list;
             }
+            bus.$off('vipLevelCategory');
         },
         deleteNode(item, index) {
             this.vipLevel[item].splice(index, 1);
         },
         // type:可支付项目或优惠折扣，item
         openSelectNode(type) {
+            this.$emit('select', this.vipLevel[type]);
+            bus.$on('vipLevelCategory', this.handleCategorySelect);
             this.selectType = type;
-            this.nodes = this.vipLevel[type];
-            this.selectItem = type;
             // this.nodes = item[type];
-            $('#categorySelectModal').modal('show');
         }
     }
 };

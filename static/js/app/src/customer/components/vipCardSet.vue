@@ -6,14 +6,14 @@
             <span>
                 <div class="vipCardWarn" v-if='namewarn && edit' >↑必填字段</div>
             </span>
-            <span v-if='!edit' style="cursor:pointer"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
+            <span v-if='!edit' class="vipCardEdit"><span @click='editChange'>编辑</span>／<span @click='delet'>删除</span></span>
         </div>
         <div class="vipCardCantain" :class='toggle ? "vipCardMore" : ""'>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">优惠折扣 <span v-if='edit'><span class="vipCardBoxtitleTip" >请输入0.1-9.9之间的数字</span><span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.discountAble'></switchbtn></span></span>
                 </div>
                 <div class="vipCardBoxCantain">
-                    <div style="inline-block">
+                    <div class="vipCardBoxList"  v-if='vipCard["discountItems"].length'>
                         <div class="df" v-for='(item, index) in vipCard["discountItems"]'>
                             <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><input type="number" max="9.9" min='0.1' v-model='item.discount' class="vipCardSInput"/>折<img @click='deleteNode("discountItems", index)'  src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;"> </span> <span v-else>{{item.discount}}折</span>
                         </div>
@@ -24,10 +24,10 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">可支付项目<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
-                <div style="display:inline-block">
-                    <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
-                        <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
-                        </div>
+                    <div class="vipCardBoxList" v-if='vipCard["payableItems"].length'>
+                        <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
+                            <label for="" class="vipCardRoomLabel">{{item.nodeName}}</label><span v-if='edit'><img  @click='deleteNode("payableItems", index)' src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:95px;"> </span></div>
+                    </div>
                     <div class="vipCardChose" v-if='edit' @click='openSelectNode("payableItems")'>选择项目</div>
                 </div>
             </div>
@@ -61,11 +61,11 @@
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">充值<span v-if='edit' class="vipCardBoxSwitch"><switchbtn v-model='vipCard.rechargeAble'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
-                <div style="display:inline-block">
-                    <div class="df" v-for='(item,index) in vipCard.rechargeItems'>
-                        <span>充<input type="number" v-model='item.rechargeFee' class=" vipCardMInput" v-if='edit'> <span v-else>{{item.rechargeFee}}</span>元，送
-                        <input type="number" v-model='item.freeFee' class="vipCardMInput" v-if='edit'> <span v-else>{{item.freeFee}}</span>元 <img src="/static/image/modal/room_modal_delete.png" v-if='edit' alt="" style="cursor: pointer;margin-left:50px;" @click='deletRule(index)'></span>
-                    </div>
+                    <div style="display:inline-block">
+                        <div class="df" v-for='(item,index) in vipCard.rechargeItems'>
+                            <span>充<input type="number" v-model='item.rechargeFee' class=" vipCardMInput" v-if='edit'> <span v-else>{{item.rechargeFee}}</span>元，送
+                            <input type="number" v-model='item.freeFee' class="vipCardMInput" v-if='edit'> <span v-else>{{item.freeFee}}</span>元 <img src="/static/image/modal/room_modal_delete.png" v-if='edit' alt="" style="cursor: pointer;margin-left:50px;" @click='deletRule(index)'></span>
+                        </div>
                     </div>
                     <div class="vipCardChose" v-if='edit' @click='addRule' style="margin-top:10px;">添加规则</div>
                 </div>
@@ -99,13 +99,13 @@
             </div>
             <div class="vipCardBox">
                 <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn  v-if='edit' v-model='vipCard.discountAble'></switchbtn></span>
-                    <div class="vipCardBoxWarn" v-if='viceApplyFeeWarn && edit'>↑必填字段</div>
+                    <div class="vipCardBoxWarn" v-if='viceApplyFeeWarn && edit'>{{viceApplyFeeWarn === 1 ? '费用填写错误' : '数量请输入1-20之间的数字'}}</div>
                 </div>
                 <div class="vipCardBoxCantain">
                     <div class="df">费用：
                         <input type="number" v-model='vipCard.viceApplyFee' v-if='edit' class="vipCardMInput"> <span v-else>{{vipCard.viceApplyFee}}</span>元</div>
                     <div>数量：一张主卡最多可办理
-                        <input type="number" v-model='vipCard.viceMaxAmount' class="vipCardSInput" v-if='edit'><span v-else>{{vipCard.viceMaxAmount}}</span>张副卡<span v-if='edit'>请输入1-20之间的数字</span></div>
+                        <input type="number" v-model='vipCard.viceMaxAmount' class="vipCardSInput" v-if='edit'><span v-else>{{vipCard.viceMaxAmount}}</span>张副卡<span v-if='edit' style='font-size:12px;color:#999'>(请输入1-20之间的数字)</span></div>
                 </div>
             </div>
             <div><span :class='toggle ? "vipCardMoreShow" : "vipCardMoreHide"' @click='toggle = !toggle'>{{toggle ? "显示" : "隐藏"}}高级设置</span></div>
@@ -114,7 +114,7 @@
                 <div class="dd-btn  dd-btn-primary" @click='subDate'>保存</div>
             </div>
         </div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
+        <!-- <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" /> -->
     </div>
 </template>
 <style lang='sass' scoped>
@@ -130,6 +130,14 @@
         display: inline-block;
         margin-right: 3px
     }
+}
+
+.vipCardEdit {
+    font-size: 14px;
+    color: #178ce6;
+    float: right;
+    margin-right: 20px;
+    cursor: pointer;
 }
 
 .vipCardMoreHide {
@@ -193,6 +201,10 @@
     }
     .vipCardCantain {
         padding: 20px;
+        .vipCardBoxList {
+            display: inline-block;
+            margin-right: 30px;
+        }
         .vipCardBox {
             background: #ffffff;
             box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
@@ -200,7 +212,7 @@
             margin-bottom: 15px;
             .vipCardBoxtitle {
                 background: #f0f0f0;
-                height: 32px;
+                /*height: 32px;*/
                 line-height: 32px;
                 padding: 0 15px;
                 color: #666;
@@ -239,7 +251,7 @@
                     top: 2px;
                     padding-bottom: 10px;
                     cursor: pointer;
-                    margin-left: 30px;
+                    /*margin-left: 30px;*/
                     display: inline-block;
                 }
                 .vipCardRoomLabel {
@@ -260,10 +272,10 @@
 }
 </style>
 <script>
-import categorySelect from './categorySelect.vue';
 import http from '../../common/http';
 import switchbtn from '../../common/components/switch.vue';
 import modal from '../../common/modal';
+import bus from '../event.js';
 export default {
     props: {
         data: {
@@ -311,13 +323,16 @@ export default {
         };
     },
     components: {
-        categorySelect,
         switchbtn
     },
     methods: {
         canel() {
-            this.vipCard = this.getdata();
-            this.edit = false;
+            if (this.vipCard.categoryId) {
+                this.vipCard = this.getdata();
+                this.edit = false;
+            } else {
+                this.$emit('delet');
+            }
         },
         deletRule(index) {
             this.vipCard.rechargeItems.splice(index, 1);
@@ -389,8 +404,12 @@ export default {
                 this.givingIntervalWarn = true;
                 return;
             }
-            if (!(Number(this.vipCard.viceApplyFee) >= 0 && this.vipCard.viceApplyFee !== '' && Number(this.vipCard.viceMaxAmount) >= 0 && this.vipCard.viceMaxAmount !== '' && Number(this.vipCard.viceMaxAmount) <= 20 && this.vipCard.viceMaxAmount !== '')) {
-                this.viceApplyFeeWarn = true;
+            if (!(Number(this.vipCard.viceApplyFee) >= 0 && this.vipCard.viceApplyFee !== '')) {
+                this.viceApplyFeeWarn = 1;
+                return;
+            }
+            if (!(Number(this.vipCard.viceMaxAmount) > 0 && this.vipCard.viceMaxAmount !== '' && Number(this.vipCard.viceMaxAmount) <= 20 && this.vipCard.viceMaxAmount !== '')) {
+                this.viceApplyFeeWarn = 2;
                 return;
             }
             const data = Object.assign({}, this.vipCard);
@@ -425,17 +444,16 @@ export default {
             } else {
                 this.vipCard[this.selectType] = list;
             }
+            bus.$off('vipCardCategory');
         },
         deleteNode(item, index) {
             this.vipCard[item].splice(index, 1);
         },
         // type:可支付项目或优惠折扣，item
         openSelectNode(type) {
+            this.$emit('select', this.vipCard[type]);
+            bus.$on('vipCardCategory', this.handleCategorySelect);
             this.selectType = type;
-            this.nodes = this.vipCard[type];
-            this.selectItem = type;
-            // this.nodes = item[type];
-            $('#categorySelectModal').modal('show');
         }
     }
 };
