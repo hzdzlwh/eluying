@@ -46,7 +46,7 @@
                                 </span>
                             </span>
                             <span class="discount-num">
-                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
+                                {{ `${vipDiscountDetail.tag} ${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
                             </span>
                         </span>
                     </div>
@@ -84,7 +84,7 @@
                                 </span>
                             </span>
                             <span class="discount-num">
-                                {{ `${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
+                                {{ `${vipDiscountDetail.tag} ${(getItemDiscountInfo(option.type, vipDiscountDetail).discount * 10).toFixed(1)}折` }}
                             </span>
                         </span>
                     </div>
