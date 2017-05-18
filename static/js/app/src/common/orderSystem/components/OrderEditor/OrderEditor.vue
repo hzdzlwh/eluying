@@ -438,6 +438,14 @@
                         id: -4,
                         tag: '会员折扣'
                     };
+                    this.vipDiscountDetail = {
+                        vipDetail: {
+                            discountList: vip.discountList,
+                            level: vip.name,
+                            id: vip.vipId
+                        },
+                        tag: '会员'
+                    };
                 }
 
                 if (vipCardId > 0) {
@@ -448,6 +456,12 @@
                         discount: this.getRoomDiscount(card.discountList) * 10,
                         id: -4,
                         tag: '会员卡折扣'
+                    };
+                    this.vipDiscountDetail = {
+                        vipDetail: {
+                            discountList: card.discountList
+                        },
+                        tag: card.name
                     };
                 }
 
@@ -557,7 +571,8 @@
                                 levels: [{
                                     name: res.data.vipDetail.level,
                                     id: -1,
-                                    discountList: res.data.vipDetail.discountList
+                                    discountList: res.data.vipDetail.discountList,
+                                    vipId: res.data.vipDetail.id
                                 }]
                             });
                             const cards = res.data.cards.map(card => {
@@ -603,6 +618,7 @@
                         this.vipDiscountDetail = {};
                         this.vipDiscountDetail.isVip = false;
                         this.vipDiscountDetail.vipDetail = discountList;
+                        this.vipDiscountDetail.tag = '企业';
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
                             discount: this.getItemDiscountInfo(0, 0).discount * 10,
@@ -670,7 +686,7 @@
                 this.goodsPrice = 0;
                 this.foodPrice = 0;
                 this.vipCardId = undefined;
-                this.vipCardInfo =  {};
+                this.vipCardInfo = {};
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
@@ -903,7 +919,7 @@
                     params.origin = '会员';
                     if (this.vipCardId !== 0) {
                         params.discountChannel = this.vipCardId > 0 ? 4 : 1;
-                        params.discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipDiscountDetail.vipDetail.vipId;
+                        params.discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipId;
                     }
                 } else if (this.userOriginType.id === -3) {
                     params.origin = '微官网';

@@ -72,7 +72,7 @@
                     <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
-                                                {{`${vipDiscountDetail.isVip ? '会员' : '企业'}${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
+                                                {{`${vipDiscountDetail.tag} ${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                     </span>
                 </div>

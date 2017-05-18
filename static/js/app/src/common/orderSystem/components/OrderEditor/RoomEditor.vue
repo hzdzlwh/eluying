@@ -236,6 +236,14 @@
                 }
 
                 if (this.rooms.length > 0) {
+                    // 切成其他的渠道，要把会员和企业的折扣设为不使用
+                    if (origin.id !== -4 || origin.id !== -5) {
+                        this.rooms.map(r => {
+                            if (r.moreDiscount < 0) {
+                                r.moreDiscount = 0;
+                            }
+                        });
+                    }
                     this.forceChangePrice = true;
                     // 更改渠道
                     this.modifyRooms(this.rooms);
