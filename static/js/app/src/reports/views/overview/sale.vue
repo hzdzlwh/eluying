@@ -36,7 +36,7 @@
 <style>
 
 </style>
-<script>
+<script type="text/jsx">
     import { mapState } from 'vuex';
     import http from '../../../common/http';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
@@ -48,7 +48,7 @@
                     {
                         title: '订单号/创建时间',
                         width: 216,
-                        render: (h, row) => (<span><span>{row.serialNum}</span><br /><small><i>{row.creationTime}</i></small></span>)
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.creationTime}</i></small></span>)
                     },
                     {
                         title: '创建人',

@@ -44,6 +44,10 @@
     </div>
 </template>
 <style>
+    .js-order-num {
+        color: #178ce6;
+        cursor: pointer;
+    }
 </style>
 <script>
     import OrderDetail from './Detail/OrderDetail.vue';
@@ -104,6 +108,7 @@
             bus.$on('showCancelOrder', this.showCancelOrder);
             bus.$on('changeCheckState', this.changeCheckState);
             this.getRoomsList();
+            document.addEventListener('click', this.handleOrderNumClick);
         },
         beforeDestroy: function() {
             bus.$off('onClose', this.hideDetail);
@@ -117,9 +122,23 @@
             bus.$off('hideCancelOrder', this.hideCancelOrder);
             bus.$off('showCancelOrder', this.showCancelOrder);
             bus.$off('changeCheckState', this.changeCheckState);
+            document.removeEventListener('click', this.handleOrderNumClick);
         },
         methods: {
             ...mapMutations([types.SET_ORDER_DETAIL]),
+            handleOrderNumClick(ev) {
+                const el = ev.target;
+                if (!el.classList.contains('js-order-num')) {
+                    return;
+                }
+                http.get('/order/getOrderTypeAndId', { serialNum: el.innerHTML })
+                    .then(res => {
+                        bus.$emit('onShowDetail', {
+                            type: res.data.orderType,
+                            orderId: res.data.orderId
+                        });
+                    });
+            },
             getRoomsList() {
                 return http.get('/room/getRoomsList', {})
                     .then(res => {
