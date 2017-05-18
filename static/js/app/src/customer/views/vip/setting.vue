@@ -4,7 +4,7 @@
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
             <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="margin-left: 273px" @click="openCreate">新增</button>
+            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float:right" @click="openCreate">新增</button>
             <div style="margin-top:18px;">
             <vipLevel  v-for='(dd ,index) in settings' :data='dd' :key="dd.vipLevelSettingId" :type='Number(autoUpgrade)' @delet='getLevelList' @addCard='getLevelList' @select='select'></vipLevel>
             </div>
@@ -107,10 +107,7 @@
         cursor: pointer;
     }
     .vip-setting-container {
-        width:730px;
-        .dd-btn-primary{
-            float:right
-        }
+        
         td {
             vertical-align: top !important;
         }
@@ -120,6 +117,7 @@
     @import '~dd-common-css/src/variables';
 
     .vip-setting-container {
+        width:730px;
         margin: 0 auto;
     i {
         color: #999;

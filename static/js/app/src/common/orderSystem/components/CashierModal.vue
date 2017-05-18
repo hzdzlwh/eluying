@@ -714,8 +714,8 @@ export default {
             }
             if (this.ReaminderParams) {
                 params.balancePay = JSON.stringify({
-                    cards: JSON.stringify(this.ReaminderParams.params),
-                    type: JSON.stringify(this.ReaminderParams.type)
+                    cards: this.ReaminderParams.params,
+                    type: this.ReaminderParams.type
                 });
             }
             if (payWithAlipay <= 0) {
