@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="vipLevelBox" v-if='type'>
-                <div class="vipLevelBoxtitle">可支付项目</div>
+                <div class="vipLevelBoxtitle">累计消费金额</div>
                 <div class="vipLevelBoxCantain">
                     <div>累计消费金额：达到该等级需要累计消费金额
                         <input type="number" class="vipLevelMInput" v-model='vipLevel.thresholdFee' v-if='edit'><span v-else>{{vipLevel.thresholdFee}}</span>元</div>
