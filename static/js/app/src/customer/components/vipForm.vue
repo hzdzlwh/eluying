@@ -65,11 +65,11 @@
                                     </div>
                                 </div>
                                 <div class="vipInfo-item-wrap">
-                                    <div class="vipInfo-item" style="margin-bottom:0">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">创建渠道</span>
                                         <input class="dd-input long-input" v-model="vip.vipChannel" type="text" >
                                     </div>
-                                    <div class="vipInfo-item" style="margin-bottom:0">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">地区</span>
                                         <div class="vipInfo-item-content">
                                             <div class="vip-country-container">
@@ -96,6 +96,14 @@
                                                 </dd-select>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="vipInfo-item-wrap" v-show="vipProps.newAdd || vipProps.isAutoUpgrade === 0">
+                                    <div class="vipInfo-item vip-level" style="margin-bottom:0">
+                                        <span class="vipInfo-item-label">会员等级</span>
+                                        <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
+                                            <dd-option :key="level.vipLevelId" v-for="level in levels" :value="level.vipLevelId" :label="level.vipLevelName"></dd-option>
+                                        </dd-select>
                                     </div>
                                 </div>
                             </div>
@@ -239,6 +247,14 @@
             border-radius:2px;
         }
     }
+    .none-margin{
+        margin-bottom: 0;
+    }
+    .vip-level{
+        .dd-select{
+            width: 247px;
+        }
+    }
     .vipInfo-item-label {
         display: inline-flex;
         height: 20px;
@@ -371,7 +387,6 @@
                 }
 
                 this.hasSubmit = false;
-                console.log(vip);
                 const data = {
                     ...vip,
                     province: this.provinceItems[this.province] && this.provinceItems[this.province].name,
@@ -387,7 +402,6 @@
                 if (vip.customerId) {
                     url = '/customer/addToVip';
                 }
-                console.log(data);
                 http.post(url, data)
                     .then(res => {
                         this.close();
