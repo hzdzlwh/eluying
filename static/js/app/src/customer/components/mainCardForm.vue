@@ -103,6 +103,10 @@
                 type: String,
                 default: ''
             },
+            oldName: {
+                type: String,
+                default: ''
+            },
             channels: Array
         },
         data() {
@@ -133,7 +137,7 @@
                     type.selected = false;
                 });
                 this.phone = this.oldPhone;
-                this.name = '';
+                this.name = this.oldName;
                 this.cardNum = '';
                 this.disableNameInput = false;
                 this.phoneValid = true;
@@ -261,6 +265,9 @@
             oldPhone(newVal) {
                 this.phone = newVal;
                 this.editable = true;
+            },
+            oldName(newVal) {
+                this.name = newVal;
             }
         },
         components: {
