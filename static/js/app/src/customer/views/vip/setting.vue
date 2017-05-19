@@ -2,9 +2,9 @@
     <div class="vip-setting-container">
         <div class="clearfix" v-if="settings && settings.length > 0">
             <i v-if="autoUpgrade === 1">会员等级由低到高自动升级（最多可创建5个等级）</i>
-            <i v-if="autoUpgrade === 0">最多可创建5个等级</i>
+            <i v-if="autoUpgrade === 0">最多可创建30个等级</i>
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
-            <button v-if="settings && settings.length < 5 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float:right" @click="openCreate">新增</button>
+            <button v-if="settings && settings.length < 30 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float:right" @click="openCreate">新增</button>
             <div style="margin-top:18px;">
                 <vipLevel v-for='(dd ,index) in settings' :editor='dd.addType === 1' :data='dd' :key="dd.vipLevelSettingId" :type='Number(autoUpgrade)' @delet='deletLevel' @addCard='getLevelList' @select='select'></vipLevel>
             </div>
@@ -12,7 +12,7 @@
         <div style="text-align: center; margin-top: 87px" v-if="settings && settings.length === 0">
             <img src="//static.dingdandao.com/ordersManage_noOrders.png" alt="">
             <p style="margin: 10px 0 20px"><i>您目前还没有会员体系</i><span class="help-button" data-toggle="modal" data-target="#helpModal">&nbsp;&nbsp;帮助</span></p>
-            <button class="dd-btn dd-btn-primary" data-toggle="modal" data-target="#system">创建会员体系</button>
+            <button class="dd-btn dd-btn-primary" data-toggle="modal" data-target="#system" >创建会员体系</button>
         </div>
         <div class="modal fade" role="dialog" id="helpModal">
             <div class="modal-dialog" style="width: 632px">

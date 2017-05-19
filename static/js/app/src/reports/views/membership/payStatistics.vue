@@ -7,7 +7,7 @@
 			<div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
 	            <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
-                <button class="dd-btn dd-btn-primary">导出Excel</button>
+                <a :href="exportUrl"><button class="dd-btn dd-btn-primary">导出Excel</button></a>
 	        </div>
         </div>
         <div>
@@ -15,106 +15,130 @@
         </div>
         <div class="foot">
             <span><small>共计</small> {{count}}条记录</span>
-            <dd-pagination @currentchange="getLists" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="getStatistics" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
 	</div>
 </template>
 
 <script type="text/jsx">
+    import { mapState } from 'vuex';
+    import http from '../../../common/http';
     import { DdTable, DdPagination } from 'dd-vue-component';
 
     export default {
         data() {
             return {
-                count: 20,
-                pages: 5,
+                count: 0,
+                pages: 0,
                 pageNo: 1,
+                advanceTotalPayAmount: 0,
+                giftTotalPayAmount: 0,
+                totalPayAmount: 0,
+                searchPattern: '',
                 col: [
                     {
                         title: '序号',
-                        dataIndex: 'a',
+                        dataIndex: 'order',
                         width: 56
                     },
                     {
                         title: '会员卡',
-                        dataIndex: 'b',
+                        dataIndex: 'vipCardName',
                         width: 100
                     },
                     {
                         title: '卡号',
-                        dataIndex: 'c',
+                        dataIndex: 'vipCardNum',
                         width: 164
                     },
                     {
                         title: '姓名',
-                        dataIndex: 'd',
+                        dataIndex: 'vipUserName',
                         width: 58
                     },
                     {
                         title: '手机号',
-                        dataIndex: 'e',
+                        dataIndex: 'vipUserPhone',
                         width: 107
                     },
                     {
                         title: '订单号',
                         width: 164,
-                        render: (h, row) => <span class="js-order-num">{row.f}</span>
+                        render: (h, row) => <span class="js-order-num">{row.orderNum}</span>
                     },
                     {
                         title: '渠道',
-                        dataIndex: 'g',
+                        dataIndex: 'channelType',
                         width: 58
                     },
                     {
                         title: '支付金额',
-                        dataIndex: 'h',
+                        dataIndex: 'payAmount',
                         width: 108
                     },
                     {
                         title: '预收账款支付',
-                        dataIndex: 'i',
+                        dataIndex: 'advancePayAmount',
                         width: 108
                     },
                     {
                         title: '赠送金额支付',
-                        dataIndex: 'j',
+                        dataIndex: 'giftPayAmount',
                         width: 108
                     },
                     {
                         title: '时间',
-                        dataIndex: 'k',
+                        dataIndex: 'creationTime',
                         width: 135
                     },
                     {
                         title: '操作人员',
-                        dataIndex: 'l',
+                        dataIndex: 'operator',
                         width: 87
                     }
                 ],
-                payStatisticLists: [
-                    {
-                        a: 1,
-                        b: '超级白金卡',
-                        c: 112345678912345678,
-                        d: '斤斤计',
-                        e: 12345678901,
-                        f: 330009999999999999,
-                        g: '门店',
-                        h: 99999,
-                        i: 2222,
-                        j: 99999,
-                        k: '2017-09-04 15:00',
-                        l: '那是是'
-                    }
-                ]
+                payStatisticLists: []
             };
+        },
+        computed: {
+            ...mapState(['date']),
+            exportUrl() {
+            }
+        },
+        created() {
+            this.getStatistics();
         },
         methods: {
             search() {
+                this.searchPattern = this.$refs.searchInput.value;
+                this.getStatistics();
             },
             handleTableChange() {
             },
-            getLists() {
+            getStatistics(page) {
+                this.pageNo = page || this.pageNo;
+                http.get('/stat/getVipCardPaylogs', {
+                    endDate: this.date.endDate,
+                    keyword: this.searchPattern,
+                    page: this.pageNo,
+                    startDate: this.date.startDate
+                }).then(res => {
+                    if (res.code === 1) {
+                        this.payStatisticLists = res.data.items.map((item, index) => {
+                            return { ...item, order: index + 1 };
+                        });
+                        this.count = res.data.totalCount;
+                        this.advanceTotalPayAmount = res.data.advanceTotalPayAmount;
+                        this.giftTotalPayAmount = res.data.giftTotalPayAmount;
+                        this.totalPayAmount = res.data.totalPayAmount;
+                        this.pages = Math.ceil(res.data.totalCount / 30);
+                    }
+                });
+            }
+        },
+        watch: {
+            data() {
+                this.getStatistics();
             }
         },
         components: {
