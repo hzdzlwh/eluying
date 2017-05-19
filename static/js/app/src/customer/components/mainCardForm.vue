@@ -96,6 +96,7 @@
 </style>
 <script>
     import http from '../../common/http';
+    import modal from 'modal';
     import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
@@ -217,6 +218,10 @@
                     payChannel: this.payChannel,
                     payChannelId: this.payChannelId
                 };
+                if (!params.categoryId) {
+                    modal.warn('请选择会员卡！');
+                    return false;
+                }
                 const id = this.payChannelId;
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     params.totalPrice = (this.selectedCard.cardFee + this.selectedCard.rechargeFee).toFixed(2);
