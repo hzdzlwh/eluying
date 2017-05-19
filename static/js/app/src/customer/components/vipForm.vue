@@ -41,7 +41,7 @@
                                             <img v-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号
                                         </span>
                                         <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
-                                        <input v-if="vip.vipUserId" :value="vip.phone" type="text" maxlength="11" class="dd-input short-input">
+                                        <input v-if="vip.vipUserId" :value="vip.phone" disabled type="text" maxlength="11" class="dd-input short-input">
                                         <span v-if="!vip.vipUserId && hasSubmit && !vip.phone" class="error-tips">必填字段</span>
                                         <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
                                     </div>
