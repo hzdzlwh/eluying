@@ -7,7 +7,7 @@
             <div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
 	            <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
-                <a :href="exportUrl"><button class="dd-btn dd-btn-primary">导出Excel</button></a>
+                <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
 	        </div>
         </div>
         <div>
@@ -83,6 +83,19 @@
         computed: {
             ...mapState(['date']),
             exportUrl() {
+                const paramsObj = {
+                    exportType: 0,
+                    reportType: 14,
+                    params: JSON.stringify({
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    })
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
             }
         },
         created() {
