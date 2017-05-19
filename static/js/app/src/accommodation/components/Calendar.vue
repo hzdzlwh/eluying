@@ -416,7 +416,7 @@
         cursor: pointer;
     }
     .calendar-status-close {
-        background: #bfbfbf;
+        background: #a6a6a6;
         width: 96px;
         height: 44px;
         margin: auto;
@@ -432,25 +432,27 @@
         padding-left: 8px;
         cursor: pointer;
         user-select: none;
+        transition: all 0.1s;
         &.ui-draggable-dragging {
             cursor: move;
             transform: rotate(3deg);
+            opacity: 0.85;
         }
     }
     .glyph-book {
-        background: #ffba75;
+        background: #f29130;
         &.glyph-start {
              border-left: 6px solid #f27c05;
         }
     }
     .glyph-ing {
-        background: #82beff;
+        background: #399be6;
         &.glyph-start {
              border-left: 6px solid $blue;
         }
     }
     .glyph-finish {
-        background: #bfbfbf;
+        background: #a6a6a6;
         &.glyph-start {
              border-left: 6px solid #8c8c8c;
         }
