@@ -14,7 +14,7 @@
         </div>
         <dd-table :on-change="handleTableChange" :columns="col" :data-source="cardList"></dd-table>
         <div class="foot">
-            <span><small>共计</small>{{count}}位会员</span>
+            <span><small>共计</small>{{count}}张卡</span>
             <dd-pagination
                     @currentchange="getCardList"
                     :visible-pager-count="6"
@@ -329,7 +329,7 @@
                                 }
                             });
                             this.count = res.data.vipCardsCount;
-                            this.pages = Math.ceil(res.data.vipUserListSize / 30);
+                            this.pages = Math.ceil(res.data.vipCardsListSize / 30);
                         }
                     });
             },
