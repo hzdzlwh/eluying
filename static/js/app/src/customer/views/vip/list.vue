@@ -356,7 +356,7 @@
                     });
             },
             openVipForm() {
-                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined, birthday: undefined };
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined, birthday: undefined, newAdd: true };
                 $('#vipForm').modal('show');
             },
             outPutExcel() {
@@ -433,7 +433,7 @@
                 });
             },
             charge(card) {
-                this.card = { vipCardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId, id: card.vipCardId };
+                this.card = { vipCardNum: card.vipCardNum, categoryName: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId, id: card.vipCardId };
                 this.handleDetailClose();
                 this.rechargeVisible = true;
             },
