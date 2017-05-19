@@ -78,6 +78,12 @@
                                     ¥{{ notPay }}
                                 </span>
                             </span>
+                            <span class="footer-label">
+                                {{orderState ? '还需补款:' : '还需退款:'}}
+                                <span class="order-price-num red" >
+                                    ¥{{ needPayed }}
+                                </span>
+                            </span>
                             <span v-if="totalDeposit != 0" class="footer-label">
                                 {{(totalDeposit > 0 && type !== 'checkIn') ? '需退押金' : '需补押金'}}:
                                 <span class="order-price-num" :class="(totalDeposit > 0 && type !== 'checkIn') ? 'red' : 'green'">
@@ -210,7 +216,6 @@ export default {
             onePassAmount: 0,
             companyAmount: 0,
             ReaminderParams: {}, // 余额付款传来的参数,
-            payableFeeBack: 0, // 储存点击上一步时的总价 0为没有上一步
             ramainShow: false,
             remainderDate: undefined
         };
@@ -242,6 +247,9 @@ export default {
         notPay() { // 需补或或需退金额
             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
             return Math.abs(Number(payMoney).toFixed(2));
+        },
+        needPayed() {
+            return (this.notPay * 100 - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0) * 100) / 100
         }
     },
     created() {
@@ -261,11 +269,9 @@ export default {
             if (params) {
                     this.ReaminderParams.params = params.paycard;
                     this.ReaminderParams.type = params.type;
-                    this.payableFeeBack = this.orderPayment.payableFee;
-                    this.ReaminderParams.total = params.total;
+                    this.ReaminderParams.total = params.payTotal;
             } else {
                 this.ReaminderParams = undefined;
-                this.payableFeeBack = 0;
             }
             this.ramainShow = false;
             this.cashierShow();
@@ -373,7 +379,6 @@ export default {
             this.companyBalance = undefined;
             this.deleteIds = [];
             this.ReaminderParams = {}; // 余额参数,
-            this.payableFeeBack = 0;
             this.ramainShow = false;
             this.remainderDate = undefined;
         },
@@ -442,9 +447,13 @@ export default {
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
-                    window.console.log(this.ReaminderParams.payTotal);
-                    if (this.payableFeeBack) {
-                        this.orderPayment.paidFee = this.ReaminderParams.payTotal + this.orderPayment.paidFee;
+                    if (this.ReaminderParams) {
+                        if (this.ReaminderParams.type === 0) {
+                            this.orderPayment.paidFee = this.ReaminderParams.total + this.orderPayment.paidFee;
+                        }
+                        if (this.ReaminderParams.type === 2) {
+                            this.orderPayment.paidFee =  this.orderPayment.paidFee - this.ReaminderParams.total;
+                        }
                     }
 
                     // 如果是余额过来的余额要改成余额减去后
@@ -456,6 +465,8 @@ export default {
                         });
                     }
                     this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
+                    window.console.log(this.paiedMoney)
+                    window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
