@@ -113,7 +113,7 @@
     margin-left: 15px;
 }
 </style>
-<script>
+<script type="text/jsx">
 import {
     DdPagination,
     DdSelect,
@@ -169,23 +169,23 @@ export default {
                 sorter: true
             }, {
                 title: '首单日期',
-                render: (h, row) => < span > {
+                render: (h, row) => <span> {
                         row.firstOrderTime
-                    } < /span>,
+                    } </span>,
                 dataIndex: 'firstOrderTime',
                 sorter: true
             }, {
                 title: '最近订单日期',
-                render: (h, row) => < span > {
+                render: (h, row) => <span> {
                         row.recentOrderTime
-                    } < /span>,
+                    } </span>,
                 dataIndex: 'recentOrderTime',
                 sorter: true
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span > {
-                        this.contral.VIP_EDIT_ID ? < span onClick = {
+                        <span> {
+                        this.contral.VIP_EDIT_ID ? <span onClick = {
                             () => this.openDetailDialog(row, 1)
                         }> 加入会员 /</span> : '' }
                         <span onClick = {
@@ -202,20 +202,21 @@ export default {
         detailClose: function() {
             this.detailVisible = false;
         },
-        openDetailDialog: function(date, type) {
+        openDetailDialog: function(data, type) {
             if (type) {
                 this.formdata = {
-                    name: date.name,
-                    phone: date.phone,
-                    customerId: date.customerId,
+                    name: data.name,
+                    phone: data.phone,
+                    customerId: data.customerId,
                     vipLevelId: ''
 
                 };
                 $('#vipForm').modal('show');
                 this.formvisible = true;
             } else {
-                this.detailid = Number(date.phone);
+                this.detailid = Number(data.phone);
                 this.detailVisible = true;
+                this.detailTitle = data.name;
             }
         },
         changeSort: function(value) {
