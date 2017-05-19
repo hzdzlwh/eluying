@@ -204,14 +204,21 @@ export default {
             this.fee = [];
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
-            this.needPay = 0;
-            const _this = this;
-            this.paycard.forEach(function(item, index) {
-                _this.$set(_this.fee, index, Math.min(Number(_this.remainder.needFee), Number(_this.remainder.cards[0].balanceFee || _this.remainder.cards[0].refundFee)));
-                // _this.remainder.needFee = (_this.remainder.needFee - _this.fee[index]).toFixed(2);
-                _this.payed = _this.payed + _this.fee[index];
-            });
-            _this.needPay = (_this.remainder.needFee * 100 - _this.payed * 100) / 100;
+            // this.needPay = 0;
+            let total = this.remainder.needFee;
+            for (let i = 0; i < this.paycard.length; i++) {
+                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee || this.remainder.cards[i].refundFee))
+                this.$set(this.fee, i, minfee);
+                total = total - minfee
+                this.payed = this.payed + minfee;
+            }
+            // this.paycard.forEach((item, index) => {
+            //     this.$set(this.fee, index, );
+            //     total = total - Math.min(Number(this.total), Number(this.remainder.cards[index].balanceFee || this.remainder.cards[index].refundFee))
+            //     // _this.remainder.needFee = (_this.remainder.needFee - _this.fee[index]).toFixed(2);
+            //     this.payed = this.payed + this.fee[index];
+            // });
+            this.needPay = (this.remainder.needFee * 100 - this.payed * 100) / 100;
             // window.console.log(value);
             // this.paycard[index].serialNum = value;
             // this.$set(this.fee, index, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[index].balanceFee)));
