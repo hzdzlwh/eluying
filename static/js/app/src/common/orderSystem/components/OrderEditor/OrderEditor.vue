@@ -89,6 +89,7 @@
                                                              :key="item" v-if="item.levels && item.levels.length > 0">
                                                 <dd-option v-for="level in item.levels" :key="level"
                                                            :value="level.id" :label="level.name">
+                                                    <span :title="level.serialNum">{{level.name}}</span>
                                                 </dd-option>
                                             </dd-group-option>
                                         </dd-select>
@@ -452,7 +453,7 @@
                     const card = this.vipCardsAndLevel[1].levels.find(i => i.id === this.vipCardId);
                     this.vipCardInfo = {
                         name: card.name,
-                        serialNum: card.serialName,
+                        serialNum: card.serialNum,
                         discount: this.getRoomDiscount(card.discountList) * 10,
                         id: -4,
                         tag: '会员卡折扣'
