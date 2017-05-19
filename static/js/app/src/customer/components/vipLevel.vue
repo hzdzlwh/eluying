@@ -297,7 +297,7 @@ export default {
                 this.namewarn = true;
                 return;
             }
-            if (this.vipLevel.thresholdFee < 0) {
+            if (this.vipLevel.thresholdFee < 0 || !this.vipLevel.thresholdFee) {
                 modal.warn('可支付项目累计金额 请输入0及以上的数字');
                 return;
             }
