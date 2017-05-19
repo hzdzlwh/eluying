@@ -92,7 +92,7 @@
                             </span>
                         </div>
                         <div>
-                        <div class="dd-btn dd-btn-primary" @click="back" v-if='this.ReaminderParams' style="margin-right:20px;">上一步</div>
+                        <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div></div>
                     </div>
                 </div>
@@ -329,6 +329,7 @@ export default {
                     this.ramainShow = true;
                     this.remainderDate = res.data.balancePay;
                 } else {
+                    this.remainderDate = undefined
                     this.cashierShow();
                 }
             });
@@ -465,8 +466,8 @@ export default {
                         });
                     }
                     this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
-                    window.console.log(this.paiedMoney)
-                    window.console.log(this.ReaminderParams.total)
+                    // window.console.log(this.paiedMoney)
+                    // window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
