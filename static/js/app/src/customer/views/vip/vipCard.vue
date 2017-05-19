@@ -1,7 +1,7 @@
 <template>
     <!-- <div v-for 'item in data'> -->
     <div class="view-container">
-        <div class="vipCard"><span>最多可以创建10种卡</span><span class="dd-btn dd-btn-sm dd-btn-primary" @click='add' style="float:right;">新增会员卡</span></div>
+        <div class="vipCardParnet"><span>最多可以创建10种卡</span><span class="dd-btn dd-btn-sm dd-btn-primary" @click='add' style="float:right;">新增会员卡</span></div>
         <vipCardSet @select='select' v-for='(dd ,index) in data' :data='dd' :key="dd" :editor='dd.addType === 1' :toggleShow='!(dd.addType === 1)' @delet='deletCard(index)' @addCard='fetchDate'></vipCardSet>
         <div v-if="data.length === 0" style="text-aligin:center;margin-top:200px;">您还没有会员卡</div>
         <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
@@ -9,11 +9,14 @@
     <!-- </div> -->
 </template>
 <style scoped>
-.vipCard {
+.vipCardParnet {
     font-size: 12px;
     color: #999999;
     margin-bottom: 20px;
     width: 730px;
+}
+.vipCardParnet .dd-btn {
+    font-size: 14px;
 }
 </style>
 <script>
