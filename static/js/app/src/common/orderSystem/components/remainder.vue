@@ -27,6 +27,7 @@
                                         <span class="reaminder-mr20">{{remainder.type === 0 ? '收款会员卡' : '退款会员卡'}}</span>
                                         <dd-select class='reaminder-mr20' v-model='payment.serialNum' @input='changePaycard' :placeholder="`请选择${remainder.kindName}`" :disabled='remainder.type === 2'>
                                             <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.serialNum" :value="payChannel.serialNum" :label="payChannel.cardName">
+                                            <span :title='payChannel.serialNum'>{{payChannel.cardName}}</span>
                                             </dd-option>
                                         </dd-select >
                                         <span class="reaminder-mr20">{{remainder.type === 0  ? '收款' : '退款'}}</span>

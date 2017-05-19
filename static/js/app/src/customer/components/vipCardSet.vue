@@ -379,10 +379,15 @@ export default {
                 this.namewarn = true;
                 return;
             }
-            if (!(Number(this.vipCard.applyStrategy.cardFee) >= 0 && this.vipCard.applyStrategy.cardFee !== '' && this.vipCard.applyStrategy.freeFee !== '' && Number(this.vipCard.applyStrategy.freeFee) >= 0 && this.vipCard.applyStrategy.rechargeFee !== '' && Number(this.vipCard.applyStrategy.rechargeFee) >= 0)) {
+            const reg = /^[0-9]{1,7}(\.[0-9]{0,2})?$/;
+            if (!(reg.test(this.vipCard.applyStrategy.cardFee) && reg.test(this.vipCard.applyStrategy.freeFee) && reg.test(this.vipCard.applyStrategy.rechargeFee))) {
                 this.applyStrategyWarn = true;
                 return;
             }
+            // if (!(Number(this.vipCard.applyStrategy.cardFee) >= 0 && this.vipCard.applyStrategy.cardFee !== '' && this.vipCard.applyStrategy.freeFee !== '' && Number(this.vipCard.applyStrategy.freeFee) >= 0 && this.vipCard.applyStrategy.rechargeFee !== '' && Number(this.vipCard.applyStrategy.rechargeFee) >= 0)) {
+            //     this.applyStrategyWarn = true;
+            //     return;
+            // }
             if (this.vipCard.discountItems) {
                 for (let i = 0; i < this.vipCard.discountItems.length; i ++) {
                     this.vipCard.discountItems[i].discount = parseFloat(this.vipCard.discountItems[i].discount);
@@ -392,19 +397,19 @@ export default {
                     }
                 }
             }
-            if (!(Number(this.vipCard.thresholdFee) >= 0 && this.vipCard.thresholdFee !== '')) {
+            if (!(reg.test(this.vipCard.thresholdFee))) {
                 this.thresholdFeeWarn = true;
                 return;
             }
-            if (!(Number(this.vipCard.reapplyMasterFee) >= 0 && this.vipCard.reapplyMasterFee !== '' && Number(this.vipCard.reapplyViceFee) >= 0 && this.vipCard.reapplyViceFee !== '')) {
+            if (!(reg.test(this.vipCard.reapplyMasterFee) && reg.test(this.vipCard.reapplyViceFee))) {
                 this.reapplyMasterFeeWarn = true;
                 return;
             }
-            if (!(Number(this.vipCard.givingInterval) >= 0 && this.vipCard.givingInterval !== '' && Number(this.vipCard.givingFee) >= 0 && this.vipCard.givingFee !== '' && Number(this.vipCard.givingAmount) >= 0 && this.vipCard.givingAmount !== '')) {
+            if (!(reg.test(this.vipCard.givingInterval) && reg.test(this.vipCard.givingFee) && /^[0-9]*$/.test(this.vipCard.givingAmount))) {
                 this.givingIntervalWarn = true;
                 return;
             }
-            if (!(Number(this.vipCard.viceApplyFee) >= 0 && this.vipCard.viceApplyFee !== '')) {
+            if (!(reg.test(this.vipCard.viceApplyFee))) {
                 this.viceApplyFeeWarn = 1;
                 return;
             }
