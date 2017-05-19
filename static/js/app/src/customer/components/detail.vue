@@ -33,7 +33,7 @@
                                     <dd-option :key="state.id" v-for="state in states" :value="state.id" :label="state.name"></dd-option>
                                 </dd-select>
                             </div>
-                            <div>
+                            <div class="use-time">
                                 <span>使用时间：</span>
                                 <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
                                 <span>～</span>
@@ -120,6 +120,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        .use-time{
+            .dd-input{
+                width: 166px;
+            }
         }
         .search {
             width: 217px;
