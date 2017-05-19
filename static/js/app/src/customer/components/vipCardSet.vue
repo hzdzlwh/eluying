@@ -78,11 +78,11 @@
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">主卡补办费用：</label>
                         <span v-if='edit'>
-                        <input type="number" v-model='vipCard.reapplyMasterFee' class="vipCardMInput">元</span><span v-else>{{vipCard.reapplyMasterFee}}</span></div>
+                        <input type="number" v-model='vipCard.reapplyMasterFee' class="vipCardMInput">元</span><span v-else>{{vipCard.reapplyMasterFee}}元</span></div>
                     <div class="df">
                         <label for="" class="vipCardRoomLabel">副卡补办费用：</label>
                         <span v-if='edit'>
-                        <input type="number" v-model='vipCard.reapplyViceFee' class="vipCardMInput">元</span> <span v-else>{{vipCard.reapplyViceFee}}</span></div>
+                        <input type="number" v-model='vipCard.reapplyViceFee' class="vipCardMInput">元</span> <span v-else>{{vipCard.reapplyViceFee}}元</span></div>
                 </div>
             </div>
             <div class="vipCardBox">
