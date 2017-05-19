@@ -14,9 +14,9 @@
                         </div>
                     </div>
                     <div class="cardList-body-item">
-                        <span class="cardList-body-itemLeft">原卡</span>
+                        <span class="cardList-body-itemLeft">会员卡</span>
                         <div class="cardList-body-itemRight">
-                            {{card.cardType}} {{card.vipCardNum}}
+                            {{`${card.categoryName} ${card.vipCardNum}`}}
                         </div>
                     </div>
                 </div>

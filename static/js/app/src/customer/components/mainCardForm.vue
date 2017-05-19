@@ -47,11 +47,13 @@
                     </div>
                     <div class="cardList-body-item" v-if="cardTypes">
                         <span class="cardList-body-itemLeft">会员卡</span>
-                        <div class="cardList-body-itemRight">
+                        <div class="cardList-body-itemRight" style="justify-content: flex-start">
                             <div class="card-type"
                                  v-for="type in cardTypes"
                                  :key="type.id"
                                  :class="{ 'card-type-selected': type.selected }"
+                                 :title="type.name"
+                                 :style="{ color: type.status === 0 ? '#ccc' : '',cursor: type.status === 0 ? 'auto' : 'pointer'}"
                                  @click="selectCardType(type)">
                                 {{ type.name }}
                             </div>
@@ -94,6 +96,7 @@
 </style>
 <script>
     import http from '../../common/http';
+    import modal from 'modal';
     import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default{
@@ -169,11 +172,14 @@
                 this.editable = false;
             },
             selectCardType(item) {
+                if (item.status === 0) {
+                    return false;
+                }
                 this.cardTypes.map(type => {
-                    if (type.id === item.id) {
+                    if (type.id === item.id && type.status === 1) {
                         type.selected = !type.selected;
                     } else {
-                        type.selected = type.id === item.id;
+                        type.selected = false;
                     }
                 });
                 if (item.selected) {
@@ -216,6 +222,10 @@
                     payChannel: this.payChannel,
                     payChannelId: this.payChannelId
                 };
+                if (!params.categoryId) {
+                    modal.warn('请选择会员卡！');
+                    return false;
+                }
                 const id = this.payChannelId;
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     params.totalPrice = (this.selectedCard.cardFee + this.selectedCard.rechargeFee).toFixed(2);

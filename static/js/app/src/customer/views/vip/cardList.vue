@@ -14,7 +14,7 @@
         </div>
         <dd-table :on-change="handleTableChange" :columns="col" :data-source="cardList"></dd-table>
         <div class="foot">
-            <span><small>共计</small>{{count}}位会员</span>
+            <span><small>共计</small>{{count}}张卡</span>
             <dd-pagination
                     @currentchange="getCardList"
                     :visible-pager-count="6"
@@ -156,15 +156,20 @@
             flex-flow: row wrap;
         }
         .card-type {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             box-sizing: border-box;
             border:1px solid #cccccc;
             border-radius:2px;
             width: 100px;
             cursor: pointer;
+            line-height: 24px;
             height: 24px;
+            &:not(:nth-child(3n)) {
+                margin-right: 10px;
+             }
             &:nth-child(n+4) {
                  margin-top: 10px;
             }
@@ -174,14 +179,16 @@
             color: #178ce6;
         }
         .recharge-type {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             box-sizing: border-box;
             border:1px solid #cccccc;
             border-radius:2px;
             width: 150px;
             cursor: pointer;
+            line-height: 24px;
             height: 24px;
             &:nth-child(n+3) {
                  margin-top: 10px;
@@ -213,7 +220,7 @@
         }
     }
 </style>
-<script>
+<script type="text/jsx">
     import { DdTable, DdPagination } from 'dd-vue-component';
     import mainCardForm from '../../components/mainCardForm.vue';
     import additionalCardForm from '../../components/additionalCardForm.vue';
@@ -322,7 +329,7 @@
                                 }
                             });
                             this.count = res.data.vipCardsCount;
-                            this.pages = Math.ceil(res.data.vipUserListSize / 30);
+                            this.pages = Math.ceil(res.data.vipCardsListSize / 30);
                         }
                     });
             },
