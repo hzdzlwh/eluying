@@ -22,6 +22,7 @@
         </recharge-card-form>
         <main-card-form :visible="mainCardVisible"
                         :oldPhone="vip.phone"
+                        :oldName="vip.name"
                         :channels="payChannels"
                         @closeModal="hideModel"
                         @changeParams="modifyParams">
@@ -83,11 +84,10 @@
                             <span class="vip-detail-filed">创建人</span>
                             <span>{{vip.operatorName}}</span>
                         </div>
-                        <div style="width: 25%">
+                        <div style="width: 50%">
                             <span class="vip-detail-filed">地区</span>
                             <span>{{(vip.province || '')}} - {{(vip.city || '')}} - {{(vip.county || '')}}</span>
                         </div>
-                        <div style="width: 25%"></div>
                     </div>
                 </div>
                 <div class="bottom-line">
@@ -433,7 +433,7 @@
                 });
             },
             charge(card) {
-                this.card = { cardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId, id: card.vipCardId };
+                this.card = { vipCardNum: card.vipCardNum, cardType: card.type === 0 ? '主卡' : '副卡', categoryId: card.categoryId, id: card.vipCardId };
                 this.handleDetailClose();
                 this.rechargeVisible = true;
             },
