@@ -4,7 +4,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <span class="header-text">收银台</span>
+                        <span class="header-text" title='收银台'>收银台</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
