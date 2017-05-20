@@ -432,11 +432,12 @@
         padding-left: 8px;
         cursor: pointer;
         user-select: none;
-        transition: all 0.1s;
+        transition: transform 0.2s;
         &.ui-draggable-dragging {
             cursor: move;
             transform: rotate(3deg);
             opacity: 0.85;
+            box-shadow:0 0 5px 0 rgba(0,0,0,0.5);
         }
     }
     .glyph-book {
