@@ -267,6 +267,7 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
+                    this.ReaminderParams = {};
                     this.ReaminderParams.params = params.paycard;
                     this.ReaminderParams.type = params.type;
                     this.ReaminderParams.total = params.payTotal;
@@ -426,7 +427,6 @@ export default {
                             this.orderPayment.paidFee =  this.orderPayment.paidFee - this.ReaminderParams.total;
                         }
                     }
-
                     // 如果是余额过来的余额要改成余额减去后
                     this.onePassAmount = res.data.onePassAmount || 0;
                     this.companyAmount = res.data.companyAmount || 0;
@@ -439,6 +439,8 @@ export default {
                     // window.console.log(this.paiedMoney)
                     // window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
+                    this.payments = [];
+                    // 充值支付列表   
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
                         //     fee: Math.abs(payMoney).toFixed(2),
