@@ -65,11 +65,11 @@
                                     </div>
                                 </div>
                                 <div class="vipInfo-item-wrap">
-                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">创建渠道</span>
                                         <input class="dd-input long-input" v-model="vip.vipChannel" type="text" >
                                     </div>
-                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">地区</span>
                                         <div class="vipInfo-item-content">
                                             <div class="vip-country-container">
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="vipInfo-item-wrap" v-show="vipProps.newAdd || vipProps.isAutoUpgrade === 0">
+                                <div class="vipInfo-item-wrap" v-show="vipProps.isAutoUpgrade === 0">
                                     <div class="vipInfo-item vip-level" style="margin-bottom:0">
                                         <span class="vipInfo-item-label">会员等级</span>
                                         <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
