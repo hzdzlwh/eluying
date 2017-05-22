@@ -699,7 +699,7 @@
             align-items: center;
         }
         .userInfo-item {
-            margin-right: 55px;
+            margin-right: 32px;
             min-width: 165px;
             &:last-of-type {
                 margin-right: 0;

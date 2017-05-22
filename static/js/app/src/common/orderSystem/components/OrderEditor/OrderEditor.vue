@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
-                                    <div class="select-component-container">
+                                    <span class="vipcard-select" style="width: 210px">
                                         <dd-select v-model="vipCardId">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
@@ -88,12 +88,12 @@
                                             <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
                                                              :key="item" v-if="item.levels && item.levels.length > 0">
                                                 <dd-option v-for="level in item.levels" :key="level"
-                                                           :value="level.id" :label="level.name">
-                                                    <span :title="level.serialNum">{{level.name}}</span>
+                                                           :value="level.id" :label="level.name+level.serialNum">
+                                                    <span :title="level.serialNum">{{level.name}} {{level.serialNum}}</span>
                                                 </dd-option>
                                             </dd-group-option>
                                         </dd-select>
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -257,6 +257,17 @@
         color: #999999;
         justify-content: space-between;
         align-items: center;
+    }
+    .vipcard-select {
+        width: 210px;
+        .dd-select {
+            input {
+                width: 100%;
+            }
+        }
+        .dd-select-menu {
+            width: 216px;
+        }
     }
 </style>
 <script>
