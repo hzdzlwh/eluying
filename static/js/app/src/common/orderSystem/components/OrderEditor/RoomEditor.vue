@@ -263,7 +263,7 @@
                     discounts: discounts
                 });
             },
-            vipCardId(id) {
+            vipCardId(id, oldId) {
                 // 会员折扣id为-4
                 const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
                     id: -4,
@@ -277,7 +277,9 @@
                 });
                 if (id !== 0) {
                     this.rooms.map(r => {
-                        r.moreDiscount = this.userOriginType.id;
+                        if (!r.quickDiscountId && oldId !== undefined) {
+                            r.moreDiscount = this.userOriginType.id;
+                        }
                     });
                 }
                 if (this.rooms.length > 0) {
@@ -400,8 +402,8 @@
                         return 0;
                     }
 
-                    if (item.qucikDiscountId) {
-                        return item.qucikDiscountId;
+                    if (item.quickDiscountId) {
+                        return item.quickDiscountId;
                     }
 
                     const discountChannel = item.discountChannel || item.roomInfo.discountChannel;
