@@ -285,8 +285,9 @@ export default {
             let item = {
                 discount: 1
             };
-            if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
-                this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+            const discountList = this.vipDiscountDetail.vipDetail.discountList;
+            if (this.vipDiscountDetail.vipDetail && discountList && discountList.length > 0) {
+                discountList.forEach(list => {
                     if (list.nodeId === nodeId && list.nodeType === nodeType) {
                         item = { ...list };
                     }

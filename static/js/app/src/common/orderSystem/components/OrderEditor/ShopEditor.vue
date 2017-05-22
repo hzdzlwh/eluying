@@ -241,7 +241,7 @@
              */
             getItemDiscountInfo(nodeType, discountInfo) {
                 let item = { discount: 1 };
-                if (discountInfo.vipDetail && discountInfo.vipDetail.discountList.length > 0) {
+                if (discountInfo.vipDetail && discountInfo.vipDetail.discountList && discountInfo.vipDetail.discountList.length > 0) {
                     discountInfo.vipDetail.discountList.forEach(discount => {
                         if (discount.nodeId === 0 && discount.nodeType === nodeType) {
                             item = { ...discount };

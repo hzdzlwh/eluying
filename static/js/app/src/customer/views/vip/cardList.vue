@@ -329,7 +329,7 @@
                                 }
                             });
                             this.count = res.data.vipCardsCount;
-                            this.pages = Math.ceil(res.data.vipCardsListSize / 30);
+                            this.pages = Math.ceil(res.data.vipCardsCount / 30);
                         }
                     });
             },
