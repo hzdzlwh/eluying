@@ -56,6 +56,10 @@
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
+                                <div v-if="order.discountChannel === 4" class="userInfo-item">
+                                    <label class="label-text">会员卡</label>
+                                    <span>{{ order.discountRelatedName }}</span>
+                                </div>
                             </div>
                         </div>
                         <slot></slot>
