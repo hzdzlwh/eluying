@@ -283,7 +283,9 @@
                     });
                 }
                 if (this.rooms.length > 0) {
-                    this.forceChangePrice = true;
+                    if (oldId) {
+                        this.forceChangePrice = true;
+                    }
                     // 更改渠道
                     this.modifyRooms(this.rooms);
                 }
