@@ -29,7 +29,7 @@
                                            class="dd-input normal-input"
                                            maxlength="16"
                                            placeholder="请输入姓名"
-                                           :disabled='disableNameInput'
+                                           :disabled='disableNameInput || editable'
                                            v-model="name" />
                                 </div>
                             </div>

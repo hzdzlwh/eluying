@@ -41,7 +41,7 @@
                                             <img v-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号
                                         </span>
                                         <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
-                                        <input v-if="vip.vipUserId" :value="vip.phone" type="text" maxlength="11" class="dd-input short-input">
+                                        <input v-if="vip.vipUserId" :value="vip.phone" disabled type="text" maxlength="11" class="dd-input short-input">
                                         <span v-if="!vip.vipUserId && hasSubmit && !vip.phone" class="error-tips">必填字段</span>
                                         <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
                                     </div>
@@ -65,11 +65,11 @@
                                     </div>
                                 </div>
                                 <div class="vipInfo-item-wrap">
-                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">创建渠道</span>
                                         <input class="dd-input long-input" v-model="vip.vipChannel" type="text" >
                                     </div>
-                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.newAdd || vipProps.isAutoUpgrade === 0)}">
+                                    <div class="vipInfo-item" v-bind:class="{'none-margin': !(vipProps.isAutoUpgrade === 0)}">
                                         <span class="vipInfo-item-label">地区</span>
                                         <div class="vipInfo-item-content">
                                             <div class="vip-country-container">
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="vipInfo-item-wrap" v-show="vipProps.newAdd || vipProps.isAutoUpgrade === 0">
+                                <div class="vipInfo-item-wrap" v-show="vipProps.isAutoUpgrade === 0">
                                     <div class="vipInfo-item vip-level" style="margin-bottom:0">
                                         <span class="vipInfo-item-label">会员等级</span>
                                         <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
