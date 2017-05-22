@@ -263,7 +263,7 @@
                     discounts: discounts
                 });
             },
-            vipCardId(id) {
+            vipCardId(id, oldId) {
                 // 会员折扣id为-4
                 const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
                     id: -4,
@@ -275,13 +275,22 @@
                     label: this.vipCardInfo.tag,
                     discounts: discounts
                 });
+                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
                 if (id !== 0) {
                     this.rooms.map(r => {
-                        r.moreDiscount = this.userOriginType.id;
+                        if (r.moreDiscount === -4 || r.moreDiscount === -5) {
+                            if (this.vipCardInfo.discount === 10) {
+                                r.moreDiscount = 0;
+                            } else {
+                                r.moreDiscount = this.userOriginType.id;
+                            }
+                        }
                     });
                 }
                 if (this.rooms.length > 0) {
-                    this.forceChangePrice = true;
+                    if (oldId) {
+                        this.forceChangePrice = true;
+                    }
                     // 更改渠道
                     this.modifyRooms(this.rooms);
                 }
@@ -400,8 +409,8 @@
                         return 0;
                     }
 
-                    if (item.qucikDiscountId) {
-                        return item.qucikDiscountId;
+                    if (item.quickDiscountId) {
+                        return item.quickDiscountId;
                     }
 
                     const discountChannel = item.discountChannel || item.roomInfo.discountChannel;
