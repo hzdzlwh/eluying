@@ -275,10 +275,15 @@
                     label: this.vipCardInfo.tag,
                     discounts: discounts
                 });
+                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
                 if (id !== 0) {
                     this.rooms.map(r => {
-                        if (!r.quickDiscountId && oldId !== undefined) {
-                            r.moreDiscount = this.userOriginType.id;
+                        if (r.moreDiscount === -4 || r.moreDiscount === -5) {
+                            if (this.vipCardInfo.discount === 10) {
+                                r.moreDiscount = 0;
+                            } else {
+                                r.moreDiscount = this.userOriginType.id;
+                            }
                         }
                     });
                 }
