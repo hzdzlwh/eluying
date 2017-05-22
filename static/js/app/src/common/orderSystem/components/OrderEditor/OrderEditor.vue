@@ -783,8 +783,9 @@
                 let item = {
                     discount: 1
                 };
-                if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
-                    this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                const vipDetail = this.vipDiscountDetail.vipDetail;
+                if (vipDetail && vipDetail.discountList && vipDetail.discountList.length > 0) {
+                    vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
                             item = { ...list };
                         } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
