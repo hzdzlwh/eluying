@@ -1,5 +1,23 @@
 <template>
     <div class="calendar">
+        <div class="legend-box">
+            <span class="room-legend">
+                <span class="room-legend-icon blue"></span>
+                <span>已入住</span>
+            </span>
+            <span class="room-legend">
+                <span class="room-legend-icon red"></span>
+                <span>已预订</span>
+            </span>
+            <span class="room-legend">
+                <span class="room-legend-icon grey"></span>
+                <span>已退房、已关闭</span>
+            </span>
+            <span class="room-legend">
+                <span class="dirty"></span>
+                <span>脏房</span>
+            </span>
+        </div>
         <div class="calendar-picker">
             <DateSelect @change="handleDateChange" :defaultDate="defaultStartDate"/>
             <RoomFilter @change="handleRoomFilter" :categories="categories" />
@@ -149,8 +167,43 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar {
-       height: 100%;
+        height: 100%;
         width: 100%;
+    }
+    .legend-box {
+        position: absolute;
+        display: flex;
+        z-index: 9;
+        left: 16px;
+        top: 14px;
+        align-items: center;
+        color: #999;
+        .room-legend {
+            margin-right: 12px;
+        }
+        .room-legend-icon {
+            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            vertical-align: sub;
+            &.blue {
+                background: #399be6;
+            }
+            &.red {
+                background: #f29130;
+            }
+            &.grey {
+                background: #a6a6a6;
+            }
+        }
+        .dirty {
+            background: url('../../../../../image/dirty-room.png');
+            display: inline-block;
+            width:15px;
+            height:17px;
+            vertical-align: sub;
+        }
     }
     .calendar-picker {
         position: absolute;
