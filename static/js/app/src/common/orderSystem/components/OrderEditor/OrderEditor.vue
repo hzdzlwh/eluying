@@ -90,7 +90,7 @@
                                             <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
                                                              :key="item" v-if="item.levels && item.levels.length > 0">
                                                 <dd-option v-for="level in item.levels" :key="level"
-                                                           :value="level.id" :label="level.name+level.serialNum">
+                                                           :value="level.id" :label="level.name+(level.serialNum || '')">
                                                     <span :title="level.serialNum">{{level.name}} {{level.serialNum}}</span>
                                                 </dd-option>
                                             </dd-group-option>
@@ -538,6 +538,9 @@
                 types.LOAD_ENTER_LIST
             ]),
             getRoomDiscount(discounts) {
+                if (!discounts) {
+                    return 1;
+                }
                 const discount = discounts.find(i => i.nodeType === 0);
                 return discount ? discount.discount : 1;
             },
@@ -562,7 +565,7 @@
             setVipListPosition(position) {
                 const vipList = document.querySelector('.userVip-list');
                 if (vipList) {
-                    vipList.style.left = position === 1 ? 46 + 'px' : 267 + 'px';
+                    vipList.style.left = position === 1 ? 46 + 'px' : 245 + 'px';
                 }
             },
             checkPhone() {

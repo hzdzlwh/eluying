@@ -277,8 +277,12 @@
                 });
                 if (id !== 0) {
                     this.rooms.map(r => {
-                        if (!r.quickDiscountId && oldId !== undefined) {
-                            r.moreDiscount = this.userOriginType.id;
+                        if (r.moreDiscount === -4 || r.moreDiscount === -5) {
+                            if (this.vipCardInfo.discount === 10) {
+                                r.moreDiscount = 0;
+                            } else {
+                                r.moreDiscount = this.userOriginType.id;
+                            }
                         }
                     });
                 }
