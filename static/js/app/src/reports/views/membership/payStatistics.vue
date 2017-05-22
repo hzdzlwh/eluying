@@ -130,6 +130,7 @@
             },
             getStatistics(page) {
                 this.pageNo = page || this.pageNo;
+                const _this = this;
                 http.get('/stat/getVipCardPaylogs', {
                     endDate: this.date.endDate,
                     keyword: this.searchPattern,
@@ -138,7 +139,7 @@
                 }).then(res => {
                     if (res.code === 1) {
                         this.payStatisticLists = res.data.items.map((item, index) => {
-                            return { ...item, order: index + 1 };
+                            return { ...item, order: _this.pageNo === 1 ? (_this.pageNo - 1) * 30 + (index + 1) : (_this.pageNo - 1) * 30 + index };
                         });
                         this.count = res.data.totalCount;
                         this.advanceTotalPayAmount = res.data.advanceTotalPayAmount;
