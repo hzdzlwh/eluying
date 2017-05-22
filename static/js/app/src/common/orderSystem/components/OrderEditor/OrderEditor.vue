@@ -29,6 +29,7 @@
                                     </div>
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
+                                           autocomplete="off"
                                            :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="name"
                                            @input="changeVipList(1)">
@@ -36,6 +37,7 @@
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                           autocomplete="off"
                                            :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
                                            @input="changeVipList(2)">
@@ -80,7 +82,7 @@
                                 </div>
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
-                                    <div class="select-component-container">
+                                    <span class="vipcard-select" style="width: 210px">
                                         <dd-select v-model="vipCardId">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
@@ -88,11 +90,12 @@
                                             <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
                                                              :key="item" v-if="item.levels && item.levels.length > 0">
                                                 <dd-option v-for="level in item.levels" :key="level"
-                                                           :value="level.id" :label="level.name">
+                                                           :value="level.id" :label="level.name+level.serialNum">
+                                                    <span :title="level.serialNum">{{level.name}} {{level.serialNum}}</span>
                                                 </dd-option>
                                             </dd-group-option>
                                         </dd-select>
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -256,6 +259,17 @@
         color: #999999;
         justify-content: space-between;
         align-items: center;
+    }
+    .vipcard-select {
+        width: 210px;
+        .dd-select {
+            input {
+                width: 100%;
+            }
+        }
+        .dd-select-menu {
+            width: 216px;
+        }
     }
 </style>
 <script>
@@ -422,6 +436,7 @@
                 }
 
                 if (originType !== -5 && originType !== -4) {
+                    this.vipCardId = 0;
                     this.vipDiscountDetail = {};
                 }
 
@@ -452,7 +467,7 @@
                     const card = this.vipCardsAndLevel[1].levels.find(i => i.id === this.vipCardId);
                     this.vipCardInfo = {
                         name: card.name,
-                        serialNum: card.serialName,
+                        serialNum: card.serialNum,
                         discount: this.getRoomDiscount(card.discountList) * 10,
                         id: -4,
                         tag: '会员卡折扣'

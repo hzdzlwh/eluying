@@ -4,7 +4,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <span class="header-text">收银台</span>
+                        <span class="header-text" >收银台</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
@@ -92,7 +92,7 @@
                             </span>
                         </div>
                         <div>
-                        <div class="dd-btn dd-btn-primary" @click="back" v-if='this.ReaminderParams' style="margin-right:20px;">上一步</div>
+                        <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div></div>
                     </div>
                 </div>
@@ -267,6 +267,7 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
+                    this.ReaminderParams = {};
                     this.ReaminderParams.params = params.paycard;
                     this.ReaminderParams.type = params.type;
                     this.ReaminderParams.total = params.payTotal;
@@ -284,42 +285,48 @@ export default {
             $('#cashier').modal('hide');
             this.ramainShow = true;
         },
+        getpParms() {
+           let params;
+                if (this.type === 'register') {
+                    params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
+                } else {
+                    let operationType;
+                    let penalty; // eslint-disable-line
+                    if (this.type === 'checkOut') {
+                        operationType = 1;
+                        penalty = this.business.penalty;
+                    }
+                    if (this.type === 'cancel') {
+                        operationType = 4;
+                    }
+
+                    const orderId = getOrderId(this.orderDetail);
+
+                    const subOrderIds = [];
+                    if (this.roomBusinessInfo.roomOrderInfoList &&
+                            this.type !== 'orderDetail' &&
+                            this.type !== 'cancel') {
+                        this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                            if (item.selected) {
+                                subOrderIds.push(item.roomOrderId);
+                            }
+                        });
+                    }
+
+                    params = {
+                        // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
+                        orderType: this.orderDetail.type,
+                        // 住宿业务使用
+                        subOrderIds: JSON.stringify(subOrderIds),
+                        // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
+                        operationType,
+                        orderId
+                    };
+                }
+            return params
+        },
         getRemainder() {
-            let params;
-            if (this.type === 'register') {
-                params = {
-                    orderId: this.business.orderDetail.orderId,
-                    orderType: this.business.orderDetail.orderType
-                };
-            } else {
-                let operationType;
-                if (this.type === 'checkOut') {
-                    operationType = 1;
-                }
-
-                const orderId = getOrderId(this.orderDetail);
-
-                const subOrderIds = [];
-                if (this.roomBusinessInfo.roomOrderInfoList &&
-                    this.type !== 'orderDetail' &&
-                    this.type !== 'cancel') {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
-                        if (item.selected) {
-                            subOrderIds.push(item.roomOrderId);
-                        }
-                    });
-                }
-
-                params = {
-                    // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
-                    orderType: this.orderDetail.type,
-                    // 住宿业务使用
-                    subOrderIds: JSON.stringify(subOrderIds),
-                    // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
-                    operationType,
-                    orderId
-                };
-            }
+            let params = this.getpParms();
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -329,6 +336,7 @@ export default {
                     this.ramainShow = true;
                     this.remainderDate = res.data.balancePay;
                 } else {
+                    this.remainderDate = undefined
                     this.cashierShow();
                 }
             });
@@ -407,43 +415,7 @@ export default {
             }
         },
         getOrderPayment() {
-            let params;
-            if (this.type === 'register') {
-                params = {
-                    orderId: this.business.orderDetail.orderId,
-                    orderType: this.business.orderDetail.orderType
-                };
-            } else {
-                let operationType;
-                let penalty; // eslint-disable-line
-                if (this.type === 'checkOut') {
-                    operationType = 1;
-                    penalty = this.business.penalty;
-                }
-
-                const orderId = getOrderId(this.orderDetail);
-
-                const subOrderIds = [];
-                if (this.roomBusinessInfo.roomOrderInfoList &&
-                    this.type !== 'orderDetail' &&
-                    this.type !== 'cancel') {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
-                        if (item.selected) {
-                            subOrderIds.push(item.roomOrderId);
-                        }
-                    });
-                }
-
-                params = {
-                    // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
-                    orderType: this.orderDetail.type,
-                    // 住宿业务使用
-                    subOrderIds: JSON.stringify(subOrderIds),
-                    // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
-                    operationType,
-                    orderId
-                };
-            }
+            let params = this.getpParms();
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
@@ -455,7 +427,6 @@ export default {
                             this.orderPayment.paidFee =  this.orderPayment.paidFee - this.ReaminderParams.total;
                         }
                     }
-
                     // 如果是余额过来的余额要改成余额减去后
                     this.onePassAmount = res.data.onePassAmount || 0;
                     this.companyAmount = res.data.companyAmount || 0;
@@ -465,9 +436,11 @@ export default {
                         });
                     }
                     this.paiedMoney = (this.orderPayment.paidFee - this.orderPayment.refundFee).toFixed(2);
-                    window.console.log(this.paiedMoney)
-                    window.console.log(this.ReaminderParams.total)
+                    // window.console.log(this.paiedMoney)
+                    // window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
+                    this.payments = [];
+                    // 充值支付列表   
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
                         //     fee: Math.abs(payMoney).toFixed(2),

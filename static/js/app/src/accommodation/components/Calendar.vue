@@ -1,5 +1,23 @@
 <template>
     <div class="calendar">
+        <div class="legend-box">
+            <span class="room-legend">
+                <span class="room-legend-icon blue"></span>
+                <span>已入住</span>
+            </span>
+            <span class="room-legend">
+                <span class="room-legend-icon red"></span>
+                <span>已预订</span>
+            </span>
+            <span class="room-legend">
+                <span class="room-legend-icon grey"></span>
+                <span>已退房、已关闭</span>
+            </span>
+            <span class="room-legend">
+                <span class="dirty"></span>
+                <span>脏房</span>
+            </span>
+        </div>
         <div class="calendar-picker">
             <DateSelect @change="handleDateChange" :defaultDate="defaultStartDate"/>
             <RoomFilter @change="handleRoomFilter" :categories="categories" />
@@ -149,8 +167,43 @@
 <style lang="scss" rel="stylesheet/scss">
     @import "~dd-common-css/src/variables";
     .calendar {
-       height: 100%;
+        height: 100%;
         width: 100%;
+    }
+    .legend-box {
+        position: absolute;
+        display: flex;
+        z-index: 9;
+        left: 16px;
+        top: 14px;
+        align-items: center;
+        color: #999;
+        .room-legend {
+            margin-right: 12px;
+        }
+        .room-legend-icon {
+            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            vertical-align: sub;
+            &.blue {
+                background: #399be6;
+            }
+            &.red {
+                background: #f29130;
+            }
+            &.grey {
+                background: #a6a6a6;
+            }
+        }
+        .dirty {
+            background: url('../../../../../image/dirty-room.png');
+            display: inline-block;
+            width:15px;
+            height:17px;
+            vertical-align: sub;
+        }
     }
     .calendar-picker {
         position: absolute;
@@ -416,7 +469,7 @@
         cursor: pointer;
     }
     .calendar-status-close {
-        background: #bfbfbf;
+        background: #a6a6a6;
         width: 96px;
         height: 44px;
         margin: auto;
@@ -432,25 +485,28 @@
         padding-left: 8px;
         cursor: pointer;
         user-select: none;
+        transition: transform 0.2s;
         &.ui-draggable-dragging {
             cursor: move;
             transform: rotate(3deg);
+            opacity: 0.85;
+            box-shadow:0 0 5px 0 rgba(0,0,0,0.5);
         }
     }
     .glyph-book {
-        background: #ffba75;
+        background: #f29130;
         &.glyph-start {
              border-left: 6px solid #f27c05;
         }
     }
     .glyph-ing {
-        background: #82beff;
+        background: #399be6;
         &.glyph-start {
              border-left: 6px solid $blue;
         }
     }
     .glyph-finish {
-        background: #bfbfbf;
+        background: #a6a6a6;
         &.glyph-start {
              border-left: 6px solid #8c8c8c;
         }

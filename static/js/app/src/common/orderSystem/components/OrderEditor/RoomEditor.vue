@@ -15,6 +15,7 @@
                         <dd-group-option v-for="item in discountPlans" :label="item.label"
                              :key="item" v-if="item.discounts && item.discounts.length > 0">
                             <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name">
+                                <span :title="discount.serialNum">{{discount.name}}</span>
                             </dd-option>
                         </dd-group-option>
                     </dd-select>
@@ -118,6 +119,7 @@
                                     <dd-group-option v-for="item in discountPlans" :label="item.label"
                                                      :key="item" v-if="item.discounts && item.discounts.length > 0">
                                         <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name + ' ' + discount.discount + '折'">
+                                            <span :title="discount.serialNum">{{discount.name + ' ' + discount.discount + '折'}}</span>
                                         </dd-option>
                                     </dd-group-option>
                                 </dd-select>

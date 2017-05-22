@@ -7,7 +7,7 @@
             <div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
 	            <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
-                <a :href="exportUrl"><button class="dd-btn dd-btn-primary">导出Excel</button></a>
+                <a :href="exportUrl" download><button class="dd-btn dd-btn-primary">导出Excel</button></a>
 	        </div>
         </div>
         <div>
@@ -70,7 +70,8 @@
                     },
                     {
                         title: '时间',
-                        dataIndex: 'creationTime'
+                        dataIndex: 'creationTime',
+                        width: 135
                     },
                     {
                         title: '操作人员',
@@ -83,6 +84,19 @@
         computed: {
             ...mapState(['date']),
             exportUrl() {
+                const paramsObj = {
+                    exportType: 0,
+                    reportType: 15,
+                    params: JSON.stringify({
+                        startDate: this.date.startDate,
+                        endDate: this.date.endDate
+                    })
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
             }
         },
         created() {
@@ -95,6 +109,7 @@
             },
             getDealDetails(page) {
                 this.pageNo = page || this.pageNo;
+                const _this = this;
                 http.get('/stat/getVipCardWalletDetails', {
                     endDate: this.date.endDate,
                     keyword: this.searchPattern,
@@ -103,7 +118,7 @@
                 }).then(res => {
                     if (res.code === 1) {
                         this.dealDetailList = res.data.items.map((item, index) => {
-                            return { ...item, order: index + 1 };
+                            return { ...item, order: _this.pageNo === 1 ? (_this.pageNo - 1) * 30 + (index + 1) : (_this.pageNo - 1) * 30 + index };
                         });
                         this.pages = Math.ceil(res.data.totalCount / 30);
                         this.count = res.data.totalCount;
