@@ -579,6 +579,7 @@
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         this.vipDiscountDetail = { ...res.data };
+                        this.vipDiscountDetail.tag = '会员';
                         if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
                             this.vipId = res.data.vipDetail.vipId;
