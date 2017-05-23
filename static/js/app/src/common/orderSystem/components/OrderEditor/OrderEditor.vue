@@ -449,7 +449,7 @@
                     const vip = this.vipCardsAndLevel[0].levels[0];
                     this.vipCardInfo = {
                         name: vip.name,
-                        discount: this.getRoomDiscount(vip.discountList) * 10,
+                        discount: (this.getRoomDiscount(vip.discountList) * 10).toFixed(),
                         id: -4,
                         tag: '会员折扣'
                     };
@@ -468,7 +468,7 @@
                     this.vipCardInfo = {
                         name: card.name,
                         serialNum: card.serialNum,
-                        discount: this.getRoomDiscount(card.discountList) * 10,
+                        discount: (this.getRoomDiscount(card.discountList) * 10).toFixed(),
                         id: -4,
                         tag: '会员卡折扣'
                     };
@@ -639,7 +639,7 @@
                         this.vipDiscountDetail.tag = '企业';
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
-                            discount: this.getItemDiscountInfo(0, 0).discount * 10,
+                            discount: (this.getItemDiscountInfo(0, 0).discount * 10).toFixed(),
                             id: -5,
                             tag: '企业折扣'
                         };
