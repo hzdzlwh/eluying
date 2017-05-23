@@ -276,15 +276,14 @@
                     discounts: discounts
                 });
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
-                if (id !== 0) {
+                if (id !== 0 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
                     this.rooms.map(r => {
-                        if (r.moreDiscount === -4 || r.moreDiscount === -5) {
-                            if (this.vipCardInfo.discount === 10) {
-                                r.moreDiscount = 0;
-                            } else {
-                                r.moreDiscount = this.userOriginType.id;
-                            }
-                        }
+                        r.moreDiscount = this.userOriginType.id;
+                    });
+                }
+                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = 0;
                     });
                 }
                 if (this.rooms.length > 0) {
