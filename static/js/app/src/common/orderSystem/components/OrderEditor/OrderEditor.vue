@@ -453,14 +453,12 @@
                         id: -4,
                         tag: '会员折扣'
                     };
-                    this.vipDiscountDetail = {
-                        vipDetail: {
-                            discountList: vip.discountList,
-                            level: vip.name,
-                            id: vip.vipId
-                        },
-                        tag: '会员'
+                    this.vipDiscountDetail.vipDetail = {
+                        discountList: vip.discountList,
+                        level: vip.name,
+                        id: vip.vipId
                     };
+                    this.vipDiscountDetail.tag = '会员';
                 }
 
                 if (vipCardId > 0) {
@@ -472,12 +470,10 @@
                         id: -4,
                         tag: '会员卡折扣'
                     };
-                    this.vipDiscountDetail = {
-                        vipDetail: {
-                            discountList: card.discountList
-                        },
-                        tag: card.name
+                    this.vipDiscountDetail.vipDetail = {
+                        discountList: card.discountList
                     };
+                    this.vipDiscountDetail.tag = card.name;
                 }
 
                 if (vipCardId === 0) {
