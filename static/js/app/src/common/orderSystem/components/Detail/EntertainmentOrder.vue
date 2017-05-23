@@ -32,12 +32,11 @@
                                 :class="(showMoadl && !order.enterItems) ? 'cursor' : ''"
                                 >查看</span>
                             </div>
-                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 20px">
-                                                <span>原价<span class="origin-price">¥{{(item.originPrice * (item.amount || item.bookNum) * item.timeAmount).toFixed(2) }}</span></span>
-                            <span class="discount-num">
-                                                    {{ item.vipShowDiscount }}
-
-                                                </span>
+                            <span class="discount-info" v-if="item.showDiscount" style="top: 20px">
+                                <span>原价<span class="origin-price">¥{{Math.round((item.originPrice * (item.amount || item.bookNum) * item.timeAmount) * 100) / 100 }}</span></span>
+                                <span class="discount-num">
+                                    {{ item.showDiscount }}
+                                </span>
                             </span>
                             
                         </div>

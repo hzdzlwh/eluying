@@ -579,6 +579,7 @@
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         this.vipDiscountDetail = { ...res.data };
+                        this.vipDiscountDetail.tag = '会员';
                         if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
                             this.vipId = res.data.vipDetail.vipId;
@@ -786,8 +787,9 @@
                 let item = {
                     discount: 1
                 };
-                if (this.vipDiscountDetail.vipDetail && this.vipDiscountDetail.vipDetail.discountList.length > 0) {
-                    this.vipDiscountDetail.vipDetail.discountList.forEach(list => {
+                const vipDetail = this.vipDiscountDetail.vipDetail;
+                if (vipDetail && vipDetail.discountList && vipDetail.discountList.length > 0) {
+                    vipDetail.discountList.forEach(list => {
                         if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
                             item = { ...list };
                         } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
@@ -821,7 +823,7 @@
                         amount: item.amount,
                         id: Number(item.id),
                         name: item.name,
-                        price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2),
+                        price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100,
                         type: 3
                     };
                 });
@@ -832,7 +834,7 @@
                         return {
                             amount: item.amount,
                             id: item.id,
-                            price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2)
+                            price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100
                         };
                     });
                     this.previousGoods.unshift(previousItem);
