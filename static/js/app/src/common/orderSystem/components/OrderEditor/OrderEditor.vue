@@ -823,7 +823,7 @@
                         amount: item.amount,
                         id: Number(item.id),
                         name: item.name,
-                        price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2),
+                        price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100,
                         type: 3
                     };
                 });
@@ -834,7 +834,7 @@
                         return {
                             amount: item.amount,
                             id: item.id,
-                            price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2)
+                            price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100
                         };
                     });
                     this.previousGoods.unshift(previousItem);
