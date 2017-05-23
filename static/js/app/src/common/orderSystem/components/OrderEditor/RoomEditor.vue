@@ -414,7 +414,7 @@
 
                     const discountChannel = item.discountChannel || item.roomInfo.discountChannel;
                     if (discountChannel) {
-                        return discountChannel === 1 ? -4 : -5;
+                        return discountChannel === 2 ? -5 : -4;
                     }
                 }
 
