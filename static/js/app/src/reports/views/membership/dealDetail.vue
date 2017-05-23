@@ -2,7 +2,7 @@
 	<div class="deal-detail">
 		<div class="header-wrap">
 			<div>
-                <h4>交易明细(2016-08-22~2016-08-28)</h4>         
+                <h4>交易明细({{this.date.startDate}}~{{this.date.endDate}})</h4>         
             </div>
             <div class="search">
 	            <input type="text" class="dd-input" placeholder="搜索姓名/手机号/证件号/会员卡号" @keyup.enter="search" ref="searchInput">
