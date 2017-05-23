@@ -55,9 +55,9 @@
                                 </span>
                             </span>
                             <span class="footer-label">
-                                {{remainder.type === 0  ? '还需收款：' : '还需退款：'}}:
+                                {{remainder.type === 0  ? '还需收款：' : '还需退款：'}}
                                 <span class="order-price-num red" >
-                                    ¥{{ needPay}}
+                                    ¥{{ Number(needPay.toFixed(2))}}
                                 </span>
                             </span>
                         </div>

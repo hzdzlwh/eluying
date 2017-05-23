@@ -297,11 +297,11 @@ export default {
                 this.namewarn = true;
                 return;
             }
-            if (this.vipLevel.thresholdFee < 0 || !this.vipLevel.thresholdFee) {
+            if (this.vipLevel.thresholdFee < 0 || !this.vipLevel.thresholdFee && this.type) {
                 modal.warn('可支付项目累计金额 请输入0及以上的数字');
                 return;
             }
-            if (this.vipLevel.consumeItems) {
+            if (this.vipLevel.consumeItems && this.type) {
                 for (let i = 0; i < this.vipLevel.consumeItems.length; i ++) {
                     this.vipLevel.consumeItems[i].growthValue = parseFloat(this.vipLevel.consumeItems[i].growthValue);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.vipLevel.consumeItems[i].growthValue)) {
