@@ -18,7 +18,8 @@
                             :card="card"
                             :channels="payChannels"
                             @closeModal="hideModel"
-                            @changeParams="modifyParams">
+                            @changeParams="modifyParams"
+                            @refreshView="getVips">
         </recharge-card-form>
         <main-card-form :visible="mainCardVisible"
                         :oldPhone="vip.phone"
@@ -126,7 +127,7 @@
                             <td>{{item.vipCardNum}}</td>
                             <td>{{item.balanceFee}}</td>
                             <td>{{item.creationTime}}</td>
-                            <td><a @click="charge(item)">充值</a></td>
+                            <td><a v-if="item.name.substring(0, 2) != '副卡'" @click="charge(item)">充值</a></td>
                         </tr>
                         </tbody>
                     </table>
