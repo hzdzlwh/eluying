@@ -226,10 +226,8 @@
                         params.orderId = this.business.orderDetail.orderId;
                         params.orderType = this.business.orderDetail.orderType;
                     } else {
-                        params.orderId = this.orderDetail.orderType === -1
-                                         ? this.orderDetail.orderId
-                                         : this.orderDetail.subOrderId;
-                        params.orderType = this.orderDetail.orderType;
+                        params.orderId = getOrderId(this.orderDetail);
+                        params.orderType = this.orderDetail.type;
                     }
                     Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                         if (this.orderState && this.isCompany && this.companyCityLedger) {
@@ -258,7 +256,8 @@
                 this.deleteIds = [];
             },
             getPayChannels(index) {
-                if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
+                // (this.type === 'register' && this.business.cashierType === 'finish') 补录
+                if (!this.orderState) {
                     return this.depositPayChannels;
                 }
                 if (this.payments.length <= 1) {
