@@ -429,6 +429,7 @@
                 const companyId = origin.companyId;
                 if (originType === -5) {
                     this.getCompanyDiscount({ contractCompanyId: companyId });
+                    this.vipCardId = -5;
                 }
 
                 if (originType === -4 && this.phone.length === 11) {
@@ -449,18 +450,16 @@
                     const vip = this.vipCardsAndLevel[0].levels[0];
                     this.vipCardInfo = {
                         name: vip.name,
-                        discount: this.getRoomDiscount(vip.discountList) * 10,
+                        discount: (this.getRoomDiscount(vip.discountList) * 10).toFixed(1),
                         id: -4,
                         tag: '会员折扣'
                     };
-                    this.vipDiscountDetail = {
-                        vipDetail: {
-                            discountList: vip.discountList,
-                            level: vip.name,
-                            id: vip.vipId
-                        },
-                        tag: '会员'
+                    this.vipDiscountDetail.vipDetail = {
+                        discountList: vip.discountList,
+                        level: vip.name,
+                        id: vip.vipId
                     };
+                    this.vipDiscountDetail.tag = '会员';
                 }
 
                 if (vipCardId > 0) {
@@ -468,16 +467,14 @@
                     this.vipCardInfo = {
                         name: card.name,
                         serialNum: card.serialNum,
-                        discount: this.getRoomDiscount(card.discountList) * 10,
+                        discount: (this.getRoomDiscount(card.discountList) * 10).toFixed(1),
                         id: -4,
                         tag: '会员卡折扣'
                     };
-                    this.vipDiscountDetail = {
-                        vipDetail: {
-                            discountList: card.discountList
-                        },
-                        tag: card.name
+                    this.vipDiscountDetail.vipDetail = {
+                        discountList: card.discountList
                     };
+                    this.vipDiscountDetail.tag = card.name;
                 }
 
                 if (vipCardId === 0) {
@@ -579,6 +576,7 @@
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
                         this.vipDiscountDetail = { ...res.data };
+                        this.vipDiscountDetail.tag = '会员';
                         if (this.vipDiscountDetail.isVip) {
                             this.userOriginType = this.getOrigin(-4);
                             this.vipId = res.data.vipDetail.vipId;
@@ -639,7 +637,7 @@
                         this.vipDiscountDetail.tag = '企业';
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
-                            discount: this.getItemDiscountInfo(0, 0).discount * 10,
+                            discount: (this.getItemDiscountInfo(0, 0).discount * 10).toFixed(1),
                             id: -5,
                             tag: '企业折扣'
                         };
@@ -822,7 +820,7 @@
                         amount: item.amount,
                         id: Number(item.id),
                         name: item.name,
-                        price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2),
+                        price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100,
                         type: 3
                     };
                 });
@@ -833,7 +831,7 @@
                         return {
                             amount: item.amount,
                             id: item.id,
-                            price: (item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount).toFixed(2)
+                            price: Math.round((item['originPrice'] * this.getItemDiscountInfo(0, item.type).discount) * 100) / 100
                         };
                     });
                     this.previousGoods.unshift(previousItem);

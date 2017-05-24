@@ -14,7 +14,7 @@
             <dd-table :on-change="handleTableChange" :columns="col" :data-source="payStatisticLists"></dd-table>
         </div>
         <div class="foot">
-            <span><small>共计</small> {{count}}条记录</span>
+            <span><small>共计</small> {{count}}条记录<small>总支付金额￥</small>{{totalPayAmount}}<small>预收账款支付总额￥</small>{{advanceTotalPayAmount}}<small>赠送金额支付总额￥</small>{{giftTotalPayAmount}}</span>
             <dd-pagination @currentchange="getStatistics" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
 	</div>
@@ -186,8 +186,9 @@
             }
             .search-icon{
                 position: absolute;
-                right: 8px;
-                top: 6px;
+                right: 116px;
+                top: 8px;
+                cursor: pointer;
             }
         }
         .foot {
@@ -199,6 +200,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            small:not(:first-child){
+                margin-left: 18px;
+            }
         }
     }
     

@@ -164,8 +164,9 @@
             }
             .search-icon{
                 position: absolute;
-                right: 8px;
-                top: 6px;
+                right: 116px;
+                top: 8px;
+                cursor: pointer;
             }
         }
         .foot {
