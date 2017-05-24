@@ -249,7 +249,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (this.notPay * 100 - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0) * 100) / 100
+            return (this.notPay0 - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0)).toFixed(2);
         }
     },
     created() {
