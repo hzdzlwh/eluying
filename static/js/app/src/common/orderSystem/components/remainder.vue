@@ -133,6 +133,7 @@
 }
 </style>
 <script>
+import bus from '../../eventBus';
 import {
     DdSelect,
     DdOption
@@ -198,10 +199,13 @@ export default {
     },
     computed: {},
     created() {
-        // bus.$on('showRemainder', this.show);
+        bus.$on('hideCashier', this.reset);
         // this.getData();
     },
     methods: {
+        reset() {
+            this.fee = [];
+        },
         changePaycard() {
             this.fee = [];
             this.payed = 0;
