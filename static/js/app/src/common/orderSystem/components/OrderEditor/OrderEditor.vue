@@ -460,7 +460,6 @@
                         id: vip.vipId
                     });
                     this.$set(this.vipDiscountDetail, 'tag', '会员');
-                    console.log(this.vipDiscountDetail);
                 }
 
                 if (vipCardId > 0) {
@@ -477,7 +476,6 @@
                         discountList: card.discountList
                     });
                     this.$set(this.vipDiscountDetail, 'tag', card.name);
-                    console.log(this.vipDiscountDetail);
                 }
 
                 if (vipCardId === 0) {
