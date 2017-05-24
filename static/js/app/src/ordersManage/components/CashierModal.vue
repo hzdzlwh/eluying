@@ -223,8 +223,8 @@
                 if (val) {
                     const params = { type: 1 };
                     if (this.type === 'register') {
-                        params.orderId = this.business.orderDetail.orderId;
-                        params.orderType = this.business.orderDetail.orderType;
+                        params.orderId = getOrderId(this.business.orderDetail);
+                        params.orderType = this.business.orderDetail.type;
                     } else {
                         params.orderId = getOrderId(this.orderDetail);
                         params.orderType = this.orderDetail.type;
