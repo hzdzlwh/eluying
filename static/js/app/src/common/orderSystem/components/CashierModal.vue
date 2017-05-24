@@ -267,10 +267,10 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
-                    this.ReaminderParams = {};
-                    this.ReaminderParams.params = params.paycard;
-                    this.ReaminderParams.type = params.type;
-                    this.ReaminderParams.total = params.payTotal;
+                this.ReaminderParams = {};
+                this.ReaminderParams.params = params.paycard;
+                this.ReaminderParams.type = params.type;
+                this.ReaminderParams.total = params.payTotal;
             } else {
                 this.ReaminderParams = undefined;
             }
@@ -323,7 +323,7 @@ export default {
                         orderId
                     };
                 }
-            return params
+            return params;
         },
         getRemainder() {
             let params = this.getpParms();
@@ -349,8 +349,8 @@ export default {
                 params.orderId = this.business.orderDetail.orderId;
                 params.orderType = this.business.orderDetail.orderType;
             } else {
-                params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
-                params.orderType = this.orderDetail.orderType;
+                params.orderId = getOrderId(this.orderDetail);
+                params.orderType = this.orderDetail.type;
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
@@ -415,7 +415,7 @@ export default {
             }
         },
         getOrderPayment() {
-            let params = this.getpParms();
+            const params = this.getpParms();
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
@@ -424,7 +424,7 @@ export default {
                             this.orderPayment.paidFee = this.ReaminderParams.total + this.orderPayment.paidFee;
                         }
                         if (this.ReaminderParams.type === 2) {
-                            this.orderPayment.paidFee =  this.orderPayment.paidFee - this.ReaminderParams.total;
+                            this.orderPayment.paidFee = this.orderPayment.paidFee - this.ReaminderParams.total;
                         }
                     }
                     // 如果是余额过来的余额要改成余额减去后
@@ -440,7 +440,7 @@ export default {
                     // window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                     this.payments = [];
-                    // 充值支付列表   
+                    // 充值支付列表
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
                         //     fee: Math.abs(payMoney).toFixed(2),
