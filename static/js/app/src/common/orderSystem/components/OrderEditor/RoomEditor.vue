@@ -253,7 +253,7 @@
             },
             vipCardInfo(vipCardInfo) {
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
-                    id: -4,
+                    id: this.userOriginType.id,
                     name: vipCardInfo.name,
                     serialNum: vipCardInfo.serialNum,
                     discount: vipCardInfo.discount
@@ -266,7 +266,7 @@
             vipCardId(id, oldId) {
                 // 会员折扣id为-4
                 const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
-                    id: -4,
+                    id: this.userOriginType.id,
                     name: this.vipCardInfo.name,
                     serialNum: this.vipCardInfo.serialNum,
                     discount: this.vipCardInfo.discount
@@ -276,15 +276,14 @@
                     discounts: discounts
                 });
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
-                if (id !== 0) {
+                if (id !== 0 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
                     this.rooms.map(r => {
-                        if (r.moreDiscount === -4 || r.moreDiscount === -5) {
-                            if (this.vipCardInfo.discount === 10) {
-                                r.moreDiscount = 0;
-                            } else {
-                                r.moreDiscount = this.userOriginType.id;
-                            }
-                        }
+                        r.moreDiscount = this.userOriginType.id;
+                    });
+                }
+                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = 0;
                     });
                 }
                 if (this.rooms.length > 0) {
@@ -415,7 +414,7 @@
 
                     const discountChannel = item.discountChannel || item.roomInfo.discountChannel;
                     if (discountChannel) {
-                        return discountChannel === 1 ? -4 : -5;
+                        return discountChannel === 2 ? -5 : -4;
                     }
                 }
 
@@ -551,6 +550,11 @@
                         delete room.state;
                         delete room.originDatePriceList;
                     }
+                }
+                if (this.vipCardInfo && this.vipCardInfo.discount && Number(this.vipCardInfo.discount) !== 10) {
+                    room.moreDiscount = this.userOriginType.id;
+                } else {
+                    room.moreDiscount = 0;
                 }
 
                 this.rooms.push(room);

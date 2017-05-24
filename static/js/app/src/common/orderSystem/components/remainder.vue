@@ -57,7 +57,7 @@
                             <span class="footer-label">
                                 {{remainder.type === 0  ? '还需收款：' : '还需退款：'}}
                                 <span class="order-price-num red" >
-                                    ¥{{ Number(needPay.toFixed(2))}}
+                                    ¥{{ needPay}}
                                 </span>
                             </span>
                         </div>
@@ -180,8 +180,8 @@ export default {
                     this.$set(this.paycard, 0, this.remainder.cards[0]);
                     this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee)));
                     // this.fee.$set(0, );
-                    this.payed = this.fee[0];
-                    this.needPay = (this.remainder.needFee * 100 - this.payed * 100) / 100;
+                    this.payed = this.fee[0].toFixed(2);
+                    this.needPay = (this.remainder.needFee - this.payed).toFixed(2)
 
                 }
                 if (this.remainder.type === 2) {
@@ -190,7 +190,8 @@ export default {
                         this.$set(this.fee, i, this.remainder.cards[i].refundFee);
                         this.payed = this.payed + this.fee[i];
                     }
-                    this.needPay = (this.remainder.paidFee * 100 - this.remainder.needFee * 100 - this.payed * 100) / 100;
+                    this.payed = this.payed.toFixed(2);
+                    this.needPay = (this.remainder.paidFee - this.remainder.needFee - this.payed).toFixed(2);
                 }
             }
         }
@@ -208,18 +209,19 @@ export default {
             // this.needPay = 0;
             let total = this.remainder.needFee;
             for (let i = 0; i < this.paycard.length; i++) {
-                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee || this.remainder.cards[i].refundFee))
+                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee || this.remainder.cards[i].refundFee));
                 this.$set(this.fee, i, minfee);
-                total = total - minfee
+                total = (total - minfee).toFixed(2);
                 this.payed = this.payed + minfee;
             }
+            this.payed = this.payed.toFixed(2);
             // this.paycard.forEach((item, index) => {
             //     this.$set(this.fee, index, );
             //     total = total - Math.min(Number(this.total), Number(this.remainder.cards[index].balanceFee || this.remainder.cards[index].refundFee))
             //     // _this.remainder.needFee = (_this.remainder.needFee - _this.fee[index]).toFixed(2);
             //     this.payed = this.payed + this.fee[index];
             // });
-            this.needPay = (this.remainder.needFee * 100 - this.payed * 100) / 100;
+            this.needPay = (this.remainder.needFee - this.payed).toFixed(2);
             // window.console.log(value);
             // this.paycard[index].serialNum = value;
             // this.$set(this.fee, index, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[index].balanceFee)));
