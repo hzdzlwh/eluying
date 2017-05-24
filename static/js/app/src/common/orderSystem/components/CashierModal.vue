@@ -391,7 +391,8 @@ export default {
             this.remainderDate = undefined;
         },
         getPayChannels(index) {
-            if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
+            // this.type === 'register' && this.business.cashierType === 'finish') 补录
+            if (!this.orderState) {
                 return this.depositPayChannels;
             }
             if (this.payments.length <= 1) {
