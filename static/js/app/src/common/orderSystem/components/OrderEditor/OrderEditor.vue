@@ -429,6 +429,7 @@
                 const companyId = origin.companyId;
                 if (originType === -5) {
                     this.getCompanyDiscount({ contractCompanyId: companyId });
+                    this.vipCardId = -5;
                 }
 
                 if (originType === -4 && this.phone.length === 11) {
