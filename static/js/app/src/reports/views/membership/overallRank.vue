@@ -14,7 +14,7 @@
             <dd-table :on-change="handleTableChange" :columns="col" :data-source="memberCards"></dd-table>
         </div>
         <div class="foot">
-            <span><small>共计</small> {{count}}位会员</span>
+            <span><small>共计</small> {{count}}张会员卡</span>
             <dd-pagination @currentchange="getVipCards" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
 	</div>
@@ -170,8 +170,9 @@
             }
             .search-icon{
                 position: absolute;
-                right: 8px;
-                top: 6px;
+                right: 116px;
+                top: 8px;
+                cursor: pointer;
             }
         }
         .foot {

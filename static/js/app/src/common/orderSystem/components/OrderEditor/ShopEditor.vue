@@ -29,7 +29,7 @@
                                 <p class="shop-item-price">
                                     <label>小计</label>
                                     <span>
-                                    ¥{{((option['originPrice'] * getItemDiscountInfo(option.type, vipDiscountDetail).discount).toFixed(2) * option.amount).toFixed(2)}}
+                                    ¥{{Math.round((Math.round((option['originPrice'] * getItemDiscountInfo(option.type, vipDiscountDetail).discount) * 100) / 100 * option.amount) * 100) / 100}}
                                 </span>
                                 </p>
                             </div>
@@ -42,7 +42,7 @@
                             <span>
                                 原价
                                 <span class="origin-price">
-                                    ¥{{ (option['originPrice'] * option.amount).toFixed(2) }}
+                                    ¥{{ Math.round((option['originPrice'] * option.amount * 100)) / 100 }}
                                 </span>
                             </span>
                             <span class="discount-num">
@@ -151,13 +151,13 @@
                 let totalPrice = 0;
                 for (const key in this.editShopList) {
                     totalPrice = this.editShopList[key].items.reduce((a, b) => {
-                        const itemPrice = ((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount).toFixed(2) * b.amount).toFixed(2);
+                        const itemPrice = (Math.round((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount) * 100) / 100 * b.amount).toFixed(2);
                         return a + Number(itemPrice);
                     }, totalPrice);
                 }
                 if (this.shopGoodsItems.length > 0) {
                     totalPrice = this.shopGoodsItems.reduce((a, b) => {
-                        const itemPrice = ((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount).toFixed(2) * b.amount).toFixed(2);
+                        const itemPrice = (Math.round((b['originPrice'] * this.getItemDiscountInfo(b.type, this.vipDiscountDetail).discount) * 100) / 100 * b.amount).toFixed(2);
                         return a + Number(itemPrice);
                     }, totalPrice);
                 }

@@ -378,7 +378,6 @@
                 if ((vip.email && !this.mailFilter.test(vip.email))) {
                     return false;
                 }
-
                 if (!vip.phone ||
                     !vip.name ||
                     vip.name.length < 2 ||
@@ -402,7 +401,8 @@
                 if (vip.customerId) {
                     url = '/customer/addToVip';
                 }
-                http.post(url, data)
+                delete data.vipCards;
+                http.get(url, data)
                     .then(res => {
                         this.close();
                         this.$emit('onSuccess');
