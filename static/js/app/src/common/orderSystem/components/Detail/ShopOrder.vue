@@ -75,7 +75,7 @@
                     shopList[orderId]['time'] = this.order.creationTime;
                     shopList[orderId]['state'] = this.order.state;
                     shopList[orderId]['items'] = this.order.itemList;
-                    shopList[orderId]['items'][0]['vipShowDiscount'] = this.order.vipShowDiscount;
+                    shopList[orderId]['items'][0]['showDiscount'] = this.order.showDiscount;
                 }
                 return shopList;
             }
