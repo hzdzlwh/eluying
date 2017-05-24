@@ -133,6 +133,7 @@
 }
 </style>
 <script>
+import bus from '../../eventBus';
 import {
     DdSelect,
     DdOption
@@ -198,18 +199,27 @@ export default {
     },
     computed: {},
     created() {
-        // bus.$on('showRemainder', this.show);
+        bus.$on('hideCashier', this.reset);
         // this.getData();
     },
     methods: {
+        reset() {
+            this.fee = [];
+        },
         changePaycard() {
             this.fee = [];
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
             // this.needPay = 0;
             let total = this.remainder.needFee;
+            if (this.remainder.type === 2) {
+                total = this.remainder.paidFee;
+            }
             for (let i = 0; i < this.paycard.length; i++) {
-                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee || this.remainder.cards[i].refundFee));
+                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee));
+                if (this.remainder.type === 2) {
+                    minfee = Number(this.remainder.cards[i].refundFee);
+                }
                 this.$set(this.fee, i, minfee);
                 total = (total - minfee).toFixed(2);
                 this.payed = this.payed + minfee;
@@ -221,7 +231,12 @@ export default {
             //     // _this.remainder.needFee = (_this.remainder.needFee - _this.fee[index]).toFixed(2);
             //     this.payed = this.payed + this.fee[index];
             // });
-            this.needPay = (this.remainder.needFee - this.payed).toFixed(2);
+            if (this.remainder.type === 0) {
+                this.needPay = (this.remainder.needFee - this.payed).toFixed(2);
+            }
+            if (this.remainder.type === 2) {
+                this.needPay = (this.remainder.paidFee - this.payed).toFixed(2);
+            }
             // window.console.log(value);
             // this.paycard[index].serialNum = value;
             // this.$set(this.fee, index, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[index].balanceFee)));
