@@ -118,7 +118,7 @@
                 }).then(res => {
                     if (res.code === 1) {
                         this.dealDetailList = res.data.items.map((item, index) => {
-                            return { ...item, order: _this.pageNo === 1 ? (_this.pageNo - 1) * 30 + (index + 1) : (_this.pageNo - 1) * 30 + index };
+                            return { ...item, order: (_this.pageNo - 1) * 30 + (index + 1) };
                         });
                         this.pages = Math.ceil(res.data.totalCount / 30);
                         this.count = res.data.totalCount;
