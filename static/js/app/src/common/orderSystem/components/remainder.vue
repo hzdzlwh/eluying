@@ -19,7 +19,7 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>{{remainder.type === 0  ? '会员卡收款' : '会员卡退款'}}</span></p>
                             <div class="reaminder-order-item">
-                                <span class="reaminder-money-text" style="margin-right:20px">{{remainder.kindName}}<span style="margin-left:20px;">{{remainder.type === 0  ? '需补' : '需退'}}:￥{{payed}}</span></span>
+                                <span class="reaminder-money-text" style="margin-right:20px">{{remainder.kindName}}<span style="margin-left:20px;">{{remainder.type === 0  ? '需补' : '需退'}}:￥{{remainder.cardFee}}</span></span>
                             </div>
                             <div class="reaminder-getMoney-container">
                                 <div class="reaminder-getMoney-channels">
@@ -232,10 +232,10 @@ export default {
             //     this.payed = this.payed + this.fee[index];
             // });
             if (this.remainder.type === 0) {
-                this.needPay = (this.remainder.needFee - this.payed).toFixed(2);
+                this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
             }
             if (this.remainder.type === 2) {
-                this.needPay = (this.remainder.paidFee - this.payed).toFixed(2);
+                this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
             }
             // window.console.log(value);
             // this.paycard[index].serialNum = value;
