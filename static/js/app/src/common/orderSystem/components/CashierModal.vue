@@ -336,7 +336,7 @@ export default {
                     this.ramainShow = true;
                     this.remainderDate = res.data.balancePay;
                 } else {
-                    this.remainderDate = undefined
+                    this.remainderDate = undefined;
                     this.cashierShow();
                 }
             });
@@ -420,8 +420,9 @@ export default {
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
-                    let paiedFee = 0 ;
-                    if (this.ReaminderParams) {
+                    let paiedFee = this.orderPayment.paidFee;
+                    // 如果是跳过就是用paidfee
+                    if (this.ReaminderParams && this.ReaminderParams.params) {
                         if (this.ReaminderParams.type === 0) {
                             paiedFee = Number(this.ReaminderParams.total) + this.orderPayment.paidFee;
                         }
@@ -438,11 +439,12 @@ export default {
                         });
                     }
                     this.paiedMoney = (paiedFee - this.orderPayment.refundFee).toFixed(2);
-                    // window.console.log(this.paiedMoney)
-                    // window.console.log(this.ReaminderParams.total)
-                    const payMoney = ((this.type === 'cancel' ? 0 : paiedFee) - (paiedFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
+                    window.console.log(this.paiedMoney)
+                    window.console.log(paiedFee)
+                    const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
                     this.payments = [];
                     // 充值支付列表
+                    // 
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
                         //     fee: Math.abs(payMoney).toFixed(2),
@@ -573,17 +575,7 @@ export default {
             const receiveMoney = this.payments.reduce((a, b) => {
                 return a + Number(b.fee);
             }, 0);
-            let paiedFee = 0;
-            if (this.ReaminderParams) {
-                if (this.ReaminderParams.type === 0) {
-                    paiedFee = Number(this.ReaminderParams.total) + this.orderPayment.paidFee;
-                }
-                if (this.ReaminderParams.type === 2) {
-                    paiedFee = this.orderPayment.paidFee - Number(this.ReaminderParams.total);
-                }
-            }
-            // 增加余额的应收
-            const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : paiedFee) - (paiedFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
+            const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
             // 订单详情允许多次收银条件
             const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
             if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
