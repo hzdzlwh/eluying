@@ -687,7 +687,7 @@
                 if (this.userOriginType && this.userOriginType.id === -5) {
                     discountRelatedId = this.userOriginType.companyId;
                     discountChannel = 2;
-                } else if (this.userOriginType && this.userOriginType.id === -4) {
+                } else if (this.userOriginType && (this.userOriginType.id === -4 || this.userOriginType.id === -3)) {
                     // 会员渠道分为会员等级和会员卡
                     if (!this.vipId || this.vipCardId === undefined) {
                         return false;
