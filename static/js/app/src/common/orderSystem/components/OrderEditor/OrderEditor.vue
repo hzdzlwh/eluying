@@ -292,7 +292,7 @@
     import EnterEditor from './EntertainmentEditor.vue';
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
-    import { getOrderId } from '../../../../ordersManage/utils/order';
+    import { getOrderId } from '../../utils/order';
     export default{
         name: 'OrderEditor',
         data() {
