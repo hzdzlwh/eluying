@@ -249,7 +249,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (this.notPay0 - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0)).toFixed(2);
+            return (this.notPay - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0)).toFixed(2);
         }
     },
     created() {
@@ -267,10 +267,10 @@ export default {
     methods: {
         getReaminderParams(params) {
             if (params) {
-                    this.ReaminderParams = {};
-                    this.ReaminderParams.params = params.paycard;
-                    this.ReaminderParams.type = params.type;
-                    this.ReaminderParams.total = params.payTotal;
+                this.ReaminderParams = {};
+                this.ReaminderParams.params = params.paycard;
+                this.ReaminderParams.type = params.type;
+                this.ReaminderParams.total = params.payTotal;
             } else {
                 this.ReaminderParams = undefined;
             }
@@ -323,7 +323,7 @@ export default {
                         orderId
                     };
                 }
-            return params
+            return params;
         },
         getRemainder() {
             let params = this.getpParms();
@@ -349,8 +349,8 @@ export default {
                 params.orderId = this.business.orderDetail.orderId;
                 params.orderType = this.business.orderDetail.orderType;
             } else {
-                params.orderId = this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.subOrderId;
-                params.orderType = this.orderDetail.orderType;
+                params.orderId = getOrderId(this.orderDetail);
+                params.orderType = this.orderDetail.type;
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
@@ -391,7 +391,8 @@ export default {
             this.remainderDate = undefined;
         },
         getPayChannels(index) {
-            if ((this.type === 'register' && this.business.cashierType === 'finish') || !this.orderState) {
+            // this.type === 'register' && this.business.cashierType === 'finish') 补录
+            if (!this.orderState) {
                 return this.depositPayChannels;
             }
             if (this.payments.length <= 1) {
@@ -415,7 +416,7 @@ export default {
             }
         },
         getOrderPayment() {
-            let params = this.getpParms();
+            const params = this.getpParms();
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
@@ -424,7 +425,7 @@ export default {
                             this.orderPayment.paidFee = this.ReaminderParams.total + this.orderPayment.paidFee;
                         }
                         if (this.ReaminderParams.type === 2) {
-                            this.orderPayment.paidFee =  this.orderPayment.paidFee - this.ReaminderParams.total;
+                            this.orderPayment.paidFee = this.orderPayment.paidFee - this.ReaminderParams.total;
                         }
                     }
                     // 如果是余额过来的余额要改成余额减去后
@@ -440,7 +441,7 @@ export default {
                     // window.console.log(this.ReaminderParams.total)
                     const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - (this.orderPayment.paidFee - this.orderPayment.refundFee) + Number(this.penalty)).toFixed(2);
                     this.payments = [];
-                    // 充值支付列表   
+                    // 充值支付列表
                     if (Number(payMoney) !== 0) {
                         // this.payments.push({
                         //     fee: Math.abs(payMoney).toFixed(2),

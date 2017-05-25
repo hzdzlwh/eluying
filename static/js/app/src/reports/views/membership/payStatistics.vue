@@ -151,7 +151,7 @@
             }
         },
         watch: {
-            data() {
+            date() {
                 this.getStatistics();
             }
         },
