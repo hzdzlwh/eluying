@@ -178,7 +178,7 @@ export default {
             if (this.remainder.cards && this.remainder.cards.length > 0) {
                 // const firstCard = this.remainder.cards[0];
                 if (this.remainder.type === 0) {
-                    this.$set(this.paycard, 0, this.remainder.cards[0]);
+                    this.$set(this.paycard, 0, JSON.parse(JSON.stringify(this.remainder.cards[0])));
                     this.$set(this.fee, 0, Math.min(Number(this.remainder.cardFee), Number(this.remainder.cards[0].balanceFee)));
                     // this.fee.$set(0, );
                     this.payed = this.fee[0].toFixed(2);
@@ -187,8 +187,8 @@ export default {
                 }
                 if (this.remainder.type === 2) {
                     for (let i = 0; i < this.remainder.cards.length; i++) {
-                        this.$set(this.paycard, i, this.remainder.cards[i]);
-                        this.$set(this.fee, i, this.remainder.cards[i].refundFee);
+                        this.$set(this.paycard, i, JSON.parse(JSON.stringify(this.remainder.cards[i])));
+                        this.$set(this.fee, i, Number(this.remainder.cards[i].refundFee));
                         this.payed = this.payed + this.fee[i];
                     }
                     this.payed = this.payed.toFixed(2);
@@ -211,7 +211,7 @@ export default {
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
             // this.needPay = 0;
-            let total = JSON.parse(JSON.stringify(this.remainder.cardFee));
+            let total = Number(this.remainder.cardFee);
             if (this.remainder.type === 2) {
                 total = this.remainder.paidFee;
             }
