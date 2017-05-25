@@ -295,14 +295,14 @@
                 }
             },
             vipId(id, oldId) {
-                /* // 防止初始化的时候调接口
+                // 防止初始化的时候调接口
                 if (!oldId && !this.userOriginType) {
                     return false;
                 }
 
                 if (this.rooms.length > 0) {
                     this.modifyRooms(this.rooms);
-                }*/
+                }
             }
         },
         computed: {
