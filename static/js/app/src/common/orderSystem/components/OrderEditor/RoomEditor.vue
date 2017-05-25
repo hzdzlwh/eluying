@@ -251,7 +251,10 @@
                     this.modifyRooms(this.rooms);
                 }
             },
-            vipCardInfo(vipCardInfo) {
+            vipCardInfo(vipCardInfo, oldVipCardInfo) {
+                if (!this.userOriginType) {
+                    return;
+                }
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
                     id: this.userOriginType.id,
                     name: vipCardInfo.name,
@@ -262,9 +265,13 @@
                     label: vipCardInfo.tag,
                     discounts: discounts
                 });
+                this.handleVipCardChange(this.userOriginType.id, oldVipCardInfo.name !== undefined);
             },
             vipCardId(id, oldId) {
                 // 会员折扣id为-4
+                if (!this.userOriginType) {
+                    return;
+                }
                 const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
                     id: this.userOriginType.id,
                     name: this.vipCardInfo.name,
@@ -275,24 +282,8 @@
                     label: this.vipCardInfo.tag,
                     discounts: discounts
                 });
-                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
-                if (id !== 0 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
-                    this.rooms.map(r => {
-                        r.moreDiscount = this.userOriginType.id;
-                    });
-                }
-                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || oldId !== undefined)) {
-                    this.rooms.map(r => {
-                        r.moreDiscount = 0;
-                    });
-                }
-                if (this.rooms.length > 0) {
-                    if (oldId) {
-                        this.forceChangePrice = true;
-                    }
-                    // 更改渠道
-                    this.modifyRooms(this.rooms);
-                }
+                const changeId = id === 0 ? 0 : this.userOriginType.id;
+                this.handleVipCardChange(changeId, oldId !== undefined);
             },
             vipDiscountDetail(newVal, oldVal) {
                 if (!newVal.vipDetail || !oldVal.vipDetail) {
@@ -304,14 +295,14 @@
                 }
             },
             vipId(id, oldId) {
-                // 防止初始化的时候调接口
+                /* // 防止初始化的时候调接口
                 if (!oldId && !this.userOriginType) {
                     return false;
                 }
 
                 if (this.rooms.length > 0) {
                     this.modifyRooms(this.rooms);
-                }
+                }*/
             }
         },
         computed: {
@@ -356,6 +347,26 @@
             }
         },
         methods: {
+            handleVipCardChange(id, forceChange) {
+                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
+                if (this.checkState !== 'editOrder' || forceChange) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = id;
+                    });
+                }
+                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || forceChange)) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = 0;
+                    });
+                }
+                if (this.rooms.length > 0) {
+                    if (forceChange) {
+                        this.forceChangePrice = true;
+                    }
+                    // 更改渠道
+                    this.modifyRooms(this.rooms);
+                }
+            },
             handleMoreDiscountClick(index, ev) {
                 ev.stopPropagation();
                 document.querySelector(`#js-more-discount-${index} .dd-select-input`).click();
@@ -678,7 +689,7 @@
                     discountChannel = 2;
                 } else if (this.userOriginType && this.userOriginType.id === -4) {
                     // 会员渠道分为会员等级和会员卡
-                    if (!this.vipId || !this.vipCardId) {
+                    if (!this.vipId || this.vipCardId === undefined) {
                         return false;
                     }
 
