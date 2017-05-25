@@ -179,10 +179,10 @@ export default {
                 // const firstCard = this.remainder.cards[0];
                 if (this.remainder.type === 0) {
                     this.$set(this.paycard, 0, this.remainder.cards[0]);
-                    this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee)));
+                    this.$set(this.fee, 0, Math.min(Number(this.remainder.cardFee), Number(this.remainder.cards[0].balanceFee)));
                     // this.fee.$set(0, );
                     this.payed = this.fee[0].toFixed(2);
-                    this.needPay = (this.remainder.needFee - this.payed).toFixed(2)
+                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2)
 
                 }
                 if (this.remainder.type === 2) {
@@ -192,7 +192,7 @@ export default {
                         this.payed = this.payed + this.fee[i];
                     }
                     this.payed = this.payed.toFixed(2);
-                    this.needPay = (this.remainder.paidFee - this.remainder.needFee - this.payed).toFixed(2);
+                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
                 }
             }
         }
@@ -211,14 +211,14 @@ export default {
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
             // this.needPay = 0;
-            let total = this.remainder.needFee;
+            let total = this.remainder.cardFee;
             if (this.remainder.type === 2) {
                 total = this.remainder.paidFee;
             }
             for (let i = 0; i < this.paycard.length; i++) {
-                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee));
+                let minfee = Math.min(Number(total), Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).balanceFee));
                 if (this.remainder.type === 2) {
-                    minfee = Number(this.remainder.cards[i].refundFee);
+                    minfee = Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).refundFee);
                 }
                 this.$set(this.fee, i, minfee);
                 total = (total - minfee).toFixed(2);
