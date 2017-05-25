@@ -211,7 +211,7 @@ export default {
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
             // this.needPay = 0;
-            let total = this.remainder.cardFee;
+            let total = JSON.parse(JSON.stringify(this.remainder.cardFee));
             if (this.remainder.type === 2) {
                 total = this.remainder.paidFee;
             }
