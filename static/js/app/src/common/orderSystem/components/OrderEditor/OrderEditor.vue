@@ -414,7 +414,7 @@
                 return (this.roomPrice + this.enterPrice + this.goodsPrice + this.foodPrice).toFixed(2);
             },
             showVipCardSelect() {
-                return this.userOriginType && this.userOriginType.id === -4;
+                return this.vipDiscountDetail && this.vipDiscountDetail.isVip;
             }
         },
         created() {
@@ -430,10 +430,11 @@
                 if (originType === -5) {
                     this.getCompanyDiscount({ contractCompanyId: companyId });
                     this.vipCardId = -5;
+                    return;
                 }
 
                 if (originType === -4 && this.phone.length === 11) {
-                    this.getVipDiscount(this.phone);
+                    this.getVipDiscount(this.phone, true);
                 }
 
                 if (originType !== -5 && originType !== -4) {
@@ -512,6 +513,9 @@
                         if (this.userOriginType === undefined) {
                             this.userSelfOrigins.push({ id: this.order.originId, name: this.order.origin, unknown: true });
                             this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
+                            if (this.order.discountChannel === 4 || this.order.discountChannel === 1) {
+                                this.getVipDiscount(this.order.customerPhone, false);
+                            }
                         }
                     } else {
                         if (this.userSelfOrigins[0]) {
@@ -544,7 +548,7 @@
             },
             changeVipList(num) {
                 if (num === 2 && this.phone.length === 11) {
-                    this.getVipDiscount(this.phone);
+                    this.getVipDiscount(this.phone, true);
                 }
                 const params = num === 1 ? { name: this.name } : { phone: this.phone };
                 if ((num === 1 && this.name.length >= 1) || (num === 2 && this.phone.length >= 4)) {
@@ -570,7 +574,7 @@
                 const phoneReg = /^1[34578]\d{9}$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
-            getVipDiscount(phone) {
+            getVipDiscount(phone, setOrigin) {
                 if (phone === this.vipDiscountDetail.phone) {
                     return;
                 }
@@ -583,7 +587,9 @@
                         this.vipDiscountDetail = { ...res.data, phone: phone };
                         this.vipDiscountDetail.tag = '会员';
                         if (this.vipDiscountDetail.isVip) {
-                            this.userOriginType = this.getOrigin(-4);
+                            if (setOrigin) {
+                                this.userOriginType = this.getOrigin(-4);
+                            }
                             this.vipId = res.data.vipDetail.vipId;
                             // 生成会员卡下拉框,规定不使用-0，会员等级，-1
                             this.vipCardsAndLevel = [];
@@ -718,7 +724,7 @@
                 this.phone = vip.phone;
                 this.vipId = vip.vipId;
                 this.vipListShow = false;
-                this.getVipDiscount(vip.phone);
+                this.getVipDiscount(vip.phone, true);
                 this.userOriginType = this.getOrigin(-4);
             },
             validate() {
@@ -945,6 +951,10 @@
                     }
                 } else if (this.userOriginType.id === -3) {
                     params.origin = '微官网';
+                    if (this.vipCardId !== 0) {
+                        params.discountChannel = this.vipCardId > 0 ? 4 : 1;
+                        params.discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipId;
+                    }
                 } else {
                     params.origin = this.userOriginType.name;
                 }
