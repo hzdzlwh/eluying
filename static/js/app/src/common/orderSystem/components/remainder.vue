@@ -261,7 +261,11 @@ export default {
                     type: this.remainder.type
                 });
             } else {
-                this.$emit('getReaminderParams');
+                this.$emit('getReaminderParams', {
+                    payTotal: this.payed,
+                    needMorePay: this.needPay,
+                    type: this.remainder.type
+                });
             }
             $('#reaminder').modal('hide');
         },
