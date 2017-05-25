@@ -252,6 +252,9 @@
                 }
             },
             vipCardInfo(vipCardInfo, oldVipCardInfo) {
+                if (!this.userOriginType) {
+                    return;
+                }
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
                     id: this.userOriginType.id,
                     name: vipCardInfo.name,
@@ -266,6 +269,9 @@
             },
             vipCardId(id, oldId) {
                 // 会员折扣id为-4
+                if (!this.userOriginType) {
+                    return;
+                }
                 const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
                     id: this.userOriginType.id,
                     name: this.vipCardInfo.name,
