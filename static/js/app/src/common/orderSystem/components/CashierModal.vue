@@ -180,7 +180,7 @@ import bus from '../../eventBus';
 import remainder from './remainder.vue';
 import {
     getOrderId
-} from '../../../ordersManage/utils/order';
+} from '../utils/order';
 export default {
     props: {
         type: {
