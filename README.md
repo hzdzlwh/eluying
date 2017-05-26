@@ -50,6 +50,7 @@ http.post(url, data, config)
 ```js
 config = {
     notify: Boolean // 是否modal.error后端错误信息，默认为true
+    loading: true // 是否加载动画，默认true
 }
 ````
 source: common\http.js

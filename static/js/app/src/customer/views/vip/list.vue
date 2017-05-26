@@ -19,7 +19,7 @@
                             :channels="payChannels"
                             @closeModal="hideModel"
                             @changeParams="modifyParams"
-                            @refreshView="getVips">
+                            @refreshView="getVipsAndDetail">
         </recharge-card-form>
         <main-card-form :visible="mainCardVisible"
                         :oldPhone="vip.phone"
@@ -27,13 +27,13 @@
                         :channels="payChannels"
                         @closeModal="hideModel"
                         @changeParams="modifyParams"
-                        @refreshView="getVips">
+                        @refreshView="getVipsAndDetail">
         </main-card-form>
         <pay-with-code :visible="payCodeVisible"
                        :params="payWithCodeParams"
                        :url="payWithCodeInterfaceUrl"
                        @closeModal="hideModel"
-                       @refreshView="getVips">
+                       @refreshView="getVipsAndDetail">
         </pay-with-code>
         <detail
             :tab="detailTab"
@@ -403,6 +403,10 @@
                         }
                     });
             },
+            getVipsAndDetail() {
+                this.getVips();
+                this.getVipDetail(this.vip.vipUserId);
+            },
             getPayChannels() {
                 http.get('/user/getChannels', { type: 1 })
                     .then(res => {
@@ -438,11 +442,9 @@
             },
             charge(card) {
                 this.card = { vipCardNum: card.vipCardNum, categoryName: card.name, categoryId: card.categoryId, id: card.vipCardId };
-                this.handleDetailClose();
                 this.rechargeVisible = true;
             },
             checkCard() {
-                this.handleDetailClose();
                 this.mainCardVisible = true;
             },
             hideModel() {

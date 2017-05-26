@@ -13,6 +13,7 @@
     "jquery": "1.12.4",
     "jquery-ui-dist": "^1.12.1",
     "md5": "^2.1.0",
+    "promise.prototype.finally": "^2.0.1",
     "qs": "^6.4.0",
     "raven-js": "^3.12.1",
     "vue": "2.2.5",
