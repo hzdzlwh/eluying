@@ -70,6 +70,7 @@
         },
         methods: {
             exportUrl() {
+                return '';
             }
         },
         components: {
