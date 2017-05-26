@@ -76,9 +76,13 @@
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
-    .giving-money {
-        color: #f24949;
+    #rechargeCardModal{
+        z-index: 2052;
+        .giving-money {
+            color: #f24949;
+        }
     }
+    
 </style>
 <script>
     import http from '../../common/http';

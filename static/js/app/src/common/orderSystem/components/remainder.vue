@@ -32,7 +32,7 @@
                                         </dd-select >
                                         <span class="reaminder-mr20">{{remainder.type === 0  ? '收款' : '退款'}}</span>
                                         <input type="number" class="dd-input reaminder-mr20" v-model="fee[index]" disabled=true>
-                                        <span class="reaminder-delBtn-icon" @click="deletePayMent(index)"></span>
+                                        <span class="reaminder-delBtn-icon" @click="deletePayMent(index)" v-if='remainder.type === 0'></span>
                                     </div>
                                 </div>
                                 <div v-if='remainder.type === 0'>
@@ -62,7 +62,7 @@
                             </span>
                         </div>
                         <div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)">跳过</div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
                         </div>
                     </div>
