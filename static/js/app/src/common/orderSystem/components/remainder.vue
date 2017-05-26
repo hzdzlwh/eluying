@@ -62,7 +62,7 @@
                             </span>
                         </div>
                         <div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" >跳过</div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
                         </div>
                     </div>
