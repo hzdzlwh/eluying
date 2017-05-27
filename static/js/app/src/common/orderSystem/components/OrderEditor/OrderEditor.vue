@@ -481,6 +481,10 @@
 
                 if (vipCardId === 0) {
                     this.vipCardInfo = {};
+                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                        discountList: []
+                    });
+                    this.$set(this.vipDiscountDetail, 'tag', '');
                 }
             },
             phone(newVal) {
