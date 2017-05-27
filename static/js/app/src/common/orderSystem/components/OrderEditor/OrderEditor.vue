@@ -83,7 +83,7 @@
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
                                     <span class="vipcard-select" style="width: 210px">
-                                        <dd-select v-model="vipCardId">
+                                        <dd-select v-model="vipCardId" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
                                             </dd-option>
