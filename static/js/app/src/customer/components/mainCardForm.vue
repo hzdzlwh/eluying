@@ -93,6 +93,9 @@
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
+    #mainCardModal{
+        z-index: 2052;
+    }
 </style>
 <script>
     import http from '../../common/http';

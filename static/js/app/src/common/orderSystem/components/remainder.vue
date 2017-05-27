@@ -19,7 +19,7 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>{{remainder.type === 0  ? '会员卡收款' : '会员卡退款'}}</span></p>
                             <div class="reaminder-order-item">
-                                <span class="reaminder-money-text" style="margin-right:20px">{{remainder.kindName}}<span style="margin-left:20px;">{{remainder.type === 0  ? '需补' : '需退'}}:￥{{payed}}</span></span>
+                                <span class="reaminder-money-text" style="margin-right:20px">{{remainder.kindName}}<span style="margin-left:20px;">{{remainder.type === 0  ? '需补' : '需退'}}:￥{{remainder.cardFee}}</span></span>
                             </div>
                             <div class="reaminder-getMoney-container">
                                 <div class="reaminder-getMoney-channels">
@@ -32,7 +32,7 @@
                                         </dd-select >
                                         <span class="reaminder-mr20">{{remainder.type === 0  ? '收款' : '退款'}}</span>
                                         <input type="number" class="dd-input reaminder-mr20" v-model="fee[index]" disabled=true>
-                                        <span class="reaminder-delBtn-icon" @click="deletePayMent(index)"></span>
+                                        <span class="reaminder-delBtn-icon" @click="deletePayMent(index)" v-if='remainder.type === 0'></span>
                                     </div>
                                 </div>
                                 <div v-if='remainder.type === 0'>
@@ -62,7 +62,7 @@
                             </span>
                         </div>
                         <div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)">跳过</div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
                         </div>
                     </div>
@@ -178,21 +178,21 @@ export default {
             if (this.remainder.cards && this.remainder.cards.length > 0) {
                 // const firstCard = this.remainder.cards[0];
                 if (this.remainder.type === 0) {
-                    this.$set(this.paycard, 0, this.remainder.cards[0]);
-                    this.$set(this.fee, 0, Math.min(Number(this.remainder.needFee), Number(this.remainder.cards[0].balanceFee)));
+                    this.$set(this.paycard, 0, JSON.parse(JSON.stringify(this.remainder.cards[0])));
+                    this.$set(this.fee, 0, Math.min(Number(this.remainder.cardFee), Number(this.remainder.cards[0].balanceFee)));
                     // this.fee.$set(0, );
                     this.payed = this.fee[0].toFixed(2);
-                    this.needPay = (this.remainder.needFee - this.payed).toFixed(2)
+                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2)
 
                 }
                 if (this.remainder.type === 2) {
                     for (let i = 0; i < this.remainder.cards.length; i++) {
-                        this.$set(this.paycard, i, this.remainder.cards[i]);
-                        this.$set(this.fee, i, this.remainder.cards[i].refundFee);
+                        this.$set(this.paycard, i, JSON.parse(JSON.stringify(this.remainder.cards[i])));
+                        this.$set(this.fee, i, Number(this.remainder.cards[i].refundFee));
                         this.payed = this.payed + this.fee[i];
                     }
                     this.payed = this.payed.toFixed(2);
-                    this.needPay = (this.remainder.paidFee - this.remainder.needFee - this.payed).toFixed(2);
+                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
                 }
             }
         }
@@ -211,14 +211,14 @@ export default {
             this.payed = 0;
             // this.remainder.needFee = this.data.needFee;
             // this.needPay = 0;
-            let total = this.remainder.needFee;
+            let total = Number(this.remainder.cardFee);
             if (this.remainder.type === 2) {
                 total = this.remainder.paidFee;
             }
             for (let i = 0; i < this.paycard.length; i++) {
-                let minfee = Math.min(Number(total), Number(this.remainder.cards[i].balanceFee));
+                let minfee = Math.min(Number(total), Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).balanceFee));
                 if (this.remainder.type === 2) {
-                    minfee = Number(this.remainder.cards[i].refundFee);
+                    minfee = Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).refundFee);
                 }
                 this.$set(this.fee, i, minfee);
                 total = (total - minfee).toFixed(2);
@@ -232,10 +232,10 @@ export default {
             //     this.payed = this.payed + this.fee[index];
             // });
             if (this.remainder.type === 0) {
-                this.needPay = (this.remainder.needFee - this.payed).toFixed(2);
+                this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
             }
             if (this.remainder.type === 2) {
-                this.needPay = (this.remainder.paidFee - this.payed).toFixed(2);
+                this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
             }
             // window.console.log(value);
             // this.paycard[index].serialNum = value;
@@ -261,7 +261,11 @@ export default {
                     type: this.remainder.type
                 });
             } else {
-                this.$emit('getReaminderParams');
+                this.$emit('getReaminderParams', {
+                    payTotal: this.payed,
+                    needMorePay: this.needPay,
+                    type: this.remainder.type
+                });
             }
             $('#reaminder').modal('hide');
         },

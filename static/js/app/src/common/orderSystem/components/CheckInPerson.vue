@@ -100,7 +100,7 @@
     import { DdSelect, DdOption } from 'dd-vue-component';
     import { ID_CARD_TYPE } from '../../../ordersManage/constant';
     import modal from 'modal';
-    import ieidc from '../../../ordersManage/utils/ieidc';
+    import ieidc from '../utils/ieidc';
     export default{
         props: {
             personsObj: {

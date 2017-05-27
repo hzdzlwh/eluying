@@ -1,4 +1,5 @@
 require('cookie');
+require('promise.prototype.finally').shim();
 import Raven from 'raven-js';
 import modal from './modal';
 import ENDPOINT from './ENDPOINT';
@@ -10,10 +11,8 @@ const spin = new modal.Spin();
 const host = process.env.NODE_ENV === 'production' ? '/ws' : (process.env.serverUrl + '/ws');
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.response.use(function(response) {
-    spin.removePending();
     return response;
 }, function(error) {
-    spin.removePending();
     Raven.captureMessage('网络请求失败', {
         extra: {
             error
@@ -29,7 +28,8 @@ const http = {
     },
     request(method, path, data, config) {
         const defaultConfig = {
-            notify: true // 错误提示
+            notify: true, // 错误提示
+            loading: true
         };
         config = Object.assign(defaultConfig, config);
         if (!data) {
@@ -48,7 +48,7 @@ const http = {
             config.data = qs.stringify(data);
         }
 
-        spin.addPending();
+        config.loading && spin.addPending();
 
         const url = this.getUrl(path);
         return axios.request({
@@ -90,6 +90,9 @@ const http = {
                 }
 
                 return res.data;
+            })
+            .finally(() => {
+                config.loading && spin.removePending();
             });
     },
     ajaxWithToken: function(method, path, data, callback, errorCallback, asy, baseUrl) {

@@ -55,7 +55,7 @@
     import http from '../../http';
     import modal from '../../modal';
     import bus from '../../eventBus';
-    import { getOrderId } from '../../../ordersManage/utils/order';
+    import { getOrderId } from '../utils/order';
     import { mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
     export default{
