@@ -1,6 +1,6 @@
 <template>
     <label>
-        <input class="mui-switch mui-switch-animbg" type="checkbox" :disabled='value' :checked=''>{{label}} </label>
+        <input class="mui-switch mui-switch-animbg" type="checkbox" :disabled='disabled' :checked='value'>{{label}} </label>
 </template>
 <script>
 export default {
