@@ -70,7 +70,6 @@ function forgetVCOnClick(){
         if (!picture) {
             return false
         }
-        $(this).unbind("click");
         var that = this;
         $.ajax({
             type: "GET",
@@ -86,8 +85,8 @@ function forgetVCOnClick(){
                 if (data.code !== 1) {
                     $("#loginForgetPwd .errorTips").html(data.msg);
                     $("#loginForgetPwd .errorTips").show();
-                    wait = 0;
                 } else {
+                    $(that).unbind('click');
                     time(that);
                 }
             },
@@ -117,7 +116,6 @@ function registerVCOnClick(){
         if (!picture) {
             return false
         }
-        $(this).unbind("click");
         var that = this;
         $.ajax({
             type: "GET",
@@ -133,8 +131,8 @@ function registerVCOnClick(){
                 if(data.code !== 1){
                     $("#loginRegister .errorTips").html(data.msg);
                     $("#loginRegister .errorTips").show();
-                    wait = 0;
                 } else {
+                    $(that).unbind('click');
                     time(that);
                 }
             },
