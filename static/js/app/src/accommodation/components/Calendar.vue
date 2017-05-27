@@ -60,7 +60,7 @@
                                 :room="r.i"
                                 @click="setDirtyRoom(r)"
                             >
-                                {{r.sn}}
+                                <span>{{r.sn}}</span>
                             </div>
                             <div class="calendar-category-room fold" v-if="r.isLast && c.folded">剩余</div>
                         </template>
@@ -256,7 +256,7 @@
     .calendar-category-list {
         display: inline-block;
         vertical-align: top;
-        width: 66px;
+        width: 65px;
         margin-left: 74px;
         height: auto;
     }
@@ -264,10 +264,12 @@
         cursor: pointer;
         position: relative;
         width: 100%;
-        line-height: 48px;
         text-align: center;
         border-bottom: solid thin #e6e6e6;
         height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .calendar-category-room.fold {
         cursor: default;
