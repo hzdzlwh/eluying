@@ -12,7 +12,7 @@
                             <p class="content-item-title"><span>订单总结</span></p>
                             <span>取消金额:<span>¥{{cancelFee}}</span></span>
                             <span v-if="oldPenalty">违约金:<span>¥{{oldPenalty}}</span></span>
-                            <span style="margin-left: 24px">已付金额:<span>¥{{paid}}</span></span>
+                            <span style="margin-left: 24px">已收金额:<span>¥{{paid}}</span></span>
                         </div>
                         <div class="content-item" v-if="order && order.type !== 2">
                             <p class="content-item-title"><span>违约信息</span></p>

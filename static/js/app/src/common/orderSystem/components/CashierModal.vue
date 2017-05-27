@@ -13,7 +13,7 @@
                             <div class="cashier-order-item">
                                 <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                                <span class="cashier-money-text">已付金额:<span>¥{{ paiedMoney }}</span></span>
+                                <span class="cashier-money-text">已收金额:<span>¥{{ paiedMoney }}</span></span>
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span>
                             </div>
                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">

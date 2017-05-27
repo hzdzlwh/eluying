@@ -110,7 +110,7 @@
                                             <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额'
+                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已收金额'
                                                 : '已退金额'}}</span>
                                             <span class="money-num">¥{{Math.abs(
                                                 findTypePrice(order.payments, 14))}}</span>
@@ -156,7 +156,7 @@
                                     </span>
                                 </span>
                                 <span class="order-price-text">
-                                    {{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}
+                                    {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
                                     <span class="order-price-num grey">
                                         ¥{{Math.abs(findTypePrice(order.payments, 14))}}
                                     </span>
