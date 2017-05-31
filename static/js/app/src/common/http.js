@@ -61,11 +61,11 @@ const http = {
                     if (config.notify && res.data.code !== 5) {
                         modal.error(res.data.msg);
                     } else if (res.data.code === 5) {
-                       /* window.localStorage.clear();
+                        window.localStorage.clear();
                         modal.error('账号在别处登录。');
                         setTimeout(() => {
                             window.location.href = '/login.html';
-                        }, 3000);*/
+                        }, 3000);
                     }
 
                     Raven.captureMessage('ajax请求错误', {
