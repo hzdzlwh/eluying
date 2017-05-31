@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">可支付项目<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble' disabled='!edit'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">可支付项目<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.payAble' :disabled='!edit'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
                     <div class="vipCardBoxList" v-if='vipCard["payableItems"].length'>
                         <div class="df" v-for='(item, index) in vipCard["payableItems"]'>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">办卡方案<span class="vipCardBoxSwitch" ><switchbtn v-model='vipCard.applyAble' disabled='!edit'></switchbtn></span>
+                <div class="vipCardBoxtitle">办卡方案<span class="vipCardBoxSwitch" ><switchbtn v-model='vipCard.applyAble' :disabled='!edit'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='applyStrategyWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">使用规则<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.thresholdAble' disabled='!edit'></switchbtn></span>
+                <div class="vipCardBoxtitle">使用规则<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.thresholdAble' :disabled='!edit'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='thresholdFeeWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain vipCardRule">
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">充值<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.rechargeAble' disabled='!edit'></switchbtn></span></div>
+                <div class="vipCardBoxtitle">充值<span  class="vipCardBoxSwitch"><switchbtn v-model='vipCard.rechargeAble' :disabled='!edit'></switchbtn></span></div>
                 <div class="vipCardBoxCantain">
                     <div style="display:inline-block">
                         <div class="df" v-for='(item,index) in vipCard.rechargeItems'>
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">补办<span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.reapplyAble' disabled='!edit'></switchbtn></span>
+                <div class="vipCardBoxtitle">补办<span class="vipCardBoxSwitch"><switchbtn v-model='vipCard.reapplyAble' :disabled='!edit'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='reapplyMasterFeeWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">转赠<span class="vipCardBoxSwitch" ><switchbtn v-model='vipCard.givingAble' disabled='!edit'></switchbtn></span>
+                <div class="vipCardBoxtitle">转赠<span class="vipCardBoxSwitch" ><switchbtn v-model='vipCard.givingAble' :disabled='!edit'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='givingIntervalWarn && edit'>↑该项填写有误</div>
                 </div>
                 <div class="vipCardBoxCantain">
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="vipCardBox">
-                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn   v-model='vipCard.viceAble' disabled='!edit'></switchbtn></span>
+                <div class="vipCardBoxtitle">副卡<span class="vipCardBoxSwitch"><switchbtn   v-model='vipCard.viceAble' :disabled='!edit'></switchbtn></span>
                     <div class="vipCardBoxWarn" v-if='viceApplyFeeWarn && edit'>{{viceApplyFeeWarn === 1 ? '费用填写错误' : '数量请输入1-20之间的数字'}}</div>
                 </div>
                 <div class="vipCardBoxCantain">
