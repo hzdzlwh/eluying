@@ -1011,13 +1011,23 @@
                 http.post('/room/confirmOrder', params)
                     .then(res => {
                         this.hideModal();
-                        if (this.checkState === 'ing' || this.checkState === 'finish') {
-                            const business = {};
-                            business.businessJson = JSON.parse(JSON.stringify(params));
-                            business.businessJson.functionType = 1;
-                            business.businessJson.orderId = res.data.orderId;
-                            business.orderDetail = { ...res.data };
-                            business.cashierType = this.checkState;
+                        const business = {};
+                        business.businessJson = JSON.parse(JSON.stringify(params));
+                        business.businessJson.functionType = 1;
+                        business.businessJson.orderId = res.data.orderId;
+                        business.orderDetail = { ...res.data };
+                        business.cashierType = this.checkState;
+                        // if (this.checkState === 'ing') {
+                        //     http.post('/order/modifyRoomOrder', params)
+                        //     .then(res => {
+                        //         this.hideModal();
+                        //         bus.$emit('refreshView');
+                        //         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
+                        //     });
+                        //     bus.$emit('refreshView');
+                        //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
+                        // }
+                        if (this.checkState === 'finish') {
                             bus.$emit('showCashier', { type: 'register', business: business });
                         } else {
                             bus.$emit('refreshView');

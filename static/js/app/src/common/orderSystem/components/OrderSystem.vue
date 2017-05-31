@@ -146,9 +146,13 @@
                     });
             },
             showOrderDetail(order) {
-                this.detailType = order.type;
-                this.detailId = order.orderId;
-                this.detailVisible = true;
+                if (order) {
+                    this.detailType = order.type;
+                    this.detailId = order.orderId;
+                    this.detailVisible = true;
+                } else {
+                    this.detailVisible = true;
+                }
             },
             hideDetail() {
                 this.detailId = undefined;

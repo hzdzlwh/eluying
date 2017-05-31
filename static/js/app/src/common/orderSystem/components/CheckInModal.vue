@@ -48,7 +48,7 @@
                         <div>
                             <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{(Math.abs(finalPrice)).toFixed(2)}}</span></span>
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="finishCheckIn">去收银</div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div> <div class="dd-btn dd-btn-primary" @click="finishCheckIn">去收银</div>
                     </div>
                 </div>
             </div>
@@ -105,6 +105,10 @@
             }
         },
         methods: {
+            returnPreStep() {
+                this.hideModal();
+                bus.$emit('onShowDetail');
+            },
             hideModal() {
                 $('#checkIn').modal('hide');
             },
@@ -180,7 +184,7 @@
                     rooms: rooms.filter((room) => { return room; })
                 };
                 $('#checkIn').modal('hide');
-                bus.$emit('showCashier', { type: 'checkIn', business });
+                // bus.$emit('showCashier', { type: 'checkIn', business });
             }
         },
         components: {

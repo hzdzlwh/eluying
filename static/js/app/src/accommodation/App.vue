@@ -7,6 +7,9 @@
             <span class="acc-header-link">
                <router-link to="/orders">住宿订单</router-link>
             </span>
+            <span class="acc-header-link">
+               <router-link to="/nowOrders">单日房态</router-link>
+            </span>
         </div>
         <router-view></router-view>
         <OrderSystem></OrderSystem>

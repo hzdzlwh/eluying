@@ -1232,6 +1232,8 @@
                                 return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                             });
                             if (haveToday) {
+                                // this.hideModal();
+                                // $('#orderDetail').modal('hidden');
                                 $('#checkIn').modal({ backdrop: 'static' });
                             } else {
                                 modal.warn('未到办理入住的时间，无法入住！');

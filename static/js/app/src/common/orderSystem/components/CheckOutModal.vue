@@ -41,19 +41,19 @@
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
                             <span style="margin-left: 24px">已收金额:<span>¥{{payed}}</span></span>
                         </div>
-                        <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
+                    <!--     <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>违约信息</span></p>
                             <span style="margin-right: 24px">提前退房部分房价：￥{{noCheckInMoney}}</span>
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">{{`${ (totalPrice + (Number(penalty) || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
                                 <span class="order-price-num" :class="(totalPrice + (Number(penalty) || 0) - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice + (Number(penalty) || 0) - payed)).toFixed(2)}}</span>
                             </span>
-                            <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span>
+                            <!-- <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span> -->
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="checkOut">确认退房</div>
                     </div>
@@ -89,7 +89,7 @@
                 this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
-                            sum += (room.totalPrice - room.noCheckInMoney);
+                            sum += room.totalPrice;
                         }
                     }
                 );
@@ -120,25 +120,25 @@
 
                 return sum;
             },
-            deposit() {
-                return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
-            },
-            noCheckInMoney() {
-                let sum = 0;
-                if (!this.roomBusinessInfo.roomOrderInfoList) {
-                    return sum;
-                }
+            // deposit() {
+            //     return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
+            // },
+            // noCheckInMoney() {
+            //     let sum = 0;
+            //     if (!this.roomBusinessInfo.roomOrderInfoList) {
+            //         return sum;
+            //     }
 
-                this.roomBusinessInfo.roomOrderInfoList.map(
-                    room => {
-                        if (room.selected) {
-                            sum += room.noCheckInMoney;
-                        }
-                    }
-                );
+            //     this.roomBusinessInfo.roomOrderInfoList.map(
+            //         room => {
+            //             if (room.selected) {
+            //                 sum += room.noCheckInMoney;
+            //             }
+            //         }
+            //     );
 
-                return sum;
-            }
+            //     return sum;
+            // }
         },
         methods: {
             hideModal() {
@@ -174,7 +174,7 @@
                     business.penalty = this.penalty;
                 }
 
-                if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
+                if ( (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     http.get('/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(rooms)
