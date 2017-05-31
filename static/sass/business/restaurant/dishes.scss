@@ -28,7 +28,7 @@
   border: 1px solid #178ce6;
   border-radius: 2px;
   display: inline-block;
-  font-size: 14px;
+  font-size: 0;
   li {
     width:100px;
     line-height: 24px;
@@ -36,6 +36,10 @@
     color:#178ce6;
     text-align:center;
     display: inline-block;
+    font-size: 14px;
+    &:not(:first-child) {
+      border-left: 1px solid #178CE6;
+    }
     a.active {
       width:100px;
       height:24px;

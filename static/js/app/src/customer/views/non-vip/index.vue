@@ -1,12 +1,10 @@
 <template>
     <div class="listbox">
-        <div class="vip-search">
+        <div class="box-head">
             <div class="vip-search-container">
                 <input type="text" v-model='search' placeholder="搜索姓名/手机号" class="order-search dd-input">
                 <span class="vip-search-icon" @click='fetchDate'><img src="//static.dingdandao.com/order_manage_search_grey.png" alt=""></span>
             </div>
-        </div>
-        <div class="box-head">
             <div class="add-button">
                 <div class="dd-dropdown">
                         <span class="dd-btn-primary dd-btn"><a :href="outPutText()" download>导出明细</a></span>
@@ -100,8 +98,9 @@
 }
 
 .box-head {
-    margin-bottom: 8px;
-    clear: both;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 21px;
     overflow: auto;
 }
 
@@ -109,14 +108,12 @@
     margin-bottom: 20px;
 }
 
-.vip-search,
 .add-button {
-    float: right;
     display: inline-block;
     margin-left: 15px;
 }
 </style>
-<script>
+<script type="text/jsx">
 import {
     DdPagination,
     DdSelect,
@@ -172,23 +169,23 @@ export default {
                 sorter: true
             }, {
                 title: '首单日期',
-                render: (h, row) => < span > {
+                render: (h, row) => <span> {
                         row.firstOrderTime
-                    } < /span>,
+                    } </span>,
                 dataIndex: 'firstOrderTime',
                 sorter: true
             }, {
                 title: '最近订单日期',
-                render: (h, row) => < span > {
+                render: (h, row) => <span> {
                         row.recentOrderTime
-                    } < /span>,
+                    } </span>,
                 dataIndex: 'recentOrderTime',
                 sorter: true
             }, {
                 title: '操作',
                 render: (h, row) =>
-                        < span > {
-                        this.contral.VIP_EDIT_ID ? < span onClick = {
+                        <span> {
+                        this.contral.VIP_EDIT_ID ? <span onClick = {
                             () => this.openDetailDialog(row, 1)
                         }> 加入会员 /</span> : '' }
                         <span onClick = {
@@ -205,20 +202,21 @@ export default {
         detailClose: function() {
             this.detailVisible = false;
         },
-        openDetailDialog: function(date, type) {
+        openDetailDialog: function(data, type) {
             if (type) {
                 this.formdata = {
-                    name: date.name,
-                    phone: date.phone,
-                    customerId: date.customerId,
+                    name: data.name,
+                    phone: data.phone,
+                    customerId: data.customerId,
                     vipLevelId: ''
 
                 };
                 $('#vipForm').modal('show');
                 this.formvisible = true;
             } else {
-                this.detailid = date.phone;
+                this.detailid = Number(data.phone);
                 this.detailVisible = true;
+                this.detailTitle = data.name;
             }
         },
         changeSort: function(value) {

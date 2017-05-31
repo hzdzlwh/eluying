@@ -27,18 +27,15 @@
         data() {
             return {
                 routes: []
-            }
+            };
         },
         created() {
             this.routes = this.$route.matched[1].meta.children;
         },
         watch: {
-            ['$route.path']() {
+            '$route.path'() {
                 this.routes = this.$route.matched[1].meta.children;
             }
-        },
-        methods: {
-        
         }
-    }
+    };
 </script>

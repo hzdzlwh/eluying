@@ -50,10 +50,10 @@ export default function (option) {
         option.leftMenu && LeftMenu.render();
         option.topMenu && TopMenu.render(option.topMenu);
         modal.modalInit();
-        option.centerModals && modal.centerModals();
+        // option.centerModals && modal.centerModals();
         const events = {
             "resize window": util.mainContainer,
-            "show.bs.modal body .modal": modal.centerModals,
+            // "show.bs.modal body .modal": modal.centerModals,
         };
 
         if (option.clearModal) {

@@ -14,11 +14,10 @@
         </div>
     </div>
 </template>
-<script>
+<script type="text/jsx">
     import { mapState } from 'vuex';
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from '../../common/http';
-    import util from '../../common/util';
     const sexMap = {
         '1': '男',
         '2': '女'
@@ -54,7 +53,7 @@
         },
         components: {
             DdTable,
-            DdPagination,
+            DdPagination
         },
         data() {
             return {
@@ -62,7 +61,7 @@
                 columns: [
                     {
                         title: '订单号／创建时间',
-                        render: (h, row) => (<span><span>{row.serialNum}</span><br /><small><i>{row.date}</i></small></span>),
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.date}</i></small></span>),
                         width: 188
                     },
                     {
@@ -167,7 +166,7 @@
                 num: undefined,
                 totalPrice: undefined,
                 pages: undefined
-            }
+            };
         },
         methods: {
             query(page) {
@@ -175,7 +174,7 @@
                     return false;
                 }
 
-                this.page = page ? page : this.page;
+                this.page = page || this.page;
 
                 http.get('/order/listInsurancePC', {
                     startDate: this.date.startDate,
@@ -206,5 +205,5 @@
                 return `${host}?${params}`;
             }
         }
-    }
+    };
 </script>

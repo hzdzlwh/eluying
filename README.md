@@ -50,6 +50,7 @@ http.post(url, data, config)
 ```js
 config = {
     notify: Boolean // 是否modal.error后端错误信息，默认为true
+    loading: true // 是否加载动画，默认true
 }
 ````
 source: common\http.js
@@ -134,3 +135,17 @@ id名驼峰
 
 ## git commit提交
 http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
+
+### orderSystem
+```js
+import { install, OrderSystem } '../common/orderSystem';
+install(store);
+
+// .vue
+<template>
+<OrderSystem />
+</template>
+
+// 事件
+bus.$on('refreshView')
+```

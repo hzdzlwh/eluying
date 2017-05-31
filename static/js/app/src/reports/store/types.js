@@ -3,4 +3,4 @@
  */
 export default {
     SET_DATE: 'setDate'
-}
+};

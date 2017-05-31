@@ -36,7 +36,7 @@
 <style>
 
 </style>
-<script>
+<script type="text/jsx">
     import { mapState } from 'vuex';
     import http from '../../../common/http';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
@@ -48,7 +48,7 @@
                     {
                         title: '订单号/创建时间',
                         width: 216,
-                        render: (h, row) => (<span><span>{row.serialNum}</span><br /><small><i>{row.creationTime}</i></small></span>),
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.creationTime}</i></small></span>)
                     },
                     {
                         title: '创建人',
@@ -96,7 +96,7 @@
                         id: -1
                     }
                 ]
-            }
+            };
         },
         computed: {
             ...mapState(['date'])
@@ -142,10 +142,10 @@
                             const salesStat = res.data.salesStat;
                             setBar(salesStat.items.map(i => i.value), '金额（元）', salesStat.items.map(i => i.date.substr(5, 5)));
                         }
-                    })
+                    });
             },
             getSalesRecordList(page) {
-                this.page = page ? page : this.page;
+                this.page = page || this.page;
 
                 http.get('/stat/getSalesRecordList', {
                     startDate: this.date.startDate,
@@ -169,7 +169,7 @@
                         if (res.code === 1) {
                             this.employeeList = [...this.employeeList, ...res.data.list];
                         }
-                })
+                    });
             },
             getChannels() {
                 http.get('/user/getChannels', { type: 2, isAll: true })
@@ -177,7 +177,7 @@
                         if (res.code === 1) {
                             this.origins = [...this.origins, ...res.data.list];
                         }
-                })
+                    });
             },
             exportUrl(type) {
                 const paramsObj = {
@@ -195,5 +195,5 @@
                 return `${host}?${params}`;
             }
         }
-    }
+    };
 </script>

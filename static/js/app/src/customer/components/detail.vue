@@ -17,8 +17,8 @@
                             </li>
                         </ul>
                         <div v-if="innerTab === 1 && hasEditAuth">
-                            <button class="dd-btn dd-btn-primary" @click="onDelete(id)">删除</button>
-                            <button class="dd-btn dd-btn-primary" @click="onEdit(id)">编辑</button>
+                            <a style="margin-right:12px" @click="onDelete(id)">删除</a>
+                            <a @click="onEdit(id)">编辑</a>
                         </div>
                     </div>
                 </div>
@@ -26,14 +26,14 @@
                     <div v-if="innerTab === 1">
                         <slot></slot>
                     </div>
-                    <div v-if="innerTab === 2">
+                    <div v-if="innerTab === 2" style="padding: 24px 24px 15px 24px">
                         <div class="detail-content-filter">
                             <div style="width: 88px" v-if="type !== 'company'">
                                 <dd-select v-model="state">
                                     <dd-option :key="state.id" v-for="state in states" :value="state.id" :label="state.name"></dd-option>
                                 </dd-select>
                             </div>
-                            <div>
+                            <div class="use-time">
                                 <span>使用时间：</span>
                                 <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" />
                                 <span>～</span>
@@ -81,23 +81,29 @@
             background: #fafafa;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
             border-radius: 2px;
-            height: 705px;
-            padding: 24px;
+            min-height: 609px;
+            padding: 0;
         }
         .detail-header {
             border-bottom: #e6e6e6 solid 1px;
-            margin: 0 -24px;
-            padding: 0 24px 24px;
+            padding: 20px 20px 16px 20px;
         }
         .detail-header-title {
             margin-bottom: 18px;
+            h4{
+                font-size: 16px;
+            }
         }
         .detail-header-title, .detail-header-action {
             display: flex;
             justify-content: space-between;
+            a:hover{
+                cursor: pointer;
+                text-decoration:none
+            }
         }
         .detail-content-box {
-            padding-top: 24px;
+
         }
         .detail-content-filter {
             display: flex;
@@ -114,6 +120,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        .use-time{
+            .dd-input{
+                width: 166px;
+            }
         }
         .search {
             width: 217px;
@@ -193,6 +204,10 @@
         {
             name: '已取消',
             id: 4
+        },
+        {
+            name: '反结账',
+            id: 8
         }
     ];
 
