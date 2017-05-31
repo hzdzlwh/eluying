@@ -34,10 +34,10 @@
                                       :class="!order.caterOrderId ? 'cursor' : ''">
                                 </span>
                             </div>
-                            <span class="discount-info" v-if="item.vipShowDiscount" style="top: 14px">
+                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
                                 <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                 <span class="discount-num">
-                                    {{ item.vipShowDiscount }}
+                                    {{ item.showDiscount }}
                                 </span>
                             </span>
                         </div>
@@ -197,7 +197,7 @@
                     obj.date = this.order.expectStartTime;
                     obj.foodPrice = this.order.totalPrice;
                     obj.originTotalPrice = this.order.originTotalPrice;
-                    obj.vipShowDiscount = this.order.vipShowDiscount;
+                    obj.showDiscount = this.order.showDiscount;
                     foodItems[0] = obj;
                 } else {
                     foodItems = this.order.foodItems;
