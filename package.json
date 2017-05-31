@@ -5,6 +5,7 @@
   "dependencies": {
     "angular": "^1.5.3",
     "axios": "^0.16.1",
+    "blueimp-gallery": "^2.25.0",
     "core-js": "^2.4.1",
     "dd-common-css": "0.2.2",
     "dd-vue-component": "1.0.2",

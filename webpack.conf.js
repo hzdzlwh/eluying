@@ -45,7 +45,7 @@ var webpackConf = {
             { test: /\.vue$/, loader: 'vue' },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.css$/, loaders: ['style', 'css'] },
-            { test: /\.(png|jpg|woff|woff2|eot|ttf|svg)/, loader: 'url-loader?limit=100000' }
+            { test: /\.(png|jpg|woff|woff2|eot|ttf|svg|gif)/, loader: 'url-loader?limit=100000' }
         ]
     },
     vue: {

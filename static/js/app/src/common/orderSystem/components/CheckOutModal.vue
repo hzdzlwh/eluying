@@ -174,10 +174,17 @@
                     business.penalty = this.penalty;
                 }
 
-                if ( (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
+                if ((this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
+                    const roomsFix = rooms;
+                    roomsFix.forEach(function(element, index) {
+                        if (element === null) {
+                            roomsFix.splice(index, 1);
+                        }
+                    });
+                    // 清理rooms里为nu l l的值，如果要改回原来的用就行了
                     http.get('/order/checkInOrCheckout', {
                         ...business,
-                        rooms: JSON.stringify(rooms)
+                        rooms: JSON.stringify(roomsFix)
                     })
                         .then(res => {
                             this.hideModal();

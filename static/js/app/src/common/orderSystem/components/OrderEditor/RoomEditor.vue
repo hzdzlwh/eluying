@@ -187,7 +187,8 @@
                 quickDiscounts: [],
                 forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
                 lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
-                discountPlans: []
+                discountPlans: [],
+                timestamp: 0
             };
         },
         created() {
@@ -723,7 +724,9 @@
                 };
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
-                        if (res.code === 1) {
+                        // 嘻嘻
+                        if (res.data.timestamp > this.timestamp) {
+                            this.timestamp = res.data.timestamp;
                             res.data.list.map((item, index) => {
                                 const currentRoom = rooms[index];
                                 currentRoom.datePriceList = item.datePriceList.map(i => {

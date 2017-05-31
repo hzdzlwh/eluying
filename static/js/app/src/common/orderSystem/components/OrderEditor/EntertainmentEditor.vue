@@ -49,16 +49,6 @@
                                 <p class="fee-container">
                                     <span class="fee-symbol">¥</span>
                                     <input type="number" class="dd-input fee-input" style="width: 80px" v-model="item.totalPrice" />
-                                    <span style="display:none">¥{{ item.originPrice * item.count * item.timeAmount}}</span>
-                                    <span style="display:none">¥{{ vipDiscountDetail.vipDetail
-                                          && getItemDiscountInfo(item.nodeId).discount < 1}}</span>
-                                    <span style="display:none">¥{{ !!vipDiscountDetail.vipDetail
-                                          }}</span>
-<span style="display:none">¥{{ getItemDiscountInfo(item.nodeId).discount
-                                          }}</span>
-
-<span style="display:none">¥{{ item.nodeId
-                                          }}</span>
                                 </p>
                             </p>
                         </div>
@@ -67,11 +57,11 @@
                                     </span>
                     <span v-if="item.usedAmount > 0" class="delete-icon-like"></span>
                     <span class="discount-info" style="top: 28px" v-if="vipDiscountDetail.vipDetail
-                                          && getItemDiscountInfo(item.nodeId).discount < 1">
-                                            <span>原价<span class="origin-price">¥{{ (item.originPrice * item.count * item.timeAmount).toFixed(2)}}</span></span>
-                    <span class="discount-num" v-if="Number(item.totalPrice) === Number(((item['price']
+                                          && getItemDiscountInfo(item.nodeId).discount < 1 && Number(item.totalPrice) === Number(((item['price']
                                                                          * getItemDiscountInfo(item.nodeId).discount).toFixed(2)
                                                                          * item.count * item.timeAmount).toFixed(2))">
+                                            <span>原价<span class="origin-price">¥{{ (item.originPrice * item.count * item.timeAmount).toFixed(2)}}</span></span>
+                    <span class="discount-num" >
                                                 {{`${vipDiscountDetail.tag} ${(getItemDiscountInfo(item.nodeId, item.type, vipDiscountDetail).discount * 10).toFixed(1)}折`}}
                                             </span>
                     </span>
@@ -125,7 +115,8 @@ export default {
             enterItems: this.getplayItems(),
             orderType: this.order.playItems ? 1 : 0, // 1组合订单，0子订单
             ORDER_TYPE,
-            totalprice: 0
+            totalprice: 0,
+            discountFlag: false// 判断是否是初始化
         };
     },
     watch: {
@@ -133,6 +124,8 @@ export default {
             handler(c, o) {
                 this.enterItems = this.getplayItems();
                 this.orderType = (this.order.playItems || this.order.campName === undefined) ? 1 : 0;
+                this.discountFlag = false;
+                // 在预定完成后也需要修改状态
                 // 如果是预定order为空的也判断为组合订单
             }
         },
@@ -164,6 +157,11 @@ export default {
                     this.$emit('priceChange', totalprice);
                     return false;
                 }
+                if (this.enterItems.length && !this.discountFlag) {
+                    this.discountFlag = true;
+                    return;
+                }
+                // 防止初始化的时候更改价格，显示原价
                 // if (c.vipDetail.vipId !== o.vipDetail.vipId) {
                 this.enterItems.forEach((el) => {
                     const newPrice = Number(((el['price'] * _this.getItemDiscountInfo(el.nodeId).discount).toFixed(2) * el.count * el.timeAmount).toFixed(2));
@@ -174,12 +172,20 @@ export default {
                 });
                 // }
                 this.$emit('priceChange', totalprice);
-            }
+            },
+            deep: true
         }
     },
     created() {
         // 确认按钮事件
         bus.$on('submitOrder', this.emitchange);
+        bus.$on('refreshView', this.resetOrder);
+        bus.$on('hideOrderEditor', this.resetOrder);
+    },
+    beforeDestroy() {
+        bus.$off('submitOrder', this.emitchange);
+        bus.$off('refreshView', this.resetOrder);
+        bus.$off('hideOrderEditor', this.resetOrder);
     },
     components: {
         DdDatepicker,
@@ -190,6 +196,9 @@ export default {
         ...mapState({ enterList: state => state.orderSystem.enterList })
     },
     methods: {
+        resetOrder() {
+            this.discountFlag = false;
+        },
         emitchange() {
             this.$emit('change', this.enterItems);
         },
@@ -256,7 +265,8 @@ export default {
                 modal.warn('请到"网络设置－业务设置"中添加娱乐项目！');
                 return false;
             }
-
+            this.discountFlag = true;
+            // 编辑组合订单的时候吧初始化的时候防止修改给去掉
             this.enterSelectModalShow = true;
         },
         showEnterSelectModal(index) {
@@ -292,7 +302,6 @@ export default {
                     }
                 });
             }
-
             return item;
         },
         modifyEnter(item) {
