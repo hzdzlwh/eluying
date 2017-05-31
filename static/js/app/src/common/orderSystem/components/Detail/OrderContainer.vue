@@ -66,6 +66,11 @@
                         <div class="content-item" v-if="this.order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{ order.remark || '无' }}</div>
+                            <div v-if="order.remarkPic">
+                                <a class="remark-img" v-for="pic in order.remarkPic" :href="pic" data-gallery>
+                                    <img :src="pic">
+                                </a>
+                            </div>
                         </div>
                         <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
@@ -217,10 +222,30 @@
             </div>
         </div>
         <Insurance :order="order"/>
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <ol class="indicator"></ol>
+        </div>
     </div>
 </template>
 <style lang="scss">
     @import "~dd-common-css/src/variables";
+
+    .blueimp-gallery {
+        background: rgba(0,0,0,.8)!important;
+    }
+    .remark-img {
+        display: inline-block;
+        margin-right: 8px;
+        margin-top: 11px;
+        img {
+            height: 72px;
+        }
+    }
 
     #orderDetail {
         .label-text {
@@ -628,7 +653,7 @@
 
     .roomModals-body {
         width: 100%;
-        max-height: 485px;
+        max-height: 534px;
         overflow-y: auto;
         overflow-x: hidden;
         label {
@@ -1015,6 +1040,9 @@
     import Insurance from './Insurance.vue';
     import types from '../../store/types';
     import modal from '../../../modal';
+    require('blueimp-gallery/js/jquery.blueimp-gallery.min');
+    import 'blueimp-gallery/css/blueimp-gallery.css';
+
     export default{
         data() {
             return {
