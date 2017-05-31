@@ -55,7 +55,7 @@
                             </span>
                             <!-- <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span> -->
                         </div>
-                        <div class="dd-btn dd-btn-primary" @click="checkOut">确认退房</div>
+                        <div><div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div><div class="dd-btn dd-btn-primary" @click="checkOut">确认退房</div></div>
                     </div>
                 </div>
             </div>
@@ -141,6 +141,10 @@
             // }
         },
         methods: {
+            returnPreStep() {
+                this.hideModal();
+                bus.$emit('onShowDetail');
+            },
             hideModal() {
                 this.penalty = undefined;
                 $('#checkOut').modal('hide');

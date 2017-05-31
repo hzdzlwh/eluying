@@ -1031,6 +1031,9 @@
                         //     bus.$emit('refreshView');
                         //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
                         // }
+                        if (this.checkState === 'ing') {
+                            bus.$emit('refreshView');
+                        }
                         if (this.checkState === 'finish') {
                             bus.$emit('showCashier', { type: 'register', business: business });
                         } else {

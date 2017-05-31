@@ -44,11 +44,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="roomModals-footer">
-                        <div>
+                    <div class="roomModals-footer" style="justify-content: flex-end;">
+                        <!-- <div>
                             <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{(Math.abs(finalPrice)).toFixed(2)}}</span></span>
+                        </div> -->
+                        <div style="float:right">
+                            <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div> <div class="dd-btn dd-btn-primary" @click="finishCheckIn">确认入住</div>
                         </div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div> <div class="dd-btn dd-btn-primary" @click="finishCheckIn">去收银</div>
                     </div>
                 </div>
             </div>
@@ -63,6 +65,7 @@
     import CheckInPerson from './CheckInPerson.vue';
     import { mapState } from 'vuex';
     import bus from '../../eventBus';
+    import http from 'http';
     export default{
         data() {
             return {};
@@ -88,21 +91,21 @@
                     return rooms;
                 }
             },
-            finalPrice() {
-                let price = 0;
-                if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomsList.forEach(item => {
-                        if (item.selected) {
-                            item.payments.forEach(pay => {
-                                if (pay.type === 15) {
-                                    price += pay.fee;
-                                }
-                            });
-                        }
-                    });
-                }
-                return price;
-            }
+            // finalPrice() {
+            //     let price = 0;
+            //     if (this.roomBusinessInfo.roomOrderInfoList) {
+            //         this.roomsList.forEach(item => {
+            //             if (item.selected) {
+            //                 item.payments.forEach(pay => {
+            //                     if (pay.type === 15) {
+            //                         price += pay.fee;
+            //                     }
+            //                 });
+            //             }
+            //         });
+            //     }
+            //     return price;
+            // }
         },
         methods: {
             returnPreStep() {
@@ -181,9 +184,12 @@
                     functionType: 1,
                     type: 0,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: rooms.filter((room) => { return room; })
+                    rooms: JSON.stringify(rooms.filter((room) => { return room; }))
                 };
-                $('#checkIn').modal('hide');
+                http.get('/order/checkInOrCheckout', business).then(res => {
+                    $('#checkIn').modal('hide');
+                    bus.$emit('refreshView');
+                });
                 // bus.$emit('showCashier', { type: 'checkIn', business });
             }
         },
