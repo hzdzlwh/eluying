@@ -18,6 +18,7 @@ import dealDetail from './views/membership/dealDetail.vue';
 import payStatistics from './views/membership/payStatistics.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
+import receivable from './views/overview/flow/receivable.vue';
 import flowPrepiad from './views/overview/flow/prepaid.vue';
 import insurance from './views/insurance.vue';
 import auth from '../common/auth';
@@ -73,6 +74,13 @@ export const routes = [
                         component: flowPrepiad,
                         meta: {
                             name: '预收账款'
+                        }
+                    },
+                    {
+                        path: '/overview/flow/receivable',
+                        component: receivable,
+                        meta: {
+                            name: '应收账款'
                         }
                     }
                 ]

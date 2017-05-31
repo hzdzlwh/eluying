@@ -30,6 +30,11 @@
                 </dd-dropdown>
             </div>
         </div>
+        <dd-table :columns="columns" :data-source="dataSource" :bordered="true"></dd-table>
+        <div style="display: flex;justify-content: space-between;margin-top: 20px">
+            <span>共计{{num}}笔记录 累计金额¥ {{totalPrice}}</span>
+            <dd-pagination @currentchange="" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="page" />
+        </div>
     </div>
 </template>
 
@@ -40,10 +45,14 @@
     export default {
         data() {
             return {
-                allEnterprise: '',
-                allType: '',
+                allEnterprise: -1,
+                allType: -1,
                 keyword: '',
                 enterprises: [
+                    {
+                        id: -1,
+                        name: '全部企业'
+                    },
                     {
                         id: 0,
                         name: '阿里巴巴'
@@ -55,6 +64,10 @@
                 ],
                 types: [
                     {
+                        id: -1,
+                        name: '全部类型'
+                    },
+                    {
                         id: 0,
                         name: '消费'
                     },
@@ -62,7 +75,65 @@
                         id: 1,
                         name: '结算'
                     }
-                ]
+                ],
+                columns: [
+                    {
+                        title: '订单号/操作时间',
+                        render: (h, row) => (<span><span class="js-order-num">{row.a}</span><br /><small><i>{row.creationTime}</i></small></span>),
+                        width: 188
+                    },
+                    {
+                        title: '客户姓名',
+                        dataIndex: 'b'
+                    },
+                    {
+                        title: '手机号',
+                        dataIndex: 'c'
+                    },
+                    {
+                        title: '企业名称',
+                        dataIndex: 'd'
+                    },
+                    {
+                        title: '类型',
+                        dataIndex: 'e'
+                    },
+                    {
+                        title: '金额',
+                        dataIndex: 'f'
+                    },
+                    {
+                        title: '支付方式',
+                        dataIndex: 'g'
+                    },
+                    {
+                        title: '交易号',
+                        dataIndex: 'h'
+                    },
+                    {
+                        title: '操作人',
+                        dataIndex: 'i'
+                    }
+
+                ],
+                dataSource: [
+                    {
+                        a: '1112323422421242',
+                        creationTime: '2017-05-27',
+                        b: '张三',
+                        c: 15888888888,
+                        d: '阿里巴吧',
+                        e: '消费',
+                        f: 500,
+                        g: '企业挂账',
+                        h: '3838884736257477',
+                        i: '李四'
+                    }
+                ],
+                num: undefined,
+                totalPrice: undefined,
+                pages: 3,
+                page: 1
             };
         },
         computed: {
