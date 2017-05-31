@@ -2,7 +2,7 @@
     <div class="outer-container">
         <header class="outer-title">
             <h4>{{title}}</h4>
-            <a><span>+</span>{{add}}</a>
+            <a @click="openModel"><span>+</span>{{add}}</a>
         </header>
         <slot></slot>
     </div>
@@ -13,6 +13,15 @@
         props: {
             title: '',
             add: '',
+        },
+        methods: {
+            openModel() {
+                if(this.title === '消费项目') {
+                    this.$emit('openItemModal');
+                } else {
+                    this.$emit('openClassifyModal');
+                }
+            }
         }
     }
 </script>

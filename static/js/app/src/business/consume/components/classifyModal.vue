@@ -1,0 +1,58 @@
+<template>
+    <div>
+        <div class="modal fade" id="classifyModal" role="dialog" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="classify-modal-header">
+                        <h4 v-if="!classifyProps.name">新增分类</h4>
+                        <h4 v-if="classifyProps.name">修改分类</h4>
+                    </div>
+                    <div class="classify-modal-body">
+                        <div>
+                            <span>分类名称</span><input type="text" v-model="classify.name">
+                            <span v-if="classify.name && classify.name.length > 10">格式错误</span>
+                        </div>
+                    </div>
+                    <div class="classify-modal-footer">
+                        <button class="dd-btn dd-btn-primary" @click="addClassify">确定</button>
+                        <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import http from '../../../common/http';
+
+    export default {
+        props: {
+            classifyProps: Object
+        },
+        data() {
+            return {
+                classify: {}
+            }
+        },
+        methods: {
+            addClassify() {
+                http.get('/goods/addOtherGoodsType', {name: this.classify.name}).then(res => {
+                    if (res.code === 1) {
+                        $('#classifyModal').modal('hide');
+                        this.$emit('onSuccess');
+                    }
+                });
+            }
+        },
+        watch: {
+            classifyProps(val) {
+                this.classify = { ...val };
+            }
+        }
+    }
+</script>
+
+<style lang="scss" rel="stylesheet/scss">
+    
+</style>
