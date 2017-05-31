@@ -167,22 +167,23 @@ const http = {
         return this.request('post', path, data, config);
     },
     getDataWithToken: function(data) {
-        data.timestamp = (new Date()).valueOf();
-        data.campId = data.campId || localStorage.getItem('campId');
-        data.uid = localStorage.getItem('uid');
-        data.terminal = 1;
-        data.version = data.version || -1;
-        data.kick = true;
+        const result = { ...data };
+        result.timestamp = (new Date()).valueOf();
+        result.campId = data.campId || localStorage.getItem('campId');
+        result.uid = localStorage.getItem('uid');
+        result.terminal = 1;
+        result.version = data.version || -1;
+        result.kick = true;
         const array = [];
-        for (const key in data) {
-            array.push(data[key]);
+        for (const key in result) {
+            array.push(result[key]);
         }
 
         array.push(localStorage.getItem('token'));
         array.sort();
         const str = array.join('');
-        data.sign = md5(str);
-        return data;
+        result.sign = md5(str);
+        return result;
     },
     paramsToString: function(params) {
         const paramsArray = [];
