@@ -175,8 +175,8 @@
                 if (business.type === 2) {
                     business.penalty = this.penalty;
                 }
-                if (this.penalty <= 0 ) {
-                    modal.warn('请输入zheng违约金！');
+                if (this.penalty <= 0) {
+                    modal.warn('请输入正确格式的违约金');
                     return false;
                 }
                 if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
@@ -204,6 +204,7 @@
                     if (this.PenaltyFee) {
                         business.PenaltyFee = business.penalty;
                     }
+                    this.PenaltyFee = false;
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
                 }
