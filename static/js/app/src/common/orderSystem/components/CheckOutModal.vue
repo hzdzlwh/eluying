@@ -144,7 +144,7 @@
         },
         methods: {
             hideModal() {
-                this.penalty = undefined;
+                // this.penalty = undefined;
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
