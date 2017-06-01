@@ -155,7 +155,9 @@
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
-                    business.PenaltyFewe = this.PenaltyFewe;
+                    if (this.PenaltyFewe) {
+                        business.PenaltyFewe = totalPenalty;
+                    }
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
                 }
