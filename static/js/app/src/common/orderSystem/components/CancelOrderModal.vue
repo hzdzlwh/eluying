@@ -72,7 +72,7 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                PenaltyFee: false
+                PenaltyFee: true
             };
         },
         computed: {
@@ -158,7 +158,7 @@
                     if (this.PenaltyFee) {
                         business.PenaltyFee = Number(totalPenalty);
                     }
-                    this.PenaltyFee = false;
+                    this.PenaltyFee = true;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
                 }
