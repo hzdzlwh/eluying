@@ -323,8 +323,8 @@ export default {
                         operationType,
                         orderId
                     };
-                    if (this.business.PenaltyFewe) {
-                        params.penalty = this.business.PenaltyFewe;
+                    if (this.business.PenaltyFee) {
+                        params.penalty = this.business.PenaltyFee;
                     }
                 }
             return params;
