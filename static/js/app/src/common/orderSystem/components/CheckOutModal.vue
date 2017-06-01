@@ -144,7 +144,7 @@
         },
         methods: {
             hideModal() {
-                // this.penalty = undefined;
+                this.penalty = undefined;
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
@@ -199,7 +199,7 @@
                     business.functionType = 1;
                     this.hideModal();
                     if (this.PenaltyFee) {
-                        business.PenaltyFee = Number(this.penalty);
+                        business.PenaltyFee = business.penalty;
                     }
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
