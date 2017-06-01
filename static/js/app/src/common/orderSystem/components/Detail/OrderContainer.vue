@@ -146,6 +146,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px">收银明细</span>
                             </div>
                             <div class="footer-price">
                                 <span class="order-price-text">
@@ -222,6 +223,7 @@
             </div>
         </div>
         <Insurance :order="order"/>
+        <CashDetail :show="cashDetailShow" :onClose="closeCashDetail"/>
         <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
             <div class="slides"></div>
             <h3 class="title"></h3>
@@ -1042,12 +1044,14 @@
     import modal from '../../../modal';
     require('blueimp-gallery/js/jquery.blueimp-gallery.min');
     import 'blueimp-gallery/css/blueimp-gallery.css';
+    import CashDetail from './CashDetail.vue';
 
     export default{
         data() {
             return {
                 readOnly: true,
                 ORDER_STATUS_ICON,
+                cashDetailShow: false,
                 ORDER_TYPE,
                 reseturl: {
                     '-1': 'resettleCombinedOrder',
@@ -1233,6 +1237,12 @@
             },
             openInsurance() {
                 $('#insuranceDialog').modal('show');
+            },
+            openCashDetail() {
+                this.cashDetailShow = true;
+            },
+            closeCashDetail() {
+                this.cashDetailShow = false;
             },
             editOrder() {
                 this.hideModal();
