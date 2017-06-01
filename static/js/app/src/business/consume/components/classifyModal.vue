@@ -10,7 +10,7 @@
                     <div class="classify-modal-body">
                         <div>
                             <span>分类名称</span><input type="text" v-model="classify.name">
-                            <span v-if="classify.name && classify.name.length > 10">格式错误</span>
+                            <span v-if="classify.name && (!nameReg.test(classify.name) || classify.name.length > 10)">格式错误</span>
                         </div>
                     </div>
                     <div class="classify-modal-footer">
@@ -32,11 +32,16 @@
         },
         data() {
             return {
-                classify: {}
+                classify: {},
+                nameReg: /[\w\u4e00-\u9fa5]/,
             }
         },
         methods: {
             addClassify() {
+                if (!this.nameReg.test(this.classify.name) || this.classify.name.length > 10 || this.classify.name === '') {
+                    return false;
+                }
+                
                 let url = this.classify.goodsTypeId ? 'goods/editOtherGoodsType' : '/goods/addOtherGoodsType';
                 http.get(url, this.classify).then(res => {
                     if (res.code === 1) {

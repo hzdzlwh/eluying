@@ -10,6 +10,7 @@
                     <div class="item-modal-body">
                         <div>
                             <span>名称：</span><input type="text" v-model="item.name">
+                            <span v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
                         <div>
                             <span>分类：</span>
@@ -19,9 +20,11 @@
                         </div>
                         <div>
                             <span>单位：</span><input type="text" v-model="item.unit">
+                            <span v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
-                            <span>默认价格：</span><input type="text" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" style="padding-left:11px" v-model="item.price">
+                            <span v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
@@ -45,7 +48,9 @@
         data() {
             return {
                 item: {},
-                goodsTypeId: 0
+                goodsTypeId: 0,
+                nameReg: /[\w\u4e00-\u9fa5]/,
+                priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
             }
         },
         computed: {
@@ -58,6 +63,9 @@
         },
         methods: {
             addItem() {
+                if ( this.item.price === '' || !this.priceReg.test(this.item.price) || (!this.nameReg.test(this.item.unit) || this.item.unit.length > 5) || (!this.nameReg.test(this.item.name) || this.item.name.length > 20)) {
+                    return false;
+                }
                 let url = this.item.newAdd ? '/goods/addOtherGoods' : '/goods/editOtherGoods';
                 http.get(url, { goodsTypeId: this.goodsTypeId, name: this.item.name, price: Number(this.item.price), unit: this.item.unit, goodsId: this.item.goodsId }).then(res => {
                     if (res.code === 1) {
@@ -78,5 +86,12 @@
 <style lang="scss" rel="stylesheet/scss">
     .modal-content{
         border-top: 4px solid #178ce6;
+    }
+    .default-price{
+        &:after {
+            content: '￥';
+            position: absolute;
+            line-height: 20px;
+        }
     }
 </style>

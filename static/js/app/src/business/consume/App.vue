@@ -1,34 +1,38 @@
 <template>
     <div>
-        <outer-container style="width:600px; float:left;" :title='consumeItem' :add="addItem" @openItemModal="openItemModal">
-            <div v-for="item in itemLists">
-                <h4>{{item.name}}</h4>
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>名称</th>
-                            <th>分类</th>
-                            <th>单位</th>
-                            <th>默认价格</th>
-                            <th>状态</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="list in item.childList">
-                            <td>{{list.name}}</td>
-                            <td>{{list.goodsTypeName}}</td>
-                            <td>{{list.unit}}</td>
-                            <td>{{list.price}}</td>
-                            <td><switchbtn @click.native="sendState(list)" v-model="list.state"></switchbtn></td>
-                            <td><span @click="openItemModal(list)">修改</span>/<span @click="deleteItem(list.goodsId)">删除</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <outer-container style="width:745px; float:left;" :title='consumeItem' :add="addItem" @openItemModal="openItemModal">
+            <div class="item-wrap">
+                <div v-for="item in itemLists">
+                    <h4>{{item.name}}</h4>
+                    <div class="table-wrap">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>分类</th>
+                                    <th>单位</th>
+                                    <th>默认价格</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="list in item.childList">
+                                    <td>{{list.name}}</td>
+                                    <td>{{list.goodsTypeName}}</td>
+                                    <td>{{list.unit}}</td>
+                                    <td>{{list.price}}</td>
+                                    <td><switchbtn @click.native="sendState(list)" v-model="list.state"></switchbtn></td>
+                                    <td><span @click="openItemModal(list)">修改</span>/<span @click="deleteItem(list.goodsId)">删除</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </outer-container>
-        <outer-container style="width:200px; position:fixed; margin-left:620px;" :title='classifyManage' :add="addClassify" @openClassifyModal="openClassifyModal">
-            <div>
+        <outer-container style="width:176px; position:fixed; margin-left:775px;" :title='classifyManage' :add="addClassify" @openClassifyModal="openClassifyModal">
+            <div class="classify-tableWrap">
                 <table style="width: 100%;">
                     <thead>
                         <tr>
@@ -87,7 +91,6 @@
            },
            getItemList() {
                 http.get('/goods/getOtherGoodsList', {}).then(res => {
-                    console.log(res);
                     if (res.code === 1) {
                         this.itemLists = res.data.list;
                         this.itemNames = res.data.list.map(item => {
@@ -141,6 +144,39 @@
     }
 </script>
 
-<style>
-    
+<style lang="scss" rel="stylesheet/scss">
+    tbody {
+        tr {
+            td:last-child{
+                color: #178CE6;
+                cursor: pointer;
+
+            }
+        }
+    }
+    .item-wrap{
+        padding: 20px 15px;
+        & > div {
+            border: 1px solid #d4d4d4;
+            margin-bottom: 30px;
+            h4{
+                height: 30px;
+                line-height: 30px;
+                padding-left: 20px;
+                border-bottom: 1px solid #d4d4d4;
+                background: #fafafa;
+            }
+            .table-wrap{
+                padding: 10px 20px;
+            }
+        }
+    }
+    .classify-tableWrap{
+        padding: 20px 10px;
+        tbody{
+            tr{
+                height: 38px;
+            }
+        }
+    }
 </style>

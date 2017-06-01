@@ -35,8 +35,21 @@
             display: flex;
             justify-content: space-between;
             padding: 10px;
-            background: #ddd;
+            background: #fafafa;
             border-bottom: 1px solid #ccc;
+            a{
+                cursor: pointer;
+                text-decoration: none;
+                span{
+                        border: 1px solid;
+                        width: 16px;
+                        line-height: 16px;
+                        display: inline-block;
+                        text-align: center;
+                        border-radius: 3px;
+                        margin-right: 3px;
+                }
+            }
         }
     }
 </style>
