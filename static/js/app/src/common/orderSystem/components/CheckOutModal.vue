@@ -175,7 +175,10 @@
                 if (business.type === 2) {
                     business.penalty = this.penalty;
                 }
-
+                if (this.penalty <= 0 ) {
+                    modal.warn('请输入zheng违约金！');
+                    return false;
+                }
                 if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     const roomsFix = rooms;
                     roomsFix.forEach(function(element, index) {
