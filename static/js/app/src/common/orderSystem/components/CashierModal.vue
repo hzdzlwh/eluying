@@ -295,12 +295,14 @@ export default {
                     let penalty; // eslint-disable-line
                     if (this.type === 'checkOut') {
                         operationType = 1;
-                        penalty = this.business.penalty;
                     }
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-
+                    if (this.business.PenaltyFee) {
+                        penalty = this.business.penalty;
+                        params.penalty = penalty;
+                    }
                     const orderId = getOrderId(this.orderDetail);
 
                     const subOrderIds = [];
