@@ -160,8 +160,9 @@
             border: 1px solid #d4d4d4;
             margin-bottom: 30px;
             h4{
-                height: 30px;
-                line-height: 30px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 16px;
                 padding-left: 20px;
                 border-bottom: 1px solid #d4d4d4;
                 background: #fafafa;

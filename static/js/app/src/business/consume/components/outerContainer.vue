@@ -34,9 +34,12 @@
         .outer-title{
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 15px 10px;
             background: #fafafa;
             border-bottom: 1px solid #ccc;
+            h4{
+                font-size: 16px;
+            }
             a{
                 cursor: pointer;
                 text-decoration: none;
