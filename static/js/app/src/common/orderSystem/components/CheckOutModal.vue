@@ -74,7 +74,7 @@
         data() {
             return {
                 penalty: undefined,
-                PenaltyFee: false
+                PenaltyFee: true
             };
         },
         computed: {
@@ -204,7 +204,7 @@
                     if (this.PenaltyFee) {
                         business.PenaltyFee = business.penalty;
                     }
-                    this.PenaltyFee = false;
+                    this.PenaltyFee = true;
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
                 }
