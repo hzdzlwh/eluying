@@ -37,7 +37,7 @@
                                      
                                 </span>
                             </div>
-                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFewe" value="1" style="margin-left:10px" /></label></div>
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -72,7 +72,7 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                PenaltyFewe: false
+                PenaltyFee: false
             };
         },
         computed: {
@@ -155,8 +155,8 @@
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
-                    if (this.PenaltyFewe) {
-                        business.PenaltyFewe = totalPenalty;
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = Number(totalPenalty);
                     }
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
