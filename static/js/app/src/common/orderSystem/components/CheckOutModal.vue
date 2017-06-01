@@ -46,6 +46,7 @@
                             <span style="margin-right: 24px">提前退房部分房价：￥{{noCheckInMoney}}</span>
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFewe" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -72,7 +73,8 @@
     export default{
         data() {
             return {
-                penalty: undefined
+                penalty: undefined,
+                PenaltyFewe: false
             };
         },
         computed: {
@@ -196,6 +198,9 @@
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();
+                    if (this.PenaltyFewe) {
+                        business.PenaltyFewe = this.penalty;
+                    }
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
                 }
