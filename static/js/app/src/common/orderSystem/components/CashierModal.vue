@@ -299,7 +299,9 @@ export default {
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-                    if (this.business.PenaltyFee) {
+                    window.console.log('PenaltyFee' + this.business.PenaltyFee);
+                    window.console.log('penalty' + this.business.penalty);
+                    if (!this.business.PenaltyFee) {
                         penalty = this.business.penalty;
                         params.penalty = penalty;
                     }
