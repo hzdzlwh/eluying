@@ -158,6 +158,7 @@
                     if (this.PenaltyFee) {
                         business.PenaltyFee = Number(totalPenalty);
                     }
+                    this.PenaltyFee = false;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
                 }

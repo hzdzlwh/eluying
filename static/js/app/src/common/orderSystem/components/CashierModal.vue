@@ -299,12 +299,7 @@ export default {
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-                    window.console.log('PenaltyFee' + this.business.PenaltyFee);
-                    window.console.log('penalty' + this.business.penalty);
-                    if (!this.business.PenaltyFee) {
-                        penalty = this.business.penalty;
-                        params.penalty = penalty;
-                    }
+                    
                     const orderId = getOrderId(this.orderDetail);
 
                     const subOrderIds = [];
@@ -327,14 +322,15 @@ export default {
                         operationType,
                         orderId
                     };
-                    if (this.business.PenaltyFee) {
-                        params.penalty = this.business.PenaltyFee;
-                    }
+                    
                 }
             return params;
         },
         getRemainder() {
             let params = this.getpParms();
+            if (this.business.PenaltyFee) {
+                params.penalty = this.business.penalty;
+            }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -425,6 +421,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
+            // if (!this.business.PenaltyFee) {
+            params.penalty =  this.business.penalty;
+            // }
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
