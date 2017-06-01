@@ -4,8 +4,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="classify-modal-header">
-                        <h4 v-if="!classifyProps.name">新增分类</h4>
-                        <h4 v-if="classifyProps.name">修改分类</h4>
+                        <h4 v-if="!classifyProps.goodsTypeId">新增分类</h4>
+                        <h4 v-if="classifyProps.goodsTypeId">修改分类</h4>
                     </div>
                     <div class="classify-modal-body">
                         <div>
@@ -37,7 +37,8 @@
         },
         methods: {
             addClassify() {
-                http.get('/goods/addOtherGoodsType', {name: this.classify.name}).then(res => {
+                let url = this.classify.goodsTypeId ? 'goods/editOtherGoodsType' : '/goods/addOtherGoodsType';
+                http.get(url, this.classify).then(res => {
                     if (res.code === 1) {
                         $('#classifyModal').modal('hide');
                         this.$emit('onSuccess');

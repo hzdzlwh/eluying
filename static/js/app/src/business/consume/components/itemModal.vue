@@ -4,22 +4,28 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="item-modal-header">
-                        <h4 v-if="!item.name">新增项目</h4>
-                        <h4 v-if="item.name">编辑项目</h4>
+                        <h4 v-if="!item.goodsId">新增项目</h4>
+                        <h4 v-if="item.goodsId">编辑项目</h4>
                     </div>
                     <div class="item-modal-body">
                         <div>
-                            <span>名称：</span><input type="text" v-model="item.title">
+                            <span>名称：</span><input type="text" v-model="item.name">
                         </div>
                         <div>
                             <span>分类：</span>
-                            <div>
-                                
-                            </div>
+                            <dd-select v-model="goodsTypeId">
+                                <dd-option v-for="type in item.itemName" :key="type.goodsTypeId" :value="type.goodsTypeId" :label="type.name"></dd-option>
+                            </dd-select>
+                        </div>
+                        <div>
+                            <span>单位：</span><input type="text" v-model="item.unit">
+                        </div>
+                        <div>
+                            <span>默认价格：</span><input type="text" v-model="item.price">
                         </div>
                     </div>
                     <div class="item-modal-footer">
-                        <button class="dd-btn dd-btn-primary">确定</button>
+                        <button class="dd-btn dd-btn-primary" @click="addItem">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -29,16 +35,42 @@
 </template>
 
 <script>
-    import { DdSelect, DdOption } from 'dd-vue-component';
+    import { DdSelect, DdOption, DdDatepicker } from 'dd-vue-component';
     import http from '../../../common/http';
 
     export default {
         props: {
-            item: Object
+            itemProps: Object
         },
         data() {
             return {
+                item: {},
+                goodsTypeId: 0
             }
+        },
+        computed: {
+        },
+        watch: {
+            itemProps(val) {
+                this.item = { ...val };
+                this.goodsTypeId = this.item.goodsId ? this.item.goodsTypeId : this.item.itemName[0].goodsTypeId;
+            }
+        },
+        methods: {
+            addItem() {
+                let url = this.item.newAdd ? '/goods/addOtherGoods' : '/goods/editOtherGoods';
+                http.get(url, { goodsTypeId: this.goodsTypeId, name: this.item.name, price: Number(this.item.price), unit: this.item.unit, goodsId: this.item.goodsId }).then(res => {
+                    if (res.code === 1) {
+                        $('#itemModal').modal('hide');
+                        this.$emit('onSuccess');
+                    }
+                });
+            }
+        },
+        components: {
+            DdSelect,
+            DdOption,
+            DdDatepicker
         }
     }
 </script>
