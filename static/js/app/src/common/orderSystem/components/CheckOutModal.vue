@@ -36,6 +36,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="content-item">
+                            <p class="content-item-title"><span>今日房费</span></p>
+                            <div>
+                                <label>全天房费<input type="radio" v-model="tadayFee" value="1"/></label>  
+                            </div>
+                            <div>
+                             <label>半天房费<input type="radio" v-model="tadayFee" value="0.5"/></label>  
+                             </div>
+                             <div>
+                             <label>不收取<input type="radio" v-model="tadayFee" value="0"/></label>  
+                             </div>
+                        </div>
                         <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>订单总结</span></p>
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
