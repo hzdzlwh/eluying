@@ -15,7 +15,7 @@
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
                                 <span class="cashier-money-text">已付金额:<span>¥{{ paiedMoney }}</span></span>
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span>
-                                <span class="cashier-money-text" v-if='remainderDate && remainderDate.penalty'>违约金<span>¥{{ remainderDate.penalty }}</span></span>
+                                
                             </div>
                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
                                 <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
