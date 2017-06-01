@@ -237,7 +237,7 @@ export default {
             return Number((this.deposit || 0).toFixed(2));
         },
         penalty() {
-            return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            return (this.orderPayment.penalty || 0) + ((this.business && !this.business.PenaltyFewe && this.business.penalty) || 0);
         },
         appearDeposit() {
             const type = this.type;
