@@ -237,7 +237,7 @@ export default {
             return Number((this.deposit || 0).toFixed(2));
         },
         penalty() {
-            return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            return (this.orderPayment.penalty || 0) + ((this.business && this.business.PenaltyFewe && this.business.penalty) || 0);
         },
         appearDeposit() {
             const type = this.type;
@@ -323,7 +323,9 @@ export default {
                         operationType,
                         orderId
                     };
-                    params.penalty = this.business.PenaltyFewe;
+                    if (this.business.PenaltyFewe) {
+                        params.penalty = this.business.PenaltyFewe;
+                    }
                 }
             return params;
         },
@@ -636,7 +638,7 @@ export default {
                 };
                 if (this.business.subOrderPenaltys) {
                     businessJson.subOrderPenaltys = JSON.parse(this.business.subOrderPenaltys);
-                } else if (this.business.penalty) {
+                } else if (this.business.penalty && !this.business.PenaltyFewe) {
                     payments.push({
                         fee: Number(this.business.penalty),
                         payChannelId: -5,
