@@ -37,7 +37,7 @@
                                      
                                 </span>
                             </div>
-                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFewe" value="1" style="margin-left:20px" /></label>  </div>
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFewe" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
