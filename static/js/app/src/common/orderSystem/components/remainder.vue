@@ -14,7 +14,7 @@
                                 <span class="reaminder-money-text">订单金额:<span>¥{{remainder.payableFee}}</span></span>
                                 <span class="reaminder-money-text">余额应收:<span>¥{{remainder.needFee}}</span></span>
                                 <span class="reaminder-money-text">余额已收:<span>¥{{remainder.paidFee}}</span></span>
-                                <span class="cashier-money-text" v-if='remainderDate.penalty'>违约金<span>¥{{ remainderDate.penalty }}</span></span>
+                                <span class="cashier-money-text" v-if='remainder.penalty'>违约金<span>¥{{ remainder.penalty }}</span></span>
                             </div>
                         </div>
                         <div class="content-item">
