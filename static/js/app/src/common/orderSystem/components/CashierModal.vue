@@ -324,7 +324,7 @@ export default {
         },
         getRemainder() {
             let params = this.getpParms();
-            if (this.business.PenaltyFee) {
+            if (this.business.PenaltyFee && this.business.penalty) {
                 params.penalty = this.business.penalty;
             }
             http.get('/order/getBalancePayment', params).then(res => {
