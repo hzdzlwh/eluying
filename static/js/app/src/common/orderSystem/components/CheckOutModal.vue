@@ -84,7 +84,8 @@
     export default{
         data() {
             return {
-                penalty: undefined
+                penalty: undefined,
+                tadayFee: 1
             };
         },
         computed: {
@@ -155,7 +156,8 @@
         methods: {
             returnPreStep() {
                 this.hideModal();
-                bus.$emit('onShowDetail');
+                bus.$emit('back');
+                // bus.$emit('onShowDetail');
             },
             hideModal() {
                 this.penalty = undefined;
@@ -214,6 +216,7 @@
                     this.hideModal();
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
+                    bus.$emit('changeBack', this.showCombinationOrder);
                 }
             }
         },

@@ -92,10 +92,13 @@
                 detailType: undefined,
                 detailId: undefined,
                 detailVisible: false,
-                roomCategory: [] // 订单编辑中使用
+                roomCategory: [], // 订单编辑中使用
+                bacnHandel: undefined
             };
         },
         created() {
+            bus.$on('changeBack', this.changeBack);
+            bus.$on('back', this.back);
             bus.$on('onClose', this.hideDetail);
             bus.$on('onShowDetail', this.showOrderDetail);
             bus.$on('editOrder', this.editOrder);
@@ -111,6 +114,8 @@
             document.addEventListener('click', this.handleOrderNumClick);
         },
         beforeDestroy: function() {
+            bus.$off('changeBack', this.changeBack);
+            bus.$off('back', this.back);
             bus.$off('onClose', this.hideDetail);
             bus.$off('onShowDetail', this.showOrderDetail);
             bus.$off('editOrder', this.editOrder);
@@ -126,6 +131,12 @@
         },
         methods: {
             ...mapMutations([types.SET_ORDER_DETAIL]),
+            changeBack(handel, that) {
+                this.bacnHandel = handel;
+            },
+            back() {
+                this.bacnHandel();
+            },
             handleOrderNumClick(ev) {
                 const el = ev.target;
                 if (!el.classList.contains('js-order-num')) {

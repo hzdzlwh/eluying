@@ -1271,6 +1271,7 @@
                             // 退房
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
+                        bus.$emit('changeBack', this.showCombinationOrder);
                         this.hideModal();
                     });
             },
