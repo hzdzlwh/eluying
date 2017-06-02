@@ -253,7 +253,7 @@
                 }
             },
             vipCardInfo(vipCardInfo, oldVipCardInfo) {
-                if (!this.userOriginType) {
+                if (!this.userOriginType || JSON.stringify(vipCardInfo) === JSON.stringify(oldVipCardInfo)) {
                     return;
                 }
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
