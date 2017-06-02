@@ -417,9 +417,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
-            // if (!this.business.PenaltyFee) {
-            params.penalty =  this.business.penalty;
-            // }
+            if (this.business.penalty) {
+                params.penalty =  this.business.penalty;
+            }
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
