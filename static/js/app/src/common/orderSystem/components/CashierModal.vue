@@ -712,8 +712,6 @@ export default {
                         this.resetData();
                         bus.$emit('hideCashier');
                         $('#cashier').modal('hide');
-                        window.console.log('cashier' + params.orderType)
-                        window.console.log('cashier' + params.orderId)
                         bus.$emit('onShowDetail', {
                             type: params.orderType,
                             orderId: params.orderId
