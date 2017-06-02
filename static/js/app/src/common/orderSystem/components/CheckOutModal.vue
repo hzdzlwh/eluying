@@ -38,15 +38,9 @@
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>今日房费</span></p>
-                            <div>
-                                <label>全天房费<input type="radio" v-model="tadayFee" value="1"/></label>  
-                            </div>
-                            <div>
-                             <label>半天房费<input type="radio" v-model="tadayFee" value="0.5"/></label>  
-                             </div>
-                             <div>
-                             <label>不收取<input type="radio" v-model="tadayFee" value="0"/></label>  
-                             </div>
+                            <div class="dd-btn" :class=' tadayFee === 1 ? "dd-btn-primary" : "" ' @click="tadayFee = 1">全天房费</div>
+                            <div class="dd-btn" :class=' tadayFee === 0.5 ? "dd-btn-primary" : "" ' @click="tadayFee = 0.5">半天房费</div>
+                            <div class="dd-btn" :class='tadayFee === 0 ? "dd-btn-primary" : "" ' @click="tadayFee = 0">不收取</div>
                         </div>
                         <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>订单总结</span></p>
@@ -84,7 +78,8 @@
     export default{
         data() {
             return {
-                penalty: undefined
+                penalty: undefined,
+                tadayFee: 1
             };
         },
         computed: {
@@ -129,9 +124,8 @@
                         }
                     }
                 );
-
                 return sum;
-            },
+            }
             // deposit() {
             //     return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
             // },
@@ -153,9 +147,13 @@
             // }
         },
         methods: {
+            show() {
+                $('#checkOut').modal({ backdrop: 'static' });
+            },
             returnPreStep() {
                 this.hideModal();
-                bus.$emit('onShowDetail');
+                bus.$emit('back');
+                // bus.$emit('onShowDetail');
             },
             hideModal() {
                 this.penalty = undefined;
@@ -212,8 +210,9 @@
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();
-                    this.$emit('showCashier', { type: 'checkOut', business });
+                    // this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
+                    bus.$emit('changeBack', this.show);
                 }
             }
         },

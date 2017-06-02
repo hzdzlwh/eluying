@@ -145,11 +145,22 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+    thead{
+        tr {
+            th{
+                font-weight: bold;
+            }
+            th:last-child {
+                text-align: right;
+            }
+        }
+    }
     tbody {
         tr {
             td:last-child{
                 color: #178CE6;
                 cursor: pointer;
+                text-align: right;
 
             }
         }

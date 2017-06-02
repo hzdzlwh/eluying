@@ -30,6 +30,9 @@
     </div>
 </template>
 <style scoped>
+.noVipContent{
+    padding: 20px;
+}
 .btnl {
     margin-left: 8px;
 }
