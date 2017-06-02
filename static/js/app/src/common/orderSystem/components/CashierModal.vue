@@ -286,7 +286,7 @@ export default {
             $('#cashier').modal('hide');
             this.ramainShow = true;
         },
-        getpParms() {
+        getpParms(flag = false) {
            let params;
                 if (this.type === 'register') {
                     params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
@@ -305,7 +305,7 @@ export default {
                     const subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
-                            this.type !== 'cancel') {
+                            this.type !== 'cancel' && !flag) {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
@@ -327,7 +327,7 @@ export default {
             return params;
         },
         getRemainder() {
-            let params = this.getpParms();
+            let params = this.getpParms(true);
             if (this.business.PenaltyFee) {
                 params.penalty = this.business.penalty;
             }
