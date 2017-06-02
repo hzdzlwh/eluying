@@ -299,9 +299,7 @@ export default {
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-                    
                     const orderId = getOrderId(this.orderDetail);
-
                     const subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
@@ -312,7 +310,6 @@ export default {
                             }
                         });
                     }
-
                     params = {
                         // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
                         orderType: this.orderDetail.type,
@@ -322,12 +319,14 @@ export default {
                         operationType,
                         orderId
                     };
-                    
                 }
             return params;
         },
         getRemainder() {
-            let params = this.getpParms(true);
+            let params = this.getpParms();
+            if (this.type === 'resetOrder') {
+                params = this.getpParms(true);
+            }
             if (this.business.PenaltyFee) {
                 params.penalty = this.business.penalty;
             }
