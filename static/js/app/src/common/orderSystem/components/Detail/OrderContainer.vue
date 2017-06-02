@@ -1255,6 +1255,7 @@
             },
             cancelOrder() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
                 bus.$emit('showCancelOrder');
             },
             showCashier() {

@@ -8,9 +8,9 @@
                         <h4 v-if="classifyProps.goodsTypeId">修改分类</h4>
                     </div>
                     <div class="classify-modal-body">
-                        <div>
+                        <div style="position: relative;">
                             <span style="margin-right: 8px;">分类名称：</span><input type="text" class="dd-input" style="width: 210px;" v-model="classify.name">
-                            <span v-if="classify.name && (!nameReg.test(classify.name) || classify.name.length > 10)">格式错误</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="classify.name && (!nameReg.test(classify.name) || classify.name.length > 10)">格式错误</span>
                         </div>
                     </div>
                     <div class="classify-modal-footer">
