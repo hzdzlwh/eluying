@@ -255,9 +255,7 @@
             vipCardInfo(vipCardInfo, oldVipCardInfo) {
                 if (!this.userOriginType ||
                     JSON.stringify(vipCardInfo) === JSON.stringify(oldVipCardInfo) ||
-                    (this.userOriginType !== -4 &&
-                    this.userOriginType !== -3 &&
-                    this.userOriginType !== -5)) {
+                    this.userOriginType.id > 0) {
                     return;
                 }
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
