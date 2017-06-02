@@ -30,13 +30,14 @@
     .outer-container{
         border-radius: 2px;
         border-top: 4px solid #178ce6;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+        box-shadow: 0 0px 5px 0 rgba(0,0,0,0.15);
         .outer-title{
+            height: 49px;
             display: flex;
             justify-content: space-between;
-            padding: 15px 10px;
-            background: #fafafa;
-            border-bottom: 1px solid #ccc;
+            padding: 16px 20px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #e6e6e6;
             h4{
                 font-size: 16px;
             }

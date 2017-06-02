@@ -9,7 +9,7 @@
                     </div>
                     <div class="item-modal-body">
                         <div>
-                            <span class="item-name">名称：</span><input type="text" style="width: 166px" v-model="item.name">
+                            <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name">
                             <span v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
                         <div style="display: flex;">
@@ -19,16 +19,16 @@
                             </dd-select>
                         </div>
                         <div>
-                            <span class="item-name">单位：</span><input type="text" style="width: 166px" v-model="item.unit">
+                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.unit">
                             <span v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
-                            <span class="default-price">默认价格：</span><input type="text" style="padding-left:11px; width: 166px;" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="padding-left:11px; width: 210px;" v-model="item.price">
                             <span v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
-                        <button class="dd-btn dd-btn-primary" style="margin-right: 36px;" @click="addItem">确定</button>
+                        <button class="dd-btn dd-btn-primary" style="margin-right: 20px;" @click="addItem">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -85,13 +85,15 @@
 
 <style lang="scss" rel="stylesheet/scss">
     .modal-dialog{
-        width: 444px;
+        width: 328px;
        .modal-content{
+            padding: 22px 20px;
             border-top: 4px solid #178ce6;
             .item-modal-header{
-                height: 30px;
-                line-height: 30px;
+                height: 40px;
+                line-height: 40px;
                 font-size: 16px;
+                color: #178ce6;
             }
             .item-modal-body{
                 .item-name{
@@ -99,12 +101,18 @@
                     width: 70px;
                     text-align: right;
                 }
+                .dd-select{
+                    width: 210px;
+                }
                 & > div {
-                    margin-bottom: 20px;
+                    margin-bottom: 15px;
                 }
             }
             .item-modal-footer{
                 text-align: center;
+                button{
+                    min-width: 50px;
+                }
             }
         } 
     }
@@ -112,7 +120,8 @@
         &:after {
             content: '￥';
             position: absolute;
-            line-height: 20px;
+            line-height: 24px;
+            z-index: 9;
         }
     }
 </style>
