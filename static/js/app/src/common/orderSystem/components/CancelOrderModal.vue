@@ -42,7 +42,10 @@
                         <div>
                             <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need.toFixed(2))}}</span></span>
                         </div>
+                        <div>
+                         <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,6 +93,13 @@
             }
         },
         methods: {
+            showModal() {
+                bus.$emit('showCancelOrder');
+            },
+            returnPreStep() {
+                this.hideModal();
+                bus.$emit('back');
+            },
             hideModal() {
                 this.penalty = undefined;
                 this.subOrderPenaltys = [];
@@ -150,6 +160,7 @@
                             bus.$emit('showOrder', this.orderId);
                         });
                 } else {
+                    bus.$emit('changeBack', this.showModal);
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
                     this.hideModal();
