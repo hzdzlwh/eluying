@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="手机号"
                                            autocomplete="off"
                                            :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
@@ -291,6 +291,7 @@
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
     import { getOrderId } from '../../utils/order';
+    import validate from '../../../validate';
     export default{
         name: 'OrderEditor',
         directives: {
@@ -576,8 +577,7 @@
                 }
             },
             checkPhone() {
-                const phoneReg = /^\d{11}$/;
-                this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
+                this.phoneValid = validate.phone.test(this.phone) || this.phone === '';
             },
             getVipDiscount(phone, setOrigin) {
                 if (phone === this.vipDiscountDetail.phone) {

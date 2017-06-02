@@ -146,7 +146,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px">收银明细</span>
+                                <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px" @click="openCashDetail">收银明细</span>
                             </div>
                             <div class="footer-price">
                                 <span class="order-price-text">
@@ -223,7 +223,7 @@
             </div>
         </div>
         <Insurance :order="order"/>
-        <CashDetail :show="cashDetailShow" :onClose="closeCashDetail"/>
+        <CashDetail :show="cashDetailShow" :onClose="closeCashDetail" :order="order"/>
         <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
             <div class="slides"></div>
             <h3 class="title"></h3>
@@ -1063,7 +1063,8 @@
             };
         },
         components: {
-            Insurance
+            Insurance,
+            CashDetail
         },
         props: {
             type: Number,
