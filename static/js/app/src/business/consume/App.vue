@@ -1,34 +1,38 @@
 <template>
     <div>
-        <outer-container style="width:600px; float:left;" :title='consumeItem' :add="addItem" @openItemModal="openItemModal">
-            <div v-for="item in itemLists">
-                <h4>{{item.name}}</h4>
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>名称</th>
-                            <th>分类</th>
-                            <th>单位</th>
-                            <th>默认价格</th>
-                            <th>状态</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="list in item.childList">
-                            <td>{{list.name}}</td>
-                            <td>{{list.goodsTypeName}}</td>
-                            <td>{{list.unit}}</td>
-                            <td>{{list.price}}</td>
-                            <td><switchbtn @click.native="sendState(list)" v-model="list.state"></switchbtn></td>
-                            <td><span @click="openItemModal(list)">修改</span>/<span @click="deleteItem(list.goodsId)">删除</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <outer-container style="width:654px; float:left;" :title='consumeItem' :add="addItem" @openItemModal="openItemModal">
+            <div class="item-wrap">
+                <div v-for="item in itemLists">
+                    <h4>{{item.name}}</h4>
+                    <div class="table-wrap">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>分类</th>
+                                    <th>单位</th>
+                                    <th>默认价格</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="list in item.childList">
+                                    <td>{{list.name}}</td>
+                                    <td>{{list.goodsTypeName}}</td>
+                                    <td>{{list.unit}}</td>
+                                    <td>{{list.price}}</td>
+                                    <td><switchbtn @click.native="sendState(list)" v-model="list.state"></switchbtn></td>
+                                    <td><span @click="openItemModal(list)">修改</span>/<span @click="deleteItem(list.goodsId)">删除</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </outer-container>
-        <outer-container style="width:200px; position:fixed; margin-left:620px;" :title='classifyManage' :add="addClassify" @openClassifyModal="openClassifyModal">
-            <div>
+        <outer-container style="width:213px; position:fixed; margin-left:674px;" :title='classifyManage' :add="addClassify" @openClassifyModal="openClassifyModal">
+            <div class="classify-tableWrap">
                 <table style="width: 100%;">
                     <thead>
                         <tr>
@@ -87,7 +91,6 @@
            },
            getItemList() {
                 http.get('/goods/getOtherGoodsList', {}).then(res => {
-                    console.log(res);
                     if (res.code === 1) {
                         this.itemLists = res.data.list;
                         this.itemNames = res.data.list.map(item => {
@@ -141,6 +144,59 @@
     }
 </script>
 
-<style>
-    
+<style lang="scss" rel="stylesheet/scss">
+    thead{
+        tr {
+            th{
+                font-weight: bold;
+            }
+            th:last-child {
+                text-align: right;
+            }
+        }
+    }
+    tbody {
+        tr {
+            td:last-child{
+                color: #178CE6;
+                cursor: pointer;
+                text-align: right;
+
+            }
+        }
+    }
+    .item-wrap{
+        padding: 18px 20px 0 20px;
+        & > div {
+            box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
+            border-radius: 2px;
+            border: 1px solid #e6e6e6;
+            margin-bottom: 20px;
+            h4{
+                height: 37px;
+                line-height: 37px;
+                font-size: 16px;
+                padding-left: 20px;
+                border-bottom: 1px solid #e6e6e6;
+                background: #f0f0f0;
+            }
+            .table-wrap{
+                padding: 10px 20px;
+                .dd-switch{
+                    cursor: pointer;
+                }
+                label{
+                    margin-bottom: 0px;
+                }
+            }
+        }
+    }
+    .classify-tableWrap{
+        padding: 20px;
+        tbody{
+            tr{
+                height: 28px;
+            }
+        }
+    }
 </style>

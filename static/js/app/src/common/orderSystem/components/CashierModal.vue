@@ -93,6 +93,7 @@
                         </div>
                         <div>
                         <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
+                        <div class="dd-btn dd-btn-primary" style="margin-right:20px" v-else @click="returnPreStep">返回</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div></div>
                     </div>
                 </div>
@@ -265,6 +266,10 @@ export default {
         }
     },
     methods: {
+        returnPreStep() {
+            this.hideModal();
+            bus.$emit('back');
+        },
         getReaminderParams(params) {
             if (params) {
                 this.ReaminderParams = {};
@@ -300,9 +305,9 @@ export default {
                         operationType = 4;
                     }
 
-                    const orderId = getOrderId(this.orderDetail);
-
+                    const orderId = JSON.stringify(getOrderId(this.orderDetail));
                     const subOrderIds = [];
+                    window.console.log(this.orderDetail);
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
                             this.type !== 'cancel') {
@@ -312,7 +317,6 @@ export default {
                             }
                         });
                     }
-
                     params = {
                         // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
                         orderType: this.orderDetail.type,

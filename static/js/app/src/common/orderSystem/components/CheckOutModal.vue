@@ -36,17 +36,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-item">
+                        <div class="content-item" v-if='roomBusinessInfo.businessType === 2'>
                             <p class="content-item-title"><span>今日房费</span></p>
-                            <div>
-                                <label>全天房费<input type="radio" v-model="tadayFee" value="1"/></label>  
-                            </div>
-                            <div>
-                             <label>半天房费<input type="radio" v-model="tadayFee" value="0.5"/></label>  
-                             </div>
-                             <div>
-                             <label>不收取<input type="radio" v-model="tadayFee" value="0"/></label>  
-                             </div>
+                            <div class="dd-btn" :class=' tadayFeeType === 1 ? "dd-btn-primary" : "" ' @click="tadayFeeType = 1">全天房费</div>
+                            <div class="dd-btn" :class=' tadayFeeType === 0.5 ? "dd-btn-primary" : "" ' @click="tadayFeeType = 0.5">半天房费</div>
+                            <div class="dd-btn" :class='tadayFeeType === 0 ? "dd-btn-primary" : "" ' @click="tadayFeeType = 0">不收取</div>
+                            <p>{{number}}个房间，共收取今日房费 ¥<input type="number" v-model='totalFee' class="dd-input" @input='changeTotalFee'><span style="color:#999">(自定义今日房费将平均分配到每个房间)</span></p>
                         </div>
                         <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
                             <p class="content-item-title"><span>订单总结</span></p>
@@ -62,8 +57,8 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                            <span class="footer-label">{{`${ (totalPrice + (Number(penalty) || 0) - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
-                                <span class="order-price-num" :class="(totalPrice + (Number(penalty) || 0) - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice + (Number(penalty) || 0) - payed)).toFixed(2)}}</span>
+                            <span class="footer-label">{{`${ (totalPrice  - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
+                                <span class="order-price-num" :class="(totalPrice  - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice  - payed)).toFixed(2)}}</span>
                             </span>
                             <!-- <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span> -->
                         </div>
@@ -84,7 +79,9 @@
     export default{
         data() {
             return {
-                penalty: undefined
+                penalty: undefined,
+                tadayFeeType: 1,
+                totalFee: 0
             };
         },
         computed: {
@@ -92,6 +89,20 @@
                 orderDetail: state => state.orderSystem.orderDetail,
                 roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
             }),
+            number() {
+                let sum = 0;
+                if (!this.roomBusinessInfo.roomOrderInfoList) {
+                    return sum;
+                }
+                this.roomBusinessInfo.roomOrderInfoList.map(
+                    room => {
+                        if (room.selected) {
+                            sum += 1;
+                        }
+                    }
+                );
+                return Number(sum);
+            },
             totalPrice() {
                 let sum = 0;
                 if (!this.roomBusinessInfo.roomOrderInfoList) {
@@ -105,7 +116,26 @@
                         }
                     }
                 );
-
+                sum += this.tadayFee;
+                return Number(sum.toFixed(2));
+            },
+            tadayFee() {
+                let sum = 0;
+                if (!this.roomBusinessInfo.roomOrderInfoList || !this.tadayFeeType) {
+                    return sum;
+                }
+                this.roomBusinessInfo.roomOrderInfoList.map(
+                    room => {
+                        if (room.selected) {
+                            if (this.tadayFeeType === 0.5) {
+                                sum += room.todayPriceHalf;
+                            }
+                            if (this.tadayFeeType === 1) {
+                                sum += room.todayPrice;
+                            }
+                        }
+                    }
+                );
                 return Number(sum.toFixed(2));
             },
             payed() {
@@ -129,9 +159,8 @@
                         }
                     }
                 );
-
                 return sum;
-            },
+            }
             // deposit() {
             //     return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
             // },
@@ -152,10 +181,29 @@
             //     return sum;
             // }
         },
+        watch: {
+            tadayFee() {
+                this.totalFee = this.tadayFee;
+            }
+        },
         methods: {
+            changeTotalFee() {
+                this.tadayFeeType = undefined;
+                http.get('/vipCard/checkPhoneBeforeApplyVipCard', { phone: this.phone })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.name = res.data.name;
+                            this.disableNameInput = !!res.data.name;
+                        }
+                });
+            },
+            show() {
+                $('#checkOut').modal({ backdrop: 'static' });
+            },
             returnPreStep() {
                 this.hideModal();
-                bus.$emit('onShowDetail');
+                bus.$emit('back');
+                // bus.$emit('onShowDetail');
             },
             hideModal() {
                 this.penalty = undefined;
@@ -212,8 +260,9 @@
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();
-                    this.$emit('showCashier', { type: 'checkOut', business });
+                    // this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
+                    bus.$emit('changeBack', this.show);
                 }
             }
         },

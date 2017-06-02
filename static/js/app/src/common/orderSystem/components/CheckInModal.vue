@@ -110,7 +110,7 @@
         methods: {
             returnPreStep() {
                 this.hideModal();
-                bus.$emit('onShowDetail');
+                bus.$emit('back');
             },
             hideModal() {
                 $('#checkIn').modal('hide');

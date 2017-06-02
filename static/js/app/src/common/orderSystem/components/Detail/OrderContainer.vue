@@ -66,9 +66,9 @@
                         <div class="content-item" v-if="this.order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{ order.remark || '无' }}</div>
-                            <div v-if="order.remarkPic">
-                                <a class="remark-img" v-for="pic in order.remarkPic" :href="pic" data-gallery>
-                                    <img :src="pic">
+                            <div v-if="order.imgUrls">
+                                <a class="remark-img" v-for="pic in order.imgUrls" :href="pic.raw" data-gallery>
+                                    <img :src="pic.thumb">
                                 </a>
                             </div>
                         </div>
@@ -146,6 +146,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px" @click="openCashDetail">收银明细</span>
                             </div>
                             <div class="footer-price">
                                 <span class="order-price-text">
@@ -222,6 +223,7 @@
             </div>
         </div>
         <Insurance :order="order"/>
+        <CashDetail :show="cashDetailShow" :onClose="closeCashDetail" :order="order"/>
         <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
             <div class="slides"></div>
             <h3 class="title"></h3>
@@ -1042,12 +1044,14 @@
     import modal from '../../../modal';
     require('blueimp-gallery/js/jquery.blueimp-gallery.min');
     import 'blueimp-gallery/css/blueimp-gallery.css';
+    import CashDetail from './CashDetail.vue';
 
     export default{
         data() {
             return {
                 readOnly: true,
                 ORDER_STATUS_ICON,
+                cashDetailShow: false,
                 ORDER_TYPE,
                 reseturl: {
                     '-1': 'resettleCombinedOrder',
@@ -1059,7 +1063,8 @@
             };
         },
         components: {
-            Insurance
+            Insurance,
+            CashDetail
         },
         props: {
             type: Number,
@@ -1228,11 +1233,20 @@
                         type: ORDER_TYPE.COMBINATION
                     });
             },
+            show() {
+                bus.$emit('onShowDetail');
+            },
             dateFormat(date) {
                 return util.timeFormat(date);
             },
             openInsurance() {
                 $('#insuranceDialog').modal('show');
+            },
+            openCashDetail() {
+                this.cashDetailShow = true;
+            },
+            closeCashDetail() {
+                this.cashDetailShow = false;
             },
             editOrder() {
                 this.hideModal();
@@ -1241,6 +1255,7 @@
             },
             cancelOrder() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
                 bus.$emit('showCancelOrder');
             },
             showCashier() {
@@ -1271,6 +1286,7 @@
                             // 退房
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
+                        bus.$emit('changeBack', this.show);
                         this.hideModal();
                     });
             },

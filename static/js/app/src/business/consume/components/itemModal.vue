@@ -9,23 +9,29 @@
                     </div>
                     <div class="item-modal-body">
                         <div>
-                            <span>名称：</span><input type="text" v-model="item.name">
+                            <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name">
+                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if="nameIsWrite && item.name.length === 0">必填</span>
+                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
-                        <div>
-                            <span>分类：</span>
+                        <div style="display: flex;">
+                            <span class="item-name" style="line-height: 24px;">分类：</span>
                             <dd-select v-model="goodsTypeId">
                                 <dd-option v-for="type in item.itemName" :key="type.goodsTypeId" :value="type.goodsTypeId" :label="type.name"></dd-option>
                             </dd-select>
                         </div>
                         <div>
-                            <span>单位：</span><input type="text" v-model="item.unit">
+                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit">
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitIsWrite && item.unit.length === 0">必填</span>
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
-                            <span>默认价格：</span><input type="text" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="priceIsWrite && item.price.length === 0">必填</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
-                        <button class="dd-btn dd-btn-primary" @click="addItem">确定</button>
+                        <button class="dd-btn dd-btn-primary" style="margin:0 20px 0 78px;" @click="addItem">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -45,7 +51,12 @@
         data() {
             return {
                 item: {},
-                goodsTypeId: 0
+                goodsTypeId: 0,
+                nameReg: /[\w\u4e00-\u9fa5]/,
+                priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
+                nameIsWrite: false,
+                unitIsWrite: false,
+                priceIsWrite: false
             }
         },
         computed: {
@@ -58,6 +69,18 @@
         },
         methods: {
             addItem() {
+                if ( this.item.price === '' || !this.priceReg.test(this.item.price) || (!this.nameReg.test(this.item.unit) || this.item.unit.length > 5) || (!this.nameReg.test(this.item.name) || this.item.name.length > 20)) {
+                    if (this.item.name === '') {
+                        this.nameIsWrite = true;
+                    }
+                    if (this.item.unit === '') {
+                        this.unitIsWrite = true;
+                    }
+                    if (this.item.price === '') {
+                        this.priceIsWrite = true;
+                    }
+                    return false;
+                }
                 let url = this.item.newAdd ? '/goods/addOtherGoods' : '/goods/editOtherGoods';
                 http.get(url, { goodsTypeId: this.goodsTypeId, name: this.item.name, price: Number(this.item.price), unit: this.item.unit, goodsId: this.item.goodsId }).then(res => {
                     if (res.code === 1) {
@@ -76,7 +99,40 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-    .modal-content{
-        border-top: 4px solid #178ce6;
+    .modal-dialog{
+        width: 330px;
+       .modal-content{
+            padding: 22px 20px;
+            border-top: 4px solid #178ce6;
+            .item-modal-header{
+                height: 40px;
+                line-height: 40px;
+                font-size: 16px;
+                color: #178ce6;
+            }
+            .item-modal-body{
+                .item-name{
+                    margin-right: 8px;
+                    display: inline-block;
+                    width: 70px;
+                    text-align: right;
+                }
+                .default-price{
+                    margin-right: 8px;
+                }
+                .dd-select{
+                    width: 210px;
+                }
+                & > div {
+                    position: relative;
+                    margin-bottom: 15px;
+                }
+            }
+            .item-modal-footer{
+                button{
+                    min-width: 50px;
+                }
+            }
+        } 
     }
 </style>
