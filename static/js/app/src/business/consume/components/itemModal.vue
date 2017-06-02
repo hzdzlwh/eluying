@@ -10,6 +10,7 @@
                     <div class="item-modal-body">
                         <div>
                             <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name">
+                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if="nameIsWrite && item.name.length === 0">必填</span>
                             <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
                         <div style="display: flex;">
@@ -20,10 +21,12 @@
                         </div>
                         <div>
                             <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit">
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitIsWrite && item.unit.length === 0">必填</span>
                             <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
                             <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="priceIsWrite && item.price.length === 0">必填</span>
                             <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
@@ -51,6 +54,9 @@
                 goodsTypeId: 0,
                 nameReg: /[\w\u4e00-\u9fa5]/,
                 priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
+                nameIsWrite: false,
+                unitIsWrite: false,
+                priceIsWrite: false
             }
         },
         computed: {
@@ -64,6 +70,15 @@
         methods: {
             addItem() {
                 if ( this.item.price === '' || !this.priceReg.test(this.item.price) || (!this.nameReg.test(this.item.unit) || this.item.unit.length > 5) || (!this.nameReg.test(this.item.name) || this.item.name.length > 20)) {
+                    if (this.item.name === '') {
+                        this.nameIsWrite = true;
+                    }
+                    if (this.item.unit === '') {
+                        this.unitIsWrite = true;
+                    }
+                    if (this.item.price === '') {
+                        this.priceIsWrite = true;
+                    }
                     return false;
                 }
                 let url = this.item.newAdd ? '/goods/addOtherGoods' : '/goods/editOtherGoods';
