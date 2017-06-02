@@ -9,26 +9,26 @@
                     </div>
                     <div class="item-modal-body">
                         <div>
-                            <span>名称：</span><input type="text" v-model="item.name">
+                            <span class="item-name">名称：</span><input type="text" style="width: 166px" v-model="item.name">
                             <span v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
-                        <div>
-                            <span>分类：</span>
+                        <div style="display: flex;">
+                            <span class="item-name" style="line-height: 24px;">分类：</span>
                             <dd-select v-model="goodsTypeId">
                                 <dd-option v-for="type in item.itemName" :key="type.goodsTypeId" :value="type.goodsTypeId" :label="type.name"></dd-option>
                             </dd-select>
                         </div>
                         <div>
-                            <span>单位：</span><input type="text" v-model="item.unit">
+                            <span class="item-name">单位：</span><input type="text" style="width: 166px" v-model="item.unit">
                             <span v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
-                            <span class="default-price">默认价格：</span><input type="text" style="padding-left:11px" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" style="padding-left:11px; width: 166px;" v-model="item.price">
                             <span v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
-                        <button class="dd-btn dd-btn-primary" @click="addItem">确定</button>
+                        <button class="dd-btn dd-btn-primary" style="margin-right: 36px;" @click="addItem">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -84,8 +84,29 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-    .modal-content{
-        border-top: 4px solid #178ce6;
+    .modal-dialog{
+        width: 444px;
+       .modal-content{
+            border-top: 4px solid #178ce6;
+            .item-modal-header{
+                height: 30px;
+                line-height: 30px;
+                font-size: 16px;
+            }
+            .item-modal-body{
+                .item-name{
+                    display: inline-block;
+                    width: 70px;
+                    text-align: right;
+                }
+                & > div {
+                    margin-bottom: 20px;
+                }
+            }
+            .item-modal-footer{
+                text-align: center;
+            }
+        } 
     }
     .default-price{
         &:after {
