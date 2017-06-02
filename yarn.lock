@@ -982,6 +982,10 @@ bluebird@^3.0.5, bluebird@^3.1.1:
   version "3.5.0"
   resolved "http://registry.npm.taobao.org/bluebird/download/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
+blueimp-gallery@^2.25.0:
+  version "2.25.0"
+  resolved "http://registry.npm.taobao.org/blueimp-gallery/download/blueimp-gallery-2.25.0.tgz#0a4d35d92448eb6224ebda6c5b3a6614a1822d52"
+
 boom@2.x.x:
   version "2.10.1"
   resolved "http://registry.npm.taobao.org/boom/download/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
