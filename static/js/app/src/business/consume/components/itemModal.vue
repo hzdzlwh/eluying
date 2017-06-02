@@ -19,16 +19,16 @@
                             </dd-select>
                         </div>
                         <div>
-                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.unit">
+                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit">
                             <span v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
-                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="padding-left:11px; width: 210px;" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
                             <span v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
-                        <button class="dd-btn dd-btn-primary" style="margin-right: 20px;" @click="addItem">确定</button>
+                        <button class="dd-btn dd-btn-primary" style="margin:0 20px 0 78px;" @click="addItem">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
 
 <style lang="scss" rel="stylesheet/scss">
     .modal-dialog{
-        width: 328px;
+        width: 330px;
        .modal-content{
             padding: 22px 20px;
             border-top: 4px solid #178ce6;
@@ -97,9 +97,13 @@
             }
             .item-modal-body{
                 .item-name{
+                    margin-right: 8px;
                     display: inline-block;
                     width: 70px;
                     text-align: right;
+                }
+                .default-price{
+                    margin-right: 8px;
                 }
                 .dd-select{
                     width: 210px;
@@ -109,19 +113,10 @@
                 }
             }
             .item-modal-footer{
-                text-align: center;
                 button{
                     min-width: 50px;
                 }
             }
         } 
-    }
-    .default-price{
-        &:after {
-            content: '￥';
-            position: absolute;
-            line-height: 24px;
-            z-index: 9;
-        }
     }
 </style>

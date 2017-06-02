@@ -9,12 +9,12 @@
                     </div>
                     <div class="classify-modal-body">
                         <div>
-                            <span>分类名称：</span><input type="text" class="dd-input" style="width: 210px;" v-model="classify.name">
+                            <span style="margin-right: 8px;">分类名称：</span><input type="text" class="dd-input" style="width: 210px;" v-model="classify.name">
                             <span v-if="classify.name && (!nameReg.test(classify.name) || classify.name.length > 10)">格式错误</span>
                         </div>
                     </div>
                     <div class="classify-modal-footer">
-                        <button class="dd-btn dd-btn-primary" style="margin-right: 20px;" @click="addClassify">确定</button>
+                        <button class="dd-btn dd-btn-primary" style="margin: 0 20px 0 78px;" @click="addClassify">确定</button>
                         <button class="dd-btn dd-btn-ghost" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -71,7 +71,6 @@
             margin-bottom: 20px;
         }
         .classify-modal-footer{
-            text-align: center;
             button{
                 min-width: 50px;
             }
