@@ -10,7 +10,7 @@
                     <div class="item-modal-body">
                         <div>
                             <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name">
-                            <span v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
+                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
                         </div>
                         <div style="display: flex;">
                             <span class="item-name" style="line-height: 24px;">分类：</span>
@@ -20,11 +20,11 @@
                         </div>
                         <div>
                             <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit">
-                            <span v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
                         </div>
                         <div>
                             <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
-                            <span v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
@@ -109,6 +109,7 @@
                     width: 210px;
                 }
                 & > div {
+                    position: relative;
                     margin-bottom: 15px;
                 }
             }
