@@ -15,14 +15,11 @@
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
-                                    <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
+                                    <div class="userVip-list" v-clickoutside="hideVipList" v-show="vipListShow" @click.stop="()=>{}">
                                         <p class="userVip-item" v-for="vip in vipList" @click="setVipInfo(vip)">
-                                            <span class="vip-level" v-if="vip.level">
-                                                [
-                                                <span class="vip-level-text">{{ vip.level }}</span>
-                                                ]
+                                            <span class="vip-level">
+                                                [<span class="vip-level-text">{{ vip.level }}</span>]
                                             </span>
-                                            <span class="vip-level" v-if="!vip.level"></span>
                                             <span class="vip-name">{{ vip.name }}</span>
                                             <span class="vip-phone">{{ vip.phone }}</span>
                                         </p>
@@ -283,6 +280,7 @@
         DdGroupOption,
         DdOption
     } from 'dd-vue-component';
+    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../http';
     import { ORDER_TYPE } from '../../../../ordersManage/constant';
     import modal from '../../../modal';
@@ -295,6 +293,9 @@
     import { getOrderId } from '../../utils/order';
     export default{
         name: 'OrderEditor',
+        directives: {
+            Clickoutside
+        },
         data() {
             return {
                 name: '',
@@ -575,7 +576,7 @@
                 }
             },
             checkPhone() {
-                const phoneReg = /^1[34578]\d{9}$/;
+                const phoneReg = /^\d{11}$/;
                 this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
             },
             getVipDiscount(phone, setOrigin) {
@@ -702,6 +703,10 @@
                     return this.userSelfOrigins.find(i => id === i.id) || this.userGroupOrigins[1].origins.find(i => id === i.id);
                 }
             },
+            hideVipList() {
+                this.vipListShow = false;
+                this.vipList = [];
+            },
             refreshData() {
                 this.name = '';
                 this.phone = '';
@@ -736,7 +741,8 @@
                 let durationValid = true;
                 let roomPersonValid = true;
 
-                if (this.checkState !== 'editOrder' || this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
+                this.checkPhone();
+                if (this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
                     if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
                         modal.warn('请输入联系人或手机号!');
                         return false;
