@@ -1232,6 +1232,9 @@
                         type: ORDER_TYPE.COMBINATION
                     });
             },
+            show() {
+                bus.$emit('onShowDetail');
+            },
             dateFormat(date) {
                 return util.timeFormat(date);
             },
@@ -1281,7 +1284,7 @@
                             // 退房
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
-                        bus.$emit('changeBack', this.showCombinationOrder);
+                        bus.$emit('changeBack', this.show);
                         this.hideModal();
                     });
             },

@@ -93,7 +93,7 @@
                 detailId: undefined,
                 detailVisible: false,
                 roomCategory: [], // 订单编辑中使用
-                bacnHandel: undefined
+                bacnHandel: []
             };
         },
         created() {
@@ -132,10 +132,13 @@
         methods: {
             ...mapMutations([types.SET_ORDER_DETAIL]),
             changeBack(handel, that) {
-                this.bacnHandel = handel;
+                this.bacnHandel.unshift(handel);
+                if (this.bacnHandel.length > 10) {
+                    this.bacnHandel.splice(10, 1);
+                }
             },
             back() {
-                this.bacnHandel();
+                this.bacnHandel.shift()();
             },
             handleOrderNumClick(ev) {
                 const el = ev.target;
