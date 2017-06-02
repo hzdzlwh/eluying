@@ -66,9 +66,9 @@
                         <div class="content-item" v-if="this.order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{ order.remark || '无' }}</div>
-                            <div v-if="order.remarkPic">
-                                <a class="remark-img" v-for="pic in order.remarkPic" :href="pic" data-gallery>
-                                    <img :src="pic">
+                            <div v-if="order.imgUrls">
+                                <a class="remark-img" v-for="pic in order.imgUrls" :href="pic.raw" data-gallery>
+                                    <img :src="pic.thumb">
                                 </a>
                             </div>
                         </div>
