@@ -54,6 +54,8 @@
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
                         </div> -->
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
+                        </div>
                     </div>
                     <div class="roomModals-footer">
                         <div>
@@ -81,7 +83,8 @@
             return {
                 penalty: undefined,
                 tadayFeeType: 1,
-                totalFee: 0
+                totalFee: 0,
+                PenaltyFee: true
             };
         },
         computed: {
@@ -245,7 +248,7 @@
                             roomsFix.splice(index, 1);
                         }
                     });
-                    // 清理rooms里为nu l l的值，如果要改回原来的用就行了
+                    // 清理rooms里为null的值，如果要改回原来的用就行了
                     http.get('/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(roomsFix)
@@ -261,6 +264,11 @@
                     business.functionType = 1;
                     this.hideModal();
                     // this.$emit('showCashier', { type: 'checkOut', business });
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = business.penalty;
+                    }
+                    this.PenaltyFee = true;
+                    this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('changeBack', this.show);
                 }
