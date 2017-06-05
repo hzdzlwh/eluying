@@ -15,6 +15,7 @@
                                 <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
                                 <span class="cashier-money-text">已付金额:<span>¥{{ paiedMoney }}</span></span>
                                 <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span>
+                                
                             </div>
                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
                                 <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
@@ -236,7 +237,7 @@ export default {
             return Number((this.deposit || 0).toFixed(2));
         },
         penalty() {
-            return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            return (this.orderPayment.penalty || 0);
         },
         appearDeposit() {
             const type = this.type;
@@ -285,7 +286,7 @@ export default {
             $('#cashier').modal('hide');
             this.ramainShow = true;
         },
-        getpParms() {
+        getpParms(flag) {
            let params;
                 if (this.type === 'register') {
                     params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
@@ -294,25 +295,21 @@ export default {
                     let penalty; // eslint-disable-line
                     if (this.type === 'checkOut') {
                         operationType = 1;
-                        penalty = this.business.penalty;
                     }
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-
                     const orderId = getOrderId(this.orderDetail);
-
                     const subOrderIds = [];
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
-                            this.type !== 'cancel') {
+                            this.type !== 'cancel' && this.type !== 'resetOrder') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
                             }
                         });
                     }
-
                     params = {
                         // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
                         orderType: this.orderDetail.type,
@@ -327,6 +324,9 @@ export default {
         },
         getRemainder() {
             let params = this.getpParms();
+            if (this.business.PenaltyFee && this.business.penalty) {
+                params.penalty = this.business.penalty;
+            }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -417,6 +417,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
+            if (this.business.penalty) {
+                params.penalty =  this.business.penalty;
+            }
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
