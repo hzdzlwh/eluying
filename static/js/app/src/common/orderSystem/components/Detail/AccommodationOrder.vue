@@ -50,23 +50,39 @@
                                             </span>
                         </span>
                     </div>
-                    <div class="room-user" v-for="user in (item.idCardList || item.idCardsList)">
+                    <div class="room-user" v-for="(user, index) in (item.idCardList || item.idCardsList)">
                         <span class="user-icon"></span>
                         <span class="user-name">{{user.name}}</span>
                         <div class="card-type">
                             <label class="label-text">{{ID_CARD_TYPE[user.idCardType]}}</label>
                             <span>{{user.idCardNum}}</span>
+                            <span v-if="index === 0" class="living-persons-detail" @click="showPersonsDetailModal(item)">入住人详情</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <persons-detail
+                :id="id"
+                :type="type"
+                :orderId="orderId"
+                :roomOrderId="roomOrderId"
+                :show="showPersonsDetail"
+                :personsList="personsList"
+                :editAble="editAble"
+                @closePersonsDetail="closePersonsDetail">
+        </persons-detail>
     </div>
 </template>
 <style scoped>
     .room-fix {
         display: inline-block;
         cursor: pointer;
+    }
+    .living-persons-detail {
+        color: #4a90e2;
+        cursor: pointer;
+        margin-left: 12px;
     }
 </style>
 <script>
@@ -76,6 +92,7 @@
         ORDER_STATE_TEXT
     } from '../../../../ordersManage/constant';
     import bus from '../../../eventBus';
+    import personsDetail from '../personsDetail.vue';
     export default {
         props: {
             order: {
@@ -85,12 +102,19 @@
             showMoadl: {
                 type: Boolean,
                 default: true
-            }
+            },
+            id: Number,
+            type: Number
         },
         data() {
             return {
                 ID_CARD_TYPE,
-                ORDER_TYPE
+                ORDER_TYPE,
+                orderId: undefined,
+                roomOrderId: undefined,
+                showPersonsDetail: false,
+                personsList: [],
+                editAble: true
             };
         },
         computed: {
@@ -115,7 +139,21 @@
                     orderId: id,
                     type: 3
                 });
+            },
+            showPersonsDetailModal(room) {
+                this.orderId = room.orderId;
+                this.roomOrderId = room.roomOrderId;
+                this.showPersonsDetail = true;
+                this.personsList = [...room.idCardsList];
+                const state = room.roomInfo ? room.roomInfo.state : room.state;
+                this.editAble = state !== 2 && state !== 3;
+            },
+            closePersonsDetail() {
+                this.showPersonsDetail = false;
             }
+        },
+        components: {
+            personsDetail
         }
     };
 </script>
