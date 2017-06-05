@@ -361,7 +361,7 @@
             titleAndBtn() {
                 switch (this.checkState) {
                     case 'ing':
-                        return { title: '直接入住', btn: '入住并收银' };
+                        return { title: '直接入住', btn: '确认入住' };
                     case 'finish':
                         return { title: '补录', btn: '补录' };
                     case 'book':

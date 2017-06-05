@@ -7,7 +7,7 @@
                         <span class="header-text">{{roomBusinessInfo.businessType === 2 ? '提前退房' : '办理退房'}}</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
-                    <div class="roomModals-body">
+                    <div class="roomModals-body" >
                         <div class="content-item">
                             <p class="content-item-title"><span>房间信息</span></p>
                             <div v-for="room in roomBusinessInfo.roomOrderInfoList">
@@ -52,9 +52,8 @@
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
                         </div> -->
-                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
+             <!--                <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div> -->
                         </div>
-                    </div>
                     <div class="roomModals-footer">
                         <div>
                             <span class="footer-label">{{`${ (totalPrice  - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
@@ -92,7 +91,6 @@ export default {
                 totalFee: 0,
                 backroomBusinessInfo: undefined,
                 timeCount: true,
-                PenaltyFee: true
             };
         },
         computed: {
@@ -214,9 +212,6 @@ export default {
                         }
                     );
                 }
-                if (n === 0) {
-                    this.tadayFee = 0
-                }
             }
         },
         methods: {
@@ -334,10 +329,7 @@ export default {
                         type: 'checkOut',
                         business
                     });
-                    if (this.PenaltyFee) {
-                        business.PenaltyFee = business.penalty;
-                    }
-                    this.PenaltyFee = true;
+
                     bus.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('changeBack', this.show);
                 }
