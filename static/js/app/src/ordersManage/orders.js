@@ -64,6 +64,8 @@ $(function() {
                 '8': '反结账'
             },
             optionsOrderState: ORDER_STATE_LIST,
+            customerChannel: null,
+            customerChannelList: [],
             startDate: '',
             endDate: '',
             orderNum: 0,
@@ -86,6 +88,7 @@ $(function() {
             }
 
             this.getOrdersList({}, false);
+            this.getCustomerChannels();
         },
         beforeDestroy: function() {
             bus.$off('refreshView', this.refreshView);
@@ -153,7 +156,8 @@ $(function() {
                     startDate: this.startDate,
                     keyword: this.searchContent,
                     sort: this.sort,
-                    orderType: this.orderType
+                    orderType: this.orderType,
+                    originId: this.customerChannel
                 };
                 return Object.assign({}, obj, this.orderParams);
             },
@@ -203,6 +207,13 @@ $(function() {
                 } else {
                     return this.orderStatusText[item.orderState];
                 }
+            },
+            getCustomerChannels() {
+                http.get('/user/getChannels', { isAll: false, type: 2 }).then(res => {
+                    if (res.code === 1) {
+                        this.customerChannelList = [{ id: null, name: '全部客源渠道' }, { id: -3, name: '微官网', type: 2 }].concat(res.data.list);
+                    }
+                });
             },
             searchOrders() {
                 const obj = this.getParams();
@@ -292,13 +303,22 @@ $(function() {
                 } */
             },
 
+            customerChannel: function(newVal) {
+                this.$nextTick(() => {
+                    this.orderStatus = '-1';
+                    const obj = this.getParams();
+                    this.getOrdersList(obj, false);
+                });
+            },
+
             orderParams: function(newVal) {
                 const obj = {
                     endDate: this.endDate,
                     startDate: this.startDate,
                     keyword: this.searchContent,
                     sort: this.sort,
-                    orderType: this.orderType
+                    orderType: this.orderType,
+                    originId: this.customerChannel
                 };
                 this.getOrdersList(Object.assign({}, obj, newVal), false);
             },

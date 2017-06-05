@@ -67,6 +67,11 @@
                     </dd-option>
                 </dd-select>
             </div>
+            <div class="dd-select-customerChannel">
+                <dd-select v-model="customerChannel">
+                    <dd-option v-for="option in customerChannelList" :key="option.id" :value="option.id" :label="option.name"></dd-option>
+                </dd-select>
+            </div>
             <span class="dd-date-label">使用时间:</span>
             <div class="dd-start-date">
                 <dd-datepicker placeholder="开始时间" v-model="startDate" :disabled-date="disableStartDate" />
