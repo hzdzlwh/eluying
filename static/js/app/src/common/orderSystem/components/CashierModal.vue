@@ -4,7 +4,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <span class="header-text" >收银台</span>
+                        <span class="header-text">收银台</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="roomModals-body" style="overflow: inherit">
@@ -46,31 +46,10 @@
                                 </div>
                             </div>
                         </div>
-<!--                         <div class="content-item" v-if="appearDeposit">
-                            <p class="content-item-title"><span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '押金退款' : '押金收款'}}</span></p>
-                            <div class="cashier-order-item">
-                                <span class="cashier-money-text">已付押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
-                                <span class="cashier-money-text" v-if="orderPayment.deposit > 0 && type !== 'checkIn'">需退押金:<span>{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0)}}</span></span>
-                            </div>
-                            <div class="cashier-deposit-container">
-                                <div class="cashier-deposit-info" v-if="showDeposit">
-                                    <span>押金:</span>
-                                    <input type="number" class="dd-input" v-model.number="deposit" placeholder="请输入押金金额">
-                                    <span style="margin-left: 24px">{{(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}}方式:</span>
-                                    <dd-select v-model="depositPayChannel" :placeholder="`请选择${(orderPayment.deposit || 0) - (orderPayment.refundDeposit || 0) > 0 && type !== 'checkIn' ? '退款' : '收款'}方式`">
-                                        <dd-option v-for="payChannel in depositPayChannels" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
-                                        </dd-option>
-                                    </dd-select>
-                                    <span class="cashier-delBtn-icon" @click="deleteDeposit"></span>
-                                </div>
-                                <div class="cashier-addBtn" @click="addDeposit" v-if="!showDeposit">
-                                    <span class="cashier-addBtn-icon"></span>
-                                    <span style="cursor: pointer">添加押金</span>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="roomModals-footer">
+                        <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
+                        <div @click="returnPreStep" v-else class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">
                                 {{orderState ? '需补金额:' : '需退金额:'}}
@@ -84,22 +63,13 @@
                                     ¥{{ needPayed }}
                                 </span>
                             </span>
-                           <!--  <span v-if="totalDeposit != 0" class="footer-label">
-                                {{(totalDeposit > 0 && type !== 'checkIn') ? '需退押金' : '需补押金'}}:
-                                <span class="order-price-num" :class="(totalDeposit > 0 && type !== 'checkIn') ? 'red' : 'green'">
-                                    ¥{{Math.abs(totalDeposit)}}
-                                </span>
-                            </span> -->
+                            <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
                         </div>
-                        <div>
-                        <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px" v-else @click="returnPreStep">返回</div>
-                        <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div></div>
                     </div>
                 </div>
             </div>
         </div>
-        <remainder  :show='ramainShow' :data='remainderDate' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
+        <remainder :show='ramainShow' :data='remainderDate' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
     </div>
 </template>
 <style lang="scss">
@@ -237,7 +207,7 @@ export default {
         //     return Number((this.deposit || 0).toFixed(2));
         // },
         penalty() {
-            return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            return (this.orderPayment.penalty || 0);
         },
         // appearDeposit() {
         //     const type = this.type;
@@ -250,7 +220,9 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (this.notPay - this.payments.reduce((o,n,i)=>{return o + Number(n.fee)}, 0)).toFixed(2);
+            return (this.notPay - this.payments.reduce((o, n, i) => {
+                return o + Number(n.fee)
+            }, 0)).toFixed(2);
         }
     },
     created() {
@@ -290,47 +262,56 @@ export default {
             $('#cashier').modal('hide');
             this.ramainShow = true;
         },
-        getpParms() {
-           let params;
-                if (this.type === 'register') {
-                    params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
-                } else {
-                    let operationType;
-                    let penalty; // eslint-disable-line
-                    if (this.type === 'checkOut') {
-                        operationType = 1;
-                        penalty = this.business.penalty;
-                    }
-                    if (this.type === 'cancel') {
-                        operationType = 4;
-                    }
-
-                    const orderId = JSON.stringify(getOrderId(this.orderDetail));
-                    const subOrderIds = [];
-                    window.console.log(this.orderDetail);
-                    if (this.roomBusinessInfo.roomOrderInfoList &&
-                            this.type !== 'orderDetail' &&
-                            this.type !== 'cancel') {
-                        this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
-                            if (item.selected) {
-                                subOrderIds.push(item.roomOrderId);
-                            }
-                        });
-                    }
-                    params = {
-                        // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
-                        orderType: this.orderDetail.type,
-                        // 住宿业务使用
-                        subOrderIds: JSON.stringify(subOrderIds),
-                        // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
-                        operationType,
-                        orderId
-                    };
+        getpParms(flag) {
+            let params;
+            if (this.type === 'register') {
+                params = {
+                    orderId: this.business.orderDetail.orderId,
+                    orderType: this.business.orderDetail.orderType
+                };
+            } else {
+                let operationType;
+                let penalty; // eslint-disable-line
+                if (this.type === 'checkOut') {
+                    operationType = 1;
                 }
+                if (this.type === 'cancel') {
+                    operationType = 4;
+                }
+                const orderId = getOrderId(this.orderDetail);
+                const subOrderIds = [];
+                if (this.roomBusinessInfo.roomOrderInfoList &&
+                    this.type !== 'orderDetail' &&
+                    this.type !== 'cancel' && this.type !== 'resetOrder') {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
+                        if (item.selected) {
+                            subOrderIds.push(item.roomOrderId);
+                        }
+                    });
+                }
+                params = {
+                    // -1-大订单 0-餐饮 1-娱乐 2-商超 3-住宿
+                    orderType: this.orderDetail.type,
+                    // 住宿业务使用
+                    subOrderIds: JSON.stringify(subOrderIds),
+                    // required = false 1= 提前退房 2 = 关联订单下单 3=办理入住
+                    operationType,
+                    orderId
+                };
+            }
             return params;
         },
         getRemainder() {
             let params = this.getpParms();
+            if (this.business.PenaltyFee && this.business.penalty) {
+                params.penalty = this.business.penalty;
+            }
+            if (this.type === 'collect') {
+                this.remainderDate = undefined;
+                this.cashierShow();
+                return;
+            }
+            // 如果是结算就只弹出收银台
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -355,6 +336,12 @@ export default {
             } else {
                 params.orderId = getOrderId(this.orderDetail);
                 params.orderType = this.orderDetail.type;
+                if (this.type === 'collect') {
+                    params.origin = 2;
+                }
+                if (this.type === 'orderDetail') {
+                    params.origin = 3;
+                }
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
@@ -421,6 +408,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
+            if (this.business.penalty) {
+                params.penalty = this.business.penalty;
+            }
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
@@ -569,7 +559,7 @@ export default {
             // }
             if (invalid) {
                 const loss = !this.orderState || (this.type !== 'checkIn');
-                modal.warn(`请选择${loss ? '退款' : '收款'}方式！`);
+                modal.warn(`请选择${loss ? '收款' : '退款'}方式！`);
                 return false;
             }
             // 功能一次结清，现在改为允许多次收款
@@ -578,7 +568,8 @@ export default {
             }, 0);
             const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
             // 订单详情允许多次收银条件
-            const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
+            // const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
+            const allowGetMoneyTimes = (this.type === 'collect');
             if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
                 modal.warn('订单未结清，无法完成收银！');
                 return false;
@@ -681,6 +672,12 @@ export default {
                 if (this.business.type === 2) {
                     params.operationType = 1;
                 }
+            }
+            if (this.type === 'collect') {
+                this.isSettle = false;
+            }
+            if (this.type === 'orderDetail') {
+                this.isSettle = true;
             }
             // 判断是否进行扫码收款
             let payWithAlipay = 0;

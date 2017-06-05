@@ -1,5 +1,4 @@
 require('cookie');
-require('promise.prototype.finally').shim();
 import Raven from 'raven-js';
 import modal from './modal';
 import ENDPOINT from './ENDPOINT';
@@ -7,6 +6,7 @@ import axios from 'axios';
 import qs from 'qs';
 const md5 = require('md5');
 
+let logoutErr = false;
 const spin = new modal.Spin();
 const host = process.env.NODE_ENV === 'production' ? '/ws' : (process.env.serverUrl + '/ws');
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -60,7 +60,8 @@ const http = {
                 if (res.data.code !== 1) {
                     if (config.notify && res.data.code !== 5) {
                         modal.error(res.data.msg);
-                    } else if (res.data.code === 5) {
+                    } else if (res.data.code === 5 && !logoutErr) {
+                        logoutErr = true;
                         window.localStorage.clear();
                         modal.error('账号在别处登录。');
                         setTimeout(() => {
@@ -167,22 +168,23 @@ const http = {
         return this.request('post', path, data, config);
     },
     getDataWithToken: function(data) {
-        data.timestamp = (new Date()).valueOf();
-        data.campId = data.campId || localStorage.getItem('campId');
-        data.uid = localStorage.getItem('uid');
-        data.terminal = 1;
-        data.version = data.version || -1;
-        data.kick = true;
+        const result = { ...data };
+        result.timestamp = (new Date()).valueOf();
+        result.campId = data.campId || localStorage.getItem('campId');
+        result.uid = localStorage.getItem('uid');
+        result.terminal = 1;
+        result.version = data.version || -1;
+        result.kick = true;
         const array = [];
-        for (const key in data) {
-            array.push(data[key]);
+        for (const key in result) {
+            array.push(result[key]);
         }
 
         array.push(localStorage.getItem('token'));
         array.sort();
         const str = array.join('');
-        data.sign = md5(str);
-        return data;
+        result.sign = md5(str);
+        return result;
     },
     paramsToString: function(params) {
         const paramsArray = [];

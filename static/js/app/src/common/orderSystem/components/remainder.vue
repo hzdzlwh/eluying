@@ -14,6 +14,7 @@
                                 <span class="reaminder-money-text">订单金额:<span>¥{{remainder.payableFee}}</span></span>
                                 <span class="reaminder-money-text">余额应收:<span>¥{{remainder.needFee}}</span></span>
                                 <span class="reaminder-money-text">余额已收:<span>¥{{remainder.paidFee}}</span></span>
+                                <span class="cashier-money-text" v-if='remainder.penalty'>违约金<span>¥{{ remainder.penalty }}</span></span>
                             </div>
                         </div>
                         <div class="content-item">
@@ -46,6 +47,7 @@
                         </div>
                     </div>
                     <div class="roomModals-footer">
+                     <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">
                                 {{remainder.type === 0  ? '余额收款：' : '余额退款:'}}
@@ -60,10 +62,7 @@
                                     ¥{{ needPay}}
                                 </span>
                             </span>
-                        </div>
-                        <div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
+                             <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
                         </div>
                     </div>

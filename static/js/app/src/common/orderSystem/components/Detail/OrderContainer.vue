@@ -56,9 +56,9 @@
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
-                                <div v-if="order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
+                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
                                     <label class="label-text">会员卡</label>
-                                    <span>{{ order.discountRelatedName }}</span>
+                                    <span>{{ order.discountRelatedName || '不使用' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -212,9 +212,13 @@
                                 </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
                                      v-if="orderState === 8">重新结账</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('collect')"
+                                     v-if="(type === ORDER_TYPE.COMBINATION && (orderState === -1 || orderState === 2 || orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && orderState !== 2 && orderState !== 3)">
+                                    收银
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
                                      v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8">
-                                    结账
+                                    结算
                                 </div>
                             </div>
                         </div>
@@ -1258,12 +1262,14 @@
                 bus.$emit('changeBack', this.show);
                 bus.$emit('showCancelOrder');
             },
-            showCashier() {
+            showCashier(type) {
                 this.hideModal();
-                bus.$emit('showCashier', { type: 'orderDetail' });
+                bus.$emit('changeBack', this.show);
+                bus.$emit('showCashier', { type: type });
             },
             reGetMoney() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
                 bus.$emit('showCashier', { type: 'resetOrder' });
             },
             checkInOrCheckOut(type) {

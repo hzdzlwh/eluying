@@ -44,12 +44,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="roomModals-footer" style="justify-content: flex-end;">
+                    <div class="roomModals-footer" >
                         <!-- <div>
                             <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{(Math.abs(finalPrice)).toFixed(2)}}</span></span>
                         </div> -->
+                        <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div style="float:right">
-                            <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div> <div class="dd-btn dd-btn-primary" @click="finishCheckIn">确认入住</div>
+                            <div class="dd-btn dd-btn-primary" @click="finishCheckIn">确认入住</div>
                         </div>
                     </div>
                 </div>

@@ -361,7 +361,7 @@
             titleAndBtn() {
                 switch (this.checkState) {
                     case 'ing':
-                        return { title: '直接入住', btn: '入住并收银' };
+                        return { title: '直接入住', btn: '确认入住' };
                     case 'finish':
                         return { title: '补录', btn: '补录' };
                     case 'book':
@@ -629,6 +629,11 @@
 
                                 if (this.order.discountChannel === 4 && cards.some(c => c.id === this.order.discountRelatedId)) {
                                     this.vipCardId = this.order.discountRelatedId;
+                                    return;
+                                }
+
+                                if (!this.order.discountChannel && this.checkState === 'editOrder') {
+                                    this.vipCardId = 0;
                                     return;
                                 }
 

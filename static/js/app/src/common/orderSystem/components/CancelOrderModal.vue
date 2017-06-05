@@ -18,7 +18,7 @@
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
-                                <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
+                                <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
                             </div>
                             <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
@@ -34,18 +34,20 @@
                                 <span class="cashier-addBtn" @click="addPenalty" style="display: inline-flex;">
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加违约金</span>
+                                     
                                 </span>
                             </div>
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
+                     <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need.toFixed(2))}}</span></span>
-                        </div>
-                        <div>
-                         <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
+
                         </div>
+                      
                     </div>
                 </div>
             </div>
@@ -53,6 +55,9 @@
     </div>
 </template>
 <style>
+.btn-back{
+    cursor: pointer;
+}
 </style>
 <script>
     import http from '../../http';
@@ -72,7 +77,8 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: []
+                subOrders: [],
+                PenaltyFee: true
             };
         },
         computed: {
@@ -163,6 +169,10 @@
                     bus.$emit('changeBack', this.showModal);
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = Number(totalPenalty);
+                    }
+                    this.PenaltyFee = true;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
                 }
