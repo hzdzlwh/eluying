@@ -56,9 +56,9 @@
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
-                                <div v-if="order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
+                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
                                     <label class="label-text">会员卡</label>
-                                    <span>{{ order.discountRelatedName }}</span>
+                                    <span>{{ order.discountRelatedName || '不使用' }}</span>
                                 </div>
                             </div>
                         </div>

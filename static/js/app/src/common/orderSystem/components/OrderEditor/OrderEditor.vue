@@ -632,6 +632,11 @@
                                     return;
                                 }
 
+                                if (!this.order.discountChannel && this.checkState === 'editOrder') {
+                                    this.vipCardId = 0;
+                                    return;
+                                }
+
                                 if (cards && cards.length > 0) {
                                     this.vipCardId = cards[0].id;
                                 } else {

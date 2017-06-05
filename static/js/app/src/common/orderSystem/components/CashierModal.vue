@@ -237,7 +237,7 @@ export default {
         //     return Number((this.deposit || 0).toFixed(2));
         // },
         penalty() {
-            return (this.orderPayment.penalty || 0) + ((this.business && this.business.penalty) || 0);
+            return (this.orderPayment.penalty || 0);
         },
         // appearDeposit() {
         //     const type = this.type;
@@ -290,7 +290,7 @@ export default {
             $('#cashier').modal('hide');
             this.ramainShow = true;
         },
-        getpParms() {
+        getpParms(flag) {
            let params;
                 if (this.type === 'register') {
                     params = { orderId: this.business.orderDetail.orderId, orderType: this.business.orderDetail.orderType };
@@ -299,18 +299,15 @@ export default {
                     let penalty; // eslint-disable-line
                     if (this.type === 'checkOut') {
                         operationType = 1;
-                        penalty = this.business.penalty;
                     }
                     if (this.type === 'cancel') {
                         operationType = 4;
                     }
-
-                    const orderId = JSON.stringify(getOrderId(this.orderDetail));
+                    const orderId = getOrderId(this.orderDetail);
                     const subOrderIds = [];
-                    window.console.log(this.orderDetail);
                     if (this.roomBusinessInfo.roomOrderInfoList &&
                             this.type !== 'orderDetail' &&
-                            this.type !== 'cancel') {
+                            this.type !== 'cancel' && this.type !== 'resetOrder') {
                         this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                             if (item.selected) {
                                 subOrderIds.push(item.roomOrderId);
@@ -331,6 +328,9 @@ export default {
         },
         getRemainder() {
             let params = this.getpParms();
+            if (this.business.PenaltyFee && this.business.penalty) {
+                params.penalty = this.business.penalty;
+            }
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -421,6 +421,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
+            if (this.business.penalty) {
+                params.penalty =  this.business.penalty;
+            }
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;

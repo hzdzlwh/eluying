@@ -253,7 +253,9 @@
                 }
             },
             vipCardInfo(vipCardInfo, oldVipCardInfo) {
-                if (!this.userOriginType) {
+                if (!this.userOriginType ||
+                    JSON.stringify(vipCardInfo) === JSON.stringify(oldVipCardInfo) ||
+                    this.userOriginType.id > 0) {
                     return;
                 }
                 const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
@@ -694,8 +696,20 @@
                         return false;
                     }
 
-                    discountRelatedId = this.vipCardId > 0 ? this.vipCardId : this.vipId;
-                    discountChannel = this.vipCardId > 0 ? 4 : 1;
+                    if (this.vipCardId > 0) {
+                        discountRelatedId = this.vipCardId;
+                        discountChannel = 4;
+                    }
+
+                    if (this.vipCardId === 0) {
+                        discountRelatedId = null;
+                        discountChannel = null;
+                    }
+
+                    if (this.vipCardId < 0) {
+                        discountRelatedId = this.vipId;
+                        discountChannel = 1;
+                    }
                 }
 
                 rooms.map(room => {
