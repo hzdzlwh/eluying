@@ -331,6 +331,12 @@ export default {
             if (this.business.PenaltyFee && this.business.penalty) {
                 params.penalty = this.business.penalty;
             }
+            if (this.type === 'collect') {
+                this.remainderDate = undefined;
+                this.cashierShow();
+                return;
+            }
+            // 如果是结算就只弹出收银台
             http.get('/order/getBalancePayment', params).then(res => {
                 if (res.data.balancePay) {
                     // this.getOrderPayment().then(() => {
@@ -355,6 +361,12 @@ export default {
             } else {
                 params.orderId = getOrderId(this.orderDetail);
                 params.orderType = this.orderDetail.type;
+                if (this.type === 'collect') {
+                    params.origin = 2;
+                }
+                if (this.type === 'orderDetail') {
+                    params.origin = 3;
+                }
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
@@ -572,7 +584,7 @@ export default {
             // }
             if (invalid) {
                 const loss = !this.orderState || (this.type !== 'checkIn');
-                modal.warn(`请选择${loss ? '退款' : '收款'}方式！`);
+                modal.warn(`请选择${loss ? '收款' : '退款'}方式！`);
                 return false;
             }
             // 功能一次结清，现在改为允许多次收款
@@ -581,7 +593,8 @@ export default {
             }, 0);
             const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
             // 订单详情允许多次收银条件
-            const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
+            // const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
+            const allowGetMoneyTimes = (this.type === 'collect');
             if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
                 modal.warn('订单未结清，无法完成收银！');
                 return false;
@@ -684,6 +697,12 @@ export default {
                 if (this.business.type === 2) {
                     params.operationType = 1;
                 }
+            }
+            if (this.type === 'collect') {
+                this.isSettle = false;
+            }
+            if (this.type === 'orderDetail') {
+                this.isSettle = true;
             }
             // 判断是否进行扫码收款
             let payWithAlipay = 0;

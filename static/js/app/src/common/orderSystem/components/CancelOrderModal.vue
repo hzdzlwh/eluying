@@ -18,7 +18,7 @@
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
-                                <input v-model="penalty" type="text" class="dd-input" placeholder="请输入违约金">
+                                <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
                             </div>
                             <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
