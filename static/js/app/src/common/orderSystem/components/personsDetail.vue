@@ -2,23 +2,24 @@
     <div>
         <div class="modal fade roomModals" id="personsDetail" role="dialog" data-backdrop="static">
             <div class="modal-dialog" style="width: 545px">
-                <div class="modal-content" style="width: 545px">
+                <div class="modal-content" style="width: 545px;max-height: 443px">
                     <div class="roomModals-header" style="border-bottom: 1px solid #e6e6e6">
                         <span class="header-text personsDetail-title">入住人详情</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
                     <div class="personsDetail-body">
                         <div class="personsDetail-leftList">
-                            <div class="personsDetail-leftItem"
-                                 :class="{'selected': person.selected}"
-                                 v-for="(person, index) in personsList"
-                                 @click="changeShowPerson(index)"
-                                 v-if="personsList && personsList.length > 0">
-                                <div>
-                                    <p>{{person.name}}</p>
-                                    <p style="font-size: 12px">{{person.idCardNum}}</p>
+                            <div style="max-height: 346px;overflow－x: hidden; overflow-y: auto">
+                                <div class="personsDetail-leftItem"
+                                     :class="{'selected': person.selected}"
+                                     v-for="(person, index) in personsList"
+                                     v-if="personsList && personsList.length > 0">
+                                    <div @click="changeShowPerson(index)" style="flex-grow: 1">
+                                        <p>{{person.name}}</p>
+                                        <p style="font-size: 12px">{{person.idCardNum}}</p>
+                                    </div>
+                                    <span class="delete-icon" style="margin: 0 4px 0" @click="deletePerson(person)" v-show="editAble"></span>
                                 </div>
-                                <span class="delete-icon" style="margin: 0 4px 0" @click="deletePerson(person)" v-show="editAble"></span>
                             </div>
                             <div class="personsDetail-leftBtn" v-show="editAble">
                                 <div style="display: flex; align-items: center; cursor: pointer;" @click="addNewPerson">
@@ -40,6 +41,7 @@
                                         </dd-select>
                                     </div>
                                 </div>
+                                <span class="personsDetail-errorTip" v-show="nameErrorRequire">必填项</span>
                             </div>
                             <div class="personsDetail-rightItem">
                                 <span class="personsDetail-rightText">证件号</span>
@@ -50,6 +52,7 @@
                                     </dd-select>
                                 </div>
                                 <input class="dd-input personsDetail-cardNum" placeholder="证件号码" maxlength="32" v-model="idCardNum" :disabled="!editAble">
+                                <span class="personsDetail-errorTip" v-show="idCardNumErrorRequire">必填项</span>
                             </div>
                             <div class="personsDetail-rightItem">
                                 <span class="personsDetail-rightText">生日</span>
@@ -59,7 +62,13 @@
                             </div>
                             <p class="personsDetail-rightItem">
                                 <span class="personsDetail-rightText">手机号</span>
-                                <input type="text" class="dd-input personsDetail-input" maxlength="20" v-model="phone" :disabled="!editAble" />
+                                <input type="text"
+                                       class="dd-input personsDetail-input"
+                                       maxlength="20"
+                                       v-model="phone"
+                                       @input="checkPhone"
+                                       :disabled="!editAble" />
+                                <span class="personsDetail-errorTip" v-show="phoneErrorRules">格式有误</span>
                             </p>
                             <p class="personsDetail-rightItem">
                                 <span class="personsDetail-rightText">车牌号</span>
@@ -75,7 +84,12 @@
                             </p>
                             <p class="personsDetail-rightItem">
                                 <span class="personsDetail-rightText">邮箱</span>
-                                <input type="text" class="dd-input personsDetail-largeInput" maxlength="32" v-model="email" :disabled="!editAble" />
+                                <input type="text" class="dd-input personsDetail-largeInput"
+                                       maxlength="32"
+                                       v-model="email"
+                                       @input="checkEmail"
+                                       :disabled="!editAble" />
+                                <span class="personsDetail-errorTip" v-show="emailErrorRules">格式有误</span>
                             </p>
                             <div class="personsDetail-rightFoot" v-show="editAble">
                                 <button class="dd-btn dd-btn-ghost" style="margin-right: 16px" @click="cancel">取消</button>
@@ -133,6 +147,14 @@
         margin-bottom: 16px;
         display: flex;
         align-items: center;
+        position: relative;
+    }
+    .personsDetail-errorTip {
+        position: absolute;
+        color: orangered;
+        font-size: 12px;
+        top: 24px;
+        left: 50px;
     }
     .personDetail-rightContainer {
         display: flex;
@@ -172,6 +194,7 @@
     import { ID_CARD_TYPE, SEX_TYPE } from '../../../ordersManage/constant';
     import http from '../../http';
     import modal from '../../modal';
+    import reg from '../../validate';
     import { mapActions, mapState } from 'vuex';
     import types from '../store/types';
 
@@ -188,10 +211,6 @@
             show: {
                 type: Boolean,
                 default: false
-            },
-            personsList: {
-                type: Array,
-                default: []
             },
             editAble: {
                 type: Boolean,
@@ -214,7 +233,13 @@
                 carNum: undefined,
                 country: undefined,
                 address: undefined,
-                email: undefined
+                email: undefined,
+                personsList: [],
+                selectedPerson: {},
+                nameErrorRequire: false,
+                idCardNumErrorRequire: false,
+                emailErrorRules: false,
+                phoneErrorRules: false
             };
         },
         computed: {
@@ -242,29 +267,120 @@
                 this.country = undefined;
                 this.address = undefined;
                 this.email = undefined;
+                this.resetErrorTip();
+            },
+            resetErrorTip() {
+                this.nameErrorRequire = false;
+                this.idCardNumErrorRequire = false;
+                this.emailErrorRules = false;
+                this.phoneErrorRules = false;
+            },
+            checkEmail() {
+                const invalid = this.email && this.email.length > 0 && !(reg.email.test(this.email));
+                if (invalid) {
+                    this.emailErrorRules = true;
+                } else {
+                    this.emailErrorRules = false;
+                }
+            },
+            checkPhone() {
+                const invalid = this.phone && this.phone.length > 0 && !(reg.phone.test(this.phone));
+                if (invalid) {
+                    this.phoneErrorRules = true;
+                } else {
+                    this.phoneErrorRules = false;
+                }
             },
             hideModal() {
                 this.$emit('closePersonsDetail');
                 $('#personsDetail').modal('hide');
+                this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
             },
             changeShowPerson(index) {
                 this.editNewPerson = false;
                 this.personsList.map((person, tag) => {
                     if (tag === index) {
                         person.selected = true;
-                        this.name = person.name;
-                        this.idCardType = person.idCardType;
-                        this.idCardNum = person.idCardNum;
+                        const params = { orderId: this.orderId, roomOrderId: this.roomOrderId, checkInUserId: person.id };
+                        http.get('/order/getCheckInUsersAllInfo', params)
+                            .then(res => {
+                                const checkInUser = res.data.checkInUser;
+                                this.selectedPerson = res.data.checkInUser;
+                                if (checkInUser) {
+                                    this.name = checkInUser.name;
+                                    this.genderType = checkInUser.sex;
+                                    this.idCardType = checkInUser.idCardType;
+                                    this.idCardNum = checkInUser.idCardNum;
+                                    this.birthday = checkInUser.birthday;
+                                    this.phone = checkInUser.phone;
+                                    this.carNum = checkInUser.carNum;
+                                    this.country = checkInUser.country;
+                                    this.address = checkInUser.address;
+                                    this.email = checkInUser.email;
+                                }
+                            });
                     } else {
                         person.selected = false;
                     }
                 });
             },
             savePersonInfo() {
-                modal.alert('保存成功！');
+                let invalid = false;
+                if (!this.name || this.name.length <= 0) {
+                    invalid = true;
+                    this.nameErrorRequire = true;
+                }
+                if (!this.idCardNum || this.idCardNum.length <= 0) {
+                    invalid = true;
+                    this.idCardNumErrorRequire = true;
+                }
+                if (this.email && this.email.length > 0 && !reg.email.test(this.email)) {
+                    invalid = true;
+                    this.emailErrorRules = true;
+                }
+                if (this.phone && this.phone.length > 0 && !(reg.phone.test(this.phone))) {
+                    invalid = true;
+                    this.phoneErrorRules = true;
+                }
+                if (invalid) {
+                    return false;
+                }
+                const person = {
+                    name: this.name,
+                    phone: this.phone,
+                    address: this.address,
+                    sex: this.genderType,
+                    idCardType: this.idCardType,
+                    idCardNum: this.idCardNum,
+                    carNum: this.carNum,
+                    birthday: this.birthday,
+                    country: this.country,
+                    email: this.email
+                };
+                const params = { orderId: this.orderId, roomOrderId: this.roomOrderId, checkInUser: JSON.stringify(person) };
+                if (this.editNewPerson) {
+                    http.get('/order/addRoomCheckInUser', params)
+                        .then(res => {
+                            modal.alert('保存成功！');
+                            this.getUsersAndInfo();
+                        });
+                } else {
+                    params.checkInUserId = this.selectedPerson.id;
+                    http.get('/order/updateRoomCheckInUsers', params)
+                        .then(res => {
+                            modal.alert('保存成功！');
+                        });
+                }
             },
             deletePerson(person) {
-                modal.confirm({ title: '删除入住人', message: '确认删除此入住人吗？' });
+                const params = { orderId: this.orderId, roomOrderId: this.roomOrderId, checkInUserId: person.id };
+                modal.confirm({ title: '删除入住人', message: '确认删除此入住人吗？' }, () => { this.deletePersonMethod(params); });
+            },
+            deletePersonMethod(params) {
+                http.get('/order/deleteRoomCheckInUser', params)
+                    .then(res => {
+                        this.getUsersAndInfo();
+                    });
             },
             addNewPerson() {
                 this.resetData();
@@ -274,41 +390,64 @@
                 });
             },
             cancel() {
-                let selectedPerson;
                 if (this.editNewPerson) {
                     this.resetData();
                 } else {
-                    this.personsList.map(person => {
-                        if (person.selected) {
-                            selectedPerson = person;
+                    this.resetErrorTip();
+                    this.name = this.selectedPerson.name;
+                    this.genderType = this.selectedPerson.sex;
+                    this.idCardType = this.selectedPerson.idCardType;
+                    this.idCardNum = this.selectedPerson.idCardNum;
+                    this.birthday = this.selectedPerson.birthday;
+                    this.phone = this.selectedPerson.phone;
+                    this.carNum = this.selectedPerson.carNum;
+                    this.country = this.selectedPerson.country;
+                    this.address = this.selectedPerson.address;
+                    this.email = this.selectedPerson.email;
+                }
+            },
+            getUsersAndInfo() {
+                const params = { orderId: this.orderId, roomOrderId: this.roomOrderId };
+                http.get('/order/getCheckInUsersBasicInfo', params)
+                    .then(res => {
+                        if (res.data.checkInUsers && res.data.checkInUsers.length > 0) {
+                            this.personsList = [...res.data.checkInUsers];
+                            this.personsList.map((person, index) => {
+                                if (index === 0) {
+                                    this.$set(person, 'selected', true);
+                                } else {
+                                    this.$set(person, 'selected', false);
+                                }
+                            });
+                        }
+                        const nextParams = { orderId: this.orderId, roomOrderId: this.roomOrderId, checkInUserId: this.personsList[0].id };
+                        return http.get('/order/getCheckInUsersAllInfo', nextParams);
+                    })
+                    .then(res => {
+                        const checkInUser = res.data.checkInUser;
+                        this.selectedPerson = res.data.checkInUser;
+                        if (checkInUser) {
+                            this.name = checkInUser.name;
+                            this.genderType = checkInUser.sex;
+                            this.idCardType = checkInUser.idCardType;
+                            this.idCardNum = checkInUser.idCardNum;
+                            this.birthday = checkInUser.birthday;
+                            this.phone = checkInUser.phone;
+                            this.carNum = checkInUser.carNum;
+                            this.country = checkInUser.country;
+                            this.address = checkInUser.address;
+                            this.email = checkInUser.email;
                         }
                     });
-                    this.name = selectedPerson.name;
-                    this.idCardType = selectedPerson.idCardType;
-                    this.idCardNum = selectedPerson.idCardNum;
-                }
             }
         },
         watch: {
             show(newVal) {
                 if (newVal) {
                     $('#personsDetail').modal('show');
+                    this.getUsersAndInfo();
                 } else {
                     $('#personsDetail').modal('hide');
-                }
-            },
-            personsList(newVal) {
-                if (newVal && newVal.length > 0) {
-                    this.name = newVal[0].name;
-                    this.idCardType = newVal[0].idCardType;
-                    this.idCardNum = newVal[0].idCardNum;
-                    newVal.map((person, index) => {
-                        if (index === 0) {
-                            this.$set(person, 'selected', true);
-                        } else {
-                            this.$set(person, 'selected', false);
-                        }
-                    });
                 }
             }
         },

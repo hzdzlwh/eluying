@@ -68,7 +68,6 @@
                 :orderId="orderId"
                 :roomOrderId="roomOrderId"
                 :show="showPersonsDetail"
-                :personsList="personsList"
                 :editAble="editAble"
                 @closePersonsDetail="closePersonsDetail">
         </persons-detail>
@@ -144,7 +143,6 @@
                 this.orderId = room.orderId;
                 this.roomOrderId = room.roomOrderId;
                 this.showPersonsDetail = true;
-                this.personsList = [...room.idCardsList];
                 const state = room.roomInfo ? room.roomInfo.state : room.state;
                 this.editAble = state !== 2 && state !== 3;
             },
