@@ -46,6 +46,7 @@
                             <span style="margin-right: 24px">提前退房部分房价：￥{{noCheckInMoney}}</span>
                             <span>提前退房违约金：</span>
                             <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -72,7 +73,8 @@
     export default{
         data() {
             return {
-                penalty: undefined
+                penalty: undefined,
+                PenaltyFee: true
             };
         },
         computed: {
@@ -173,7 +175,10 @@
                 if (business.type === 2) {
                     business.penalty = this.penalty;
                 }
-
+                if (this.penalty <= 0) {
+                    modal.warn('请输入正确格式的违约金');
+                    return false;
+                }
                 if (this.deposit === 0 && (this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     const roomsFix = rooms;
                     roomsFix.forEach(function(element, index) {
@@ -181,7 +186,7 @@
                             roomsFix.splice(index, 1);
                         }
                     });
-                    // 清理rooms里为nu l l的值，如果要改回原来的用就行了
+                    // 清理rooms里为null的值，如果要改回原来的用就行了
                     http.get('/order/checkInOrCheckout', {
                         ...business,
                         rooms: JSON.stringify(roomsFix)
@@ -196,6 +201,10 @@
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
                     this.hideModal();
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = business.penalty;
+                    }
+                    this.PenaltyFee = true;
                     this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', { type: 'checkOut', business });
                 }

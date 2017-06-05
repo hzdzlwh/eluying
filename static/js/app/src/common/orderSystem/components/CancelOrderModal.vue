@@ -34,8 +34,10 @@
                                 <span class="cashier-addBtn" @click="addPenalty" style="display: inline-flex;">
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加违约金</span>
+                                     
                                 </span>
                             </div>
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -69,7 +71,8 @@
                 penalty: undefined,
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
-                subOrders: []
+                subOrders: [],
+                PenaltyFee: true
             };
         },
         computed: {
@@ -152,6 +155,10 @@
                 } else {
                     business.penalty = Number(totalPenalty);
                     business.functionType = 0;
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = Number(totalPenalty);
+                    }
+                    this.PenaltyFee = true;
                     this.hideModal();
                     bus.$emit('showCashier', { type: 'cancel', business });
                 }
