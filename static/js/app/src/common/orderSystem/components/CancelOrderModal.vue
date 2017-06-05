@@ -41,13 +41,13 @@
                         </div>
                     </div>
                     <div class="roomModals-footer">
+                     <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need.toFixed(2))}}</span></span>
-                        </div>
-                        <div>
-                         <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
+
                         </div>
+                      
                     </div>
                 </div>
             </div>
@@ -55,6 +55,9 @@
     </div>
 </template>
 <style>
+.btn-back{
+    cursor: pointer;
+}
 </style>
 <script>
     import http from '../../http';

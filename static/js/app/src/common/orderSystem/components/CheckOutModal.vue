@@ -55,15 +55,13 @@
              <!--                <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div> -->
                         </div>
                     <div class="roomModals-footer">
+                    <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">{{`${ (totalPrice  - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
                                 <span class="order-price-num" :class="(totalPrice  - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice  - payed)).toFixed(2)}}</span>
                             </span>
-                            <!-- <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span> -->
-                        </div>
-                        <div>
-                            <div class="dd-btn dd-btn-primary" style="margin-right:20px" @click="returnPreStep">返回</div>
                             <div class="dd-btn dd-btn-primary" @click="checkOut">确认退房</div>
+                            <!-- <span class="footer-label">需退押金<span class="order-price-num green">¥{{deposit}}</span></span> -->
                         </div>
                     </div>
                 </div>
