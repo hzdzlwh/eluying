@@ -36,8 +36,8 @@
                                     @contextmenu="openAction(status, $event)"
                                 >
                                     <div
-                                        v-if="status.s === -1"
-                                        class="calendar-status-inner"
+                                    v-if="status.s !== 100"
+                                        class="day-calendar-status-inner"
                                         :key="room.i + status.dateStr"
                                         :class="{'selected': status.selected}"
                                         @click="selectStatus(status)"
@@ -53,10 +53,51 @@
                                     </div>
                                     <div
                                         class="calendar-status-action"
-                                        @click.stop="openOrCloseStatus(room, status)"
+                                        
                                         v-if="status.actionVisible"
                                     >
-                                        {{status.s === 100 ? '打开房间' : '关闭房间'}}
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        预定
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        办理入住
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        转为{{status.s === 100 ? '脏' : '净'}}房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                       转维修房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        转停用房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        转保留房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        查看在住
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        办理退房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        查看维修房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        结束维修房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        查看停用房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        结束停用房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        查看保留房
+                                    </div>
+                                    <div @click.stop="openOrCloseStatus(room, status)">
+                                        结束保留房
+                                    </div>
                                     </div>
                                 </td>
                             </tr>
@@ -66,7 +107,7 @@
                         </template>
                     </tbody>
                 </table>
-                <div class="calendar-glyph"
+                <<!-- div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart,
                         'draggable': g.draggable,
                         'glyph-book': g.roomState === 0,
@@ -115,436 +156,30 @@
                         </div>
                         <div class="glyph-detail-remarks" v-if="g.remark"><span class="glyph-label">备注：</span>{{g.remark}}</div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </template>
-<style lang="scss" rel="stylesheet/scss">
-    @import "~dd-common-css/src/variables";
-    .calendar {
-        height: 100%;
-        width: 100%;
+<style lang="scss" rel="stylesheet/scss" scoped>
+.calendar-status-action{
+    height:auto;
+    div{
+        border-bottom:1px solid #000;
     }
-    .legend-box {
-        position: absolute;
-        display: flex;
-        z-index: 9;
-        left: 16px;
-        top: 14px;
-        align-items: center;
-        color: #999;
-        .room-legend {
-            margin-right: 12px;
-        }
-        .room-legend-icon {
-            border-radius: 2px;
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-            vertical-align: sub;
-            &.blue {
-                background: #399be6;
-            }
-            &.red {
-                background: #f29130;
-            }
-            &.grey {
-                background: #a6a6a6;
-            }
-        }
-        .dirty {
-            background: url('../../../../../image/dirty-room.png');
-            display: inline-block;
-            width:15px;
-            height:17px;
-            vertical-align: sub;
-        }
-    }
-    .calendar-picker {
-        position: absolute;
-        top: 48px;
-    }
-    .calendar-header-picker {
-        width: 140px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 2;
-    }
-    .calendar-leftHeader {
-        will-change: transform;
-        transform: translateZ(0);
-        border-right: solid thin #ccc;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        background: #f8f9fc;
-        width: 140px;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        &::-webkit-scrollbar {
-            background: transparent;
-        }
-    }
-    .calendar-category {
-        width: 100%;
-        height: auto;
-        position: relative;
-    }
-    .calendar-category-name {
-        cursor: pointer;
-        width: 74px;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        position: absolute;
-        border-right: solid thin #e6e6e6;
-        border-bottom: solid thin #e6e6e6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .calendar-category-name-text {
-        cursor: pointer;
-    }
-    .calendar-category-list {
-        display: inline-block;
-        vertical-align: top;
-        width: 66px;
-        margin-left: 74px;
-        height: auto;
-    }
-    .calendar-category-room {
-        cursor: pointer;
-        position: relative;
-        width: 100%;
-        line-height: 48px;
-        text-align: center;
-        border-bottom: solid thin #e6e6e6;
-        height: 48px;
-    }
-    .calendar-category-room.fold {
-        cursor: default;
-    }
-    .calendar-category-room-dirty {
-        background: #e1e5f0;
-    }
-    .calendar-category-room-dirty::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        width: 14px;
-        height: 17px;
-        background: url('../../../../../image/dirty-room.png');
-    }
-    .calendar-category-room.hover, .calendar-header-date.hover {
-        background: #bfdeff;
-    }
-    .calendar-header {
-        position: absolute;
-        top: 48px;
-        right: 0;
-        left: 140px;
-        z-index: 1;
-        height: 80px;
-        margin-left: 1px;
-        overflow-x: hidden;
-        overflow-y: scroll;
-        &::-webkit-scrollbar {
-            background: #f8f9fc;
-        }
-    }
-    .calendar-header-table {
-        width: 100%;
-        table-layout: fixed;
-    }
-    .calendar-header-item {
-        width: 100px;
-    }
-    .calendar-header-date {
-        width: 100%;
-        height: 48px;
-        text-align: center;
-        background: #f8f9fc;
-        border-bottom: solid thin #ccc;
-        border-right: solid thin #e6e6e6;
-        position: relative;
-    }
-    .calendar-header-date.weekend {
-        color: #f24949;
-    }
-    .calendar-header-date.today {
-        color: $blue;
-    }
-    .calendar-header-day {
-        width: 100%;
-        height: 25px;
-        line-height: 25px;
-    }
-    .calendar-header-desc {
-        width: 100%;
-        height: 25px;
-        line-height: 25px;
-    }
-    .calendar-header-left {
-        width: 100%;
-        height: 32px;
-        background: #ebebeb;
-        text-align: center;
-        line-height: 32px;
-        border-bottom: solid thin #ccc;
-        border-right: solid thin #e6e6e6;
-    }
-    .calendar-body {
-        position: absolute;
-        top: 128px;
-        bottom: 0;
-        width: 100%;
-    }
-    .calendar-status-list {
-        will-change: transform;
-        transform: translateZ(0);
-        position: absolute;
-        margin-top: -1px;
-        left: 140px;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        overflow: scroll;
-    }
-    .calendar-status-table {
-        width: 100%;
-        table-layout: fixed;
-    }
-    .calendar-status-row {
-        display: table-row;
-    }
-    .calendar-status {
-        position: relative;
-        width: 100px;
-        height: 48px;
-        background: white;
-        border-right: solid thin #e6e6e6;
-        border-bottom: solid thin #e6e6e6;
-        background-clip: padding-box;
-    }
-    .calendar-status-busy {
-        color: #f24949;
-    }
-    .calendar-status:hover {
-        .calendar-status-inner {
-            display: block;
-        }
-        .calendar-status-inner.selected::after {
-            display: none;
-        }
-        .calendar-status-info {
-            display: block !important;
-        }
-    }
-    .calendar-status-inner {
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        width: 96px;
-        height: 44px;
-        margin: auto;
-        margin-top: 2px;
-        font-size: 12px;
-        position: relative;
-        line-height: 48px;
-        text-align: center;
-        display: none;
-        border: 1px solid $blue;
-        cursor: pointer;
-        &.selected {
-             background: #e6f1ff;
-             display: block;
-             border: solid thin $blue;
-            .calendar-status-info {
-                display: none;
-            }
-            &::after {
-                content: '';
-                position: absolute;
-                 top: 1px;
-                 left: 40px;
-                 width: 16px;
-                 height: 32px;
-                 border: 1px solid $blue;
-                 border-top-width: 0;
-                 border-left-width: 0;
-                 transform: rotate(45deg);
-            }
-        }
-    }
-    .calendar-status-date {
-        width: 45px;
-        height: 17px;
-        position: absolute;
-        left: 3px;
-        top: 5px;
-        line-height: 17px;
-        text-align: left;
-    }
-    .calendar-status-price {
-        width: 49px;
-        height: 17px;
-        position: absolute;
-        right: 3px;
-        top: 5px;
-        line-height: 17px;
-        text-align: right;
-    }
-    .calendar-status-name {
-        width: 92px;
-        height: 17px;
-        position: absolute;
-        left: 1px;
-        bottom: 5px;
-        line-height: 17px;
-        text-overflow: ellipsis;
-        text-align: center;
-    }
-    .calendar-status-action {
-        background: #fafafa;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
-        width: 88px;
-        height: 32px;
-        text-align: center;
-        line-height: 32px;
-        position: absolute;
-        top: 32px;
-        left: 49px;
-        z-index: 1;
-        cursor: pointer;
-    }
-    .calendar-status-close {
-        background: #a6a6a6;
-        width: 96px;
-        height: 44px;
-        margin: auto;
-        margin-top: 2px;
-        color: #fff;
-        line-height: 44px;
-        padding-left: 14px;
-    }
-    .calendar-glyph {
-        position: absolute;
-        height: 44px;
-        color: white;
-        padding-left: 8px;
-        cursor: pointer;
-        user-select: none;
-        transition: transform 0.2s;
-        &.ui-draggable-dragging {
-            cursor: move;
-            transform: rotate(3deg);
-            opacity: 0.85;
-            box-shadow:0 0 5px 0 rgba(0,0,0,0.5);
-        }
-    }
-    .glyph-book {
-        background: #f29130;
-        &.glyph-start {
-             border-left: 6px solid #f27c05;
-        }
-    }
-    .glyph-ing {
-        background: #399be6;
-        &.glyph-start {
-             border-left: 6px solid $blue;
-        }
-    }
-    .glyph-finish {
-        background: #a6a6a6;
-        &.glyph-start {
-             border-left: 6px solid #8c8c8c;
-        }
-    }
-    .calendar-glyph-name, .calendar-glyph-info {
-        height: 22px;
-        line-height: 22px;
-        display: block;
-        width: 90%;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-    .calendar-glyph-channel {
-        max-width: 55%;
-        font-size: 12px;
-        margin-right: 6px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-    .calendar-glyph-detail {
-        display: none;
-        width: 300px;
-        background: #fafafa;
-        box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
-        color: #666;
-        position: absolute;
-        padding: 10px 8px;
-        z-index: 2;
-        .glyph-label {
-            color: #999;
-        }
-    }
-    .calendar-glyph-detail.down {
-        left: 0;
-        top: 48px;
-        .glyph-arrow-up {
-            display: block;
-        }
-        .glyph-arrow-down {
-            display: none;
-        }
-    }
-    .calendar-glyph-detail.up {
-        left: 0;
-        bottom: 48px;
-        .glyph-arrow-up {
-            display: none;
-        }
-        .glyph-arrow-down {
-            display: block;
-        }
-    }
-    .glyph-detail-name, .glyph-detail-time, .glyph-detail-price {
-        display: flex;
-        justify-content: space-between;
-        line-height: 22px;
-    }
-    .glyph-detail-price {
-        padding-top: 4px;
-        margin-top: 4px;
-        border-top: 1px solid #e6e6e6;
-    }
-    .glyph-arrow-down, .glyph-arrow-up {
-        position: absolute;
-        left: 20px;
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid #fafafa;
-        line-height: 0;
-    }
-    .glyph-arrow-up {
-        top: -10px;
-    }
-    .glyph-arrow-down {
-        bottom: -10px;
-        border-bottom: none;
-        border-top: 10px solid #fafafa;
-    }
+}
+.day-calendar-status-inner{
+    width: 96px;
+    height: 44px;
+    margin: auto;
+    margin-top: 2px;
+    font-size: 12px;
+    position: relative;
+    line-height: 48px;
+    text-align: center;
+    border: 1px solid #178ce6;
+    cursor: pointer;
+}
 </style>
 <script>
     import DateSelect from './DateSelect.vue';
