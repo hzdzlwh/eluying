@@ -57,7 +57,7 @@
                             <span v-if="index === 0" class="living-persons-detail" @click="showPersonsDetailModal(item)">入住人详情</span>
                         </div>
                     </div>
-                    <div class="extra-items" v-if="item.extraItems.length > 0">
+                    <div class="extra-items" v-if="item.extraItems && item.extraItems.length > 0">
                         <div class="extra-items-title">
                             <span class="extra-item-icon"></span>
                             <span>其他消费</span>
