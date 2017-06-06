@@ -459,6 +459,13 @@
             background-size: contain;
             margin-right: 25px;
         }
+        .extra-item-icon {
+            width: 15px;
+            height: 18px;
+            background: url("../../../../../../../image/modal/room_modal_extra.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
         .food-icon {
             width: 14px;
             height: 18px;
@@ -830,6 +837,7 @@
         }
         .fee-input {
             padding-left: 16px;
+            width: 90px;
         }
         .discount-info {
             display: inline-flex;
@@ -1034,6 +1042,34 @@
             color: $blue;
             font-weight: bold;
         }
+    }
+    .extra-items {
+        margin-top: 19px;
+    }
+    .extra-items-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .extra-items-content {
+        padding-left: 40px;
+    }
+    .extra-items-date {
+        color: #999;
+        font-size: 12px;
+        margin-bottom: 10px
+    }
+    .extra-items-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .extra-items-name {
+        width: 224px;
+        margin-right: 24px;
+    }
+    .extra-items-num, .extra-items-total {
+        margin-right: 24px;
     }
 </style>
 <script>

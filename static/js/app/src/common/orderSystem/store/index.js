@@ -9,6 +9,7 @@ const orderSystemModule = {
     state: {
         shopList: [],
         enterList: [],
+        otherGoodsList: [],
         orderDetail: {},
         roomBusinessInfo: {}
     },
@@ -25,6 +26,9 @@ const orderSystemModule = {
         },
         [types.SET_ROOM_BUSINESS_INFO](state, { roomBusinessInfo }) {
             state.roomBusinessInfo = roomBusinessInfo;
+        },
+        [types.SET_OTHER_GOODS_LIST](state, { otherGoodsList }) {
+            state.otherGoodsList = otherGoodsList;
         }
     },
 
@@ -43,6 +47,28 @@ const orderSystemModule = {
                         } else {
                             reject(res);
                         }
+                    });
+            });
+        },
+        [types.LOAD_OTHER_GOODS_LIST]({ commit }) {
+            return new Promise((resolve, reject) => {
+                http.get('/goods/otherGoodsList', {})
+                    .then(res => {
+                        const otherGoodsList = [];
+                        res.data.list.forEach((d) => {
+                            const gList = d.childList.map(item => ({
+                                i: item.goodsId,
+                                n: item.name,
+                                p: item.price
+                            }));
+                            otherGoodsList.push({
+                                cName: d.name,
+                                id: d.goodsTypeId,
+                                gList: gList
+                            });
+                        });
+                        commit(types.SET_OTHER_GOODS_LIST, { otherGoodsList });
+                        resolve(res);
                     });
             });
         },
