@@ -76,7 +76,6 @@
                                        @input="changeRoomFee(item)"
                                        @blur="setFirstDayFee(item)"
                                        @focus="setFirstDayFee(item)"
-                                       style="width: 80px"
                                        @click.stop="showPriceList(index)"/>
                             </p>
                             <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList && item.datePriceList.length > 1" v-clickoutside="hidePriceList">
@@ -131,8 +130,44 @@
                         :personsObj="{id: index, persons: item.idCardList}"
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
+                <!-- 其他消费开始 -->
+                <div class="extra-items" v-if="checkState === 'ing'">
+                    <span class="extra-items-title">
+                        <span class="extra-item-icon"></span>
+                        <span>其他消费</span>
+                        <span @click="addExtraItem(item)" class="increase-container" style="margin-left: 16px"><span class="increase-icon"></span>添加项目</span>
+                    </span>
+                    <div style="padding-left: 40px">
+                        <div v-for="extra in item.extraItems">
+                            <div v-if="extra.date" style="color: #999;font-size: 12px;margin-bottom: 10px">{{extra.date}}</div>
+                            <div>
+                                <div v-for="(good, index) in extra.itemList" style="display: flex;align-items: center;margin-bottom: 8px">
+                                    <span style="width: 224px;margin-right: 24px">{{good.goodsName}}</span>
+                                    <span style="margin-right: 24px">数量
+                                    <counter @numChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
+                                    </span>
+                                        <span style="margin-right: 24px">小计
+                                        <p class="fee-container">
+                                            <span class="fee-symbol">¥</span>
+                                            <input class="dd-input fee-input" v-model.number="good.subtotal"/>
+                                        </p>
+                                    </span>
+                                    <span class="delete-icon" @click="deleteExtra(extra, index)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 其他消费结束 -->
                 <span v-show="false">{{totalPrice}}</span>
             </div>
+        </div>
+        <div v-if="otherGoodsList.length > 0">
+            <selectGoods
+                    :show="goodsSelectModalShow"
+                    :goodsDate="otherGoodsList"
+                    @selectGoodsDate="setOtherGoodsItems"
+                    @Modalclose="closeShopSelectModal"/>
         </div>
     </div>
 </template>
@@ -180,6 +215,9 @@
     import util from '../../../util';
     import bus from '../../../eventBus';
     import Vue from 'vue';
+    import { mapState } from 'vuex';
+    import counter from '../../../components/counter.vue';
+    import selectGoods from './SelectGoods.vue';
     export default{
         data() {
             return {
@@ -188,7 +226,9 @@
                 forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
                 lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
                 discountPlans: [],
-                timestamp: 0
+                timestamp: 0,
+                goodsSelectModalShow: false,
+                currentSelectOtherRoom: undefined
             };
         },
         created() {
@@ -209,7 +249,9 @@
             DdSelect,
             DdOption,
             DdDatepicker,
-            DdGroupOption
+            DdGroupOption,
+            counter,
+            selectGoods
         },
         directives: {
             Clickoutside
@@ -309,6 +351,7 @@
             }
         },
         computed: {
+            ...mapState({ otherGoodsList: state => state.orderSystem.otherGoodsList }),
             totalPrice() {
                 const price = this.rooms.reduce((sum, room) => {
                     return sum + (room.price || 0);
@@ -492,7 +535,8 @@
                             return roomInfo.totalPrice === 0 ? 1 / order.datePriceList.length : dat.dateFee / roomInfo.totalPrice;
                         }),
                         showDiscount: order.roomInfo.showDiscount,
-                        moreDiscount: getMoreDiscount(order)
+                        moreDiscount: getMoreDiscount(order),
+                        extraItems: []
                     };
 
                     this.rooms = [room];
@@ -521,7 +565,8 @@
                         showTip: false,
                         quickDiscountId: '',
                         showDiscount: undefined,
-                        moreDiscount: 0
+                        moreDiscount: 0,
+                        extraItems: []
                     };
                 });
             },
@@ -849,6 +894,53 @@
             moreDiscountChange(room) {
                 this.forceChangePrice = true;
                 this.modifyRooms([room]);
+            },
+            addExtraItem(room) {
+                if (this.otherGoodsList.length <= 0) {
+                    modal.warn('请到"网络设置－业务设置"中添加其他消费！');
+                    return false;
+                }
+
+                this.currentSelectOtherRoom = room;
+                this.goodsSelectModalShow = true;
+            },
+            setOtherGoodsItems(data) {
+                const goodsList = data;
+                let newItems = this.currentSelectOtherRoom.extraItems.find(i => !i.logId);
+                if (!newItems) {
+                    newItems = { itemList: [] };
+                    this.currentSelectOtherRoom.extraItems.push(newItems);
+                }
+                goodsList.map(i => {
+                    let flag = false;
+                    newItems.itemList.map(n => {
+                        if (n.goodsId === i.id) {
+                            n.amount = n.amount + i.num;
+                            n.subtotal = n.amount * i.p;
+                            flag = true;
+                        }
+                    });
+                    if (!flag) {
+                        newItems.itemList.push({
+                            amount: i.num,
+                            subtotal: i.num * i.p,
+                            price: i.p,
+                            goodsName: i.n,
+                            goodsId: i.id
+                        });
+                    }
+                });
+            },
+            handleExtraNumChange(good, num) {
+                good.amount = num;
+                good.subtotal = num * good.price;
+            },
+            // 关闭商超选择弹窗
+            closeShopSelectModal() {
+                this.goodsSelectModalShow = false;
+            },
+            deleteExtra(extra, index) {
+                this.$delete(extra.itemList, index);
             }
         }
     };

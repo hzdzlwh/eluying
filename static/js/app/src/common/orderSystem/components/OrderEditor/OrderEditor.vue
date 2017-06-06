@@ -543,7 +543,8 @@
         methods: {
             ...mapActions([
                 types.LOAD_SHOP_LIST,
-                types.LOAD_ENTER_LIST
+                types.LOAD_ENTER_LIST,
+                types.LOAD_OTHER_GOODS_LIST
             ]),
             getRoomDiscount(discounts) {
                 if (!discounts) {
@@ -699,6 +700,7 @@
                     });
                 this[types.LOAD_SHOP_LIST]();
                 this[types.LOAD_ENTER_LIST]();
+                this[types.LOAD_OTHER_GOODS_LIST]();
             },
             getOrigin(id, companyId) {
                 // -5企业，-4会员

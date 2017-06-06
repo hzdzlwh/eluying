@@ -459,6 +459,13 @@
             background-size: contain;
             margin-right: 25px;
         }
+        .extra-item-icon {
+            width: 15px;
+            height: 18px;
+            background: url("../../../../../../../image/modal/room_modal_extra.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
         .food-icon {
             width: 14px;
             height: 18px;
@@ -830,6 +837,7 @@
         }
         .fee-input {
             padding-left: 16px;
+            width: 90px;
         }
         .discount-info {
             display: inline-flex;
@@ -1034,6 +1042,13 @@
             color: $blue;
             font-weight: bold;
         }
+    }
+    .extra-items {
+        margin-top: 19px;
+    }
+    .extra-items-title {
+        display: flex;
+        align-items: center;
     }
 </style>
 <script>

@@ -10,7 +10,6 @@
                             <span>{{(item.roomInfo
                             && item.roomInfo.roomNum) || item.serialNum
                                 }}({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
-
                             <span class="state-icon"
                                   :class="getOrderState(item, 'color')"
                             >
@@ -43,11 +42,10 @@
                         <span class="discount-info"
                               v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))"
                               style="top: 20px">
-                                            <span>原价<span
-                                                    class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
+                            <span>原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
                         <span class="discount-num">
-                                                {{ item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)}}
-                                            </span>
+                            {{ item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)}}
+                        </span>
                         </span>
                     </div>
                     <div class="room-user" v-for="(user, index) in (item.idCardList || item.idCardsList)">
@@ -57,6 +55,20 @@
                             <label class="label-text">{{ID_CARD_TYPE[user.idCardType]}}</label>
                             <span>{{user.idCardNum}}</span>
                             <span v-if="index === 0" class="living-persons-detail" @click="showPersonsDetailModal(item)">入住人详情</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="extra-item-icon"></span>
+                        <span>其他消费</span>
+                        <div v-for="extra in item.extraItems">
+                            <span>extra.date</span>
+                            <div>
+                                <div v-for="good in extra.itemlist">
+                                    <span>{{good.goodsName}}</span>
+                                    <span>x{{good.amount}}</span>
+                                    <span>￥{{good.subtotal}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
