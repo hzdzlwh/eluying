@@ -17,16 +17,16 @@
             <div style="display: flex;position: relative;">
                 <input class="dd-input"
                        type="text"
-                       placeholder="搜索客户名称／手机号／账户编号"
+                       placeholder="搜索客户名称／手机号／企业名称／订单号"
                        @keyup.enter="getReceivableList()"
                        v-model="keyword"
-                       style="width: 246px; margin-right: 10px"/>
+                       style="width: 296px; margin-right: 10px"/>
                 <span class="reports-search-icon" @click="getReceivableList()">
                     <img src="//static.dingdandao.com/order_manage_search_grey.png" />
                 </span>
                 <dd-dropdown text="导出明细" trigger="click">
-                    <dd-dropdown-item><span><a :href="exportUrl">导出PDF</a></span></dd-dropdown-item>
-                    <dd-dropdown-item><span><a :href="exportUrl">导出Excel</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     },
                     {
                         title: '类型',
-                        dataIndex: 'receivableType'
+                        render: (h, row) => (<span>{row.receivableType === 0 ? '结算' : '消费'}</span>)
                     },
                     {
                         title: '金额',
@@ -119,8 +119,30 @@
             ...mapState(['date'])
         },
         methods: {
-            exportUrl() {
-                return '';
+            exportUrl(type) {
+                const originParam = {
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate
+                };
+                if (this.allEnterprise !== null) {
+                    originParam.companyId = this.allEnterprise;
+                }
+                if (this.allType !== null) {
+                    originParam.receivableType = this.allType;
+                }
+                if (this.keyword) {
+                    originParam.keyword = this.keyword;
+                }
+                const paramsObj = {
+                    exportType: type,
+                    reportType: 17,
+                    params: JSON.stringify(originParam)
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
             },
             getReceivableList(page) {
                 this.page = page || this.page;
@@ -167,6 +189,11 @@
     };
 </script>
 
-<style>
-    
+<style lang="scss" scoped>
+    .reports-search-icon {
+        position: absolute;
+        top: 2px;
+        left: 278px;
+        cursor: pointer;
+    }
 </style>

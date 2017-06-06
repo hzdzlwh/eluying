@@ -2,7 +2,8 @@
  * Created by lingchenxuan on 2017/1/9.
  */
 import Router from 'vue-router';
-import operation from './views/overview/operation.vue';
+import operation from './views/overview/operation/operation.vue';
+import dailyReport from './views/overview/operation/dailyReport.vue';
 import container from './views/container.vue';
 import channel from './views/overview/channel.vue';
 import sale from './views/overview/sale.vue';
@@ -42,10 +43,27 @@ export const routes = [
         children: [
             {
                 path: '/overview/operation',
-                component: operation,
+                component: childContainer,
                 meta: {
                     name: '运营'
-                }
+                },
+                redirect: '/overview/operation/operation',
+                children: [
+                    {
+                        path: '/overview/operation/operation',
+                        component: operation,
+                        meta: {
+                            name: '统计'
+                        }
+                    },
+                    {
+                        path: '/overview/operation/dailyReport',
+                        component: dailyReport,
+                        meta: {
+                            name: '日报'
+                        }
+                    }
+                ]
             },
             {
                 path: '/overview/flow',
