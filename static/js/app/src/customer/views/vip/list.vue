@@ -360,7 +360,7 @@
                     });
             },
             openVipForm() {
-                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined, birthday: undefined, isAutoUpgrade: this.isAutoUpgrade };
+                this.vip = { name: '', phone: '', idCardType: 0, vipLevelId: '', gender: undefined, birthday: undefined, isAutoUpgrade: this.isAutoUpgrade, newAdd: true };
                 $('#vipForm').modal('show');
             },
             outPutExcel() {
