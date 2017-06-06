@@ -838,7 +838,8 @@
                         sub: true,
                         roomOrderId: room.roomOrderId,
                         quickDiscountId: room.quickDiscountId,
-                        useDiscount: room.moreDiscount === 0 || !room.priceModified
+                        useDiscount: room.moreDiscount === 0 || !room.priceModified,
+                        extraItems: room.extraItems
                     };
                 });
             },

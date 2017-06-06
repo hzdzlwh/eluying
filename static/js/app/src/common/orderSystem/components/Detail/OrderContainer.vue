@@ -1049,6 +1049,27 @@
     .extra-items-title {
         display: flex;
         align-items: center;
+        margin-bottom: 10px;
+    }
+    .extra-items-content {
+        padding-left: 40px;
+    }
+    .extra-items-date {
+        color: #999;
+        font-size: 12px;
+        margin-bottom: 10px
+    }
+    .extra-items-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .extra-items-name {
+        width: 224px;
+        margin-right: 24px;
+    }
+    .extra-items-num, .extra-items-total {
+        margin-right: 24px;
     }
 </style>
 <script>

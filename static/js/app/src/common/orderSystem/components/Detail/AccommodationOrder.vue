@@ -57,16 +57,20 @@
                             <span v-if="index === 0" class="living-persons-detail" @click="showPersonsDetailModal(item)">入住人详情</span>
                         </div>
                     </div>
-                    <div>
-                        <span class="extra-item-icon"></span>
-                        <span>其他消费</span>
-                        <div v-for="extra in item.extraItems">
-                            <span>extra.date</span>
-                            <div>
-                                <div v-for="good in extra.itemlist">
-                                    <span>{{good.goodsName}}</span>
-                                    <span>x{{good.amount}}</span>
-                                    <span>￥{{good.subtotal}}</span>
+                    <div class="extra-items" v-if="item.extraItems.length > 0">
+                        <div class="extra-items-title">
+                            <span class="extra-item-icon"></span>
+                            <span>其他消费</span>
+                        </div>
+                        <div class="extra-items-content">
+                            <div v-for="extra in item.extraItems">
+                                <div class="extra-items-date">{{extra.date}}</div>
+                                <div>
+                                    <div class="extra-items-row" v-for="good in extra.itemList">
+                                        <span class="extra-items-name">{{good.goodsName}}</span>
+                                        <span class="extra-items-num">x{{good.amount}}</span>
+                                        <span>￥{{good.subtotal}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

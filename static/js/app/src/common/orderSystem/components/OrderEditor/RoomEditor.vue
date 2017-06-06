@@ -131,22 +131,22 @@
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
                 <!-- 其他消费开始 -->
-                <div class="extra-items" v-if="checkState === 'ing'">
-                    <span class="extra-items-title">
+                <div class="extra-items" v-if="checkState === 'ing' || item.state === 1 || item.state === 8">
+                    <div class="extra-items-title">
                         <span class="extra-item-icon"></span>
                         <span>其他消费</span>
                         <span @click="addExtraItem(item)" class="increase-container" style="margin-left: 16px"><span class="increase-icon"></span>添加项目</span>
-                    </span>
-                    <div style="padding-left: 40px">
+                    </div>
+                    <div class="extra-items-content">
                         <div v-for="extra in item.extraItems">
-                            <div v-if="extra.date" style="color: #999;font-size: 12px;margin-bottom: 10px">{{extra.date}}</div>
+                            <div v-if="extra.date" class="extra-items-date">{{extra.date}}</div>
                             <div>
-                                <div v-for="(good, index) in extra.itemList" style="display: flex;align-items: center;margin-bottom: 8px">
-                                    <span style="width: 224px;margin-right: 24px">{{good.goodsName}}</span>
-                                    <span style="margin-right: 24px">数量
+                                <div v-for="(good, index) in extra.itemList" class="extra-items-row">
+                                    <span class="extra-items-name">{{good.goodsName}}</span>
+                                    <span class="extra-items-num">数量
                                     <counter @numChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
                                     </span>
-                                        <span style="margin-right: 24px">小计
+                                        <span class="extra-items-total">小计
                                         <p class="fee-container">
                                             <span class="fee-symbol">¥</span>
                                             <input class="dd-input fee-input" v-model.number="good.subtotal"/>
@@ -166,6 +166,7 @@
             <selectGoods
                     :show="goodsSelectModalShow"
                     :goodsDate="otherGoodsList"
+                    title="选择其他消费"
                     @selectGoodsDate="setOtherGoodsItems"
                     @Modalclose="closeShopSelectModal"/>
         </div>
@@ -353,9 +354,16 @@
         computed: {
             ...mapState({ otherGoodsList: state => state.orderSystem.otherGoodsList }),
             totalPrice() {
-                const price = this.rooms.reduce((sum, room) => {
+                let price = this.rooms.reduce((sum, room) => {
                     return sum + (room.price || 0);
                 }, 0);
+                this.rooms.map(r => {
+                    r.extraItems.map(e => {
+                        e.itemList.map(g => {
+                            price = price + Number(g.subtotal);
+                        });
+                    });
+                });
                 this.$emit('priceChange', price);
                 return price;
             },
@@ -504,7 +512,8 @@
                                 return item.fee === 0 ? 1 / item.datePriceList.length : dat.dateFee / item.fee;
                             }),
                             showDiscount: item.showDiscount,
-                            moreDiscount: getMoreDiscount(item)
+                            moreDiscount: getMoreDiscount(item),
+                            extraItems: item.extraItems
                         };
                     });
                 }
@@ -534,9 +543,9 @@
                         priceScale: order.datePriceList.map(dat => {
                             return roomInfo.totalPrice === 0 ? 1 / order.datePriceList.length : dat.dateFee / roomInfo.totalPrice;
                         }),
-                        showDiscount: order.roomInfo.showDiscount,
+                        showDiscount: roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order),
-                        extraItems: []
+                        extraItems: order.extraItems
                     };
 
                     this.rooms = [room];
