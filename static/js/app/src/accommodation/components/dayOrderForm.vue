@@ -4,55 +4,35 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" @click='close'><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">{{data.id? '编辑企业客户' : '添加企业客户'}}</h4>
+                    <h4 class="modal-title">{{outOrIn? '转' : '查看'}}{{formType[formNumber].name}}</h4>
                 </div>
                 <div class="modal-body modal-line">
                     <p>
                         <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">企业名称：</span>
-                        <input v-model='formdata.companyName' type="text" maxlength="20" class="dd-input">
+                                    <img src="//static.dingdandao.com/start.png">房间</span>
+                        <span>{{formdata.roomName}}</span>
                     </p>
                     <p>
-                        <span class="addCus">
-                                   企业编号：</span>
-                        <input v-model='formdata.contractNum' type="text" class="dd-input" maxlength="20" placeholder="-请输入数字或字母-">
-                    </p>
-                    <p>
-                        <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">联系人：</span>
-                        <input v-model='formdata.contactName' class="dd-input" type="text" maxlength="20">
-                    </p>
-                    <p>
-                        <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">联系号码：</span>
-                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="11">
-                    </p>
-                    <p>
-                        <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png"/>企业类型：
-                            </span>
-                        <DdSelect v-model="formdata.companyType" class="addCustype">
-                            <DdOption v-for="option in formCustomerType" :value="option.value" :key='option' :label="option.name">
-                            </DdOption>
-                        </DdSelect>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p class="preferential">
-                        <span class="addCus">
-                                    优惠折扣：
-                            </span>
-                    </p>
-                    <span class="selectBox" v-if='formdata.discounts'>
-                        <div class="discountBox">
-                        <div v-for='(item,index) in formdata.discounts' class="discountItem" :key="item.id">
-                            <span class="preName">{{item.nodeName}}</span>
-                    <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
-                </div>
+                        <span class="addCus">起始日期</span>
+                       <!--  <div class="dd-start-date">
+                <DdDatepicker placeholder="开始时间" v-model="formdata.startDate" />
             </div>
-            <div style="display:flex;">
-                <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
-                <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
+            <span class="dd-date-symbol">~</span>
+            <div class="dd-end-date">
+                <DdDatepicker placeholder="结束时间" v-model="formdata.endDate" />
+            </div> -->
+                    </p>
+                    <p>
+                        <span class="addCus">
+                                    <img src="//static.dingdandao.com/start.png">原因</span>
+                        <input v-model='formdata.why' class="dd-input" type="text" maxlength="20">
+                    </p>
+                    <p>
+                        <span class="addCus">
+                                    <img src="//static.dingdandao.com/start.png">备注</span>
+                        <textarea v-model='formdata.remark'></textarea>
+                    </p>
+                </div>
             </div>
             </span>
             </span>
@@ -60,7 +40,6 @@
         </div>
     </div>
     </div>
-    <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
 <style scoped>
@@ -84,36 +63,36 @@
     display: inline-block;
 }
 
-#add .modal-body p input {
+#dayOrderForm .modal-body p input {
     width: 210px;
     height: 24px;
     margin-right: 4px;
 }
 
-#add .modal-body p {
+#dayOrderForm .modal-body p {
     margin: 0 auto 16px;
     display: flex;
 }
 
-#add .modal-line {
+#dayOrderForm .modal-line {
     border: 1px solid #e6e6e6
 }
 
-#add .addCus {
+#dayOrderForm .addCus {
     width: 100px;
     display: inline-block;
     text-align: right;
     color: #666;
 }
 
-#add .modal-title {
+#dayOrderForm .modal-title {
     font-size: 16px;
     color: #178ce6;
     text-align: left;
     margin-bottom: 8px;
 }
 
-#add .modal-content {
+#dayOrderForm .modal-content {
     background: #fafafa;
     border-radius: 2px;
     border-top: 4px solid #178ce6;
@@ -121,11 +100,11 @@
     padding: 0;
 }
 
-#add .modal-dialog {
+#dayOrderForm .modal-dialog {
     width: 480px;
 }
 
-#add {
+#dayOrderForm {
     z-index: 2051;
 }
 
@@ -180,37 +159,39 @@
 </style>
 <script>
 import {
-    DdSelect,
-    DdOption
+   DdDatepicker
 } from 'dd-vue-component';
-import categorySelect from './categorySelect.vue';
 import http from '../../common/http';
 import modal from '../../common/modal';
 export default {
     props: {
         data: {
             type: Object,
-            default: {}
+            default: () => { return {}; }
         },
         visible: {
             type: Boolean,
             default: false
         },
-        formType:{
-            
+        formNumber: {
+            type: Number,
+            default: 0
+        },
+        // 0为维修，1为保留，2为停用
+        outOrIn: {
+            type: Number,
+            default: 0
         }
+        // 0为查看，1为转
     },
     data() {
         return {
             formdata: {
                 id: 0,
-                companyAddress: '',
-                companyName: '',
-                companyType: 0,
-                contactName: '',
-                contactPhone: '',
-                contractNum: '',
-                discounts: [],
+                roomName: '',
+                startDate: '',
+                endDate: 0,
+                why: '',
                 remark: ''
             },
             consume: [],
@@ -225,44 +206,11 @@ export default {
             }]
         };
     },
-    computed: {
-        nodes() {
-            return this.selectType === 'consume' ? this.consume : this.formdata.discounts;
-        }
-    },
-    created() {
-        this.getCompanyDate();
-    },
     methods: {
         close() {
             this.selectType = undefined;
             $('#add').modal('hide');
             this.$emit('close');
-        },
-        openSelectNode(type) {
-            $('#categorySelectModal').modal('show');
-            this.selectType = type;
-        },
-        remove(index) {
-            this.discount.splice(index, 1);
-        },
-        getCompanyDate() {
-            if (this.id) {
-                http.get('/contractCompany/getDetail', {
-                    cid: this.id
-                }).then(res => {
-                    this.companyAddress = res.data.companyAddress;
-                    this.encompanyName = res.data.companyName;
-                    this.encompanyType = res.data.companyType;
-                    this.encontactName = res.data.contactName;
-                    this.encontactPhone = res.data.contactPhone;
-                    this.encontractNum = res.data.contractNum;
-                    this.discount = res.data.discounts;
-                    this.enremark = res.data.remark;
-                });
-            } else {
-                this.discount = [];
-            }
         },
         customerDate: function() {
             if (!this.formdata.companyName) {
@@ -286,7 +234,7 @@ export default {
             }
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
-                for (let i = 0; i < this.formdata.discounts.length; i++) {
+                for (let i = 0; i < this.formdata.discounts.length; i ++) {
                     this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.warn('请输入0.1-9.9之间正确的折扣数字');
@@ -308,57 +256,26 @@ export default {
                 }
                 this.close();
             });
-        },
-        handleCategorySelect(list) {
-            if (this.selectType === 'consume') {
-                this.consume = list;
-            } else {
-                if (this.formdata.discounts) {
-                    const newList = [];
-                    list.map(item => {
-                        const result = this.formdata.discounts.find(i => i.id === item.id && i.nodeType === item.nodeType);
-                        if (result) {
-                            if (item.selected) {
-                                newList.push({...result
-                                });
-                            }
-                        } else {
-                            newList.push({...item
-                            });
-                        }
-                    });
-
-                    this.formdata.discounts = newList;
-                } else {
-                    this.formdata.discounts = list;
-                }
-            }
-        },
-        deleteNode(item) {
-            const index = this.formdata.discounts.indexOf(item);
-            this.formdata.discounts.splice(index, 1);
         }
     },
     watch: {
         visible(val) {
             if (val) {
-                $('#add').modal({
+                $('#dayOrderForm').modal({
                     backdrop: 'static'
                 });
-                $('#add').modal('show');
+                $('#dayOrderForm').modal('show');
             } else {
-                $('#add').modal('hide');
+                $('#dayOrderForm').modal('hide');
             }
         },
         data(val) {
-            this.formdata = {...val
+            this.formdata = { ...val
             };
         }
     },
     components: {
-        DdSelect,
-        DdOption,
-        categorySelect
+        DdDatepicker
     }
 };
 </script>

@@ -28,7 +28,7 @@
                     <tbody>
                         <template v-for="room in finalRoomStatus">
                             <tr class="calendar-status-row" v-if="room.selected && !room.folded">
-                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: status, index: index})">
+                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: room, index: index})">
                                     <div v-if="status.s !== 100" class="day-calendar-status-inner" :key="room.i + status.dateStr" :class="{'selected': status.selected}" @click="selectStatus(status)">
                                         <div class="calendar-status-info">
                                             <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
@@ -44,22 +44,22 @@
             </div>
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" class="calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="check('book')">
                 预定
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="check('ing')">
                 办理入住
             </div>
             <div @click.stop="openOrCloseStatus()">
                 转为房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(0,1)">
                 转维修房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(2,1)">
                 转停用房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(1,1)">
                 转保留房
             </div>
             <div @click.stop="openOrCloseStatus()">
@@ -68,26 +68,28 @@
             <div @click.stop="openOrCloseStatus()">
                 办理退房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(0,0)">
                 查看维修房
             </div>
             <div @click.stop="openOrCloseStatus()">
                 结束维修房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(2,0)">
                 查看停用房
             </div>
             <div @click.stop="openOrCloseStatus()">
                 结束停用房
             </div>
-            <div @click.stop="openOrCloseStatus()">
+            <div @click.stop="openForm(1,0)">
                 查看保留房
             </div>
             <div @click.stop="openOrCloseStatus()">
                 结束保留房
             </div>
         </contextmenu>
+         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='dayOrderFormVisible = false'></dayOrderForm>
     </div>
+   
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .calendar-status-action {
@@ -113,6 +115,7 @@
 <script>
 import DateSelect from './DateSelect.vue';
 import RoomFilter from './RoomFilter.vue';
+import dayOrderForm from './dayOrderForm.vue';
 import util from 'util';
 import http from '../../common/http';
 import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
@@ -137,12 +140,16 @@ export default {
             lastScrollLeft: 0,
             currentAction: undefined,
             isDrag: false,
-            menuData: undefined
+            menuData: undefined,
+            dayOrderFormVisible: false,
+            formNumber: 0,
+            outOrIn: 0
         };
     },
     components: {
         DateSelect,
         RoomFilter,
+        dayOrderForm,
         contextmenu
     },
     computed: {
@@ -259,6 +266,21 @@ export default {
         }
     },
     methods: {
+        openForm(formNumber, outOrIn) {
+            this.formNumber = formNumber;
+            this.outOrIn = outOrIn;
+            this.dayOrderFormVisible = true;
+        },
+        check(type) {
+            const temp = [];
+            temp.push({
+                roomId: this.menuData.data.id,
+                startDate: this.menuData.data.date,
+                endDate: this.menuData.data.date,
+                categoryType: this.menuData.data.cId
+            });
+            bus.$emit('changeCheckState', type, temp);
+        },
         onCtxOpen(locals) {
             this.menuData = locals;
         },
