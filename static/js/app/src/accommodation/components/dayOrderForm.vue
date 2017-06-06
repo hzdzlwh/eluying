@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="add" role="dialog">
+    <div class="modal fade" id="dayOrderForm" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -42,39 +42,23 @@
                         <span class="addCus">
                                     优惠折扣：
                             </span>
-                            <span>
-                        <span class="selectBox" v-if='formdata.discounts'>
+                    </p>
+                    <span class="selectBox" v-if='formdata.discounts'>
                         <div class="discountBox">
                         <div v-for='(item,index) in formdata.discounts' class="discountItem" :key="item.id">
                             <span class="preName">{{item.nodeName}}</span>
-                        <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
-                </div></div>
-                <div style="display:flex;">
-                    <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
-                    <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
+                    <input class="dd-input" type="text" v-model='item.discount'>折<span class="delete-icon" @click='formdata.discounts.splice(index, 1)'></span>
                 </div>
-                </span>
-                
-                </span>
-                </p>
-                <p>
-                    <span class="addCus">
-                                   地址：</span>
-                    <input v-model='formdata.companyAddress' type="text" class="dd-input addAdress" maxlength="16">
-                </p>
-                <p>
-                    <span class="addCus">
-                                   备注：</span>
-                    <textarea v-model='formdata.remark' cols="7" class="addOthor dd-input" placeholder="-请填写描述-"></textarea>
-                </p>
-                <p>
-                    <span class="addCus">
-                                   </span>
-                    <span class="dd-btn-primary dd-btn" style="margin-right:10px;min-width: 30px;" @click='customerDate'>确定</span>
-                    <span class="dd-btn-ghost dd-btn" style="min-width: 30px;" @click='close'>取消</span>
-                </p>
             </div>
+            <div style="display:flex;">
+                <span class="preName addpre" @click="openSelectNode('discount')">选择项目</span>
+                <span class="preRequest" v-if='formdata.discounts.length'>请输入0.1-9.9之间的数字</span>
+            </div>
+            </span>
+            </span>
+            </p>
         </div>
+    </div>
     </div>
     <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
@@ -178,10 +162,12 @@
     display: inline-flex;
     align-items: center;
 }
-.discountBox{
-        max-height: 284px;
+
+.discountBox {
+    max-height: 284px;
     overflow-y: auto;
 }
+
 .selectBox input {
     width: 56px!important;
 }
@@ -209,6 +195,9 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        formType:{
+            
         }
     },
     data() {
@@ -227,12 +216,12 @@ export default {
             consume: [],
             // discount: this.data.discounts,
             selectType: undefined,
-            formCustomerType: [{
-                name: '可挂帐',
-                value: 1
+            formType: [{
+                name: '维修'
             }, {
-                name: '不可挂帐',
-                value: 0
+                name: '保留'
+            }, {
+                name: '停用'
             }]
         };
     },
@@ -297,7 +286,7 @@ export default {
             }
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
-                for (let i = 0; i < this.formdata.discounts.length; i ++) {
+                for (let i = 0; i < this.formdata.discounts.length; i++) {
                     this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.warn('请输入0.1-9.9之间正确的折扣数字');
@@ -330,11 +319,11 @@ export default {
                         const result = this.formdata.discounts.find(i => i.id === item.id && i.nodeType === item.nodeType);
                         if (result) {
                             if (item.selected) {
-                                newList.push({ ...result
+                                newList.push({...result
                                 });
                             }
                         } else {
-                            newList.push({ ...item
+                            newList.push({...item
                             });
                         }
                     });
@@ -362,7 +351,7 @@ export default {
             }
         },
         data(val) {
-            this.formdata = { ...val
+            this.formdata = {...val
             };
         }
     },
