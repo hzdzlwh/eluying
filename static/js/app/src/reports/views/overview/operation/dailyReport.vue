@@ -54,8 +54,8 @@
                     <tfoot>
                         <tr>
                             <td>借方合计</td>
-                            <td></td>
-                            <td></td>
+                            <td>{{debit.summary.dailyTotal}}</td>
+                            <td>{{debit.summary.monthlyTotal}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -86,15 +86,30 @@
                             <td></td>
                             <td></td>
                         </tr>
+                        <tr v-for="item in credit.cater.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
+                        </tr>
                         <tr class="mark-tr">
                             <td>娱乐</td>
                             <td></td>
                             <td></td>
                         </tr>
+                        <tr v-for="item in credit.entertainment.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
+                        </tr>
                         <tr class="mark-tr">
                             <td>商超</td>
                             <td></td>
                             <td></td>
+                        </tr>
+                        <tr v-for="item in credit.goods.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
                         </tr>
                         <tr class="mark-tr">
                             <td>会员卡</td>
@@ -115,8 +130,8 @@
                     <tfoot>
                         <tr>
                             <td>贷方合计</td>
-                            <td></td>
-                            <td></td>
+                            <td>{{credit.summary.dailyTotal}}</td>
+                            <td>{{credit.summary.monthlyTotal}}</td>
                         </tr>
                     </tfoot>
                 </table>
