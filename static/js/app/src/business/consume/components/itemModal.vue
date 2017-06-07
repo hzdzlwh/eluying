@@ -20,7 +20,7 @@
                             </dd-select>
                         </div>
                         <div>
-                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit" @input="validate">
+                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit" @input="validate" maxlength="5">
                             <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitErrorAlert">格式不对</span>
                         </div>
                         <div>
