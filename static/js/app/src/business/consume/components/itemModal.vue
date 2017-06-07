@@ -9,9 +9,9 @@
                     </div>
                     <div class="item-modal-body">
                         <div>
-                            <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name">
+                            <span class="item-name">名称：</span><input type="text" class="dd-input" style="width: 210px" v-model="item.name" maxlength="20" @input="validate">
                             <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if="nameIsWrite && item.name.length === 0">必填</span>
-                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if=" item.name && (!nameReg.test(item.name) || item.name.length > 20)">格式不对</span>
+                            <span style="position:absolute;left:80px;font-size: 12px;color: #f24949;" v-if="nameErrorAlert">格式不对</span>
                         </div>
                         <div style="display: flex;">
                             <span class="item-name" style="line-height: 24px;">分类：</span>
@@ -20,9 +20,8 @@
                             </dd-select>
                         </div>
                         <div>
-                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit">
-                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitIsWrite && item.unit.length === 0">必填</span>
-                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if=" item.unit && (!nameReg.test(item.unit) || item.unit.length > 5)">格式不对</span>
+                            <span class="item-name">单位：</span><input type="text" class="dd-input" style="width: 105px" v-model="item.unit" @input="validate">
+                            <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitErrorAlert">格式不对</span>
                         </div>
                         <div>
                             <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
@@ -55,8 +54,9 @@
                 nameReg: /[\w\u4e00-\u9fa5]/,
                 priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
                 nameIsWrite: false,
-                unitIsWrite: false,
-                priceIsWrite: false
+                priceIsWrite: false,
+                nameErrorAlert: false,
+                unitErrorAlert: false
             }
         },
         computed: {
@@ -69,12 +69,9 @@
         },
         methods: {
             addItem() {
-                if ( this.item.price === '' || !this.priceReg.test(this.item.price) || (!this.nameReg.test(this.item.unit) || this.item.unit.length > 5) || (!this.nameReg.test(this.item.name) || this.item.name.length > 20)) {
+                if ( this.item.price === '' || !this.priceReg.test(this.item.price) ||  this.item.name === '' ||this.nameErrorAlert || this.unitErrorAlert) {
                     if (this.item.name === '') {
                         this.nameIsWrite = true;
-                    }
-                    if (this.item.unit === '') {
-                        this.unitIsWrite = true;
                     }
                     if (this.item.price === '') {
                         this.priceIsWrite = true;
@@ -86,6 +83,28 @@
                     if (res.code === 1) {
                         $('#itemModal').modal('hide');
                         this.$emit('onSuccess');
+                    }
+                });
+            },
+            validate() {
+                if (this.item.name === '') {
+                    this.nameErrorAlert = false;
+                }
+                if (this.item.unit === '') {
+                    this.unitErrorAlert = false;
+                }
+                this.item.name.split('').forEach((element) => {
+                    if (!this.nameReg.test(element)) {
+                        this.nameErrorAlert = true;
+                    } else {
+                        this.nameErrorAlert = false;
+                    }
+                });
+                this.item.unit.split('').forEach((element) => {
+                    if (!this.nameReg.test(element)) {
+                        this.unitErrorAlert = true;
+                    } else {
+                        this.unitErrorAlert = false;
                     }
                 });
             }

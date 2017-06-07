@@ -153,7 +153,7 @@ export default {
                         totalprice += Number(el.totalPrice);
                     }
                 });
-                if (o.isVip === undefined && c.isVip === undefined) {
+                if (o.isVip === undefined) {
                     this.$emit('priceChange', totalprice);
                     return false;
                 }

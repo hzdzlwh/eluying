@@ -5,7 +5,7 @@
                 <span style="display: flex;align-items: center">应收账款明细（{{date.startDate}}~{{date.endDate}}）</span>
                 <div style="width: 120px;margin-right: 10px">
                     <dd-select v-model="allEnterprise">
-                        <dd-option v-for="enterprise in enterprises" :key="enterprise.id" :value="enterprise.id" :label="enterprise.name"></dd-option>
+                        <dd-option v-for="enterprise in enterprises" :key="enterprise.id" :value="enterprise.id" :label="enterprise.companyName"></dd-option>
                     </dd-select>
                 </div>
                 <div style="width: 120px;margin-right: 10px">
@@ -17,23 +17,23 @@
             <div style="display: flex;position: relative;">
                 <input class="dd-input"
                        type="text"
-                       placeholder="搜索客户名称／手机号／账户编号"
-                       @keyup.enter=""
+                       placeholder="搜索客户名称／手机号／企业名称／订单号"
+                       @keyup.enter="getReceivableList()"
                        v-model="keyword"
-                       style="width: 246px; margin-right: 10px"/>
-                <span class="reports-search-icon" @click="">
+                       style="width: 296px; margin-right: 10px"/>
+                <span class="reports-search-icon" @click="getReceivableList()">
                     <img src="//static.dingdandao.com/order_manage_search_grey.png" />
                 </span>
                 <dd-dropdown text="导出明细" trigger="click">
-                    <dd-dropdown-item><span><a :href="exportUrl">导出PDF</a></span></dd-dropdown-item>
-                    <dd-dropdown-item><span><a :href="exportUrl">导出Excel</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                    <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
         </div>
         <dd-table :columns="columns" :data-source="dataSource" :bordered="true"></dd-table>
         <div style="display: flex;justify-content: space-between;margin-top: 20px">
-            <span>共计{{num}}笔记录 累计金额¥ {{totalPrice}}</span>
-            <dd-pagination @currentchange="" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="page" />
+            <span>共计{{totalCount}}笔记录 累计金额¥ {{totalAmount}}</span>
+            <dd-pagination @currentchange="getReceivableList" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="page" />
         </div>
     </div>
 </template>
@@ -41,107 +41,141 @@
 <script>
     import { mapState } from 'vuex';
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
+    import http from '../../../../common/http';
 
     export default {
         data() {
             return {
-                allEnterprise: -1,
-                allType: -1,
+                allEnterprise: null,
+                allType: null,
                 keyword: '',
-                enterprises: [
-                    {
-                        id: -1,
-                        name: '全部企业'
-                    },
-                    {
-                        id: 0,
-                        name: '阿里巴巴'
-                    },
-                    {
-                        id: 1,
-                        name: '腾讯网络'
-                    }
-                ],
+                enterprises: [],
                 types: [
                     {
-                        id: -1,
+                        id: null,
                         name: '全部类型'
                     },
                     {
                         id: 0,
-                        name: '消费'
+                        name: '结算'
                     },
                     {
                         id: 1,
-                        name: '结算'
+                        name: '消费'
                     }
                 ],
                 columns: [
                     {
                         title: '订单号/操作时间',
-                        render: (h, row) => (<span><span class="js-order-num">{row.a}</span><br /><small><i>{row.creationTime}</i></small></span>),
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.operationTime}</i></small></span>),
                         width: 188
                     },
                     {
                         title: '客户姓名',
-                        dataIndex: 'b'
+                        dataIndex: 'customerName'
                     },
                     {
                         title: '手机号',
-                        dataIndex: 'c'
+                        dataIndex: 'customerPhone'
                     },
                     {
                         title: '企业名称',
-                        dataIndex: 'd'
+                        dataIndex: 'companyName'
                     },
                     {
                         title: '类型',
-                        dataIndex: 'e'
+                        render: (h, row) => (<span>{row.receivableType === 0 ? '结算' : '消费'}</span>)
                     },
                     {
                         title: '金额',
-                        dataIndex: 'f'
+                        dataIndex: 'amount'
                     },
                     {
                         title: '支付方式',
-                        dataIndex: 'g'
+                        dataIndex: 'payChannel'
                     },
                     {
                         title: '交易号',
-                        dataIndex: 'h'
+                        dataIndex: 'tradeNo'
                     },
                     {
                         title: '操作人',
-                        dataIndex: 'i'
+                        dataIndex: 'operator'
                     }
 
                 ],
-                dataSource: [
-                    {
-                        a: '1112323422421242',
-                        creationTime: '2017-05-27',
-                        b: '张三',
-                        c: 15888888888,
-                        d: '阿里巴吧',
-                        e: '消费',
-                        f: 500,
-                        g: '企业挂账',
-                        h: '3838884736257477',
-                        i: '李四'
-                    }
-                ],
-                num: undefined,
-                totalPrice: undefined,
-                pages: 3,
+                dataSource: [],
+                totalCount: undefined,
+                totalAmount: undefined,
+                pages: undefined,
                 page: 1
             };
+        },
+        created() {
+            this.getEnterprises();
+            this.getReceivableList();
         },
         computed: {
             ...mapState(['date'])
         },
         methods: {
-            exportUrl() {
-                return '';
+            exportUrl(type) {
+                const originParam = {
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate
+                };
+                if (this.allEnterprise !== null) {
+                    originParam.companyId = this.allEnterprise;
+                }
+                if (this.allType !== null) {
+                    originParam.receivableType = this.allType;
+                }
+                if (this.keyword) {
+                    originParam.keyword = this.keyword;
+                }
+                const paramsObj = {
+                    exportType: type,
+                    reportType: 17,
+                    params: JSON.stringify(originParam)
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
+            },
+            getReceivableList(page) {
+                this.page = page || this.page;
+                http.get('/stat/getReceivablePayments', { startDate: this.date.startDate, endDate: this.date.endDate, keyword: this.keyword, page: this.page, companyId: this.allEnterprise, receivableType: this.allType }).then(res => {
+                    if (res.code === 1) {
+                        this.dataSource = res.data.items;
+                        this.pages = Math.ceil(res.data.totalCount / 30);
+                        this.totalCount = res.data.totalCount;
+                        this.totalAmount = res.data.totalAmount;
+                    }
+                });
+            },
+            getEnterprises() {
+                http.get('/contractCompany/getList4Stat', {}).then(res => {
+                    if (res.code === 1) {
+                        this.enterprises = res.data.list;
+                        this.enterprises.unshift({ id: null, companyName: '全部企业' });
+                    }
+                });
+            }
+        },
+        watch: {
+            date() {
+                this.page = 1;
+                this.getReceivableList();
+            },
+            allEnterprise() {
+                this.page = 1;
+                this.getReceivableList();
+            },
+            allType() {
+                this.page = 1;
+                this.getReceivableList();
             }
         },
         components: {
@@ -155,6 +189,11 @@
     };
 </script>
 
-<style>
-    
+<style lang="scss" scoped>
+    .reports-search-icon {
+        position: absolute;
+        top: 2px;
+        left: 278px;
+        cursor: pointer;
+    }
 </style>

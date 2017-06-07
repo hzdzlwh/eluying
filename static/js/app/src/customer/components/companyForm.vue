@@ -311,10 +311,11 @@ export default {
                 delete data.id;
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
-                modal.success('添加成功');
                 this.$emit('add');
                 if (this.formdata.id) {
                     modal.success('修改成功');
+                } else {
+                    modal.success('添加成功');
                 }
                 this.close();
             });

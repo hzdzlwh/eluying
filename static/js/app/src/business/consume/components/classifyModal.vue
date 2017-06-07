@@ -9,9 +9,9 @@
                     </div>
                     <div class="classify-modal-body">
                         <div style="position: relative;">
-                            <span style="margin-right: 8px;">分类名称：</span><input type="text" class="dd-input" style="width: 210px;" v-model="classify.name">
+                            <span style="margin-right: 8px;">分类名称：</span><input type="text" class="dd-input" style="width: 210px;" v-model="classify.name" maxlength="10" @input="validate">
                             <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="nameIsWrite && classify.name.length === 0">必填</span>
-                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="classify.name && (!nameReg.test(classify.name) || classify.name.length > 10)">格式错误</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="errorAlert">格式错误</span>
                         </div>
                     </div>
                     <div class="classify-modal-footer">
@@ -35,12 +35,13 @@
             return {
                 classify: {},
                 nameReg: /[\w\u4e00-\u9fa5]/,
-                nameIsWrite: false
+                nameIsWrite: false,
+                errorAlert: false
             }
         },
         methods: {
             addClassify() {
-                if (!this.nameReg.test(this.classify.name) || this.classify.name.length > 10 || this.classify.name === '') {
+                if (this.errorAlert || this.classify.name === '') {
                     if (this.classify.name === '') {
                         this.nameIsWrite = true;
                     }
@@ -52,6 +53,18 @@
                     if (res.code === 1) {
                         $('#classifyModal').modal('hide');
                         this.$emit('onSuccess');
+                    }
+                });
+            },
+            validate() {
+                if (this.classify.name === '') {
+                    this.errorAlert = false;
+                }
+                this.classify.name.split('').forEach((element) => {
+                    if (!this.nameReg.test(element)) {
+                        this.errorAlert = true;
+                    } else {
+                        this.errorAlert = false;
                     }
                 });
             }

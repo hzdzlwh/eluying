@@ -1,10 +1,10 @@
 <template>
-    <div class="modal fade selectComponentModal" id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal">
+    <div class="modal fade selectComponentModal" tabindex="-1" role="dialog" aria-labelledby="goodsModal" data-backdrop="static" ref="modal">
         <div class="modal-dialog goodsdialog" v-if='bill'>
             <div class="modal-content">
                 <div class="goodsModals-header">
                     <div class="header-container">
-                        <span class="header-text">选择商品</span>
+                        <span class="header-text">{{title}}</span>
                     </div>
                     <span class="close-icon" @click="hideModal()"></span>
                 </div>
@@ -207,6 +207,10 @@ export default {
             default: function() {
                 return [];
             }
+        },
+        title: {
+            type: String,
+            default: '选择商品'
         }
     },
     data() {
@@ -295,13 +299,14 @@ export default {
     },
     watch: {
         show(val) {
+            const modal = this.$refs.modal;
             if (val) {
-                $('#goodsModal').modal({
+                $(modal).modal({
                     backdrop: 'static'
                 });
-                $('#goodsModal').modal('show');
+                $(modal).modal('show');
             } else {
-                $('#goodsModal').modal('hide');
+                $(modal).modal('hide');
             }
         }
     }
