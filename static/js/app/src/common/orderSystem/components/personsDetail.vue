@@ -14,11 +14,11 @@
                                      :class="{'selected': person.selected}"
                                      v-for="(person, index) in personsList"
                                      v-if="personsList && personsList.length > 0">
-                                    <div @click="changeShowPerson(index)" style="flex-grow: 1">
+                                    <div @click="changeShowPerson(index)" style="flex-grow: 1; max-width: 133px; word-break: break-all">
                                         <p>{{person.name}}</p>
                                         <p style="font-size: 12px">{{person.idCardNum}}</p>
                                     </div>
-                                    <span class="delete-icon" style="margin: 0 4px 0" @click="deletePerson(person)" v-show="editAble"></span>
+                                    <span class="delete-icon" style="margin: 0 4px" @click="deletePerson(person)" v-show="editAble"></span>
                                 </div>
                             </div>
                             <div class="personsDetail-leftBtn" v-show="editAble">
@@ -92,7 +92,6 @@
                                 <span class="personsDetail-errorTip" v-show="emailErrorRules">格式有误</span>
                             </p>
                             <div class="personsDetail-rightFoot" v-show="editAble">
-                                <button class="dd-btn dd-btn-ghost" style="margin-right: 16px" @click="cancel">取消</button>
                                 <button class="dd-btn dd-btn-primary" @click="savePersonInfo">保存</button>
                             </div>
                         </div>
@@ -267,6 +266,7 @@
                 this.country = undefined;
                 this.address = undefined;
                 this.email = undefined;
+                this.editNewPerson = false;
                 this.resetErrorTip();
             },
             resetErrorTip() {
@@ -362,13 +362,19 @@
                     http.get('/order/addRoomCheckInUser', params)
                         .then(res => {
                             modal.alert('保存成功！');
-                            this.getUsersAndInfo();
+                            this.editNewPerson = false;
+                            const userId = res.data.checkInUserId;
+                            console.log(res);
+                            this.getUsersAndInfo(userId);
                         });
                 } else {
                     params.checkInUserId = this.selectedPerson.id;
                     http.get('/order/updateRoomCheckInUsers', params)
                         .then(res => {
                             modal.alert('保存成功！');
+                            console.log(res);
+                            const userId = res.data.checkInUserId;
+                            this.getUsersAndInfo(userId);
                         });
                 }
             },
@@ -389,38 +395,34 @@
                     person.selected = false;
                 });
             },
-            cancel() {
-                if (this.editNewPerson) {
-                    this.resetData();
-                } else {
-                    this.resetErrorTip();
-                    this.name = this.selectedPerson.name;
-                    this.genderType = this.selectedPerson.sex;
-                    this.idCardType = this.selectedPerson.idCardType;
-                    this.idCardNum = this.selectedPerson.idCardNum;
-                    this.birthday = this.selectedPerson.birthday;
-                    this.phone = this.selectedPerson.phone;
-                    this.carNum = this.selectedPerson.carNum;
-                    this.country = this.selectedPerson.country;
-                    this.address = this.selectedPerson.address;
-                    this.email = this.selectedPerson.email;
-                }
-            },
-            getUsersAndInfo() {
+            getUsersAndInfo(id) {
                 const params = { orderId: this.orderId, roomOrderId: this.roomOrderId };
                 http.get('/order/getCheckInUsersBasicInfo', params)
                     .then(res => {
                         if (res.data.checkInUsers && res.data.checkInUsers.length > 0) {
                             this.personsList = [...res.data.checkInUsers];
                             this.personsList.map((person, index) => {
-                                if (index === 0) {
-                                    this.$set(person, 'selected', true);
+                                if (id) {
+                                    if (person.id === id) {
+                                        this.$set(person, 'selected', true);
+                                    } else {
+                                        this.$set(person, 'selected', false);
+                                    }
                                 } else {
-                                    this.$set(person, 'selected', false);
+                                    if (index === 0) {
+                                        this.$set(person, 'selected', true);
+                                    } else {
+                                        this.$set(person, 'selected', false);
+                                    }
                                 }
                             });
                         }
-                        const nextParams = { orderId: this.orderId, roomOrderId: this.roomOrderId, checkInUserId: this.personsList[0].id };
+                        const nextParams = { orderId: this.orderId, roomOrderId: this.roomOrderId };
+                        if (id) {
+                            nextParams.checkInUserId = id;
+                        } else {
+                            nextParams.checkInUserId = this.personsList[0].id;
+                        }
                         return http.get('/order/getCheckInUsersAllInfo', nextParams);
                     })
                     .then(res => {

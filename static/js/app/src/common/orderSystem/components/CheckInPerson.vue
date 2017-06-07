@@ -3,14 +3,14 @@
         <div class="checkInPerson-personsList" v-if="personsObj.persons && personsObj.persons.length > 0">
             <div class="checkInPerson-person" v-for="(person, index) in personsObj.persons">
                 <span class="checkInPerson-person-icon"></span>
-                <input class="dd-input checkInPerson-person-name" placeholder="入住人姓名" v-model="person.name" maxlength="16">
+                <input class="dd-input checkInPerson-person-name" placeholder="入住人姓名" v-model="person.name" maxlength="20">
                 <div class="checkInPerson-component-container">
                     <dd-select v-model="person.idCardType">
                         <dd-option v-for="card in cardsList" :value="card.id" :label="card.name" :key="card.id+card.name">
                         </dd-option>
                     </dd-select>
                 </div>
-                <input class="dd-input checkInPerson-person-cardNum" style="width: 170px;" placeholder="证件号码" v-model="person.idCardNum" maxlength="18">
+                <input class="dd-input checkInPerson-person-cardNum" style="width: 170px;" placeholder="证件号码" v-model="person.idCardNum" maxlength="32">
                 <span class="checkInPerson-delete-icon" @click="deletePerson(index)"></span>
             </div>
         </div>
