@@ -821,6 +821,7 @@
                 room.quickDiscountId = '';
                 this.setDayFee(room);
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
+                room.moreDiscount = 0;
             },
             // 设置每日房价
             setDayFee(room) {
