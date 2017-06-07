@@ -24,7 +24,7 @@
                         <div class="cardList-body-itemRight additionalModal-body-itemRight">
                             <input type="text"
                                    class="dd-input normal-input"
-                                   maxlength="11"
+                                   maxlength="20"
                                    placeholder="请输入手机号"
                                    :disabled='disableNameInput'
                                    v-model="phone" />
@@ -137,13 +137,14 @@
                 this.phoneErrorTip = '格式有误';
             },
             createAdditionalCard() {
-                this.checkPhone();
+                // this.checkPhone();
                 if (this.phone.length === 0) {
                     this.phoneErrorTip = '必填字段';
-                }
-                if (!this.phoneValid) {
                     return false;
                 }
+                /* if (!this.phoneValid) {
+                    return false;
+                } */
                 const params = {
                     vipCardId: this.card.id,
                     name: this.name,
@@ -184,19 +185,20 @@
                 });
             },
             phone(newVal) {
-                if (newVal.length > 0) {
+                /* if (newVal.length > 0) {
                     this.phoneErrorTip = '格式有误';
-                }
+                } */
                 if (newVal.length === 0) {
                     this.phoneValid = false;
                     this.phoneErrorTip = '必填字段';
                 }
-                if (newVal.length === 11) {
+                /* if (newVal.length === 11) {
                     this.checkPhone();
                     if (this.phoneValid) {
                         this.getPhoneInfo();
                     }
-                }
+                } */
+                this.getPhoneInfo();
             }
         },
         components: {

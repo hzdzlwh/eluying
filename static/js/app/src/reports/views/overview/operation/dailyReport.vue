@@ -4,7 +4,7 @@
             <div class="dd-datepicker-container">
                 <span>报表日期</span>
                 <DdDatepicker v-model="today" :disabled-date="disabledDate" />
-                <span> 单位:人民币元</span>
+                <span style="margin-left: 10px;"> 单位:人民币元</span>
             </div>
             <div>
                 <dd-dropdown text="导出明细" trigger="click">
@@ -30,10 +30,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            
+                        <tr class="mark-tr">
+                            <td>收银</td>
+                            <td>{{debit.payments.dailyTotal}}</td>
+                            <td>{{debit.payments.monthlyTotal}}</td>
+                        </tr>
+                        <tr v-for="item in debit.payments.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>收银</td>
+                            <td>{{debit.enterpriseCityledger.dailyTotal}}</td>
+                            <td>{{debit.enterpriseCityledger.monthlyTotal}}</td>
+                        </tr>
+                        <tr v-for="item in debit.enterpriseCityledger.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>借方合计</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
                 </table>
                 <table class="daily-table" border="1">
                     <thead>
@@ -47,10 +71,54 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            
+                        <tr class="mark-tr">
+                            <td>住宿</td>
+                            <td>{{credit.accommodation.dailyTotal}}</td>
+                            <td>{{credit.accommodation.monthlyTotal}}</td>
+                        </tr>
+                        <tr v-for="item in credit.accommodation.items">
+                            <td>{{item.name}}</td>
+                            <td>{{item.dailyAmount}}</td>
+                            <td>{{item.monthlyAmount}}</td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>餐饮</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>娱乐</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>商超</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>会员卡</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>保险</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="mark-tr">
+                            <td>预付款</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>贷方合计</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -65,17 +133,44 @@
     export default {
         data() {
             return {
-                today: undefined
+                today: undefined,
+                credit: {
+                    accommodation: Object,
+                    advancePayment: Object,
+                    cater: Object,
+                    entertainment: Object,
+                    goods: Object,
+                    insurance: Object,
+                    vipCard: Object,
+                    summary: Object
+                },
+                debit: {
+                    enterpriseCityledger: Object,
+                    payments: Object,
+                    summary: Object
+                }
             };
         },
         created() {
             this.today = util.dateFormat(new Date());
-            // this.getDailyReportData();
+            this.getDailyReportData();
         },
         methods: {
             getDailyReportData() {
                 http.get('/stat/getDailyStat', { date: this.today }).then(res => {
-                    console.log(res);
+                    if (res.code === 1) {
+                        this.credit.accommodation = res.data.credit.accommodation;
+                        this.credit.advancePayment = res.data.credit.advancePayment;
+                        this.credit.cater = res.data.credit.cater;
+                        this.credit.entertainment = res.data.credit.entertainment;
+                        this.credit.goods = res.data.credit.goods;
+                        this.credit.insurance = res.data.credit.insurance;
+                        this.credit.vipCard = res.data.credit.vipCard;
+                        this.credit.summary = res.data.credit.summary;
+                        this.debit.payments = res.data.debit.payments;
+                        this.debit.enterpriseCityledger = res.data.debit.enterpriseCityledger;
+                        this.debit.summary = res.data.debit.summary;
+                    }
                 });
             },
             disabledDate(date) {
@@ -112,6 +207,8 @@
         padding-top: 20px;
         .title{
             h2{
+                font-size: 24px;
+                color: #178ce6;
                 text-align: center;
             }
         }
@@ -140,6 +237,38 @@
                             padding-left: 20px;
                         }
                         th:not(:first-child){
+                            text-align: right;
+                            padding-right: 20px;
+                        }
+                    }
+                }
+                tbody{
+                    tr{
+                        td:first-child{
+                            padding-left: 34px;
+                        }
+                        td:not(:first-child){
+                            text-align: right;
+                            padding-right: 20px;
+                        }
+                    }
+                    .mark-tr{
+                        font-weight: bold;
+                        color: #666666;
+                        background: #b2dbff;
+                        td:first-child{
+                            padding-left: 20px;
+                        }
+                    }
+                }
+                tfoot{
+                    tr{
+                       background: #61758c;
+                        color: #fff;
+                        td:first-child{
+                            padding-left: 20px;
+                        }
+                        td:not(:first-child){
                             text-align: right;
                             padding-right: 20px;
                         }

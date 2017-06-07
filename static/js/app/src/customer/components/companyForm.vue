@@ -25,7 +25,7 @@
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">联系号码：</span>
-                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="11">
+                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="20">
                     </p>
                     <p>
                         <span class="addCus">
