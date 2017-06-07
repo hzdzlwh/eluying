@@ -58,9 +58,17 @@
                                 :class="{'calendar-category-room-dirty': r.isDirty}"
                                 v-if="!c.folded"
                                 :room="r.i"
-                                @click="setDirtyRoom(r)"
+                                v-clickoutside="closeDirtyMenu"
+                                @contextmenu.stop="toggleDirtyMenu(r, $event)"
                             >
                                 <span>{{r.sn}}</span>
+                                <div
+                                    class="calendar-status-action calendar-dirty-menu"
+                                    @click.stop="setDirtyRoom(r)"
+                                    v-if="r.dirtyMenuVisible"
+                                >
+                                    {{r.isDirty ? '转为净房' : '转为脏房'}}
+                                </div>
                             </div>
                             <div class="calendar-category-room fold" v-if="r.isLast && c.folded">剩余</div>
                         </template>
@@ -591,6 +599,10 @@
         border-bottom: none;
         border-top: 10px solid #fafafa;
     }
+    .calendar-dirty-menu {
+        left: -52px;
+        top: 31px
+    }
 </style>
 <script>
     import DateSelect from './DateSelect.vue';
@@ -617,7 +629,8 @@
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
                 currentAction: undefined,
-                isDrag: false
+                isDrag: false,
+                currentDirtyMenu: undefined
             };
         },
         components: {
@@ -798,6 +811,19 @@
                 this.currentAction = status;
                 return false;
             },
+            toggleDirtyMenu(room, ev) {
+                this.closeDirtyMenu();
+                this.currentDirtyMenu = room;
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.$set(room, 'dirtyMenuVisible', !room.dirtyMenuVisible);
+                return false;
+            },
+            closeDirtyMenu() {
+                if (this.currentDirtyMenu) {
+                    this.$set(this.currentDirtyMenu, 'dirtyMenuVisible', false);
+                }
+            },
             setDirtyRoom(room) {
                 http.get('/room/addRemoveDirtyRoom', {
                     actionType: !room.isDirty,
@@ -805,6 +831,7 @@
                 })
                     .then(result => {
                         room.isDirty = !room.isDirty;
+                        this.$set(room, 'dirtyMenuVisible', false);
                     });
             },
             clearAllSelected() {
