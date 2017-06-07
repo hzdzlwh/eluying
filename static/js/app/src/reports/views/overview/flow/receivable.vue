@@ -67,7 +67,7 @@
                 columns: [
                     {
                         title: '订单号/操作时间',
-                        render: (h, row) => (<span><span class="js-order-num">{row.seriaNum}</span><br /><small><i>{row.operationTime}</i></small></span>),
+                        render: (h, row) => (<span><span class="js-order-num">{row.serialNum}</span><br /><small><i>{row.operationTime}</i></small></span>),
                         width: 188
                     },
                     {
