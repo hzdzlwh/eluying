@@ -14,7 +14,12 @@
                     </p>
                     <p>
                         <span class="addCus">起始日期</span>
-                       <!--  <div class="dd-start-date">
+                       <DatePicker :popperClass='"DatePickerAbsorct"'
+      v-model="value3"
+      type="datetimerange"
+      placeholder="选择时间范围">
+    </DatePicker>
+                        <!--  <div class="dd-start-date">
                 <DdDatepicker placeholder="开始时间" v-model="formdata.startDate" />
             </div>
             <span class="dd-date-symbol">~</span>
@@ -34,12 +39,7 @@
                     </p>
                 </div>
             </div>
-            </span>
-            </span>
-            </p>
         </div>
-    </div>
-    </div>
     </div>
 </template>
 <style scoped>
@@ -159,16 +159,13 @@
 </style>
 <script>
 import {
-   DdDatepicker
+    DdDatepicker
 } from 'dd-vue-component';
 import http from '../../common/http';
 import modal from '../../common/modal';
+import { DatePicker } from 'element-ui'
 export default {
     props: {
-        data: {
-            type: Object,
-            default: () => { return {}; }
-        },
         visible: {
             type: Boolean,
             default: false
@@ -177,42 +174,61 @@ export default {
             type: Number,
             default: 0
         },
-        // 0为维修，1为保留，2为停用
+        // 0为保留，1为维修，2为停用
         outOrIn: {
             type: Number,
             default: 0
-        }
+        },
         // 0为查看，1为转
+        date: String,
+        room: Object
     },
     data() {
         return {
-            formdata: {
-                id: 0,
-                roomName: '',
-                startDate: '',
-                endDate: 0,
-                why: '',
-                remark: ''
-            },
+            formdata: {},
             consume: [],
             // discount: this.data.discounts,
             selectType: undefined,
             formType: [{
-                name: '维修'
-            }, {
                 name: '保留'
             }, {
+                name: '维修'
+            }, {
                 name: '停用'
-            }]
+            }],
+             value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         };
     },
     methods: {
         close() {
             this.selectType = undefined;
-            $('#add').modal('hide');
+            $('#dayOrderForm').modal('hide');
             this.$emit('close');
         },
-        customerDate: function() {
+        fetchData() {
+            if (this.room) {
+                http.get('/room/getStopInfo', {
+                    date: this.date,
+                    roomId: this.room.roomId,
+                    type: this.formNumber + 1
+                }).then(res => {});
+            }
+        },
+        changeData() {
+            const parms = this.formdata;
+            if (!parms.logId) {
+                delete parms.logId;
+            }
+            parms.type = Number(this.formNumber) + 1;
+            http.get('/room/setStopInfo', {
+                date: this.date,
+                roomId: this.room.roomId,
+                type: this.formNumber
+            }).then(res => {
+                this.formdata = res.data;
+            });
+        },
+        customerDate() {
             if (!this.formdata.companyName) {
                 modal.warn('请输入企业名称');
                 return;
@@ -234,7 +250,7 @@ export default {
             }
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
-                for (let i = 0; i < this.formdata.discounts.length; i ++) {
+                for (let i = 0; i < this.formdata.discounts.length; i++) {
                     this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.warn('请输入0.1-9.9之间正确的折扣数字');
@@ -269,13 +285,19 @@ export default {
                 $('#dayOrderForm').modal('hide');
             }
         },
-        data(val) {
-            this.formdata = { ...val
-            };
+        formNumber() {
+            this.fetchData();
+        },
+        outOrIn() {
+            this.fetchData();
+        },
+        date() {
+            this.fetchData();
         }
     },
     components: {
-        DdDatepicker
+        DdDatepicker,
+        DatePicker
     }
 };
 </script>
