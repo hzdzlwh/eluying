@@ -108,7 +108,7 @@
                         <th>客户姓名</th>
                         <th style="width: 104px;">手机号码</th>
                         <th>客源渠道</th>
-                        <th style="position: relative; cursor: pointer" @click="changeListByDate">
+                        <th style="position: relative; cursor: pointer; width: 100px;" @click="changeListByDate">
                             使用时间
                             <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
                             <div class="dd-arrowDown-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showDownArrow)"></div>
@@ -145,7 +145,7 @@
                         </td>
                         <td v-text="item.orderTotalPrice"></td>
                         <td v-text="item.payAmount"></td>
-                        <td v-text="item.payChannels"></td>
+                        <td v-text="item.payChannels" :title="item.payChannels"></td>
                         <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                         <td v-text="item.customerPhone || '--'"></td>
                         <td v-text="item.origin"></td>

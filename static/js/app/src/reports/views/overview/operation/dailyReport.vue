@@ -180,6 +180,11 @@
                 return '';
             }
         },
+        watch: {
+            today() {
+                this.getDailyReportData();
+            }
+        },
         components: {
             DdDatepicker,
             DdDropdown,
