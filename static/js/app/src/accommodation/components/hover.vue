@@ -1,11 +1,11 @@
 <template>
-    <div class="calendar-glyph-detail ing down" >
+    <div class="calendar-glyph-detail ing down">
         <div class="glyph-arrow-up"></div>
         <div class="glyph-arrow-down"></div>
         <div class="glyph-detail-name">
             <div>{{date.customerName}} ({{date.customerPhone}})</div>
-            <div class="eluyun_book2-small_outer spriteImg">
-                <div class="eluyun_book2-small"></div>
+            <div class="eluyun_ing2-room_outer spriteImg">
+                <div class="eluyun_ing2-room"></div>
             </div>
         </div>
         <div class="glyph-detail-time">
@@ -23,7 +23,7 @@
     </div>
 </template>
 <style scoped>
-.calendar-glyph-detail{
+.calendar-glyph-detail {
     position: relative;
 }
 </style>

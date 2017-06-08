@@ -1290,6 +1290,8 @@
             },
             editOrder() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
+                bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
             },

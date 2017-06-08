@@ -189,7 +189,21 @@ const orderSystemModule = {
                 case ORDER_TYPE.RETAIL:
                     return dispatch(types.GET_GOODS_ORDER_DETAIL, { orderId });
             }
-        }
+        },
+        [types.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({ state, commit }, { businessType, orderId}) {
+            return new Promise((resolve, reject) => {
+                http.get('/order/getRoomBusinessInfo', { orderId, businessType })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            res.data.businessType = businessType;
+                            commit(types.SET_ROOM_BUSINESS_INFO, { roomBusinessInfo: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            });
+        },
     }
 };
 

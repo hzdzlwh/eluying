@@ -142,6 +142,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
+                         <div @click="returnPreStep" v-if='hasBack' class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
@@ -324,7 +325,8 @@
                 ORDER_TYPE,
                 vipCardsAndLevel: [],
                 vipCardId: undefined,
-                vipCardInfo: {}
+                vipCardInfo: {},
+                hasBack: false
             };
         },
         props: {
@@ -421,6 +423,10 @@
         },
         created() {
             this.getData();
+            bus.$on('setBack', this.setBack);
+        },
+        beforeDestroy() {
+            bus.$off('setBack', this.setBack);
         },
         watch: {
             userOriginType(origin) {
@@ -546,6 +552,14 @@
                 types.LOAD_ENTER_LIST,
                 types.LOAD_OTHER_GOODS_LIST
             ]),
+            returnPreStep() {
+                this.hideModal();
+                bus.$emit('back');
+                // bus.$emit('onShowDetail');
+            },
+            setBack() {
+                this.hasBack = true;
+            },
             getRoomDiscount(discounts) {
                 if (!discounts) {
                     return 1;
@@ -730,6 +744,7 @@
                 this.foodPrice = 0;
                 this.vipCardId = undefined;
                 this.vipCardInfo = {};
+                this.hasBack = false;
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');

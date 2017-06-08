@@ -9,9 +9,8 @@
                 <div class="taday-status-box" v-for='(item, contentIndex) in finalRoomStatus'>
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
-                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}"
-                        @mouseenter="it.hover = true" @mouseleave="it.hover = false">
-                        <hover :date='it' class='calendar-glyph-hover'></hover>
+                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="it.hover = true" @mouseleave="it.hover = false">
+                            <hover :date='it' class='calendar-glyph-hover' v-if='it.roomState === 11'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
                                 {{it.roomName}}
@@ -135,11 +134,11 @@
         color: #ffffff;
         display: inline-block;
         margin: 4px 8px;
-        position:relative;
-        &:hover{
-            .calendar-glyph-hover{
-                display:block;
-                position:absolute;
+        position: relative;
+        &:hover {
+            .calendar-glyph-hover {
+                display: block;
+                position: absolute;
             }
         }
         .taday-status-item-title {
@@ -288,7 +287,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO, type.GET_ORDER_DETAIL]),
+        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL]),
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
         },
@@ -329,21 +328,20 @@ export default {
             });
         },
         showCheckOut(types) {
-            // const handel = this.hideCheckout
+            const handel = this.hideCheckout
             this[type.GET_ORDER_DETAIL]({
                 orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
                 orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
-                this[type.LOAD_ROOM_BUSINESS_INFO]({
-                    businessType: 1
+                this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
+                    businessType:  2,
+                    orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
                         backdrop: 'static'
                     })
-                    // bus.$emit('changeBack',handel);
                 )
-            );
-            // this.showOrder().then(bus.$emit('showCheckout'));
+            )
         },
         hideCheckout() {
             $('#checkOut').modal('hide');
