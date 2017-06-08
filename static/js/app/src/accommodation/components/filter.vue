@@ -1,50 +1,100 @@
 <template>
     <div style="position: relative">
-        <div class="calendar-room-filter-box" @click="toggleSelect">
+        <div class="calendar-room-filter-box" @click="roomTypeVisible = !roomTypeVisible">
             <div class="calendar-icon calendar-icon-roomtype"></div>
             <span style="cursor: pointer">状态</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="visible" class="calendar-room-filter-select">
+        <div v-if="roomTypeVisible" class="calendar-room-filter-select">
             <ul>
-                <li v-for="c in roomTypeList" @click="select(c)">
+                <li v-for="c in roomTypeList">
                     <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span> {{c.name}}
-                    <input name="room" type="checkbox" value="roomTypeSelect[c.id]" />
+                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                 </li>
             </ul>
         </div>
-<!-- room -->
-          <div class="calendar-room-filter-box" @click="toggleSelect">
+        <!-- roomType -->
+        <div class="calendar-room-filter-box" @click="tagVisible = !tagVisible">
             <div class="calendar-icon calendar-icon-tag"></div>
             <span style="cursor: pointer">标签</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="visible" class="calendar-room-filter-select">
+        <div v-if="tagVisible" class="calendar-room-filter-select">
             <ul>
-                <li v-for="c in roomTypeList" @click="select(c)">
-                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span> {{c.name}}
-                    <input name="room" type="checkbox" value="roomTypeSelect[c.id]" />
+                <li v-for="c in tagList">
+                    <span class="calendar-tag-color" :style='{background:c.color}'>{{c.name}}</span>
+                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                 </li>
             </ul>
         </div>
-<!-- tag -->
-
+        <!-- tag -->
+        <div class="calendar-room-filter-box" @click="roomVisible = !roomVisible">
+            <div class="calendar-icon calendar-icon-room"></div>
+            <span style="cursor: pointer">房型</span>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+        </div>
+        <div v-if="roomVisible" class="calendar-room-filter-select">
+            <ul>
+                <li v-for="c in categoriesList">
+                    <span>{{c.name}}</span>
+                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                </li>
+            </ul>
+        </div>
+        <!-- room -->
+        <div class="calendar-room-filter-box" @click="areaVisible = !areaVisible">
+            <div class="calendar-icon calendar-icon-area"></div>
+            <span style="cursor: pointer">区域</span>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+        </div>
+        <div v-if="areaVisible" class="calendar-room-filter-select">
+            <ul>
+                <li v-for="c in areaTemp">
+                    <span>{{c.name}}</span>
+                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                </li>
+            </ul>
+        </div>
+        <!-- area -->
+        <div class="calendar-room-filter-box" @click="customVisible = !customVisible">
+            <div class="calendar-icon calendar-icon-custom"></div>
+            <span style="cursor: pointer">客源</span>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+        </div>
+        <div v-if="customVisible" class="calendar-room-filter-select">
+            <ul>
+                <li v-for="c in customTemp">
+                    <span>{{c.name}}</span>
+                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                </li>
+            </ul>
+        </div>
+        <!-- custom -->
     </div>
 </template>
 <style scoped>
+.calendar-tag-color {
+    color: #fff;
+    padding: 3px;
+    background: #f29130;
+    border-radius: 2px;
+}
+
 .calendar-room-filter-select ul {
     width: 183px;
-    padding: 0 17px 0 30px ;
+    padding: 0 17px 5px 30px;
 }
 
 .calendar-room-filter-select li {
-    margin: 0 0 10px;
+    margin-bottom: 20px;
 }
+
 .calendar-room-filter-select li input {
     float: right;
 }
+
 .calendar-room-filter-select {
-    padding-top:15px;
+    padding-top: 15px;
     top: 38px;
     cursor: default;
     left: 0;
@@ -73,12 +123,23 @@
 .calendar-icon-roomtype {
     background-image: url('/static/image/icon/ico1.png')
 }
-.calendar-icon-tag{
+
+.calendar-icon-tag {
     background-image: url('/static/image/icon/ico2.png')
 }
-.calendar-icon-room{
+
+.calendar-icon-room {
     background-image: url('/static/image/icon/ico3.png')
 }
+
+.calendar-icon-area {
+    background-image: url('/static/image/icon/ico4.png')
+}
+
+.calendar-icon-custom {
+    background-image: url('/static/image/icon/ico5.png')
+}
+
 .calendar-room-filter-toggle {
     float: right;
     margin-top: 7px;
@@ -97,16 +158,22 @@ import {
 } from '../colorList';
 export default {
     props: {
-        categories: Array
+        categories: Array,
+        customList: Array,
+        areaList: Array
     },
     data() {
         return {
-            roomTypeSelect: {
-
-            },
+            categoriesList: [],
             colorList,
-            visible: false,
+            roomTypeVisible: false,
+            tagVisible: false,
+            roomVisible: false,
+            customVisible: false,
+            areaVisible: false,
             categoriesTemp: [],
+            customTemp: [],
+            areaTemp: [],
             roomTypeList: [{
                 name: '空房',
                 id: '0'
@@ -137,7 +204,161 @@ export default {
             }]
         };
     },
+    computed: {
+        parms() {
+            const categoriesParms = [];
+            const roomTypeList = [];
+            const tagList = [];
+            const areaList = [];
+            const customList = [];
+            this.categoriesList.forEach(function(el, index) {
+                if (el.select) {
+                    categoriesParms.push(Number(el.id));
+                }
+            });
+            this.roomTypeList.forEach(function(el, index) {
+                if (el.select) {
+                    roomTypeList.push(Number(el.id));
+                }
+            });
+            this.tagList.forEach(function(el, index) {
+                if (el.select) {
+                    tagList.push(Number(el.value));
+                }
+            });
+            this.areaTemp.forEach(function(el, index) {
+                if (el.select) {
+                    customList.push(Number(el.id));
+                }
+            });
+            this.customList.forEach(function(el, index) {
+                if (el.select) {
+                    areaList.push(Number(el.id));
+                }
+            });
+            return {
+                roomTypes: JSON.stringify(categoriesParms),
+                states: JSON.stringify(roomTypeList),
+                tags: JSON.stringify(tagList),
+                origins: JSON.stringify(customList),
+                zones: JSON.stringify(areaList)
+            };
+        }
+    },
+    watch: {
+        categories(val) {
+            this.categoriesList = val;
+        },
+        customList(val) {
+            this.customTemp = val;
+        },
+        areaList(val) {
+            this.areaTemp = val;
+        },
+        parms(n, o) {
+            if (JSON.stringify(n) !== JSON.stringify(o)) {
+                this.$emit('change', n);
+            }
+        }
+        // categoriesList(n, o) {
+        //     if (o !== []) {
+        //         this.$emit('change', this.getParms());
+        //     }
+        // },
+        // tagList(n, o) {
+        //     if (o !== []) {
+        //         this.$emit('change', this.getParms());
+        //     }
+        // },
+        // roomTypeList(n, o) {
+        //     if (o !== []) {
+        //         this.$emit('change', this.getParms());
+        //     }
+        // },
+        // roomTypeList: {
+        //     handler(n, o) {
+        //         if (o !== []) {
+        //             this.$emit('change', this.getParms());
+        //         }
+        //     },
+        //     deep: true
+        // },
+        // tagList: {
+        //     handler(n, o) {
+        //         if (o !== []) {
+        //             this.$emit('change', this.getParms());
+        //         }
+        //     },
+        //     deep: true
+        // },
+        // areaTemp: {
+        //     handler(n, o) {
+        //         if (o !== []) {
+        //             this.$emit('change', this.getParms());
+        //         }
+        //     },
+        //     deep: true
+        // },
+        // customTemp: {
+        //     handler(n, o) {
+        //         if (o !== []) {
+        //             this.$emit('change', this.getParms());
+        //         }
+        //     },
+        //     deep: true
+        // },
+        // categoriesList: {
+        //     handler(n, o) {
+        //         if (o !== []) {
+        //             this.$emit('change', this.getParms());
+        //         }
+        //     },
+        //     deep: true
+        // }
+    },
     methods: {
+        setSelect(item) {
+            this.$set(item, 'select', !item.select);
+        },
+        getParms() {
+            const categoriesParms = [];
+            const roomTypeList = [];
+            const tagList = [];
+            const areaList = [];
+            const customList = [];
+            this.categoriesList.forEach(function(el, index) {
+                if (el.select) {
+                    categoriesParms.push(Number(el.id));
+                }
+            });
+            this.roomTypeList.forEach(function(el, index) {
+                if (el.select) {
+                    roomTypeList.push(Number(el.id));
+                }
+            });
+            this.tagList.forEach(function(el, index) {
+                if (el.select) {
+                    tagList.push(Number(el.id));
+                }
+            });
+            this.areaTemp.forEach(function(el, index) {
+                if (el.select) {
+                    customList.push(Number(el.id));
+                }
+            });
+            this.customList.forEach(function(el, index) {
+                if (el.select) {
+                    areaList.push(Number(el.id));
+                }
+            });
+            return {
+                roomTypes: JSON.stringify(categoriesParms),
+                states: JSON.stringify(roomTypeList),
+                tags: JSON.stringify(tagList),
+                origins: JSON.stringify(customList),
+                zones: JSON.stringify(areaList)
+            };
+        },
         toggleSelect() {
             if (this.visible) {
                 this.visible = false;
@@ -146,9 +367,6 @@ export default {
                 }));
                 this.visible = true;
             }
-        },
-        select() {
-
         },
         hide() {
             this.visible = false;

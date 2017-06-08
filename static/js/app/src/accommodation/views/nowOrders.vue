@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- <Search /> -->
-        <Calendar :roomStatus="roomStatus" @changeEnter='changeEnter' :categories='categories' />
+        <Calendar :roomStatus="roomStatus" @changeEnter='changeEnter' :categories='categories' :customList='customList' :areaList='areaList' />
         <ShopCart :selectedEntries="selectedEntries" />
     </div>
 </template>
@@ -25,12 +25,16 @@ export default {
             DAYS: 30,
             dateRange: [],
             leftMap: {},
-            selectedEntries: []
+            selectedEntries: [],
+            customList: [],
+            areaList: []
         };
     },
     created() {
         bus.$on('refreshView', this.refreshView);
         this.getRoomAndStatus();
+        this.getCategories();
+        this.getChannels();
     },
     beforeDestroy() {
         bus.$off('refreshView', this.refreshView);
@@ -43,23 +47,67 @@ export default {
     methods: {
         getCategories() {
             return http.get('/room/getRoomCategories', {})
-                .then(res => {
-                    this.categories = res.data.list;
-                });
+                    .then(res => {
+                        const date = res.data.list;
+                        const tamp = {};
+                        const list = [];
+                        date.forEach(function(element, index) {
+                            if (!tamp[element.cName]) {
+                                tamp[element.cName] = true;
+                                list.push({
+                                    name: element.cName,
+                                    id: element.cId
+                                });
+                            }
+                        });
+                        this.categories = list;
+                    });
+        },
+        getChannels() {
+            return http.get('/user/getChannels', {
+                isAll: true,
+                type: 2
+            })
+                    .then(res => {
+                        const date = res.data.list;
+                        const list = [];
+                        date.forEach(function(element, index) {
+                            list.push({
+                                name: element.name,
+                                id: element.id
+                            });
+                            // element.companyList.forEach( function(el, index) {
+                            //     list.push({
+                            //     name: el.companyName,
+                            //     id: el.id
+                            // });
+                        });
+                        this.customList = list;
+                    });
         },
         changeEnter(enter) {
             this.selectedEntries = enter;
         },
-        getRoomAndStatus() {
+        getRoomAndStatus(parms) {
             return http.get('/room/getDailyRoomStatus', {
-                date: this.startDateStr
+                date: this.startDateStr,
+                ...parms
             })
-            .then(res => {
-                this.roomStatus = res.data.list;
-            });
+                    .then(res => {
+                        this.roomStatus = res.data.list;
+                        if (!parms) {
+                            const areaList = this.areaList;
+                            res.data.list.forEach(function(element, index) {
+                                areaList.push({
+                                    id: element.zoneId,
+                                    name: element.zoneName
+                                });
+                            });
+                        }
+                    });
         },
-        refreshView() {
-            this.getRoomAndStatus();
+        refreshView(parms) {
+            this.getRoomAndStatus(parms);
         }
     },
     components: {

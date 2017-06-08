@@ -2,7 +2,7 @@
     <div class="taday-calendar">
         <div class="taday-calendar-picker">
             <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' />
-            <roomFilter :categories='categories'></roomFilter>
+            <roomFilter :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander'></roomFilter>
         </div>
         <div class="taday-calendar-body">
             <div class="taday-calendar-status-list">
@@ -237,7 +237,9 @@ export default {
         orderList: Array,
         startDate: Date,
         leftMap: Object,
-        DAYS: Number
+        DAYS: Number,
+        customList: Array,
+        areaList: Array
     },
     data() {
         return {
@@ -276,6 +278,9 @@ export default {
     },
     methods: {
         ...mapActions([type.LOAD_ROOM_BUSINESS_INFO, type.GET_ORDER_DETAIL]),
+        roomFilterHander(parms) {
+            bus.$emit('refreshView', parms);
+        },
         closeDayForm() {
             this.dayOrderFormVisible = false;
         },
