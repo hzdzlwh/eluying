@@ -358,6 +358,15 @@ var events = {
                                 }else if(d.statusList[i].status == 2){
                                     statusClass = 'notsale';
                                     statusStr = '未售';
+                                }else if(d.statusList[i].status == 3){
+                                    statusClass = 'reserve';
+                                    statusStr = '保留';
+                                }else if(d.statusList[i].status == 4) {
+                                    statusClass = 'fix';
+                                    statusStr = '维修';
+                                }else if(d.statusList[i].status == 5) {
+                                    statusClass = 'stop';
+                                    statusStr = '停用';
                                 }
                                 html += '<td> <div room="' + d.id + '" date="' + d.statusList[i].date
                                     + '" status="' + d.statusList[i].status + '" class="statusitem '

@@ -30,32 +30,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="mark-tr">
-                            <td>收银</td>
-                            <td>{{debit.payments.dailyTotal}}</td>
-                            <td>{{debit.payments.monthlyTotal}}</td>
-                        </tr>
-                        <tr v-for="item in debit.payments.items">
+                        <tr v-for="(item, index) in debit" :class="{'mark-tr': item.top}" v-if="index != debit.length - 1">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
                         </tr>
-                        <tr class="mark-tr">
-                            <td>收银</td>
-                            <td>{{debit.enterpriseCityledger.dailyTotal}}</td>
-                            <td>{{debit.enterpriseCityledger.monthlyTotal}}</td>
-                        </tr>
-                        <tr v-for="item in debit.enterpriseCityledger.items">
-                            <td>{{item.name}}</td>
-                            <td>{{item.dailyAmount}}</td>
-                            <td>{{item.monthlyAmount}}</td>
+                        <tr v-for="n in debitSupplymentTr">
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>借方合计</td>
-                            <td>{{debit.summary.dailyTotal}}</td>
-                            <td>{{debit.summary.monthlyTotal}}</td>
+                            <td>{{debitSummary.name}}</td>
+                            <td>{{debitSummary.dailyAmount}}</td>
+                            <td>{{debitSummary.monthlyAmount}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -71,67 +61,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="mark-tr">
-                            <td>住宿</td>
-                            <td>{{credit.accommodation.dailyTotal}}</td>
-                            <td>{{credit.accommodation.monthlyTotal}}</td>
-                        </tr>
-                        <tr v-for="item in credit.accommodation.items">
+                        <tr v-for="(item, index) in credit" :class="{'mark-tr': item.top}" v-if="index != credit.length - 1">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
                         </tr>
-                        <tr class="mark-tr">
-                            <td>餐饮</td>
+                        <tr v-for="n in creditSupplymentTr">
                             <td></td>
-                            <td></td>
-                        </tr>
-                        <tr v-for="item in credit.cater.items">
-                            <td>{{item.name}}</td>
-                            <td>{{item.dailyAmount}}</td>
-                            <td>{{item.monthlyAmount}}</td>
-                        </tr>
-                        <tr class="mark-tr">
-                            <td>娱乐</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr v-for="item in credit.entertainment.items">
-                            <td>{{item.name}}</td>
-                            <td>{{item.dailyAmount}}</td>
-                            <td>{{item.monthlyAmount}}</td>
-                        </tr>
-                        <tr class="mark-tr">
-                            <td>商超</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr v-for="item in credit.goods.items">
-                            <td>{{item.name}}</td>
-                            <td>{{item.dailyAmount}}</td>
-                            <td>{{item.monthlyAmount}}</td>
-                        </tr>
-                        <tr class="mark-tr">
-                            <td>会员卡</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="mark-tr">
-                            <td>保险</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="mark-tr">
-                            <td>预付款</td>
                             <td></td>
                             <td></td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>贷方合计</td>
-                            <td>{{credit.summary.dailyTotal}}</td>
-                            <td>{{credit.summary.monthlyTotal}}</td>
+                            <td>{{creditSummary.name}}</td>
+                            <td>{{creditSummary.dailyAmount}}</td>
+                            <td>{{creditSummary.monthlyAmount}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -149,42 +94,32 @@
         data() {
             return {
                 today: undefined,
-                credit: {
-                    accommodation: Object,
-                    advancePayment: Object,
-                    cater: Object,
-                    entertainment: Object,
-                    goods: Object,
-                    insurance: Object,
-                    vipCard: Object,
-                    summary: Object
-                },
-                debit: {
-                    enterpriseCityledger: Object,
-                    payments: Object,
-                    summary: Object
-                }
+                credit: [],
+                creditSummary: {},
+                debit: [],
+                debitSummary: {}
             };
         },
         created() {
             this.today = util.dateFormat(new Date());
             this.getDailyReportData();
         },
+        computed: {
+            debitSupplymentTr() {
+                return this.credit.length > this.debit.length ? this.credit.length - this.debit.length : 0;
+            },
+            creditSupplymentTr() {
+                return this.debit.length > this.credit.length ? this.debit.length - this.credit.length : 0;
+            }
+        },
         methods: {
             getDailyReportData() {
                 http.get('/stat/getDailyStat', { date: this.today }).then(res => {
                     if (res.code === 1) {
-                        this.credit.accommodation = res.data.credit.accommodation;
-                        this.credit.advancePayment = res.data.credit.advancePayment;
-                        this.credit.cater = res.data.credit.cater;
-                        this.credit.entertainment = res.data.credit.entertainment;
-                        this.credit.goods = res.data.credit.goods;
-                        this.credit.insurance = res.data.credit.insurance;
-                        this.credit.vipCard = res.data.credit.vipCard;
-                        this.credit.summary = res.data.credit.summary;
-                        this.debit.payments = res.data.debit.payments;
-                        this.debit.enterpriseCityledger = res.data.debit.enterpriseCityledger;
-                        this.debit.summary = res.data.debit.summary;
+                        this.credit = res.data.credit;
+                        this.debit = res.data.debit;
+                        this.creditSummary = res.data.credit.pop();
+                        this.debitSummary = res.data.debit.pop();
                     }
                 });
             },
