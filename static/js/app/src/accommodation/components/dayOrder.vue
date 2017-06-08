@@ -1,15 +1,16 @@
 <template>
     <div class="taday-calendar">
         <div class="taday-calendar-picker">
-            <DateSelect  :defaultDate="defaultStartDate" @change='changeDate' />
-            <RoomFilter @change="handleRoomFilter" :categories="categories" />
+            <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' />
+            <roomFilter :categories='categories'></roomFilter>
         </div>
         <div class="taday-calendar-body">
-            <div class="taday-calendar-status-list" @scroll="handleStatusScroll">
-                <div class="taday-status-box" v-for='item in finalRoomStatus'>
+            <div class="taday-calendar-status-list">
+                <div class="taday-status-box" v-for='(item, contentIndex) in finalRoomStatus'>
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
-                        <div class="taday-status-item" v-for='it in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" :style="{background:colorList[it.roomState]}">
+                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}">
+                            <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
                                 {{it.roomName}}
                             </div>
@@ -41,7 +42,7 @@
             </div>
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
-            <div @click.stop="check('book')" v-if='menuData && menuData.data.roomState === 0'>
+            <div @click.stop="check('book')" v-if='menuData && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
             <div @click.stop="check('ing')" v-if='menuData && menuData.data.isArrival'>
@@ -84,7 +85,7 @@
                 结束保留房
             </div>
         </contextmenu>
-        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='dayOrderFormVisible = false' :date='String(date)' :room='roomdata && roomdata.data'></dayOrderForm>
+        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata && roomdata.data'></dayOrderForm>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -169,6 +170,19 @@
     }
 }
 
+.taday-status-item-select {
+    background: url(/static/image/modal/roomSelect.png);
+    background-color: rgba(255, 255, 255, 0.4);
+    width: 108px;
+    height: 66px;
+    margin: -8px;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 2px solid #178ce6;
+    border-radius: 4px;
+}
+
 .day-calendar-status-inner {
     width: 96px;
     height: 44px;
@@ -199,17 +213,21 @@
 </style>
 <script>
 import DateSelect from './DateSelect.vue';
-import RoomFilter from './RoomFilter.vue';
+import roomFilter from './filter.vue';
 import dayOrderForm from './dayOrderForm.vue';
 import util from 'util';
 import http from '../../common/http';
 import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import bus from '../../common/eventBus';
 import modal from '../../common/modal';
+import type from '../../common/orderSystem/store/types';
 import {
     colorList
 } from '../colorList';
 import contextmenu from '../../common/components/contextmenu';
+import {
+    mapActions
+} from 'vuex';
 export default {
     props: {
         categories: Array,
@@ -234,12 +252,13 @@ export default {
             outOrIn: 0,
             colorList,
             date: new Date(),
-            roomdata: undefined
+            roomdata: undefined,
+            selectRooms: {}
         };
     },
     components: {
         DateSelect,
-        RoomFilter,
+        roomFilter,
         dayOrderForm,
         contextmenu
     },
@@ -256,14 +275,62 @@ export default {
         }
     },
     methods: {
+        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO, type.GET_ORDER_DETAIL]),
+        closeDayForm() {
+            this.dayOrderFormVisible = false;
+        },
+        setSelect(it, contentIndex, itemIndex) {
+            if (it.roomState !== 0 && it.roomState !== 12) {
+                return;
+            }
+            // const element = this.finalRoomStatus[contentIndex].roomList[itemIndex];
+            this.$set(it, 'isSelect', !(it.isSelect));
+            if (it.isSelect) {
+                this.$set(this.selectRooms, it.roomId, it);
+            } else {
+                this.$delete(this.selectRooms, it.roomId);
+            }
+            const temp = [];
+            for (const item in this.selectRooms) {
+                if (this.selectRooms.hasOwnProperty(item)) {
+                    temp.push({
+                        id: this.selectRooms[item].roomId,
+                        date: new Date(this.date),
+                        cId: 240,
+                        cName: this.selectRooms[item].roomName.split(' ')[0],
+                        rName: this.selectRooms[item].roomName.split(' ')[1],
+                        selected: true
+                    });
+                }
+            }
+
+            this.$emit('changeEnter', temp);
+        },
         showOrder() {
             bus.$emit('onShowDetail', {
                 type: this.menuData.data.roomOrderId ? 3 : -1,
                 orderId: this.menuData.data.roomOrderId || this.menuData.data.orderId
             });
         },
-        showCheckOut() {
+        showCheckOut(types) {
+            // const handel = this.hideCheckout
+            this[type.GET_ORDER_DETAIL]({
+                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
+                orderType: this.menuData.data.roomOrderId ? 3 : -1
+            }).then(
+                this[type.LOAD_ROOM_BUSINESS_INFO]({
+                    businessType: 1
+                }).then(
+                    $('#checkOut').modal({
+                        backdrop: 'static'
+                    })
+                    // bus.$emit('changeBack',handel);
+                )
+            );
             // this.showOrder().then(bus.$emit('showCheckout'));
+        },
+        hideCheckout() {
+            $('#checkOut').modal('hide');
         },
         setDetary(type) {
             http.get('/room/addRemoveDirtyRoom', {
@@ -284,12 +351,45 @@ export default {
         check(type) {
             const temp = [];
             temp.push({
-                roomId: this.menuData.data.roomId,
-                startDate: this.date,
-                endDate: this.date,
-                categoryType: this.menuData.data.cId
+                id: this.menuData.data.roomId,
+                date: new Date(this.date),
+                cId: 240,
+                cName: this.menuData.data.roomName.split(' ')[0],
+                rName: this.menuData.data.roomName.split(' ')[1],
+                selected: true
             });
-            bus.$emit('changeCheckState', type, temp);
+            bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
+        },
+        getRoomsWithDate(data) {
+            const temp = [];
+            data.map(e => {
+                if (!e.selected) {
+                    return false;
+                }
+
+                if (temp.length === 0) {
+                    temp.push({
+                        roomId: e.id,
+                        startDate: e.date,
+                        endDate: e.date,
+                        categoryType: e.cId
+                    });
+                } else {
+                    const lastItem = temp[temp.length - 1];
+                    // 将时间连续的房子放到一起
+                    if (e.id === lastItem.roomId && util.DateDiff(lastItem.endDate, e.date) === 1) {
+                        lastItem.endDate = e.date;
+                    } else {
+                        temp.push({
+                            roomId: e.id,
+                            startDate: e.date,
+                            endDate: e.date,
+                            categoryType: e.cId
+                        });
+                    }
+                }
+            });
+            return temp;
         },
         onCtxOpen(locals) {
             this.menuData = locals;

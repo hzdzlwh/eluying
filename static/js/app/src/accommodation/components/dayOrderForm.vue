@@ -9,16 +9,13 @@
                 <div class="modal-body modal-line">
                     <p>
                         <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">房间</span>
-                        <span>{{formdata.roomName}}</span>
+                                    房间</span>
+                        <span>{{room && room.roomName}}</span>
                     </p>
                     <p>
                         <span class="addCus">起始日期</span>
-                       <DatePicker :popperClass='"DatePickerAbsorct"'
-      v-model="value3"
-      type="datetimerange"
-      placeholder="选择时间范围">
-    </DatePicker>
+                        <DatePicker :popper-class='"DatePickerAbsorct"' v-model="value3" type="datetimerange" placeholder="选择时间范围" format='yyyy-MM-dd HH:mm:ss'>
+                        </DatePicker>
                         <!--  <div class="dd-start-date">
                 <DdDatepicker placeholder="开始时间" v-model="formdata.startDate" />
             </div>
@@ -29,14 +26,28 @@
                     </p>
                     <p>
                         <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">原因</span>
-                        <input v-model='formdata.why' class="dd-input" type="text" maxlength="20">
+                                    原因</span>
+                        <input v-model='formdata.reason' class="dd-input" type="text" maxlength="20">
                     </p>
                     <p>
                         <span class="addCus">
-                                    <img src="//static.dingdandao.com/start.png">备注</span>
-                        <textarea v-model='formdata.remark'></textarea>
+                                    备注</span>
+                        <textarea style="width:350px" v-model='formdata.remark' class='dd-input' placeholder="
+ 请输入备注信息"></textarea>
                     </p>
+                </div>
+                <div class="roomModals-footer">
+                    <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end'>
+                        结束
+                    </div>
+                    <div class="order-btns">
+                        <div class="dd-btn  order-btn" style="color:#178ce6" @click='close'>
+                            取消
+                        </div>
+                        <div class="dd-btn dd-btn-primary order-btn" @click='changeData'>
+                            确定
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,12 +70,12 @@
 }
 
 .addCustype {
-    width: 120px;
+    width: 80px;
     display: inline-block;
 }
 
 #dayOrderForm .modal-body p input {
-    width: 210px;
+    width: 350px;
     height: 24px;
     margin-right: 4px;
 }
@@ -79,10 +90,11 @@
 }
 
 #dayOrderForm .addCus {
-    width: 100px;
+    width: 80px;
     display: inline-block;
     text-align: right;
     color: #666;
+    margin-right: 20px;
 }
 
 #dayOrderForm .modal-title {
@@ -163,7 +175,9 @@ import {
 } from 'dd-vue-component';
 import http from '../../common/http';
 import modal from '../../common/modal';
-import { DatePicker } from 'element-ui'
+import {
+    DatePicker
+} from 'element-ui';
 export default {
     props: {
         visible: {
@@ -196,10 +210,22 @@ export default {
             }, {
                 name: '停用'
             }],
-             value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+            value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)]
         };
     },
     methods: {
+        dateFormat: function(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? '0' + m : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            let h = date.getHours();
+            h = h < 10 ? '0' + h : h;
+            let M = date.getMinutes();
+            M = M < 10 ? '0' + M : M;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + M;
+        },
         close() {
             this.selectType = undefined;
             $('#dayOrderForm').modal('hide');
@@ -211,21 +237,34 @@ export default {
                     date: this.date,
                     roomId: this.room.roomId,
                     type: this.formNumber + 1
-                }).then(res => {});
+                }).then(res => {
+                    this.formdata = res.data;
+                });
             }
+        },
+        end() {
+            const parms = {
+                logId: this.formdata.logId,
+                roomId: this.room.roomId,
+                type: this.formNumber + 1
+            };
+            http.get('/room/endStopInfo', parms).then(res => {
+                this.close;
+            });
         },
         changeData() {
             const parms = this.formdata;
             if (!parms.logId) {
                 delete parms.logId;
             }
+            parms.startDate = this.dateFormat(this.value3[0]);
+            parms.endDate = this.dateFormat(this.value3[1]);
+            parms.reason = this.dateFormat.reason;
+            parms.remark = this.dateFormat.remark;
+            parms.roomId = this.room.roomId;
             parms.type = Number(this.formNumber) + 1;
-            http.get('/room/setStopInfo', {
-                date: this.date,
-                roomId: this.room.roomId,
-                type: this.formNumber
-            }).then(res => {
-                this.formdata = res.data;
+            http.get('/room/setStopInfo', parms).then(res => {
+                this.close;
             });
         },
         customerDate() {
@@ -250,7 +289,7 @@ export default {
             }
             const data = Object.assign({}, this.formdata);
             if (this.formdata.discounts) {
-                for (let i = 0; i < this.formdata.discounts.length; i++) {
+                for (let i = 0; i < this.formdata.discounts.length; i ++) {
                     this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
                     if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
                         modal.warn('请输入0.1-9.9之间正确的折扣数字');
@@ -293,6 +332,9 @@ export default {
         },
         date() {
             this.fetchData();
+        },
+        formdata(val) {
+            this.value3 = [new Date(val.startDate), new Date(val.endDate)];
         }
     },
     components: {
