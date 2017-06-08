@@ -38,15 +38,15 @@
 }
 
 .calendar-room-filter-select li {
-    margin: 15px 0 10px;
+    margin: 0 0 10px;
 }
 .calendar-room-filter-select li input {
     float: right;
 }
 .calendar-room-filter-select {
+    padding-top:15px;
     top: 38px;
     cursor: default;
-    position: absolute;
     left: 0;
     z-index: 1;
     background: #fafafa;
