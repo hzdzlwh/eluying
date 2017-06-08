@@ -27,7 +27,8 @@ export default {
             leftMap: {},
             selectedEntries: [],
             customList: [],
-            areaList: []
+            areaList: [],
+            parms: undefined
         };
     },
     created() {
@@ -88,10 +89,20 @@ export default {
         changeEnter(enter) {
             this.selectedEntries = enter;
         },
-        getRoomAndStatus(parms) {
+        getRoomAndStatus() {
+            let parms;
+            if (this.parms) {
+                parms = Object.assign({
+                    date: this.startDateStr
+                }, this.parms);
+            } else {
+                parms = {
+                    date: this.startDateStr
+                };
+            }
             return http.get('/room/getDailyRoomStatus', {
                 date: this.startDateStr,
-                ...parms
+                ...this.parms
             })
                     .then(res => {
                         this.roomStatus = res.data.list;
@@ -107,7 +118,10 @@ export default {
                     });
         },
         refreshView(parms) {
-            this.getRoomAndStatus(parms);
+            if (parms) {
+                this.parms = parms;
+            }
+            this.getRoomAndStatus();
         }
     },
     components: {

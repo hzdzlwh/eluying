@@ -37,8 +37,8 @@
                     </p>
                 </div>
                 <div class="roomModals-footer">
-                    <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end'>
-                        结束
+                    <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end' v-if='outOrIn === 0'>
+                        结束{{formType[formNumber].name}}
                     </div>
                     <div class="order-btns">
                         <div class="dd-btn  order-btn" style="color:#178ce6" @click='close'>
@@ -175,6 +175,7 @@ import {
 } from 'dd-vue-component';
 import http from '../../common/http';
 import modal from '../../common/modal';
+import bus from '../../common/eventBus';
 import {
     DatePicker
 } from 'element-ui';
@@ -210,7 +211,7 @@ export default {
             }, {
                 name: '停用'
             }],
-            value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)]
+            value3: [new Date(), new Date()]
         };
     },
     methods: {
@@ -224,7 +225,9 @@ export default {
             h = h < 10 ? '0' + h : h;
             let M = date.getMinutes();
             M = M < 10 ? '0' + M : M;
-            return y + '-' + m + '-' + d + ' ' + h + ':' + M;
+            let s = date.getSeconds();
+            s = s < 10 ? '0' + s : s;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
         },
         close() {
             this.selectType = undefined;
@@ -249,7 +252,8 @@ export default {
                 type: this.formNumber + 1
             };
             http.get('/room/endStopInfo', parms).then(res => {
-                this.close;
+                this.close();
+                bus.$emit('refreshView');
             });
         },
         changeData() {
@@ -264,52 +268,8 @@ export default {
             parms.roomId = this.room.roomId;
             parms.type = Number(this.formNumber) + 1;
             http.get('/room/setStopInfo', parms).then(res => {
-                this.close;
-            });
-        },
-        customerDate() {
-            if (!this.formdata.companyName) {
-                modal.warn('请输入企业名称');
-                return;
-            }
-            if (this.formdata.contractNum) {
-                const re = /^[0-9a-zA-Z]*$/g;
-                if (!re.test(this.formdata.contractNum)) {
-                    modal.warn('请输入正确的协议编号');
-                    return;
-                }
-            }
-            if (!this.formdata.contactName) {
-                modal.warn('请输入联系人');
-                return;
-            }
-            if (!this.formdata.contactPhone) {
-                modal.warn('请输入联系号码');
-                return;
-            }
-            const data = Object.assign({}, this.formdata);
-            if (this.formdata.discounts) {
-                for (let i = 0; i < this.formdata.discounts.length; i ++) {
-                    this.formdata.discounts[i].discount = parseFloat(this.formdata.discounts[i].discount);
-                    if (!/^0\.[1-9]$|^[1-9]\.[0-9]$|^[1-9]$/.test(this.formdata.discounts[i].discount)) {
-                        modal.warn('请输入0.1-9.9之间正确的折扣数字');
-                        return false;
-                    }
-                }
-
-                data.discounts = JSON.stringify(data.discounts);
-            }
-            if (!this.formdata.id) {
-                delete data.id;
-            }
-            http.get('/contractCompany/addEditContractCompany', data).then(res => {
-                this.$emit('add');
-                if (this.formdata.id) {
-                    modal.success('修改成功');
-                } else {
-                    modal.success('添加成功');
-                }
                 this.close();
+                bus.$emit('refreshView');
             });
         }
     },
@@ -324,13 +284,17 @@ export default {
                 $('#dayOrderForm').modal('hide');
             }
         },
-        formNumber() {
-            this.fetchData();
+        formNumber(n) {
+            if (this.outOrIn === 0) {
+                this.fetchData();
+            }
         },
-        outOrIn() {
-            this.fetchData();
+        outOrIn(n) {
+            if (n === 0) {
+                this.fetchData();
+            }
         },
-        date() {
+        date(n) {
             this.fetchData();
         },
         formdata(val) {

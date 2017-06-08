@@ -9,7 +9,9 @@
                 <div class="taday-status-box" v-for='(item, contentIndex) in finalRoomStatus'>
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
-                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}">
+                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}"
+                        @mouseenter="it.hover = true" @mouseleave="it.hover = false">
+                        <hover :date='it' class='calendar-glyph-hover'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
                                 {{it.roomName}}
@@ -48,7 +50,7 @@
             <div @click.stop="check('ing')" v-if='menuData && menuData.data.isArrival'>
                 办理入住
             </div>
-            <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.isArrival || menuData.data.roomState === 0)'>
+            <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
                 转为{{(menuData && (menuData.data.isDirty || menuData.data.roomState === 12 )) ? '净' : '脏'}}房
             </div>
             <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.roomState === 0'>
@@ -60,10 +62,10 @@
             <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.roomState === 0'>
                 转保留房
             </div>
-            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
+            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 )'>
                 查看在住
             </div>
-            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
+            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
                 办理退房
             </div>
             <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.roomState === 2'>
@@ -133,6 +135,13 @@
         color: #ffffff;
         display: inline-block;
         margin: 4px 8px;
+        position:relative;
+        &:hover{
+            .calendar-glyph-hover{
+                display:block;
+                position:absolute;
+            }
+        }
         .taday-status-item-title {
             display: block;
             white-space: nowrap;
@@ -215,6 +224,7 @@
 import DateSelect from './DateSelect.vue';
 import roomFilter from './filter.vue';
 import dayOrderForm from './dayOrderForm.vue';
+import hover from './hover.vue';
 import util from 'util';
 import http from '../../common/http';
 import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
@@ -262,7 +272,8 @@ export default {
         DateSelect,
         roomFilter,
         dayOrderForm,
-        contextmenu
+        contextmenu,
+        hover
     },
     computed: {
         finalRoomStatus() {
@@ -342,7 +353,7 @@ export default {
                 actionType: !type,
                 roomId: this.menuData.data.roomId
             }).then(res => {
-                this.$emit('add');
+                bus.$emit('refreshView');
             });
         },
         changeDate(date) {
