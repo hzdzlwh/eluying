@@ -27,7 +27,7 @@
                     <p>
                         <span class="addCus">
                                     原因</span>
-                        <input  v-model='formdata.reason' class="dd-input" type="text" maxlength="50">
+                        <input v-model='formdata.reason' class="dd-input" type="text" maxlength="50">
                     </p>
                     <p>
                         <span class="addCus">
@@ -37,10 +37,10 @@
                     </p>
                 </div>
                 <div class="roomModals-footer">
-                <div>
-                    <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end' v-if='outOrIn === 0'>
-                        结束{{formType[formNumber].name}}
-                    </div>
+                    <div>
+                        <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end' v-if='outOrIn === 0'>
+                            结束{{formType[formNumber].name}}
+                        </div>
                     </div>
                     <div class="order-btns">
                         <div class="dd-btn  order-btn" style="color:#178ce6" @click='close'>
@@ -247,8 +247,12 @@ export default {
                     roomId: this.room.roomId,
                     type: this.formNumber + 1
                 }).then(res => {
+                    this.flag = true;
                     this.formdata = res.data;
+                    // 防止重复提交
                 });
+            } else {
+                this.flag = true;
             }
         },
         end() {

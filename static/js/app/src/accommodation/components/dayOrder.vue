@@ -29,11 +29,11 @@
             <div @click.stop="check('book')" v-if='menuData && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
-            <div @click.stop="check('ing')" v-if='menuData && menuData.data.isArrival'>
+            <div @click.stop="check('ing')" v-if='menuData && menuData.data.isArrival && menuData.data.roomState !== 12'>
                 办理入住
             </div>
             <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
-                转为{{(menuData && (menuData.data.isDirty || menuData.data.roomState === 12 )) ? '净' : '脏'}}房
+                转为{{(menuData && menuData.data.isDirty) ? '净' : '脏'}}房
             </div>
             <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
                 转维修房
@@ -47,7 +47,7 @@
             <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
                 查看预定
             </div>
-            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 )'>
+            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11  && menuData.data.roomState !== 12)'>
                 查看在住
             </div>
             <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
@@ -282,6 +282,9 @@ export default {
                 case 11:
                     this.showOrder();
                     break;
+                case 12:
+                    this.showOrder();
+                    break;
                 case 2:
                     this.openForm(1, 0);
                     break;
@@ -303,7 +306,7 @@ export default {
             this.dayOrderFormVisible = false;
         },
         setSelect(it, contentIndex, itemIndex) {
-            if (it.roomState !== 0 && it.roomState !== 12) {
+            if (it.roomState !== 0) {
                 this.tadayClick(it);
                 return;
             }
