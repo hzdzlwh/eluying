@@ -100,7 +100,7 @@
                                             <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
                                         </div>
                                     </div>
-                                    <div class="calendar-status-close" v-if="status.s === -1 && status.st !== 0">
+                                    <div @click="openCloseRoomFrom(status)" class="calendar-status-close" v-if="status.s === -1 && status.st !== 0">
                                         {{['保留','维修','停用'][status.st - 1]}}
                                     </div>
                                 </td>
@@ -167,31 +167,31 @@
             <div @click.stop="setDirtyRoom(menuData.data)">
                 转为{{menuData && menuData.data.isDirty    ? '净' : '脏'}}房
             </div>
-            <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
                 转维修房
             </div>
-            <div @click.stop="openForm(2,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
                 转停用房
             </div>
-            <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
                 转保留房
             </div>
-            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.st === 2'>
+            <div @click.stop="openForm(menuData.data.st-1,0)" v-if='menuData && menuData.data.st === 2'>
                 查看维修房
             </div>
-            <div @click.stop="endCloseStatus(2)" v-if='menuData && menuData.data.st === 2'>
+            <div @click.stop="endCloseStatus(menuData.data.st)" v-if='menuData && menuData.data.st === 2'>
                 结束维修房
             </div>
-            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.st === 3'>
+            <div @click.stop="openForm(menuData.data.st-1,0)" v-if='menuData && menuData.data.st === 3'>
                 查看停用房
             </div>
-            <div @click.stop="endCloseStatus(3)" v-if='menuData && menuData.data.st === 3'>
+            <div @click.stop="endCloseStatus(menuData.data.st)" v-if='menuData && menuData.data.st === 3'>
                 结束停用房
             </div>
-            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.st === 1'>
+            <div @click.stop="openForm(menuData.data.st-1,0)" v-if='menuData && menuData.data.st === 1'>
                 查看保留房
             </div>
-            <div @click.stop="endCloseStatus(1)" v-if='menuData && menuData.data.st === 1'>
+            <div @click.stop="endCloseStatus(menuData.data.st)" v-if='menuData && menuData.data.st === 1'>
                 结束保留房
             </div>
         </contextmenu>
@@ -900,6 +900,10 @@
                 }).then(res => {
                     bus.$emit('refreshView');
                 });
+            },
+            openCloseRoomFrom(status) {
+                this.roomdata = JSON.parse(JSON.stringify({ data: status }));
+                this.openForm(status.st - 1, 0);
             },
             openForm(formNumber, outOrIn) {
                 this.formNumber = formNumber;
