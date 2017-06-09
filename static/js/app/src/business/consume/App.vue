@@ -100,7 +100,7 @@
                 });
            },
            sendState(list) {
-                http.get('goods/shelveOtherGoods', {goodsId: list.goodsId, state: list.state}).then(res => {
+                http.get('/goods/shelveOtherGoods', {goodsId: list.goodsId, state: list.state}).then(res => {
                 });
            },
            refreshList() {
