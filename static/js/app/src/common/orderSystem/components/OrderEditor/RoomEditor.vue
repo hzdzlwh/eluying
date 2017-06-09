@@ -606,7 +606,8 @@
                         roomOrderId: undefined,
                         quickDiscountId: '',
                         priceScale: [],
-                        showDiscount: undefined
+                        showDiscount: undefined,
+                        extraItems: []
                     };
                 } else {
                     // 新增房间，房型时间同上一间
