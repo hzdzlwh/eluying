@@ -227,7 +227,6 @@
                 forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
                 lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
                 discountPlans: [],
-                timestamp: 0,
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined
             };
@@ -559,7 +558,7 @@
                 this.lastRoomsToken = {};
                 this.rooms = rooms.map(room => {
                     room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
-
+                    room.startDate = util.dateFormat(room.startDate);
                     return {
                         categoryType: room.categoryType,
                         roomType: room.roomId,
@@ -793,27 +792,29 @@
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
                         // 嘻嘻
-                        if (res.data.timestamp > this.timestamp) {
-                            this.timestamp = res.data.timestamp;
-                            res.data.list.map((item, index) => {
-                                const currentRoom = rooms[index];
-                                currentRoom.datePriceList = item.datePriceList.map(i => {
-                                    return {
-                                        ...i,
-                                        showInput: false
-                                    };
-                                });
-                                currentRoom.showTip = !item.available;
-                                currentRoom.price = item.totalFee;
-                                // 每日房价分配比例
-                                currentRoom.priceScale = item.datePriceList.map(i => {
-                                    return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
-                                });
-                                currentRoom.showDiscount = item.showDiscount;
-                                currentRoom.priceModified = false;
-                                currentRoom.originPrice = item.originTotalFee;
+                        res.data.list.map((item, index) => {
+                            const currentRoom = rooms[index];
+                            if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
+                                return;
+                            }
+
+                            currentRoom.datePriceList = item.datePriceList.map(i => {
+                                return {
+                                    ...i,
+                                    showInput: false
+                                };
                             });
-                        }
+                            currentRoom.showTip = !item.available;
+                            currentRoom.price = item.totalFee;
+                            // 每日房价分配比例
+                            currentRoom.priceScale = item.datePriceList.map(i => {
+                                return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
+                            });
+                            currentRoom.showDiscount = item.showDiscount;
+                            currentRoom.priceModified = false;
+                            currentRoom.originPrice = item.originTotalFee;
+                            currentRoom.timestamp = res.data.timestamp;
+                        });
                     });
             },
             changeRoomFee(room) {
