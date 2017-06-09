@@ -85,10 +85,10 @@
                                     :key="room.i + status.dateStr"
                                     :room="room.i"
                                     :date="status.dateStr"
-                                    @contextmenu="openAction(status, $event)"
+                                    @contextmenu.prevent="$refs.ctxMenu.open($event, {data: status})"
                                 >
                                     <div
-                                        v-if="status.s === -1"
+                                        v-if="status.st === 0 && status.s === -1"
                                         class="calendar-status-inner"
                                         :key="room.i + status.dateStr"
                                         :class="{'selected': status.selected}"
@@ -100,15 +100,8 @@
                                             <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
                                         </div>
                                     </div>
-                                    <div class="calendar-status-close" v-if="status.s === 100">
-                                        已关闭
-                                    </div>
-                                    <div
-                                        class="calendar-status-action"
-                                        @click.stop="openOrCloseStatus(room, status)"
-                                        v-if="status.actionVisible"
-                                    >
-                                        {{status.s === 100 ? '打开房间' : '关闭房间'}}
+                                    <div class="calendar-status-close" v-if="status.s === -1 && status.st !== 0">
+                                        {{['保留','维修','停用'][status.st - 1]}}
                                     </div>
                                 </td>
                             </tr>
@@ -170,6 +163,39 @@
                 </div>
             </div>
         </div>
+        <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals">
+            <div @click.stop="setDirtyRoom(menuData.data)">
+                转为{{menuData && menuData.data.isDirty    ? '净' : '脏'}}房
+            </div>
+            <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.st === 0'>
+                转维修房
+            </div>
+            <div @click.stop="openForm(2,1)" v-if='menuData && menuData.data.st === 0'>
+                转停用房
+            </div>
+            <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.st === 0'>
+                转保留房
+            </div>
+            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.st === 2'>
+                查看维修房
+            </div>
+            <div @click.stop="endCloseStatus(2)" v-if='menuData && menuData.data.st === 2'>
+                结束维修房
+            </div>
+            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.st === 3'>
+                查看停用房
+            </div>
+            <div @click.stop="endCloseStatus(3)" v-if='menuData && menuData.data.st === 3'>
+                结束停用房
+            </div>
+            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.st === 1'>
+                查看保留房
+            </div>
+            <div @click.stop="endCloseStatus(1)" v-if='menuData && menuData.data.st === 1'>
+                结束保留房
+            </div>
+        </contextmenu>
+        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata && roomdata.data'></dayOrderForm>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
@@ -479,7 +505,7 @@
         cursor: pointer;
     }
     .calendar-status-close {
-        background: #a6a6a6;
+        background: #878787;
         width: 96px;
         height: 44px;
         margin: auto;
@@ -612,6 +638,9 @@
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
     import modal from '../../common/modal';
+    import contextmenu from '../../common/components/contextmenu';
+    import dayOrderForm from './dayOrderForm.vue';
+
     export default{
         props: {
             categories: Array,
@@ -630,12 +659,20 @@
                 lastScrollLeft: 0,
                 currentAction: undefined,
                 isDrag: false,
-                currentDirtyMenu: undefined
+                currentDirtyMenu: undefined,
+                menuData: undefined,
+                dayOrderFormVisible: false,
+                formNumber: 0,
+                outOrIn: 0,
+                date: new Date(),
+                roomdata: undefined
             };
         },
         components: {
             DateSelect,
-            RoomFilter
+            RoomFilter,
+            contextmenu,
+            dayOrderForm
         },
         computed: {
             dateRange() {
@@ -673,6 +710,9 @@
                     room.selected = category.selected;
                     room.folded = category.folded;
                     room.cName = category.cName;
+                    room.st.map(s => {
+                        s.roomName = room.cName + room.sn;
+                    });
                     return room;
                 });
             },
@@ -830,7 +870,7 @@
                     roomId: room.i
                 })
                     .then(result => {
-                        room.isDirty = !room.isDirty;
+                        bus.$emit('refreshView');
                         this.$set(room, 'dirtyMenuVisible', false);
                     });
             },
@@ -842,6 +882,29 @@
                         }
                     });
                 });
+            },
+            onCtxOpen(locals) {
+                this.menuData = locals;
+                this.roomdata = JSON.parse(JSON.stringify(locals));
+            },
+            resetCtxLocals() {
+                this.menuData = undefined;
+            },
+            closeDayForm() {
+                this.dayOrderFormVisible = false;
+            },
+            endCloseStatus(type) {
+                http.get('/room/endStopInfo', {
+                    type: type,
+                    roomId: this.menuData.data.roomId
+                }).then(res => {
+                    bus.$emit('refreshView');
+                });
+            },
+            openForm(formNumber, outOrIn) {
+                this.formNumber = formNumber;
+                this.outOrIn = outOrIn;
+                this.dayOrderFormVisible = true;
             },
             bindDragRoom() {
                 const that = this;
@@ -951,9 +1014,6 @@
             Clickoutside
         },
         created() {
-            document.body.addEventListener('click', () => {
-                this.currentAction && (this.currentAction.actionVisible = false);
-            });
             this.bindDragRoom();
         },
         beforeDestroy() {

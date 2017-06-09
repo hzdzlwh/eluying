@@ -942,6 +942,9 @@
                 });
             },
             handleExtraNumChange(good, num) {
+                if (good.price === undefined || good.price === null) {
+                    modal.warn('该商品已删除');
+                }
                 good.amount = num;
                 good.subtotal = num * good.price;
             },
