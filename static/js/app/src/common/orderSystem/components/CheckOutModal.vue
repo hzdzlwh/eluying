@@ -7,7 +7,7 @@
                         <span class="header-text">{{roomBusinessInfo.businessType === 2 ? '提前退房' : '办理退房'}}</span>
                         <span class="close-icon" @click="hideModal"></span>
                     </div>
-                    <div class="roomModals-body" >
+                    <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>房间信息</span></p>
                             <div v-for="room in roomBusinessInfo.roomOrderInfoList">
@@ -27,7 +27,7 @@
                                         <label class="label-text">{{`共${room.night}晚`}}</label>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
-                                        <label class="label-text">房费</label>
+                                        <label class="label-text">订单金额</label>
                                         <span>{{`¥${room.totalPrice}`}}</span>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                             <div class="dd-btn" :class=' tadayFeeType === 1 ? "dd-btn-primary" : "" ' @click="changeTadayFeeType(1)">全天房费</div>
                             <div class="dd-btn" :class=' tadayFeeType === 0.5 ? "dd-btn-primary" : "" ' @click="changeTadayFeeType(0.5)">半天房费</div>
                             <div class="dd-btn" :class='tadayFeeType === 0 ? "dd-btn-primary" : "" ' @click="changeTadayFeeType(0)">不收取</div>
-                            <p>{{number}}个房间，共收取今日房费 ¥
+                            <p style="    margin-top: 10px;">{{number}}个房间，共收取今日房费 ¥
                                 <input type="number" v-model='totalFee' class="dd-input" @input='changeTotalFee'><span style="color:#999">(自定义今日房费将平均分配到每个房间)</span></p>
                         </div>
                         <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
@@ -46,16 +46,9 @@
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
                             <span style="margin-left: 24px">已收金额:<span>¥{{payed}}</span></span>
                         </div>
-                        <!--     <div class="content-item" v-if="roomBusinessInfo.businessType === 2">
-                            <p class="content-item-title"><span>违约信息</span></p>
-                            <span style="margin-right: 24px">提前退房部分房价：￥{{noCheckInMoney}}</span>
-                            <span>提前退房违约金：</span>
-                            <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
-                        </div> -->
-             <!--                <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div> -->
-                        </div>
+                    </div>
                     <div class="roomModals-footer">
-                    <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
+                        <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">{{`${ (totalPrice  - payed) >= 0 ? '需补金额:' : '需退金额:'}`}}
                                 <span class="order-price-num" :class="(totalPrice  - payed) >= 0 ? 'red' : 'green'">¥{{(Math.abs(totalPrice  - payed)).toFixed(2)}}</span>
@@ -69,7 +62,11 @@
         </div>
     </div>
 </template>
-<style>
+<style scoped>
+.content-item .dd-btn {
+    border: 1px solid #178ce6;
+    border-radius: 2px;
+}
 </style>
 <script>
 import http from '../../http';
@@ -78,9 +75,6 @@ import {
     mapState
 } from 'vuex';
 import bus from '../../eventBus';
-import {
-    debounce
-} from '../../util.js';
 export default {
     data() {
             return {
@@ -122,9 +116,9 @@ export default {
                         }
                     }
                 );
-                if (this.tadayFeeType !== undefined) {
-                    sum += this.tadayFee;
-                }
+                // if (this.tadayFeeType !== undefined) {
+                //     sum += this.tadayFee;
+                // }
                 return Number(sum.toFixed(2));
             },
             tadayFee() {
@@ -171,45 +165,57 @@ export default {
                     }
                 );
                 return sum;
-            },
-            // deposit() {
-            //     return this.roomBusinessInfo.deposit - this.roomBusinessInfo.depositRefund;
-            // },
-            // noCheckInMoney() {
-            //     let sum = 0;
-            //     if (!this.roomBusinessInfo.roomOrderInfoList) {
-            //         return sum;
-            //     }
-
-            //     this.roomBusinessInfo.roomOrderInfoList.map(
-            //         room => {
-            //             if (room.selected) {
-            //                 sum += room.noCheckInMoney;
-            //             }
-            //         }
-            //     );
-
-            //     return sum;
-            // }
+            }
         },
         watch: {
+            roomBusinessInfo() {
+                this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
+                this.roomBusinessInfo.roomOrderInfoList.map(
+                    room => {
+                        this.backroomBusinessInfo.roomOrderInfoList.map(
+                            item => {
+                                if (item.roomId === room.roomId) {
+                                    if (this.tadayFeeType === 1) {
+                                        room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
+                                    }
+                                    if (this.tadayFeeType === 0.5) {
+                                        room.totalPrice = Number(item.totalPrice) + Number(item.todayPriceHalf);
+                                    }
+                                    if (this.tadayFeeType === 0) {
+                                        room.totalPrice = Number(item.totalPrice)
+                                    }
+                                }
+                            }
+                        );
+                    }
+                );
+            },
             tadayFee() {
                 this.totalFee = this.tadayFee;
             },
             tadayFeeType(n, o) {
-                if (o === undefined) {
-                    this.roomBusinessInfo.roomOrderInfoList.map(
-                        room => {
-                            this.backroomBusinessInfo.roomOrderInfoList.map(
-                                item => {
-                                    if (item.roomId === room.roomId) {
-                                        room.totalPrice = Number(item.totalPrice);
+                // if (!this.backroomBusinessInfo) {
+                //     this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
+                // }
+                this.roomBusinessInfo.roomOrderInfoList.map(
+                    room => {
+                        this.backroomBusinessInfo.roomOrderInfoList.map(
+                            item => {
+                                if (item.roomId === room.roomId) {
+                                    if (n === 1) {
+                                        room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
+                                    }
+                                    if (n === 0.5) {
+                                        room.totalPrice = Number(item.totalPrice) + Number(item.todayPriceHalf);
+                                    }
+                                    if (n === 0) {
+                                        room.totalPrice = Number(item.totalPrice)
                                     }
                                 }
-                            );
-                        }
-                    );
-                }
+                            }
+                        );
+                    }
+                );
             }
         },
         methods: {
@@ -321,6 +327,22 @@ export default {
                 } else {
                     business.penalty = Number(this.penalty);
                     business.functionType = 1;
+                    const todayFeeMap = [];
+                    this.roomBusinessInfo.roomOrderInfoList.map(
+                        room => {
+                            this.backroomBusinessInfo.roomOrderInfoList.map(
+                                item => {
+                                    if (item.roomId === room.roomId) {
+                                        todayFeeMap.push({
+                                            fee: (room.totalPrice - item.totalPrice).toFixed(2),
+                                            subOrderId: item.roomOrderId
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                    );
+                    business.todayFeeMap = JSON.stringify(todayFeeMap);
                     this.hideModal();
                     // this.$emit('showCashier', { type: 'checkOut', business });
                     bus.$emit('showCashier', {
@@ -328,7 +350,10 @@ export default {
                         business
                     });
 
-                    bus.$emit('showCashier', { type: 'checkOut', business });
+                    bus.$emit('showCashier', {
+                        type: 'checkOut',
+                        business
+                    });
                     bus.$emit('changeBack', this.show);
                 }
             }

@@ -9,7 +9,7 @@
             <ul>
                 <li v-for="c in roomTypeList">
                     <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span> {{c.name}}
-                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
                 </li>
             </ul>
         </div>

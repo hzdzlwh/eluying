@@ -328,20 +328,20 @@ export default {
             });
         },
         showCheckOut(types) {
-            const handel = this.hideCheckout
+            const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
                 orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
                 orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
-                    businessType:  2,
+                    businessType: 2,
                     orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
                         backdrop: 'static'
                     })
                 )
-            )
+            );
         },
         hideCheckout() {
             $('#checkOut').modal('hide');
@@ -438,7 +438,7 @@ export default {
                 type: type,
                 roomId: this.menuData.data.roomId
             }).then(res => {
-                this.$emit('add');
+                this.$emit('refreshView');
             });
         }
 

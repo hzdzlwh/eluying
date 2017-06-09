@@ -306,6 +306,10 @@ export default {
             if (this.business.PenaltyFee && this.business.penalty) {
                 params.penalty = this.business.penalty;
             }
+            if (this.business.todayFeeMap) {
+                params.todayFeeMap = this.business.todayFeeMap;
+            }
+            // 今日房费
             if (this.type === 'collect') {
                 this.remainderDate = undefined;
                 this.cashierShow();
@@ -411,6 +415,10 @@ export default {
             if (this.business.penalty) {
                 params.penalty = this.business.penalty;
             }
+            if (this.business.todayFeeMap) {
+                params.todayFeeMap = this.business.todayFeeMap;
+            }
+            // 今日房费
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
                     this.orderPayment = res.data;
@@ -549,6 +557,10 @@ export default {
             let invalid = false;
             if (this.payments.length > 0) {
                 this.payments.forEach(payment => {
+                    if (payment.fee < 0) {
+                        modal.warn('请选择正确的金额');
+                        return false;
+                    }
                     if (!payment.payChannelId) {
                         invalid = true;
                     }
