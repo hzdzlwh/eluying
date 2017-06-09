@@ -48,7 +48,7 @@
                     return false;
                 }
                 
-                let url = this.classify.goodsTypeId ? 'goods/editOtherGoodsType' : '/goods/addOtherGoodsType';
+                let url = this.classify.goodsTypeId ? '/goods/editOtherGoodsType' : '/goods/addOtherGoodsType';
                 http.get(url, this.classify).then(res => {
                     if (res.code === 1) {
                         $('#classifyModal').modal('hide');
