@@ -8,7 +8,7 @@
         <div v-if="roomTypeVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in roomTypeList">
-                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span> {{c.name}}
+                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
                     <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
                 </li>
             </ul>
@@ -22,7 +22,7 @@
         <div v-if="tagVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in tagList">
-                    <span class="calendar-tag-color" :style='{background:c.color}'>{{c.name}}</span>
+                   <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                 </li>
             </ul>
@@ -161,7 +161,8 @@ export default {
     props: {
         categories: Array,
         customList: Array,
-        areaList: Array
+        areaList: Array,
+        roomTypeCount: Object
     },
     data() {
         return {
@@ -177,31 +178,39 @@ export default {
             areaTemp: [],
             roomTypeList: [{
                 name: '空房',
-                id: '0'
+                id: '0',
+                tag: 'empty'
             }, {
                 name: '在住',
-                id: '11'
+                id: '11',
+                tag: 'checkIn'
             }, {
                 name: '预离',
-                id: '12'
+                id: '12',
+                tag: 'dueOut'
             }, {
                 name: '保留',
-                id: '1'
+                id: '1',
+                tag: 'persist'
             }, {
                 name: '维修',
-                id: '2'
+                id: '2',
+                tag: 'repair'
             }, {
                 name: '停用',
-                id: '3'
+                id: '3',
+                tag: 'blockUp'
             }],
             tagList: [{
                 name: '预抵',
                 color: '#e59547',
-                value: '1'
+                value: '1',
+                tag: 'arrival'
             }, {
                 name: '脏房',
                 color: '#8b7258',
-                value: '2'
+                value: '2',
+                tag: 'dirty'
             }]
         };
     },

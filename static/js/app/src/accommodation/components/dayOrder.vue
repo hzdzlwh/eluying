@@ -1,8 +1,8 @@
 <template>
     <div class="taday-calendar">
         <div class="taday-calendar-picker">
-            <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' />
-            <roomFilter :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander'></roomFilter>
+            <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
+            <roomFilter :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander' :roomTypeCount='roomTypeCount'></roomFilter>
         </div>
         <div class="taday-calendar-body">
             <div class="taday-calendar-status-list">
@@ -53,19 +53,19 @@
             <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
                 办理退房
             </div>
-            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.roomState === 2'>
+            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.hasRepair === 1'>
                 查看维修房
             </div>
             <div @click.stop="openOrCloseStatus(2)" v-if='menuData && menuData.data.roomState === 2'>
                 结束维修房
             </div>
-            <div @click.stop="openForm(2,0)" v-if='menuData && menuData.data.roomState === 3'>
+            <div @click.stop="openForm(2,0)" v-if='menuData && menuData.data.hasBlockUp === 1'>
                 查看停用房
             </div>
             <div @click.stop="openOrCloseStatus(3)" v-if='menuData && menuData.data.roomState === 3'>
                 结束停用房
             </div>
-            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.roomState === 1'>
+            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.hasPersist === 1'>
                 查看保留房
             </div>
             <div @click.stop="openOrCloseStatus(1)" v-if='menuData && menuData.data.roomState === 1'>
@@ -234,7 +234,8 @@ export default {
         leftMap: Object,
         DAYS: Number,
         customList: Array,
-        areaList: Array
+        areaList: Array,
+        roomTypeCount: Object
     },
     data() {
         return {
@@ -263,13 +264,6 @@ export default {
     computed: {
         finalRoomStatus() {
             return this.roomStatus;
-            // return this.roomStatus.map(room => {
-            //     const category = this.categories.find(category => category.cId === room.ti);
-            //     room.selected = category.selected;
-            //     room.folded = category.folded;
-            //     room.cName = category.cName;
-            //     return room;
-            // });
         }
     },
     methods: {
@@ -368,6 +362,7 @@ export default {
         },
         changeDate(date) {
             this.date = date;
+            this.$emit('changeDate', new Date(date));
         },
         openForm(formNumber, outOrIn) {
             this.roomdata = JSON.parse(JSON.stringify(this.menuData.data));
@@ -430,8 +425,6 @@ export default {
 
         handleStatusScroll(ev) {
             if (!this.scrollTicking) {
-                // this.$refs.calendarLeftHeader.scrollTop = ev.target.scrollTop;
-                // this.$refs.calendarHeader.scrollLeft = ev.target.scrollLeft;
                 window.requestAnimationFrame(() => {
                     this.scrollTicking = false;
                 });

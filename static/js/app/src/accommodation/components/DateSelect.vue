@@ -3,7 +3,8 @@
         <div @click="handleClick" :style='{width: width ? width + "px" : "140px "}'>
             <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
         </div>
-        <DdDatepicker v-model="date" ref="datepicker" />
+        <DdDatepicker v-model="date" ref="datepicker" :disabled-date="disabledEndDate(new Date())" v-if='disabledDate' />
+        <DdDatepicker v-model="date" ref="datepicker" v-else />
     </div>
 </template>
 <style>
@@ -43,13 +44,18 @@ import {
 import {
     dateFormat,
     stringToDate,
-    dateFormatWithoutYear
+    dateFormatWithoutYear,
+    isSameDay
 } from '../../common/util';
 export default {
     props: {
         defaultDate: {
             type: String,
             default: dateFormat(new Date())
+        },
+        disabledDate: {
+            type: Boolean,
+            default: false
         },
         onChange: Function,
         width: Number
@@ -60,8 +66,8 @@ export default {
         };
     },
     watch: {
-        date(v) {
-            this.$emit('change', v);
+        date(n, o) {
+            this.$emit('change', n);
         }
     },
     created() {
@@ -73,6 +79,23 @@ export default {
         }
     },
     methods: {
+        disabledEndDate(startDate) {
+            if (isSameDay(new Date(startDate), new Date())) {
+                const str1 = dateFormat(new Date());
+                const arr1 = str1.split('-');
+                return (date) => {
+                    return (date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                };
+            } else {
+                const str = dateFormat(new Date(startDate));
+                const arr = str.split('-');
+                const str1 = dateFormat(new Date());
+                const arr1 = str1.split('-');
+                return (date) => {
+                    return (date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
+                };
+            }
+        },
         handleClick(ev) {
             ev.stopPropagation();
             this.$refs.datepicker.toggleCalendar();
