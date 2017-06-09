@@ -213,7 +213,7 @@
                                 <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
                                      v-if="orderState === 8">重新结账</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('collect')"
-                                     v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && orderState === 2 && orderState === 3 || orderState === 8)">
+                                     v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && (orderState === 0 || orderState === 2 || orderState === 3 || orderState === 8))">
                                     收银
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
