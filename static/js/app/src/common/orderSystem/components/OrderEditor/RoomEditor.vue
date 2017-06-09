@@ -131,7 +131,7 @@
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
                 <!-- 其他消费开始 -->
-                <div class="extra-items" v-if="checkState === 'ing' || item.state === 1 || item.state === 8">
+                <div class="extra-items" v-if="checkState === 'finish' || checkState === 'ing' || item.state === 1 || item.state === 8">
                     <div class="extra-items-title">
                         <span class="extra-item-icon"></span>
                         <span>其他消费</span>
