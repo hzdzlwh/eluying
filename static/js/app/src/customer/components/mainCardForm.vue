@@ -262,7 +262,9 @@
                         this.getPhoneInfo();
                     }
                 } */
-                this.getPhoneInfo();
+                if (newVal.length !== 0) {
+                    this.getPhoneInfo();
+                }
             },
             payChannelId(newVal) {
                 this.channels.map(channel => {

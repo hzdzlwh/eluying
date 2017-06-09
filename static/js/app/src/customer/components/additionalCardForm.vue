@@ -96,7 +96,7 @@
         },
         data() {
             return {
-                phone: undefined,
+                phone: '',
                 name: '',
                 cardNum: '',
                 phoneValid: true,
@@ -140,6 +140,7 @@
                 // this.checkPhone();
                 if (this.phone.length === 0) {
                     this.phoneErrorTip = '必填字段';
+                    this.phoneValid = false;
                     return false;
                 }
                 /* if (!this.phoneValid) {
@@ -198,7 +199,9 @@
                         this.getPhoneInfo();
                     }
                 } */
-                this.getPhoneInfo();
+                if (newVal.length !== 0) {
+                    this.getPhoneInfo();
+                }
             }
         },
         components: {

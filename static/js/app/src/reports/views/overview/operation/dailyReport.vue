@@ -128,8 +128,7 @@
             },
             exportUrl(type) {
                 const originParam = {
-                    startDate: this.today,
-                    endDate: this.today
+                    date: this.today
                 };
                 const paramsObj = {
                     exportType: type,
