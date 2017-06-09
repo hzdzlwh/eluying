@@ -23,23 +23,6 @@
                         </div>
                     </div>
                 </div>
-                <!--             <table class="calendar-status-table">
-                    <tbody>
-                        <template v-for="room in finalRoomStatus">
-                            <tr class="calendar-status-row" v-if="room.selected && !room.folded">
-                                <td class="calendar-status" v-for="(status, index) in room.st" :key="room.i + status.dateStr" :room="room.i" :date="status.dateStr" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: room, index: index})">
-                                    <div v-if="status.s !== 100" class="day-calendar-status-inner" :key="room.i + status.dateStr" :class="{'selected': status.selected}" @click="selectStatus(status)">
-                                        <div class="calendar-status-info">
-                                            <div class="calendar-status-date">{{dateRange[index].dateStr}}</div>
-                                            <div class="calendar-status-price">￥{{status.p}}</div>
-                                            <div class="calendar-status-name">{{room.sn}}({{room.cName}})</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table> -->
             </div>
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
@@ -52,14 +35,17 @@
             <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
                 转为{{(menuData && (menuData.data.isDirty || menuData.data.roomState === 12 )) ? '净' : '脏'}}房
             </div>
-            <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.roomState === 0'>
+            <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
                 转维修房
             </div>
-            <div @click.stop="openForm(2,1)" v-if='menuData && menuData.data.roomState === 0'>
+            <div @click.stop="openForm(2,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
                 转停用房
             </div>
-            <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.roomState === 0'>
+            <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
                 转保留房
+            </div>
+            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
+                查看预定
             </div>
             <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 )'>
                 查看在住
@@ -67,13 +53,13 @@
             <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
                 办理退房
             </div>
-            <div @click.stop="openForm(0,0)" v-if='menuData && menuData.data.roomState === 2'>
+            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.roomState === 2'>
                 查看维修房
             </div>
             <div @click.stop="openOrCloseStatus(2)" v-if='menuData && menuData.data.roomState === 2'>
                 结束维修房
             </div>
-            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.roomState === 3'>
+            <div @click.stop="openForm(2,0)" v-if='menuData && menuData.data.roomState === 3'>
                 查看停用房
             </div>
             <div @click.stop="openOrCloseStatus(3)" v-if='menuData && menuData.data.roomState === 3'>
@@ -86,7 +72,7 @@
                 结束保留房
             </div>
         </contextmenu>
-        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata && roomdata.data'></dayOrderForm>
+        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -288,6 +274,28 @@ export default {
     },
     methods: {
         ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL]),
+        tadayClick(it) {
+            this.menuData = {
+                data: it
+            };
+            switch (it.roomState) {
+                case 11:
+                    this.showOrder();
+                    break;
+                case 2:
+                    this.openForm(1, 0);
+                    break;
+                case 3:
+                    this.openForm(2, 0);
+                    break;
+                case 1:
+                    this.openForm(0, 0);
+                    break;
+            }
+            if (it.isArrival) {
+                this.showOrder();
+            }
+        },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
         },
@@ -296,6 +304,7 @@ export default {
         },
         setSelect(it, contentIndex, itemIndex) {
             if (it.roomState !== 0 && it.roomState !== 12) {
+                this.tadayClick(it);
                 return;
             }
             // const element = this.finalRoomStatus[contentIndex].roomList[itemIndex];
@@ -358,6 +367,7 @@ export default {
             this.date = date;
         },
         openForm(formNumber, outOrIn) {
+            this.roomdata = JSON.parse(JSON.stringify(this.menuData.data));
             this.formNumber = formNumber;
             this.outOrIn = outOrIn;
             this.dayOrderFormVisible = true;
@@ -407,7 +417,6 @@ export default {
         },
         onCtxOpen(locals) {
             this.menuData = locals;
-            this.roomdata = JSON.parse(JSON.stringify(locals));
         },
         onCtxClose(locals) {
             window.console.log('close', locals);

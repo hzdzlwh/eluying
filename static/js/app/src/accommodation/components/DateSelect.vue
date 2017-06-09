@@ -1,5 +1,5 @@
 <template>
-    <div class="calendar-date-select">
+    <div class="calendar-date-select" :style='{width: width ? width + "px" : "140px "}'>
         <div @click="handleClick" :style='{width: width ? width + "px" : "140px "}'>
             <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
         </div>
