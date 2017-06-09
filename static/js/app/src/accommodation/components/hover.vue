@@ -12,8 +12,8 @@
             <div class="start">{{date.checkInDate}}<span class="glyph-label">&nbsp;入住</span></div>
             <div class="end">{{date.checkOutDate}}<span class="glyph-label">&nbsp;离店</span></div>
             <div class="glyph-label">共<span>{{date.nights}}</span>晚</div>
+            <div class="glyph-label">{{date.origin}}</div>
         </div>
-        <div class="glyph-label">{{date.origin}}</div>
         <div class="glyph-detail-price">
             <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{date.totalPrice}}</span></div>
             <!---->

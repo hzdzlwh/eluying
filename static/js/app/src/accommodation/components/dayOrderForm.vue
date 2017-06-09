@@ -27,18 +27,20 @@
                     <p>
                         <span class="addCus">
                                     原因</span>
-                        <input v-model='formdata.reason' class="dd-input" type="text" maxlength="20">
+                        <input  v-model='formdata.reason' class="dd-input" type="text" maxlength="50">
                     </p>
                     <p>
                         <span class="addCus">
                                     备注</span>
                         <textarea style="width:350px" v-model='formdata.remark' class='dd-input' placeholder="
- 请输入备注信息"></textarea>
+ 请输入备注信息" maxlength="500"></textarea>
                     </p>
                 </div>
                 <div class="roomModals-footer">
+                <div>
                     <div class="dd-btn dd-btn-primary order-btn" style='background:#009900' @click='end' v-if='outOrIn === 0'>
                         结束{{formType[formNumber].name}}
+                    </div>
                     </div>
                     <div class="order-btns">
                         <div class="dd-btn  order-btn" style="color:#178ce6" @click='close'>
@@ -211,7 +213,8 @@ export default {
             }, {
                 name: '停用'
             }],
-            value3: [new Date(), new Date()]
+            value3: undefined,
+            flag: true
         };
     },
     methods: {
@@ -233,8 +236,11 @@ export default {
             this.selectType = undefined;
             $('#dayOrderForm').modal('hide');
             this.$emit('close');
+            this.flag = true;
+            this.formdata = {};
         },
         fetchData() {
+            this.flag = false;
             if (this.room) {
                 http.get('/room/getStopInfo', {
                     date: this.date,
@@ -263,8 +269,8 @@ export default {
             }
             parms.startDate = this.dateFormat(this.value3[0]);
             parms.endDate = this.dateFormat(this.value3[1]);
-            parms.reason = this.dateFormat.reason;
-            parms.remark = this.dateFormat.remark;
+            parms.reason = this.formdata.reason;
+            parms.remark = this.formdata.remark;
             parms.roomId = this.room.roomId;
             parms.type = Number(this.formNumber) + 1;
             http.get('/room/setStopInfo', parms).then(res => {
@@ -285,20 +291,31 @@ export default {
             }
         },
         formNumber(n) {
-            if (this.outOrIn === 0) {
+            if (this.outOrIn === 0 && this.flag) {
                 this.fetchData();
             }
         },
         outOrIn(n) {
-            if (n === 0) {
+            if (n === 0 && this.flag) {
                 this.fetchData();
             }
         },
         date(n) {
-            this.fetchData();
+            if (this.outOrIn === 0 && this.flag) {
+                this.fetchData();
+            }
+        },
+        room(val) {
+            if (this.outOrIn === 0 && this.flag) {
+                this.fetchData();
+            }
         },
         formdata(val) {
-            this.value3 = [new Date(val.startDate), new Date(val.endDate)];
+            if (val.startDate && val.endDate) {
+                this.value3 = [new Date(val.startDate), new Date(val.endDate)];
+            } else {
+                this.value3 = undefined;
+            }
         }
     },
     components: {

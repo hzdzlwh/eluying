@@ -109,6 +109,7 @@
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
     height: 38px;
     padding: 12px 16px;
+    margin:2px 0;
 }
 
 .calendar-icon {
@@ -228,12 +229,12 @@ export default {
             });
             this.areaTemp.forEach(function(el, index) {
                 if (el.select) {
-                    customList.push(Number(el.id));
+                    areaList.push(Number(el.id));
                 }
             });
             this.customList.forEach(function(el, index) {
                 if (el.select) {
-                    areaList.push(Number(el.id));
+                    customList.push(Number(el.id));
                 }
             });
             return {
@@ -260,61 +261,6 @@ export default {
                 this.$emit('change', n);
             }
         }
-        // categoriesList(n, o) {
-        //     if (o !== []) {
-        //         this.$emit('change', this.getParms());
-        //     }
-        // },
-        // tagList(n, o) {
-        //     if (o !== []) {
-        //         this.$emit('change', this.getParms());
-        //     }
-        // },
-        // roomTypeList(n, o) {
-        //     if (o !== []) {
-        //         this.$emit('change', this.getParms());
-        //     }
-        // },
-        // roomTypeList: {
-        //     handler(n, o) {
-        //         if (o !== []) {
-        //             this.$emit('change', this.getParms());
-        //         }
-        //     },
-        //     deep: true
-        // },
-        // tagList: {
-        //     handler(n, o) {
-        //         if (o !== []) {
-        //             this.$emit('change', this.getParms());
-        //         }
-        //     },
-        //     deep: true
-        // },
-        // areaTemp: {
-        //     handler(n, o) {
-        //         if (o !== []) {
-        //             this.$emit('change', this.getParms());
-        //         }
-        //     },
-        //     deep: true
-        // },
-        // customTemp: {
-        //     handler(n, o) {
-        //         if (o !== []) {
-        //             this.$emit('change', this.getParms());
-        //         }
-        //     },
-        //     deep: true
-        // },
-        // categoriesList: {
-        //     handler(n, o) {
-        //         if (o !== []) {
-        //             this.$emit('change', this.getParms());
-        //         }
-        //     },
-        //     deep: true
-        // }
     },
     methods: {
         setSelect(item) {
@@ -343,12 +289,12 @@ export default {
             });
             this.areaTemp.forEach(function(el, index) {
                 if (el.select) {
-                    customList.push(Number(el.id));
+                    areaList.push(Number(el.id));
                 }
             });
             this.customList.forEach(function(el, index) {
                 if (el.select) {
-                    areaList.push(Number(el.id));
+                    customList.push(Number(el.id));
                 }
             });
             return {
