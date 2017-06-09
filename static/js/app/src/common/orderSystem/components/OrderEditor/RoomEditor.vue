@@ -926,14 +926,14 @@
                     newItems.itemList.map(n => {
                         if (n.goodsId === i.id) {
                             n.amount = n.amount + i.num;
-                            n.subtotal = n.amount * i.p;
+                            n.subtotal = Number((n.amount * i.p).toFixed(2));
                             flag = true;
                         }
                     });
                     if (!flag) {
                         newItems.itemList.push({
                             amount: i.num,
-                            subtotal: i.num * i.p,
+                            subtotal: Number((i.num * i.p).toFixed(2)),
                             price: i.p,
                             goodsName: i.n,
                             goodsId: i.id
@@ -946,7 +946,7 @@
                     modal.warn('该商品已删除');
                 }
                 good.amount = num;
-                good.subtotal = num * good.price;
+                good.subtotal = Number((num * good.price).toFixed(2));
             },
             // 关闭商超选择弹窗
             closeShopSelectModal() {
