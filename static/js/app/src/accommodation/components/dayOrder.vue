@@ -111,7 +111,7 @@
 
 .taday-status-content {
     flex: 1;
-    padding: 8px;
+    margin: 0 -4px;
     .taday-status-item {
         padding: 8px;
         border-radius: 4px;

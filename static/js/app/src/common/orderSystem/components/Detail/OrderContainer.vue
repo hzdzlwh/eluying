@@ -133,10 +133,10 @@
                                             <span class="money-num">¥{{Math.abs(
                                                 findTypePrice(order.payments, 15))}}</span>
                                         </p>
-                                        <p class="money-item money-type-border">
+                                       <!--  <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
-                                        </p>
+                                        </p> -->
                                         <p class="money-item item-indent money-sub-item"
                                            v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(

@@ -8,8 +8,10 @@
         <div v-if="roomTypeVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in roomTypeList">
+                <label >
                     <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
                     <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    </label>
                 </li>
             </ul>
         </div>
@@ -22,8 +24,10 @@
         <div v-if="tagVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in tagList">
+                <label >
                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    </label>
                 </li>
             </ul>
         </div>
@@ -36,8 +40,10 @@
         <div v-if="roomVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in categoriesList">
+                <label >
                     <span>{{c.name}}</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    </label>
                 </li>
             </ul>
         </div>
@@ -50,8 +56,10 @@
         <div v-if="areaVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in areaTemp">
+                <label >
                     <span>{{c.name}}</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    </label>
                 </li>
             </ul>
         </div>
@@ -64,8 +72,10 @@
         <div v-if="customVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in customTemp">
+                <label >
                     <span>{{c.name}}</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    </label>
                 </li>
             </ul>
         </div>
@@ -73,6 +83,9 @@
     </div>
 </template>
 <style scoped>
+.calendar-room-filter-select label{
+    display: block;
+};
 .calendar-tag-color {
     color: #fff;
     padding: 3px;

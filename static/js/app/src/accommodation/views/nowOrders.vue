@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <Search /> -->
+        <Search />
         <Calendar :roomStatus="roomStatus" @changeEnter='changeEnter' @changeDate='changeDate' :categories='categories' :customList='customList' :areaList='areaList' :roomTypeCount='roomTypeCount' />
         <ShopCart :selectedEntries="selectedEntries" />
     </div>

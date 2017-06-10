@@ -197,6 +197,10 @@ export default {
             roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
         }),
         orderState() {
+            if (this.type === 'collect') {
+                return true;
+                // 收银就只有收款
+            }
             if (this.orderPayment) {
                 const income = (this.type === 'cancel' ? 0 : this.orderPayment.payableFee) + this.penalty - Number(this.paiedMoney);
                 return income >= 0;
@@ -217,6 +221,9 @@ export default {
         // },
         notPay() { // 需补或或需退金额
             const payMoney = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
+            if (this.type === 'collect') {
+                return Number(payMoney).toFixed(2);
+            }
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
@@ -451,7 +458,7 @@ export default {
                         //     type: this.orderState ? 0 : 2
                         // });
                         this.$set(this.payments, 0, {
-                            fee: Math.abs(payMoney).toFixed(2),
+                            fee: this.type === 'collect' ? (Number(payMoney) > 0 ? payMoney : 0) : Math.abs(payMoney).toFixed(2),
                             payChannelId: undefined,
                             type: this.orderState ? 0 : 2
                         });
@@ -500,7 +507,8 @@ export default {
             }
         },
         addPayMent() {
-            const payMoney = Math.abs(((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2));
+            const collectPayMany = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
+            const payMoney = Math.abs(collectPayMany);
             let paidMoney = 0;
             if (this.payments.length > 0) {
                 this.payments.forEach(pay => {
@@ -508,8 +516,9 @@ export default {
                 });
             }
             this.uniqueId += 1;
+            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)))
             this.payments.push({
-                fee: Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2))),
+                fee: fee,
                 payChannelId: undefined,
                 type: this.orderState ? 0 : 2,
                 uniqueId: this.uniqueId
