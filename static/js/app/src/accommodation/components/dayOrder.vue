@@ -196,6 +196,7 @@
     border-radius: 16px;
     padding: 15px;
     padding-bottom: 28px;
+    cursor:pointer;
 }
 
 .taday-status-title {
@@ -212,9 +213,7 @@ import dayOrderForm from './dayOrderForm.vue';
 import hover from './hover.vue';
 import util from 'util';
 import http from '../../common/http';
-import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import bus from '../../common/eventBus';
-import modal from '../../common/modal';
 import type from '../../common/orderSystem/store/types';
 import {
     colorList
@@ -334,7 +333,7 @@ export default {
             });
         },
         showCheckOut(types) {
-            const handel = this.hideCheckout;
+            // const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
                 orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
                 orderType: this.menuData.data.roomOrderId ? 3 : -1

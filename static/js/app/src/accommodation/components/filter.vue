@@ -3,9 +3,9 @@
         <div class="calendar-room-filter-box" @click="roomTypeVisible = !roomTypeVisible">
             <div class="calendar-icon calendar-icon-roomtype"></div>
             <span style="cursor: pointer">状态</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomTypeVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="roomTypeVisible" class="calendar-room-filter-select">
+        <div v-if="roomTypeVisible" class="calendar-room-filter-select" >
             <ul>
                 <li v-for="c in roomTypeList">
                 <label >
@@ -19,7 +19,7 @@
         <div class="calendar-room-filter-box" @click="tagVisible = !tagVisible">
             <div class="calendar-icon calendar-icon-tag"></div>
             <span style="cursor: pointer">标签</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: tagVisible}' class='calendar-room-filter-toggle'>
         </div>
         <div v-if="tagVisible" class="calendar-room-filter-select">
             <ul>
@@ -35,7 +35,7 @@
         <div class="calendar-room-filter-box" @click="roomVisible = !roomVisible">
             <div class="calendar-icon calendar-icon-room"></div>
             <span style="cursor: pointer">房型</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomVisible}' class='calendar-room-filter-toggle'>
         </div>
         <div v-if="roomVisible" class="calendar-room-filter-select">
             <ul>
@@ -51,7 +51,7 @@
         <div class="calendar-room-filter-box" @click="areaVisible = !areaVisible">
             <div class="calendar-icon calendar-icon-area"></div>
             <span style="cursor: pointer">区域</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: areaVisible}' class='calendar-room-filter-toggle'>
         </div>
         <div v-if="areaVisible" class="calendar-room-filter-select">
             <ul>
@@ -67,7 +67,7 @@
         <div class="calendar-room-filter-box" @click="customVisible = !customVisible">
             <div class="calendar-icon calendar-icon-custom"></div>
             <span style="cursor: pointer">客源</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: customVisible}' class='calendar-room-filter-toggle'>
         </div>
         <div v-if="customVisible" class="calendar-room-filter-select">
             <ul>
@@ -115,6 +115,7 @@
     background: #fafafa;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
     border-radius: 2px;
+    transition:all 1s; 
 }
 
 .calendar-room-filter-box {
@@ -157,8 +158,11 @@
 .calendar-room-filter-toggle {
     float: right;
     margin-top: 7px;
+    transition:all 1s; 
 }
-
+.calendarChange{
+    transform:rotate(180deg); 
+}
 .calendar-icon-color {
     width: 14px;
     display: inline-block;

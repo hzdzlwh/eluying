@@ -32,8 +32,7 @@
                     <p>
                         <span class="addCus">
                                     备注</span>
-                        <textarea style="width:350px" v-model='formdata.remark' class='dd-input' placeholder="
- 请输入备注信息" maxlength="500"></textarea>
+                        <textarea style="width:350px" v-model='formdata.remark' class='dd-input' placeholder="请输入备注信息" maxlength="500"></textarea>
                     </p>
                 </div>
                 <div class="roomModals-footer">
@@ -176,7 +175,6 @@ import {
     DdDatepicker
 } from 'dd-vue-component';
 import http from '../../common/http';
-import modal from '../../common/modal';
 import bus from '../../common/eventBus';
 import {
     DatePicker

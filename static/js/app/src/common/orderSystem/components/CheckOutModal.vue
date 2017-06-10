@@ -277,6 +277,7 @@ export default {
             },
             toggleRoomSelectedState(room) {
                 room.selected = !room.selected;
+                this.tadayFeeType = 1;
             },
             checkOut() {
                 const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
