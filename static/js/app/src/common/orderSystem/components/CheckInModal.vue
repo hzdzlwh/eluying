@@ -14,10 +14,7 @@
                                 <div class="item" v-for="(room, index) in roomsList">
                                     <div class="room-info">
                                         <div class="room-name">
-                                            <span class="room-select-icon"
-                                                  :class="room.selected ? 'selected-icon' : 'notSelect-icon'"
-                                                  @click="toggleRoomSelectedState(room)"
-                                            >
+                                            <span class="room-select-icon" :class="room.selected ? 'selected-icon' : 'notSelect-icon'" @click="toggleRoomSelectedState(room)">
                                             </span>
                                             <span class="room-icon"></span>
                                             <span>{{room.serialNum}}({{room.roomName}})</span>
@@ -35,16 +32,12 @@
                                             <span>{{`¥${room.totalPrice}`}}</span>
                                         </div>
                                     </div>
-                                    <CheckInPerson
-                                            :personsObj="{id: index, persons: room.idCardList}"
-                                            @addPerson="addPerson"
-                                            @deletePerson="deletePerson"
-                                    />
+                                    <CheckInPerson :personsObj="{id: index, persons: room.idCardList}" @addPerson="addPerson" @deletePerson="deletePerson" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="roomModals-footer" >
+                    <div class="roomModals-footer">
                         <!-- <div>
                             <span class="footer-label">{{finalPrice >= 0 ? '需补金额:' : '需退金额:'}}<span class="order-price-num red">¥{{(Math.abs(finalPrice)).toFixed(2)}}</span></span>
                         </div> -->
@@ -61,15 +54,23 @@
 <style>
 </style>
 <script>
-    import modal from 'modal';
-    import util from 'util';
-    import CheckInPerson from './CheckInPerson.vue';
-    import { mapState } from 'vuex';
-    import bus from '../../eventBus';
-    import http from 'http';
-    export default{
-        data() {
+import modal from 'modal';
+import util from 'util';
+import CheckInPerson from './CheckInPerson.vue';
+import {
+    mapState
+} from 'vuex';
+import bus from '../../eventBus';
+import http from 'http';
+export default {
+    data() {
             return {};
+        },
+        created() {
+            bus.$on('changeOutOrInSelect', this.changeOutOrInSelect);
+        },
+        beforeDestroy() {
+            bus.$off('changeOutOrInSelect', this.changeOutOrInSelect);
         },
         computed: {
             ...mapState({
@@ -82,7 +83,7 @@
                         return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                     });
                     rooms.forEach(item => {
-                        this.$set(item, 'selected', true);
+                            this.$set(item, 'selected', true);
                         // 独立住宿订单和子订单只选择一个房间
                         const roomInfo = this.orderDetail.roomInfo;
                         if (roomInfo && roomInfo.roomId !== item.roomId) {
@@ -91,24 +92,18 @@
                     });
                     return rooms;
                 }
-            },
-            // finalPrice() {
-            //     let price = 0;
-            //     if (this.roomBusinessInfo.roomOrderInfoList) {
-            //         this.roomsList.forEach(item => {
-            //             if (item.selected) {
-            //                 item.payments.forEach(pay => {
-            //                     if (pay.type === 15) {
-            //                         price += pay.fee;
-            //                     }
-            //                 });
-            //             }
-            //         });
-            //     }
-            //     return price;
-            // }
+            }
         },
         methods: {
+            changeOutOrInSelect(id) {
+                if (this.roomBusinessInfo.roomOrderInfoList) {
+                    this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
+                        if (room.roomId !== id) {
+                            room.selected = false;
+                        }
+                    });
+                }
+            },
             returnPreStep() {
                 this.hideModal();
                 bus.$emit('back');
@@ -143,7 +138,9 @@
                 });
             },
             finishCheckIn() {
-                const selectedRoom = this.roomsList.filter(room => { return room.selected; });
+                const selectedRoom = this.roomsList.filter(room => {
+                    return room.selected;
+                });
                 if (selectedRoom.length <= 0) {
                     modal.warn('请选择入住的房间！');
                     return false;
@@ -185,7 +182,9 @@
                     functionType: 1,
                     type: 0,
                     orderId: this.roomBusinessInfo.orderId,
-                    rooms: JSON.stringify(rooms.filter((room) => { return room; }))
+                    rooms: JSON.stringify(rooms.filter((room) => {
+                        return room;
+                    }))
                 };
                 http.get('/order/checkInOrCheckout', business).then(res => {
                     $('#checkIn').modal('hide');
@@ -197,5 +196,5 @@
         components: {
             CheckInPerson
         }
-    };
+};
 </script>

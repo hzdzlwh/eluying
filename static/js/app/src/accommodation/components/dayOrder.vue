@@ -10,7 +10,7 @@
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
                         <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="hoverShow($event, it)" @mouseleave="it.hover = false">
-                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.roomState === 11' ></hover>
+                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
                                 {{it.roomName}}
@@ -26,11 +26,23 @@
             </div>
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
-            <div @click.stop="check('book')" v-if='menuData && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
+            <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
-            <div @click.stop="check('ing')" v-if='menuData && menuData.data.isArrival && menuData.data.roomState !== 12'>
+            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
+                查看预定
+            </div>
+            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11  && menuData.data.roomState !== 12)'>
+                查看在住
+            </div>
+            <div @click.stop="check('ing')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12) && isTaday'>
+                直接入住
+            </div>
+            <div @click.stop="showCheckIn()" v-if='menuData && menuData.data.isArrival '>
                 办理入住
+            </div>
+            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
+                办理退房
             </div>
             <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
                 转为{{(menuData && menuData.data.isDirty) ? '净' : '脏'}}房
@@ -43,15 +55,6 @@
             </div>
             <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
                 转保留房
-            </div>
-            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
-                查看预定
-            </div>
-            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11  && menuData.data.roomState !== 12)'>
-                查看在住
-            </div>
-            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
-                办理退房
             </div>
             <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.hasRepair === 1'>
                 查看维修房
@@ -196,7 +199,7 @@
     border-radius: 16px;
     padding: 15px;
     padding-bottom: 28px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .taday-status-title {
@@ -264,6 +267,9 @@ export default {
     computed: {
         finalRoomStatus() {
             return this.roomStatus;
+        },
+        isTaday() {
+            return util.isSameDay(new Date(), new Date(this.date));
         }
     },
     methods: {
@@ -304,7 +310,7 @@ export default {
             this.dayOrderFormVisible = false;
         },
         setSelect(it, contentIndex, itemIndex) {
-            if (it.roomState !== 0) {
+            if (it.roomState !== 0 || it.isArrival) {
                 this.tadayClick(it);
                 return;
             }
@@ -350,6 +356,24 @@ export default {
                     $('#checkOut').modal({
                         backdrop: 'static'
                     })
+                )
+            );
+        },
+        showCheckIn(types) {
+            // const handel = this.hideCheckout;
+            this[type.GET_ORDER_DETAIL]({
+                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
+                orderType: this.menuData.data.roomOrderId ? 3 : -1
+            }).then(
+                this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
+                    businessType: 0,
+                    orderId: this.menuData.data.orderId
+                }).then(
+
+                    $('#checkIn').modal({
+                        backdrop: 'static'
+                    }),
+                    bus.$emit('changeOutOrInSelect', this.menuData.data.roomId),
                 )
             );
         },
