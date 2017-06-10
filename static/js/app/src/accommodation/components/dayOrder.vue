@@ -267,9 +267,9 @@ export default {
     created() {
         bus.$on('refreshView', this.refreshView);
     },
-     beforeDestroy() {
-            bus.$off('refreshView', this.refreshView);
-        },
+    beforeDestroy() {
+        bus.$off('refreshView', this.refreshView);
+    },
     computed: {
         finalRoomStatus() {
             return this.roomStatus;
