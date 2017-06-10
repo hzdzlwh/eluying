@@ -310,7 +310,7 @@ export default {
             this.dayOrderFormVisible = false;
         },
         setSelect(it, contentIndex, itemIndex) {
-            if (it.roomState !== 0 || it.isArrival) {
+            if ((it.roomState !== 0 && it.roomState !== 12) || it.isArrival) {
                 this.tadayClick(it);
                 return;
             }
