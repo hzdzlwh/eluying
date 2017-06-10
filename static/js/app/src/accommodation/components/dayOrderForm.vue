@@ -16,13 +16,6 @@
                         <span class="addCus">起始日期</span>
                         <DatePicker :popper-class='"DatePickerAbsorct"' v-model="value3" type="datetimerange" placeholder="选择时间范围" format='yyyy-MM-dd HH:mm:ss'>
                         </DatePicker>
-                        <!--  <div class="dd-start-date">
-                <DdDatepicker placeholder="开始时间" v-model="formdata.startDate" />
-            </div>
-            <span class="dd-date-symbol">~</span>
-            <div class="dd-end-date">
-                <DdDatepicker placeholder="结束时间" v-model="formdata.endDate" />
-            </div> -->
                     </p>
                     <p>
                         <span class="addCus">
