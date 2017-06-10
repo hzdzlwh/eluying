@@ -264,6 +264,12 @@ export default {
         contextmenu,
         hover
     },
+    created() {
+        bus.$on('refreshView', this.refreshView);
+    },
+     beforeDestroy() {
+            bus.$off('refreshView', this.refreshView);
+        },
     computed: {
         finalRoomStatus() {
             return this.roomStatus;
@@ -308,6 +314,9 @@ export default {
         },
         closeDayForm() {
             this.dayOrderFormVisible = false;
+        },
+        refreshView() {
+            this.selectRooms = {};
         },
         setSelect(it, contentIndex, itemIndex) {
             if ((it.roomState !== 0 && it.roomState !== 12) || it.isArrival) {

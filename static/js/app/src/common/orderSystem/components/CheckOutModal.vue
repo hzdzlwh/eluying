@@ -201,7 +201,8 @@ export default {
                     room => {
                         this.backroomBusinessInfo.roomOrderInfoList.map(
                             item => {
-                                if (item.roomId === room.roomId) {
+                                if (item.roomId === room.roomId &&
+                                    room.selected) {
                                     if (n === 1) {
                                         room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
                                     }

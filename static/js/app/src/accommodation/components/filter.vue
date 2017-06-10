@@ -5,11 +5,11 @@
             <span style="cursor: pointer">状态</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomTypeVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="roomTypeVisible" class="calendar-room-filter-select" >
+        <div v-show="roomTypeVisible" class="calendar-room-filter-select" >
             <ul>
                 <li v-for="c in roomTypeList">
                 <label >
-                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
+                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}}）</span>
                     <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
@@ -21,11 +21,11 @@
             <span style="cursor: pointer">标签</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: tagVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="tagVisible" class="calendar-room-filter-select">
+        <div v-show="tagVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in tagList">
                 <label >
-                   <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}})</span>
+                   <span class="calendar-icon-color" :style='{background:c.color}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount[c.tag]}}）</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
@@ -37,7 +37,7 @@
             <span style="cursor: pointer">房型</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="roomVisible" class="calendar-room-filter-select">
+        <div v-show="roomVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in categoriesList">
                 <label >
@@ -53,7 +53,7 @@
             <span style="cursor: pointer">区域</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: areaVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="areaVisible" class="calendar-room-filter-select">
+        <div v-show="areaVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in areaTemp">
                 <label >
@@ -69,7 +69,7 @@
             <span style="cursor: pointer">客源</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: customVisible}' class='calendar-room-filter-toggle'>
         </div>
-        <div v-if="customVisible" class="calendar-room-filter-select">
+        <div v-show="customVisible" class="calendar-room-filter-select">
             <ul>
                 <li v-for="c in customTemp">
                 <label >
