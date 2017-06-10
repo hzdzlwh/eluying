@@ -9,8 +9,8 @@
                 <div class="taday-status-box" v-for='(item, contentIndex) in finalRoomStatus'>
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
-                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="it.hover = true" @mouseleave="it.hover = false">
-                            <hover :date='it' class='calendar-glyph-hover' v-if='it.roomState === 11'></hover>
+                        <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="hoverShow($event, it)" @mouseleave="it.hover = false">
+                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.roomState === 11' ></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
                                 {{it.roomName}}
@@ -250,7 +250,8 @@ export default {
             colorList,
             date: new Date(),
             roomdata: undefined,
-            selectRooms: {}
+            selectRooms: {},
+            hoverEvent: undefined
         };
     },
     components: {
@@ -267,6 +268,10 @@ export default {
     },
     methods: {
         ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL]),
+        hoverShow(e, it) {
+            this.hoverEvent = e;
+            it.hover = true;
+        },
         tadayClick(it) {
             this.menuData = {
                 data: it

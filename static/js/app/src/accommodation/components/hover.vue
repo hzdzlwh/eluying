@@ -1,5 +1,5 @@
 <template>
-    <div class="calendar-glyph-detail ing down">
+    <div class="calendar-glyph-detail ing down " :class='{hoverRight : overflow}'>
         <div class="glyph-arrow-up"></div>
         <div class="glyph-arrow-down"></div>
         <div class="glyph-detail-name">
@@ -26,6 +26,12 @@
 .calendar-glyph-detail {
     position: relative;
 }
+.hoverRight{
+    left: -200px!important;
+}
+.hoverRight .glyph-arrow-up{
+    left: 260px;
+}
 </style>
 <script>
 export default {
@@ -33,12 +39,22 @@ export default {
         date: {
             default: {},
             type: Object
+        },
+        hoverShow: {
+            default: undefined,
+            type: MouseEvent
         }
     },
     data() {
         return {};
     },
-    computed: {},
+    computed: {
+        overflow() {
+            if (this.hoverShow && this.date) {
+                return window.document.body.clientWidth - this.hoverShow.x < 350;
+            }
+        }
+    },
     watch: {
 
     },
