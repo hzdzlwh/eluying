@@ -327,7 +327,7 @@ export default {
                     temp.push({
                         id: this.selectRooms[item].roomId,
                         date: new Date(this.date),
-                        cId: 240,
+                        cId: this.selectRooms[item].typeId,
                         cName: this.selectRooms[item].roomName.split(' ')[0],
                         rName: this.selectRooms[item].roomName.split(' ')[1],
                         selected: true
@@ -403,7 +403,7 @@ export default {
             temp.push({
                 id: this.menuData.data.roomId,
                 date: new Date(this.date),
-                cId: 240,
+                cId: this.menuData.data.typeId,
                 cName: this.menuData.data.roomName.split(' ')[0],
                 rName: this.menuData.data.roomName.split(' ')[1],
                 selected: true
