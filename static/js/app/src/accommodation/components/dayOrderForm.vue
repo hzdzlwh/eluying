@@ -20,12 +20,12 @@
                     <p>
                         <span class="addCus">
                                     原因</span>
-                        <input v-model='formdata.reason' class="dd-input" type="text" maxlength="50">
+                        <input v-model='formdata.reason'  placeholder="请输入原因" class="dd-input" type="text" maxlength="50">
                     </p>
                     <p>
                         <span class="addCus">
                                     备注</span>
-                        <textarea style="width:350px" v-model='formdata.remark' class='dd-input' placeholder="请输入备注信息" maxlength="500"></textarea>
+                        <textarea  v-model='formdata.remark' class='dd-input' placeholder="请输入备注信息" maxlength="500" style="height:100px; resize:none;width:350px"></textarea>
                     </p>
                 </div>
                 <div class="roomModals-footer">
@@ -71,7 +71,6 @@
 #dayOrderForm .modal-body p input {
     width: 350px;
     height: 24px;
-    margin-right: 4px;
 }
 
 #dayOrderForm .modal-body p {
