@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="手机号"
+                                    <input class="dd-input" type="text" id="phone" maxlength="20" placeholder="手机号"
                                            autocomplete="off"
                                            :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
@@ -441,7 +441,7 @@
                     return;
                 }
 
-                if (originType === -4 && this.phone.length === 11) {
+                if (originType === -4 && this.phone) {
                     this.getVipDiscount(this.phone, true);
                 }
 
@@ -504,7 +504,7 @@
                     return false;
                 }
 
-                if (newVal.length === 11) {
+                if (newVal) {
                     this.checkPhone();
                 } else {
                     this.vipDiscountDetail = {};
@@ -568,7 +568,7 @@
                 return discount ? discount.discount : 1;
             },
             changeVipList(num) {
-                if (num === 2 && this.phone.length === 11) {
+                if (num === 2 && this.phone) {
                     this.getVipDiscount(this.phone, true);
                 }
                 const params = num === 1 ? { name: this.name } : { phone: this.phone };
