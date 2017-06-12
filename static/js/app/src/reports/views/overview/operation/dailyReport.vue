@@ -30,7 +30,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in debit" :class="{'mark-tr': item.top}">
+                        <tr v-for="(item, index) in debit" :class="{'mark-tr': item.nodeLevel === 1, 'word-bold': item.nodeLevel === 2}">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
@@ -61,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in credit" :class="{'mark-tr': item.top}">
+                        <tr v-for="(item, index) in credit" :class="{'mark-tr': item.nodeLevel === 1, 'word-bold': item.nodeLevel === 2}">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
@@ -226,6 +226,10 @@
                         td:first-child{
                             padding-left: 20px;
                         }
+                    }
+                    .word-bold{
+                        font-weight: bold;
+                        color: #666666;
                     }
                 }
                 tfoot{
