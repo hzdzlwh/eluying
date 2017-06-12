@@ -892,7 +892,6 @@
             },
             onCtxOpen(locals) {
                 this.menuData = locals;
-                this.roomdata = JSON.parse(JSON.stringify(locals));
             },
             resetCtxLocals() {
                 this.menuData = undefined;
@@ -913,6 +912,7 @@
                 this.openForm(status.st - 1, 0);
             },
             openForm(formNumber, outOrIn) {
+                this.roomdata = JSON.parse(JSON.stringify(this.menuData));
                 this.formNumber = formNumber;
                 this.outOrIn = outOrIn;
                 this.dayOrderFormVisible = true;
