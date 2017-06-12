@@ -50,7 +50,7 @@
             },
             max: {
                 type: Number,
-                default: 999
+                default: 9999
             },
             num: {
                 type: Number,
@@ -71,12 +71,13 @@
             disabled: {
                 type: Boolean,
                 default: false
-            }
+            },
+            onNumChange: Function
         },
-        data(){
-            return{
+        data() {
+            return {
                 value: this.num
-            }
+            };
         },
         computed: {},
         methods: {
@@ -93,6 +94,10 @@
                 } else {
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
+                const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
+                if (!flag) {
+                    this.value += this.step;
+                }
             },
             increaseNum() {
                 if (this.disabled) {
@@ -107,9 +112,13 @@
                 } else {
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
+                const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
+                if (!flag) {
+                    this.value -= this.step;
+                }
             }
         },
-        watch:{
+        watch: {
             num(newVal) {
                 this.value = newVal;
             },
@@ -119,5 +128,5 @@
                 }
             }
         }
-    }
+    };
 </script>
