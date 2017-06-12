@@ -144,7 +144,7 @@
                                 <div v-for="(good, index) in extra.itemList" class="extra-items-row">
                                     <span class="extra-items-name">{{good.goodsName}}</span>
                                     <span class="extra-items-num">数量
-                                    <counter @numChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
+                                    <counter :onNumChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
                                     </span>
                                         <span class="extra-items-total">小计
                                         <p class="fee-container">
@@ -944,8 +944,9 @@
                 });
             },
             handleExtraNumChange(good, num) {
-                if (good.price === undefined || good.price === null) {
+                if (good.price === null) {
                     modal.warn('该商品已删除');
+                    return false;
                 }
                 good.amount = num;
                 good.subtotal = Number((num * good.price).toFixed(2));
