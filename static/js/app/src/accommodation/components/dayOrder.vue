@@ -44,7 +44,7 @@
             <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
                 办理退房
             </div>
-            <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
+            <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 && menuData.data.roomState !== 2 && menuData.data.roomState !== 3 )'>
                 转为{{(menuData && menuData.data.isDirty) ? '净' : '脏'}}房
             </div>
             <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.roomState === 0 && menuData.data.isArrival === 0'>
