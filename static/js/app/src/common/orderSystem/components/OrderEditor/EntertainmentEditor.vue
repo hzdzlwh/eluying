@@ -323,9 +323,9 @@ export default {
             if (item.id && item.date) {
                 const date = util.dateFormat(new Date(item.date));
                 const lastItem = this.lastEnterItem;
-                if (lastItem.id === item.id && lastItem.date === date) {
-                    return false;
-                }
+                // if (lastItem.id === item.id && lastItem.date === date) {
+                //     return false;
+                // }
                 this.lastEnterItem.id = item.id;
                 this.lastEnterItem.date = item.date;
                 http.get('/item/getInventory', {
@@ -411,6 +411,7 @@ export default {
                     inventory: undefined,
                     usedAmount: 0,
                     selfInventory: 0,
+                    // totalPrice: Number(data['price'] * this.getItemDiscountInfo(data.nodeId).discount).toFixed(2),
                     totalPrice: 0,
                     originPrice: 0,
                     isnew: true,
