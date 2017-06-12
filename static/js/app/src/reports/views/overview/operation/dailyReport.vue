@@ -18,7 +18,7 @@
                 <h2>营业日报表</h2>
             </div>
             <div class="table-container">
-                <table class="daily-table" border="1">
+                <table class="debit-table" border="1">
                     <thead>
                         <tr>
                             <th colspan="3">借方</th>
@@ -49,7 +49,7 @@
                         </tr>
                     </tfoot>
                 </table>
-                <table class="daily-table" border="1">
+                <table class="credit-table" border="1">
                     <thead>
                         <tr>
                             <th colspan="3">贷方</th>
@@ -182,7 +182,7 @@
         .table-container{
             display: flex;
             margin-top: 26px;
-            .daily-table{
+            .debit-table{
                 width: 50%;
                 font-size: 12px;
                 border: 1px solid #e6e6e6;
@@ -230,6 +230,74 @@
                     .word-bold{
                         font-weight: bold;
                         color: #666666;
+                        padding-left: 34px;
+                    }
+                }
+                tfoot{
+                    tr{
+                       background: #61758c;
+                        color: #fff;
+                        td:first-child{
+                            padding-left: 20px;
+                        }
+                        td:not(:first-child){
+                            text-align: right;
+                            padding-right: 20px;
+                        }
+                    }
+                }
+            }
+            .credit-table{
+                width: 50%;
+                font-size: 12px;
+                border: 1px solid #e6e6e6;
+                tr{
+                    height: 32px;
+                }
+                thead{
+                    tr:first-child{
+                        background: #61758c;
+                        color: #fff;
+                        th{
+                            text-align: center;
+                        }
+                    }
+                    tr:last-child{
+                        background: #eeeeee;
+                        color: #666666;
+                        th:first-child{
+                            padding-left: 20px;
+                        }
+                        th:not(:first-child){
+                            text-align: right;
+                            padding-right: 20px;
+                        }
+                    }
+                }
+                tbody{
+                    tr{
+                        td:first-child{
+                            padding-left: 46px;
+                        }
+                        td:not(:first-child){
+                            text-align: right;
+                            padding-right: 20px;
+                        }
+                    }
+                    .mark-tr{
+                        font-weight: bold;
+                        color: #666666;
+                        background: #b2dbff;
+                        td:first-child{
+                            padding-left: 20px;
+                        }
+                    }
+                    .word-bold{
+                        font-weight: bold;
+                        color: #666666;
+                        td:first-child{
+                            padding-left: 34px;
+                        }
                     }
                 }
                 tfoot{
