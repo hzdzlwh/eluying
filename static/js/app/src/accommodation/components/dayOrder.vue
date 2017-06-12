@@ -29,10 +29,10 @@
             <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
-            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
+            <div @click.stop="showOrder('reserve')" v-if='menuData && menuData.data.isArrival === 1'>
                 查看预定
             </div>
-            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11  && menuData.data.roomState !== 12)'>
+            <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
                 查看在住
             </div>
             <div @click.stop="check('ing')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12) && isTaday'>
@@ -105,7 +105,7 @@
 .taday-calendar-picker {
     position: relative;
     top: 48px;
-    box-shadow:2px 2px 4px 0px rgba(0,0,0,0.15);
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.15);
 }
 
 .taday-calendar-body {
@@ -207,7 +207,7 @@
     color: #178ce6;
     line-height: 24px;
     text-align: left;
-    margin-bottom:16px;
+    margin-bottom: 16px;
 }
 </style>
 <script>
@@ -307,7 +307,7 @@ export default {
                     break;
             }
             if (it.isArrival) {
-                this.showOrder();
+                this.showOrder('showOrder');
             }
         },
         roomFilterHander(parms) {
@@ -320,7 +320,7 @@ export default {
             this.selectRooms = {};
         },
         setSelect(it, contentIndex, itemIndex) {
-            if ((it.roomState !== 0 && it.roomState !== 12) || it.isArrival) {
+            if (it.roomState !== 0 || it.isArrival) {
                 this.tadayClick(it);
                 return;
             }
@@ -347,11 +347,18 @@ export default {
 
             this.$emit('changeEnter', temp);
         },
-        showOrder() {
-            bus.$emit('onShowDetail', {
-                type: this.menuData.data.roomOrderId ? 3 : -1,
-                orderId: this.menuData.data.roomOrderId || this.menuData.data.orderId
-            });
+        showOrder(type) {
+            if (type === 'reserve') {
+                bus.$emit('onShowDetail', {
+                    type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
+                    orderId: this.menuData.data.reserveOrderId || this.menuData.data.reserveRoomOrderId
+                });
+            } else {
+                bus.$emit('onShowDetail', {
+                    type: this.menuData.data.roomOrderId ? 3 : -1,
+                    orderId: this.menuData.data.roomOrderId || this.menuData.data.orderId
+                });
+            }
         },
         showCheckOut(types) {
             // const handel = this.hideCheckout;
@@ -404,6 +411,7 @@ export default {
         },
         openForm(formNumber, outOrIn) {
             this.roomdata = JSON.parse(JSON.stringify(this.menuData.data));
+            this.roomdata.dateStr = this.date;
             this.formNumber = formNumber;
             this.outOrIn = outOrIn;
             this.dayOrderFormVisible = true;
