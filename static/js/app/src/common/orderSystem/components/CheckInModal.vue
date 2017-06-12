@@ -60,6 +60,7 @@ import CheckInPerson from './CheckInPerson.vue';
 import {
     mapState
 } from 'vuex';
+import { getOrderId } from '../utils/order';
 import bus from '../../eventBus';
 import http from 'http';
 export default {
@@ -189,6 +190,7 @@ export default {
                 http.get('/order/checkInOrCheckout', business).then(res => {
                     $('#checkIn').modal('hide');
                     bus.$emit('refreshView');
+                    bus.$emit('onShowDetail', { ...this.orderDetail, orderId: getOrderId(this.orderDetail) });
                 });
                 // bus.$emit('showCashier', { type: 'checkIn', business });
             }
