@@ -217,7 +217,7 @@
                                     收银
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
-                                     v-if="order.isSettle === false">
+                                     v-if="order.isSettle === false && order.orderType === -1">
                                     结算
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"

@@ -154,6 +154,7 @@ export default {
                     }
                 });
                 if (o.isVip === undefined) {
+                    this.discountFlag = true;
                     this.$emit('priceChange', totalprice);
                     return false;
                 }

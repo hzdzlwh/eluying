@@ -233,7 +233,7 @@ export default {
             this.flag = false;
             if (this.room) {
                 http.get('/room/getStopInfo', {
-                    date: this.date,
+                    date: this.room.dateStr,
                     roomId: this.room.roomId,
                     type: this.formNumber + 1
                 }).then(res => {

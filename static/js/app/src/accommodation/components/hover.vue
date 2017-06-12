@@ -20,7 +20,7 @@
         <div class="glyph-detail-price">
             <div><span class="glyph-label">订单总价：</span><span class="num">¥ {{date.totalPrice}}</span></div>
             <!---->
-            <div><span class="glyph-label">客户需补：</span><span class="num">¥ {{date.lastPrice}}</span></div>
+            <div><span class="glyph-label">客户{{date.lastPrice > 0 ? '需补' : '需退'}}：</span><span class="num">¥ {{date.lastPrice > 0 ? date.lastPrice : -date.lastPrice}}</span></div>
         </div>
         <!---->
     </div>
