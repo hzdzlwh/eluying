@@ -6,6 +6,9 @@ var config = require('./config');
 var path = require('path');
 var webpackConf = {
     devtool: 'inline-source-map',
+    node: {
+        fs: 'empty'
+    },
     plugins: [
         new webpack.ProvidePlugin({
             '$': 'jquery',
