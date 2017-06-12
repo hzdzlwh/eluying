@@ -171,16 +171,16 @@
             <div @click.stop="setDirtyRoom(menuData.data)">
                 转为{{menuData && menuData.data.isDirty    ? '净' : '脏'}}房
             </div>
-            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(1,1)" v-if='menuData && menuData.data.st === 0'>
                 转维修房
             </div>
-            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(2,1)" v-if='menuData && menuData.data.st === 0'>
                 转停用房
             </div>
-            <div @click.stop="openForm(menuData.data.st-1,1)" v-if='menuData && menuData.data.st === 0'>
+            <div @click.stop="openForm(0,1)" v-if='menuData && menuData.data.st === 0'>
                 转保留房
             </div>
-            <div @click.stop="openForm(menuData.data.st-1,0)" v-if='menuData && menuData.data.st === 2'>
+            <div @click.stop="openForm(1,0)" v-if='menuData && menuData.data.st === 2'>
                 查看维修房
             </div>
             <div @click.stop="endCloseStatus(menuData.data.st)" v-if='menuData && menuData.data.st === 2'>
