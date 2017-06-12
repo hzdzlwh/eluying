@@ -1,7 +1,7 @@
 <template>
     <div class="calendar-date-select" :style='{width: width ? width + "px" : "140px "}'>
         <div @click="handleClick" :style='{width: width ? width + "px" : "140px "}'>
-            <span class="calendar-date-label" style="cursor: pointer">{{dateStr}}</span>
+            <span class="calendar-date-label" style="cursor: pointer">{{date}}</span>
         </div>
         <DdDatepicker v-model="date" ref="datepicker" :disabled-date="disabledEndDate(new Date())" v-if='disabledDate' />
         <DdDatepicker v-model="date" ref="datepicker" v-else />
@@ -72,11 +72,6 @@ export default {
     },
     created() {
         this.date = this.defaultDate;
-    },
-    computed: {
-        dateStr() {
-            return dateFormatWithoutYear(stringToDate(this.date));
-        }
     },
     methods: {
         disabledEndDate(startDate) {
