@@ -43,8 +43,6 @@ import {
 } from 'dd-vue-component';
 import {
     dateFormat,
-    stringToDate,
-    dateFormatWithoutYear,
     isSameDay
 } from '../../common/util';
 export default {
