@@ -105,6 +105,7 @@
 .taday-calendar-picker {
     position: relative;
     top: 48px;
+    box-shadow:2px 2px 4px 0px rgba(0,0,0,0.15);
 }
 
 .taday-calendar-body {
@@ -118,11 +119,11 @@
     .taday-status-item {
         padding: 8px;
         border-radius: 4px;
-        width: 108px;
-        height: 66px;
+        width: 124px;
+        height: 82px;
         color: #ffffff;
         display: inline-block;
-        margin: 4px 8px;
+        margin: 4px 4px;
         position: relative;
         &:hover {
             .calendar-glyph-hover {
@@ -197,8 +198,7 @@
     box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.10);
     background: #fafafa;
     border-radius: 16px;
-    padding: 15px;
-    padding-bottom: 28px;
+    padding: 16px;
     cursor: pointer;
 }
 
@@ -207,6 +207,7 @@
     color: #178ce6;
     line-height: 24px;
     text-align: left;
+    margin-bottom:16px;
 }
 </style>
 <script>

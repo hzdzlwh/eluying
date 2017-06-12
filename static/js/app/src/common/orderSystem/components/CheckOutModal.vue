@@ -251,9 +251,13 @@ export default {
                             item => {
                                 this.roomBusinessInfo.roomOrderInfoList.map(
                                     room => {
-                                        if (room.selected && item.subOrderId === room.roomOrderId) {
-                                            room.totalPrice += item.fee;
-                                        }
+                                        this.backroomBusinessInfo.roomOrderInfoList.map(
+                                            backRoom => {
+                                                if (room.selected && item.subOrderId === room.roomOrderId && backRoom.roomOrderId === room.roomOrderId) {
+                                                    room.totalPrice = item.fee + backRoom.totalPrice;
+                                                }
+                                            }
+                                        );
                                     }
                                 );
                             }
