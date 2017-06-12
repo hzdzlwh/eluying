@@ -30,7 +30,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in debit" :class="{'mark-tr': item.top}" v-if="index != debit.length - 1">
+                        <tr v-for="(item, index) in debit" :class="{'mark-tr': item.top}">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
@@ -61,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in credit" :class="{'mark-tr': item.top}" v-if="index != credit.length - 1">
+                        <tr v-for="(item, index) in credit" :class="{'mark-tr': item.top}">
                             <td>{{item.name}}</td>
                             <td>{{item.dailyAmount}}</td>
                             <td>{{item.monthlyAmount}}</td>
