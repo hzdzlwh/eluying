@@ -11,7 +11,11 @@
             </span>
             <span class="room-legend">
                 <span class="room-legend-icon grey"></span>
-                <span>已退房、已关闭</span>
+                <span>已退房</span>
+            </span>
+            <span class="room-legend">
+                <span class="room-legend-icon darkergrey"></span>
+                <span>已关闭</span>
             </span>
             <span class="room-legend">
                 <span class="dirty"></span>
@@ -229,6 +233,9 @@
             }
             &.grey {
                 background: #a6a6a6;
+            }
+            &.darkergrey {
+                background: #878787;
             }
         }
         .dirty {
