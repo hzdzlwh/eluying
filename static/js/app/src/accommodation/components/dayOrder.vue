@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
+        <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" :class='{ctxBottom: ctxStatus === "buttom"}' @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
             <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
@@ -255,7 +255,8 @@ export default {
             date: new Date(),
             roomdata: undefined,
             selectRooms: {},
-            hoverEvent: undefined
+            hoverEvent: undefined,
+            ctxStatus: undefined
         };
     },
     components: {
@@ -309,7 +310,6 @@ export default {
                     this.openForm(0, 0);
                     break;
             }
-
         },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
@@ -462,6 +462,10 @@ export default {
         },
         onCtxOpen(locals) {
             this.menuData = locals;
+            const elHeight = $('#context-menu .ctx-menu').offsetHeight;
+            if (window.document.body.clientHeight - event.x < elHeight + 50) {
+                this.ctxStatus = elHeight;
+            }
         },
         onCtxClose(locals) {
             window.console.log('close', locals);

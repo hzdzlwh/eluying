@@ -217,12 +217,12 @@
                                     收银
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
-                                     v-if="order.isSettle === false && order.orderType === -1">
+                                     v-if="order.isSettle === false && order.orderType === -1 && (type === ORDER_TYPE.COMBINATION)">
                                     结算
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
                                      v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8 && (type !== ORDER_TYPE.ACCOMMODATION && type !== ORDER_TYPE.COMBINATION)">
-                                    结帐
+                                    收银
                                     <!-- 娱乐商超 -->
                                 </div>
                             </div>

@@ -188,6 +188,7 @@ export default {
         },
         // 0为查看，1为转
         date: String,
+        // 这个属性挂在里了=-=又不想删面的以后有什么情况
         room: Object
     },
     data() {
