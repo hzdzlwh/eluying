@@ -199,7 +199,7 @@
                 结束保留房
             </div>
         </contextmenu>
-        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata && roomdata.data'></dayOrderForm>
+        <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
