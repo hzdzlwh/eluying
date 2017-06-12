@@ -4,7 +4,10 @@
         <div class="glyph-arrow-down"></div>
         <div class="glyph-detail-name">
             <div>{{date.customerName}} ({{date.customerPhone}})</div>
-            <div class="eluyun_ing2-room_outer spriteImg">
+            <div class="eluyun_book2-small_outer spriteImg" v-if='date.roomState === 0'>
+                <div class="eluyun_book2-small"></div>
+            </div>
+            <div class="eluyun_ing2-room_outer spriteImg" v-else>
                 <div class="eluyun_ing2-room"></div>
             </div>
         </div>
@@ -26,10 +29,12 @@
 .calendar-glyph-detail {
     position: relative;
 }
-.hoverRight{
+
+.hoverRight {
     left: -200px!important;
 }
-.hoverRight .glyph-arrow-up{
+
+.hoverRight .glyph-arrow-up {
     left: 260px;
 }
 </style>

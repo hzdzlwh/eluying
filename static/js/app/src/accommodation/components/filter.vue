@@ -25,7 +25,7 @@
             <ul>
                 <li v-for="c in tagList">
                 <label >
-                   <span class="calendar-icon-color" :style='{background:c.color}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount && roomTypeCount[c.tag]}}）</span>
+                   <span class="calendar-tag-color" :style='{background:c.color}'>{{c.name}}</span><span>（{{roomTypeCount && roomTypeCount[c.tag]}}）</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
@@ -113,7 +113,7 @@
     left: 0;
     z-index: 1;
     background: #fafafa;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
+    /*box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);*/
     border-radius: 2px;
     transition:all 1s; 
 }
@@ -123,7 +123,7 @@
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
     height: 38px;
     padding: 12px 16px;
-    margin:2px 0;
+    margin-bottom:4px;
 }
 
 .calendar-icon {
@@ -168,6 +168,12 @@
     display: inline-block;
     height: 14px;
     margin-right: 5px;
+}
+.calendar-tag-color {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 2px;
+    color:#fff;
 }
 </style>
 <script>
