@@ -29,7 +29,7 @@
             <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
-            <div @click.stop="showOrder('reserve')" v-if='menuData && menuData.data.isArrival === 1'>
+            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
                 查看预定
             </div>
             <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
@@ -41,7 +41,7 @@
             <div @click.stop="showCheckIn()" v-if='menuData && menuData.data.isArrival '>
                 办理入住
             </div>
-            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 )'>
+            <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
                 办理退房
             </div>
             <div @click.stop="setDetary(menuData && menuData.data.isDirty)" v-if='menuData && (menuData.data.roomState !== 1 || menuData.data.roomState !== 2 || menuData.data.roomState !== 3 )'>
@@ -289,6 +289,9 @@ export default {
             this.menuData = {
                 data: it
             };
+            if (it.isArrival) {
+                this.showOrder('reserve');
+            }
             switch (it.roomState) {
                 case 11:
                     this.showOrder();
@@ -306,9 +309,7 @@ export default {
                     this.openForm(0, 0);
                     break;
             }
-            if (it.isArrival) {
-                this.showOrder('showOrder');
-            }
+
         },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
@@ -367,7 +368,7 @@ export default {
                 orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
-                    businessType: 2,
+                    businessType: this.menuData.data.roomState === 12 ? 1 : 2,
                     orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
