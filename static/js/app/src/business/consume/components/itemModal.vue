@@ -27,6 +27,7 @@
                             <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
                             <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="priceIsWrite && item.price.length === 0">必填</span>
                             <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="item.price > 20000000">不能大于20000000</span>
                         </div>
                     </div>
                     <div class="item-modal-footer">
@@ -69,7 +70,7 @@
         },
         methods: {
             addItem() {
-                if ( this.item.price === '' || !this.priceReg.test(this.item.price) ||  this.item.name === '' ||this.nameErrorAlert || this.unitErrorAlert) {
+                if ( this.item.price === '' || this.item.price > 20000000 || !this.priceReg.test(this.item.price) ||  this.item.name === '' ||this.nameErrorAlert || this.unitErrorAlert) {
                     if (this.item.name === '') {
                         this.nameIsWrite = true;
                     }
