@@ -286,6 +286,15 @@ export default {
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
+                if (room.selected) {
+                    this.backroomBusinessInfo.roomOrderInfoList.map(
+                        item => {
+                            if (item.roomId === room.roomId) {
+                                room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
+                            }
+                        }
+                    );
+                }
                 room.selected = !room.selected;
                 this.tadayFeeType = 1;
             },
