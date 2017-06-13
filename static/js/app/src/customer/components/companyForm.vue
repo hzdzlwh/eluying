@@ -283,7 +283,7 @@ export default {
             if (this.formdata.contractNum) {
                 const re = /^[0-9a-zA-Z]*$/g;
                 if (!re.test(this.formdata.contractNum)) {
-                    modal.warn('请输入正确的协议编号');
+                    modal.warn('请输入正确的企业编号');
                     return;
                 }
             }

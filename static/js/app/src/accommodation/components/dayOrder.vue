@@ -171,8 +171,8 @@
 .taday-status-item-select {
     background: url(/static/image/modal/roomSelect.png);
     background-color: rgba(255, 255, 255, 0.4);
-    width: 108px;
-    height: 66px;
+    width:100%;
+    height:100%;
     margin: -8px;
     position: absolute;
     background-repeat: no-repeat;

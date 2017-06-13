@@ -355,6 +355,13 @@ export default {
                 }
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
+                if (!this.orderState) {
+                    this.payChannels = this.payChannels.filter(function(element) {
+                        return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12)
+                    })
+                }
+                window.console.log(this.payChannels)
+                // 退款没有支付宝和微信
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
                     this.payChannels = [{
                         channelId: -14,
