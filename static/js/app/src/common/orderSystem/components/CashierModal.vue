@@ -432,6 +432,9 @@ export default {
             if (this.business.todayFeeMap) {
                 params.todayFeeMap = this.business.todayFeeMap;
             }
+            if (this.type === 'collect') {
+                params.isSettle = false;
+            }
             // 今日房费
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
@@ -702,11 +705,11 @@ export default {
                 }
             }
             if (this.type === 'collect') {
-                this.isSettle = false;
+                params.isSettle = false;
             }
-            if (this.type === 'orderDetail') {
-                this.isSettle = true;
-            }
+            // if (this.type === 'orderDetail') {
+            //     params.isSettle = true;
+            // }
             // 判断是否进行扫码收款
             let payWithAlipay = 0;
             let payWithCompany = 0;
