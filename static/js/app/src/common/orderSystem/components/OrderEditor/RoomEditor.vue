@@ -191,13 +191,16 @@
         }
         .more-discount-select {
             position: absolute;
-            top: -18px;
+            top: 10px;
             left: -55px;
             width: 0;
             height: 0;
         }
         .dd-select {
             width: 120px;
+        }
+        .dd-select-menu {
+            top: 0;
         }
         .dd-select-input {
             display: none;
