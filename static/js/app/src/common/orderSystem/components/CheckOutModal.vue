@@ -153,13 +153,18 @@ export default {
                     room => {
                         if (room.selected) {
                             sum += room.payments.reduce((a, b) => {
-                                if (b.type === 0) {
+                                if (b.type === 14) {
                                     return a + b.fee;
-                                } else if (b.type === 2) {
-                                    return a - b.fee;
                                 } else {
                                     return a;
                                 }
+                                // if (b.type === 0) {
+                                //     return a + b.fee;
+                                // } else if (b.type === 2) {
+                                //     return a - b.fee;
+                                // } else {
+                                //     return a;
+                                // }
                             }, 0);
                         }
                     }
