@@ -35,10 +35,10 @@
             <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
                 查看在住
             </div>
-            <div @click.stop="check('ing')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12) && isTaday'>
+            <div @click.stop="check('ing')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 ) && isTaday'>
                 直接入住
             </div>
-            <div @click.stop="showCheckIn()" v-if='menuData && menuData.data.isArrival '>
+            <div @click.stop="showCheckIn()" v-if='menuData && menuData.data.isArrival && menuData.data.roomState !==12'>
                 办理入住
             </div>
             <div @click.stop="showCheckOut()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>

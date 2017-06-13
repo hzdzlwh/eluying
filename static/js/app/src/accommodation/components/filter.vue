@@ -9,7 +9,7 @@
             <ul>
                 <li v-for="c in roomTypeList">
                 <label >
-                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>（{{roomTypeCount && roomTypeCount[c.tag]}}）</span>
+                    <span class="calendar-icon-color" :style='{background:colorList[c.id]}'></span><span >{{c.name}}</span> <span>({{roomTypeCount && roomTypeCount[c.tag]}})</span>
                     <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
@@ -25,7 +25,7 @@
             <ul>
                 <li v-for="c in tagList">
                 <label >
-                   <span class="calendar-tag-color" :style='{background:c.color}'>{{c.name}}</span><span>（{{roomTypeCount && roomTypeCount[c.tag]}}）</span>
+                   <span class="calendar-tag-color" :style='{background:c.color}'>{{c.name}}</span><span>({{roomTypeCount && roomTypeCount[c.tag]}})</span>
                     <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
