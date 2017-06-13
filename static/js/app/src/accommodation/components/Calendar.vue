@@ -908,8 +908,10 @@
                 });
             },
             openCloseRoomFrom(status) {
-                this.roomdata = JSON.parse(JSON.stringify({ data: status }));
-                this.openForm(status.st - 1, 0);
+                this.roomdata = { data: { ...status } };
+                this.formNumber = status.st - 1;
+                this.outOrIn = 0;
+                this.dayOrderFormVisible = true;
             },
             openForm(formNumber, outOrIn) {
                 this.roomdata = JSON.parse(JSON.stringify(this.menuData));
