@@ -29,7 +29,7 @@
             <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
                 预定
             </div>
-            <div @click.stop="showOrder()" v-if='menuData && menuData.data.isArrival === 1'>
+            <div @click.stop="showOrder('reserve')" v-if='menuData && menuData.data.isArrival === 1'>
                 查看预定
             </div>
             <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
