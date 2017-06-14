@@ -352,7 +352,7 @@ export default {
             if (type === 'reserve') {
                 bus.$emit('onShowDetail', {
                     type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
-                    orderId: this.menuData.data.reserveOrderId || this.menuData.data.reserveRoomOrderId
+                    orderId: this.menuData.data.reserveRoomOrderId || this.menuData.data.reserveOrderId
                 });
             } else {
                 bus.$emit('onShowDetail', {
