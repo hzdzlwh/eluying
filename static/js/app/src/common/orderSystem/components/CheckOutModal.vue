@@ -17,7 +17,7 @@
                                             </span>
                                         <span class="room-icon"></span>
                                         <span>{{room.serialNum}}({{room.roomName}})</span>
-                                        <span class="room-state-icon" style="background: #82beff">住</span>
+                                        <span class="state-icon blue">已入住</span>
                                     </div>
                                     <div class="room-date">
                                         <label class="label-text">入住</label>

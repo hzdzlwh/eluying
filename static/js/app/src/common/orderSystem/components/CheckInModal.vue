@@ -18,7 +18,7 @@
                                             </span>
                                             <span class="room-icon"></span>
                                             <span>{{room.serialNum}}({{room.roomName}})</span>
-                                            <span class="room-state-icon" style="background: #ffba75">预</span>
+                                            <span class="state-icon yellow">已预订</span>
                                         </div>
                                         <div class="room-date">
                                             <label class="label-text">入住</label>

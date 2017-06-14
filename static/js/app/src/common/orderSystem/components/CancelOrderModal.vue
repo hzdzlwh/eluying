@@ -37,7 +37,7 @@
                                      
                                 </span>
                             </div>
-                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
+                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" class="dd-checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -45,9 +45,7 @@
                         <div>
                             <span class="footer-label">{{need > 0 ? '需退' : '需补'}}金额:<span class="order-price-num green">¥{{Math.abs(need.toFixed(2))}}</span></span>
                         <div class="dd-btn dd-btn-primary" @click="cancel">确认取消</div>
-
                         </div>
-                      
                     </div>
                 </div>
             </div>
