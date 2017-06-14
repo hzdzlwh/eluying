@@ -289,7 +289,7 @@ export default {
                 const subOrderIds = [];
                 if (this.roomBusinessInfo.roomOrderInfoList &&
                     this.type !== 'orderDetail' &&
-                    this.type !== 'cancel' && this.type !== 'resetOrder') {
+                    this.type !== 'cancel' && this.type !== 'resetOrder' && this.type !== 'collect') {
                     this.roomBusinessInfo.roomOrderInfoList.forEach(item => {
                         if (item.selected) {
                             subOrderIds.push(item.roomOrderId);
@@ -360,7 +360,6 @@ export default {
                         return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12)
                     })
                 }
-                window.console.log(this.payChannels)
                 // 退款没有支付宝和微信
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
                     this.payChannels = [{
@@ -398,6 +397,7 @@ export default {
             this.ReaminderParams = {}; // 余额参数,
             this.ramainShow = false;
             this.remainderDate = undefined;
+            // this.business = {};
         },
         getPayChannels(index) {
             // this.type === 'register' && this.business.cashierType === 'finish') 补录
@@ -480,7 +480,7 @@ export default {
                 });
         },
         getChannels(params) {
-            http.get('/user/getChannels', params)
+            return http.get('/user/getChannels', params)
                 .then(res => {
                     const channels = res.data.list;
                     channels.forEach(channel => {
