@@ -494,7 +494,7 @@ export default {
                 type: type,
                 roomId: this.menuData.data.roomId
             }).then(res => {
-                this.$emit('refreshView');
+                bus.$emit('refreshView');
             });
         }
 
