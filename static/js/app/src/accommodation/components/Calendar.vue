@@ -1028,10 +1028,14 @@
         },
         created() {
             this.bindDragRoom();
+            $(document).on('mousewheel', '.calendar-leftHeader', e => {
+                document.querySelector('.calendar-status-list').scrollTop += e.originalEvent.deltaY;
+            });
         },
         beforeDestroy() {
-            $(document).off('mousedown', '.calendar-glyph');
-            $(document).off('mouseover', '.calendar-glyph.draggable');
+            $(document).off('mousedown', '.calendar-glyph')
+                .off('mouseover', '.calendar-glyph.draggable')
+                .off('mousewheel', '.calendarLeftHeader');
         }
     };
 </script>
