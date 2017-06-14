@@ -300,15 +300,18 @@ export default {
             },
             checkOut() {
                 const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
-                    if (room.selected) {
-                        return {
-                            startDate: room.checkInDate,
-                            endDate: room.checkOutDate,
-                            idCardList: room.idCardList,
-                            roomId: room.roomId,
-                            roomOrderId: room.roomOrderId
-                        };
-                    }
+                    this.backroomBusinessInfo.roomOrderInfoList.map(item => {
+                        if (room.selected && room.roomId === item.roomId) {
+                            return {
+                                startDate: room.checkInDate,
+                                endDate: room.checkOutDate,
+                                idCardList: room.idCardList,
+                                roomId: room.roomId,
+                                roomOrderId: room.roomOrderId,
+                                fee: room.totalPrice = item.totalPrice
+                            };
+                        }
+                    });
                 });
                 const filterRooms = rooms.filter(room => {
                     return room;
@@ -329,9 +332,11 @@ export default {
                 if ((this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     const roomsFix = rooms;
                     roomsFix.forEach(function(element, index) {
+
                         if (element === null) {
                             roomsFix.splice(index, 1);
                         }
+                        // if (element.roomId === ) {}
                     });
                     // 清理rooms里为null的值，如果要改回原来的用就行了
                     http.get('/order/checkInOrCheckout', {
