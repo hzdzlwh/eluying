@@ -150,11 +150,7 @@
                 orderDetail: state => state.orderSystem.orderDetail
             }),
             operator() {
-                if (this.type === 'register') {
-                    return this.business.orderDetail.user;
-                } else {
-                    return this.orderDetail.operatorName;
-                }
+                return localStorage.getItem('userName');
             }
         },
         methods: {
