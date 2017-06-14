@@ -589,7 +589,7 @@ export default {
             //     invalid = true;
             // }
             if (invalid) {
-                const loss = !this.orderState || (this.type !== 'checkIn');
+                const loss = this.orderState;
                 modal.warn(`请选择${loss ? '收款' : '退款'}方式！`);
                 return false;
             }
