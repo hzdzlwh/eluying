@@ -83,6 +83,7 @@ export default {
                 totalFee: 0,
                 backroomBusinessInfo: undefined,
                 timeCount: true,
+                subOrderIds: []
             };
         },
         computed: {
@@ -236,19 +237,19 @@ export default {
             },
             changeTotalFeefn() {
                 this.tadayFeeType = undefined;
-                const subOrderIds = [];
+                // const subOrderIds = [];
                 if (!this.backroomBusinessInfo) {
                     this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
                 }
                 this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
-                            subOrderIds.push(room.roomOrderId);
+                            this.subOrderIds.push(room.roomOrderId);
                         }
                     }
                 );
                 http.get(' /room/getCustomCheckOutFee', {
-                        subOrderIds: JSON.stringify(subOrderIds),
+                        subOrderIds: JSON.stringify(this.subOrderIds),
                         totalFee: this.totalFee
                     })
                     .then(res => {
@@ -283,6 +284,7 @@ export default {
                 this.penalty = undefined;
                 this.totalFee = undefined;
                 this.tadayFeeType = 1;
+                this.subOrderIds = []
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
@@ -299,16 +301,20 @@ export default {
                 this.tadayFeeType = 1;
             },
             checkOut() {
-                const rooms = this.roomBusinessInfo.roomOrderInfoList.map(room => {
-                    if (room.selected) {
-                        return {
-                            startDate: room.checkInDate,
-                            endDate: room.checkOutDate,
-                            idCardList: room.idCardList,
-                            roomId: room.roomId,
-                            roomOrderId: room.roomOrderId
-                        };
-                    }
+                const rooms = [] 
+                this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                     this.backroomBusinessInfo.roomOrderInfoList.map(item => {
+                        if (room.selected && room.roomId === item.roomId) {
+                            rooms.push({
+                                startDate: room.checkInDate,
+                                endDate: room.checkOutDate,
+                                idCardList: room.idCardList,
+                                roomId: room.roomId,
+                                roomOrderId: room.roomOrderId,
+                                fee: room.totalPrice - item.totalPrice
+                            });
+                        }
+                    });
                 });
                 const filterRooms = rooms.filter(room => {
                     return room;
@@ -329,9 +335,11 @@ export default {
                 if ((this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
                     const roomsFix = rooms;
                     roomsFix.forEach(function(element, index) {
+
                         if (element === null) {
                             roomsFix.splice(index, 1);
                         }
+                        // if (element.roomId === ) {}
                     });
                     // 清理rooms里为null的值，如果要改回原来的用就行了
                     http.get('/order/checkInOrCheckout', {
@@ -352,7 +360,7 @@ export default {
                         room => {
                             this.backroomBusinessInfo.roomOrderInfoList.map(
                                 item => {
-                                    if (item.roomId === room.roomId) {
+                                    if (item.roomId === room.roomId && room.selected) {
                                         todayFeeMap.push({
                                             fee: (room.totalPrice - item.totalPrice).toFixed(2),
                                             subOrderId: item.roomOrderId
