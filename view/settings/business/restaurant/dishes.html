@@ -318,7 +318,7 @@
                         </thead>
                         <tbody>
                         <tr v-for="dishes in dishesTempList" track-by="categoryId">
-                            <td class="ellipsis">{{dishes.categoryName}}</td>
+                            <td class="ellipsis" style="max-width: 140px">{{dishes.categoryName}}</td>
                             <td>￥{{dishes.unitPrice}}</td>
                             <td>
                                 <span class="dishes-num-decrease" @click="decreaseDishesNum(dishes)">-</span><input type="text" v-model="dishes.amount" number @change="changeAmount(dishes)"><span class="dishes-num-increase" @click="increaseDishesNum(dishes)">+</span>

@@ -17,10 +17,13 @@ var topMenu = {
             price:'价格维护',
             other:'其他设置',
             otherDisplay: (option && option.showOther === false) ? 'none' : 'block',
+            consume: '其他消费',
+            consumeDisplay: (option && option.showConsume === false) ? 'none' : 'block',
             categoryPath:'/view/settings/business/category/'+ path +'.html',
             inventoryPath:'/view/settings/business/inventory/'+ path +'.html',
             pricePath:'/view/settings/business/price/'+ path +'.html',
-            otherPath: '/view/settings/business/other/'+ path +'.html'
+            otherPath: '/view/settings/business/other/'+ path +'.html',
+            consumePath: '/view/settings/business/consume/'+ path + '.html'
         };
         if (path === 'food') {
             data.categoryPath = '/view/settings/business/restaurant/dishes.html?' + query;

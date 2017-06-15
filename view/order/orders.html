@@ -67,6 +67,11 @@
                     </dd-option>
                 </dd-select>
             </div>
+            <div class="dd-select-customerChannel">
+                <dd-select v-model="customerChannel">
+                    <dd-option v-for="option in customerChannelList" :key="option.id" :value="option.id" :label="option.name"></dd-option>
+                </dd-select>
+            </div>
             <span class="dd-date-label">使用时间:</span>
             <div class="dd-start-date">
                 <dd-datepicker placeholder="开始时间" v-model="startDate" :disabled-date="disableStartDate" />
@@ -99,10 +104,11 @@
                         <th style="width: 120px">订单业态</th>
                         <th>消费金额¥</th>
                         <th>客户已付¥</th>
-                        <th>已收押金¥</th>
+                        <th>支付方式</th>
                         <th>客户姓名</th>
                         <th style="width: 104px;">手机号码</th>
-                        <th style="position: relative; cursor: pointer" @click="changeListByDate">
+                        <th>客源渠道</th>
+                        <th style="position: relative; cursor: pointer; width: 100px;" @click="changeListByDate">
                             使用时间
                             <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
                             <div class="dd-arrowDown-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showDownArrow)"></div>
@@ -139,9 +145,10 @@
                         </td>
                         <td v-text="item.orderTotalPrice"></td>
                         <td v-text="item.payAmount"></td>
-                        <td v-text="item.depositAmount"></td>
+                        <td v-text="item.payChannels" :title="item.payChannels"></td>
                         <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
                         <td v-text="item.customerPhone || '--'"></td>
+                        <td v-text="item.origin"></td>
                         <td v-text="item.date"></td>
                         <td v-text="getOrderStatusText(item)"></td>
                         <td v-text="!!item.operators && item.operators.length > 0
@@ -184,7 +191,7 @@
             <span class="orders-total">共计<b>{{ orderNum }}个订单</b></span>
             <span class="orders-total">消费金额<b>¥{{ orderTotalPrice }}</b></span>
             <span class="orders-total">客户已付<b>¥{{ totalPay }}</b></span>
-            <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span>
+            <!-- <span class="orders-total">已收押金<b>¥{{ depositAmount }}</b></span> -->
             <div class="dd-pagination-container">
                 <dd-pagination @currentchange="handlePageChange"
                                :visible-pager-count="5"

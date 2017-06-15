@@ -47,6 +47,7 @@
                         </div>
                     </div>
                     <div class="roomModals-footer">
+                     <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
                         <div>
                             <span class="footer-label">
                                 {{remainder.type === 0  ? '余额收款：' : '余额退款:'}}
@@ -61,9 +62,7 @@
                                     ¥{{ needPay}}
                                 </span>
                             </span>
-                        </div>
-                        <div>
-                        <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
+                             <div class="dd-btn dd-btn-primary" style="margin-right:20px;" @click="payMoney(0)" v-if='remainder.type === 0'>跳过</div>
                         <div class="dd-btn dd-btn-primary" @click="payMoney(1)">完成</div>
                         </div>
                     </div>
@@ -204,6 +203,10 @@ export default {
         // this.getData();
     },
     methods: {
+        returnPreStep() {
+            this.hideModal();
+            bus.$emit('back');
+        },
         reset() {
             this.fee = [];
         },

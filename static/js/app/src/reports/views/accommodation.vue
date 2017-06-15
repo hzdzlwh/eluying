@@ -15,6 +15,9 @@
                     <p>
                         <small><i>违约金：¥{{penalty}}</i></small>
                     </p>
+                    <p>
+                        <small><i>其他消费：¥{{extraConsume}}</i></small>
+                    </p>
                 </div>
                 <div>
                     <p>
@@ -69,7 +72,8 @@
                 roomNights: undefined,
                 consumeAmount: undefined,
                 columns: [],
-                dataSource: []
+                dataSource: [],
+                extraConsume: undefined
             };
         },
         components: {
@@ -140,13 +144,15 @@
                     this.roomFee = res.data.summary.roomFee;
                     this.consumeAmount = res.data.summary.consumeAmount;
                     this.roomNights = res.data.summary.roomNights;
+                    this.extraConsume = res.data.summary.extraConsume;
                     const penalty = {
                         name: '违约金',
                         dateValues: res.data.penaltys
                     };
                     res.data.roomFeeDetail.push(penalty);
+                    const concatData = res.data.roomFeeDetail.concat(res.data.extraConsumes);
                     const tableData = getTableData({
-                        list: res.data.roomFeeDetail,
+                        list: concatData,
                         firstTitle: '房间名称',
                         secondTitle: '合计',
                         foot: true

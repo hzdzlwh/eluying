@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div>
         <div class="content-item">
             <p class="content-item-title">
@@ -153,7 +153,11 @@ export default {
                         totalprice += Number(el.totalPrice);
                     }
                 });
-                if (o.isVip === undefined && c.isVip === undefined) {
+                if (o.vipDetail === undefined) {
+                    return false;
+                }
+                if ((!c.vipDetail || !o.vipDetail)) {
+                    this.discountFlag = true;
                     this.$emit('priceChange', totalprice);
                     return false;
                 }
@@ -172,8 +176,8 @@ export default {
                 });
                 // }
                 this.$emit('priceChange', totalprice);
-            },
-            deep: true
+            }
+            // deep: true
         }
     },
     created() {
@@ -237,7 +241,8 @@ export default {
                     filterEnters.forEach(item => {
                         const enter = { ...item
                         };
-                        item.nodeId ? enter.nodeId = item.nodeId : enter.nodeId = item.enterItems[0].entertainmentId;
+                        item.nodeId ? enter.nodeId = item.nodeId : enter.nodeId = (item.enterItems[0] ? item.enterItems[0].entertainmentId : item.entertainmentId);
+                        // 后段太乱了，又改了数据
                         enter.name = item.itemName;
                         enter.usedAmount = item.bookNum - item.enableAmount;
                         enter.unitTime = item.chargeUnitTime;
@@ -322,9 +327,9 @@ export default {
             if (item.id && item.date) {
                 const date = util.dateFormat(new Date(item.date));
                 const lastItem = this.lastEnterItem;
-                if (lastItem.id === item.id && lastItem.date === date) {
-                    return false;
-                }
+                // if (lastItem.id === item.id && lastItem.date === date) {
+                //     return false;
+                // }
                 this.lastEnterItem.id = item.id;
                 this.lastEnterItem.date = item.date;
                 http.get('/item/getInventory', {
@@ -410,6 +415,7 @@ export default {
                     inventory: undefined,
                     usedAmount: 0,
                     selfInventory: 0,
+                    // totalPrice: Number(data['price'] * this.getItemDiscountInfo(data.nodeId).discount).toFixed(2),
                     totalPrice: 0,
                     originPrice: 0,
                     isnew: true,

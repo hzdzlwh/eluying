@@ -4,7 +4,7 @@
 import Router from 'vue-router';
 import Calendar from './views/Calendar.vue';
 import Orders from './views/Orders.vue';
-
+import nowOrders from './views/nowOrders.vue';
 export const routes = [
     {
         path: '/',
@@ -17,6 +17,10 @@ export const routes = [
     {
         path: '/orders',
         component: Orders
+    },
+    {
+        path: '/nowOrders',
+        component: nowOrders
     }
 ];
 

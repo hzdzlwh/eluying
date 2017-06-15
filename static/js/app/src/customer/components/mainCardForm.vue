@@ -15,13 +15,13 @@
                             <div class="cardList-body-itemRight">
                                 <input type="text"
                                        class="dd-input normal-input"
-                                       maxlength="11"
+                                       maxlength="20"
                                        placeholder="请输入手机号"
                                        :disabled="editable"
                                        v-model="phone" />
-                                <span class="error-phone-tip" v-show="!phoneValid">
+                                <span class="error-phone-tip" v-show="phoneIsWrite && phone.length === 0">
                                     <span style="vertical-align: text-bottom">&uarr;</span>
-                                    {{phoneErrorTip}}
+                                    必填字段
                                 </span>
                                 <div>
                                     <span style="margin-right: 8px;">姓名</span>
@@ -131,7 +131,8 @@
                     cardFee: 0,
                     rechargeFee: 0,
                     freeFee: 0
-                }
+                },
+                phoneIsWrite: false
             };
         },
         created() {
@@ -210,13 +211,15 @@
                 this.phoneErrorTip = '格式有误';
             },
             createMainCard() {
-                this.checkPhone();
+                // this.checkPhone();
+                this.phoneIsWrite = true;
                 if (this.phone.length === 0) {
-                    this.phoneErrorTip = '必填字段';
-                }
-                if (!this.phoneValid) {
+                    // this.phoneErrorTip = '必填字段';
                     return false;
                 }
+                /* if (!this.phoneValid) {
+                    return false;
+                } */
                 const params = {
                     categoryId: this.selectedCard.categoryId,
                     name: this.name,
@@ -246,18 +249,21 @@
         },
         watch: {
             phone(newVal) {
-                if (newVal.length > 0) {
+                /* if (newVal.length > 0) {
                     this.phoneErrorTip = '格式有误';
-                }
-                if (newVal.length === 0) {
+                } */
+                /* if (newVal.length === 0) {
                     this.phoneValid = false;
                     this.phoneErrorTip = '必填字段';
-                }
-                if (newVal.length === 11) {
+                } */
+                /* if (newVal.length === 11) {
                     this.checkPhone();
                     if (this.phoneValid) {
                         this.getPhoneInfo();
                     }
+                } */
+                if (newVal.length !== 0) {
+                    this.getPhoneInfo();
                 }
             },
             payChannelId(newVal) {

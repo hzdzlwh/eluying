@@ -15,14 +15,11 @@
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
                                 <div class="userInfo-item">
-                                    <div class="userVip-list" v-show="vipListShow" @click.stop="()=>{}">
+                                    <div class="userVip-list" v-clickoutside="hideVipList" v-show="vipListShow" @click.stop="()=>{}">
                                         <p class="userVip-item" v-for="vip in vipList" @click="setVipInfo(vip)">
-                                            <span class="vip-level" v-if="vip.level">
-                                                [
-                                                <span class="vip-level-text">{{ vip.level }}</span>
-                                                ]
+                                            <span class="vip-level">
+                                                [<span class="vip-level-text">{{ vip.level }}</span>]
                                             </span>
-                                            <span class="vip-level" v-if="!vip.level"></span>
                                             <span class="vip-name">{{ vip.name }}</span>
                                             <span class="vip-phone">{{ vip.phone }}</span>
                                         </p>
@@ -36,7 +33,7 @@
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" maxlength="11" placeholder="11位手机号"
+                                    <input class="dd-input" type="text" id="phone" maxlength="20" placeholder="手机号"
                                            autocomplete="off"
                                            :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
@@ -145,6 +142,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
+                         <div @click="returnPreStep" v-if='hasBack' class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
@@ -283,6 +281,7 @@
         DdGroupOption,
         DdOption
     } from 'dd-vue-component';
+    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import http from '../../../http';
     import { ORDER_TYPE } from '../../../../ordersManage/constant';
     import modal from '../../../modal';
@@ -293,8 +292,12 @@
     import ShopEditor from './ShopEditor.vue';
     import CateEditor from './CateEditor.vue';
     import { getOrderId } from '../../utils/order';
+    import validate from '../../../validate';
     export default{
         name: 'OrderEditor',
+        directives: {
+            Clickoutside
+        },
         data() {
             return {
                 name: '',
@@ -322,7 +325,8 @@
                 ORDER_TYPE,
                 vipCardsAndLevel: [],
                 vipCardId: undefined,
-                vipCardInfo: {}
+                vipCardInfo: {},
+                hasBack: false
             };
         },
         props: {
@@ -359,7 +363,7 @@
             titleAndBtn() {
                 switch (this.checkState) {
                     case 'ing':
-                        return { title: '直接入住', btn: '入住并收银' };
+                        return { title: '直接入住', btn: '确认入住' };
                     case 'finish':
                         return { title: '补录', btn: '补录' };
                     case 'book':
@@ -419,6 +423,10 @@
         },
         created() {
             this.getData();
+            bus.$on('setBack', this.setBack);
+        },
+        beforeDestroy() {
+            bus.$off('setBack', this.setBack);
         },
         watch: {
             userOriginType(origin) {
@@ -433,7 +441,7 @@
                     return;
                 }
 
-                if (originType === -4 && this.phone.length === 11) {
+                if (originType === -4 && this.phone) {
                     this.getVipDiscount(this.phone, true);
                 }
 
@@ -455,12 +463,21 @@
                         id: -4,
                         tag: '会员折扣'
                     };
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: vip.discountList,
                         level: vip.name,
                         id: vip.vipId
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', '会员');
+                    this.$set(this.vipDiscountDetail, 'tag', '会员');*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: vip.discountList,
+                            level: vip.name,
+                            id: vip.vipId
+                        },
+                        tag: vip.name
+                    };
                 }
 
                 if (vipCardId > 0) {
@@ -473,18 +490,32 @@
                         tag: '会员卡折扣'
                     };
 
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: card.discountList
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', card.name);
+                    this.$set(this.vipDiscountDetail, 'tag', card.name);*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: card.discountList
+                        },
+                        tag: card.name
+                    };
                 }
 
                 if (vipCardId === 0) {
                     this.vipCardInfo = {};
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: []
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', '');
+                    this.$set(this.vipDiscountDetail, 'tag', '');*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: []
+                        },
+                        tag: ''
+                    };
                 }
             },
             phone(newVal) {
@@ -496,7 +527,7 @@
                     return false;
                 }
 
-                if (newVal.length === 11) {
+                if (newVal) {
                     this.checkPhone();
                 } else {
                     this.vipDiscountDetail = {};
@@ -541,8 +572,17 @@
         methods: {
             ...mapActions([
                 types.LOAD_SHOP_LIST,
-                types.LOAD_ENTER_LIST
+                types.LOAD_ENTER_LIST,
+                types.LOAD_OTHER_GOODS_LIST
             ]),
+            returnPreStep() {
+                this.hideModal();
+                bus.$emit('back');
+                // bus.$emit('onShowDetail');
+            },
+            setBack() {
+                this.hasBack = true;
+            },
             getRoomDiscount(discounts) {
                 if (!discounts) {
                     return 1;
@@ -551,7 +591,7 @@
                 return discount ? discount.discount : 1;
             },
             changeVipList(num) {
-                if (num === 2 && this.phone.length === 11) {
+                if (num === 2 && this.phone) {
                     this.getVipDiscount(this.phone, true);
                 }
                 const params = num === 1 ? { name: this.name } : { phone: this.phone };
@@ -575,8 +615,7 @@
                 }
             },
             checkPhone() {
-                const phoneReg = /^1[34578]\d{9}$/;
-                this.phoneValid = phoneReg.test(this.phone) || this.phone === '';
+                this.phoneValid = validate.phone.test(this.phone) || this.phone === '';
             },
             getVipDiscount(phone, setOrigin) {
                 if (phone === this.vipDiscountDetail.phone) {
@@ -588,8 +627,7 @@
                     : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        this.vipDiscountDetail = { ...res.data, phone: phone };
-                        this.vipDiscountDetail.tag = '会员';
+                        this.vipDiscountDetail = { ...res.data, phone: phone, tag: res.data.vipDetail && res.data.vipDetail.level };
                         if (this.vipDiscountDetail.isVip) {
                             if (setOrigin) {
                                 this.userOriginType = this.getOrigin(-4);
@@ -651,10 +689,12 @@
                 http.get('/contractCompany/getContractDiscount', params)
                     .then(res => {
                         const discountList = res.data;
-                        this.vipDiscountDetail = {};
-                        this.vipDiscountDetail.isVip = false;
-                        this.vipDiscountDetail.vipDetail = discountList;
-                        this.vipDiscountDetail.tag = '企业';
+                        this.vipDiscountDetail = {
+                            isVip: false,
+                            vipDetail: discountList,
+                            tag: '企业'
+                        };
+
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
                             discount: (this.getItemDiscountInfo(0, 0).discount * 10).toFixed(1),
@@ -698,6 +738,7 @@
                     });
                 this[types.LOAD_SHOP_LIST]();
                 this[types.LOAD_ENTER_LIST]();
+                this[types.LOAD_OTHER_GOODS_LIST]();
             },
             getOrigin(id, companyId) {
                 // -5企业，-4会员
@@ -706,6 +747,10 @@
                 } else {
                     return this.userSelfOrigins.find(i => id === i.id) || this.userGroupOrigins[1].origins.find(i => id === i.id);
                 }
+            },
+            hideVipList() {
+                this.vipListShow = false;
+                this.vipList = [];
             },
             refreshData() {
                 this.name = '';
@@ -723,6 +768,7 @@
                 this.foodPrice = 0;
                 this.vipCardId = undefined;
                 this.vipCardInfo = {};
+                this.hasBack = false;
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');
@@ -741,7 +787,8 @@
                 let durationValid = true;
                 let roomPersonValid = true;
 
-                if (this.checkState !== 'editOrder' || this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
+                this.checkPhone();
+                if (this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
                     if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
                         modal.warn('请输入联系人或手机号!');
                         return false;
@@ -830,7 +877,8 @@
                         sub: true,
                         roomOrderId: room.roomOrderId,
                         quickDiscountId: room.quickDiscountId,
-                        useDiscount: room.moreDiscount === 0 || !room.priceModified
+                        useDiscount: room.moreDiscount === 0 || !room.priceModified,
+                        extraItems: room.extraItems
                     };
                 });
             },
@@ -888,6 +936,7 @@
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: !room.priceModified,
+                    extraItems: JSON.stringify(room.extraItems),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)
@@ -1020,13 +1069,26 @@
                 http.post('/room/confirmOrder', params)
                     .then(res => {
                         this.hideModal();
-                        if (this.checkState === 'ing' || this.checkState === 'finish') {
-                            const business = {};
-                            business.businessJson = JSON.parse(JSON.stringify(params));
-                            business.businessJson.functionType = 1;
-                            business.businessJson.orderId = res.data.orderId;
-                            business.orderDetail = { ...res.data };
-                            business.cashierType = this.checkState;
+                        const business = {};
+                        business.businessJson = JSON.parse(JSON.stringify(params));
+                        business.businessJson.functionType = 1;
+                        business.businessJson.orderId = res.data.orderId;
+                        business.orderDetail = { ...res.data };
+                        business.cashierType = this.checkState;
+                        // if (this.checkState === 'ing') {
+                        //     http.post('/order/modifyRoomOrder', params)
+                        //     .then(res => {
+                        //         this.hideModal();
+                        //         bus.$emit('refreshView');
+                        //         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
+                        //     });
+                        //     bus.$emit('refreshView');
+                        //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
+                        // }
+                        if (this.checkState === 'ing') {
+                            bus.$emit('refreshView');
+                        }
+                        if (this.checkState === 'finish') {
                             bus.$emit('showCashier', { type: 'register', business: business });
                         } else {
                             bus.$emit('refreshView');

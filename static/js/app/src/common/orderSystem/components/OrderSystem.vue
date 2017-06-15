@@ -92,10 +92,13 @@
                 detailType: undefined,
                 detailId: undefined,
                 detailVisible: false,
-                roomCategory: [] // 订单编辑中使用
+                roomCategory: [], // 订单编辑中使用
+                bacnHandel: []
             };
         },
         created() {
+            bus.$on('changeBack', this.changeBack);
+            bus.$on('back', this.back);
             bus.$on('onClose', this.hideDetail);
             bus.$on('onShowDetail', this.showOrderDetail);
             bus.$on('editOrder', this.editOrder);
@@ -111,6 +114,8 @@
             document.addEventListener('click', this.handleOrderNumClick);
         },
         beforeDestroy: function() {
+            bus.$off('changeBack', this.changeBack);
+            bus.$off('back', this.back);
             bus.$off('onClose', this.hideDetail);
             bus.$off('onShowDetail', this.showOrderDetail);
             bus.$off('editOrder', this.editOrder);
@@ -126,6 +131,15 @@
         },
         methods: {
             ...mapMutations([types.SET_ORDER_DETAIL]),
+            changeBack(handel, that) {
+                this.bacnHandel.unshift(handel);
+                if (this.bacnHandel.length > 10) {
+                    this.bacnHandel.splice(10, 1);
+                }
+            },
+            back() {
+                this.bacnHandel.shift()();
+            },
             handleOrderNumClick(ev) {
                 const el = ev.target;
                 if (!el.classList.contains('js-order-num')) {
@@ -146,9 +160,13 @@
                     });
             },
             showOrderDetail(order) {
-                this.detailType = order.type;
-                this.detailId = order.orderId;
-                this.detailVisible = true;
+                if (order) {
+                    this.detailType = order.type;
+                    this.detailId = order.orderId;
+                    this.detailVisible = true;
+                } else {
+                    this.detailVisible = true;
+                }
             },
             hideDetail() {
                 this.detailId = undefined;

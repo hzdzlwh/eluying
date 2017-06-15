@@ -7,5 +7,10 @@
     ],
     "stage-0"
   ],
-  "plugins": ["transform-vue-jsx"]
+  "plugins": ["transform-vue-jsx",["component", [
+    {
+      "libraryName": "element-ui",
+      "styleLibraryName": "theme-default"
+    }
+  ]]]
 }

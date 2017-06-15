@@ -18,7 +18,7 @@
 </template>
 <style>
 </style>
-<script>
+<script type="text/jsx">
     import { DdTable } from 'dd-vue-component';
     export default{
         components: {

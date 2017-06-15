@@ -96,7 +96,7 @@ $(function() {
                 this.editor.command(null, 'insertHtml', '<img src="' + url + '" style="max-width:100%;"/>');
             },
             saveData() {
-                http.get('/directNet/editRemark4DirectNet', {
+                http.post('/directNet/editRemark4DirectNet', {
                     remark: this.content
                 })
                     .then(result => {
