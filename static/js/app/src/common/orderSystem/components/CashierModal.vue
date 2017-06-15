@@ -318,6 +318,8 @@ export default {
             }
             // 今日房费
             if (this.type === 'collect') {
+                params.isSettle = false;
+                // 收银的时候传false
                 this.remainderDate = undefined;
                 this.cashierShow();
                 return;

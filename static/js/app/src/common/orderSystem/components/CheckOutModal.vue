@@ -238,6 +238,7 @@ export default {
             changeTotalFeefn() {
                 this.tadayFeeType = undefined;
                 // const subOrderIds = [];
+                this.subOrderIds = [];
                 if (!this.backroomBusinessInfo) {
                     this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
                 }
