@@ -476,7 +476,7 @@
                             level: vip.name,
                             id: vip.vipId
                         },
-                        tag: '会员'
+                        tag: vip.name
                     };
                 }
 
@@ -627,7 +627,7 @@
                     : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        this.vipDiscountDetail = { ...res.data, phone: phone, tag: '会员' };
+                        this.vipDiscountDetail = { ...res.data, phone: phone };
                         if (this.vipDiscountDetail.isVip) {
                             if (setOrigin) {
                                 this.userOriginType = this.getOrigin(-4);
