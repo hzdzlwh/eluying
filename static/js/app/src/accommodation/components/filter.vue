@@ -42,7 +42,7 @@
                 <li v-for="c in categoriesList">
                 <label >
                     <span>{{c.name}}</span>
-                    <input name="room" type="checkbox" :value='c.select' @change="setSelect(c)" />
+                    <input name="room" class="dd-checkbox" type="checkbox" :value='c.select' @change="setSelect(c)" />
                     </label>
                 </li>
             </ul>
@@ -168,6 +168,7 @@
     display: inline-block;
     height: 14px;
     margin-right: 5px;
+    vertical-align: text-top;
 }
 .calendar-tag-color {
     display: inline-block;
