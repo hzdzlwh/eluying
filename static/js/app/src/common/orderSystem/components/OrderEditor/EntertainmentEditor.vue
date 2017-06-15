@@ -241,7 +241,8 @@ export default {
                     filterEnters.forEach(item => {
                         const enter = { ...item
                         };
-                        item.nodeId ? enter.nodeId = item.nodeId : enter.nodeId = item.enterItems[0].entertainmentId;
+                        item.nodeId ? enter.nodeId = item.nodeId : enter.nodeId = (item.enterItems[0] ? item.enterItems[0].entertainmentId : item.entertainmentId);
+                        // 后段太乱了，又改了数据
                         enter.name = item.itemName;
                         enter.usedAmount = item.bookNum - item.enableAmount;
                         enter.unitTime = item.chargeUnitTime;

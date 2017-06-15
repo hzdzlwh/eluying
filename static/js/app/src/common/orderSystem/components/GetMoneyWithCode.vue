@@ -175,7 +175,7 @@
                             const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                             bus.$emit('refreshView');
                             setTimeout(() => {
-                                bus.$emit('onShowDetail', orderId);
+                                bus.$emit('onShowDetail', { type: this.params.orderType, orderId: this.params.orderId });
                             }, 2500);
                         } else if (status === 1) {
                             modal.warn('收款失败');
@@ -198,7 +198,7 @@
                                             const orderId = this.type === 'register' ? this.business.orderDetail.relatedOrderId : this.orderDetail.orderId;
                                             bus.$emit('refreshView');
                                             setTimeout(() => {
-                                                bus.$emit('onShowDetail', orderId);
+                                                bus.$emit('onShowDetail', { type: this.params.orderType, orderId: this.params.orderId });
                                             }, 2500);
                                         } else if (status1 === 1) {
                                             modal.warn('收款失败');
