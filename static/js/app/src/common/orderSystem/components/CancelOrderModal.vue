@@ -155,7 +155,7 @@
 
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
-                if (this.need - Number(totalPenalty) === 0) {
+                if (this.need === 0) {
                     http.get('/order/cancel', business)
                         .then(res => {
                             modal.success('取消成功');

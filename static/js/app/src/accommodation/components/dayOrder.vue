@@ -30,10 +30,10 @@
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" class="taday-calendar-status-action" :class='{ctxBottom: ctxStatus === "buttom"}' @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
             <div @click.stop="check('book')" v-if='menuData && !menuData.data.isArrival && (menuData.data.roomState === 0 || menuData.data.roomState === 12)'>
-                预定
+                预订
             </div>
             <div @click.stop="showOrder('reserve')" v-if='menuData && menuData.data.isArrival === 1'>
-                查看预定
+                查看预订
             </div>
             <div @click.stop="showOrder()" v-if='menuData && (menuData.data.roomState === 11 || menuData.data.roomState === 12)'>
                 查看在住
