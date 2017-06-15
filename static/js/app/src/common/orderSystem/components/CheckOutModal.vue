@@ -354,7 +354,9 @@ export default {
                             bus.$emit('showOrder', this.orderDetail.orderId);
                         });
                 } else {
-                    business.penalty = Number(this.penalty);
+                    if (this.penalty) {
+                        business.penalty = Number(this.penalty);
+                    }
                     business.functionType = 1;
                     const todayFeeMap = [];
                     this.roomBusinessInfo.roomOrderInfoList.map(
@@ -379,10 +381,10 @@ export default {
                         business
                     });
 
-                    bus.$emit('showCashier', {
-                        type: 'checkOut',
-                        business
-                    });
+                    // bus.$emit('showCashier', {
+                    //     type: 'checkOut',
+                    //     business
+                    // });
                     bus.$emit('changeBack', this.show);
                 }
             }

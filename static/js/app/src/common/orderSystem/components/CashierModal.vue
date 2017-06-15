@@ -590,7 +590,7 @@ export default {
                 });
             }
             if (numvaild) {
-                modal.warn('请选择正确的金额');
+                modal.warn('请输入正确的金额');
                 return false;
             }
             // if (this.deposit && !this.depositPayChannel) {
