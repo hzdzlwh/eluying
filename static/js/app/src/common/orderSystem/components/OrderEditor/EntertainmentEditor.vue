@@ -156,7 +156,7 @@ export default {
                 if (o.vipDetail === undefined) {
                     return false;
                 }
-                if ((!c.vipDetail && !o.vipDetail)) {
+                if ((!c.vipDetail || !o.vipDetail)) {
                     this.discountFlag = true;
                     this.$emit('priceChange', totalprice);
                     return false;
