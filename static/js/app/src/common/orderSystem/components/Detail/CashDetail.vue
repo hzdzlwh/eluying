@@ -6,7 +6,7 @@
                     收银明细
                     <button type="button" class="close" data-dismiss="modal" @click="close"><span>&times;</span></button>
                 </div>
-                <div style="padding: 20px 24px;height: 480px">
+                <div style="padding: 20px 24px;height: 480px;overflow: auto">
                     <dd-table :columns="columns" :dataSource="dataSource"></dd-table>
                 </div>
                 <div class="roomModals-footer">
@@ -103,7 +103,7 @@
                             this.dataSource = res.data.items;
                             this.num = res.data.totalCount;
                             this.totalPrice = res.data.totalAmount;
-                            this.pages = Math.ceil(res.data.num / 10);
+                            this.pages = Math.ceil(this.num / 10);
                         }
                     });
             },

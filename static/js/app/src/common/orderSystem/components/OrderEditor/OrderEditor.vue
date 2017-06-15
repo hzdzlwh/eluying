@@ -912,6 +912,7 @@
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: !room.priceModified,
+                    extraItems: JSON.stringify(room.extraItems),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)

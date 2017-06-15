@@ -36,7 +36,7 @@
                                 <div>
                                     <span class="personsDetail-rightText">性别</span>
                                     <div style="width: 74px; display: inline-block">
-                                        <dd-select v-model="genderType" :disabled="!editAble">
+                                        <dd-select placeholder="" v-model="genderType" :disabled="!editAble">
                                             <dd-option v-for="gender in genderList" :value="gender.id" :label="gender.name" :key="gender.id"></dd-option>
                                         </dd-select>
                                     </div>
@@ -308,7 +308,7 @@
                                 this.selectedPerson = res.data.checkInUser;
                                 if (checkInUser) {
                                     this.name = checkInUser.name;
-                                    this.genderType = checkInUser.sex;
+                                    this.genderType = checkInUser.sex === null ? undefined : checkInUser.sex;
                                     this.idCardType = checkInUser.idCardType;
                                     this.idCardNum = checkInUser.idCardNum;
                                     this.birthday = checkInUser.birthday;
@@ -361,18 +361,16 @@
                 if (this.editNewPerson) {
                     http.get('/order/addRoomCheckInUser', params)
                         .then(res => {
-                            modal.alert('保存成功！');
+                            modal.success('保存成功！');
                             this.editNewPerson = false;
                             const userId = res.data.checkInUserId;
-                            console.log(res);
                             this.getUsersAndInfo(userId);
                         });
                 } else {
                     params.checkInUserId = this.selectedPerson.id;
                     http.get('/order/updateRoomCheckInUsers', params)
                         .then(res => {
-                            modal.alert('保存成功！');
-                            console.log(res);
+                            modal.success('保存成功！');
                             const userId = res.data.checkInUserId;
                             this.getUsersAndInfo(userId);
                         });
