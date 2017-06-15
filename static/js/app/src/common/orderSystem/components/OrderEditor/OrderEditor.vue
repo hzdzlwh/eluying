@@ -627,7 +627,7 @@
                     : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        this.vipDiscountDetail = { ...res.data, phone: phone };
+                        this.vipDiscountDetail = { ...res.data, phone: phone, tag: res.data.vipDetail && res.data.vipDetail.level };
                         if (this.vipDiscountDetail.isVip) {
                             if (setOrigin) {
                                 this.userOriginType = this.getOrigin(-4);
