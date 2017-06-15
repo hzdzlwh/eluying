@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="margin-bottom: 20px">
+        <div style="margin: 20px 0;">
             <p><i>订单金额拆分到每日订单，统计每日产生的消费金额，</i></p>
             <p><i>包括已预订、进行中、已结束、已取消的订单</i></p>
         </div>
@@ -54,9 +54,9 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import http from '../../../common/http';
-    import { setPie, setLine } from '../../utils/chartHelper';
-    import { getTableData } from '../../utils/tableHelper';
+    import http from '../../../../common/http';
+    import { setPie, setLine } from '../../../utils/chartHelper';
+    import { getTableData } from '../../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
     export default{
         props: {

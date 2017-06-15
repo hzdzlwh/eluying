@@ -101,7 +101,9 @@
                             r.st.map((s, index) => {
                                 s.date = util.diffDate(this.startDate, index);
                                 s.dateStr = util.dateFormat(s.date);
-
+                                s.isDirty = r.isDirty;
+                                s.roomId = r.i;
+                                s.i = r.i;
                                 // 计算库存，不把left放在computed中是为了优化性能
                                 // leftMap的结构为{ 房型id: [某天的库存] }
                                 if (!this.leftMap[r.ti]) {
@@ -112,7 +114,7 @@
                                     this.leftMap[r.ti][index] = 0;
                                 }
 
-                                if (s.s === -1) {
+                                if (s.s === -1 && s.st === 0) {
                                     this.leftMap[r.ti][index] ++; // eslint-disable-line
                                 }
                             });

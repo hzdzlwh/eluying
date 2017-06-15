@@ -76,7 +76,6 @@
                                        @input="changeRoomFee(item)"
                                        @blur="setFirstDayFee(item)"
                                        @focus="setFirstDayFee(item)"
-                                       style="width: 80px"
                                        @click.stop="showPriceList(index)"/>
                             </p>
                             <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList && item.datePriceList.length > 1" v-clickoutside="hidePriceList">
@@ -131,8 +130,45 @@
                         :personsObj="{id: index, persons: item.idCardList}"
                         @addPerson="addPerson"
                         @deletePerson="deletePerson"/>
+                <!-- 其他消费开始 -->
+                <div class="extra-items" v-if="checkState === 'finish' || checkState === 'ing' || item.state === 1 || item.state === 8">
+                    <div class="extra-items-title">
+                        <span class="extra-item-icon"></span>
+                        <span>其他消费</span>
+                        <span @click="addExtraItem(item)" class="increase-container" style="margin-left: 16px"><span class="increase-icon"></span>添加项目</span>
+                    </div>
+                    <div class="extra-items-content">
+                        <div v-for="extra in item.extraItems">
+                            <div v-if="extra.date" class="extra-items-date">{{extra.date}}</div>
+                            <div>
+                                <div v-for="(good, index) in extra.itemList" class="extra-items-row">
+                                    <span class="extra-items-name">{{good.goodsName}}</span>
+                                    <span class="extra-items-num">数量
+                                    <counter :onNumChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
+                                    </span>
+                                        <span class="extra-items-total">小计
+                                        <p class="fee-container">
+                                            <span class="fee-symbol">¥</span>
+                                            <input class="dd-input fee-input" v-model.number="good.subtotal"/>
+                                        </p>
+                                    </span>
+                                    <span class="delete-icon" @click="deleteExtra(extra, index)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 其他消费结束 -->
                 <span v-show="false">{{totalPrice}}</span>
             </div>
+        </div>
+        <div v-if="otherGoodsList.length > 0">
+            <selectGoods
+                    :show="goodsSelectModalShow"
+                    :goodsDate="otherGoodsList"
+                    title="选择其他消费"
+                    @selectGoodsDate="setOtherGoodsItems"
+                    @Modalclose="closeShopSelectModal"/>
         </div>
     </div>
 </template>
@@ -155,13 +191,16 @@
         }
         .more-discount-select {
             position: absolute;
-            top: -18px;
+            top: 10px;
             left: -55px;
             width: 0;
             height: 0;
         }
         .dd-select {
             width: 120px;
+        }
+        .dd-select-menu {
+            top: 0;
         }
         .dd-select-input {
             display: none;
@@ -180,6 +219,9 @@
     import util from '../../../util';
     import bus from '../../../eventBus';
     import Vue from 'vue';
+    import { mapState } from 'vuex';
+    import counter from '../../../components/counter.vue';
+    import selectGoods from './SelectGoods.vue';
     export default{
         data() {
             return {
@@ -188,7 +230,8 @@
                 forceChangePrice: false, // 更改过渠道后，不保留原始价格，请求价格都需要传这个
                 lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
                 discountPlans: [],
-                timestamp: 0
+                goodsSelectModalShow: false,
+                currentSelectOtherRoom: undefined
             };
         },
         created() {
@@ -209,7 +252,9 @@
             DdSelect,
             DdOption,
             DdDatepicker,
-            DdGroupOption
+            DdGroupOption,
+            counter,
+            selectGoods
         },
         directives: {
             Clickoutside
@@ -309,10 +354,18 @@
             }
         },
         computed: {
+            ...mapState({ otherGoodsList: state => state.orderSystem.otherGoodsList }),
             totalPrice() {
-                const price = this.rooms.reduce((sum, room) => {
+                let price = this.rooms.reduce((sum, room) => {
                     return sum + (room.price || 0);
                 }, 0);
+                this.rooms.map(r => {
+                    r.extraItems.map(e => {
+                        e.itemList.map(g => {
+                            price = price + Number(g.subtotal);
+                        });
+                    });
+                });
                 this.$emit('priceChange', price);
                 return price;
             },
@@ -461,7 +514,8 @@
                                 return item.fee === 0 ? 1 / item.datePriceList.length : dat.dateFee / item.fee;
                             }),
                             showDiscount: item.showDiscount,
-                            moreDiscount: getMoreDiscount(item)
+                            moreDiscount: getMoreDiscount(item),
+                            extraItems: item.extraItems
                         };
                     });
                 }
@@ -491,8 +545,9 @@
                         priceScale: order.datePriceList.map(dat => {
                             return roomInfo.totalPrice === 0 ? 1 / order.datePriceList.length : dat.dateFee / roomInfo.totalPrice;
                         }),
-                        showDiscount: order.roomInfo.showDiscount,
-                        moreDiscount: getMoreDiscount(order)
+                        showDiscount: roomInfo.showDiscount,
+                        moreDiscount: getMoreDiscount(order),
+                        extraItems: order.extraItems
                     };
 
                     this.rooms = [room];
@@ -506,7 +561,7 @@
                 this.lastRoomsToken = {};
                 this.rooms = rooms.map(room => {
                     room.endDate = util.dateFormat(util.diffDate(room.endDate, 1));
-
+                    room.startDate = util.dateFormat(room.startDate);
                     return {
                         categoryType: room.categoryType,
                         roomType: room.roomId,
@@ -521,7 +576,8 @@
                         showTip: false,
                         quickDiscountId: '',
                         showDiscount: undefined,
-                        moreDiscount: 0
+                        moreDiscount: 0,
+                        extraItems: []
                     };
                 });
             },
@@ -553,7 +609,8 @@
                         roomOrderId: undefined,
                         quickDiscountId: '',
                         priceScale: [],
-                        showDiscount: undefined
+                        showDiscount: undefined,
+                        extraItems: []
                     };
                 } else {
                     // 新增房间，房型时间同上一间
@@ -739,27 +796,29 @@
                 http.get('/room/getRoomStatusAndPriceList', params)
                     .then(res => {
                         // 嘻嘻
-                        if (res.data.timestamp > this.timestamp) {
-                            this.timestamp = res.data.timestamp;
-                            res.data.list.map((item, index) => {
-                                const currentRoom = rooms[index];
-                                currentRoom.datePriceList = item.datePriceList.map(i => {
-                                    return {
-                                        ...i,
-                                        showInput: false
-                                    };
-                                });
-                                currentRoom.showTip = !item.available;
-                                currentRoom.price = item.totalFee;
-                                // 每日房价分配比例
-                                currentRoom.priceScale = item.datePriceList.map(i => {
-                                    return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
-                                });
-                                currentRoom.showDiscount = item.showDiscount;
-                                currentRoom.priceModified = false;
-                                currentRoom.originPrice = item.originTotalFee;
+                        res.data.list.map((item, index) => {
+                            const currentRoom = rooms[index];
+                            if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
+                                return;
+                            }
+
+                            currentRoom.datePriceList = item.datePriceList.map(i => {
+                                return {
+                                    ...i,
+                                    showInput: false
+                                };
                             });
-                        }
+                            currentRoom.showTip = !item.available;
+                            currentRoom.price = item.totalFee;
+                            // 每日房价分配比例
+                            currentRoom.priceScale = item.datePriceList.map(i => {
+                                return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
+                            });
+                            currentRoom.showDiscount = item.showDiscount;
+                            currentRoom.priceModified = false;
+                            currentRoom.originPrice = item.originTotalFee;
+                            currentRoom.timestamp = res.data.timestamp;
+                        });
                     });
             },
             changeRoomFee(room) {
@@ -767,6 +826,7 @@
                 room.quickDiscountId = '';
                 this.setDayFee(room);
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
+                room.moreDiscount = 0;
             },
             // 设置每日房价
             setDayFee(room) {
@@ -849,6 +909,57 @@
             moreDiscountChange(room) {
                 this.forceChangePrice = true;
                 this.modifyRooms([room]);
+            },
+            addExtraItem(room) {
+                if (this.otherGoodsList.length <= 0) {
+                    modal.warn('请到"网络设置－业务设置"中添加其他消费！');
+                    return false;
+                }
+
+                this.currentSelectOtherRoom = room;
+                this.goodsSelectModalShow = true;
+            },
+            setOtherGoodsItems(data) {
+                const goodsList = data;
+                let newItems = this.currentSelectOtherRoom.extraItems.find(i => !i.logId);
+                if (!newItems) {
+                    newItems = { itemList: [] };
+                    this.currentSelectOtherRoom.extraItems.push(newItems);
+                }
+                goodsList.map(i => {
+                    let flag = false;
+                    newItems.itemList.map(n => {
+                        if (n.goodsId === i.id) {
+                            n.amount = n.amount + i.num;
+                            n.subtotal = Number((n.amount * i.p).toFixed(2));
+                            flag = true;
+                        }
+                    });
+                    if (!flag) {
+                        newItems.itemList.push({
+                            amount: i.num,
+                            subtotal: Number((i.num * i.p).toFixed(2)),
+                            price: i.p,
+                            goodsName: i.n,
+                            goodsId: i.id
+                        });
+                    }
+                });
+            },
+            handleExtraNumChange(good, num) {
+                if (good.price === null) {
+                    modal.warn('该商品已删除');
+                    return false;
+                }
+                good.amount = num;
+                good.subtotal = Number((num * good.price).toFixed(2));
+            },
+            // 关闭商超选择弹窗
+            closeShopSelectModal() {
+                this.goodsSelectModalShow = false;
+            },
+            deleteExtra(extra, index) {
+                this.$delete(extra.itemList, index);
             }
         }
     };

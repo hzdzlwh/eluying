@@ -24,7 +24,7 @@
                         <div class="cardList-body-itemRight repairModal-body-itemRight">
                             <input type="text"
                                    class="dd-input normal-input"
-                                   maxlength="11"
+                                   maxlength="20"
                                    placeholder="请输入手机号"
                                    v-model="phone" />
                             <span class="error-phone-tip" v-show="!phoneValid">
@@ -133,13 +133,15 @@
                 this.phoneErrorTip = '格式有误';
             },
             giveOther() {
-                this.checkPhone();
+                // this.checkPhone();
                 if (this.phone.length === 0) {
                     this.phoneErrorTip = '必填字段';
-                }
-                if (!this.phoneValid) {
+                    this.phoneValid = false;
                     return false;
                 }
+                /* if (!this.phoneValid) {
+                    return false;
+                } */
                 const params = {
                     name: this.name,
                     payChannel: this.payChannel,
@@ -180,18 +182,21 @@
                 });
             },
             phone(newVal) {
-                if (newVal.length > 0) {
+                /* if (newVal.length > 0) {
                     this.phoneErrorTip = '格式有误';
-                }
+                } */
                 if (newVal.length === 0) {
                     this.phoneValid = false;
                     this.phoneErrorTip = '必填字段';
                 }
-                if (newVal.length === 11) {
+                /* if (newVal.length === 11) {
                     this.checkPhone();
                     if (this.phoneValid) {
                         this.getPhoneInfo();
                     }
+                } */
+                if (newVal.length !== 0) {
+                    this.getPhoneInfo();
                 }
             }
         },

@@ -40,10 +40,10 @@
                                         <span class="vipInfo-item-label">
                                             <img v-if="!vip.vipUserId" src="//static.dingdandao.com/start.png">手机号
                                         </span>
-                                        <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="11" class="dd-input short-input">
-                                        <input v-if="vip.vipUserId" :value="vip.phone" disabled type="text" maxlength="11" class="dd-input short-input">
+                                        <input v-if="!vip.vipUserId" v-model="vip.phone" type="text" maxlength="20" class="dd-input short-input">
+                                        <input v-if="vip.vipUserId" :value="vip.phone" disabled type="text" maxlength="20" class="dd-input short-input">
                                         <span v-if="!vip.vipUserId && hasSubmit && !vip.phone" class="error-tips">必填字段</span>
-                                        <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span>
+                                        <!-- <span v-if="(vip.modify || !vip.vipUserId) && hasSubmit && vip.phone && vip.phone.length > 0 && vip.phone.length !== 11" class="error-tips">格式错误</span> -->
                                     </div>
                                 </div>
                                 <div class="vipInfo-item-wrap">
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="vipInfo-item-wrap" v-show="vipProps.isAutoUpgrade === 0 || vipProps.newAdd">
+                                <div class="vipInfo-item-wrap" v-show="vipProps.newAdd || vipProps.isAutoUpgrade === 0">
                                     <div class="vipInfo-item vip-level" style="margin-bottom:0">
                                         <span class="vipInfo-item-label">会员等级</span>
                                         <dd-select placeholder="-会员等级－" v-model="vip.vipLevelId">
@@ -380,8 +380,7 @@
                 }
                 if (!vip.phone ||
                     !vip.name ||
-                    vip.name.length < 2 ||
-                    vip.phone.length !== 11) {
+                    vip.name.length < 2) {
                     return false;
                 }
 

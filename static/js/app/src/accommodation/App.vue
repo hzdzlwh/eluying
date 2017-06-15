@@ -2,9 +2,12 @@
     <div class="acc-container">
         <div class="acc-header">
             <span class="acc-header-link">
-                <router-link to="/calendar">前台录入</router-link>
+                <router-link to="/calendar">日历房态</router-link>
             </span>
             <span class="acc-header-link">
+               <router-link to="/nowOrders">单日房态</router-link>
+            </span>
+             <span class="acc-header-link">
                <router-link to="/orders">住宿订单</router-link>
             </span>
         </div>

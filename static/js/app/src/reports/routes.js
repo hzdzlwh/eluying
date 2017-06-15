@@ -2,7 +2,8 @@
  * Created by lingchenxuan on 2017/1/9.
  */
 import Router from 'vue-router';
-import operation from './views/overview/operation.vue';
+import operation from './views/overview/operation/operation.vue';
+import dailyReport from './views/overview/operation/dailyReport.vue';
 import container from './views/container.vue';
 import channel from './views/overview/channel.vue';
 import sale from './views/overview/sale.vue';
@@ -18,6 +19,7 @@ import dealDetail from './views/membership/dealDetail.vue';
 import payStatistics from './views/membership/payStatistics.vue';
 import flowChannels from './views/overview/flow/channels.vue';
 import flowRecords from './views/overview/flow/records.vue';
+import receivable from './views/overview/flow/receivable.vue';
 import flowPrepiad from './views/overview/flow/prepaid.vue';
 import insurance from './views/insurance.vue';
 import auth from '../common/auth';
@@ -41,10 +43,27 @@ export const routes = [
         children: [
             {
                 path: '/overview/operation',
-                component: operation,
+                component: childContainer,
                 meta: {
                     name: '运营'
-                }
+                },
+                redirect: '/overview/operation/operation',
+                children: [
+                    {
+                        path: '/overview/operation/operation',
+                        component: operation,
+                        meta: {
+                            name: '统计'
+                        }
+                    },
+                    {
+                        path: '/overview/operation/dailyReport',
+                        component: dailyReport,
+                        meta: {
+                            name: '日报'
+                        }
+                    }
+                ]
             },
             {
                 path: '/overview/flow',
@@ -73,6 +92,13 @@ export const routes = [
                         component: flowPrepiad,
                         meta: {
                             name: '预收账款'
+                        }
+                    },
+                    {
+                        path: '/overview/flow/receivable',
+                        component: receivable,
+                        meta: {
+                            name: '应收账款'
                         }
                     }
                 ]

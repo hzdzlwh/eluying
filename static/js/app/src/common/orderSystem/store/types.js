@@ -8,6 +8,8 @@ export default {
     'LOAD_ROOM_BUSINESS_INFO': 'loadRoomBusinessInfo',
     'SET_SHOP_LIST': 'setShopList',
     'LOAD_SHOP_LIST': 'loadShopList',
+    'LOAD_OTHER_GOODS_LIST': 'loadOtherGoodsList',
+    'SET_OTHER_GOODS_LIST': 'setOtherGoodsList',
     'SET_ENTER_LIST': 'setEnterList',
     'LOAD_ENTER_LIST': 'loadEnterList',
     'GET_ROOM_ORDER_DETAIL': 'getRoomOrderDetail',

@@ -25,7 +25,7 @@
                     <p>
                         <span class="addCus">
                                     <img src="//static.dingdandao.com/start.png">联系号码：</span>
-                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="11">
+                        <input v-model='formdata.contactPhone' class="dd-input" type="text" maxlength="20">
                     </p>
                     <p>
                         <span class="addCus">
@@ -283,7 +283,7 @@ export default {
             if (this.formdata.contractNum) {
                 const re = /^[0-9a-zA-Z]*$/g;
                 if (!re.test(this.formdata.contractNum)) {
-                    modal.warn('请输入正确的协议编号');
+                    modal.warn('请输入正确的企业编号');
                     return;
                 }
             }
@@ -311,10 +311,11 @@ export default {
                 delete data.id;
             }
             http.get('/contractCompany/addEditContractCompany', data).then(res => {
-                modal.success('添加成功');
                 this.$emit('add');
                 if (this.formdata.id) {
                     modal.success('修改成功');
+                } else {
+                    modal.success('添加成功');
                 }
                 this.close();
             });

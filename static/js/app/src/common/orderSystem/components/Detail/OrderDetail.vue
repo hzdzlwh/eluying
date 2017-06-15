@@ -1,6 +1,11 @@
 <template>
     <order-container :type="type" :order="order" :id="id">
-        <AccommodationOrder :order="order" v-if="(order.rooms && order.rooms.length > 0) || order.roomInfo" :showMoadl='!order.roomInfo' />
+        <AccommodationOrder
+                :order="order"
+                :id="id"
+                :type="type"
+                v-if="(order.rooms && order.rooms.length > 0) || order.roomInfo"
+                :showMoadl='!order.roomInfo' />
         <CateOrder :order="order" v-if="showCateOrderComponent" />
         <EntertainmentOrder :order="order" v-if="(order.playItems && order.playItems.length > 0) || order.enterItems" />
         <ShopOrder :order="order" v-if="showShopOrderComponent" />

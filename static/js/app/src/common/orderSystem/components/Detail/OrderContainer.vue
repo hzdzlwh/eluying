@@ -66,6 +66,11 @@
                         <div class="content-item" v-if="this.order.type !== ORDER_TYPE.RETAIL">
                             <p class="content-item-title"><span>备注信息</span></p>
                             <div>{{ order.remark || '无' }}</div>
+                            <div v-if="order.imgUrls">
+                                <a class="remark-img" v-for="pic in order.imgUrls" :href="pic.raw" data-gallery>
+                                    <img :src="pic.thumb">
+                                </a>
+                            </div>
                         </div>
                         <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
@@ -110,7 +115,7 @@
                                             <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
-                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已付金额'
+                                            <span class="money-type">{{findTypePrice(order.payments, 14) >= 0 ? '已收金额'
                                                 : '已退金额'}}</span>
                                             <span class="money-num">¥{{Math.abs(
                                                 findTypePrice(order.payments, 14))}}</span>
@@ -128,10 +133,10 @@
                                             <span class="money-num">¥{{Math.abs(
                                                 findTypePrice(order.payments, 15))}}</span>
                                         </p>
-                                        <p class="money-item money-type-border">
+                                       <!--  <p class="money-item money-type-border">
                                             <span class="money-type">需退押金</span>
                                             <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
-                                        </p>
+                                        </p> -->
                                         <p class="money-item item-indent money-sub-item"
                                            v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(
@@ -141,6 +146,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px" @click="openCashDetail">收银明细</span>
                             </div>
                             <div class="footer-price">
                                 <span class="order-price-text">
@@ -156,7 +162,7 @@
                                     </span>
                                 </span>
                                 <span class="order-price-text">
-                                    {{findTypePrice(order.payments, 14) >= 0 ? '已付金额:' : '已退金额:'}}
+                                    {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
                                     <span class="order-price-num grey">
                                         ¥{{Math.abs(findTypePrice(order.payments, 14))}}
                                     </span>
@@ -167,12 +173,12 @@
                                         ¥{{Math.abs(findTypePrice(order.payments, 15))}}
                                     </span>
                                 </span>
-                                <span class="order-price-text">
+                               <!--  <span class="order-price-text">
                                     需退押金:
                                     <span class="order-price-num green">
                                         ¥{{findTypePrice(order.payments, 16)}}
                                     </span>
-                                </span>
+                                </span> -->
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
@@ -206,9 +212,18 @@
                                 </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
                                      v-if="orderState === 8">重新结账</div>
-                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier"
-                                     v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8">
-                                    结账
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('collect')"
+                                     v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && (orderState === 0 || orderState === 1 || orderState === 8))">
+                                    收银
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
+                                     v-if="order.isSettle === false && order.orderType === -1 && (type === ORDER_TYPE.COMBINATION)">
+                                    结算
+                                </div>
+                                <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
+                                     v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8 && (type !== ORDER_TYPE.ACCOMMODATION && type !== ORDER_TYPE.COMBINATION)">
+                                    收银
+                                    <!-- 娱乐商超 -->
                                 </div>
                             </div>
                         </div>
@@ -217,10 +232,31 @@
             </div>
         </div>
         <Insurance :order="order"/>
+        <CashDetail :show="cashDetailShow" :onClose="closeCashDetail" :order="order"/>
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <ol class="indicator"></ol>
+        </div>
     </div>
 </template>
 <style lang="scss">
     @import "~dd-common-css/src/variables";
+
+    .blueimp-gallery {
+        background: rgba(0,0,0,.8)!important;
+    }
+    .remark-img {
+        display: inline-block;
+        margin-right: 8px;
+        margin-top: 11px;
+        img {
+            height: 72px;
+        }
+    }
 
     #orderDetail {
         .label-text {
@@ -428,6 +464,13 @@
             background-size: contain;
             margin-right: 25px;
         }
+        .extra-item-icon {
+            width: 15px;
+            height: 18px;
+            background: url("../../../../../../../image/modal/room_modal_extra.png");
+            background-size: contain;
+            margin-right: 25px;
+        }
         .food-icon {
             width: 14px;
             height: 18px;
@@ -628,7 +671,7 @@
 
     .roomModals-body {
         width: 100%;
-        max-height: 485px;
+        max-height: 534px;
         overflow-y: auto;
         overflow-x: hidden;
         label {
@@ -799,6 +842,7 @@
         }
         .fee-input {
             padding-left: 16px;
+            width: 90px;
         }
         .discount-info {
             display: inline-flex;
@@ -1004,6 +1048,34 @@
             font-weight: bold;
         }
     }
+    .extra-items {
+        margin-top: 19px;
+    }
+    .extra-items-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .extra-items-content {
+        padding-left: 40px;
+    }
+    .extra-items-date {
+        color: #999;
+        font-size: 12px;
+        margin-bottom: 10px
+    }
+    .extra-items-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .extra-items-name {
+        width: 224px;
+        margin-right: 24px;
+    }
+    .extra-items-num, .extra-items-total {
+        margin-right: 24px;
+    }
 </style>
 <script>
     import bus from '../../../eventBus';
@@ -1015,11 +1087,16 @@
     import Insurance from './Insurance.vue';
     import types from '../../store/types';
     import modal from '../../../modal';
+    require('blueimp-gallery/js/jquery.blueimp-gallery.min');
+    import 'blueimp-gallery/css/blueimp-gallery.css';
+    import CashDetail from './CashDetail.vue';
+
     export default{
         data() {
             return {
                 readOnly: true,
                 ORDER_STATUS_ICON,
+                cashDetailShow: false,
                 ORDER_TYPE,
                 reseturl: {
                     '-1': 'resettleCombinedOrder',
@@ -1031,7 +1108,8 @@
             };
         },
         components: {
-            Insurance
+            Insurance,
+            CashDetail
         },
         props: {
             type: Number,
@@ -1200,27 +1278,41 @@
                         type: ORDER_TYPE.COMBINATION
                     });
             },
+            show() {
+                bus.$emit('onShowDetail');
+            },
             dateFormat(date) {
                 return util.timeFormat(date);
             },
             openInsurance() {
                 $('#insuranceDialog').modal('show');
             },
+            openCashDetail() {
+                this.cashDetailShow = true;
+            },
+            closeCashDetail() {
+                this.cashDetailShow = false;
+            },
             editOrder() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
+                bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
             },
             cancelOrder() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
                 bus.$emit('showCancelOrder');
             },
-            showCashier() {
+            showCashier(type) {
                 this.hideModal();
-                bus.$emit('showCashier', { type: 'orderDetail' });
+                bus.$emit('changeBack', this.show);
+                bus.$emit('showCashier', { type: type });
             },
             reGetMoney() {
                 this.hideModal();
+                bus.$emit('changeBack', this.show);
                 bus.$emit('showCashier', { type: 'resetOrder' });
             },
             checkInOrCheckOut(type) {
@@ -1232,6 +1324,8 @@
                                 return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
                             });
                             if (haveToday) {
+                                // this.hideModal();
+                                // $('#orderDetail').modal('hidden');
                                 $('#checkIn').modal({ backdrop: 'static' });
                             } else {
                                 modal.warn('未到办理入住的时间，无法入住！');
@@ -1241,6 +1335,7 @@
                             // 退房
                             $('#checkOut').modal({ backdrop: 'static' });
                         }
+                        bus.$emit('changeBack', this.show);
                         this.hideModal();
                     });
             },
