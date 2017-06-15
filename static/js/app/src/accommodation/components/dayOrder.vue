@@ -10,6 +10,9 @@
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
                         <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="hoverShow($event, it)" @mouseleave="it.hover = false">
+                        <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
+                            {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
+                        </div>    
                             <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName'>
@@ -101,7 +104,13 @@
         }
     }
 }
-
+.taday-status-mark{
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    opacity: 0.2;
+    font-size: 30px;
+}
 .taday-calendar-picker {
     position: relative;
     top: 48px;
