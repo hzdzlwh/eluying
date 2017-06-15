@@ -146,7 +146,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
-            line-height: 14px;
+            line-height: 20px;
             text-align: left;
             font-weight: bold;
         }
@@ -157,8 +157,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 12px;
-            line-height: 12px;
+            line-height: 20px;
             text-align: left;
+            height: 20px;
         }
         .taday-status-item-tag {
             display: inline;
