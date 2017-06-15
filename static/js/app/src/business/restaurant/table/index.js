@@ -199,11 +199,11 @@ $(function() {
             areaselect: []
         },
         watch: {
-            selectType(val) {
-                if (val) {
-                    this.selectDes = val[0].kindId;
-                }
-            }
+            // selectType(val) {
+            //     if (val) {
+            //         this.selectDes = val[0].kindId;
+            //     }
+            // }
         },
         methods: {
             createBoard: function() {
