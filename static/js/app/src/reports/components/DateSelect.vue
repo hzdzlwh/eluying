@@ -23,6 +23,7 @@
     import types from '../store/types';
     export default{
         data() {
+            const today = new Date();
             return {
                 DATE_TYPE: [
                     {
@@ -54,15 +55,15 @@
                         label: '自定义'
                     }
                 ],
-                type: undefined,
-                startDate: undefined,
-                endDate: undefined,
+                type: 0,
+                startDate: util.dateFormat(util.diffDate(today, -7)),
+                endDate: util.dateFormat(util.diffDate(today, -1)),
                 dateDisabled: true,
                 flag: undefined
             };
         },
         created() {
-            this.type = 0;
+            // this.type = 0;
         },
         watch: {
             type(val) {
