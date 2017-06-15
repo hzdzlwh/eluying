@@ -94,9 +94,11 @@
                 } else {
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
-                const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
-                if (!flag) {
-                    this.value += this.step;
+                if (this.onNumChange) {
+                    const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
+                    if (!flag) {
+                        this.value += this.step;
+                    }
                 }
             },
             increaseNum() {
@@ -112,9 +114,11 @@
                 } else {
                     this.$emit('numChange', this.type, this.id, this.value / this.step, this.orderId);
                 }
-                const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
-                if (!flag) {
-                    this.value -= this.step;
+                if (this.onNumChange) {
+                    const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
+                    if (!flag) {
+                        this.value -= this.step;
+                    }
                 }
             }
         },

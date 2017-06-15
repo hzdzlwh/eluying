@@ -201,7 +201,9 @@ $(function() {
         watch: {
             selectType(val) {
                 if (val) {
-                    this.selectDes = val[0].kindId;
+                    if (!this.selectDes) {
+                        this.selectDes = val[0].kindId;
+                    }
                 }
             }
         },

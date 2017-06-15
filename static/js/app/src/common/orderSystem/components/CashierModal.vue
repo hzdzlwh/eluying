@@ -311,6 +311,7 @@ export default {
         getRemainder() {
             let params = this.getpParms();
             if (this.business.PenaltyFee && this.business.penalty) {
+                params.balancePenaltyBtn = true;
                 params.penalty = this.business.penalty;
             }
             if (this.business.todayFeeMap) {
@@ -428,9 +429,9 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
-            if (this.business.PenaltyFee) {
-                params.penalty = this.business.PenaltyFee;
-            }
+            // if (this.business.PenaltyFee) {
+            params.penalty = this.business.penalty;
+            // }
             if (this.business.todayFeeMap) {
                 params.todayFeeMap = this.business.todayFeeMap;
             }
@@ -576,16 +577,21 @@ export default {
         // },
         payMoney() {
             let invalid = false;
+            let numvaild = false;
             if (this.payments.length > 0) {
                 this.payments.forEach(payment => {
                     if (payment.fee < 0) {
-                        modal.warn('请选择正确的金额');
-                        return false;
+                        numvaild = true;
+                        
                     }
                     if (!payment.payChannelId) {
                         invalid = true;
                     }
                 });
+            }
+            if (numvaild) {
+                modal.warn('请输入正确的金额');
+                return false;
             }
             // if (this.deposit && !this.depositPayChannel) {
             //     invalid = true;

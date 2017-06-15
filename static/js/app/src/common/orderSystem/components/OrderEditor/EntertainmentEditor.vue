@@ -156,15 +156,15 @@ export default {
                 if (o.vipDetail === undefined) {
                     return false;
                 }
-                if ((!c.vipDetail && !o.vipDetail)) {
+                if ((!c.vipDetail || !o.vipDetail)) {
                     this.discountFlag = true;
                     this.$emit('priceChange', totalprice);
                     return false;
                 }
-                // if (this.enterItems.length && !this.discountFlag) {
-                //     this.discountFlag = true;
-                //     return;
-                // }
+                if (this.enterItems.length && !this.discountFlag) {
+                    this.discountFlag = true;
+                    return;
+                }
                 // 防止初始化的时候更改价格，显示原价
                 // if (c.vipDetail.vipId !== o.vipDetail.vipId) {
                 this.enterItems.forEach((el) => {

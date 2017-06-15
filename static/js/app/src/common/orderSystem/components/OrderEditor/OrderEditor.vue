@@ -463,12 +463,21 @@
                         id: -4,
                         tag: '会员折扣'
                     };
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: vip.discountList,
                         level: vip.name,
                         id: vip.vipId
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', '会员');
+                    this.$set(this.vipDiscountDetail, 'tag', '会员');*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: vip.discountList,
+                            level: vip.name,
+                            id: vip.vipId
+                        },
+                        tag: vip.name
+                    };
                 }
 
                 if (vipCardId > 0) {
@@ -481,18 +490,32 @@
                         tag: '会员卡折扣'
                     };
 
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: card.discountList
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', card.name);
+                    this.$set(this.vipDiscountDetail, 'tag', card.name);*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: card.discountList
+                        },
+                        tag: card.name
+                    };
                 }
 
                 if (vipCardId === 0) {
                     this.vipCardInfo = {};
-                    this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    /* this.$set(this.vipDiscountDetail, 'vipDetail', {
                         discountList: []
                     });
-                    this.$set(this.vipDiscountDetail, 'tag', '');
+                    this.$set(this.vipDiscountDetail, 'tag', '');*/
+                    this.vipDiscountDetail = {
+                        ...this.vipDiscountDetail,
+                        vipDetail: {
+                            discountList: []
+                        },
+                        tag: ''
+                    };
                 }
             },
             phone(newVal) {
@@ -604,8 +627,7 @@
                     : { phone: phone };
                 http.get('/vipUser/getVipDiscount', params)
                     .then(res => {
-                        this.vipDiscountDetail = { ...res.data, phone: phone };
-                        this.vipDiscountDetail.tag = '会员';
+                        this.vipDiscountDetail = { ...res.data, phone: phone, tag: res.data.vipDetail && res.data.vipDetail.level };
                         if (this.vipDiscountDetail.isVip) {
                             if (setOrigin) {
                                 this.userOriginType = this.getOrigin(-4);
@@ -667,10 +689,12 @@
                 http.get('/contractCompany/getContractDiscount', params)
                     .then(res => {
                         const discountList = res.data;
-                        this.vipDiscountDetail = {};
-                        this.vipDiscountDetail.isVip = false;
-                        this.vipDiscountDetail.vipDetail = discountList;
-                        this.vipDiscountDetail.tag = '企业';
+                        this.vipDiscountDetail = {
+                            isVip: false,
+                            vipDetail: discountList,
+                            tag: '企业'
+                        };
+
                         this.vipCardInfo = {
                             name: this.userOriginType.name,
                             discount: (this.getItemDiscountInfo(0, 0).discount * 10).toFixed(1),
