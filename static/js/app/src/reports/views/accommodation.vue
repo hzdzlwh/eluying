@@ -98,8 +98,7 @@
             }
         },
         watch: {
-            date(a, b) {
-                console.log(a, b);
+            date() {
                 this.getRoomStatistics();
             }
         },
