@@ -311,6 +311,7 @@ export default {
         getRemainder() {
             let params = this.getpParms();
             if (this.business.PenaltyFee && this.business.penalty) {
+                params.balancePenaltyBtn = true;
                 params.penalty = this.business.penalty;
             }
             if (this.business.todayFeeMap) {
