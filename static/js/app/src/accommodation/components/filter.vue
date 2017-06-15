@@ -1,5 +1,5 @@
 <template>
-    <div style="position: relative">
+    <div style="position: relative;border-right: 1px solid #ccc;">
         <div class="calendar-room-filter-box" @click="roomTypeVisible = !roomTypeVisible">
             <div class="calendar-icon calendar-icon-roomtype"></div>
             <span style="cursor: pointer">状态</span>

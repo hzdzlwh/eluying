@@ -426,8 +426,8 @@ export default {
         },
         getOrderPayment() {
             const params = this.getpParms();
-            if (this.business.penalty) {
-                params.penalty = this.business.penalty;
+            if (this.business.PenaltyFee) {
+                params.penalty = this.business.PenaltyFee;
             }
             if (this.business.todayFeeMap) {
                 params.todayFeeMap = this.business.todayFeeMap;
@@ -676,6 +676,9 @@ export default {
                     payments: JSON.stringify(payments),
                     businessJson: JSON.stringify(businessJson)
                 };
+                if (this.business.PenaltyFee) {
+                    params.balancePenaltyBtn = true;
+                }
             } else if (this.type === 'resetOrder') { // 反结账
                 params = {
                     orderId: getOrderId(this.orderDetail),
