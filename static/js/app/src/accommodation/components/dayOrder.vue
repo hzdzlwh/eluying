@@ -10,14 +10,13 @@
                     <div class="taday-status-title">{{item.zoneName}}</div>
                     <div class="taday-status-content">
                         <div class="taday-status-item" v-for='(it, itemIndex) in item.roomList' @contextmenu.prevent="$refs.ctxMenu.open($event, {data: it})" @click='setSelect(it, contentIndex, itemIndex)' :style="{background:colorList[it.roomState]}" @mouseenter="hoverShow($event, it)" @mouseleave="it.hover = false">
-                            <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
-                                {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
-                            </div>
+                        <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
+                            {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
+                        </div>    
                             <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
-                            <div class="taday-status-item-title" :title='it.roomName + it.roomNum'>
-                                <div class="taday-status-item-title2">{{it.roomName}}</div>
-                                <div class="taday-status-item-title3">{{it.roomNum}}</div>
+                            <div class="taday-status-item-title" :title='it.roomName'>
+                                {{it.roomName}}
                             </div>
                             <div class="taday-status-item-name" :title='it.customerName'>{{it.customerName}}</div>
                             <div style='display:inline-block'>
@@ -105,15 +104,13 @@
         }
     }
 }
-
-.taday-status-mark {
+.taday-status-mark{
     position: absolute;
     top: 40px;
     left: 60px;
     opacity: 0.2;
     font-size: 30px;
 }
-
 .taday-calendar-picker {
     position: relative;
     top: 48px;
@@ -131,7 +128,7 @@
     .taday-status-item {
         padding: 8px;
         border-radius: 4px;
-        width: 130px;
+        width: 124px;
         height: 82px;
         color: #ffffff;
         display: inline-block;
@@ -143,9 +140,8 @@
                 position: absolute;
             }
         }
-        .taday-status-item-title2 {
-            display: inline-block;
-            width: 70px;
+        .taday-status-item-title {
+            display: block;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -153,19 +149,6 @@
             line-height: 20px;
             text-align: left;
             font-weight: bold;
-            float: left;
-        }
-        .taday-status-item-title3 {
-            display: inline-block;
-            font-size: 14px;
-            line-height: 20px;
-            text-align: right;
-            font-weight: bold;
-            width: 40px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            float:right;
         }
         .taday-status-item-name {
             width: 100%;
@@ -198,8 +181,8 @@
 .taday-status-item-select {
     background: url(/static/image/modal/roomSelect.png);
     background-color: rgba(255, 255, 255, 0.4);
-    width: 100%;
-    height: 100%;
+    width:100%;
+    height:100%;
     margin: -8px;
     position: absolute;
     background-repeat: no-repeat;
@@ -366,8 +349,8 @@ export default {
                         id: this.selectRooms[item].roomId,
                         date: new Date(this.date),
                         cId: this.selectRooms[item].typeId,
-                        cName: this.selectRooms[item].roomName,
-                        rName: this.selectRooms[item].roomNum,
+                        cName: this.selectRooms[item].roomName.split(' ')[0],
+                        rName: this.selectRooms[item].roomName.split(' ')[1],
                         selected: true
                     });
                 }
@@ -450,8 +433,8 @@ export default {
                 id: this.menuData.data.roomId,
                 date: new Date(this.date),
                 cId: this.menuData.data.typeId,
-                cName: this.menuData.data.roomName,
-                rName: this.menuData.data.roomNum,
+                cName: this.menuData.data.roomName.split(' ')[0],
+                rName: this.menuData.data.roomName.split(' ')[1],
                 selected: true
             });
             bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
