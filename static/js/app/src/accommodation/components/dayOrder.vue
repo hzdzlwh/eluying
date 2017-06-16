@@ -365,8 +365,8 @@ export default {
                         id: this.selectRooms[item].roomId,
                         date: new Date(this.date),
                         cId: this.selectRooms[item].typeId,
-                        cName: this.selectRooms[item].roomName.split(' ')[0],
-                        rName: this.selectRooms[item].roomName.split(' ')[1],
+                        cName: this.selectRooms[item].roomName,
+                        rName: this.selectRooms[item].roomNum,
                         selected: true
                     });
                 }
@@ -449,8 +449,8 @@ export default {
                 id: this.menuData.data.roomId,
                 date: new Date(this.date),
                 cId: this.menuData.data.typeId,
-                cName: this.menuData.data.roomName.split(' ')[0],
-                rName: this.menuData.data.roomName.split(' ')[1],
+                cName: this.menuData.data.roomName,
+                rName: this.menuData.data.roomNum,
                 selected: true
             });
             bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
