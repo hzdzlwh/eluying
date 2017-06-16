@@ -159,7 +159,7 @@
             display: inline-block;
             font-size: 14px;
             line-height: 20px;
-            text-align: left;
+            text-align: right;
             font-weight: bold;
             width: 40px;
             white-space: nowrap;
