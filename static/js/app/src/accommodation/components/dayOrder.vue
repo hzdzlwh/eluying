@@ -15,9 +15,9 @@
                             </div>
                             <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
-                            <div class="taday-status-item-title" :title='it.roomName'>
+                            <div class="taday-status-item-title" :title='it.roomName + it.roomNum'>
                                 <div class="taday-status-item-title2">{{it.roomName}}</div>
-                                <div class="taday-status-item-title3">{{it.roomName}}</div>
+                                <div class="taday-status-item-title3">{{it.roomNum}}</div>
                             </div>
                             <div class="taday-status-item-name" :title='it.customerName'>{{it.customerName}}</div>
                             <div style='display:inline-block'>
