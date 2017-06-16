@@ -165,6 +165,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            float:right;
         }
         .taday-status-item-name {
             width: 100%;
