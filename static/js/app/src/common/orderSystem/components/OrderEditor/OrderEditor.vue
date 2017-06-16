@@ -788,7 +788,7 @@
                 let roomPersonValid = true;
 
                 this.checkPhone();
-                if (this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
+                if (this.checkState !== 'editOrder' || this.order.type === ORDER_TYPE.COMBINATION || this.order.type === ORDER_TYPE.ACCOMMODATION) {
                     if (!(this.phone || this.name) || (!this.name && !this.phoneValid) || !this.phoneValid) {
                         modal.warn('请输入联系人或手机号!');
                         return false;
