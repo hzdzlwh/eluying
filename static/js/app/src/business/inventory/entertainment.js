@@ -226,7 +226,7 @@ var events = {
             inventory: inventory
         }).then(function(result) {
             if (util.errorHandler(result)) {
-                var totalDom = $('.mainClass[data=' + INVENTORY.selectedEntertain.id + ']')
+/*                var totalDom = $('.mainClass[data=' + INVENTORY.selectedEntertain.id + ']')
                     .find('.entertainDayItem[date=' + date + ']').find('p:last-child');
                 var remainDom = $('.mainClass[data=' + INVENTORY.selectedEntertain.id + ']')
                     .find('.entertainDayItem[date=' + date + ']').find('p:first-child');
@@ -234,7 +234,8 @@ var events = {
                 var remain = parseInt(remainDom.html());
                 var newRemain = inventory - total + remain;
                 totalDom.html(inventory);
-                remainDom.html(newRemain);
+                remainDom.html(newRemain);*/
+                INVENTORY.update();
                 $('#editInven').modal('hide');
             }
         });
