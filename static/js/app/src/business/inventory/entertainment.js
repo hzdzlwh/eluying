@@ -237,6 +237,7 @@ var events = {
                 remainDom.html(newRemain);*/
                 INVENTORY.update();
                 $('#editInven').modal('hide');
+                $('.operateItem').hide();
             }
         });
     },
