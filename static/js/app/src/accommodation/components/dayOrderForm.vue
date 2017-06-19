@@ -20,12 +20,12 @@
                     <p>
                         <span class="addCus">
                                     原因</span>
-                        <input v-model='formdata.reason'  placeholder="请输入原因" class="dd-input" type="text" maxlength="50">
+                        <input v-model='formdata.reason' placeholder="请输入原因" class="dd-input" type="text" maxlength="50">
                     </p>
                     <p>
                         <span class="addCus">
                                     备注</span>
-                        <textarea  v-model='formdata.remark' class='dd-input' placeholder="请输入备注信息" maxlength="500" style="height:100px; resize:none;width:350px"></textarea>
+                        <textarea v-model='formdata.remark' class='dd-input' placeholder="请输入备注信息" maxlength="500" style="height:100px; resize:none;width:350px"></textarea>
                     </p>
                 </div>
                 <div class="roomModals-footer">
@@ -233,11 +233,17 @@ export default {
         fetchData() {
             this.flag = false;
             if (this.room) {
-                http.get('/room/getStopInfo', {
+                const parms = {
                     date: this.room.dateStr,
                     roomId: this.room.roomId,
                     type: this.formNumber + 1
-                }).then(res => {
+                };
+                if (this.room.logId) {
+                    parms.logId = this.room.logId;
+                }
+                http.get('/room/getStopInfo',
+                    parms
+                ).then(res => {
                     this.flag = true;
                     this.formdata = res.data;
                     // 防止重复提交

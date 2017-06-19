@@ -114,7 +114,7 @@
                     <table class="vip-card-table">
                         <thead>
                         <tr>
-                            <th style="width: 20%">名称</th>
+                            <th style="width: 20%">类型</th>
                             <th style="width: 20%">卡号</th>
                             <th style="width: 20%">余额</th>
                             <th style="width: 20%">办理日期</th>

@@ -295,9 +295,11 @@ export default {
     },
     created() {
         bus.$on('refreshView', this.refreshView);
+        bus.$on('tadayClick', this.tadayClick);
     },
     beforeDestroy() {
         bus.$off('refreshView', this.refreshView);
+        bus.$on('tadayClick', this.tadayClick);
     },
     computed: {
         finalRoomStatus() {
@@ -325,6 +327,9 @@ export default {
                     this.showOrder();
                     break;
                 case 12:
+                    this.showOrder();
+                    break;
+                case 13:
                     this.showOrder();
                     break;
                 case 2:

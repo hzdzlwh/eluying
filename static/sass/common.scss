@@ -6,6 +6,24 @@
 //         transform: translate(-50%,-50%);
 //         transform-origin: inherit!important;
 // }
+html {
+  overflow-y: scroll;
+}
+
+:root {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:root body {
+  position: absolute;
+}
+
+body {
+  width: 100vw;
+  // overflow: hidden;
+}
+// 防止滚动出现时影响居中
 .DatePickerAbsorct,.el-picker-panel {
     // position: relative!important;
     z-index: 3001!important;
