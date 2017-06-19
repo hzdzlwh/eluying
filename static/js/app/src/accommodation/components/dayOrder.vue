@@ -13,7 +13,7 @@
                             <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
                                 {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
                             </div>
-                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
+                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.eventList'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName + it.roomNum'>
                                 <div class="taday-status-item-title2">{{it.roomName}}</div>
@@ -80,9 +80,15 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
+        <div class="datFixMenu"><span @click="check('team')">团购订单</span><span>快速下单</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.datFixMenu{
+    position:fixed;
+    bottom:100px;
+    right:100px;
+}
 .taday-calendar {
     display: flex;
     flex-flow: row;
@@ -451,15 +457,19 @@ export default {
         },
         check(type) {
             const temp = [];
-            temp.push({
-                id: this.menuData.data.roomId,
-                date: new Date(this.date),
-                cId: this.menuData.data.typeId,
-                cName: this.menuData.data.roomName,
-                rName: this.menuData.data.roomNum,
-                selected: true
-            });
-            bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
+            if (type === 'team') {
+                bus.$emit('changeCheckState', type, []);
+            } else {
+                temp.push({
+                    id: this.menuData.data.roomId,
+                    date: new Date(this.date),
+                    cId: this.menuData.data.typeId,
+                    cName: this.menuData.data.roomName,
+                    rName: this.menuData.data.roomNum,
+                    selected: true
+                });
+                bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
+            }
         },
         getRoomsWithDate(data) {
             const temp = [];

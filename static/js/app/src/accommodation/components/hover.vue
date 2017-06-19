@@ -2,7 +2,7 @@
     <div class="calendar-glyph-detail ing down " :class='{hoverRight : overflow}'>
         <div class="glyph-arrow-up"></div>
         <!-- <div class="glyph-arrow-down"></div> -->
-        <div v-for='(item, index) in mockDate' class="glyph-detail"  @click.stop='tadayClick(item)'>
+        <div v-for='(item, index) in date.eventList' class="glyph-detail"  @click.stop='tadayClick(item)'>
             <div class="glyph-detail-content" :class="{'glyph-detail-box': index !== mockDate.length - 1}">
                 <div class="glyph-detail-name" v-if='item.checkType'>
                     <div>{{item.customerName}} ({{item.customerPhone}})</div>
@@ -158,8 +158,8 @@ export default {
                 checkInDate: it.startDate,
                 roomState: it.type,
                 isArrival: false,
-                roomName: '1223',
-                roomId: '12345'
+                roomName: this.date.roomName,
+                roomId: this.date.roomId
             };
             if (it.type === 1 || it.type === 2 || it.type === 3) {
                 date.logId = it.eventId;

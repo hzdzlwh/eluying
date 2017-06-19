@@ -97,7 +97,20 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)"
+                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'team'"
+                                    :order="order"
+                                    :registerRooms="registerRooms"
+                                    :categories="categories"
+                                    :vipDiscountDetail="vipDiscountDetail"
+                                    :checkState="checkState"
+                                    :userOriginType="userOriginType"
+                                    :vipId="vipId"
+                                    :vipCardId="vipCardId"
+                                    :vipCardInfo="vipCardInfo"
+                                    @change="handleRoomChange"
+                                    @priceChange="handleRoomPriceChange"/>
+
+                        <RoomEditorTeam v-else
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"
@@ -286,6 +299,7 @@
     import { ORDER_TYPE } from '../../../../ordersManage/constant';
     import modal from '../../../modal';
     import types from '../../store/types';
+    import RoomEditorTeam from './RoomEditorTeam.vue';
     import RoomEditor from './RoomEditor.vue';
     import util from '../../../util';
     import EnterEditor from './EntertainmentEditor.vue';
@@ -356,7 +370,8 @@
             RoomEditor,
             EnterEditor,
             ShopEditor,
-            CateEditor
+            CateEditor,
+            RoomEditorTeam
         },
         computed: {
             ...mapState({ order: state => state.orderSystem.orderDetail }),
