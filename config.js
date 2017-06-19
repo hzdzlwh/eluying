@@ -12,6 +12,7 @@ module.exports = {
         'price/roomEntry': './static/js/app/src/business/price/roomEntry.js',
         'price/foodETEntry': './static/js/app/src/business/price/foodETEntry.js',
         'inventory/room': './static/js/app/src/business/inventory/room.js',
+        'inventory/entertainment': './static/js/app/src/business/inventory/entertainment.js',
         'category/roomEntry': './static/js/app/src/business/category/room/roomEntry.js',
         'category/foodEntry': './static/js/app/src/business/category/food/foodEntry.js',
         'category/ETEntry': './static/js/app/src/business/category/entertainment/ETEntry.js',
