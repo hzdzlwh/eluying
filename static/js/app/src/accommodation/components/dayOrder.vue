@@ -1,8 +1,10 @@
 <template>
     <div class="taday-calendar">
         <div class="taday-calendar-picker">
-            <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
-            <roomFilter :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander' :roomTypeCount='roomTypeCount'></roomFilter>
+            <dayOrderLeft>
+                <DateSelect slot="timePicker" :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
+                <roomFilter slot="filterCondition" v-if="$route.path === '/nowOrders/houseMap'" :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander' :roomTypeCount='roomTypeCount'></roomFilter>
+            </dayOrderLeft>
         </div>
         <div class="taday-calendar-body">
             <div class="taday-calendar-status-list">
@@ -256,6 +258,7 @@ import {
     colorList
 } from '../colorList';
 import contextmenu from '../../common/components/contextmenu';
+import dayOrderLeft from './dayOrderLeft';
 import {
     mapActions
 } from 'vuex';
@@ -297,7 +300,8 @@ export default {
         roomFilter,
         dayOrderForm,
         contextmenu,
-        hover
+        hover,
+        dayOrderLeft
     },
     created() {
         bus.$on('refreshView', this.refreshView);

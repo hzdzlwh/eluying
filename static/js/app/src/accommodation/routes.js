@@ -5,6 +5,9 @@ import Router from 'vue-router';
 import Calendar from './views/Calendar.vue';
 import Orders from './views/Orders.vue';
 import nowOrders from './views/nowOrders.vue';
+import dailyContainer from './views/dailyContainer';
+import preManage from './views/preManage';
+import houseTable from './views/houseTable';
 export const routes = [
     {
         path: '/',
@@ -20,7 +23,22 @@ export const routes = [
     },
     {
         path: '/nowOrders',
-        component: nowOrders
+        redirect: '/nowOrders/houseMap',
+        component: dailyContainer,
+        children: [
+            {
+                path: '/nowOrders/houseMap',
+                component: nowOrders
+            },
+            {
+                path: '/nowOrders/preManage',
+                component: preManage
+            },
+            {
+                path: '/nowOrders/houseTable',
+                component: houseTable
+            }
+        ]
     }
 ];
 
