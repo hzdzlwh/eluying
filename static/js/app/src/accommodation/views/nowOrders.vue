@@ -95,7 +95,7 @@ export default {
             this.selectedEntries = enter;
         },
         getRoomAndStatus() {
-            let parms;
+            let parms; // eslint-disable-line
             if (this.parms) {
                 parms = Object.assign({
                     date: this.startDateStr
