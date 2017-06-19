@@ -1,7 +1,7 @@
 .priceGrid {
     margin-top: 30px;
     width: 745px;
-    border-top:4px solid #4A90E2;
+    border-top:4px solid #178ce6;
     float: left;
     table {
         border-collapse: collapse;
@@ -23,14 +23,14 @@
             cursor: pointer;
         }
         .mainClass .selected {
-            outline: 1px #4A90E2 solid;
+            outline: 1px #178ce6 solid;
         }
         td:nth-child(even) {
             background-color: #F9F9F9;
         }
         tr.subPrice {
             height: auto;
-            background-color: #4a90e2;
+            background-color: #178ce6;
             color: #FFF;
             td {
                 height: auto;
@@ -71,9 +71,9 @@
         width: 69px;
         height: 31px;
         border-radius: 5px;
-        border: 1px #4a90e2 solid;
+        border: 1px #178ce6 solid;
         background-color: #fff;
-        color: #4a90e2;
+        color: #178ce6;
         font-size: 12px;
         margin: 0 13px;
         cursor: pointer;
@@ -116,17 +116,17 @@
         float: left;
         width: 120px;
         height: 27px;
-        border: 1px solid #4a90e2;
+        border: 1px solid #178ce6;
         margin-left: -1px;
         p {
             line-height: 25px;
-            color: #4a90e2;
+            color: #178ce6;
             text-align: center;
             cursor: pointer;
         }
     }
     li.active {
-        background-color: #4a90e2;
+        background-color: #178ce6;
         p {
             color: #fff;
         }
@@ -166,9 +166,9 @@
             width: 69px;
             height: 31px;
             border-radius: 5px;
-            border: 1px #4a90e2 solid;
+            border: 1px #178ce6 solid;
             background-color: #fff;
-            color: #4a90e2;
+            color: #178ce6;
             font-size: 12px;
             margin: 0 13px;
             cursor: pointer;
@@ -178,7 +178,7 @@
         float: left;
     }
     .grid {
-        border-top: 4px #4a90e2 solid;
+        border-top: 4px #178ce6 solid;
         border-collapse: collapse;
         float: left;
         th {
@@ -198,7 +198,7 @@
                 line-height: 25px;
             }
             p:nth-of-type(even) {
-                color: #4a90e2;
+                color: #178ce6;
             }
             .date {
                 position: absolute;
@@ -212,7 +212,7 @@
             background-color: #F9F9F9;
         }
         td.selected {
-            border: 2px #4a90e2 solid;
+            border: 2px #178ce6 solid;
         }
         td.salePrice,td.netPrice {
             cursor: pointer;
