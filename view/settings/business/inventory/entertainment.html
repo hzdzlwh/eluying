@@ -14,20 +14,22 @@
 </head>
 <body>
 <div class="modal fade" role="dialog" id="editInven">
-    <div class="modal-dialog modal-w630">
-        <div class="modal-content clearfloat">
+    <div class="modal-dialog">
+        <div class="modal-content clearfloat v-modal" style="width: 380px">
             <div class="editPrice clearfloat">
                 <div class="title">
-                    修改库存－<span></span>
+                    修改服务上限
                 </div>
-                <div class="edit">
-                    <div class="label">总量</div>
-                    <input type="text" name="total"/>
-                </div>
+                <label class="edit">
+                    <span class="label">服务上限</span>
+                    <input type="text" name="total" placeholder="不填表示使用默认上限" class="dd-input"/>
+                </label>
+<!--
                 <div class="tips">已经预订数量 <span></span> </div>
+-->
                 <div class="footer">
-                    <button class="btn-cancel" id="editInvenCancel">取消修改</button>
-                    <button class="btn-ok" id="editInvenOk">确认修改</button>
+                    <button class="btn-cancel dd-btn dd-btn-ghost" id="editInvenCancel">取消</button>
+                    <button class="btn-ok dd-btn dd-btn-primary" id="editInvenOk">确认</button>
                 </div>
             </div>
         </div>
@@ -94,16 +96,16 @@
         <div class="modal-content clearfloat">
             <div class="editPrice clearfloat">
                 <div class="title">
-                    修改库存－<span>双人帐篷</span>
+                    修改服务上限
                 </div>
                 <div class="edit">
-                    <div class="label">总量</div>
-                    <input type="text" name="total"/>
+                    <div class="label">服务上限</div>
+                    <input type="text" class="dd-input" name="total" placeholder="不填表示使用默认上限"/>
                 </div>
                 <!--<div class="tips">已经预订数量 <span>20</span> </div>-->
                 <div class="footer">
-                    <button class="btn-cancel" id="editInvenForPatchCancel">取消修改</button>
-                    <button class="btn-ok" id="editInvenForPatchOk">确认修改</button>
+                    <button class="btn-cancel" id="editInvenForPatchCancel">取消</button>
+                    <button class="btn-ok" id="editInvenForPatchOk">确认</button>
                 </div>
             </div>
         </div>
@@ -113,20 +115,27 @@
 <div class="mainContainer clearfloat" style="width: 1301px;">
     <div class="content clearfloat">
         <div class="title clearfloat topMenu">
+            <div style="margin-bottom: 30px;">
+                <ul class="restaurant-head-nav">
+                    <li><a href="/view/settings/business/category/entertainment.html">品类管理</a></li>
+                    <li><a href="/view/settings/business/price/entertainment.html">价格维护</a></li>
+                    <li class="restaurant-head-nav-selected"><a href="/view/settings/business/inventory/entertainment.html">库存管理</a></li>
+                </ul>
+            </div>
             <span class="campName">测试营地</span>
             <div class="datePick">
                 <button class="preWeek">&lt前一周</button>
                 <input type="text" class="dateContainer" id="datePicker" />
                 <label class="calender" for="datePicker"></label>
                 <button class="nextWeek">后一周&gt</button>
-                <p class="tip">今天以前的库存不能修改！</p>
+                <p class="tip">今天以前的服务上限不能修改！</p>
             </div>
         </div>
         <div class="inventoryGrid">
             <table>
                 <thead>
                 <tr>
-                    <th>项目</th>
+                    <th>规格</th>
                     <th>数字类型</th>
                     <th>
                         <p>11-02</p>
@@ -163,20 +172,20 @@
                 </tbody>
             </table>
         </div>
-        <div class="operate inventoryOperate">
+        <div class="operate inventoryOperate" style="margin-top: 102px">
             <div class="first">
                 <div class="operateItem">
                     <div class="clickDiv" id="editInvenButton">
-                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改库存">
-                        <p>修改库存</p>
+                        <img src="/static/image/icon_bianjijibenxinxi.png" alt="修改服务上限">
+                        <p>修改服务上限</p>
                     </div>
                 </div>
-                <div class="operateItem">
+                <!--<div class="operateItem">
                     <div class="clickDiv" id="editPatchButton">
                         <img src="/static/image/icon_bianjijibenxinxi.png" alt="批量管理">
                         <p>批量管理</p>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
