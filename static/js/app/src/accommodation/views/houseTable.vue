@@ -83,26 +83,41 @@
                         </tr>
                     </tbody>
                 </table>
+                <dd-table :on-change="handleTableChange" :columns="col" :data-source="dataList"></dd-table>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { DdTable, DdPagination } from 'dd-vue-component';
     import dayOrderLeft from '../components/dayOrderLeft.vue';
     import DateSelect from '../components/DateSelect.vue';
     export default {
         data() {
             return {
-                defaultStartDate: undefined
+                defaultStartDate: undefined,
+                col: [
+                    {
+                        title: '',
+                        dataIndex: ''
+                    }
+                ],
+                dataList: [
+
+                ]
             };
         },
         components: {
             dayOrderLeft,
-            DateSelect
+            DateSelect,
+            DdTable,
+            DdPagination
         },
         methods: {
             changeDate() {
+            },
+            handleTableChange() {
             }
         }
     };
