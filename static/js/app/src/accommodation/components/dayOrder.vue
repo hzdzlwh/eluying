@@ -15,7 +15,7 @@
                             <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
                                 {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
                             </div>
-                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.eventList'></hover>
+                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.eventList && it.eventList.length'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName + it.roomNum'>
                                 <div class="taday-status-item-title2">{{it.roomName}}</div>

@@ -71,6 +71,9 @@
                             </span>
                         </div>
                     </div>
+                    <div class="cateOrder-item-remark" v-if='item.remark'>
+                        菜品备注：{{item.remark}}
+                    </div>
                 </div>
             </div>
         </div>

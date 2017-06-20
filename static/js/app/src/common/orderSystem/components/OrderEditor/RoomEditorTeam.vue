@@ -4,7 +4,7 @@
             <span>房间信息
                 <span class="increase-container" @click="addRoom">
                     <span class="increase-icon"></span>添加房间
-                </span>
+            </span>
             </span>
             <span class="content-item-discount">
                 折扣方案：
@@ -16,100 +16,83 @@
                              :key="item" v-if="item.discounts && item.discounts.length > 0">
                             <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name">
                                 <span :title="discount.serialNum">{{discount.name}}</span>
-                            </dd-option>
-                        </dd-group-option>
-                    </dd-select>
-                </span>
+            </dd-option>
+            </dd-group-option>
+            </dd-select>
+            </span>
             </span>
         </p>
         <div class="registerRoom-items">
             <div class="registerRoom-container" v-for="(item,index) in rooms">
-                <div class="registerRoom-item">
-                    <span class="room-icon"></span>
-                    <div class="shop-item-content">
-                        <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
-                        <div style="display: flex">
-                            <dd-select v-model="item.categoryType" placeholder="请选择房型"
-                                       @input="changeRoomType(item ,index)">
-                                <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
-                                           :label="category.name">
-                                </dd-option>
-                            </dd-select>
-<!--                             <div class="room-category">
-                                <dd-select v-model="item.roomType" placeholder="请选择房间"
-                                           @input="handleRoomChange(item, index)">
-                                    <dd-option v-for="room in getRoomsList(item.categoryType)" :value="room.id"
-                                               :key="room.id"
-                                               :label="room.name">
+            <span class="room-icon"></span>
+                    <div class="registerRoom-content">
+                        <div class="shop-item-content">
+
+                            <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
+                            <div style="display: flex">
+                            房间：
+                                <dd-select v-model="item.checkType" placeholder="请选择房型" @input="changeRoomType(item ,index)">
+                                    <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                     </dd-option>
                                 </dd-select>
-                            </div> -->
+                            </div>
+                            <div class="room-count" style="display: inline-block; position: relative;">
+                                数量<counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble">可预订数 22</span>
+                            </div>
+                            <div class="room-type">
+                                入住类型：<dd-select v-model="item.checkType" placeholder="请选择入住类型" @input="changeRoomType(item ,index)">
+                                    <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
+                                    </dd-option>
+                                </dd-select>
+                            </div>
+                             
                         </div>
-                        <div class="room-date" style="display: inline-block; position: relative;">
-                            <span class="useless-tip error" style="left: 28px;"
-                                  v-if="checkIsToday(item.room.startDate)">
+                        <div class="shop-item-content">
+                            <div class="room-date" style="display: inline-block; position: relative;">
+                                <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">
                                 该房间的入住时间必需为今日！
                             </span>
-                            <label class="label-text">入住</label>
-                            <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
+                                <label class="label-text">入住</label>
+                                <div class="enterDate">
+                                    <DatePicker v-model="item.room.startDate" @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                    </DatePicker>
+                                    <!--  <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
                                                @input="handleRoomChange(item, index)"
                                                :disabled-date="disabledStartDate(new Date())"
-                                               :disabled="item.state === 1 || item.state === 8"/>
+                                               :disabled="item.state === 1 || item.state === 8"/> -->
+                                </div>
+                                <span>~</span>
+                                <div class="enterDate">
+                                    <DatePicker v-model="item.room.endDate" @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                    </DatePicker>
+                                </div>
+                                <label class="label-text">
+                                    共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
+                                </label>
                             </div>
-                            <span>~</span>
-                            <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.room.endDate"
-                                               @input="handleRoomChange(item, index)"
-                                               :disabled="item.state === 8"
-                                               :disabled-date="disabledEndDate(item.room.startDate)"/>
+                            <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
+                                <label class="label-text">房费</label>
+                                <p class="fee-container">
+                                    <span class="fee-symbol">¥</span>
+                                    <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
+                                </p>
+                               
                             </div>
-                            <label class="label-text">
-                                共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
-                            </label>
-                        </div>
-                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
-                            <label class="label-text">房费</label>
-                            <p class="fee-container">
-                                <span class="fee-symbol">¥</span>
-                                <input class="dd-input fee-input" v-model.number="item.price"
-                                       @input="changeRoomFee(item)"
-                                  />
-                            </p>
-<!--                             <div class="registerInfoModal-roomPriceList" v-if="item.showPriceList && item.datePriceList.length > 1" v-clickoutside="hidePriceList">
-                                <dl class="price-item" v-for="priceItem in item.datePriceList">
-                                    <dt>{{priceItem.date.slice(5)}}</dt>
-                                    <dd v-show="!priceItem.showInput"
-                                        @click="changShowInput(item, priceItem)">
-                                        ¥{{priceItem.dateFee}}
-                                    </dd>
-                                    <dd v-show="priceItem.showInput">
-                                        <input class="dd-input" style="width: 60px;"
-                                               v-model.number="priceItem.dateFee"
-                                               @input="setTotalPrice(item)">
-                                    </dd>
-                                </dl>
-                            </div> -->
-                        </div>
-                    </div>
-                    <span class="delete-icon" @click="deleteRoom(index)"
-                          v-if="!item.state || ((item.state !== 1 && item.state !== 8) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms))">
-                    </span>
+
                     <span v-if="item.state === 1" class="delete-icon-like"></span>
                     <span class="discount-info">
                         <span v-if="item.showDiscount && !item.priceModified">
                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                            <span class="discount-num"
-                                  v-if="item.showDiscount">
+                    <span class="discount-num" v-if="item.showDiscount">
                                 {{item.showDiscount}}
                             </span>
-                        </span>
-                        <span class="more-discount" :id="'js-more-discount-' + index">
+                    </span>
+                    <span class="more-discount" :id="'js-more-discount-' + index">
                             <span class="more-discount-handle" @click="handleMoreDiscountClick(index, $event)">
                                 <span>更多折扣</span>
-                                <span class="more-discount-icon"></span>
-                            </span>
-                            <span class="more-discount-select">
+                    <span class="more-discount-icon"></span>
+                    </span>
+                    <span class="more-discount-select">
                                 <dd-select v-model="item.moreDiscount" @input="moreDiscountChange(item)">
                                     <dd-option :value="0" label="不使用">
                                     </dd-option>
@@ -117,111 +100,72 @@
                                                      :key="item" v-if="item.discounts && item.discounts.length > 0">
                                         <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name + ' ' + discount.discount + '折'">
                                             <span :title="discount.serialNum">{{discount.name + ' ' + discount.discount + '折'}}</span>
-                                        </dd-option>
-                                    </dd-group-option>
-                                </dd-select>
-                            </span>
-                        </span>
+                    </dd-option>
+                    </dd-group-option>
+                    </dd-select>
                     </span>
-                </div>
-                <CheckInPerson
-                        :personsObj="{id: index, persons: item.idCardList}"
-                        @addPerson="addPerson"
-                        @deletePerson="deletePerson"/>
-                <!-- 其他消费开始 -->
-                <div class="extra-items" v-if="checkState === 'finish' || checkState === 'ing' || item.state === 1 || item.state === 8">
-                    <div class="extra-items-title">
-                        <span class="extra-item-icon"></span>
-                        <span>其他消费</span>
-                        <span @click="addExtraItem(item)" class="increase-container" style="margin-left: 16px"><span class="increase-icon"></span>添加项目</span>
-                    </div>
-                    <div class="extra-items-content">
-                        <div v-for="extra in item.extraItems">
-                            <div v-if="extra.date" class="extra-items-date">{{extra.date}}</div>
-                            <div>
-                                <div v-for="(good, index) in extra.itemList" class="extra-items-row">
-                                    <span class="extra-items-name">{{good.goodsName}}</span>
-                                    <span class="extra-items-num">数量
-                                    <counter :onNumChange="(a,b,num) => handleExtraNumChange(good, num)" :num="good.amount" :id="index" :type="3" />
-                                    </span>
-                                        <span class="extra-items-total">小计
-                                        <p class="fee-container">
-                                            <span class="fee-symbol">¥</span>
-                                            <input class="dd-input fee-input" v-model.number="good.subtotal"/>
-                                        </p>
-                                    </span>
-                                    <span class="delete-icon" @click="deleteExtra(extra, index)"></span>
-                                </div>
-                            </div>
+                    </span>
+                    </span>
                         </div>
                     </div>
+                <span class="delete-icon" @click="deleteRoom(index)" v-if="!item.state || ((item.state !== 1 && item.state !== 8) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms))">
+                    </span>
                 </div>
-                <!-- 其他消费结束 -->
-                <span v-show="false">{{totalPrice}}</span>
-            </div>
-        </div>
-        <div v-if="otherGoodsList.length > 0">
-            <selectGoods
-                    :show="goodsSelectModalShow"
-                    :goodsDate="otherGoodsList"
-                    title="选择其他消费"
-                    @selectGoodsDate="setOtherGoodsItems"
-                    @Modalclose="closeShopSelectModal"/>
+
         </div>
     </div>
 </template>
 <style lang="scss">
-    .more-discount {
-        position: relative;
-        color: #666;
-        .more-discount-handle {
-            margin-left: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .more-discount-icon {
-            margin-left: 2px;
-            border-bottom: none;
-            border-top: 3px solid grey;
-            border-left: 3px solid transparent;
-            border-right: 3px solid transparent;
-        }
-        .more-discount-select {
-            position: absolute;
-            top: 10px;
-            left: -55px;
-            width: 0;
-            height: 0;
-        }
-        .dd-select {
-            width: 120px;
-        }
-        .dd-select-menu {
-            top: 0;
-        }
-        .dd-select-input {
-            display: none;
-        }
-        .dd-select-icon {
-            visibility: hidden;
-        }
-    }
+.el-input__inner{
+height:25px!important;
+}
+.registerRoom-content{
+        width: 100%;
+    margin-right: 100px;
+}
+.roomModals-body .el-input__inner {
+    width: auto;
+}
+
+.roomModals-body .registerRoom-item {
+    align-items: baseline;
+}
+.room-vailble{
+font-size:14px;
+color:#13ce66;
+}
+.roomModals-body .registerRoom-container{
+    flex-direction: inherit;
+    justify-content: space-between;
+}
 </style>
 <script>
-    import CheckInPerson from '../CheckInPerson.vue';
-    import modal from '../../../modal';
-    import { DdSelect, DdOption, DdDatepicker, DdGroupOption } from 'dd-vue-component';
-    import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
-    import http from '../../../http';
-    import util from '../../../util';
-    import bus from '../../../eventBus';
-    import Vue from 'vue';
-    import { mapState } from 'vuex';
-    import counter from '../../../components/counter.vue';
-    import selectGoods from './SelectGoods.vue';
-    export default{
-        data() {
+import CheckInPerson from '../CheckInPerson.vue';
+import modal from '../../../modal';
+import {
+    DdSelect,
+    DdOption,
+    DdDatepicker,
+    DdGroupOption
+} from 'dd-vue-component';
+import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
+import http from '../../../http';
+import util from '../../../util';
+import bus from '../../../eventBus';
+import Vue from 'vue';
+import {
+    mapState
+} from 'vuex';
+import counter from '../../../components/counter.vue';
+import selectGoods from './SelectGoods.vue';
+import {
+    DatePicker
+} from 'element-ui';
+import {
+    checkType
+} from '../../roomCheckType';
+export default {
+    data() {
             return {
                 rooms: [],
                 quickDiscounts: [],
@@ -229,7 +173,8 @@
                 lastRoomsToken: {}, // 这个东西是为了防止相同的请求数据而去重复请求价格列表，同时防止初始化数据时调用接口
                 discountPlans: [],
                 goodsSelectModalShow: false,
-                currentSelectOtherRoom: undefined
+                currentSelectOtherRoom: undefined,
+                checkType
             };
         },
         created() {
@@ -252,7 +197,8 @@
             DdDatepicker,
             DdGroupOption,
             counter,
-            selectGoods
+            selectGoods,
+            DatePicker
         },
         directives: {
             Clickoutside
@@ -352,7 +298,9 @@
             }
         },
         computed: {
-            ...mapState({ otherGoodsList: state => state.orderSystem.otherGoodsList }),
+            ...mapState({
+                otherGoodsList: state => state.orderSystem.otherGoodsList
+            }),
             totalPrice() {
                 let price = this.rooms.reduce((sum, room) => {
                     return sum + (room.price || 0);
@@ -430,9 +378,9 @@
             },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
-                    nodeId: 0,
-                    nodeType: 0
-                })
+                        nodeId: 0,
+                        nodeType: 0
+                    })
                     .then(res => {
                         this.quickDiscounts = res.data.list.map(item => {
                             return {
@@ -494,10 +442,16 @@
                             roomType: item.roomId,
                             originPrice: item.originPrice,
                             price: item.fee,
-                            room: { roomId: item.roomId, startDate: item.startDate, endDate: item.endDate },
+                            room: {
+                                roomId: item.roomId,
+                                startDate: item.startDate,
+                                endDate: item.endDate
+                            },
                             idCardList: item.idCardList,
                             datePriceList: item.datePriceList.map(dat => {
-                                const newDate = { showInput: false };
+                                const newDate = {
+                                    showInput: false
+                                };
                                 newDate.date = dat.date;
                                 newDate.dateFee = dat.dateFee;
                                 return newDate;
@@ -526,10 +480,16 @@
                         roomType: roomInfo.roomId,
                         originPrice: roomInfo.originPrice,
                         price: roomInfo.totalPrice,
-                        room: { roomId: roomInfo.roomId, startDate: roomInfo.checkInDate, endDate: roomInfo.checkOutDate },
+                        room: {
+                            roomId: roomInfo.roomId,
+                            startDate: roomInfo.checkInDate,
+                            endDate: roomInfo.checkOutDate
+                        },
                         idCardList: order.idCardsList,
                         datePriceList: order.datePriceList.map(dat => {
-                            const newDate = { showInput: false };
+                            const newDate = {
+                                showInput: false
+                            };
                             newDate.date = dat.date;
                             newDate.dateFee = dat.dateFee;
                             return newDate;
@@ -580,46 +540,45 @@
                 });
             },
             addRoom() {
-                const len = this.rooms.length;
                 if (this.rooms.length >= 99) {
                     modal.warn('一个订单最多添加99间房!');
                     return false;
                 }
 
-                let room;
-                if (len === 0 || !this.rooms[len - 1].roomType) {
-                    room = {
-                        categoryType: undefined,
-                        roomType: undefined,
-                        originPrice: undefined,
-                        price: undefined,
-                        room: {
-                            roomId: undefined,
-                            startDate: util.dateFormat(new Date()),
-                            endDate: util.dateFormat(util.diffDate(new Date(), 1))
-                        },
-                        idCardList: [],
-                        datePriceList: [],
-                        originDatePriceList: [],
-                        showPriceList: false,
-                        showTip: false,
-                        state: undefined,
-                        roomOrderId: undefined,
-                        quickDiscountId: '',
-                        priceScale: [],
-                        showDiscount: undefined,
-                        extraItems: []
-                    };
-                } else {
-                    // 新增房间，房型时间同上一间
-                    room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
-                    room.idCardList = [];
-                    if (room.roomOrderId) {
-                        delete room.roomOrderId;
-                        delete room.state;
-                        delete room.originDatePriceList;
-                    }
-                }
+                // if (len === 0 || !this.rooms[len - 1].roomType) {
+                const room = {
+                    categoryType: undefined,
+                    originPrice: undefined,
+                    price: undefined,
+                    amount: 1,
+                    checkType: 1,
+                    room: {
+                        roomId: undefined,
+                        startDate: util.dateFormat(new Date()),
+                        endDate: util.dateFormat(util.diffDate(new Date(), 1))
+                    },
+                    idCardList: [],
+                    datePriceList: [],
+                    originDatePriceList: [],
+                    showPriceList: false,
+                    showTip: false,
+                    state: undefined,
+                    roomOrderId: undefined,
+                    quickDiscountId: '',
+                    priceScale: [],
+                    showDiscount: undefined,
+                    extraItems: []
+                };
+                // } else {
+                //     // 新增房间，房型时间同上一间
+                //     room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
+                //     room.idCardList = [];
+                //     if (room.roomOrderId) {
+                //         delete room.roomOrderId;
+                //         delete room.state;
+                //         delete room.originDatePriceList;
+                //     }
+                // }
                 if (this.vipCardInfo && this.vipCardInfo.discount && Number(this.vipCardInfo.discount) !== 10) {
                     room.moreDiscount = this.userOriginType.id;
                 } else {
@@ -635,7 +594,7 @@
             },
             changeRoomType(item, index) {
                 this.$nextTick(function() {
-                    item.roomType = this.getRoomsList(item.categoryType)[0].id;
+                    // item.roomType = this.getRoomsList(item.categoryType)[0].id;
                     this.handleRoomChange(item, index);
                 });
             },
@@ -688,7 +647,10 @@
 
                 const category = this.categories.find(c => c.typeId === id);
                 return category.rooms.map(r => {
-                    return { id: r.roomId, name: r.serialNum };
+                    return {
+                        id: r.roomId,
+                        name: r.serialNum
+                    };
                 });
             },
             checkIsToday(date) {
@@ -718,7 +680,7 @@
 
                 // 最多400天
                 if (duration > 400) {
-                    const currentTime = + new Date();
+                    const currentTime = +new Date();
                     if (currentTime - this.lastModifyRoomTime > 2000) {
                         modal.warn('入住上限最大为400天，请重新选择入住时间！');
                         this.lastModifyRoomTime = currentTime;
@@ -734,8 +696,8 @@
              */
             modifyRooms(rooms) {
                 // 过滤没有房间id的房间
-                rooms = rooms.filter(r => r.roomType);
-                if (rooms.length === 0) {
+                // rooms = rooms.filter(r => r.roomType);
+                if (!rooms || rooms.length === 0) {
                     return false;
                 }
 
@@ -785,7 +747,7 @@
                             endDate: room.room.endDate,
                             quickDiscountId: room.quickDiscountId,
                             roomOrderId: room.roomOrderId,
-                            roomId: room.roomType,
+                            // roomId: room.roomType,
                             useDiscount: !!room.moreDiscount
                         };
                     })),
@@ -869,7 +831,7 @@
             setTotalPrice(room) {
                 // 手动修改价格需要把快捷折扣置为无
                 room.quickDiscountId = '';
-                room.price = + (room.datePriceList.reduce((a, b) => {
+                room.price = +(room.datePriceList.reduce((a, b) => {
                     return a + Number(b.dateFee);
                 }, 0).toFixed(2));
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
@@ -921,7 +883,9 @@
                 const goodsList = data;
                 let newItems = this.currentSelectOtherRoom.extraItems.find(i => !i.logId);
                 if (!newItems) {
-                    newItems = { itemList: [] };
+                    newItems = {
+                        itemList: []
+                    };
                     this.currentSelectOtherRoom.extraItems.push(newItems);
                 }
                 goodsList.map(i => {
@@ -944,6 +908,10 @@
                     }
                 });
             },
+            handleRoomNumChange(item, index, num) {
+                item.amount = num;
+                this.modifyRooms(this.rooms);
+            },
             handleExtraNumChange(good, num) {
                 if (good.price === null) {
                     modal.warn('该商品已删除');
@@ -960,5 +928,5 @@
                 this.$delete(extra.itemList, index);
             }
         }
-    };
+};
 </script>
