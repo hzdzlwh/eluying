@@ -9,8 +9,26 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>可售房<div class="info-icon"></div></th>
-                            <th>可用房<div class="info-icon"></div></th>
+                            <th>
+                                <div style="display: flex;justify-content: center;">
+                                    <span>可售房</span>
+                                    <div class="info-icon">
+                                        <div class="info-detail">
+                                            可用房=总房数-在住-保留房-维修房-停用房
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div style="display: flex;justify-content: center;">
+                                    <span>可用房</span>
+                                    <div class="info-icon">
+                                        <div class="info-detail">
+                                            可用房=总房数-在住-保留房-维修房-停用房
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
                             <th>在住</th>
                             <th>预离</th>
                             <th>预抵</th>
@@ -20,7 +38,16 @@
                             <th>总房数</th>
                             <th>净房</th>
                             <th>脏房</th>
-                            <th>出租率<div class="info-icon"></div></th>
+                            <th>
+                                <div style="display: flex;justify-content: center;">
+                                    <span>出租率</span>
+                                    <div class="info-icon">
+                                        <div class="info-detail">
+                                            可用房=总房数-在住-保留房-维修房-停用房
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,6 +121,32 @@
                 border-top: 8px solid #178ce6;
                 thead{
                     background: #f1f8ff;
+                    tr{
+                        .info-icon{
+                            position: relative;
+                            cursor: pointer;
+                            width: 16px;
+                            height: 16px;
+                            background: url("/static/image/modal/room_modal_info.png");
+                            background-size: contain;
+                            .info-detail{
+                                display: none;
+                                position: absolute;
+                                width: 246px;
+                                background: #fafafa;
+                                top: -10px;
+                                left: 20px;
+                                height: 28px;
+                                padding: 8px;
+                                z-index: 999;
+                            }
+                            &:hover{
+                                .info-detail{
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
                 }
                 tbody{
                     tr:nth-of-type(even){
