@@ -82,7 +82,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
-        <div class="datFixMenu"><span @click="check('team')">团购订单</span><span>快速下单</span></div>
+        <div class="datFixMenu"><span @click="check('team')">团购订单</span><span @click="check('quick')">快速下单</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -461,7 +461,7 @@ export default {
         },
         check(type) {
             const temp = [];
-            if (type === 'team') {
+            if (type === 'team' || type === 'quick') {
                 bus.$emit('changeCheckState', type, []);
             } else {
                 temp.push({

@@ -115,13 +115,17 @@
         </div>
     </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .el-input__inner{
 height:25px!important;
 }
 .registerRoom-content{
         width: 100%;
     margin-right: 100px;
+}
+.roomModals-body input{
+    width:auto;
+    height:24px;
 }
 .roomModals-body .el-input__inner {
     width: auto;

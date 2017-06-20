@@ -3,19 +3,18 @@
         <div class="glyph-arrow-up"></div>
         <!-- <div class="glyph-arrow-down"></div> -->
         <div v-for='(item, index) in date.eventList' class="glyph-detail"  @click.stop='tadayClick(item)'>
-            <div class="glyph-detail-content" :class="{'glyph-detail-box': index !== mockDate.length - 1}">
+            <div class="glyph-detail-content" :class="{'glyph-detail-box': index !== date.eventList.length - 1}">
                 <div class="glyph-detail-name" v-if='item.checkType'>
                     <div>{{item.customerName}} ({{item.customerPhone}})</div>
                     <span class="checkType">{{checkType[item.checkType]}}</span>
                 </div>
                 <div class="glyph-detail-time">
-                    <div class="start">{{item.startDate}}<span class="glyph-label">&nbsp;到达</span></div>
-                    <div class="end">{{item.endDate}}<span class="glyph-label">&nbsp;离开</span></div>
-                    <div class="glyph-label">共<span>{{date.nights}}</span>晚</div>
-                    <div></div>
-                    <div class="glyph-label glyph-status" :style='{"background-color":colorList[item.type]}'>{{nameList[item.type]}}</div>
+                    <div class="start">{{item.startDate.slice(2,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '开始': '到达' }}</span></div>
+                    <div class="end">{{item.endDate.slice(2,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '结束': '离开' }}</span></div>
+                    <div class="glyph-label" v-if='!(item.type === 1 || item.type === 2 || item.type === 3)'>共<span>{{item.nights}}</span>晚</div>
+                    <div class="glyph-label glyph-status" :style='{"background-color" : colorList[item.type]}' :date-type='item.type'>{{nameList[item.type]}}</div>
                 </div>
-                <div class="remark">
+                <div class="remark" v-if='!(item.type === 1 || item.type === 2 || item.type === 3)'>
                     <span class="glyph-label">备注：</span>{{item.remark}}
                 </div>
             </div>
@@ -45,6 +44,7 @@
     line-height: 12px;
     margin-top: 3px;
     height: 17px;
+    width: 48px;
 }
 
 .checkType {
@@ -54,6 +54,7 @@
 
 .calendar-glyph-detail {
     position: relative;
+    width: 380px;
 }
 
 .hoverRight {

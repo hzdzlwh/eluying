@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'team'"
+                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick'"
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"
@@ -110,7 +110,7 @@
                                     @change="handleRoomChange"
                                     @priceChange="handleRoomPriceChange"/>
 
-                        <RoomEditorTeam v-else
+                        <RoomEditorQuick v-else
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"
@@ -299,7 +299,7 @@
     import { ORDER_TYPE } from '../../../../ordersManage/constant';
     import modal from '../../../modal';
     import types from '../../store/types';
-    import RoomEditorTeam from './RoomEditorTeam.vue';
+    import RoomEditorQuick from './RoomEditorQuick.vue';
     import RoomEditor from './RoomEditor.vue';
     import util from '../../../util';
     import EnterEditor from './EntertainmentEditor.vue';
@@ -371,7 +371,7 @@
             EnterEditor,
             ShopEditor,
             CateEditor,
-            RoomEditorTeam
+            RoomEditorQuick
         },
         computed: {
             ...mapState({ order: state => state.orderSystem.orderDetail }),
