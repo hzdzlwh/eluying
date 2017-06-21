@@ -395,9 +395,6 @@ var monthManage = {
         var current = util.stringToDate($("#editMonth .month").attr("start-date"));
         var nextMonth = new Date(current.setMonth(current.getMonth() + 1));
         monthManage.getAccommodationMonthPriceList(nextMonth);
-        if (nextMonth.getMonth() === 11 - new Date().getMonth()) {
-            $("#nextMonth").addClass("hide");
-        }
         $("#prevMonth").removeClass("hide");
         $("#editMonth .operateItem").addClass("hide");
     },
