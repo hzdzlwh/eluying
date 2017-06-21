@@ -58,7 +58,7 @@ const app = new Vue({
                             <p style="margin-bottom: 20px">
                                 <label>
                                     <span>区域名称</span>
-                                    <input style="width: 230px" type="text" class="dd-input" v-model="name">
+                                    <input style="width: 230px" type="text" class="dd-input" maxlength="20" v-model="name">
                                 </label>
                             </p>
                             <div>
