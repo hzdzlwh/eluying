@@ -197,6 +197,14 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="order.cancelSelectRoomsAble"
+                                         @click="cancelSelectRooms">
+                                        取消排房
+                                    </div>
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="autoSelectRooms"
+                                         v-if="order.autoSelectRoomsAble">
+                                        自动排房
+                                    </div>
                                     <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.checkInAble"
                                          @click="checkInOrCheckOut(0)">
                                         办理入住
@@ -1341,6 +1349,20 @@
             },
             resetOrder() {
                 http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
+                    .then(res => {
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        bus.$emit('refreshView');
+                    });
+            },
+            autoSelectRooms() {
+                http.post('/room/autoSelectRooms', { orderId: this.id, orderType: this.type })
+                    .then(res => {
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        bus.$emit('refreshView');
+                    });
+            },
+            cancelSelectRooms() {
+                http.post('/room/cancelSelectRooms', { orderId: this.id, orderType: this.type })
                     .then(res => {
                         this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
                         bus.$emit('refreshView');
