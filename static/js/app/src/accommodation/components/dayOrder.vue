@@ -235,8 +235,20 @@
     border-radius: 16px;
     padding: 16px;
     cursor: pointer;
+    margin-bottom:20px;
 }
-
+.datFixMenu span{
+        width: 80px;
+    height: 80px;
+    line-height: 80px;
+    background-color: #ffd281;
+    display: inline-block;
+    border-radius: 40px;
+    text-align: center;
+    margin-right: 10px;
+    cursor:pointer;
+    color:#fff;
+}
 .taday-status-title {
     font-size: 24px;
     color: #178ce6;

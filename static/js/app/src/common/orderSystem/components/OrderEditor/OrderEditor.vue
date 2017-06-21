@@ -95,9 +95,11 @@
                                     </span>
                                 </div>
                             </div>
+                            <orderExtInfo :checkState='"team"' v-if='checkState === "team"'></orderExtInfo>
+                            <!-- checkstate先放着，以后应该能复用到 -->
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick'"
+                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick' && this.checkState !== 'team'"
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"
@@ -159,7 +161,10 @@
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
+                        <div>
+                          <div class="dd-btn dd-btn-primary" @click="handleRoomBusiness('auto')">预订并自动排房</div>
                         <div class="dd-btn dd-btn-primary" @click="submitInfo">{{titleAndBtn.btn}}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -307,6 +312,7 @@
     import CateEditor from './CateEditor.vue';
     import { getOrderId } from '../../utils/order';
     import validate from '../../../validate';
+    import orderExtInfo from './orderExtInfo.vue'
     export default{
         name: 'OrderEditor',
         directives: {
@@ -371,7 +377,8 @@
             EnterEditor,
             ShopEditor,
             CateEditor,
-            RoomEditorQuick
+            RoomEditorQuick,
+            orderExtInfo
         },
         computed: {
             ...mapState({ order: state => state.orderSystem.orderDetail }),
@@ -383,6 +390,10 @@
                         return { title: '补录', btn: '补录' };
                     case 'book':
                         return { title: '预订', btn: '完成预订' };
+                    case 'quick':
+                        return { title: '快速预订', btn: '完成预订' };
+                    case 'team':
+                        return { title: '团队预订', btn: '完成预订' };
                     case 'editOrder':
                         if (this.order.type === ORDER_TYPE.ACCOMMODATION) {
                             return { title: '编辑住宿订单', btn: '完成' };
@@ -897,6 +908,21 @@
                     };
                 });
             },
+            getQuickOrTeamRooms() {
+                return this.rooms.map(room => {
+                    return {
+                        amount: room.amount,
+                        checkType: room.checkRoomType,
+                        endDate: room.room.endDate,
+                        startDate: room.room.startDate,
+                        id: room.checkType,
+                        fee: room.price,
+                        sub: true,
+                        quickDiscountId: room.quickDiscountId,
+                        useDiscount: room.moreDiscount === 0 || !room.priceModified
+                    };
+                });
+            },
             getSubmitGoods() {
                 this.newGoodItems = this.shopItems.items.map(item => {
                     return {
@@ -1058,9 +1084,14 @@
                         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
-            handleRoomBusiness() {
+            handleRoomBusiness(type) {
+                let rooms;
+                if (type && type === 'auto') {
+                    rooms = this.getQuickOrTeamRooms();
+                } else {
+                    rooms = this.getSubmitRooms();
+                }
                 this.getSubmitGoods();
-                const rooms = this.getSubmitRooms();
                 const entertainmentItems = this.getSubmitEnterItems();
 
                 const params = {
@@ -1073,15 +1104,12 @@
                     goods: JSON.stringify(this.previousGoods),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
-                if (this.checkState === 'ing') {
-                    params.type = 0;
-                } else if (this.checkState === 'finish') {
+                if (type && type === 'auto') {
                     params.type = 1;
-                } else if (this.checkState === 'book') {
-                    params.type = 2;
+                } else {
+                    params.type = 0
                 }
-
-                http.post('/room/confirmOrder', params)
+                http.post('/room/quickOrTeamReserveOrder', params)
                     .then(res => {
                         this.hideModal();
                         const business = {};
@@ -1100,15 +1128,8 @@
                         //     bus.$emit('refreshView');
                         //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
                         // }
-                        if (this.checkState === 'ing') {
-                            bus.$emit('refreshView');
-                        }
-                        if (this.checkState === 'finish') {
-                            bus.$emit('showCashier', { type: 'register', business: business });
-                        } else {
-                            bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
-                        }
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
                     });
             },
             submitInfo() {

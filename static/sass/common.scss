@@ -24,6 +24,13 @@ body {
   // overflow: hidden;
 }
 // 防止滚动出现时影响居中
+.roomModals-body .el-input__inner{
+    width: 170px;
+    height: 24px;
+}
+.roomModals-body .el-date-editor.el-input{
+    width: 170px
+}
 .DatePickerAbsorct,.el-picker-panel {
     // position: relative!important;
     z-index: 3001!important;
