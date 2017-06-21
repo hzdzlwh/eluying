@@ -1,8 +1,10 @@
 <template>
     <div class="taday-calendar">
         <div class="taday-calendar-picker">
-            <DateSelect :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
-            <roomFilter :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander' :roomTypeCount='roomTypeCount'></roomFilter>
+            <dayOrderLeft>
+                <DateSelect slot="timePicker" :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
+                <roomFilter slot="filterCondition" v-if="$route.path === '/nowOrders/houseMap'" :categories='categories' :customList='customList' :areaList='areaList' @change='roomFilterHander' :roomTypeCount='roomTypeCount'></roomFilter>
+            </dayOrderLeft>
         </div>
         <div class="taday-calendar-body">
             <div class="taday-calendar-status-list">
@@ -13,7 +15,7 @@
                             <div class="taday-status-mark" v-if='it.roomState === 1 || it.roomState === 2 ||it.roomState === 3 '>
                                 {{it.roomState === 1 ? '保留': it.roomState === 2 ? '维修' : '停用'}}
                             </div>
-                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.checkInDate'></hover>
+                            <hover :date='it' :hoverShow='hoverEvent' class='calendar-glyph-hover' v-if='it.eventList && it.eventList.length'></hover>
                             <div class="taday-status-item-select" v-if='it.isSelect'></div>
                             <div class="taday-status-item-title" :title='it.roomName + it.roomNum'>
                                 <div class="taday-status-item-title2">{{it.roomName}}</div>
@@ -80,9 +82,15 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
+        <div class="datFixMenu"><span @click="check('team')">团购订单</span><span @click="check('quick')">快速下单</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.datFixMenu{
+    position:fixed;
+    bottom:100px;
+    right:100px;
+}
 .taday-calendar {
     display: flex;
     flex-flow: row;
@@ -250,6 +258,7 @@ import {
     colorList
 } from '../colorList';
 import contextmenu from '../../common/components/contextmenu';
+import dayOrderLeft from './dayOrderLeft';
 import {
     mapActions
 } from 'vuex';
@@ -291,7 +300,8 @@ export default {
         roomFilter,
         dayOrderForm,
         contextmenu,
-        hover
+        hover,
+        dayOrderLeft
     },
     created() {
         bus.$on('refreshView', this.refreshView);
@@ -451,15 +461,19 @@ export default {
         },
         check(type) {
             const temp = [];
-            temp.push({
-                id: this.menuData.data.roomId,
-                date: new Date(this.date),
-                cId: this.menuData.data.typeId,
-                cName: this.menuData.data.roomName,
-                rName: this.menuData.data.roomNum,
-                selected: true
-            });
-            bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
+            if (type === 'team' || type === 'quick') {
+                bus.$emit('changeCheckState', type, []);
+            } else {
+                temp.push({
+                    id: this.menuData.data.roomId,
+                    date: new Date(this.date),
+                    cId: this.menuData.data.typeId,
+                    cName: this.menuData.data.roomName,
+                    rName: this.menuData.data.roomNum,
+                    selected: true
+                });
+                bus.$emit('changeCheckState', type, this.getRoomsWithDate(temp));
+            }
         },
         getRoomsWithDate(data) {
             const temp = [];
