@@ -14,7 +14,7 @@
                                     <span>可售房</span>
                                     <div class="info-icon">
                                         <div class="info-detail">
-                                            可用房=总房数-在住-保留房-维修房-停用房
+                                            可售房=总房数-预抵-在住-保留房-维修房-停用房
                                         </div>
                                     </div>
                                 </div>
@@ -24,7 +24,7 @@
                                     <span>可用房</span>
                                     <div class="info-icon">
                                         <div class="info-detail">
-                                            可用房=总房数-在住-保留房-维修房-停用房
+                                            可用房=总房数-在住-预离-保留房-维修房-停用房
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +43,7 @@
                                     <span>出租率</span>
                                     <div class="info-icon">
                                         <div class="info-detail">
-                                            可用房=总房数-在住-保留房-维修房-停用房
+                                            出租率=（在住+预离）/（总房间数-维修-停用）* 100
                                         </div>
                                     </div>
                                 </div>
@@ -51,73 +51,62 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>标准间</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>100%</td>
-                        </tr>
-                        <tr>
-                            <td>大床房</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>100%</td>
+                        <tr v-for="item in houseLists">
+                            <td>{{item.typeName}}</td>
+                            <td>{{item.salableCount}}</td>
+                            <td>{{item.usableCount}}</td>
+                            <td>{{item.liveCount}}</td>
+                            <td>{{item.leavingCount}}</td>
+                            <td>{{item.arrivingCount}}</td>
+                            <td>{{item.reservedCount}}</td>
+                            <td>{{item.repairingCount}}</td>
+                            <td>{{item.disableCount}}</td>
+                            <td>{{item.totalCount}}</td>
+                            <td>{{item.clearCount}}</td>
+                            <td>{{item.dirtyCount}}</td>
+                            <td>{{item.lettingRate}}</td>
                         </tr>
                     </tbody>
                 </table>
-                <dd-table :on-change="handleTableChange" :columns="col" :data-source="dataList"></dd-table>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import { DdTable, DdPagination } from 'dd-vue-component';
     import dayOrderLeft from '../components/dayOrderLeft.vue';
     import DateSelect from '../components/DateSelect.vue';
+    import http from '../../common/http';
+    
     export default {
         data() {
             return {
                 defaultStartDate: undefined,
-                col: [
-                    {
-                        title: '',
-                        dataIndex: ''
-                    }
-                ],
-                dataList: [
-
-                ]
+                date: new Date(),
+                houseLists: []
             };
+        },
+        created() {
         },
         components: {
             dayOrderLeft,
-            DateSelect,
-            DdTable,
-            DdPagination
+            DateSelect
         },
         methods: {
-            changeDate() {
+            changeDate(date) {
+                this.date = date;
             },
-            handleTableChange() {
+            getLists() {
+                http.get('/room/getDailyStat', { date: this.date }).then(res => {
+                    if (res.code === 1) {
+                        this.houseLists = res.data.list;
+                    }
+                });
+            }
+        },
+        watch: {
+            date(newval) {
+                this.getLists();
             }
         }
     };
@@ -147,7 +136,7 @@
                             .info-detail{
                                 display: none;
                                 position: absolute;
-                                width: 246px;
+                                width: 286px;
                                 background: #fafafa;
                                 top: -10px;
                                 left: 20px;

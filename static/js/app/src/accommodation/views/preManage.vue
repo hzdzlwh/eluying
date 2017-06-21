@@ -9,10 +9,13 @@
 <script>
     import dayOrderLeft from '../components/dayOrderLeft.vue';
     import DateSelect from '../components/DateSelect.vue';
+    import http from '../../common/http';
+
     export default {
         data() {
             return {
-                defaultStartDate: undefined
+                defaultStartDate: undefined,
+                date: new Date()
             };
         },
         components: {
@@ -20,7 +23,19 @@
             DateSelect
         },
         methods: {
-            changeDate() {
+            changeDate(date) {
+                this.date = date;
+            },
+            getLists() {
+                http.get('/room/getBookListByDate', { date: this.date }).then(res => {
+                    if (res.code === 1) {
+                    }
+                });
+            }
+        },
+        watch: {
+            date() {
+                this.getLists();
             }
         }
     };
