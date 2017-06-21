@@ -52,12 +52,12 @@ var INVENTORY = {
                         '<td class="entertainitem"> ' +
                         '<span>' + i.name + '</span> ' +
                         '</td> ' +
-                        '<td><p>剩余</p><p>总量</p></td> ';
+                        '<td><p>已用</p><p>总量</p></td> ';
                     i.inventories.sort(function(a, b) {
                         return util.stringToDate(a.date) - util.stringToDate(b.date);
                     });
                     i.inventories.forEach(function(d) {
-                        html += '<td class="entertainDayItem" date="' + d.date + '"><p>' + d.remain + '</p><p>' + d.total + '</p></td> ';
+                        html += '<td class="entertainDayItem" date="' + d.date + '"><p>' + d.used + '</p><p>' + d.total + '</p></td> ';
                     });
                     html += '</tr>';
                 });
@@ -140,6 +140,9 @@ var events = {
         $('.editSalePrice').addClass('hide');
         $('.editNetPrice').addClass('hide');
         $('.second').addClass('hide');
+        if (util.isSameDay(new Date(), $('#datePicker').datepicker('getDate'))) {
+            return false;
+        }
         util.prevWeek();
         var date = $('#datePicker').datepicker('getDate');
         var dateStr = util.dateFormat(date);

@@ -37,7 +37,8 @@ module.exports = {
         'linesite/operation': './static/js/app/src/linesite/operation/operation.js',
         'salesite/detail': './static/js/app/src/salesite/detail/detail.js',
         'reports/reports': './static/js/app/src/reports/main.js',
-        'customer/customer': './static/js/app/src/customer/main.js'
+        'customer/customer': './static/js/app/src/customer/main.js',
+        'block/room': './static/js/app/src/business/block/room.js'
     },
     html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,
