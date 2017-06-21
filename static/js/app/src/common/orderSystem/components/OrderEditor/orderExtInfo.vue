@@ -5,12 +5,12 @@
         <div class="room-date" style="display: inline-block; position: relative;" v-if='checkState === "team"'>
             <label class="label-text">入住</label>
             <div class="enterDate">
-                <DatePicker v-model="startDate" @change="handleRoomChange()" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                <DatePicker v-model='startDate' @input="changevalue(value, 'startDate')" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
             <span>~</span>
             <div class="enterDate">
-                <DatePicker v-model="endDate" @change="handleRoomChange()" :picker-options='{disabledDate:disabledStartDate(startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                <DatePicker v-model='endDate'  @change="handleRoomChange()" :picker-options='{disabledDate:disabledStartDate(startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
             <label class="label-text">
@@ -19,7 +19,7 @@
         </div>
         <div class="room-type">
             入住类型：
-            <dd-select v-model="roomCheckType" placeholder="请选择入住类型" @input="changeRoomType
+            <dd-select v-model='roomCheckType' placeholder="请选择入住类型" @input="changeRoomType
 (item ,index)">
                 <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
                 </dd-option>
@@ -45,22 +45,29 @@ import {
 } from 'element-ui';
 import bus from '../../../eventBus';
 import util from '../../../util';
+import {mapState,mapMutations} from 'vuex';
 export default {
     props: {
         checkState: String,
+        startDate: String,
+        endDate: String,
+        checkType: Number
     },
     data() {
         return {
             checkType,
-            startDate: util.dateFormat(new Date()),
-            endDate: util.dateFormat(util.diffDate(new Date(), 1)),
-            roomCheckType: 0
-        }
+            startDate: String,
+            endDate: String,
+            roomCheckType: Number
+        };
     },
     components: {
         DdSelect,
         DdOption,
         DatePicker
+    },
+    create() {
+        this.handleRoomChange();
     },
     methods: {
         dateDiff(date1, date2) {

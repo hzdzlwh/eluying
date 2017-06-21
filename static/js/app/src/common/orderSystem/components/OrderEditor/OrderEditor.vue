@@ -95,7 +95,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <orderExtInfo :checkState='"team"' v-if='checkState === "team"'></orderExtInfo>
+                            <orderExtInfo :checkState='"team"' v-if='checkState === "team"' :startDate.sync='startDate' :endDate.sync='endDate' :roomCheckType.sync='roomCheckType'></orderExtInfo>
                             <!-- checkstate先放着，以后应该能复用到 -->
                         </div>
                         <!-- header end -->
@@ -312,7 +312,13 @@
     import CateEditor from './CateEditor.vue';
     import { getOrderId } from '../../utils/order';
     import validate from '../../../validate';
-    import orderExtInfo from './orderExtInfo.vue'
+    import orderExtInfo from './orderExtInfo.vue';
+    const date = new Date();
+    const now = {
+        year: date.getFullYear(),
+        mouth: date.getMonth() + 1,
+        day: date.getDay()
+    };
     export default{
         name: 'OrderEditor',
         directives: {
@@ -320,6 +326,9 @@
         },
         data() {
             return {
+                startDate: new Date(now.year, now.mouth, now.day, 18, 0, 0, 0),
+                endDate: new Date(now.year, now.mouth, now.day + 1, 12, 0, 0, 0),
+                roomCheckType: 0,
                 name: '',
                 phone: '',
                 userOriginType: undefined,

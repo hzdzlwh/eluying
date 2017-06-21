@@ -30,14 +30,14 @@
                         <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
                         <div style="display: flex;line-height: 24px;">
                             房间
-                            <dd-select v-model="item.checkType" placeholder="请选择房型" @input="changeRoomType(item ,index)">
+                            <dd-select v-model="item.roomId" placeholder="请选择房型" @input="changeRoomType(item ,index)">
                                 <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                 </dd-option>
                             </dd-select>
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;">
                             数量
-                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble">可预订数 22</span>
+                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined'>可预订数 {{item.canReserveCount}}</span>
                         </div>
                         <div class="room-type">
                             入住类型：
@@ -116,10 +116,10 @@
 .el-input__inner {
     height: 25px!important;
 }
-
 .registerRoom-content {
     width: 100%;
     margin-right: 100px;
+    margin-bottom:10px;
 }
 
 .roomModals-body .el-input__inner {
@@ -145,6 +145,16 @@
 .roomModals-body .room-icon, .delete-icon{
         background-repeat: no-repeat;
             margin-top: 8px;
+}
+.roomModals-body .discount-info{
+    display: inline-flex;
+    position: absolute;
+    font-size: 12px;
+    color: #999999;
+    top: 30px;
+    min-width: 1000px;
+    align-items: center;
+    left: 0;
 }
 </style>
 <script>
@@ -182,7 +192,10 @@ export default {
                 discountPlans: [],
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
-                checkType
+                checkType,
+                startDate: undefined,
+                endDate: undefined,
+                checkRoomType: undefined
             };
         },
         created() {
@@ -305,6 +318,12 @@ export default {
                 if (this.rooms.length > 0) {
                     this.modifyRooms(this.rooms);
                 }
+            },
+            rooms() {
+                const price = this.rooms.reduce((sum, room) => {
+                    return sum + (room.price || 0);
+                }, 0);
+                this.$emit('priceChange', price);
             }
         },
         computed: {
@@ -312,16 +331,9 @@ export default {
                 otherGoodsList: state => state.orderSystem.otherGoodsList
             }),
             totalPrice() {
-                let price = this.rooms.reduce((sum, room) => {
+                const price = this.rooms.reduce((sum, room) => {
                     return sum + (room.price || 0);
                 }, 0);
-                this.rooms.map(r => {
-                    r.extraItems.map(e => {
-                        e.itemList.map(g => {
-                            price = price + Number(g.subtotal);
-                        });
-                    });
-                });
                 this.$emit('priceChange', price);
                 return price;
             },
@@ -561,7 +573,7 @@ export default {
                     originPrice: undefined,
                     price: undefined,
                     amount: 1,
-                    checkRoomType: 1,
+                    checkRoomType: 0,
                     room: {
                         roomId: undefined,
                         startDate: util.dateFormat(new Date()),
@@ -579,22 +591,11 @@ export default {
                     showDiscount: undefined,
                     extraItems: []
                 };
-                // } else {
-                //     // 新增房间，房型时间同上一间
-                //     room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
-                //     room.idCardList = [];
-                //     if (room.roomOrderId) {
-                //         delete room.roomOrderId;
-                //         delete room.state;
-                //         delete room.originDatePriceList;
-                //     }
-                // }
                 if (this.vipCardInfo && this.vipCardInfo.discount && Number(this.vipCardInfo.discount) !== 10) {
                     room.moreDiscount = this.userOriginType.id;
                 } else {
                     room.moreDiscount = 0;
                 }
-
                 this.rooms.push(room);
             },
             dateDiff(date1, date2) {
@@ -650,6 +651,11 @@ export default {
                     };
                 }
             },
+            handleRoomNumChange(item , index, num ) {
+                item.amount = num;
+                this.modifyRooms([item]);
+
+            },
             getRoomsList(id) {
                 if (!id) {
                     return [];
@@ -679,11 +685,12 @@ export default {
             handleRoomChange(room, index) {
                 if (index === -1) {
                     this.rooms.forEach(function(element, index) {
-                        element.checkType = room.checkType
-                        element.startDate = room.startDate
-                        element.endDate = room.endDate
+                        this.checkRoomType = room.checkType;
+                        this.startDate = room.startDate;
+                        this.endDate = room.endDate;
                     });
                     this.modifyRooms(this.rooms);
+                    return;
                 }
                 // 团队预订
                 if (JSON.stringify(room) === this.lastRoomsToken[index]) {
@@ -715,7 +722,7 @@ export default {
              */
             modifyRooms(rooms) {
                 // 过滤没有房间id的房间
-                // rooms = rooms.filter(r => r.roomType);
+                rooms = rooms.filter(r => r.roomId);
                 if (!rooms || rooms.length === 0) {
                     return false;
                 }
@@ -762,14 +769,13 @@ export default {
                     orderId: this.order.orderId,
                     rooms: JSON.stringify(rooms.map(room => {
                         return {
-                            amount: room.room.amount,
-                            checkType: room.room.checkRoomType,
-                            startDate: room.room.startDate,
-                            endDate: room.room.endDate,
+                            checkType: this.checkState === 'team' ? this.checkRoomType : room.checkRoomType,
+                            amount: room.amount,
+                            startDate: util.dateFormatLong(this.checkState === 'team' ? this.startDate : room.room.startDate),
+                            endDate: util.dateFormatLong(this.checkState === 'team' ? this.endDate : room.room.endDate),
+                            subTypeId: room.roomId,
                             quickDiscountId: room.quickDiscountId,
-                            roomOrderId: room.roomOrderId,
-                            // roomId: room.roomType,
-                            subTypeId: room.room.checkType,
+                            subTypeId: room.roomId,
                             useDiscount: !!room.moreDiscount
                         };
                     }))
@@ -798,9 +804,13 @@ export default {
                             // });
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
-                            currentRoom.originPrice = item.originTotalFee;
+                            currentRoom.originPrice = item.originTotalPrice;
                             currentRoom.timestamp = res.data.timestamp;
                             currentRoom.canReserveCount = item.canReserveCount;
+                             const price = this.rooms.reduce((sum, room) => {
+                    return sum + (room.price || 0);
+                }, 0);
+                this.$emit('priceChange', price);
                             
                         });
                     });
@@ -808,32 +818,32 @@ export default {
             changeRoomFee(room) {
                 // 手动修改价格需要把快捷折扣置为无
                 room.quickDiscountId = '';
-                this.setDayFee(room);
+                // this.setDayFee(room);
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
                 room.moreDiscount = 0;
             },
             // 设置每日房价
-            setDayFee(room) {
-                const price = room.price;
-                const priceScale = room.priceScale;
-                room.datePriceList.forEach((item, index) => {
-                    item.dateFee = Number((price * priceScale[index]).toFixed(2));
-                });
-                this.setFirstDayFee(room);
-            },
-            // 误差处理，将误差加至第一天
-            setFirstDayFee(room) {
-                const price = room.price;
-                if (price === undefined || price === '') {
-                    return false;
-                }
+            // setDayFee(room) {
+            //     const price = room.price;
+            //     const priceScale = room.priceScale;
+            //     room.datePriceList.forEach((item, index) => {
+            //         item.dateFee = Number((price * priceScale[index]).toFixed(2));
+            //     });
+            //     this.setFirstDayFee(room);
+            // },
+            // // 误差处理，将误差加至第一天
+            // setFirstDayFee(room) {
+            //     const price = room.price;
+            //     if (price === undefined || price === '') {
+            //         return false;
+            //     }
 
-                // 每日房价相加
-                const totalPrice = room.datePriceList.reduce((a, b) => {
-                    return a + Number(b.dateFee);
-                }, 0);
-                room.datePriceList[0].dateFee = Number((room.datePriceList[0].dateFee + price - totalPrice).toFixed(2));
-            },
+            //     // 每日房价相加
+            //     const totalPrice = room.datePriceList.reduce((a, b) => {
+            //         return a + Number(b.dateFee);
+            //     }, 0);
+            //     room.datePriceList[0].dateFee = Number((room.datePriceList[0].dateFee + price - totalPrice).toFixed(2));
+            // },
             showPriceList(id) {
                 this.rooms.forEach((item, index) => {
                     if (index === id) {
@@ -855,37 +865,13 @@ export default {
             setTotalPrice(room) {
                 // 手动修改价格需要把快捷折扣置为无
                 room.quickDiscountId = '';
-                room.price = +(room.datePriceList.reduce((a, b) => {
-                    return a + Number(b.dateFee);
-                }, 0).toFixed(2));
+                // room.price = +(room.datePriceList.reduce((a, b) => {
+                //     return a + Number(b.dateFee);
+                // }, 0).toFixed(2));
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             deleteRoom(index) {
                 this.rooms.splice(index, 1);
-            },
-            addPerson(id, preson) {
-                this.rooms.forEach((item, index) => {
-                    if (index === id) {
-                        if (item.idCardList && item.idCardList.length >= 20) {
-                            modal.warn('一间房最多添加20个入住人');
-                            return false;
-                        }
-
-                        if (item.idCardList) {
-                            item.idCardList.push(preson);
-                        } else {
-                            item.idCardList = [];
-                            item.idCardList.push(preson);
-                        }
-                    }
-                });
-            },
-            deletePerson(id, num) {
-                this.rooms.forEach((item, index) => {
-                    if (index === id) {
-                        item.idCardList.splice(num, 1);
-                    }
-                });
             },
             changeRooms() {
                 this.$emit('change', this.rooms);
@@ -893,63 +879,6 @@ export default {
             moreDiscountChange(room) {
                 this.forceChangePrice = true;
                 this.modifyRooms([room]);
-            },
-            addExtraItem(room) {
-                if (this.otherGoodsList.length <= 0) {
-                    modal.warn('请到"网络设置－业务设置"中添加其他消费！');
-                    return false;
-                }
-
-                this.currentSelectOtherRoom = room;
-                this.goodsSelectModalShow = true;
-            },
-            setOtherGoodsItems(data) {
-                const goodsList = data;
-                let newItems = this.currentSelectOtherRoom.extraItems.find(i => !i.logId);
-                if (!newItems) {
-                    newItems = {
-                        itemList: []
-                    };
-                    this.currentSelectOtherRoom.extraItems.push(newItems);
-                }
-                goodsList.map(i => {
-                    let flag = false;
-                    newItems.itemList.map(n => {
-                        if (n.goodsId === i.id) {
-                            n.amount = n.amount + i.num;
-                            n.subtotal = Number((n.amount * i.p).toFixed(2));
-                            flag = true;
-                        }
-                    });
-                    if (!flag) {
-                        newItems.itemList.push({
-                            amount: i.num,
-                            subtotal: Number((i.num * i.p).toFixed(2)),
-                            price: i.p,
-                            goodsName: i.n,
-                            goodsId: i.id
-                        });
-                    }
-                });
-            },
-            handleRoomNumChange(item, index, num) {
-                item.amount = num;
-                this.modifyRooms(this.rooms);
-            },
-            handleExtraNumChange(good, num) {
-                if (good.price === null) {
-                    modal.warn('该商品已删除');
-                    return false;
-                }
-                good.amount = num;
-                good.subtotal = Number((num * good.price).toFixed(2));
-            },
-            // 关闭商超选择弹窗
-            closeShopSelectModal() {
-                this.goodsSelectModalShow = false;
-            },
-            deleteExtra(extra, index) {
-                this.$delete(extra.itemList, index);
             }
         }
 };

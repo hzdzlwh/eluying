@@ -4,9 +4,9 @@
         <!-- <div class="glyph-arrow-down"></div> -->
         <div v-for='(item, index) in date.eventList' class="glyph-detail"  @click.stop='tadayClick(item)'>
             <div class="glyph-detail-content" :class="{'glyph-detail-box': index !== date.eventList.length - 1}">
-                <div class="glyph-detail-name" v-if='item.checkType'>
+                <div class="glyph-detail-name" v-if='item.type !== 1 && item.type !== 2 && item.type !== 3'>
                     <div>{{item.customerName}} ({{item.customerPhone}})</div>
-                    <span class="checkType">{{checkType[item.checkType]}}</span>
+                    <span class="checkType">{{getcheckType(item.checkType)}}</span>
                 </div>
                 <div class="glyph-detail-time">
                     <div class="start">{{item.startDate.slice(2,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '开始': '到达' }}</span></div>
@@ -69,9 +69,9 @@
 import bus from '../../common/eventBus';
 import {
     colorList,
-    nameList,
-    checkType
+    nameList
 } from '../colorList';
+import { checkType } from '../../common/orderSystem/roomCheckType.js';
 export default {
     props: {
         date: {
@@ -153,6 +153,9 @@ export default {
 
     },
     methods: {
+        getcheckType(type) {
+            this.checkType.filter(el => { el.id = type; }).name;
+        },
         tadayClick(it) {
             const date = {
                 checkOutDate: it.endDate,

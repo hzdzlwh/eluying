@@ -4,17 +4,30 @@
 import http from '../../http';
 import types from './types';
 import { ORDER_TYPE } from '../../../ordersManage/constant';
-
+const date = new Date();
+const now = {
+    year: date.getFullYear(),
+    mouth: date.getMonth() + 1,
+    day: date.getDay()
+};
 const orderSystemModule = {
     state: {
         shopList: [],
         enterList: [],
         otherGoodsList: [],
         orderDetail: {},
-        roomBusinessInfo: {}
+        roomBusinessInfo: {},
+        roomExtinfo: {
+            startDate: new Date(now.year, now.mouth, now.day, 18, 0, 0, 0),
+            endDate: new Date(now.year, now.mouth, now.day + 1, 12, 0, 0, 0),
+            roomCheckType: 0
+        }
     },
 
     mutations: {
+        [types.SET_ROOM_EXITINFO](state, { key, val }) {
+            state.roomExtinfo[key] = val;
+        },
         [types.SET_SHOP_LIST](state, { shopList }) {
             state.shopList = shopList;
         },

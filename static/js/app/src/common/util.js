@@ -52,7 +52,20 @@ var util = {
         d = d < 10 ? ('0' + d) : d;
         return y + '-' + m + '-' + d;
     },
-
+    dateFormatLong: function(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        let h = date.getHours();
+        h = h < 10 ? '0' + h : h;
+        let M = date.getMinutes();
+        M = M < 10 ? '0' + M : M;
+        let s = date.getSeconds();
+        s = s < 10 ? '0' + s : s;
+        return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
+    },
     timeFormat: function(dateArg) {
         let date = new Date(dateArg);
         let m = date.getMonth() + 1;

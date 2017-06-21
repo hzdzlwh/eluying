@@ -15,8 +15,4 @@ export const nameList = {
     12: '预离',
     13: '预抵'
 };
-export const checkType = {
-    1: '正常入住'
-};
-
 // 为了不修改原来代码没合并=-=没事别改这个
