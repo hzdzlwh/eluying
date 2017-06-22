@@ -54,7 +54,7 @@
                             </span>
                             <label class="label-text">入住</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.startDate" @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.startDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                                 <!--  <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
                                                @input="handleRoomChange(item, index)"
@@ -63,7 +63,7 @@
                             </div>
                             <span>~</span>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.endDate" @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                             </div>
                             <label class="label-text">
@@ -77,7 +77,7 @@
                                 <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
                             </p>
                             <span class="discount-info">
-                        <span>
+                        <span v-if='!item.priceModified'>
                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                             <span class="discount-num" v-if="item.showDiscount">
                                 {{item.showDiscount}}
@@ -116,10 +116,11 @@
 .el-input__inner {
     height: 25px!important;
 }
+
 .registerRoom-content {
     width: 100%;
     margin-right: 100px;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 
 .roomModals-body .el-input__inner {
@@ -139,14 +140,18 @@
     flex-direction: inherit;
     justify-content: space-between;
 }
-.registerInfoModal-roomPrice{
-    position:relative
+
+.registerInfoModal-roomPrice {
+    position: relative
 }
-.roomModals-body .room-icon, .delete-icon{
-        background-repeat: no-repeat;
-            margin-top: 8px;
+
+.roomModals-body .room-icon,
+.delete-icon {
+    background-repeat: no-repeat;
+    margin-top: 8px;
 }
-.roomModals-body .discount-info{
+
+.roomModals-body .discount-info {
     display: inline-flex;
     position: absolute;
     font-size: 12px;
@@ -182,6 +187,12 @@ import {
 import {
     checkType
 } from '../../roomCheckType';
+const date = new Date();
+const now = {
+    year: date.getFullYear(),
+    mouth: date.getMonth() + 1,
+    day: date.getDay()
+};
 export default {
     data() {
             return {
@@ -200,7 +211,7 @@ export default {
         },
         created() {
             bus.$on('submitOrder', this.changeRooms);
-            bus.$on('OrderExtInfochange', this.handleRoomChange);
+            // bus.$on('OrderExtInfochange', this.handleRoomChange);
             bus.$on('hideOrderEditor', this.cleanRooms);
             bus.$on('editOrder', this.initRooms);
             bus.$on('register', this.initRegisterRooms);
@@ -211,7 +222,7 @@ export default {
             bus.$off('hideOrderEditor', this.cleanRooms);
             bus.$off('editOrder', this.initRooms);
             bus.$off('register', this.initRegisterRooms);
-            bus.$off('OrderExtInfochange', this.handleRoomChange);
+            // bus.$off('OrderExtInfochange', this.handleRoomChange);
         },
         components: {
             CheckInPerson,
@@ -239,6 +250,10 @@ export default {
                 default: {}
             },
             order: {
+                type: Object,
+                default: {}
+            },
+            ExtInDate: {
                 type: Object,
                 default: {}
             }
@@ -324,6 +339,14 @@ export default {
                     return sum + (room.price || 0);
                 }, 0);
                 this.$emit('priceChange', price);
+            },
+            ExtInDate: {
+                handler() {
+                    if (this.checkState === 'team' && this.rooms.length > 0) {
+                        this.modifyRooms(this.rooms);
+                    }
+                },
+                deep: true
             }
         },
         computed: {
@@ -576,8 +599,8 @@ export default {
                     checkRoomType: 0,
                     room: {
                         roomId: undefined,
-                        startDate: util.dateFormat(new Date()),
-                        endDate: util.dateFormat(util.diffDate(new Date(), 1))
+                        startDate: new Date(now.year, now.mouth, now.day, 12, 0, 0),
+                        endDate: new Date(now.year, now.mouth, now.day + 1, 18, 0, 0)
                     },
                     idCardList: [],
                     datePriceList: [],
@@ -651,7 +674,7 @@ export default {
                     };
                 }
             },
-            handleRoomNumChange(item , index, num ) {
+            handleRoomNumChange(item, index, num) {
                 item.amount = num;
                 this.modifyRooms([item]);
 
@@ -683,15 +706,15 @@ export default {
                 this.vipList = [];
             },
             handleRoomChange(room, index) {
-                if (index === -1) {
-                    this.rooms.forEach(function(element, index) {
-                        this.checkRoomType = room.checkType;
-                        this.startDate = room.startDate;
-                        this.endDate = room.endDate;
-                    });
-                    this.modifyRooms(this.rooms);
-                    return;
-                }
+                // if (index === -1) {
+                //     this.rooms.forEach(function(element, index) {
+                //         this.checkRoomType = room.checkType;
+                //         this.startDate = room.startDate;
+                //         this.endDate = room.endDate;
+                //     });
+                //     this.modifyRooms(this.rooms);
+                //     return;
+                // }
                 // 团队预订
                 if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                     return false;
@@ -768,18 +791,18 @@ export default {
                     discountRelatedId: discountRelatedId,
                     orderId: this.order.orderId,
                     rooms: JSON.stringify(rooms.map(room => {
-                        return {
-                            checkType: this.checkState === 'team' ? this.checkRoomType : room.checkRoomType,
-                            amount: room.amount,
-                            startDate: util.dateFormatLong(this.checkState === 'team' ? this.startDate : room.room.startDate),
-                            endDate: util.dateFormatLong(this.checkState === 'team' ? this.endDate : room.room.endDate),
-                            subTypeId: room.roomId,
-                            quickDiscountId: room.quickDiscountId,
-                            subTypeId: room.roomId,
-                            useDiscount: !!room.moreDiscount
-                        };
-                    }))
-                    // forceChangePrice: this.forceChangePrice
+                            return {
+                                checkType: this.checkState === 'team' ? this.ExtInDate.roomCheckType : room.checkRoomType,
+                                amount: room.amount,
+                                startDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.startDate : room.room.startDate),
+                                endDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.endDate : room.room.endDate),
+                                subTypeId: room.roomId,
+                                quickDiscountId: room.quickDiscountId,
+                                subTypeId: room.roomId,
+                                useDiscount: !!room.moreDiscount
+                            };
+                        }))
+                        // forceChangePrice: this.forceChangePrice
                 };
                 http.get('/room/canReserveCountAndTotalPrice', params)
                     .then(res => {
@@ -807,11 +830,11 @@ export default {
                             currentRoom.originPrice = item.originTotalPrice;
                             currentRoom.timestamp = res.data.timestamp;
                             currentRoom.canReserveCount = item.canReserveCount;
-                             const price = this.rooms.reduce((sum, room) => {
-                    return sum + (room.price || 0);
-                }, 0);
-                this.$emit('priceChange', price);
-                            
+                            const price = this.rooms.reduce((sum, room) => {
+                                return sum + (room.price || 0);
+                            }, 0);
+                            this.$emit('priceChange', price);
+
                         });
                     });
             },

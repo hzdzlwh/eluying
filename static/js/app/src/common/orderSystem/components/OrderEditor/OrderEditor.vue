@@ -95,7 +95,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <orderExtInfo :checkState='"team"' v-if='checkState === "team"' :startDate.sync='startDate' :endDate.sync='endDate' :roomCheckType.sync='roomCheckType'></orderExtInfo>
+                            <orderExtInfo :checkState='"team"' v-model='ExtInDate' ></orderExtInfo>
                             <!-- checkstate先放着，以后应该能复用到 -->
                         </div>
                         <!-- header end -->
@@ -123,7 +123,8 @@
                                     :vipCardId="vipCardId"
                                     :vipCardInfo="vipCardInfo"
                                     @change="handleRoomChange"
-                                    @priceChange="handleRoomPriceChange"/>
+                                    @priceChange="handleRoomPriceChange"
+                                    :ExtInDate='ExtInDate'/>
                         <CateEditor
                                 v-if="this.order.type === ORDER_TYPE.CATERING"
                                 :vipDiscountDetail="vipDiscountDetail"
@@ -161,9 +162,10 @@
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
-                        <div>
-                          <div class="dd-btn dd-btn-primary" @click="handleRoomBusiness('auto')">预订并自动排房</div>
-                        <div class="dd-btn dd-btn-primary" @click="submitInfo">{{titleAndBtn.btn}}</div>
+                        <div class="dd-btn dd-btn-primary" @click="submitInfo" v-if='this.checkState !== "team" && this.checkState !== "quick"'>{{titleAndBtn.btn}}</div>
+                        <div v-else>
+                          <div class="dd-btn dd-btn-primary" @click="handleQuickTeamBusiness('auto')">预订并自动排房</div>
+                        <div class="dd-btn dd-btn-primary" @click="handleQuickTeamBusiness">完成预订</div>
                         </div>
                     </div>
                 </div>
@@ -326,9 +328,11 @@
         },
         data() {
             return {
-                startDate: new Date(now.year, now.mouth, now.day, 18, 0, 0, 0),
-                endDate: new Date(now.year, now.mouth, now.day + 1, 12, 0, 0, 0),
-                roomCheckType: 0,
+                ExtInDate: {
+                    startDate: new Date(now.year, now.mouth, now.day, 12, 0, 0, 0),
+                    endDate: new Date(now.year, now.mouth, now.day + 1, 18, 0, 0, 0),
+                    roomCheckType: 0
+                },
                 name: '',
                 phone: '',
                 userOriginType: undefined,
@@ -458,10 +462,12 @@
         },
         created() {
             this.getData();
+            bus.$on('OrderExtInfochange', this.OrderExtInfochange);
             bus.$on('setBack', this.setBack);
         },
         beforeDestroy() {
             bus.$off('setBack', this.setBack);
+            bus.$off('OrderExtInfochange', this.OrderExtInfochange);
         },
         watch: {
             userOriginType(origin) {
@@ -602,7 +608,7 @@
                     }
                     $('#orderEditor').modal('hide');
                 }
-            }
+            },
         },
         methods: {
             ...mapActions([
@@ -610,6 +616,10 @@
                 types.LOAD_ENTER_LIST,
                 types.LOAD_OTHER_GOODS_LIST
             ]),
+            OrderExtInfochange(date) {
+                this.$set(this,date.name,date.val)
+                // this[date.name] = date.val;
+            },
             returnPreStep() {
                 this.hideModal();
                 bus.$emit('back');
@@ -834,7 +844,9 @@
                     if (item.showTip) {
                         valid = false;
                     }
-
+                    if ((this.checkState === 'quick' || this.checkState === 'team') && (!item.roomId || !item.price)) {
+                        valid = false;
+                    }
                     if (util.DateDiff(new Date(item.room.endDate), new Date(item.room.startDate)) > 400) {
                         durationValid = false;
                     }
@@ -922,9 +934,9 @@
                     return {
                         amount: room.amount,
                         checkType: room.checkRoomType,
-                        endDate: room.room.endDate,
-                        startDate: room.room.startDate,
-                        id: room.checkType,
+                        endDate: util.dateFormatLong(room.room.endDate),
+                        startDate: util.dateFormatLong(room.room.startDate),
+                        id: room.roomId,
                         fee: room.price,
                         sub: true,
                         quickDiscountId: room.quickDiscountId,
@@ -1093,13 +1105,12 @@
                         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
                     });
             },
-            handleRoomBusiness(type) {
-                let rooms;
-                if (type && type === 'auto') {
-                    rooms = this.getQuickOrTeamRooms();
-                } else {
-                    rooms = this.getSubmitRooms();
+            handleQuickTeamBusiness(type) {
+                bus.$emit('submitOrder');
+                if (!this.validate()) {
+                    return false;
                 }
+                const rooms = this.getQuickOrTeamRooms();
                 this.getSubmitGoods();
                 const entertainmentItems = this.getSubmitEnterItems();
 
@@ -1116,9 +1127,45 @@
                 if (type && type === 'auto') {
                     params.type = 1;
                 } else {
-                    params.type = 0
+                    params.type = 0;
                 }
                 http.post('/room/quickOrTeamReserveOrder', params)
+                    .then(res => {
+                        this.hideModal();
+                        const business = {};
+                        business.businessJson = JSON.parse(JSON.stringify(params));
+                        business.businessJson.functionType = 1;
+                        business.businessJson.orderId = res.data.orderId;
+                        business.orderDetail = { ...res.data };
+                        business.cashierType = this.checkState;
+                        bus.$emit('refreshView');
+                        bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
+                    });
+            },
+            handleRoomBusiness() {
+                this.getSubmitGoods();
+                const rooms = this.getSubmitRooms();
+                const entertainmentItems = this.getSubmitEnterItems();
+
+                const params = {
+                    name: this.name,
+                    phone: this.phone,
+                    remark: this.remark,
+                    rooms: JSON.stringify(rooms),
+                    entertainmentItems: JSON.stringify(entertainmentItems),
+                    items: JSON.stringify(this.newGoodItems),
+                    goods: JSON.stringify(this.previousGoods),
+                    ...this.getDiscountRelatedIdAndOrigin()
+                };
+                if (this.checkState === 'ing') {
+                    params.type = 0;
+                } else if (this.checkState === 'finish') {
+                    params.type = 1;
+                } else if (this.checkState === 'book') {
+                    params.type = 2;
+                }
+
+                http.post('/room/confirmOrder', params)
                     .then(res => {
                         this.hideModal();
                         const business = {};
@@ -1137,8 +1184,15 @@
                         //     bus.$emit('refreshView');
                         //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
                         // }
-                        bus.$emit('refreshView');
-                        bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
+                        if (this.checkState === 'ing') {
+                            bus.$emit('refreshView');
+                        }
+                        if (this.checkState === 'finish') {
+                            bus.$emit('showCashier', { type: 'register', business: business });
+                        } else {
+                            bus.$emit('refreshView');
+                            bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
+                        }
                     });
             },
             submitInfo() {
