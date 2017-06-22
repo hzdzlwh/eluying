@@ -172,7 +172,8 @@ $(function() {
         el: '#dishesDialog',
         data: {
             dishes: {
-                discountable: 1
+                discountable: 1,
+                complimentable: 1
             },
             dishesClassifyList: [],
             submitted: false,
@@ -404,6 +405,7 @@ $(function() {
         data: {
             packageModel: {
                 discountable: 1,
+                complimentable: 1,
                 dishesNum: undefined,
                 dishesReq: []
             },
