@@ -2,7 +2,7 @@
     <div class="calendar-glyph-detail ing down " :class='{hoverRight : overflow}'>
         <div class="glyph-arrow-up"></div>
         <!-- <div class="glyph-arrow-down"></div> -->
-        <div v-for='(item, index) in date.eventList' class="glyph-detail"  @click.stop='tadayClick(item)'>
+        <div v-for='(item, index) in date.eventList' class="glyph-detail" @click.stop='tadayClick(item)'>
             <div class="glyph-detail-content" :class="{'glyph-detail-box': index !== date.eventList.length - 1}">
                 <div class="glyph-detail-name" v-if='item.type !== 1 && item.type !== 2 && item.type !== 3'>
                     <div>{{item.customerName}} ({{item.customerPhone}})</div>
@@ -29,9 +29,11 @@
 .glyph-detail:hover {
     background-color: #e1effa;
 }
-.glyph-detail-content{
+
+.glyph-detail-content {
     margin: 0 8px;
 }
+
 .glyph-detail-box {
     border-bottom: 1px solid #e6e6e6
 }
@@ -71,7 +73,9 @@ import {
     colorList,
     nameList
 } from '../colorList';
-import { checkType } from '../../common/orderSystem/roomCheckType.js';
+import {
+    checkType
+} from '../../common/orderSystem/roomCheckType.js';
 export default {
     props: {
         date: {
@@ -154,7 +158,9 @@ export default {
     },
     methods: {
         getcheckType(type) {
-            this.checkType.filter(el => { el.id = type; }).name;
+            return this.checkType.filter(function(el) {
+                return el.id === type;
+            })[0].name;
         },
         tadayClick(it) {
             const date = {
