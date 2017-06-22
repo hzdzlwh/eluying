@@ -318,7 +318,7 @@
     const date = new Date();
     const now = {
         year: date.getFullYear(),
-        mouth: date.getMonth() + 1,
+        mouth: date.getMonth(),
         day: date.getDay()
     };
     export default{
@@ -814,6 +814,11 @@
                 this.vipCardId = undefined;
                 this.vipCardInfo = {};
                 this.hasBack = false;
+                this.ExtInDate = {
+                    startDate: new Date(now.year, now.mouth, now.day, 12, 0, 0, 0),
+                    endDate: new Date(now.year, now.mouth, now.day + 1, 18, 0, 0, 0),
+                    roomCheckType: 0
+                };
             },
             hideModal() {
                 bus.$emit('hideOrderEditor');

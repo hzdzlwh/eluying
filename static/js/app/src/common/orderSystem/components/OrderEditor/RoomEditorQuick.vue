@@ -191,7 +191,7 @@ import {
 const date = new Date();
 const now = {
     year: date.getFullYear(),
-    mouth: date.getMonth() + 1,
+    mouth: date.getMonth(),
     day: date.getDay()
 };
 export default {
@@ -342,8 +342,13 @@ export default {
                 this.$emit('priceChange', price);
             },
             ExtInDate: {
-                handler() {
+                handler(newValue) {
                     if (this.checkState === 'team' && this.rooms.length > 0) {
+                        this.rooms.forEach(function(room) {
+                            room.room.endDate = newValue.endDate;
+                            room.room.startDate = newValue.startDate;
+                            room.checkRoomType = newValue.roomCheckType;
+                        })
                         this.modifyRooms(this.rooms);
                     }
                 },
@@ -597,11 +602,11 @@ export default {
                     originPrice: undefined,
                     price: undefined,
                     amount: 1,
-                    checkRoomType: 0,
+                    checkRoomType: this.checkState === 'team' ? this.ExtInDate.roomCheckType : 0,
                     room: {
                         roomId: undefined,
-                        startDate: new Date(now.year, now.mouth, now.day, 12, 0, 0),
-                        endDate: new Date(now.year, now.mouth, now.day + 1, 18, 0, 0)
+                        startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
+                        endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 18, 0, 0)
                     },
                     idCardList: [],
                     datePriceList: [],
