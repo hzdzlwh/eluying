@@ -52,7 +52,7 @@
                             <span class="useless-tip error" style="left: 28px;" v-if="checkIsToday(item.room.startDate)">
                                 该房间的入住时间必需为今日！
                             </span>
-                            <label class="label-text">入住</label>
+                            <label class="label-text">到达</label>
                             <div class="enterDate">
                                 <DatePicker v-model="item.room.startDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
@@ -62,6 +62,7 @@
                                                :disabled="item.state === 1 || item.state === 8"/> -->
                             </div>
                             <span>~</span>
+                            <label class="label-text">离开</label>
                             <div class="enterDate">
                                 <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>

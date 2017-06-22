@@ -3,12 +3,13 @@
     margin-top: 15px;
 ">
         <div class="room-date" style="display: inline-block; position: relative;" v-if='checkState === "team"'>
-            <label class="label-text">入住</label>
+            <label class="label-text">到达</label>
             <div class="enterDate">
                 <DatePicker v-model='value.startDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
             <span>~</span>
+            <label class="label-text">离开</label>
             <div class="enterDate">
                 <DatePicker v-model='value.endDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledStartDate(value.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>

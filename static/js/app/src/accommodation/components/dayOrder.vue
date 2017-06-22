@@ -241,7 +241,7 @@
         width: 80px;
     height: 80px;
     line-height: 80px;
-    background-color: #ffd281;
+    background-color: #ff9326;
     display: inline-block;
     border-radius: 40px;
     text-align: center;

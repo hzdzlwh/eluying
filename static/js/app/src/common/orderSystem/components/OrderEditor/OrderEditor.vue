@@ -95,7 +95,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <orderExtInfo :checkState='"team"' v-model='ExtInDate' ></orderExtInfo>
+                            <orderExtInfo :checkState='"team"' v-model='ExtInDate' v-if='checkState === "team"'></orderExtInfo>
                             <!-- checkstate先放着，以后应该能复用到 -->
                         </div>
                         <!-- header end -->
