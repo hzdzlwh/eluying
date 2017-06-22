@@ -313,7 +313,7 @@ default {
                    },
                    {
                        title: '房号',
-                       render: (h, row) => row.rooms.map(function(room) {
+                       render: (h, row) => row.rooms && row.rooms.map(function(room) {
                            return <div >{room.roomName}</div>;
                        })
                    },
