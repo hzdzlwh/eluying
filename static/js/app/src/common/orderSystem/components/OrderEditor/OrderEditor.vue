@@ -319,7 +319,7 @@
     const now = {
         year: date.getFullYear(),
         mouth: date.getMonth(),
-        day: date.getDay()
+        day: date.getDate()
     };
     export default{
         name: 'OrderEditor',

@@ -11,7 +11,7 @@
             <span>~</span>
             <label class="label-text">离开</label>
             <div class="enterDate">
-                <DatePicker v-model='value.endDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledStartDate(value.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                <DatePicker v-model='value.endDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledEndDate(value.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
             <label class="label-text">
@@ -110,45 +110,17 @@ export default {
             disabledStartDate(endDate) {
                 const str = util.dateFormat(new Date(endDate));
                 const arr = str.split('-');
-                if (this.checkState === 'finish') {
-                    return (date) => {
-                        return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
-                } else if (this.checkState === 'ing') {
-                    return (date) => {
-                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
-                } else {
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
-                }
             },
             disabledEndDate(startDate) {
-                if (this.checkState === 'finish') {
-                    if (util.isSameDay(new Date(startDate), new Date())) {
-                        const str1 = util.dateFormat(new Date());
-                        const arr1 = str1.split('-');
-                        return (date) => {
-                            return (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                        };
-                    } else {
-                        const str = util.dateFormat(new Date(startDate));
-                        const arr = str.split('-');
-                        const str1 = util.dateFormat(new Date());
-                        const arr1 = str1.split('-');
-                        return (date) => {
-                            return (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                        };
-                    }
-                } else {
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() ||  date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
                     };
-                }
-            }
+            },
         }
     }
 </script>
