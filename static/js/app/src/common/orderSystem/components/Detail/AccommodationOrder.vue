@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="content-item">
-            <p class="content-item-title"><span>房间信息</span></p>
+            <p class="content-item-title">
+                <span>房间信息</span>
+                <span class="content-item-discount" v-if="order.discountPlan">折扣方案：<span>{{order.discountPlan}}</span></span>
+            </p>
             <div class="items">
                 <div class="item" v-for="item in rooms" v-if='rooms'>
                     <div class="room-info">
