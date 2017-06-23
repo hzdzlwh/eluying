@@ -1334,7 +1334,8 @@
                             if (haveToday) {
                                 // this.hideModal();
                                 // $('#orderDetail').modal('hidden');
-                                $('#checkIn').modal({ backdrop: 'static' });
+                                // $('#checkIn').modal({ backdrop: 'static' });
+                                bus.$emit('editOrder', 'checkIn', this.order);
                             } else {
                                 modal.warn('未到办理入住的时间，无法入住！');
                                 return false;
@@ -1357,6 +1358,9 @@
             autoSelectRooms() {
                 http.post('/room/autoSelectRooms', { orderId: this.id, orderType: this.type })
                     .then(res => {
+                        if (res.msg) {
+                            modal.warn(res.msg);
+                        }
                         this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
                         bus.$emit('refreshView');
                     });

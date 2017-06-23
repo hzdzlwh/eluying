@@ -127,7 +127,7 @@
                 };
                 const callback = () => {
                     this.clear(type);
-                    this.$emit('changeCheckState', type, this.getRoomsWithDate());
+                    bus.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
                 if (type === 'finish') {
                     if (this.t || this.f) {

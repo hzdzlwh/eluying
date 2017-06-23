@@ -110,6 +110,7 @@
                                     :vipCardId="vipCardId"
                                     :vipCardInfo="vipCardInfo"
                                     @change="handleRoomChange"
+                                    :orderEditorVisible="orderEditorVisible"
                                     @priceChange="handleRoomPriceChange"/>
 
                         <RoomEditorQuick v-else
@@ -397,6 +398,8 @@
             ...mapState({ order: state => state.orderSystem.orderDetail }),
             titleAndBtn() {
                 switch (this.checkState) {
+                    case 'checkIn':
+                        return { title: '办理入住', btn: '确认入住' };
                     case 'ing':
                         return { title: '直接入住', btn: '确认入住' };
                     case 'finish':
@@ -920,10 +923,10 @@
                 return this.rooms.map(room => {
                     return {
                         datePriceList: room.datePriceList,
-                        endDate: room.room.endDate,
-                        startDate: room.room.startDate,
+                        endDate: util.dateFormatLong(room.room.endDate),
+                        startDate: util.dateFormatLong(room.room.startDate),
                         id: room.categoryType,
-                        roomId: room.roomType,
+                        roomId: room.roomType || null,
                         idCardList: JSON.stringify(room.idCardList),
                         fee: room.price,
                         sub: true,

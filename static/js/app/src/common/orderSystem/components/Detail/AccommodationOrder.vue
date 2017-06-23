@@ -19,9 +19,10 @@
                             </span>
                         </div>
                         <div class="room-date">
-                            <label class="label-text">入住</label>
+                            <label class="label-text">到达</label>
                             <span class="startDate">{{item.startDate || item.roomInfo.checkInDate}}</span>
                             <span>~</span>
+                            <label class="label-text">离开</label>
                             <span class="endDate">{{item.endDate || item.roomInfo.checkOutDate}}</span>
                             <label class="label-text">共{{item.duration}}晚</label>
                         </div>
