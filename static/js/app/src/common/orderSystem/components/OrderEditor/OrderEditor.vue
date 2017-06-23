@@ -849,7 +849,7 @@
                     if (item.showTip) {
                         valid = false;
                     }
-                    if ((this.checkState === 'quick' || this.checkState === 'team') && (!item.roomId || !item.price)) {
+                    if ((this.checkState === 'quick' || this.checkState === 'team') && (!item.categoryType || !item.price)) {
                         valid = false;
                     }
                     if (util.DateDiff(new Date(item.room.endDate), new Date(item.room.startDate)) > 400) {
@@ -941,7 +941,7 @@
                         checkType: room.checkRoomType,
                         endDate: util.dateFormatLong(room.room.endDate),
                         startDate: util.dateFormatLong(room.room.startDate),
-                        id: room.roomId,
+                        id: room.categoryType,
                         fee: room.price,
                         sub: true,
                         quickDiscountId: room.quickDiscountId,

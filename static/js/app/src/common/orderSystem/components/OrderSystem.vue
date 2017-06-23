@@ -177,7 +177,9 @@
                 this.checkState = type;
                 this.registerRooms = rooms;
                 this.orderEditorVisible = true;
-                bus.$emit('register', rooms);
+                this.$nextTick(function() {
+                    bus.$emit('register', rooms);
+                });
             },
             editOrder(type, order) {
                 this.checkState = type;

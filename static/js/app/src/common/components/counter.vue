@@ -1,7 +1,8 @@
 <template>
     <div class="counter-container" :class="{'notChange': disabled}">
         <span class="decrease-btn" :class="{'notChange': disabled}" @click="decreaseNum">-</span>
-        <span class="value" v-text="value"></span>
+        <span class="value" v-text='value' v-if='step !== 1'></span>
+        <input class="value" v-model='value' type='Number' @input='changeNum' v-else></input>
         <span class="increase-btn" :class="{'notChange': disabled}" @click="increaseNum">+</span>
         <slot></slot>
     </div>
@@ -118,6 +119,19 @@
                     const flag = this.onNumChange(this.type, this.id, this.value / this.step, this.orderId);
                     if (!flag) {
                         this.value -= this.step;
+                    }
+                }
+            },
+            changeNum() {
+                this.value = Number(this.value);
+                if (this.orderId === -1) {
+                    this.$emit('numChange', this.type, this.id, this.value);
+                } else {
+                    this.$emit('numChange', this.type, this.id, this.value, this.orderId);
+                }
+                if (this.onNumChange) {
+                    const flag = this.onNumChange(this.type, this.id, this.value, this.orderId);
+                    if (!flag) {
                     }
                 }
             }
