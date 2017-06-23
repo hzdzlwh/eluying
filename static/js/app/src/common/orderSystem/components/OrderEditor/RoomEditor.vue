@@ -24,7 +24,7 @@
         </p>
         <div class="registerRoom-items">
             <div class="registerRoom-container" v-for="(item,index) in rooms" style="display: flex;flex-direction: row;">
-                <input type="checkbox" v-model="item.isCheckIn" class="dd-checkbox" v-if="checkState === 'checkIn'" style="width: auto;margin-right: 20px">
+                <input @change="handleIsCheckInChange(item)" type="checkbox" v-model="item.isCheckIn" class="dd-checkbox" v-if="checkState === 'checkIn'" style="width: auto;margin-right: 20px">
                 <div style="flex: 1">
                     <div class="registerRoom-item">
                         <span class="room-icon"></span>
@@ -54,7 +54,7 @@
                                     <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
                                     </dd-option>
                                 </dd-select>
-                                <span class="state-icon yellow" style="margin-left: 20px" v-if="checkState==='checkIn'">
+                                <span class="state-icon yellow" style="margin-left: 20px" v-if="canShowBookIcon(item)">
                                     已预订
                                 </span>
                             </div>
@@ -261,6 +261,7 @@
                 discountPlans: [],
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
+                initCategories: {},
                 checkType
             };
         },
@@ -504,6 +505,7 @@
                 this.forceChangePrice = false;
                 this.lastRoomsToken = {};
                 const order = this.order;
+                this.initCategories = {};
 
                 // 0-不使用折扣，-4会员，-5企业，正数-快捷折扣
                 function getMoreDiscount(item) {
@@ -533,9 +535,10 @@
                             roomType: item.roomId || 0,
                             originPrice: item.originPrice,
                             price: item.fee,
+                            originStartDate: new Date(item.startDate),
                             room: {
                                 roomId: item.roomId || 0,
-                                startDate: new Date(item.startDate),
+                                startDate: this.checkState === 'checkIn' ? new Date() : new Date(item.startDate),
                                 endDate: new Date(item.endDate)
                             },
                             idCardList: item.idCardList,
@@ -571,9 +574,10 @@
                         roomType: roomInfo.roomId || 0,
                         originPrice: roomInfo.originPrice,
                         price: roomInfo.totalPrice,
+                        originStartDate: new Date(roomInfo.checkInDate),
                         room: {
                             roomId: roomInfo.roomId || 0,
-                            startDate: new Date(roomInfo.checkInDate),
+                            startDate: this.checkState === 'checkIn' ? new Date() : new Date(roomInfo.checkInDate),
                             endDate: new Date(roomInfo.checkOutDate)
                         },
                         idCardList: order.idCardsList,
@@ -603,6 +607,7 @@
                 }
                 this.rooms.map((room, index) => {
                     this.lastRoomsToken[index] = JSON.stringify(room);
+                    this.initCategories[room.categoryType] = this.initCategories[room.categoryType] ? this.initCategories[room.categoryType] + 1 : 1;
                 });
             },
             initRegisterRooms(rooms) {
@@ -669,6 +674,7 @@
                         quickDiscountId: '',
                         priceScale: [],
                         showDiscount: undefined,
+                        isCheckIn: this.checkState === 'checkIn',
                         extraItems: []
                     };
                 } else {
@@ -1028,6 +1034,23 @@
             },
             deleteExtra(extra, index) {
                 this.$delete(extra.itemList, index);
+            },
+            canShowBookIcon(room) {
+                if (this.checkState !== 'checkIn') {
+                    return false;
+                }
+
+                const rs = this.rooms.filter(r => r.categoryType === room.categoryType);
+                const index = rs.indexOf(room);
+                return index !== -1 && index < this.initCategories[room.categoryType];
+            },
+            handleIsCheckInChange(room) {
+                if (room.isCheckIn) {
+                    room.room.startDate = new Date();
+                } else {
+                    room.room.startDate = room.originStartDate;
+                    room.extraItems = [];
+                }
             }
         }
     };

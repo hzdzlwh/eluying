@@ -579,7 +579,7 @@
             },
             orderEditorVisible(visible) {
                 if (visible) {
-                    if (this.checkState === 'editOrder') {
+                    if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                         this.name = this.order.customerName;
                         this.phone = this.order.customerPhone;
                         this.remark = this.order.remark || '';
@@ -611,7 +611,7 @@
                     }
                     $('#orderEditor').modal('hide');
                 }
-            },
+            }
         },
         methods: {
             ...mapActions([
@@ -933,7 +933,8 @@
                         roomOrderId: room.roomOrderId,
                         quickDiscountId: room.quickDiscountId,
                         useDiscount: room.moreDiscount === 0 || !room.priceModified,
-                        extraItems: room.extraItems
+                        extraItems: room.extraItems,
+                        isCheckIn: room.isCheckIn
                     };
                 });
             },
