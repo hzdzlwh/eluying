@@ -638,6 +638,7 @@
                         checkType: 0
                     };
                 });
+                this.modifyRooms(this.rooms);
             },
             addRoom() {
                 const len = this.rooms.length;
@@ -680,6 +681,9 @@
                 } else {
                     // 新增房间，房型时间同上一间
                     room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
+                    room.room.startDate = new Date(Date.parse(this.rooms[len - 1].room.startDate));
+                    room.room.endDate = new Date(Date.parse(this.rooms[len - 1].room.endDate));
+                    room.extraItems = [];
                     room.idCardList = [];
                     if (room.roomOrderId) {
                         delete room.roomOrderId;

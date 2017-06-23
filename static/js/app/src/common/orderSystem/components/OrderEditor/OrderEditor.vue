@@ -1213,7 +1213,7 @@
                 }
 
                 // 编辑订单根据不同的type调用不同的接口
-                if (this.checkState === 'editOrder') {
+                if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     // 住宿订单
                     if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
                         this.modifyRoomOrder();

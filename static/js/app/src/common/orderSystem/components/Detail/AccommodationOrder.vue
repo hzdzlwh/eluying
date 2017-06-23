@@ -30,24 +30,26 @@
                             <label class="label-text">共{{item.duration}}晚</label>
                         </div>
                         <div style="display: flex">
-                            <div class="room-fee room-fix">
-                                <label class="label-text">房费</label>
-                                <span>¥{{item.fee === undefined ? item.roomInfo.totalPrice : item.fee }}</span>
-                                <div class="orderDetailModal-roomPriceList">
-                                    <dl class="price-item"
-                                        v-for="priceItem in (item.datePriceList || item.roomInfo.datePriceList)">
-                                        <dt>{{priceItem.date.slice(5)}}</dt>
-                                        <dd>¥{{priceItem.dateFee}}</dd>
-                                    </dl>
-                                </div>
-                            </div>
                             <span class="single-order-btn" @click='modalShow(item.serviceId)'
                                   v-text="(showMoadl && !order.roonInfo) ? '查看': ''"
                                   :class="(showMoadl && !order.roonInfo) ? 'cursor' : ''">查看</span>
                         </div>
+                    </div>
+                    <div style="position: relative;padding-left: 41px;margin-top: 10px">
+                        <div class="room-fee room-fix" style="margin-right: 20px">
+                            <label class="label-text">房费</label>
+                            <span>¥{{item.fee === undefined ? item.roomInfo.totalPrice : item.fee }}</span>
+                            <div class="orderDetailModal-roomPriceList">
+                                <dl class="price-item"
+                                    v-for="priceItem in (item.datePriceList || item.roomInfo.datePriceList)">
+                                    <dt>{{priceItem.date.slice(5)}}</dt>
+                                    <dd>¥{{priceItem.dateFee}}</dd>
+                                </dl>
+                            </div>
+                        </div>
                         <span class="discount-info"
                               v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))"
-                              style="top: 20px">
+                              style="position: static;">
                             <span>原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
                         <span class="discount-num">
                             {{ item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)}}

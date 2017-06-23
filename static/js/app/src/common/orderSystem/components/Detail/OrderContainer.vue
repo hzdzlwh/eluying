@@ -389,11 +389,6 @@
         .user-name {
             width: 124px;
         }
-        .room-date {
-            .startDate, .endDate {
-                margin: 0 14px;
-            }
-        }
         .room-info {
             justify-content: space-between;
             position: relative;
@@ -440,7 +435,7 @@
             flex-wrap: wrap;
             position: absolute;
             max-width: 491px;
-            right: 81px;
+            left: 41px;
             padding: 8px 8px 8px 0;
             background: #fafafa;
             box-shadow: 0 0 5px 0;
