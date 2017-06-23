@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div style="position: relative;padding-left: 41px;margin-top: 10px">
-                        <div class="room-fee room-fix">
+                        <div class="room-fee room-fix" style="margin-right: 20px">
                             <label class="label-text">房费</label>
                             <span>¥{{item.fee === undefined ? item.roomInfo.totalPrice : item.fee }}</span>
                             <div class="orderDetailModal-roomPriceList">
