@@ -31,8 +31,9 @@
                         <div class="enterDate-container">
                             <label>时间</label>
                             <div class="enterDate">
-                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)" :disabled-date="disabledEndDate(new Date(), item)"  />
-                                <!-- :disabled="item.usedAmount > 0" 如果有项目开了也可以编辑 -->
+                                <dd-datepicker placeholder="选择时间" v-model="item.date" @input="modifyEnter(item)"   />
+                                <!-- :disabled="item.usedAmount > 0" 如果有项目开了也可以编辑 
+                                取出了时间限制:disabled-date="disabledEndDate(new Date(), item)"-->
                             </div>
                         </div>
                         <div class="shop-item-count">
