@@ -26,8 +26,8 @@
                             <span class="endDate">{{item.endDate || item.roomInfo.checkOutDate}}</span>
                             <label class="label-text">共{{item.duration}}晚</label>
                         </div>
-                        <div>
-                            <div class="room-fee room-fix" style="display: flex">
+                        <div style="display: flex">
+                            <div class="room-fee room-fix">
                                 <label class="label-text">房费</label>
                                 <span>¥{{item.fee === undefined ? item.roomInfo.totalPrice : item.fee }}</span>
                                 <div class="orderDetailModal-roomPriceList">
