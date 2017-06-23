@@ -218,7 +218,8 @@ $(function() {
             },
             cancel: function() {
                 this.dishes = {
-                    discountable: 1
+                    discountable: 1,
+                    complimentable: 1
                 };
                 this.submitted = false;
                 $('#dishesDialog').modal('hide');
@@ -456,7 +457,7 @@ $(function() {
                 packageSelect.dishesListGroupByClassify = {};
                 packageSelect.dishesInClassify = [];
                 $('#packageDialog').modal('hide');
-                this.packageModel = { dishesNum: undefined, discountable: 1 };
+                this.packageModel = { dishesNum: undefined, discountable: 1, complimentable: 1, };
             },
             closePackageModelShow: function(item) {
                 item.imgUrl = '';

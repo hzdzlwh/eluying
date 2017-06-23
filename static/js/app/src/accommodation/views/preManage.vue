@@ -8,17 +8,17 @@
             <div class="table-content">
                 <table style="border: none;border-top: 4px solid #178ce6;">
                     <colgroup>
-                        <col width="80">
-                        <col width="40">
-                        <col width="80">
-                        <col width="200">
-                        <col width="400">
-                        <col width="60">
-                        <col width="60">
-                        <col width="120">
+                        <col width="130">
+                        <col width="77">
+                        <col width="89">
+                        <col width="295">
+                        <col width="284">
                         <col width="90">
+                        <col width="92">
+                        <col width="125">
+                        <col width="118">
                     </colgroup>
-                    <tr style="background: #f0f0f0;">
+                    <tr style="background: #f0f0f0; height: 53px;">
                         <th>订单详情</th>
                         <th>数量</th>
                         <th>入住类型</th>
@@ -33,18 +33,18 @@
                 <div class="tbody-item" v-for="item in orderLists">
                     <table>
                         <colgroup>
-                            <col width="80">
-                            <col width="40">
-                            <col width="80">
-                            <col width="200">
-                            <col width="400">
-                            <col width="60">
-                            <col width="60">
-                            <col width="120">
+                            <col width="130">
+                            <col width="77">
+                            <col width="89">
+                            <col width="295">
+                            <col width="284">
                             <col width="90">
+                            <col width="92">
+                            <col width="125">
+                            <col width="118">
                         </colgroup>
-                        <tr style="background: #f0f0f0; height: 30px;">
-                            <td colspan="9">订单号：{{item.orderNum}} {{item.creationTime}}</td>
+                        <tr style="background: #f0f0f0;">
+                            <td style="text-align: left; padding-left: 20px; color: #999999;" colspan="9">订单号：{{item.orderNum}} <span style="margin-left: 32px;">{{item.creationTime}}</span></td>
                         </tr>
                         <tr v-for="(row, index) in item.roomTypes">
                             <td>{{row.typeName}}</td>
@@ -55,16 +55,24 @@
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
                             </td>
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
-                            <td><span>已预定</span></td>
-                            <td v-if="index === 0" :rowspan="item.roomTypes.length" :class="{leftBorder: item.roomTypes.length !== 1}">{{item.customerName}}</td>
-                            <td v-if="index === 0" :rowspan="item.roomTypes.length" :class="{rightBorder: item.roomTypes.length !== 1}">{{item.customerPhone}}</td>
-                            <td style="color: #178ce6; cursor: pointer;"><span @click="showOrder(item)">详情</span>/<span>入住</span></td>
+                            <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预定</span></td>
+                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{leftBorder: item.roomTypes.length !== 1}">{{item.customerName}}</td>
+                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{rightBorder: item.roomTypes.length !== 1}">{{item.customerPhone}}</td>
+                            <td style="color: #178ce6; cursor: pointer;"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
                         </tr>
                     </table>
                 </div>
             </div>
-            <div class="selectable-house" ref="selectableHouse">
-                
+            <div v-show="showSelectHouse" class="selectable-house" ref="selectableHouse">
+                <div class="selectable-area" v-for="item in selectRoomLists">
+                    <h4>{{item.areaName}}</h4>
+                    <div class="room-container">
+                        <div class="room" :class="{selected: room.checked}" v-for="room in item.rooms" @click="changeSelect(room)">{{room.roomNum}}</div>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button style="margin-right: 10px;" class="dd-btn dd-btn-primary" @click="showSelectHouse = false">取消</button><button class="dd-btn dd-btn-primary" @click="setSelectRoom">确定</button>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +90,10 @@
                 defaultStartDate: undefined,
                 date: new Date(),
                 orderLists: [],
-                checkTypes: ['正常入住', '钟点房', '自用房', '免费房']
+                selectRoomLists: [],
+                checkTypes: ['正常入住', '钟点房', '自用房', '免费房'],
+                showSelectHouse: false,
+                roomInfo: {}
             };
         },
         components: {
@@ -106,12 +117,43 @@
                     orderId: item.orderType === -1 ? item.orderId : item.roomOrderId
                 });
             },
+            checkIn(item) {
+                bus.$emit('editOrder', 'checkIn', item);
+            },
             arrangeHouse(event, item, index) {
+                this.roomInfo.checkType = item.roomTypes[index].checkType;
+                this.roomInfo.endTime = item.roomTypes[index].endTime;
+                this.roomInfo.startTime = item.roomTypes[index].startTime;
+                this.roomInfo.orderId = item.orderId;
+                this.roomInfo.orderType = item.orderType;
+                this.roomInfo.typeId = item.roomTypes[index].typeId;
                 http.get('/room/getSelectRoomList', { checkType: item.roomTypes[index].checkType, date: this.date, endTime: item.roomTypes[index].endTime, orderId: item.orderId, orderType: item.orderType, startTime: item.roomTypes[index].startTime, typeId: item.roomTypes[index].typeId }).then(res => {
-                    console.log(res);
+                    if (res.code === 1) {
+                        this.selectRoomLists = res.data.list;
+                        this.$refs.selectableHouse.style.top = (event.pageY - 48) + 'px';
+                        this.$refs.selectableHouse.style.left = (event.pageX - 500) + 'px';
+                        this.showSelectHouse = true;
+                    }
                 });
-                console.log(event);
-                this.$refs.selectableHouse.style.top = event.y + 'px';
+            },
+            changeSelect(room) {
+                room.checked = !room.checked;
+            },
+            setSelectRoom() {
+                const sendData = { ...this.roomInfo, date: this.date };
+                const temp = [];
+                this.selectRoomLists.map((area) => {
+                    for (const i in area.rooms) {
+                        temp.push({ checked: area.rooms[i].checked, roomId: area.rooms[i].roomId, roomOrderId: area.rooms[i].roomOrderId });
+                    }
+                });
+                sendData.rooms = JSON.stringify(temp);
+                http.get('/room/setSelectRoomList', sendData).then(res => {
+                    if (res.code === 1) {
+                        this.showSelectHouse = false;
+                        this.getLists();
+                    }
+                });
             }
         },
         watch: {
@@ -125,16 +167,28 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
     .content{
         flex: 1;
-        padding: 50px 0 0 30px;
+        padding: 50px 0 0 32px;
         position: relative;
+        p{
+            font-size: 18px;
+            color: #178ce6;
+            margin: 30px 0 20px 0;
+        }
         .table-content{
             table{
-                border: 1px solid #ccc;
+                box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
+                border-radius: 2px;
             }
             tr{
-                height: 50px;
+                height: 37px;
+                th{
+                    text-align: center;
+                    font-weight: bold;
+                }
                 td{
+                    color: #666666;
                     border-top: 1px solid #ccc;
+                    text-align: center;
                     &.leftBorder{
                         border-left: 1px solid #ccc;
                     }
@@ -148,10 +202,11 @@
             }
         }
         .selectable-house{
-            width: 1200px;
-            height: 60px;
+            width: 632px;
+            padding: 8px;
             position: absolute;
-            border: 1px solid green;
+            background: #fafafa;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
             &:after, &:before{
                 bottom: 100%;
                 left: 50%;
@@ -165,14 +220,52 @@
             &:after{
                 border-color: rgba(214, 240, 238, 0);
                 border-bottom-color: #fff;
-                border-width: 10px;
-                margin-left: -10px;
+                border-width: 8px;
+                margin-left: -8px;
             }
             &:before{
                 border-color: rgba(214, 240, 238, 0);
-                border-bottom-color: green;
-                border-width: 13px;
-                margin-left: -13px;
+                border-bottom-color: #e6e6e6;
+                border-width: 10px;
+                margin-left: -10px;
+            }
+            .selectable-area{
+                margin-top: 10px;
+                span{
+                    line-height: 30px;
+                    width: 120px;
+                    font-size: 16px;
+                }
+                .room-container{
+                    flex: 1;
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-top: 8px;
+                    .room{
+                        width: 58px;
+                        height: 22px;
+                        margin: 2px;
+                        text-align: center;
+                        background: #43b18a;
+                        line-height: 22px;
+                        border-radius: 4px;
+                        padding: 0px 4px;
+                        cursor: pointer;
+                        color: #fff;
+                    }
+                    .selected{
+                        border: 2px solid rgba(23,140,230,1);
+                        line-height: 18px;
+                        border-radius: 4px;
+                        background-color: rgba(159,214,194,1)
+                    }
+                }
+            }
+            .btn-container{
+                text-align: right;
+                margin: 8px -8px 0;
+                border-top: 1px solid #e6e6e6;
+                padding: 8px 8px 0 0;
             }
         }
     }
