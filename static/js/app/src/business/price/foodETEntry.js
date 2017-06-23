@@ -15,7 +15,7 @@ var location = window.location.pathname.split("/")[5].split(".")[0];
 init({
     id: auth.BUSINESS_ID,
     clearModal: true,
-    topMenu: location === 'food' ? {showInventory: false, showOther: false, showConsume: false} : false
+    topMenu: location === 'food' ? {showInventory: false, showOther: false, showConsume: false, showBlock: false} : false
 });
 
 $(function(){
