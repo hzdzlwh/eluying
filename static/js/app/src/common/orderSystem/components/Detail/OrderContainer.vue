@@ -1330,6 +1330,7 @@
                                 // this.hideModal();
                                 // $('#orderDetail').modal('hidden');
                                 // $('#checkIn').modal({ backdrop: 'static' });
+                                bus.$emit('changeBack', this.show);
                                 bus.$emit('editOrder', 'checkIn', this.order);
                             } else {
                                 modal.warn('未到办理入住的时间，无法入住！');
