@@ -159,7 +159,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                         <div @click="returnPreStep" v-if='hasBack' class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
+                         <div @click="returnPreStep" v-if="hasBack || checkState === 'checkIn'" class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
