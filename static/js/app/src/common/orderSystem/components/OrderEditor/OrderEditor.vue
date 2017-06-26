@@ -113,7 +113,7 @@
                                     :orderEditorVisible="orderEditorVisible"
                                     @priceChange="handleRoomPriceChange"/>
 
-                        <RoomEditorQuick v-else
+                        <RoomEditorQuick v-if="this.checkState === 'quick' || this.checkState === 'team'"
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"

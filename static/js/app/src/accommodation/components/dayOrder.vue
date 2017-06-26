@@ -82,7 +82,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
-        <div class="datFixMenu"><span @click="check('team')">团购预订</span><span @click="check('quick')">快速预订</span></div>
+        <div class="datFixMenu"><span @click="check('team')">团队预订</span><span @click="check('quick')">快速预订</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
