@@ -528,7 +528,8 @@
                     const filterRooms = order.rooms.filter(room => {
                         return room.state === 0 || room.state === 1 || room.state === 8;
                     })
-                        .filter(room => this.checkState !== 'checkIn' || room.state === 0);
+                        .filter(room => this.checkState !== 'checkIn' ||
+                        (room.state === 0 && (util.isSameDay(new Date(room.startDate), new Date()) || new Date(room.startDate) <= new Date())));
                     this.rooms = filterRooms.map(item => {
                         return {
                             categoryType: item.typeId,
