@@ -1090,6 +1090,7 @@
     import Insurance from './Insurance.vue';
     import types from '../../store/types';
     import modal from '../../../modal';
+    import { getOrderId } from '../../utils/order';
     require('blueimp-gallery/js/jquery.blueimp-gallery.min');
     import 'blueimp-gallery/css/blueimp-gallery.css';
     import CashDetail from './CashDetail.vue';
@@ -1352,19 +1353,19 @@
                     });
             },
             autoSelectRooms() {
-                http.post('/room/autoSelectRooms', { orderId: this.order.orderId, orderType: this.type })
+                http.post('/room/autoSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
                     .then(res => {
                         if (res.msg) {
                             modal.warn(res.msg);
                         }
-                        this[types.GET_ORDER_DETAIL]({ orderId: this.order.orderId, orderType: this.type });
+                        this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
                         bus.$emit('refreshView');
                     });
             },
             cancelSelectRooms() {
-                http.post('/room/cancelSelectRooms', { orderId: this.order.orderId, orderType: this.type })
+                http.post('/room/cancelSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
                     .then(res => {
-                        this[types.GET_ORDER_DETAIL]({ orderId: this.order.orderId, orderType: this.type });
+                        this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
                         bus.$emit('refreshView');
                     });
             }
