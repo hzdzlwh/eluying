@@ -24,9 +24,9 @@
                             <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="unitErrorAlert">格式不对</span>
                         </div>
                         <div>
-                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price">
+                            <span class="default-price">默认价格：</span><input type="text" class="dd-input" style="width: 105px;" v-model="item.price" @input="validatePrice">
                             <span style="position:absolute;top:23px;left:80px;font-size: 12px;color: #f24949;" v-if="priceIsWrite && item.price.length === 0">必填</span>
-                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if=" item.price && !priceReg.test(item.price)">格式不对</span>
+                            <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="priceErrorAlert">格式不对</span>
                             <span style="position:absolute;left:80px;top:23px;font-size: 12px;color: #f24949;" v-if="item.price > 20000000">不能大于20000000</span>
                         </div>
                     </div>
@@ -54,10 +54,12 @@
                 goodsTypeId: 0,
                 nameReg: /[\w\u4e00-\u9fa5]/,
                 priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
+                decimalPriceReg: /^0\.?[1-9]{0,2}$/,
                 nameIsWrite: false,
                 priceIsWrite: false,
                 nameErrorAlert: false,
-                unitErrorAlert: false
+                unitErrorAlert: false,
+                priceErrorAlert: false
             }
         },
         computed: {
@@ -108,6 +110,14 @@
                         this.unitErrorAlert = false;
                     }
                 });
+            },
+            validatePrice() {
+                if (this.item.price >=0 && this.item.price <1) {
+                    this.priceErrorAlert =  !this.decimalPriceReg.test(this.item.price);
+                }
+                if (this.item.price >=1) {
+                    this.priceErrorAlert = !this.priceReg.test(this.item.price);
+                }
             }
         },
         components: {
