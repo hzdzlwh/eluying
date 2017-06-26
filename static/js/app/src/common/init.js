@@ -43,7 +43,6 @@ export default function (option) {
     }
 
     option = { ...defaultOption, ...option};
-
     option.id && auth.checkAuth(option.id, option.noAuthUrl);
 
     $(function() {
