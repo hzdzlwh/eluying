@@ -51,7 +51,7 @@
                             <td>{{row.count}}</td>
                             <td>{{checkTypes[row.checkType]}}</td>
                             <td>
-                                <span v-for="room in row.rooms">{{room.roomNum}}</span>
+                                <span v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
                             </td>
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
@@ -252,6 +252,12 @@
                         padding: 0px 4px;
                         cursor: pointer;
                         color: #fff;
+                    }
+                    .room:nth-child(10n+1){
+                        margin-left: 0;
+                    }
+                    .room:nth-child(10n){
+                        margin-right: 0;
                     }
                     .selected{
                         border: 2px solid rgba(23,140,230,1);
