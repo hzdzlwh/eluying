@@ -617,7 +617,7 @@
                     room.startDate.setHours(12);
                     room.startDate.setMinutes(0);
                     room.endDate = util.diffDate(room.endDate, 1);
-                    room.endDate.setHours(18);
+                    room.endDate.setHours(12);
                     room.endDate.setMinutes(0);
                     return {
                         categoryType: room.categoryType,
@@ -653,7 +653,7 @@
                     startDate.setHours(12);
                     startDate.setMinutes(0);
                     const endDate = util.diffDate(new Date(), 1);
-                    endDate.setHours(18);
+                    endDate.setHours(12);
                     endDate.setMinutes(0);
                     room = {
                         categoryType: undefined,

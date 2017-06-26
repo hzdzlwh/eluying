@@ -1351,19 +1351,19 @@
                     });
             },
             autoSelectRooms() {
-                http.post('/room/autoSelectRooms', { orderId: this.id, orderType: this.type })
+                http.post('/room/autoSelectRooms', { orderId: this.order.orderId, orderType: this.type })
                     .then(res => {
                         if (res.msg) {
                             modal.warn(res.msg);
                         }
-                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.order.orderId, orderType: this.type });
                         bus.$emit('refreshView');
                     });
             },
             cancelSelectRooms() {
-                http.post('/room/cancelSelectRooms', { orderId: this.id, orderType: this.type })
+                http.post('/room/cancelSelectRooms', { orderId: this.order.orderId, orderType: this.type })
                     .then(res => {
-                        this[types.GET_ORDER_DETAIL]({ orderId: this.id, orderType: this.type });
+                        this[types.GET_ORDER_DETAIL]({ orderId: this.order.orderId, orderType: this.type });
                         bus.$emit('refreshView');
                     });
             }
