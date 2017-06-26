@@ -58,7 +58,7 @@
                             <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预定</span></td>
                             <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{leftBorder: item.roomTypes.length !== 1}">{{item.customerName}}</td>
                             <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{rightBorder: item.roomTypes.length !== 1}">{{item.customerPhone}}</td>
-                            <td style="color: #178ce6; cursor: pointer;"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
+                            <td style="color: #178ce6; cursor: pointer;" v-if="index === 0" :rowspan="item.roomTypes.length"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
                         </tr>
                     </table>
                 </div>
@@ -70,6 +70,7 @@
                         <div class="room" :class="{selected: room.checked}" v-for="room in item.rooms" @click="changeSelect(room)">{{room.roomNum}}</div>
                     </div>
                 </div>
+                <div v-if="selectRoomLists.length === 0">房间都已被占用</div>
                 <div class="btn-container">
                     <button style="margin-right: 10px;" class="dd-btn dd-btn-primary" @click="showSelectHouse = false">取消</button><button class="dd-btn dd-btn-primary" @click="setSelectRoom">确定</button>
                 </div>
@@ -82,7 +83,10 @@
     import dayOrderLeft from '../components/dayOrderLeft.vue';
     import DateSelect from '../components/DateSelect.vue';
     import http from '../../common/http';
+    import modal from '../../common/modal';
     import bus from '../../common/eventBus';
+    import { mapActions, mapState } from 'vuex';
+    import types from '../../common/orderSystem/store/types';
 
     export default {
         data() {
@@ -93,14 +97,30 @@
                 selectRoomLists: [],
                 checkTypes: ['正常入住', '钟点房', '自用房', '免费房'],
                 showSelectHouse: false,
-                roomInfo: {}
+                roomInfo: {},
+                orderRoomNum: 0
             };
+        },
+        computed: {
+            ...mapState({ order: state => state.orderSystem.orderDetail }),
+            selectRoomNum() {
+                var num = 0;
+                this.selectRoomLists.forEach(res => {
+                    res.rooms.forEach(r => {
+                        if (r.checked === true) {
+                            num ++;
+                        }
+                    });
+                });
+                return num;
+            }
         },
         components: {
             dayOrderLeft,
             DateSelect
         },
         methods: {
+            ...mapActions([types.LOAD_ORDER_DETAIL]),
             changeDate(date) {
                 this.date = date;
             },
@@ -118,9 +138,12 @@
                 });
             },
             checkIn(item) {
-                bus.$emit('editOrder', 'checkIn', item);
+                this[types.LOAD_ORDER_DETAIL]({ orderId: item.orderId }).then(res => {
+                    bus.$emit('editOrder', 'checkIn', this.order);
+                });
             },
             arrangeHouse(event, item, index) {
+                this.orderRoomNum = item.roomTypes[index].count;
                 this.roomInfo.checkType = item.roomTypes[index].checkType;
                 this.roomInfo.endTime = item.roomTypes[index].endTime;
                 this.roomInfo.startTime = item.roomTypes[index].startTime;
@@ -138,6 +161,10 @@
             },
             changeSelect(room) {
                 room.checked = !room.checked;
+                if (this.selectRoomNum > this.orderRoomNum) {
+                    modal.warn('所选房间数量大于需排房房间数量');
+                    room.checked = !room.checked;
+                }
             },
             setSelectRoom() {
                 const sendData = { ...this.roomInfo, date: this.date };
