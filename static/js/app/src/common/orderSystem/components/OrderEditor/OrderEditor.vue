@@ -1008,6 +1008,7 @@
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: !room.priceModified,
                     extraItems: JSON.stringify(room.extraItems),
+                    whenCheckIn: this.checkState === 'checkIn',
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modifyRoomOrder', params)
@@ -1105,6 +1106,7 @@
                     goods: JSON.stringify(this.previousGoods),
                     payments: JSON.stringify([]),
                     orderId: this.order.orderId,
+                    whenCheckIn: this.checkState === 'checkIn',
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modify', params)
