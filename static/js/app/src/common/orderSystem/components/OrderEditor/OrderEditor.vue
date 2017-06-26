@@ -867,6 +867,12 @@
                         });
                     }
                 });
+                if (this.checkState === 'checkIn') {
+                    if (this.rooms.every(r => !r.isCheckIn)) {
+                        modal.warn('请选择入住的房间！');
+                        return false;
+                    }
+                }
                 this.enterItems.map(item => {
                     if (item.inventory + item.selfInventory <= 0) {
                         valid = false;
