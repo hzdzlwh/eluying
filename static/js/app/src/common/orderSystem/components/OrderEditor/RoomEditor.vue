@@ -662,7 +662,7 @@
                         originPrice: undefined,
                         price: undefined,
                         room: {
-                            roomId: undefined,
+                            roomId: 0,
                             startDate: startDate,
                             endDate: endDate
                         },
@@ -684,6 +684,8 @@
                     room = JSON.parse(JSON.stringify(this.rooms[len - 1]));
                     room.room.startDate = new Date(Date.parse(this.rooms[len - 1].room.startDate));
                     room.room.endDate = new Date(Date.parse(this.rooms[len - 1].room.endDate));
+                    room.room.roomId = 0;
+                    room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
                     if (room.roomOrderId) {
