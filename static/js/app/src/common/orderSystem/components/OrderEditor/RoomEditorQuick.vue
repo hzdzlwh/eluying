@@ -581,9 +581,9 @@ export default {
                 this.vipList = [];
             },
             handleRoomChange(room, index) {
-                if (JSON.stringify(room) === this.lastRoomsToken[index]) {
-                    return false;
-                }
+                // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
+                //     return false;
+                // }
 
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
