@@ -99,7 +99,7 @@
                             <!-- checkstate先放着，以后应该能复用到 -->
                         </div>
                         <!-- header end -->
-                        <RoomEditor v-if="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick' && this.checkState !== 'team'"
+                        <RoomEditor v-show="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick' && this.checkState !== 'team'"
                                     :order="order"
                                     :registerRooms="registerRooms"
                                     :categories="categories"
