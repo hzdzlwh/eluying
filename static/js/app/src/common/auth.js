@@ -117,8 +117,10 @@ function checkAccess(moduleId) {
         const moduleAuth = checkModule(moduleId);
         if (version && version.update) {
             location.href = UPGRADE_URL;
+            return true;
         } else if (version && version.expired) {
             location.href = EXPIRED_URL;
+            return true;
         } else {
             return moduleAuth;
         }
