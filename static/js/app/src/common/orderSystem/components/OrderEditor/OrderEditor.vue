@@ -819,7 +819,7 @@
                 this.hasBack = false;
                 this.ExtInDate = {
                     startDate: new Date(now.year, now.mouth, now.day, 12, 0, 0, 0),
-                    endDate: new Date(now.year, now.mouth, now.day + 1, 18, 0, 0, 0),
+                    endDate: new Date(now.year, now.mouth, now.day + 1, 12, 0, 0, 0),
                     roomCheckType: 0
                 };
             },
