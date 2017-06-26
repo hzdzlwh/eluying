@@ -503,7 +503,7 @@ export default {
                     room: {
                         roomId: undefined,
                         startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
-                        endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 18, 0, 0)
+                        endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 12, 0, 0)
                     },
                     idCardList: [],
                     datePriceList: [],
