@@ -503,7 +503,7 @@ export default {
                     room: {
                         roomId: undefined,
                         startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
-                        endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 18, 0, 0)
+                        endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 12, 0, 0)
                     },
                     idCardList: [],
                     datePriceList: [],
@@ -581,9 +581,9 @@ export default {
                 this.vipList = [];
             },
             handleRoomChange(room, index) {
-                if (JSON.stringify(room) === this.lastRoomsToken[index]) {
-                    return false;
-                }
+                // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
+                //     return false;
+                // }
 
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
