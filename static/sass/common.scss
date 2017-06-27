@@ -6,23 +6,23 @@
 //         transform: translate(-50%,-50%);
 //         transform-origin: inherit!important;
 // }
-html {
-  overflow-y: scroll;
-}
+// html {
+//   overflow-y: scroll;
+// }
 
-:root {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+// :root {
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
 
-:root body {
-  position: absolute;
-}
+// :root body {
+//   position: absolute;
+// }
 
-body {
-  width: 100vw;
-  // overflow: hidden;
-}
+// body {
+//   width: 100vw;
+//   // overflow: hidden;
+// }
 // 防止滚动出现时影响居中
 .roomModals-body .el-input__inner{
     width: 170px;
