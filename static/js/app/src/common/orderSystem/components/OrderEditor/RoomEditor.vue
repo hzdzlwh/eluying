@@ -32,8 +32,7 @@
                             <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                             <div style="display: flex;align-items: center;">
                                 <label class="label-text">房间&nbsp;</label>
-                                <dd-select v-model="item.categoryType" placeholder="请选择房型"
-                                           @input="changeRoomType(item ,index)">
+                                <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
                                     <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
                                                :label="category.name">
                                     </dd-option>
@@ -41,7 +40,7 @@
                                 <div class="room-category">
                                     <dd-select v-model="item.roomType" placeholder="请选择房间"
                                                @input="handleRoomChange(item, index)">
-                                        <dd-option v-for="room in getRoomsList(item.categoryType, item.state)" :value="room.id"
+                                        <dd-option v-for="room in item.roomList" :value="room.id"
                                                    :key="room.id"
                                                    :label="room.name">
                                         </dd-option>
@@ -609,6 +608,7 @@
                 this.rooms.map((room, index) => {
                     this.lastRoomsToken[index] = JSON.stringify(room);
                     this.initCategories[room.categoryType] = this.initCategories[room.categoryType] ? this.initCategories[room.categoryType] + 1 : 1;
+                    this.getRoomsList(room);
                 });
             },
             initRegisterRooms(rooms) {
@@ -620,7 +620,7 @@
                     room.endDate = util.diffDate(room.endDate, 1);
                     room.endDate.setHours(12);
                     room.endDate.setMinutes(0);
-                    return {
+                    const r = {
                         categoryType: room.categoryType,
                         roomType: room.roomId,
                         price: undefined,
@@ -638,6 +638,8 @@
                         extraItems: [],
                         checkType: 0
                     };
+                    this.getRoomsList(r);
+                    return r;
                 });
                 this.modifyRooms(this.rooms);
             },
@@ -649,7 +651,7 @@
                 }
 
                 let room;
-                if (len === 0 || !this.rooms[len - 1].roomType) {
+                if (len === 0 || this.rooms[len - 1].roomType === undefined) {
                     const startDate = new Date();
                     startDate.setHours(12);
                     startDate.setMinutes(0);
@@ -708,9 +710,10 @@
                 return util.DateDiff(d1, d2);
             },
             changeRoomType(item, index) {
+                this.getRoomsList(item);
                 this.$nextTick(function() {
-                    item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.handleRoomChange(item, index);
+                    item.roomType = 0;
+                    // this.handleRoomChange(item, index);
                 });
             },
             disabledStartDate(endDate) {
@@ -724,6 +727,8 @@
                     return (date) => {
                         return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
+                } else if (this.checkState === 'checkIn') {
+                    return date => false;
                 } else {
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
@@ -755,23 +760,30 @@
                     };
                 }
             },
-            getRoomsList(id, state) {
-                if (!id) {
+            getRoomsList(room) {
+                if (!room.categoryType) {
                     return [];
                 }
 
-                const rooms = this.categories.find(c => c.typeId === id)
-                    .rooms.map(r => {
-                        return { id: r.roomId, name: r.serialNum };
+                http.get('/room/getRoomsList', {
+                    startDate: util.dateFormat(room.room.startDate),
+                    endDate: util.dateFormat(room.room.endDate),
+                    roomOrderId: room.roomOrderId
+                })
+                    .then(res => {
+                        const categories = res.data.list;
+                        const rooms = categories.find(c => c.typeId === room.categoryType)
+                            .rooms.map(r => {
+                                return { id: r.roomId, name: r.serialNum };
+                            });
+                        if (!room.state) {
+                            rooms.unshift({
+                                id: 0,
+                                name: '未排房'
+                            });
+                        }
+                        this.$set(room, 'roomList', rooms);
                     });
-                if (!state) {
-                    rooms.unshift({
-                        id: 0,
-                        name: '未排房'
-                    });
-                }
-
-                return rooms;
             },
             checkIsToday(date) {
                 return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';

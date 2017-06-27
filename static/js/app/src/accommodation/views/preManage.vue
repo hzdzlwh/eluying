@@ -4,7 +4,7 @@
             <DateSelect slot="timePicker" :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
         </dayOrderLeft>
         <div class="content">
-            <p>当日到店预定</p>
+            <p>当日到店预订</p>
             <div class="table-content">
                 <table style="border: none;border-top: 4px solid #178ce6;">
                     <colgroup>
@@ -101,6 +101,12 @@
                 orderRoomNum: 0
             };
         },
+        created() {
+            bus.$on('refreshView', this.refreshView);
+        },
+        beforeDestroy() {
+            bus.$off('refreshView', this.refreshView);
+        },
         computed: {
             ...mapState({ order: state => state.orderSystem.orderDetail }),
             selectRoomNum() {
@@ -181,6 +187,9 @@
                         this.getLists();
                     }
                 });
+            },
+            refreshView() {
+                this.getLists();
             }
         },
         watch: {
