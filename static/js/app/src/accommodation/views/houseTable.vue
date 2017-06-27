@@ -156,6 +156,9 @@
                     tr:nth-of-type(even){
                         background: #f7f7f7;
                     }
+                    tr:last-child{
+                        font-weight: bold;
+                    }
                 }
                 tr{
                     height: 46px;
