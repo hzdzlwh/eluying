@@ -766,8 +766,8 @@
                 }
 
                 http.get('/room/getRoomsList', {
-                    endDate: util.dateFormat(room.room.startDate),
-                    startDate: util.dateFormat(room.room.endDate),
+                    startDate: util.dateFormat(room.room.startDate),
+                    endDate: util.dateFormat(room.room.endDate),
                     roomOrderId: room.roomOrderId
                 })
                     .then(res => {
