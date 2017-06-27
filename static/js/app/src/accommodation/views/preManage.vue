@@ -55,7 +55,7 @@
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
                             </td>
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
-                            <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预定</span></td>
+                            <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预订</span></td>
                             <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{leftBorder: item.roomTypes.length !== 1}">{{item.customerName}}</td>
                             <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{rightBorder: item.roomTypes.length !== 1}">{{item.customerPhone}}</td>
                             <td style="color: #178ce6; cursor: pointer;" v-if="index === 0" :rowspan="item.roomTypes.length"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
@@ -153,10 +153,10 @@
                 this.roomInfo.checkType = item.roomTypes[index].checkType;
                 this.roomInfo.endTime = item.roomTypes[index].endTime;
                 this.roomInfo.startTime = item.roomTypes[index].startTime;
-                this.roomInfo.orderId = item.orderId;
+                this.roomInfo.orderId = item.orderType === -1 ? item.orderId : item.roomOrderId;
                 this.roomInfo.orderType = item.orderType;
                 this.roomInfo.typeId = item.roomTypes[index].typeId;
-                http.get('/room/getSelectRoomList', { checkType: item.roomTypes[index].checkType, date: this.date, endTime: item.roomTypes[index].endTime, orderId: item.orderId, orderType: item.orderType, startTime: item.roomTypes[index].startTime, typeId: item.roomTypes[index].typeId }).then(res => {
+                http.get('/room/getSelectRoomList', { checkType: item.roomTypes[index].checkType, date: this.date, endTime: item.roomTypes[index].endTime, orderId: item.orderType === -1 ? item.orderId : item.roomOrderId, orderType: item.orderType, startTime: item.roomTypes[index].startTime, typeId: item.roomTypes[index].typeId }).then(res => {
                     if (res.code === 1) {
                         this.selectRoomLists = res.data.list;
                         this.$refs.selectableHouse.style.top = (event.pageY - 48) + 'px';

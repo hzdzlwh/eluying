@@ -91,59 +91,7 @@ export default {
         return {
             colorList,
             nameList,
-            checkType,
-            mockDate: [{
-                customerName: 'customerName',
-                customerPhone: 'customerPhone',
-                endDate: '4-20 15:46',
-                eventId: 12,
-                nights: '1',
-                remark: '12312',
-                roomOrderId: '123',
-                startDate: '4-24 15:21',
-                type: 11,
-                checkType: 1
-            }, {
-                customerName: 'customerName',
-                customerPhone: 'customerPhone',
-                endDate: '4-20 15:46',
-                eventId: 13,
-                nights: '1',
-                remark: '12312',
-                roomOrderId: '123',
-                startDate: '4-24 15:21',
-                type: 12,
-                checkType: 1
-            }, {
-                customerName: 'customerName',
-                customerPhone: 'customerPhone',
-                endDate: '4-20 15:46',
-                eventId: 14,
-                nights: '1',
-                remark: '12312',
-                roomOrderId: '123',
-                startDate: '4-24 15:21',
-                type: 13,
-                checkType: 1
-            }, {
-                endDate: '4-20 15:46',
-                eventId: 15,
-                remark: '12312',
-                startDate: '4-24 15:21',
-                type: 1
-            }, {
-                endDate: '4-20 15:46',
-                eventId: 16,
-                remark: '12312',
-                startDate: '4-24 15:21',
-                type: 2
-            }, {
-                endDate: '4-20 15:46',
-                eventId: 17,
-                remark: '12312',
-                startDate: '4-24 15:21',
-                type: 3
-            }]
+            checkType
         };
     },
     computed: {
@@ -169,7 +117,8 @@ export default {
                 roomState: it.type,
                 isArrival: false,
                 roomName: this.date.roomName,
-                roomId: this.date.roomId
+                roomId: this.date.roomId,
+                roomNum: this.date.roomNum
             };
             if (it.type === 1 || it.type === 2 || it.type === 3) {
                 date.logId = it.eventId;
