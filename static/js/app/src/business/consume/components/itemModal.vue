@@ -54,7 +54,7 @@
                 goodsTypeId: 0,
                 nameReg: /[\w\u4e00-\u9fa5]/,
                 priceReg: /^[1-9]\d*(\.\d{1,2})?$/,
-                decimalPriceReg: /^0\.?[1-9]{0,2}$/,
+                decimalPriceReg: /^0\.?[0-9]{0,2}$/,
                 nameIsWrite: false,
                 priceIsWrite: false,
                 nameErrorAlert: false,
