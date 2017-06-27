@@ -22,7 +22,7 @@ export const ORDER_STATUS = {
 export const REST_STATUS = {
     1: { short: '换', color: '#178ce6' },
     2: { short: '退', color: '#f24949 ' },
-    3: { short: '加', color: '#36d987' }
+    4: { short: '赠', color: '#36d987' }
 };
 export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
 export const SEX_TYPE = ['男', '女', '-'];
