@@ -16,9 +16,9 @@ export default {
                 return (date) => {
                     return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
-            } else if (this.checkState === 'ing') {
+            } else if (this.checkState === 'ing' || this.checkState === 'ing') {
                 return (date) => {
-                    return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                    return date.valueOf() <=  (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
             } else {
                 return (date) => {
