@@ -1008,6 +1008,7 @@
                     checkOutDate: util.dateFormatLong(room.room.endDate),
                     idCardsList: JSON.stringify(room.idCardList),
                     fee: room.price,
+                    isCheckIn: room.isCheckIn,
                     roomId: room.roomType,
                     datePriceList: JSON.stringify(room.datePriceList),
                     serviceId: room.roomOrderId,
