@@ -18,7 +18,12 @@ export const ORDER_STATUS = {
     5: { short: '完', long: '已完成', en: 'finish' },
     8: { short: '反', long: '反结账', en: 'reset' }
 };
-
+// 餐饮订单状态
+export const REST_STATUS = {
+    1: { short: '换', color: '#178ce6' },
+    2: { short: '退', color: '#f24949 ' },
+    3: { short: '加', color: '#36d987' }
+};
 export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
 export const SEX_TYPE = ['男', '女', '-'];
 export const FOOD_STATE = ['已预订', '就餐中', '已结束', '已取消'];
