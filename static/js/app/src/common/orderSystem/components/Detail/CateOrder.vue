@@ -62,6 +62,7 @@
                                       class="dish-name">
                                     {{dish.categoryName}}
                                 </span>
+                                <span class="cateTag" v-if='dish.serviceType' :style='{"background": REST_STATUS[dish.serviceType].color}'>{{REST_STATUS[dish.serviceType].short}}</span>
                                 <span class="dish-discount-icon"
                                       v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
                             </p>
@@ -80,6 +81,17 @@
     </div>
 </template>
 <style lang="scss">
+    .cateTag{
+            font-size: 10px;
+    color: #ffffff;
+    display: inline-flex;
+    border-radius: 2px;
+    width: 17px;
+    height: 16px;
+    margin-left: 5px;
+    align-items: center;
+    justify-content: center;
+    }
     .item-price {
         display: inline-flex;
         align-items: center;
@@ -172,14 +184,15 @@
     import bus from '../../../eventBus.js';
     import {
         ORDER_TYPE,
-        ORDER_STATE_TEXT
+        ORDER_STATE_TEXT,
+        REST_STATUS
     } from '../../../../ordersManage/constant';
     export default{
         props: {
             order: Object
         },
         data() {
-            return {};
+            return {REST_STATUS};
         },
         computed: {
             foodItems() {
@@ -195,6 +208,13 @@
                     obj.foodPrice = this.order.totalPrice;
                     obj.originTotalPrice = this.order.originTotalPrice;
                     obj.showDiscount = this.order.showDiscount;
+                    obj.itemsMap = this.order.itemsMap.forEach(function (element) {
+                       element.dishItemResp.forEach(function(el){
+                            if (el.serviceType === 1 || el.serviceType === 2) {
+                                el.price = -el.price
+                            }
+                       })
+                    })
                     foodItems[0] = obj;
                 } else {
                     foodItems = this.order.foodItems;
