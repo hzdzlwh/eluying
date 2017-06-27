@@ -651,7 +651,7 @@
                 }
 
                 let room;
-                if (len === 0 || !this.rooms[len - 1].roomType) {
+                if (len === 0 || this.rooms[len - 1].roomType === undefined) {
                     const startDate = new Date();
                     startDate.setHours(12);
                     startDate.setMinutes(0);
