@@ -20,9 +20,9 @@ export const ORDER_STATUS = {
 };
 // 餐饮订单状态
 export const REST_STATUS = {
-    1: { short: '换', color: '#ffba75' },
-    2: { short: '退', color: '#ffba75' },
-    3: { short: '加', color: '#ffba75' }
+    1: { short: '换', color: '#178ce6' },
+    2: { short: '退', color: '#f24949 ' },
+    3: { short: '加', color: '#36d987' }
 };
 export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
 export const SEX_TYPE = ['男', '女', '-'];
