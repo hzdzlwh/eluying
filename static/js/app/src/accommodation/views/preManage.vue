@@ -58,7 +58,7 @@
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
                             <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预订</span></td>
                             <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" class="leftBorder">{{item.customerName ? item.customerName : '—'}}</td>
-                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" class="rightBorder">{{item.customerPhone}}</td>
+                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" class="rightBorder">{{item.customerPhone ? item.customerPhone : '—'}}</td>
                             <td style="color: #178ce6; cursor: pointer;" v-if="index === 0" :rowspan="item.roomTypes.length"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
                         </tr>
                     </table>
