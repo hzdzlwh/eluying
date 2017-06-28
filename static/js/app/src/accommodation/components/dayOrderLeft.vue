@@ -9,7 +9,7 @@
             <slot name="filterCondition"></slot>
             <li :class="{active: $route.path === '/nowOrders/preManage'}">
                 <span :class="[$route.path === '/nowOrders/preManage' ? 'manage-icon-active' : 'manage-icon']"></span>
-                <router-link to="/nowOrders/preManage">预定管理</router-link>
+                <router-link to="/nowOrders/preManage">预订管理</router-link>
             </li>
             <li :class="{active: $route.path === '/nowOrders/houseTable'}">
                 <span :class="[$route.path === '/nowOrders/houseTable' ? 'table-icon-active' : 'table-icon']"></span>

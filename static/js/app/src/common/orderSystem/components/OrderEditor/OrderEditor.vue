@@ -1010,6 +1010,7 @@
                     fee: room.price,
                     isCheckIn: room.isCheckIn,
                     roomId: room.roomType,
+                    typeId: room.categoryType,
                     datePriceList: JSON.stringify(room.datePriceList),
                     serviceId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
