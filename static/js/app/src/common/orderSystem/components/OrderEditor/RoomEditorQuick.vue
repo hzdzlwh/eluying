@@ -42,7 +42,7 @@
                         <div class="room-type" v-if='checkState === "quick"'>
                             入住类型：
                             <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index)">
-                                <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
+                                <dd-option v-for="check in item.checkType" :value="check.id" :key="check.id" :label="check.name">
                                 </dd-option>
                             </dd-select>
                         </div>
@@ -111,7 +111,7 @@
                                 <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
                             </p>
                             <span class="discount-info">
-                        <span v-if="item.showDiscount">
+                        <span v-if="item.showDiscount && !item.priceModified">
                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                             <span class="discount-num" v-if="item.showDiscount">
                                 {{item.showDiscount}}
@@ -505,6 +505,7 @@ export default {
                         startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
                         endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 12, 0, 0)
                     },
+                    checkType: checkType,
                     idCardList: [],
                     datePriceList: [],
                     originDatePriceList: [],
@@ -690,6 +691,21 @@ export default {
                             // currentRoom.priceScale = item.datePriceList.map(i => {
                             //     return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                             // });
+                            if (true && currentRoom.checkType.some(function (el) {
+                                el.id === 1
+                            })) {
+                                currentRoom.checkType.push({
+                                    id: 1,
+                                    name: '钟点房'
+                                })
+                            } else {
+                                currentRoom.checkType.forEach(function(el, index) {
+                                    if (el.id === 1) {
+                                        currentRoom.checkType.splice(index, 1)
+                                    }
+                                })
+                            }
+
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;
