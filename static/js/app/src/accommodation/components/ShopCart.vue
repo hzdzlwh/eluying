@@ -74,7 +74,7 @@
              */
             selectedRooms() {
                 const today = new Date();
-                const finstDay = new Date(today.getFullYear(), today.getMonth(),today.getDate(),12)
+                const finstDay = new Date(today.getFullYear(), today.getMonth(),today.getDate(),23)
                 const yesDay = new Date(today.getFullYear(), today.getMonth(),today.getDate()-1)
                 let p = false;
                 let t = false;
@@ -90,7 +90,11 @@
                             util.isSameDay(date, yesDay)
                         )) {
                         t = true;
-                    } else if (date > today) {
+                    } else if (date > today ||
+                        (
+                            (today < finstDay) &&
+                            util.isSameDay(date, yesDay)
+                        )) {
                         f = true;
                     } else if (date < today) {
                         p = true;
@@ -136,25 +140,25 @@
                     this.clear(type);
                     bus.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
-                if (type === 'finish') {
-                    if (this.t || this.f) {
-                        dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
-                    }
-                } else if (type === 'ing') {
-                    if (this.p) {
-                        dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
-                    }
-                } else if (type === 'book') {
-                    if (this.p) {
-                        dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
-                    }
-                }
+                // if (type === 'finish') {
+                //     if (this.t || this.f) {
+                //         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // } else if (type === 'ing') {
+                //     if (this.p) {
+                //         dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // } else if (type === 'book') {
+                //     if (this.p) {
+                //         dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // }
 
                 bus.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
