@@ -561,7 +561,7 @@
                             }),
                             showDiscount: item.showDiscount,
                             moreDiscount: getMoreDiscount(item),
-                            extraItems: item.extraItems,
+                            extraItems: [...item.extraItems],
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn'
                         };
@@ -600,7 +600,7 @@
                         }),
                         showDiscount: roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order),
-                        extraItems: order.extraItems,
+                        extraItems: [...order.extraItems],
                         checkType: order.checkType,
                         isCheckIn: this.checkState === 'checkIn'
                     };
