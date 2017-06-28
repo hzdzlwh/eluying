@@ -620,6 +620,9 @@
                     room.endDate = util.diffDate(room.endDate, 1);
                     room.endDate.setHours(12);
                     room.endDate.setMinutes(0);
+                    if (this.checkState === 'ing') {
+                        room.startDate = new Date();
+                    }
                     const r = {
                         categoryType: room.categoryType,
                         roomType: room.roomId,
@@ -653,8 +656,10 @@
                 let room;
                 if (len === 0 || this.rooms[len - 1].roomType === undefined) {
                     const startDate = new Date();
-                    startDate.setHours(12);
-                    startDate.setMinutes(0);
+                    if (this.checkState !== 'checkIn' && this.checkState !== 'ing') {
+                        startDate.setHours(12);
+                        startDate.setMinutes(0);
+                    }
                     const endDate = util.diffDate(new Date(), 1);
                     endDate.setHours(12);
                     endDate.setMinutes(0);
