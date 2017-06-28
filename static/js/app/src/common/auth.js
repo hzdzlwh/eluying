@@ -115,7 +115,6 @@ function checkAccess(moduleId) {
         !maintenanceClosed && checkMaintenance();
         const version = checkVersion();
         const moduleAuth = checkModule(moduleId);
-        window.console.log('version' + version);
         if (version && version.update) {
             location.href = UPGRADE_URL;
             return true;
