@@ -34,7 +34,7 @@
                                         <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
