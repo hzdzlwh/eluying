@@ -110,6 +110,7 @@
                                     :vipCardId="vipCardId"
                                     :vipCardInfo="vipCardInfo"
                                     @change="handleRoomChange"
+                                    @whenCheckInDeleteRooms="handleWhenCheckInDeleteRooms"
                                     :orderEditorVisible="orderEditorVisible"
                                     @priceChange="handleRoomPriceChange"/>
 
@@ -360,7 +361,8 @@
                 vipCardsAndLevel: [],
                 vipCardId: undefined,
                 vipCardInfo: {},
-                hasBack: false
+                hasBack: false,
+                whenCheckInDeleteRooms: []
             };
         },
         props: {
@@ -1115,6 +1117,7 @@
                     payments: JSON.stringify([]),
                     orderId: this.order.orderId,
                     whenCheckIn: this.checkState === 'checkIn',
+                    whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
                     ...this.getDiscountRelatedIdAndOrigin()
                 };
                 http.post('/order/modify', params)
@@ -1255,6 +1258,9 @@
             },
             handleRoomChange(rooms) {
                 this.rooms = rooms;
+            },
+            handleWhenCheckInDeleteRooms(whenCheckInDeleteRooms) {
+                this.whenCheckInDeleteRooms = whenCheckInDeleteRooms;
             },
             handleFoodChange() {
                 return false;

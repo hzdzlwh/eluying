@@ -261,6 +261,7 @@
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
                 initCategories: {},
+                whenCheckInDeleteRooms: [],
                 checkType
             };
         },
@@ -466,6 +467,7 @@
             },
             cleanRooms() {
                 this.rooms = [];
+                this.whenCheckInDeleteRooms = [];
             },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
@@ -975,6 +977,9 @@
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             deleteRoom(index) {
+                if (this.rooms[index].roomOrderId && this.checkState === 'checkIn') {
+                    this.whenCheckInDeleteRooms.push(this.rooms[index].roomOrderId);
+                }
                 this.rooms.splice(index, 1);
             },
             addPerson(id, preson) {
@@ -1003,6 +1008,7 @@
             },
             changeRooms() {
                 this.$emit('change', this.rooms);
+                this.$emit('whenCheckInDeleteRooms', this.whenCheckInDeleteRooms);
             },
             moreDiscountChange(room) {
                 this.forceChangePrice = true;
