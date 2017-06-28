@@ -72,7 +72,7 @@
         },
         methods: {
             addItem() {
-                if ( this.item.price === '' || this.item.price > 20000000 || !this.priceReg.test(this.item.price) ||  this.item.name === '' ||this.nameErrorAlert || this.unitErrorAlert) {
+                if ( this.item.price === '' || this.item.price > 20000000 || this.priceErrorAlert ||  this.item.name === '' ||this.nameErrorAlert || this.unitErrorAlert) {
                     if (this.item.name === '') {
                         this.nameIsWrite = true;
                     }
