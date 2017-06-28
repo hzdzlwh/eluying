@@ -30,6 +30,7 @@
                         <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
                         <div style="display: flex;line-height: 24px;">
                             房间
+                            <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
                             <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index)">
                                 <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                 </dd-option>
@@ -46,7 +47,11 @@
                                 </dd-option>
                             </dd-select>
                         </div>
-                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
+                        <div class="room-count" style="display: inline-block; position: relative;" v-if='item.checkRoomType === 1'>
+                            入住时长
+                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" />
+                        </div>
+                        <!-- <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
                             <label class="label-text">房费</label>
                             <p class="fee-container">
                                 <span class="fee-symbol">¥</span>
@@ -78,7 +83,7 @@
                             </span>
                             </span>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="shop-item-content" style="margin-top:15px;">
                         <div class="room-date" style="display: inline-block; position: relative;" v-if='checkState === "quick"'>
@@ -97,14 +102,17 @@
                             <span>~</span>
                             <label class="label-text">离开</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' :disabeld='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                             </div>
-                            <label class="label-text">
+                            <label class="label-text" v-if='item.checkRoomType !==1 '>
                                 共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                             </label>
+                            <label class="label-text" v-else>
+                                共{{11}}小时
+                            </label>
                         </div>
-                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "quick"'>
+                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
                             <label class="label-text">房费</label>
                             <p class="fee-container">
                                 <span class="fee-symbol">¥</span>
@@ -147,6 +155,13 @@
     </div>
 </template>
 <style lang="scss" scoped>
+.roomErrTip {
+    position: absolute;
+    top: 24px;
+    font-size: 12px;
+    color: red;
+}
+
 .el-input__inner {
     height: 25px!important;
 }
@@ -691,9 +706,16 @@ export default {
                             // currentRoom.priceScale = item.datePriceList.map(i => {
                             //     return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                             // });
-                            if (true && currentRoom.checkType.some(function (el) {
-                                el.id === 1
-                            })) {
+                            if (this.checkState === 'team') {
+                                if (!item.isTimeRoom && this.ExtInDate.checkRoomType === 1) {
+                                    item.checkRoomTypeErr = true;
+                                } else {
+                                    delete item.checkRoomTypeErr;
+                                }
+                            }
+                            if (true && currentRoom.checkType.some(function(el) {
+                                    el.id === 1
+                                })) {
                                 currentRoom.checkType.push({
                                     id: 1,
                                     name: '钟点房'

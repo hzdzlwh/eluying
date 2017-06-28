@@ -12,6 +12,6 @@ export const checkType = [{
 },
 {
     id: 3,
-    name: '免费房间'
+    name: '免费房'
 }
 ];
