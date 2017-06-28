@@ -62,7 +62,7 @@
                                       class="dish-name">
                                     {{dish.categoryName}}
                                 </span>
-                                <span class="cateTag" v-if='dish.serviceType' :style='{"background": REST_STATUS[dish.serviceType].color}'>{{REST_STATUS[dish.serviceType].short}}</span>
+                                <span class="cateTag" v-if='dish.serviceType && dish.serviceType !== 3' :style='{"background": REST_STATUS[dish.serviceType].color}'>{{REST_STATUS[dish.serviceType].short}}</span>
                                 <span class="dish-discount-icon"
                                       v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
                             </p>
