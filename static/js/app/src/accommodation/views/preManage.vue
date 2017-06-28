@@ -52,12 +52,13 @@
                             <td>{{checkTypes[row.checkType]}}</td>
                             <td>
                                 <span v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
+                                <span v-if="row.rooms.length === 0" style="color: rgb(43, 178, 103);">未排房 </span>
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
                             </td>
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
                             <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预订</span></td>
-                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{leftBorder: item.roomTypes.length !== 1}">{{item.customerName}}</td>
-                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" :class="{rightBorder: item.roomTypes.length !== 1}">{{item.customerPhone}}</td>
+                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" class="leftBorder">{{item.customerName ? item.customerName : '—'}}</td>
+                            <td style="color: #999999;" v-if="index === 0" :rowspan="item.roomTypes.length" class="rightBorder">{{item.customerPhone}}</td>
                             <td style="color: #178ce6; cursor: pointer;" v-if="index === 0" :rowspan="item.roomTypes.length"><span @click="showOrder(item)">详情</span>/<span @click="checkIn(item)">入住</span></td>
                         </tr>
                     </table>
