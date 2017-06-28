@@ -74,6 +74,8 @@
              */
             selectedRooms() {
                 const today = new Date();
+                const finstDay = new Date(today.getFullYear(), today.getMonth(),today.getDate(),12)
+                const yesDay = new Date(today.getFullYear(), today.getMonth(),today.getDate()-1)
                 let p = false;
                 let t = false;
                 let f = false;
@@ -81,7 +83,12 @@
                 this.selectedEntries.map(e => {
                     // 直接抄的浇浇代码
                     const date = new Date(e.date);
-                    if (util.isSameDay(date, today)) {
+                    if (
+                        util.isSameDay(date, today) ||
+                        (
+                            (today < finstDay) &&
+                            util.isSameDay(date, yesDay)
+                        )) {
                         t = true;
                     } else if (date > today) {
                         f = true;
