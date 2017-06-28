@@ -10,7 +10,7 @@
                     <p>
                         <span class="addCus">
                                     房间</span>
-                        <span>{{room && room.roomName + room.roomNum}}</span>
+                        <span>{{room && room.roomName + (room.roomNum ?  room.roomNum : '')}}</span>
                     </p>
                     <p>
                         <span class="addCus">起始日期</span>
