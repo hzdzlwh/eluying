@@ -2,17 +2,33 @@
     <div class="inner-container">
         <div class="inner-title">
             <h4>{{title}}</h4>
-            <a>编辑</a>
+            <a @click="toggle" v-if="switchView">编辑</a>
         </div>
         <div class="inner-content">
-            
+            <slot name="show" v-if="switchView"></slot>
+            <slot name="edit" v-else></slot>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['title']
+        props: ['title','toggleView'],
+        data() {
+            return {
+                switchView: true
+            }
+        },
+        methods: {
+            toggle() {
+                this.switchView = !this.switchView;
+            }
+        },
+        watch: {
+            toggleView(newValue) {
+                this.toggle();
+            }
+        }
     }
 </script>
 
