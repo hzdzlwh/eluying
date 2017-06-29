@@ -691,21 +691,6 @@ export default {
                             // currentRoom.priceScale = item.datePriceList.map(i => {
                             //     return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                             // });
-                            if (true && currentRoom.checkType.some(function (el) {
-                                el.id === 1
-                            })) {
-                                currentRoom.checkType.push({
-                                    id: 1,
-                                    name: '钟点房'
-                                })
-                            } else {
-                                currentRoom.checkType.forEach(function(el, index) {
-                                    if (el.id === 1) {
-                                        currentRoom.checkType.splice(index, 1)
-                                    }
-                                })
-                            }
-
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;
