@@ -793,6 +793,11 @@ export default {
                 // this.setDayFee(room);
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
                 room.moreDiscount = 0;
+                const price = this.rooms.reduce((sum, room) => {
+                    return sum + (room.price || 0);
+                }, 0);
+                this.$emit('priceChange', price);
+                return price;
             },
             showPriceList(id) {
                 this.rooms.forEach((item, index) => {
