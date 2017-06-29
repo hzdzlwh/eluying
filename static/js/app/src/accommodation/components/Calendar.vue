@@ -132,10 +132,12 @@
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
                         <span class="calendar-glyph-channel">{{g.channelName}}</span>
+                        
+                    </div>
+                    <div class="calendar-glyph-type"><span>{{(g && g.checkType !== undefined && g.checkType === 1)   ? '钟点房' : checkType[g.checkType]}}</span>
                         <img class="" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
                         <img class="" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
-                        <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2">
-                    </div>
+                        <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2"></div>
                     <div class="calendar-glyph-detail ing up">
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
@@ -307,7 +309,7 @@
         width: 100%;
         text-align: center;
         border-bottom: solid thin #e6e6e6;
-        height: 48px;
+        height: 69px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -413,7 +415,7 @@
     .calendar-status {
         position: relative;
         width: 100px;
-        height: 48px;
+        height: 69px;
         background: white;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
@@ -439,7 +441,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         width: 96px;
-        height: 44px;
+        height: 65px;
         margin: auto;
         margin-top: 2px;
         font-size: 12px;
@@ -459,7 +461,7 @@
             &::after {
                 content: '';
                 position: absolute;
-                 top: 1px;
+                 top: 8px;
                  left: 40px;
                  width: 16px;
                  height: 32px;
@@ -523,7 +525,7 @@
     }
     .calendar-glyph {
         position: absolute;
-        height: 44px;
+        height: 65px;
         color: white;
         padding-left: 8px;
         cursor: pointer;
@@ -552,6 +554,19 @@
         background: #a6a6a6;
         &.glyph-start {
              border-left: 6px solid #8c8c8c;
+        }
+    }
+    .calendar-glyph-type{
+        span{
+            width: 48px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 12px;
+        }
+        img{
+            margin-top: -15px;
         }
     }
     .calendar-glyph-name, .calendar-glyph-info {
@@ -647,6 +662,7 @@
     import modal from '../../common/modal';
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
+    import { checkType } from '../../common/orderSystem/roomCheckType.js';
 
     export default{
         props: {
@@ -661,6 +677,7 @@
         },
         data() {
             return {
+                checkType,
                 scrollTicking: false,
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
@@ -749,7 +766,7 @@
                 // 生成订单图元
                 const glyphs = [];
                 const GRID_WIDTH = 100;
-                const GRID_HEIGHT = 48;
+                const GRID_HEIGHT = 69;
                 const startDate = this.startDate;
                 this.orderList.map(order => {
                     // 过滤未选中的房型
