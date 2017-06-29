@@ -761,11 +761,19 @@
                         };
                     }
                 } else {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
+                    if (this.checkState === 'ing') {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        };
+                    } else {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        };
+                    }
                 }
             },
             getRoomsList(room) {
