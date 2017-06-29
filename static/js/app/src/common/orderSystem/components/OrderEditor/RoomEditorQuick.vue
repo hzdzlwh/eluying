@@ -31,25 +31,25 @@
                         <div style="display: flex;line-height: 24px;">
                             房间
                             <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
-                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index)">
+                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index,'room')">
                                 <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                 </dd-option>
                             </dd-select>
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;">
                             数量
-                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined'>可预订数 {{item.canReserveCount}}</span>
+                            <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined'>可预订数 {{item.canReserveCount}}</span>
                         </div>
                         <div class="room-type" v-if='checkState === "quick"'>
                             入住类型：
-                            <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index)">
+                            <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index,'roomType')">
                                 <dd-option v-for="check in item.checkType" :value="check.id" :key="check.id" :label="check.name">
                                 </dd-option>
                             </dd-select>
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;" v-if='item.checkRoomType === 1'>
                             入住时长
-                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" />
+                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :max='item. maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id="index" :type="3" />
                         </div>
                         <!-- <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
                             <label class="label-text">房费</label>
@@ -102,7 +102,7 @@
                             <span>~</span>
                             <label class="label-text">离开</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' :disabeld='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index, 'endDate')" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' :disabled='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                             </div>
                             <label class="label-text" v-if='item.checkRoomType !==1 '>
@@ -545,10 +545,13 @@ export default {
                 const d2 = new Date(date2);
                 return util.DateDiff(d1, d2);
             },
-            changeRoomType(item, index) {
+            changeRoomType(item, index, type) {
+                if (type === 'endDate' && item.roomCheckType === 1) {
+                    return;
+                }
                 this.$nextTick(function() {
                     // item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index, type);
                 });
             },
             disabledStartDate(endDate) {
@@ -566,9 +569,13 @@ export default {
                 };
             },
             handleRoomNumChange(item, index, num) {
-                item.amount = num;
+                item.timeAmount = Number(num);
                 this.modifyRooms([item]);
 
+            },
+            handleRoomAmountChange(item, index, num){
+                item.amount = Number(num);
+                this.modifyRooms([item]);
             },
             getRoomsList(id) {
                 if (!id) {
@@ -596,35 +603,35 @@ export default {
                 this.vipListShow = false;
                 this.vipList = [];
             },
-            handleRoomChange(room, index) {
+            handleRoomChange(room, index, type) {
                 // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                 //     return false;
                 // }
 
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
-                if (duration < 1) {
+                if (duration < 1 && room.checkRoomType === 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
                     return false;
                 }
 
                 // 最多400天
-                if (duration > 400) {
-                    const currentTime = +new Date();
-                    if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.warn('入住上限最大为400天，请重新选择入住时间！');
-                        this.lastModifyRoomTime = currentTime;
-                    }
-                    return false;
-                }
+                // if (duration > 400) {
+                //     const currentTime = +new Date();
+                //     if (currentTime - this.lastModifyRoomTime > 2000) {
+                //         modal.warn('入住上限最大为400天，请重新选择入住时间！');
+                //         this.lastModifyRoomTime = currentTime;
+                //     }
+                //     return false;
+                // }
 
-                this.modifyRooms([room]);
+                this.modifyRooms([room], type);
             },
             /**
              * 根据条件获取价格
              * @param rooms
              */
-            modifyRooms(rooms) {
+            modifyRooms(rooms, type) {
                 // 过滤没有房间id的房间
                 rooms = rooms.filter(r => r.categoryType);
                 if (!rooms || rooms.length === 0) {
@@ -672,7 +679,7 @@ export default {
                     discountRelatedId: discountRelatedId,
                     orderId: this.order.orderId,
                     rooms: JSON.stringify(rooms.map(room => {
-                            return {
+                            const parm = {
                                 checkType: this.checkState === 'team' ? this.ExtInDate.roomCheckType : room.checkRoomType,
                                 amount: room.amount,
                                 startDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.startDate : room.room.startDate),
@@ -682,12 +689,35 @@ export default {
                                 sub: true,
                                 useDiscount: !!room.moreDiscount
                             };
+                            if (room.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
+                                delete parm.endDate;
+                            }
+                            return parm;
                         }))
                         // forceChangePrice: this.forceChangePrice
                 };
+
                 http.get('/room/canReserveCountAndTotalPrice', params)
                     .then(res => {
                         // 嘻嘻
+                        const flag = (Math.random() > 0.5);
+                        const mockDate = {
+                            data: {
+                                list: [{
+                                    canReserveCount: 100,
+                                    originTotalPrice: Math.random() * 1000,
+                                    showDiscount: flag,
+                                    totalFee: Math.random() * 1000
+                                }]
+                            }
+                        }
+                        mockDate.data.list[0].hasHourRoom = true
+                        mockDate.data.list[0].startLength = (Math.random() * 10).toFixed(0)
+                        mockDate.data.list[0].maxLength = (Math.random() * 100).toFixed(0)
+                        mockDate.data.list[0].startPrice = (Math.random() * 100).toFixed(0)
+                        mockDate.data.list[0].unitLength = (Math.random() * 10).toFixed(0)
+                        res = mockDate;
+                        // mockDate
                         res.data.list.map((item, index) => {
                             const currentRoom = rooms[index];
                             // if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
@@ -713,21 +743,32 @@ export default {
                                     delete item.checkRoomTypeErr;
                                 }
                             }
-                            if (true && currentRoom.checkType.some(function(el) {
-                                    el.id === 1
-                                })) {
-                                currentRoom.checkType.push({
-                                    id: 1,
-                                    name: '钟点房'
-                                })
+                            if (item.hasHourRoom) {
+                                if (!currentRoom.checkType.some(function(el) {
+                                        return el.id === 1
+                                    })) {
+                                    currentRoom.checkType.push({
+                                        id: 1,
+                                        name: '钟点房'
+                                    })
+                                }
                             } else {
                                 currentRoom.checkType.forEach(function(el, index) {
                                     if (el.id === 1) {
                                         currentRoom.checkType.splice(index, 1)
                                     }
                                 })
+                                if (currentRoom.checkRoomType === 1) {
+                                    currentRoom.checkRoomType = 0;
+                                }
                             }
-
+                            if (currentRoom.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
+                                currentRoom.unitLength = Number(item.unitLength);
+                                currentRoom.maxLength = Number(item.maxLength);
+                                currentRoom.startLength = Number(item.startLength);
+                                currentRoom.timeAmount = Number(item.startLength);
+                                currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * item.startLength)
+                            }
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;
