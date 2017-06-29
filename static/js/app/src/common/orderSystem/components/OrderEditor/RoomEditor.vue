@@ -67,7 +67,7 @@
                             <div class="room-date" style="display: inline-block; position: relative;">
                                 <span class="useless-tip error" style="left: 28px;"
                                       v-if="checkIsToday(item.room.startDate)">
-                                    该房间的入住时间必需为今日！
+                                    该房间的入住时间必须为今日！
                                 </span>
                                 <label class="label-text">到达</label>
                                 <div class="enterDate">
@@ -733,7 +733,7 @@
                     };
                 } else if (this.checkState === 'ing') {
                     return (date) => {
-                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() &&  date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
                     };
                 } else if (this.checkState === 'checkIn') {
                     return date => false;
@@ -794,7 +794,8 @@
                     });
             },
             checkIsToday(date) {
-                return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
+                return false;
+                // return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
             },
             hidePriceList() {
                 this.rooms.forEach(item => {
