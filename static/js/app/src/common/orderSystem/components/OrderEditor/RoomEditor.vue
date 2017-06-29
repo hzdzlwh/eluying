@@ -723,7 +723,7 @@
                 this.getRoomsList(item);
                 this.$nextTick(function() {
                     item.roomType = 0;
-                    // this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index);
                 });
             },
             disabledStartDate(endDate) {
