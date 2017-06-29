@@ -34,7 +34,7 @@
                                         <input type="number" class="dd-input" v-model="payment.fee">
                                         <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
                                         <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name">
+                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
                                             </dd-option>
                                         </dd-select>
                                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
@@ -188,7 +188,8 @@ export default {
             companyAmount: 0,
             ReaminderParams: {}, // 余额付款传来的参数,
             ramainShow: false,
-            remainderDate: undefined
+            remainderDate: undefined,
+            companyName: ''
         };
     },
     computed: {
@@ -360,27 +361,27 @@ export default {
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 if (!this.orderState) {
                     this.payChannels = this.payChannels.filter(function(element) {
-                        return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12)
-                    })
+                        return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
+                    });
                 }
                 // 退款没有支付宝和微信
                 if (this.orderState && this.isCompany && this.companyCityLedger) {
                     this.payChannels = [{
                         channelId: -14,
-                        name: '企业挂帐'
+                        name: `企业挂帐(${this.companyName || ''})`
                     }, {
                         channelId: -15,
-                        name: '企业扣款'
+                        name: `企业扣款(${this.companyName || ''})`
                     }].concat(this.payChannels);
                 } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
                     this.payChannels = [{
                         channelId: -15,
-                        name: '企业扣款'
+                        name: `企业扣款(${this.companyName || ''})`
                     }].concat(this.payChannels);
                 } else if (!this.orderState && this.companyCityLedger) {
                     this.payChannels = [{
                         channelId: -15,
-                        name: '退款至企业'
+                        name: `退款至企业(${this.companyName || ''})`
                     }].concat(this.payChannels);
                 }
                 $('#cashier').modal({
@@ -493,6 +494,7 @@ export default {
                         return a.channelId - b.channelId;
                     });
                     this.payChannels = channels;
+                    this.companyName = res.data.companyName;
                     // this.depositPayChannels = channels.filter(channel => {
                     //     return channel.channelId > 0;
                     // });

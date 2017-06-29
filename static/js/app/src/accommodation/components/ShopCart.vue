@@ -74,8 +74,8 @@
              */
             selectedRooms() {
                 const today = new Date();
-                const finstDay = new Date(today.getFullYear(), today.getMonth(),today.getDate(),23)
-                const yesDay = new Date(today.getFullYear(), today.getMonth(),today.getDate()-1)
+                const finstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23);
+                const yesDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
                 let p = false;
                 let t = false;
                 let f = false;

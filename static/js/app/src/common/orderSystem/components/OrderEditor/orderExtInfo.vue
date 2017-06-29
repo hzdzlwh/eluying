@@ -8,13 +8,13 @@
                 <DatePicker v-model='value.startDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
-            <span>~</span>
-            <label class="label-text">离开</label>
-            <div class="enterDate">
+            <span v-if='value.roomCheckType !== 1'>~</span>
+            <label class="label-text" v-if='value.roomCheckType !== 1'>离开</label>
+            <div class="enterDate" v-if='value.roomCheckType !== 1'>
                 <DatePicker v-model='value.endDate' @change='handleRoomChange' :clearable='false' :picker-options='{disabledDate:disabledEndDate(value.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                 </DatePicker>
             </div>
-            <label class="label-text">
+            <label class="label-text" v-if='value.roomCheckType !== 1'>
                 共{{dateDiff(value.startDate, value.endDate)}}晚
             </label>
         </div>
@@ -56,7 +56,8 @@ export default {
     },
     data() {
         return {
-            checkType,
+            checkType:  checkType.concat([{id: 1,
+                name: '钟点房'}]),
             // startDate: String,
             // endDate: String,
             // roomCheckType: Number
@@ -64,63 +65,77 @@ export default {
     },
     watch: {
         value(newval) {
-            this.$emit('change',newval)
+            this.$emit('change', newval)
         }
     },
- // computed: { // // interStartDate: { // // get: function () { // // return this.startDate // // }, // // set: function(newval) { // // bus.$emit('OrderExtInfochange', { // // name: 'StartDate', // // val: newval // // }) // // } // // } // },
-
-        components: {
-            DdSelect,
-            DdOption,
-            DatePicker
-        },
-        methods: {
-                handleRoomChange() {
-                const duration = this.dateDiff(this.value.startDate, this.value.endDate);
-                if (duration < 1) {
-                    this.value.endDate = util.diffDate(new Date(this.value.endDate), 1);
-                    return false;
-                }
-                // 最多400天
-                if (duration > 400) {
-                    const currentTime = +new Date();
-                    modal.warn('入住上限最大为400天，请重新选择入住时间！');
-                    this.lastModifyRoomTime = currentTime;
-                    return false;
-                }
-            },
-            dateDiff(date1, date2) {
-                const d1 = new Date(date1);
-                const d2 = new Date(date2);
-                return util.DateDiff(d1, d2);
-            },
-            changeRoomType(item, index) {
-                this.$nextTick(function() {
-                    // item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.handleRoomChange();
-                });
-            },
-            // handleRoomChange() {
-            //     bus.$emit('OrderExtInfochange', {
-            //         checkType: this.roomCheckType,
-            //         startDate: this.startDate,
-            //         endDate: this.endDate
-            //     }, -1);
-            // },
-            disabledStartDate(endDate) {
-                const str = util.dateFormat(new Date(endDate));
-                const arr = str.split('-');
-                    return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
-            },
-            disabledEndDate(startDate) {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    return (date) => {
-                        return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() ||  date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
-                    };
-            },
+    computed:{
+        checkTypeList(){
+            return this.checkType.push({
+                id: 1,
+                name: '钟点房'
+            })
         }
+    },
+    // computed: { // // interStartDate: { // // get: function () { // // return this.startDate // // }, // // set: function(newval) { // // bus.$emit('OrderExtInfochange', { // // name: 'StartDate', // // val: newval // // }) // // } // // } // },
+
+    components: {
+        DdSelect,
+        DdOption,
+        DatePicker
+    },
+    methods: {
+        getCheckType() {
+            return this.checkType.push({
+                id: 1,
+                name: '钟点房'
+            })
+        },
+        handleRoomChange() {
+            const duration = this.dateDiff(this.value.startDate, this.value.endDate);
+            if (duration < 1) {
+                this.value.endDate = util.diffDate(new Date(this.value.endDate), 1);
+                return false;
+            }
+            // 最多400天
+            if (duration > 400) {
+                const currentTime = +new Date();
+                modal.warn('入住上限最大为400天，请重新选择入住时间！');
+                this.lastModifyRoomTime = currentTime;
+                return false;
+            }
+        },
+        dateDiff(date1, date2) {
+            const d1 = new Date(date1);
+            const d2 = new Date(date2);
+            return util.DateDiff(d1, d2);
+        },
+        changeRoomType(item, index) {
+            this.$nextTick(function() {
+                // item.roomType = this.getRoomsList(item.categoryType)[0].id;
+                this.handleRoomChange();
+            });
+        },
+        // handleRoomChange() {
+        //     bus.$emit('OrderExtInfochange', {
+        //         checkType: this.roomCheckType,
+        //         startDate: this.startDate,
+        //         endDate: this.endDate
+        //     }, -1);
+        // },
+        disabledStartDate(endDate) {
+            const str = util.dateFormat(new Date(endDate));
+            const arr = str.split('-');
+            return (date) => {
+                return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+            };
+        },
+        disabledEndDate(startDate) {
+            const str = util.dateFormat(new Date(startDate));
+            const arr = str.split('-');
+            return (date) => {
+                return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
+            };
+        },
     }
+}
 </script>

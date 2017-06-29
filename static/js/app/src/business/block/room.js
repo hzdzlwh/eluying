@@ -16,6 +16,7 @@ init({
 const app = new Vue({
     template: `
         <div>
+           
             <div style="width: 720px">
                 <p style="color: #178ce6;display: flex;justify-content: space-between;margin-bottom: 23px"><span>房间列表</span>
                     <span style="cursor: pointer" @click="openZoneModal('new')">
@@ -51,7 +52,7 @@ const app = new Vue({
                 </div>
             </div>
             <div class="modal fade" role="dialog" id="zoneModal" data-backdrop="static">
-                <div class="modal-dialog" style="width: 352px">
+                <div class="modal-dialog" style="width: 427px">
                     <div class="modal-content v-modal">
                         <div>
                             <p style="font-size:16px;margin-bottom:20px">{{this.type === 'new' ? '新增区域' : '编辑区域'}}</p>
@@ -70,7 +71,7 @@ const app = new Vue({
                 </div>
             </div>
             <div class="modal fade" role="dialog" id="changeModal">
-                <div class="modal-dialog" style="width: 352px">
+                <div class="modal-dialog" style="width: 427px">
                     <div class="modal-content v-modal">
                         <div>
                             <p style="font-size:16px;margin-bottom:20px">换区</p>

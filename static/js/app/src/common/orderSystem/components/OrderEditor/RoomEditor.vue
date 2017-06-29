@@ -261,6 +261,7 @@
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
                 initCategories: {},
+                whenCheckInDeleteRooms: [],
                 checkType
             };
         },
@@ -466,6 +467,7 @@
             },
             cleanRooms() {
                 this.rooms = [];
+                this.whenCheckInDeleteRooms = [];
             },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
@@ -559,7 +561,7 @@
                             }),
                             showDiscount: item.showDiscount,
                             moreDiscount: getMoreDiscount(item),
-                            extraItems: item.extraItems,
+                            extraItems: [...item.extraItems],
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn'
                         };
@@ -598,7 +600,7 @@
                         }),
                         showDiscount: roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order),
-                        extraItems: order.extraItems,
+                        extraItems: [...order.extraItems],
                         checkType: order.checkType,
                         isCheckIn: this.checkState === 'checkIn'
                     };
@@ -692,6 +694,7 @@
                     room.room.startDate = new Date(Date.parse(this.rooms[len - 1].room.startDate));
                     room.room.endDate = new Date(Date.parse(this.rooms[len - 1].room.endDate));
                     room.room.roomId = 0;
+                    room.originStartDate = new Date(Date.parse(this.rooms[len - 1].originStartDate));
                     room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
@@ -975,6 +978,9 @@
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             deleteRoom(index) {
+                if (this.rooms[index].roomOrderId && this.checkState === 'checkIn') {
+                    this.whenCheckInDeleteRooms.push(this.rooms[index].roomOrderId);
+                }
                 this.rooms.splice(index, 1);
             },
             addPerson(id, preson) {
@@ -1003,6 +1009,7 @@
             },
             changeRooms() {
                 this.$emit('change', this.rooms);
+                this.$emit('whenCheckInDeleteRooms', this.whenCheckInDeleteRooms);
             },
             moreDiscountChange(room) {
                 this.forceChangePrice = true;
