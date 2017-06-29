@@ -26,6 +26,8 @@
                                 <div class="taday-status-item-tag taday-status-item-dirty" v-if='it.isDirty'>脏房</div>
                                 <div class="taday-status-item-tag taday-status-item-arrival" v-if='it.isArrival'>预抵</div>
                             </div>
+                            <div v-if='it.checkType !== undefined'>{{it.checkType === 1 ? '钟点房' : checkType[it.checkType]}}</div>
+                            <!-- <div >{{'钟点房'}}</div> -->
                         </div>
                     </div>
                 </div>
@@ -158,7 +160,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
-            line-height: 20px;
             text-align: left;
             font-weight: bold;
             float: left;
@@ -166,7 +167,6 @@
         .taday-status-item-title3 {
             display: inline-block;
             font-size: 14px;
-            line-height: 20px;
             text-align: right;
             font-weight: bold;
             width: 40px;
@@ -177,14 +177,12 @@
         }
         .taday-status-item-name {
             width: 100%;
-            display: inline-block;
+            display: inline-table;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 12px;
-            line-height: 20px;
             text-align: left;
-            height: 20px;
         }
         .taday-status-item-tag {
             display: inline;
@@ -266,6 +264,7 @@ import util from 'util';
 import http from '../../common/http';
 import bus from '../../common/eventBus';
 import type from '../../common/orderSystem/store/types';
+import { checkType } from '../../common/orderSystem/roomCheckType.js';
 import {
     colorList
 } from '../colorList';
@@ -290,6 +289,7 @@ export default {
     },
     data() {
         return {
+            checkType,
             scrollTicking: false,
             lastScrollTop: 0,
             lastScrollLeft: 0,
