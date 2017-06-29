@@ -9,8 +9,8 @@
                 <table style="border: none;border-top: 4px solid #178ce6;">
                     <colgroup>
                         <col width="130">
-                        <col width="77">
                         <col width="89">
+                        <col width="77">
                         <col width="295">
                         <col width="284">
                         <col width="90">
@@ -20,8 +20,8 @@
                     </colgroup>
                     <tr style="background: #f0f0f0; height: 53px;">
                         <th>订单详情</th>
-                        <th>数量</th>
                         <th>入住类型</th>
+                        <th>数量</th>
                         <th>房号</th>
                         <th>入住时间</th>
                         <th>状态</th>
@@ -34,8 +34,8 @@
                     <table>
                         <colgroup>
                             <col width="130">
-                            <col width="77">
                             <col width="89">
+                            <col width="77">
                             <col width="295">
                             <col width="284">
                             <col width="90">
@@ -48,10 +48,10 @@
                         </tr>
                         <tr v-for="(row, index) in item.roomTypes">
                             <td>{{row.typeName}}</td>
-                            <td>{{row.count}}</td>
                             <td>{{checkTypes[row.checkType]}}</td>
+                            <td>{{row.count}}</td>
                             <td>
-                                <span v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
+                                <span style="display:inline-block;" v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
                                 <span v-if="row.rooms.length === 0" style="color: rgb(43, 178, 103);">未排房 </span>
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
                             </td>
