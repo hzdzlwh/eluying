@@ -60,7 +60,7 @@
 }
 
 .hoverRight {
-    left: -200px!important;
+    left: -220px!important;
 }
 
 .hoverRight .glyph-arrow-up {
