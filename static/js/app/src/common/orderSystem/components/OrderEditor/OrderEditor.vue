@@ -27,7 +27,7 @@
                                     <label for="name">联系人</label>
                                     <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name"
                                            autocomplete="off"
-                                           :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
+                                           :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="name"
                                            @input="changeVipList(1)">
                                 </div>
@@ -35,7 +35,7 @@
                                     <label for="phone">手机号</label>
                                     <input class="dd-input" type="text" id="phone" maxlength="20" placeholder="手机号"
                                            autocomplete="off"
-                                           :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
+                                           :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                            v-model="phone"
                                            @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
@@ -50,7 +50,7 @@
                                 <div class="userInfo-item" style="position: relative">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                        <dd-select v-model="userOriginType" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :key="origin" v-for="origin in userSelfOrigins"
                                                        :value="origin" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
@@ -80,7 +80,7 @@
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
                                     <span class="vipcard-select" style="width: 210px">
-                                        <dd-select v-model="vipCardId" :disabled="this.checkState === 'editOrder' && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                        <dd-select v-model="vipCardId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
                                             </dd-option>
@@ -135,11 +135,11 @@
                         </CateEditor>
                         <EnterEditor
                              :order="order"
-                             v-if="this.checkState !== 'editOrder' || (order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
+                             v-if="(this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || (order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                              :vipDiscountDetail="vipDiscountDetail"
                              @change="handleEnterChange"
                              @priceChange="handlEnterPriceChange"/>
-                        <ShopEditor v-show="this.checkState !== 'editOrder' || (order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
+                        <ShopEditor v-show="(this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || (order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))"
                                 :order="order"
                                 :vipDiscountDetail="vipDiscountDetail"
                                 @change="handleShopChange"
