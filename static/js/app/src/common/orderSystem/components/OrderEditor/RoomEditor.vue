@@ -76,6 +76,7 @@
                                                 :clearable='false'
                                                 :picker-options='{disabledDate:disabledStartDate(new Date())}'
                                                 type="datetime"
+                                                :disabled='order.orderState === 8'
                                                 placeholder="选择日期时间"
                                                 format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
@@ -86,6 +87,7 @@
                                     <DatePicker v-model='item.room.endDate'
                                                 @change='()=>handleRoomChange(item, index)'
                                                 :clearable='false'
+                                                :disabled='order.orderState === 8'
                                                 :picker-options='{disabledDate:disabledEndDate(item.room.endDate)}'
                                                 type="datetime"
                                                 placeholder="选择日期时间"
@@ -761,11 +763,19 @@
                         };
                     }
                 } else {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
+                    if (this.checkState === 'ing') {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        };
+                    } else {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        };
+                    }
                 }
             },
             getRoomsList(room) {

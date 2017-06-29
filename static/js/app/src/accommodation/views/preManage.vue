@@ -146,7 +146,7 @@
             },
             checkIn(item) {
                 this[types.LOAD_ORDER_DETAIL]({ orderId: item.orderId }).then(res => {
-                    bus.$emit('editOrder', 'checkIn', this.order);
+                    bus.$emit('editOrder', 'checkIn', this.order, 'hidePreStep');
                 });
             },
             arrangeHouse(event, item, index) {

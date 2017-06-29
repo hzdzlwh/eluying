@@ -160,7 +160,7 @@
                     </div>
                     <div class="roomModals-footer">
                         <div>
-                         <div @click="returnPreStep" v-if="(hasBack || checkState === 'checkIn') && ($route && $route.path !== '/nowOrders/preManage')" class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
+                         <div @click="returnPreStep" v-if="hidePreStep && (hasBack || checkState === 'checkIn')" class="btn-back" style='    display: inline-block;'><img src="/static/image/modal/back.png" alt=""></div>
                             <span class="footer-label">订单金额</span>
                             <span class="footer-price">¥{{totalPrice}}</span>
                         </div>
@@ -380,7 +380,11 @@
                 type: String,
                 default: ''
             },
-            categories: Array
+            categories: Array,
+            hidePreStep: {
+                type: Boolean,
+                default: true
+            }
         },
         components: {
             DdDropdown,
