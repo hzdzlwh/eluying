@@ -50,7 +50,7 @@
                             <td>{{row.typeName}}</td>
                             <td>{{checkTypes[row.checkType]}}</td>
                             <td>{{row.count}}</td>
-                            <td>
+                            <td style="padding: 8px;">
                                 <span style="display:inline-block;" v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
                                 <span v-if="row.rooms.length === 0" style="color: rgb(43, 178, 103);">未排房 </span>
                                 <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
