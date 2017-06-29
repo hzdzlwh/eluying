@@ -210,7 +210,7 @@
                     obj.showDiscount = this.order.showDiscount;
                     obj.itemsMap = this.order.itemsMap.forEach(function (element) {
                        element.dishItemResp.forEach(function(el){
-                            if (el.serviceType === 1 || el.serviceType === 2) {
+                            if (el.serviceType === 1 || el.serviceType === 2 || el.serviceType === 4) {
                                 el.price = -el.price
                             }
                        })

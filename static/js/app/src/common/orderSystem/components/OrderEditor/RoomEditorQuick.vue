@@ -119,7 +119,7 @@
                                 <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
                             </p>
                             <span class="discount-info">
-                        <span v-if="item.showDiscount">
+                        <span v-if="item.showDiscount && !item.priceModified">
                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                             <span class="discount-num" v-if="item.showDiscount">
                                 {{item.showDiscount}}

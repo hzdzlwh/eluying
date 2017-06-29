@@ -89,19 +89,19 @@
                                         <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 17) != 0">
                                             <span class="money-type">零头处理</span>
                                             <span class="money-num">
-                                                {{findTypePrice(order.payments, 17) > 0 ? '-' : ''}}¥{{Math.abs(findTypePrice(order.payments, 17))}}
+                                                ¥{{findTypePrice(order.payments, 17) > 0 ? '-' : ''}}{{Math.abs(findTypePrice(order.payments, 17))}}
                                             </span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
                                            v-if="findTypePrice(order.payments, 5) > 0">
                                             <span class="money-type">优惠</span>
-                                            <span class="money-num">-¥{{Math.abs(
+                                            <span class="money-num">¥-{{Math.abs(
                                                 findTypePrice(order.payments, 5))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
                                            v-if="findTypePrice(order.payments, 11) > 0">
                                             <span class="money-type">取消订单</span>
-                                            <span class="money-num">-¥{{Math.abs(
+                                            <span class="money-num">¥-{{Math.abs(
                                                 findTypePrice(order.payments, 11))}}</span>
                                         </p>
                                         <p class="money-item item-indent money-sub-item"
@@ -124,8 +124,8 @@
                                            v-for="item in filterPayMents(order.payments, 0, 2, 6)">
                                             <span class="money-type">{{`${dateFormat(
                                                 item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 2 ? '-'
-                                                : ''}¥${item.fee}`}}</span>
+                                            <span class="money-num">¥{{`${item.type === 2 ? '-'
+                                                : ''}${item.fee}`}}</span>
                                         </p>
                                         <p class="money-item money-type-border">
                                             <span class="money-type">{{findTypePrice(order.payments, 15) >= 0 ? '需补金额'
@@ -141,8 +141,8 @@
                                            v-for="item in filterPayMents(order.payments, 1, 3)">
                                             <span class="money-type">{{`${dateFormat(
                                                 item.creationTime)} ${item.payChannel}`}}</span>
-                                            <span class="money-num">{{`${item.type === 3 ? '-'
-                                                : ''}¥${item.fee}`}}</span>
+                                            <span class="money-num">¥{{`${item.type === 3 ? '-'
+                                                : ''}${item.fee}`}}</span>
                                         </p>
                                     </div>
                                 </div>
