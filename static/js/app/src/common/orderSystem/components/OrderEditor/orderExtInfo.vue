@@ -68,14 +68,6 @@ export default {
             this.$emit('change', newval)
         }
     },
-    computed:{
-        checkTypeList(){
-            return this.checkType.push({
-                id: 1,
-                name: '钟点房'
-            })
-        }
-    },
     // computed: { // // interStartDate: { // // get: function () { // // return this.startDate // // }, // // set: function(newval) { // // bus.$emit('OrderExtInfochange', { // // name: 'StartDate', // // val: newval // // }) // // } // // } // },
 
     components: {
@@ -84,25 +76,19 @@ export default {
         DatePicker
     },
     methods: {
-        getCheckType() {
-            return this.checkType.push({
-                id: 1,
-                name: '钟点房'
-            })
-        },
         handleRoomChange() {
             const duration = this.dateDiff(this.value.startDate, this.value.endDate);
-            if (duration < 1) {
+            if (duration < 1 && value.roomCheckType !== 1) {
                 this.value.endDate = util.diffDate(new Date(this.value.endDate), 1);
                 return false;
             }
             // 最多400天
-            if (duration > 400) {
-                const currentTime = +new Date();
-                modal.warn('入住上限最大为400天，请重新选择入住时间！');
-                this.lastModifyRoomTime = currentTime;
-                return false;
-            }
+            // if (duration > 400) {
+            //     const currentTime = +new Date();
+            //     modal.warn('入住上限最大为400天，请重新选择入住时间！');
+            //     this.lastModifyRoomTime = currentTime;
+            //     return false;
+            // }
         },
         dateDiff(date1, date2) {
             const d1 = new Date(date1);

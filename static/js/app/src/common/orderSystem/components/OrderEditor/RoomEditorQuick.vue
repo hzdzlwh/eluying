@@ -607,7 +607,9 @@ export default {
                 // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                 //     return false;
                 // }
-
+                if (type ==='endDate' && room.checkRoomType === 1) {
+                    return
+                }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1 && room.checkRoomType === 1) {
@@ -767,6 +769,9 @@ export default {
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
                                 currentRoom.timeAmount = Number(item.startLength);
+                                
+                            }
+                            if (currentRoom.checkRoomType === 1) {
                                 currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * item.startLength)
                             }
                             currentRoom.showDiscount = item.showDiscount;
