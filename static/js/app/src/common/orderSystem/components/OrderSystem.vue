@@ -16,6 +16,7 @@
                 :order-editor-visible="orderEditorVisible"
                 :check-state="checkState"
                 :categories="roomCategory"
+                :hidePreStep="noBack"
         ></order-editor>
         <order-detail
                 :id="detailId"
@@ -93,7 +94,8 @@
                 detailId: undefined,
                 detailVisible: false,
                 roomCategory: [], // 订单编辑中使用
-                bacnHandel: []
+                bacnHandel: [],
+                noBack: true
             };
         },
         created() {
@@ -167,6 +169,7 @@
                 } else {
                     this.detailVisible = true;
                 }
+                this.noBack = true;
             },
             hideDetail() {
                 this.detailId = undefined;
@@ -181,10 +184,13 @@
                     bus.$emit('register', rooms);
                 });
             },
-            editOrder(type, order) {
+            editOrder(type, order, noBack) {
                 this.checkState = type;
                 this.orderEditorVisible = true;
                 this.orderDetail = order;
+                if (noBack === 'hidePreStep') {
+                    this.noBack = false
+                }
             },
             showCashier({ type, business }) {
                 this.cashierType = type;
