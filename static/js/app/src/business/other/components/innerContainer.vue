@@ -1,8 +1,8 @@
 <template>
     <div class="inner-container">
         <div class="inner-title">
-            <h4>{{title}}</h4>
-            <a @click="toggle" v-if="switchView">编辑</a>
+            <h4>{{title}}</h4><span style="font-size:12px;color:#999999;line-height:37px;" v-if="title === '特殊房统计'">是否计入住宿营收统计表(间夜量、平均房价、出租率)</span>
+            <a @click="toggle" v-if="switchView" style="cursor: pointer;">编辑</a>
         </div>
         <div class="inner-content">
             <slot name="show" v-if="switchView"></slot>
