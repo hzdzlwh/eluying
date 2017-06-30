@@ -34,6 +34,8 @@
 
 <style lang="scss" rel="stylesheet/scss">
     .inner-container{
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
+        border-radius: 2px;
         .inner-title{
             display: flex;
             justify-content: space-between;

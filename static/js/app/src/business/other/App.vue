@@ -4,7 +4,8 @@
             <inner-container :title="shortcutDiscount" :toggleView="shortcutView">
                 <div slot="show">
                     <ul>
-                        <li><span>夏日大酬宾</span><span>3折</span></li>
+                        <li><span style="margin-right:123px;">夏日大酬宾</span><span>3 折</span></li>
+                        <li><span style="margin-right:123px;">夏日大酬宾</span><span>3 折</span></li>
                     </ul>
                 </div>
                 <div slot="edit">
@@ -76,5 +77,13 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-    
+    .app{
+        ul{
+            padding: 8px 20px;
+            li{
+                height: 40px;
+                line-height: 40px;
+            }
+        }
+    }
 </style>
