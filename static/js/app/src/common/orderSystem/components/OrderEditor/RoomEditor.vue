@@ -445,12 +445,12 @@
         methods: {
             handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
-                if (this.checkState !== 'editOrder' || forceChange) {
+                if ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange) {
                     this.rooms.map(r => {
                         r.moreDiscount = id;
                     });
                 }
-                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || forceChange)) {
+                if (Number(this.vipCardInfo.discount) === 10 && ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange)) {
                     this.rooms.map(r => {
                         r.moreDiscount = 0;
                     });
@@ -723,7 +723,7 @@
                 this.getRoomsList(item);
                 this.$nextTick(function() {
                     item.roomType = 0;
-                    // this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index);
                 });
             },
             disabledStartDate(endDate) {
