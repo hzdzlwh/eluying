@@ -109,7 +109,7 @@
                                 共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                             </label>
                             <label class="label-text" v-else>
-                                共{{11}}小时
+                                共{{item.unitLength * item.timeAmount}}小时
                             </label>
                         </div>
                         <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -612,11 +612,15 @@ export default {
                 }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
-                if (duration < 1 && room.checkRoomType === 1) {
+
+                if (duration < 1 && room.checkRoomType !== 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
                     return false;
                 }
-
+                if (new Date(room.room.startDate) > new Date(room.room.endDate) && room.checkRoomType === 1) {
+                    room.room.startDate = new Date(room.room.endDate);
+                    return false;
+                }
                 // 最多400天
                 // if (duration > 400) {
                 //     const currentTime = +new Date();
@@ -691,9 +695,9 @@ export default {
                                 sub: true,
                                 useDiscount: !!room.moreDiscount
                             };
-                            if (room.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
-                                delete parm.endDate;
-                            }
+                            // if (room.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
+                            //     delete parm.endDate;
+                            // }
                             return parm;
                         }))
                         // forceChangePrice: this.forceChangePrice
@@ -772,8 +776,9 @@ export default {
                                 
                             }
                             if (currentRoom.checkRoomType === 1) {
-                                currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * item.startLength)
+                                 currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * currentRoom.timeAmount)
                             }
+                       
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;

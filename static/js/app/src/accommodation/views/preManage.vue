@@ -48,12 +48,12 @@
                         </tr>
                         <tr v-for="(row, index) in item.roomTypes">
                             <td>{{row.typeName}}</td>
-                            <td>{{checkTypes[row.checkType]}}</td>
+                            <td>{{checkTypes[row.checkType].name}}</td>
                             <td>{{row.count}}</td>
                             <td style="padding: 8px;">
                                 <span style="display:inline-block;" v-for="(room, roomIndex) in row.rooms">{{room.roomNum}}<em v-if="roomIndex !== row.rooms.length - 1">、</em></span>
                                 <span v-if="row.rooms.length === 0" style="color: rgb(43, 178, 103);">未排房 </span>
-                                <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)">排房</span>
+                                <span style="color: #178ce6; cursor: pointer;" @click="arrangeHouse($event, item, index)" v-if='row.checkType !== 1'>排房</span>
                             </td>
                             <td>{{row.startTime}}~{{row.endTime}} 共{{row.night}}晚</td>
                             <td><span style="background: #ffba75; color: #fff; padding: 2px 4px; font-size: 12px;">已预订</span></td>
@@ -88,6 +88,7 @@
     import bus from '../../common/eventBus';
     import { mapActions, mapState } from 'vuex';
     import types from '../../common/orderSystem/store/types';
+    import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
 
     export default {
         data() {
@@ -96,7 +97,7 @@
                 date: new Date(),
                 orderLists: [],
                 selectRoomLists: [],
-                checkTypes: ['正常入住', '钟点房', '自用房', '免费房'],
+                checkTypes: roomCheckType,
                 showSelectHouse: false,
                 roomInfo: {},
                 orderRoomNum: 0

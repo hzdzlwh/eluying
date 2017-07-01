@@ -26,8 +26,7 @@
                                 <div class="taday-status-item-tag taday-status-item-dirty" v-if='it.isDirty'>脏房</div>
                                 <div class="taday-status-item-tag taday-status-item-arrival" v-if='it.isArrival'>预抵</div>
                             </div>
-                            <div v-if='it.checkType !== undefined'>{{it.checkType === 1 ? '钟点房' : checkType[it.checkType]}}</div>
-                            <!-- <div >{{'钟点房'}}</div> -->
+                            <div v-if='it.checkType !== null' class="taday-status-roomCheckType">{{it.checkType === 1 ? '钟点房' : checkType[it.checkType].name}}</div>
                         </div>
                     </div>
                 </div>
@@ -84,7 +83,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
-        <div class="datFixMenu"><span @click="check('team')">团队预订</span><span @click="check('quick')">快速预订</span></div>
+        <div class="datFixMenu"><span @click="check('team')">团队<br/>预订</span><span @click="check('quick')">快速<br/>预订</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -139,7 +138,7 @@
     flex: 1;
     margin: 0 -4px;
     .taday-status-item {
-        padding: 8px;
+        padding: 4px 8px;
         border-radius: 4px;
         width: 130px;
         height: 82px;
@@ -183,6 +182,16 @@
             text-overflow: ellipsis;
             font-size: 12px;
             text-align: left;
+        }
+        .taday-status-roomCheckType{
+            position: absolute;
+            background: rgba(255, 255, 255, 0.23);
+            height: 16px;
+            width: 130px;
+            left: 0;
+            bottom: 4px;
+            font-size: 12px;
+            padding-left: 8px;
         }
         .taday-status-item-tag {
             display: inline;
@@ -236,16 +245,18 @@
     margin-bottom:20px;
 }
 .datFixMenu span{
-        width: 80px;
-    height: 80px;
-    line-height: 80px;
+    width: 56px;
+    height: 56px;
+    line-height: 24px;
     background-color: #ff9326;
     display: inline-block;
-    border-radius: 40px;
+    border-radius: 28px;
     text-align: center;
     margin-right: 10px;
-    cursor:pointer;
-    color:#fff;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    padding-top: 4px;
 }
 .taday-status-title {
     font-size: 24px;
