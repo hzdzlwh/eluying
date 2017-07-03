@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
+        <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
     </div>
 </template>
 <style lang="scss">
@@ -188,7 +188,8 @@ export default {
             discount: [],
             columns: [],
             id: undefined,
-            nodes: []
+            nodes: [],
+            selectType: 'discount'
         };
     },
     components: {
@@ -199,8 +200,9 @@ export default {
         this.getLevelList();
     },
     methods: {
-        select(nodes) {
+        select(nodes, type) {
             this.nodes = nodes;
+            this.selectType = { discountInfoList: 'discount', consumeItems: 'consume' }[type];
             $('#categorySelectModal').modal('show');
         },
         handleCategorySelect(list) {
