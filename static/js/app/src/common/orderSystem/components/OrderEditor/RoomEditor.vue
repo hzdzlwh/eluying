@@ -32,7 +32,7 @@
                             <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
                             <div style="display: flex;align-items: center;">
                                 <label class="label-text">房间&nbsp;</label>
-                                <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item)">
+                                <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item, index, 'room')">
                                     <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
                                                :label="category.name">
                                     </dd-option>
@@ -49,13 +49,17 @@
                             </div>
                             <div class="room-type">
                                 入住类型：
-                                <dd-select v-model='item.checkType' placeholder="请选择入住类型">
-                                    <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
+                                <dd-select v-model='item.checkType' placeholder="请选择入住类型" @input="changeRoomType(item, index, 'roomType')">
+                                    <dd-option v-for="check in item.checkTypes" :value="check.id" :key="check.id" :label="check.name">
                                     </dd-option>
                                 </dd-select>
                                 <span class="state-icon yellow" style="margin-left: 20px" v-if="canShowBookIcon(item)">
                                     已预订
                                 </span>
+                            </div>
+                            <div class="room-count" v-if="item.checkType === 1">
+                                入住时长
+                                <counter-step :onNumChange="(a, b, num) => handleRoomNumChange(item, index, num)" :max='item.maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id='index' :type='3'></counter-step>
                             </div>
                             <span class="delete-icon" @click="deleteRoom(index)"
                                   v-if="!item.state || ((item.state !== 1 && item.state !== 8) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms))">
@@ -249,6 +253,7 @@
     import Vue from 'vue';
     import { mapState } from 'vuex';
     import counter from '../../../components/counter.vue';
+    import counterStep from '../../../components/counterStep.vue';
     import selectGoods from './SelectGoods.vue';
     import { DatePicker } from 'element-ui';
     import { checkType } from '../../roomCheckType';
@@ -288,7 +293,8 @@
             DdGroupOption,
             counter,
             selectGoods,
-            DatePicker
+            DatePicker,
+            counterStep
         },
         directives: {
             Clickoutside
@@ -604,6 +610,7 @@
                         moreDiscount: getMoreDiscount(order),
                         extraItems: [...order.extraItems],
                         checkType: order.checkType,
+                        checkTypes: [...checkType],
                         isCheckIn: this.checkState === 'checkIn'
                     };
 
@@ -719,11 +726,11 @@
                 const d2 = new Date(date2);
                 return util.DateDiff(d1, d2);
             },
-            changeRoomType(item, index) {
+            changeRoomType(item, index, type) {
                 this.getRoomsList(item);
                 this.$nextTick(function() {
                     item.roomType = 0;
-                    this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index, type);
                 });
             },
             disabledStartDate(endDate) {
@@ -817,7 +824,7 @@
                 this.vipListShow = false;
                 this.vipList = [];
             },
-            handleRoomChange(room, index) {
+            handleRoomChange(room, index, type) {
                 if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                     return false;
                 }
@@ -839,13 +846,13 @@
                     return false;
                 }
 
-                this.modifyRooms([room]);
+                this.modifyRooms([room], type);
             },
             /**
              * 根据条件获取价格
              * @param rooms
              */
-            modifyRooms(rooms) {
+            modifyRooms(rooms, type) {
                 // 过滤没有房间id的房间
                 // rooms = rooms.filter(r => r.roomType);
                 if (rooms.length === 0) {
@@ -900,7 +907,8 @@
                             roomOrderId: room.roomOrderId,
                             roomId: room.roomType || null,
                             typeId: room.categoryType,
-                            useDiscount: !!room.moreDiscount
+                            useDiscount: !!room.moreDiscount,
+                            checkType: room.checkType
                         };
                     })),
                     forceChangePrice: this.forceChangePrice
@@ -930,6 +938,28 @@
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalFee;
                             currentRoom.timestamp = res.data.timestamp;
+                            if (item.hasHourRoom) {
+                                if (!currentRoom.checkTypes.some(el => {
+                                    return el.id === 1;
+                                })) {
+                                    currentRoom.checkTypes.push({ id: 1, name: '钟点房' });
+                                }
+                            } else {
+                                currentRoom.checkTypes.forEach(function(el, index) {
+                                    if (el.id === 1) {
+                                        currentRoom.checkTypes.splice(index, 1);
+                                    }
+                                });
+                                if (currentRoom.checkType === 1) {
+                                    currentRoom.checkType = 0;
+                                }
+                            }
+                            if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType')) {
+                                currentRoom.unitLength = Number(item.unitLength);
+                                currentRoom.maxLength = Number(item.maxLength);
+                                currentRoom.startLength = Number(item.startLength);
+                                currentRoom.timeAmount = Number(item.maxLength);
+                            }
                         });
                     });
             },
@@ -1093,6 +1123,8 @@
                     room.room.startDate = room.originStartDate;
                     room.extraItems = [];
                 }
+            },
+            handleRoomNumChange(item, index, num) {
             }
         }
     };
