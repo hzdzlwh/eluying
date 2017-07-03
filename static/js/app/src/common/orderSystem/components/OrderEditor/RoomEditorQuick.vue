@@ -32,7 +32,7 @@
                             房间
                             <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
                             <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index,'room')">
-                                <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
+                                <dd-option v-for="category in item.categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                 </dd-option>
                             </dd-select>
                         </div>
@@ -102,7 +102,7 @@
                             <span>~</span>
                             <label class="label-text">离开</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index, 'endDate')" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' :disabled='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index, 'endDate')" :picker-options='{disabledDate:disabledEndDate(item.room.startDate, item.checkRoomType)}' :disabled='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                             </div>
                             <label class="label-text" v-if='item.checkRoomType !==1 '>
@@ -235,7 +235,7 @@ import {
     DatePicker
 } from 'element-ui';
 import {
-    checkType
+    roomCheckType
 } from '../../roomCheckType';
 const date = new Date();
 const now = {
@@ -253,10 +253,11 @@ export default {
                 discountPlans: [],
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
-                checkType,
+                checkType: roomCheckType,
                 startDate: undefined,
                 endDate: undefined,
-                checkRoomType: undefined
+                checkRoomType: undefined,
+                RoomsList: this.categories
             };
         },
         created() {
@@ -387,14 +388,23 @@ export default {
             },
             ExtInDate: {
                 handler(newValue) {
-                    if (this.checkState === 'team' && this.rooms.length > 0) {
+                    http.get('/room/getRoomsList', {
+                        checkType:newValue.roomCheckType,
+                        endDate: util.dateFormatLong(newValue.endDate),
+                        startDate: util.dateFormatLong(newValue.startDate),
+                    })
+                    .then(res => {
+                        if (this.checkState === 'team' && this.rooms.length > 0) {
+                            this.RoomsList = res.data.list
                         this.rooms.forEach(function(room) {
                             room.room.endDate = newValue.endDate;
                             room.room.startDate = newValue.startDate;
                             room.checkRoomType = newValue.roomCheckType;
                         })
                         this.modifyRooms(this.rooms, 'roomType');
-                    }
+                    } 
+                    })
+
                 },
                 deep: true
             }
@@ -522,7 +532,7 @@ export default {
                         startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
                         endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 12, 0, 0)
                     },
-                    checkType: checkType,
+                    checkType: roomCheckType.slice(0),
                     idCardList: [],
                     datePriceList: [],
                     originDatePriceList: [],
@@ -535,6 +545,12 @@ export default {
                     showDiscount: undefined,
                     extraItems: []
                 };
+                if (this.checkState === 'quick') {
+                    room.categories = this.categories;
+                }
+                if (this.checkState === 'team') {
+                    room.categories = this.RoomsList;
+                }
                 if (this.vipCardInfo && this.vipCardInfo.discount && Number(this.vipCardInfo.discount) !== 10) {
                     room.moreDiscount = this.userOriginType.id;
                 } else {
@@ -551,6 +567,16 @@ export default {
                 if (type === 'endDate' && item.roomCheckType === 1) {
                     return;
                 }
+                if (type === 'roomType') {
+                    http.get('/room/getRoomsList', {
+                        checkType: item.checkRoomType,
+                        endDate: util.dateFormatLong(item.room.endDate),
+                        startDate: util.dateFormatLong(item.room.startDate)
+                    })
+                    .then(res => {
+                        item.categories = res.data.list;
+                    });
+                }
                 this.$nextTick(function() {
                     // item.roomType = this.getRoomsList(item.categoryType)[0].id;
                     this.handleRoomChange(item, index, type);
@@ -563,12 +589,17 @@ export default {
                     return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 };
             },
-            disabledEndDate(startDate) {
-                const str = util.dateFormat(new Date(startDate));
-                const arr = str.split('-');
+            disabledEndDate(startDate, type) {
+            const str = util.dateFormat(new Date(startDate));
+            const arr = str.split('-');
+            if (type === 1) {
                 return (date) => {
                     return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
                 };
+            }
+            return (date) => {
+                return (date.valueOf() < (new Date(arr[0], arr[1] - 1, Number(arr[2]) + 1)).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
+            };
             },
             handleRoomNumChange(item, index, num) {
                 this.$set(item, 'timeAmount', Number(num))

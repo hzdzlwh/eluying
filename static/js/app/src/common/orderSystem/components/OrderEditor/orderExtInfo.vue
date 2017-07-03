@@ -117,9 +117,15 @@ export default {
         disabledEndDate(startDate) {
             const str = util.dateFormat(new Date(startDate));
             const arr = str.split('-');
+            if (this.value.roomCheckType === 1) {
+                return (date) => {
+                    return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
+                };
+            }
             return (date) => {
-                return (date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
+                return (date.valueOf() < (new Date(arr[0], arr[1] - 1, Number(arr[2]) + 1)).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
             };
+
         },
     }
 }

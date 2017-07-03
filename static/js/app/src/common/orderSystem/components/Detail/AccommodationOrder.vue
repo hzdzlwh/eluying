@@ -23,10 +23,14 @@
                         </div>
                         <div class="room-date">
                             <label class="label-text">到达</label>
-                            <span class="startDate">{{item.startDate || item.roomInfo.checkInDate}}</span>
+                            <span class="startDate " :class='{roomTomeOut: item.startTimeOut}'>{{item.startDate || item.roomInfo.checkInDate}}
+                            <span class="timeOut" v-if='item.startTimeOut'>已超时</span> 
+                            </span>
                             <span>~</span>
                             <label class="label-text">离开</label>
-                            <span class="endDate">{{item.endDate || item.roomInfo.checkOutDate}}</span>
+                            <span class="endDate " :class='{roomTimeOut: item.endTimeOut}'>{{item.endDate || item.roomInfo.checkOutDate}}
+                            <span class="timeOut" v-if='item.endTimeOut'>已超时</span>   
+                            </span>
                             <label class="label-text">共{{item.duration}}晚</label>
                         </div>
                         <div style="display: flex">
@@ -98,6 +102,18 @@
     </div>
 </template>
 <style scoped>
+    .endDate, .startDate{
+        position: relative;
+    }
+    .timeOut{
+        position: absolute;
+        width: 80px;
+        top: 20px;
+        left: 75px;
+    }
+    .roomTImeOut{
+        color: red
+    }
     .room-fix {
         display: inline-block;
         cursor: pointer;
