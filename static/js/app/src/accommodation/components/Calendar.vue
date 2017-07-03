@@ -516,7 +516,7 @@
     .calendar-status-close {
         background: #878787;
         width: 96px;
-        height: 44px;
+        height: 64px;
         margin: auto;
         margin-top: 2px;
         color: #fff;

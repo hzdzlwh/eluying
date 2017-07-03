@@ -221,6 +221,7 @@
     background-position: center;
     border: 2px solid #178ce6;
     border-radius: 4px;
+    top:8px;
 }
 
 .day-calendar-status-inner {
