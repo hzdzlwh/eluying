@@ -34,7 +34,7 @@
 </style>
 <script>
 import {
-    checkType
+    roomCheckType
 } from '../../roomCheckType';
 import {
     DdSelect,
@@ -56,8 +56,7 @@ export default {
     },
     data() {
         return {
-            checkType:  checkType.concat([{id: 1,
-                name: '钟点房'}]),
+            checkType: roomCheckType,
             // startDate: String,
             // endDate: String,
             // roomCheckType: Number

@@ -858,7 +858,7 @@
                     if (item.showTip) {
                         valid = false;
                     }
-                    if ((this.checkState === 'quick' || this.checkState === 'team') && (!item.categoryType || !item.price)) {
+                    if ((this.checkState === 'quick' || this.checkState === 'team') && !item.categoryType) {
                         valid = false;
                     }
                     if (util.DateDiff(new Date(item.room.endDate), new Date(item.room.startDate)) > 400) {

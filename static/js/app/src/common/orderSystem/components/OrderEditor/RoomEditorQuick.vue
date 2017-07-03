@@ -109,7 +109,7 @@
                                 共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                             </label>
                             <label class="label-text" v-else>
-                                共{{item.unitLength * item.timeAmount}}小时
+                                共{{item.timeAmount}}小时
                             </label>
                         </div>
                         <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -393,7 +393,7 @@ export default {
                             room.room.startDate = newValue.startDate;
                             room.checkRoomType = newValue.roomCheckType;
                         })
-                        this.modifyRooms(this.rooms);
+                        this.modifyRooms(this.rooms, 'roomType');
                     }
                 },
                 deep: true
@@ -571,12 +571,13 @@ export default {
                 };
             },
             handleRoomNumChange(item, index, num) {
-                item.timeAmount = Number(num);
-                item.room.endDate = new Date( item.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * item.timeAmount)
+                this.$set(item, 'timeAmount', Number(num))
+                    // 团队预订有种操作导致要用这个方式写
+                item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 *  item.timeAmount)
                 this.modifyRooms([item]);
 
             },
-            handleRoomAmountChange(item, index, num){
+            handleRoomAmountChange(item, index, num) {
                 item.amount = Number(num);
                 this.modifyRooms([item]);
             },
@@ -610,7 +611,7 @@ export default {
                 // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                 //     return false;
                 // }
-                if (type ==='endDate' && room.checkRoomType === 1) {
+                if (type === 'endDate' && room.checkRoomType === 1) {
                     return
                 }
                 this.lastRoomsToken[index] = JSON.stringify(room);
@@ -692,7 +693,7 @@ export default {
                                 checkType: this.checkState === 'team' ? this.ExtInDate.roomCheckType : room.checkRoomType,
                                 amount: room.amount,
                                 startDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.startDate : room.room.startDate),
-                                endDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.endDate : room.room.endDate),
+                                endDate: util.dateFormatLong((this.checkState === 'team' && room.checkRoomType !==1) ? this.ExtInDate.endDate : room.room.endDate),
                                 subTypeId: room.categoryType,
                                 quickDiscountId: room.quickDiscountId,
                                 sub: true,
@@ -746,42 +747,46 @@ export default {
                             //     return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                             // });
                             if (this.checkState === 'team') {
-                                if (!item.isTimeRoom && this.ExtInDate.checkRoomType === 1) {
+                                if (!item.hasHourRoom && this.ExtInDate.checkRoomType === 1) {
                                     item.checkRoomTypeErr = true;
                                 } else {
                                     delete item.checkRoomTypeErr;
                                 }
                             }
-                            if (item.hasHourRoom) {
-                                if (!currentRoom.checkType.some(function(el) {
-                                        return el.id === 1
-                                    })) {
-                                    currentRoom.checkType.push({
-                                        id: 1,
-                                        name: '钟点房'
-                                    })
-                                }
-                            } else {
-                                currentRoom.checkType.forEach(function(el, index) {
-                                    if (el.id === 1) {
-                                        currentRoom.checkType.splice(index, 1)
+                            if (this.checkState === 'quick') {
+                                if (item.hasHourRoom) {
+                                    if (!currentRoom.checkType.some(function(el) {
+                                            return el.id === 1
+                                        })) {
+                                        currentRoom.checkType.push({
+                                            id: 1,
+                                            name: '钟点房'
+                                        })
                                     }
-                                })
-                                if (currentRoom.checkRoomType === 1) {
-                                    currentRoom.checkRoomType = 0;
+                                } else {
+                                    currentRoom.checkType.forEach(function(el, index) {
+                                        if (el.id === 1) {
+                                            currentRoom.checkType.splice(index, 1)
+                                        }
+                                    })
+                                    if (currentRoom.checkRoomType === 1) {
+                                        currentRoom.checkRoomType = 0;
+                                    }
                                 }
                             }
+
                             if (currentRoom.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
-                                currentRoom.timeAmount = Number(item.startLength);
-                                
+                                this.$set(currentRoom,'timeAmount',Number(item.startLength))
+                                currentRoom.price = item.startPrice;
+
                             }
                             if (currentRoom.checkRoomType === 1) {
-                                 currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * currentRoom.timeAmount)
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 *  currentRoom.timeAmount)
                             }
-                       
+
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;
