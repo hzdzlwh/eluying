@@ -4,17 +4,18 @@
             <div style="height: 49px;background: #f0f0f0;display: flex;justify-content: space-between;align-items: center;padding: 0 20px"><span style="font-size: 16px">房型设置</span>
                 <span style="cursor: pointer;color: #178ce6" @click="create"><img style="margin-right: 4px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAIVBMVEUAAAAXjegYjOYXjugYjecZj+YZjukXjegajOkXjeYXjObcqVb2AAAACnRSTlMASuNVYF1FklCadOWS3AAAADZJREFUCNdjEFoFBooMigxgIMSwAMLgQmFwJEAZLAZoDNHI0kAwI9m82AxDDbJ2TJPhlsKdAQDzmRTUpGPOVQAAAABJRU5ErkJggg" alt="">新增房型</span></div>
             <div style="padding: 16px 20px">
-                <div v-for="room in rooms" :key="room.settingId" style="box-shadow:0 0 5px 0 rgba(0,0,0,0.15);border-radius:2px;">
+                <div v-for="room in rooms" :key="room.settingId" style="box-shadow:0 0 5px 0 rgba(0,0,0,0.15);border-radius:2px;margin-bottom: 20px">
                     <div style="background:#f0f0f0;height:37px;padding: 0 20px;display: flex;align-items: center;font-size: 16px;justify-content: space-between">
                         <span style="display: flex;align-items: center">
                             <span>房型：</span>
-                            <dd-select>
+                            <dd-select v-if="!room.settingId || room.edit" v-model="room.subTypeId">
                                 <dd-option :key="c.cId" :label="c.cName" :value="c.cId" v-for="c in getAvailableCategories(room)"></dd-option>
                             </dd-select>
+                            <span v-if="room.settingId && !room.edit">{{room.subTypeName}}</span>
                         </span>
-                        <span style="cursor: pointer;color: #178ce6;font-size: 14px" v-if="room.settingId"><span>编辑</span>/<span @click="deleteRoom(room.settingId)">删除</span></span>
+                        <span style="cursor: pointer;color: #178ce6;font-size: 14px" v-if="room.settingId && !room.edit"><span @click="edit(room)">编辑</span>/<span @click="deleteRoom(room.settingId)">删除</span></span>
                     </div>
-                    <div style="padding: 16px 20px">
+                    <div style="padding: 16px 20px" v-if="!room.settingId || room.edit">
                         <div class="line">
                             <span class="slabel">起步时长<span class="msg" v-if="msg.startDuration">{{msg.startDuration}}</span></span><input type="text" class="dd-input" v-model="room.startDuration">
                             <span class="slabel" style="margin-left: 32px">起步价格<span class="msg" v-if="msg.startPrice">{{msg.startPrice}}</span></span>￥<input type="text" class="dd-input" v-model="room.startPrice">
@@ -40,7 +41,30 @@
                         </div>
                         <div style="padding-left: 64px">
                             <button @click="save(room)" class="dd-btn dd-btn-primary dd-btn-sm" style="margin-right: 20px">保存</button>
-                            <button class="dd-btn dd-btn-sm dd-btn-ghost" @click="cancel">取消</button>
+                            <button class="dd-btn dd-btn-sm dd-btn-ghost" @click="cancel(room)">取消</button>
+                        </div>
+                    </div>
+                    <div style="padding: 16px 20px" v-if="room.settingId && !room.edit">
+                        <div class="line">
+                            <span class="slabel">起步时长</span><span class="word">{{room.startDuration}}</span>
+                            <span class="slabel" style="margin-left: 32px">起步价格</span>￥<span class="word">{{room.startPrice}}</span>
+                        </div>
+                        <div class="line">
+                            <span class="slabel">单位时长</span><span class="word">{{room.unitDuration}}</span>
+                            <span class="slabel" style="margin-left: 32px">单位价格</span>￥<span class="word">{{room.unitPrice}}</span>
+                        </div>
+                        <div class="line">
+                            <span class="slabel">最大时长</span><span class="word">{{room.maxDuration}}</span>
+                        </div>
+                        <div class="line" style="display: flex">
+                            <span class="slabel">开放时段</span>
+                            <div>
+                                <div>
+                                    <div v-for="(h, index) in room.openHours" class="line">
+                                        <span>{{h.start}}</span> - <span>{{h.end}}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,6 +85,7 @@
 </style>
 <script>
     import http from 'http';
+    import modal from 'modal';
     import { DdSelect, DdOption } from 'dd-vue-component';
 
     export default {
@@ -79,7 +104,7 @@
             getHourRoomSetting() {
                 http.get('/room/getHourRoomSetting')
                     .then(res => {
-                        this.rooms = res.list;
+                        this.rooms = res.data.list;
                     });
             },
             create() {
@@ -96,8 +121,12 @@
                     unitPrice: ''
                 });
             },
-            cancel() {
-                this.rooms.shift();
+            cancel(room) {
+                if (room.edit) {
+                    this.getHourRoomSetting();
+                } else {
+                    this.rooms.shift();
+                }
             },
             addOpenHours(room) {
                 room.openHours.push({
@@ -110,6 +139,10 @@
             },
             save(room) {
                 this.msg = {};
+                if (!room.subTypeId) {
+                    modal.warn('请选择房型');
+                    return false;
+                }
                 if (!/^(((\d|1\d|2[0-3])(\.\d)?)|(24(\.0)?))$/.test(room.startDuration)) {
                     this.msg.startDuration = '↑请输入0.1-24之间的数字';
                     return false;
@@ -134,16 +167,22 @@
                     this.msg.maxDuration = '↑最大时长不能小于起步时长';
                     return false;
                 }
-                http.post('/room/saveHourRoomSetting', room)
+                if (!room.openHours || !room.openHours[0] || !room.openHours[0].start || !room.openHours[0].end) {
+                    modal.warn('请填写开放时间段');
+                    return false;
+                }
+                http.post('/room/saveHourRoomSetting', { ...room, openHours: JSON.stringify(room.openHours) })
                     .then(res => {
                         this.getHourRoomSetting();
                     });
             },
             deleteRoom(settingId) {
-                http.post('/room/delHourRoomSetting', { settingId })
-                    .then(res => {
-                        this.getHourRoomSetting();
-                    });
+                modal.confirm({ message: '确定删除该钟点房房型吗？' }, () => {
+                    http.post('/room/delHourRoomSetting', { settingId })
+                        .then(res => {
+                            this.getHourRoomSetting();
+                        });
+                });
             },
             getRoomCategories() {
                 http.get('/room/getRoomCategories')
@@ -155,6 +194,9 @@
                 return this.categories.filter(c =>
                     c.cId === room.subTypeId || !this.rooms.some(r => r.subTypeId === c.cId)
                 );
+            },
+            edit(room) {
+                this.$set(room, 'edit', true);
             }
         },
         components: {
