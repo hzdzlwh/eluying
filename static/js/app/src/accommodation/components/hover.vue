@@ -60,7 +60,7 @@
 }
 
 .hoverRight {
-    left: -200px!important;
+    left: -220px!important;
 }
 
 .hoverRight .glyph-arrow-up {
@@ -106,6 +106,9 @@ export default {
     },
     methods: {
         getcheckType(type) {
+            if (type === 1) {
+                return '钟点房';
+            }
             return this.checkType.filter(function(el) {
                 return el.id === type;
             })[0].name;

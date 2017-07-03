@@ -2,7 +2,7 @@
     <div class="content-item">
         <p class="content-item-title dashed">
             <span>房间信息
-                <span class="increase-container" @click="addRoom" v-if="checkState !=='editOrder' || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
+                <span class="increase-container" @click="addRoom" v-if="(checkState !=='editOrder' && checkState !== 'checkIn') || order.rooms || (order.roomInfo && !order.isCombinationOrder)">
                     <span class="increase-icon"></span>添加房间
                 </span>
             </span>
@@ -67,7 +67,7 @@
                             <div class="room-date" style="display: inline-block; position: relative;">
                                 <span class="useless-tip error" style="left: 28px;"
                                       v-if="checkIsToday(item.room.startDate)">
-                                    该房间的入住时间必需为今日！
+                                    该房间的入住时间必须为今日！
                                 </span>
                                 <label class="label-text">到达</label>
                                 <div class="enterDate">
@@ -76,6 +76,7 @@
                                                 :clearable='false'
                                                 :picker-options='{disabledDate:disabledStartDate(new Date())}'
                                                 type="datetime"
+                                                :disabled='order.orderState === 8'
                                                 placeholder="选择日期时间"
                                                 format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
@@ -86,6 +87,7 @@
                                     <DatePicker v-model='item.room.endDate'
                                                 @change='()=>handleRoomChange(item, index)'
                                                 :clearable='false'
+                                                :disabled='order.orderState === 8'
                                                 :picker-options='{disabledDate:disabledEndDate(item.room.endDate)}'
                                                 type="datetime"
                                                 placeholder="选择日期时间"
@@ -261,6 +263,7 @@
                 goodsSelectModalShow: false,
                 currentSelectOtherRoom: undefined,
                 initCategories: {},
+                whenCheckInDeleteRooms: [],
                 checkType
             };
         },
@@ -442,12 +445,12 @@
         methods: {
             handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
-                if (this.checkState !== 'editOrder' || forceChange) {
+                if ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange) {
                     this.rooms.map(r => {
                         r.moreDiscount = id;
                     });
                 }
-                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || forceChange)) {
+                if (Number(this.vipCardInfo.discount) === 10 && ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange)) {
                     this.rooms.map(r => {
                         r.moreDiscount = 0;
                     });
@@ -466,6 +469,7 @@
             },
             cleanRooms() {
                 this.rooms = [];
+                this.whenCheckInDeleteRooms = [];
             },
             getQuickDiscounts() {
                 http.get('/quickDiscount/getList', {
@@ -559,7 +563,7 @@
                             }),
                             showDiscount: item.showDiscount,
                             moreDiscount: getMoreDiscount(item),
-                            extraItems: item.extraItems,
+                            extraItems: [...item.extraItems],
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn'
                         };
@@ -598,7 +602,7 @@
                         }),
                         showDiscount: roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order),
-                        extraItems: order.extraItems,
+                        extraItems: [...order.extraItems],
                         checkType: order.checkType,
                         isCheckIn: this.checkState === 'checkIn'
                     };
@@ -692,6 +696,7 @@
                     room.room.startDate = new Date(Date.parse(this.rooms[len - 1].room.startDate));
                     room.room.endDate = new Date(Date.parse(this.rooms[len - 1].room.endDate));
                     room.room.roomId = 0;
+                    room.originStartDate = new Date(Date.parse(this.rooms[len - 1].originStartDate));
                     room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
@@ -718,7 +723,7 @@
                 this.getRoomsList(item);
                 this.$nextTick(function() {
                     item.roomType = 0;
-                    // this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index);
                 });
             },
             disabledStartDate(endDate) {
@@ -730,7 +735,7 @@
                     };
                 } else if (this.checkState === 'ing') {
                     return (date) => {
-                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() &&  date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
                     };
                 } else if (this.checkState === 'checkIn') {
                     return date => false;
@@ -758,11 +763,19 @@
                         };
                     }
                 } else {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                    };
+                    if (this.checkState === 'ing') {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        };
+                    } else {
+                        const str = util.dateFormat(new Date(startDate));
+                        const arr = str.split('-');
+                        return (date) => {
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
+                        };
+                    }
                 }
             },
             getRoomsList(room) {
@@ -791,7 +804,8 @@
                     });
             },
             checkIsToday(date) {
-                return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
+                return false;
+                // return !util.isSameDay(new Date(date), new Date()) && this.checkState === 'ing';
             },
             hidePriceList() {
                 this.rooms.forEach(item => {
@@ -975,6 +989,9 @@
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
             },
             deleteRoom(index) {
+                if (this.rooms[index].roomOrderId && this.checkState === 'checkIn') {
+                    this.whenCheckInDeleteRooms.push(this.rooms[index].roomOrderId);
+                }
                 this.rooms.splice(index, 1);
             },
             addPerson(id, preson) {
@@ -1003,6 +1020,7 @@
             },
             changeRooms() {
                 this.$emit('change', this.rooms);
+                this.$emit('whenCheckInDeleteRooms', this.whenCheckInDeleteRooms);
             },
             moreDiscountChange(room) {
                 this.forceChangePrice = true;

@@ -30,23 +30,28 @@
                         <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
                         <div style="display: flex;line-height: 24px;">
                             房间
-                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index)">
+                            <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
+                            <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index,'room')">
                                 <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId" :label="category.name">
                                 </dd-option>
                             </dd-select>
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;">
                             数量
-                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined'>可预订数 {{item.canReserveCount}}</span>
+                            <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined'>可预订数 {{item.canReserveCount}}</span>
                         </div>
                         <div class="room-type" v-if='checkState === "quick"'>
                             入住类型：
-                            <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index)">
-                                <dd-option v-for="check in checkType" :value="check.id" :key="check.id" :label="check.name">
+                            <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index,'roomType')">
+                                <dd-option v-for="check in item.checkType" :value="check.id" :key="check.id" :label="check.name">
                                 </dd-option>
                             </dd-select>
                         </div>
-                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
+                        <div class="room-count" style="display: inline-block; position: relative;" v-if='item.checkRoomType === 1'>
+                            入住时长
+                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :max='item. maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id="index" :type="3" />
+                        </div>
+                        <!-- <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
                             <label class="label-text">房费</label>
                             <p class="fee-container">
                                 <span class="fee-symbol">¥</span>
@@ -78,7 +83,7 @@
                             </span>
                             </span>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="shop-item-content" style="margin-top:15px;">
                         <div class="room-date" style="display: inline-block; position: relative;" v-if='checkState === "quick"'>
@@ -97,21 +102,24 @@
                             <span>~</span>
                             <label class="label-text">离开</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.endDate" :clearable='false' @change="handleRoomChange(item, index, 'endDate')" :picker-options='{disabledDate:disabledEndDate(item.room.startDate)}' :disabled='item.checkRoomType === 1' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                             </div>
-                            <label class="label-text">
+                            <label class="label-text" v-if='item.checkRoomType !==1 '>
                                 共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                             </label>
+                            <label class="label-text" v-else>
+                                共{{item.unitLength * item.timeAmount}}小时
+                            </label>
                         </div>
-                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "quick"'>
+                        <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
                             <label class="label-text">房费</label>
                             <p class="fee-container">
                                 <span class="fee-symbol">¥</span>
                                 <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
                             </p>
                             <span class="discount-info">
-                        <span v-if="item.showDiscount">
+                        <span v-if="item.showDiscount && !item.priceModified">
                             <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
                             <span class="discount-num" v-if="item.showDiscount">
                                 {{item.showDiscount}}
@@ -147,6 +155,13 @@
     </div>
 </template>
 <style lang="scss" scoped>
+.roomErrTip {
+    position: absolute;
+    top: 24px;
+    font-size: 12px;
+    color: red;
+}
+
 .el-input__inner {
     height: 25px!important;
 }
@@ -505,6 +520,7 @@ export default {
                         startDate: this.checkState === 'team' ? this.ExtInDate.startDate : new Date(now.year, now.mouth, now.day, 12, 0, 0),
                         endDate: this.checkState === 'team' ? this.ExtInDate.endDate : new Date(now.year, now.mouth, now.day + 1, 12, 0, 0)
                     },
+                    checkType: checkType,
                     idCardList: [],
                     datePriceList: [],
                     originDatePriceList: [],
@@ -529,10 +545,13 @@ export default {
                 const d2 = new Date(date2);
                 return util.DateDiff(d1, d2);
             },
-            changeRoomType(item, index) {
+            changeRoomType(item, index, type) {
+                if (type === 'endDate' && item.roomCheckType === 1) {
+                    return;
+                }
                 this.$nextTick(function() {
                     // item.roomType = this.getRoomsList(item.categoryType)[0].id;
-                    this.handleRoomChange(item, index);
+                    this.handleRoomChange(item, index, type);
                 });
             },
             disabledStartDate(endDate) {
@@ -550,9 +569,13 @@ export default {
                 };
             },
             handleRoomNumChange(item, index, num) {
-                item.amount = num;
+                item.timeAmount = Number(num);
                 this.modifyRooms([item]);
 
+            },
+            handleRoomAmountChange(item, index, num){
+                item.amount = Number(num);
+                this.modifyRooms([item]);
             },
             getRoomsList(id) {
                 if (!id) {
@@ -580,35 +603,41 @@ export default {
                 this.vipListShow = false;
                 this.vipList = [];
             },
-            handleRoomChange(room, index) {
+            handleRoomChange(room, index, type) {
                 // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                 //     return false;
                 // }
-
+                if (type ==='endDate' && room.checkRoomType === 1) {
+                    return
+                }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
-                if (duration < 1) {
+
+                if (duration < 1 && room.checkRoomType !== 1) {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
                     return false;
                 }
-
-                // 最多400天
-                if (duration > 400) {
-                    const currentTime = +new Date();
-                    if (currentTime - this.lastModifyRoomTime > 2000) {
-                        modal.warn('入住上限最大为400天，请重新选择入住时间！');
-                        this.lastModifyRoomTime = currentTime;
-                    }
+                if (new Date(room.room.startDate) > new Date(room.room.endDate) && room.checkRoomType === 1) {
+                    room.room.startDate = new Date(room.room.endDate);
                     return false;
                 }
+                // 最多400天
+                // if (duration > 400) {
+                //     const currentTime = +new Date();
+                //     if (currentTime - this.lastModifyRoomTime > 2000) {
+                //         modal.warn('入住上限最大为400天，请重新选择入住时间！');
+                //         this.lastModifyRoomTime = currentTime;
+                //     }
+                //     return false;
+                // }
 
-                this.modifyRooms([room]);
+                this.modifyRooms([room], type);
             },
             /**
              * 根据条件获取价格
              * @param rooms
              */
-            modifyRooms(rooms) {
+            modifyRooms(rooms, type) {
                 // 过滤没有房间id的房间
                 rooms = rooms.filter(r => r.categoryType);
                 if (!rooms || rooms.length === 0) {
@@ -656,7 +685,7 @@ export default {
                     discountRelatedId: discountRelatedId,
                     orderId: this.order.orderId,
                     rooms: JSON.stringify(rooms.map(room => {
-                            return {
+                            const parm = {
                                 checkType: this.checkState === 'team' ? this.ExtInDate.roomCheckType : room.checkRoomType,
                                 amount: room.amount,
                                 startDate: util.dateFormatLong(this.checkState === 'team' ? this.ExtInDate.startDate : room.room.startDate),
@@ -666,12 +695,35 @@ export default {
                                 sub: true,
                                 useDiscount: !!room.moreDiscount
                             };
+                            // if (room.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
+                            //     delete parm.endDate;
+                            // }
+                            return parm;
                         }))
                         // forceChangePrice: this.forceChangePrice
                 };
+
                 http.get('/room/canReserveCountAndTotalPrice', params)
                     .then(res => {
                         // 嘻嘻
+                        const flag = (Math.random() > 0.5);
+                        const mockDate = {
+                            data: {
+                                list: [{
+                                    canReserveCount: 100,
+                                    originTotalPrice: Math.random() * 1000,
+                                    showDiscount: flag,
+                                    totalFee: Math.random() * 1000
+                                }]
+                            }
+                        }
+                        mockDate.data.list[0].hasHourRoom = true
+                        mockDate.data.list[0].startLength = (Math.random() * 10).toFixed(0)
+                        mockDate.data.list[0].maxLength = (Math.random() * 100).toFixed(0)
+                        mockDate.data.list[0].startPrice = (Math.random() * 100).toFixed(0)
+                        mockDate.data.list[0].unitLength = (Math.random() * 10).toFixed(0)
+                        res = mockDate;
+                        // mockDate
                         res.data.list.map((item, index) => {
                             const currentRoom = rooms[index];
                             // if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
@@ -690,6 +742,43 @@ export default {
                             // currentRoom.priceScale = item.datePriceList.map(i => {
                             //     return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
                             // });
+                            if (this.checkState === 'team') {
+                                if (!item.isTimeRoom && this.ExtInDate.checkRoomType === 1) {
+                                    item.checkRoomTypeErr = true;
+                                } else {
+                                    delete item.checkRoomTypeErr;
+                                }
+                            }
+                            if (item.hasHourRoom) {
+                                if (!currentRoom.checkType.some(function(el) {
+                                        return el.id === 1
+                                    })) {
+                                    currentRoom.checkType.push({
+                                        id: 1,
+                                        name: '钟点房'
+                                    })
+                                }
+                            } else {
+                                currentRoom.checkType.forEach(function(el, index) {
+                                    if (el.id === 1) {
+                                        currentRoom.checkType.splice(index, 1)
+                                    }
+                                })
+                                if (currentRoom.checkRoomType === 1) {
+                                    currentRoom.checkRoomType = 0;
+                                }
+                            }
+                            if (currentRoom.checkRoomType === 1 && (type === 'room' || type === 'roomType')) {
+                                currentRoom.unitLength = Number(item.unitLength);
+                                currentRoom.maxLength = Number(item.maxLength);
+                                currentRoom.startLength = Number(item.startLength);
+                                currentRoom.timeAmount = Number(item.startLength);
+                                
+                            }
+                            if (currentRoom.checkRoomType === 1) {
+                                 currentRoom.room.endDate = new Date( currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * currentRoom.timeAmount)
+                            }
+                       
                             currentRoom.showDiscount = item.showDiscount;
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalPrice;
@@ -709,6 +798,11 @@ export default {
                 // this.setDayFee(room);
                 room.priceModified = true; // 手动改过的价格不显示折扣标签
                 room.moreDiscount = 0;
+                const price = this.rooms.reduce((sum, room) => {
+                    return sum + (room.price || 0);
+                }, 0);
+                this.$emit('priceChange', price);
+                return price;
             },
             showPriceList(id) {
                 this.rooms.forEach((item, index) => {

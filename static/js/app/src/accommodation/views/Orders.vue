@@ -16,7 +16,7 @@
                 </DdSelect>
             </div>
              
-            <div style="margin-right:183px;" v-show='tag === 0'>
+            <div  v-show='tag === 0'>
                 <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate"/>
                 <span style="color:#999;font-size:14px;">～</span>
                 <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
@@ -57,6 +57,11 @@
             <div style="margin-right:20px;width: 120px;" class="fr" v-show='tag === 0 || tag === 3'>
                 <dd-select v-model="state" >
                     <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
+                </dd-select>
+            </div>
+            <div style="margin-right:20px;width: 120px;" class="fr" >
+                <dd-select v-model="roomCheckType" >
+                    <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
         </div>
@@ -214,11 +219,14 @@
 from 'dd-vue-component';
 import http from '../../common/http';
 import eventbus from '../../common/eventBus';
+import { checkTypeAll } from '../../common/orderSystem/roomCheckType';
 import { ORDER_STATE_LIST, ORDER_TYPE } from '../../ordersManage/constant';
 export
 default {
        data() {
            return {
+               checkTypeAll,
+               roomCheckType: -1,
                timeTypeList: [
                    {
                        id: 1,
