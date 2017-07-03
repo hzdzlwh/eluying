@@ -49,7 +49,7 @@
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;" v-if='item.checkRoomType === 1'>
                             入住时长
-                            <counter :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :max='item. maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id="index" :type="3" />
+                            <counterStep :onNumChange="(a,b,num) => handleRoomNumChange(item, index,num)" :max='item. maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id="index" :type="3" />
                         </div>
                         <!-- <div class="registerInfoModal-roomPrice" @click.stop="()=>{}" v-if='checkState === "team"'>
                             <label class="label-text">房费</label>
@@ -229,6 +229,7 @@ import {
     mapState
 } from 'vuex';
 import counter from '../../../components/counter.vue';
+import counterStep from '../../../components/counterStep.vue';
 import selectGoods from './SelectGoods.vue';
 import {
     DatePicker
@@ -274,6 +275,7 @@ export default {
             DdDatepicker,
             DdGroupOption,
             counter,
+            counterStep,
             selectGoods,
             DatePicker
         },
@@ -570,6 +572,7 @@ export default {
             },
             handleRoomNumChange(item, index, num) {
                 item.timeAmount = Number(num);
+                item.room.endDate = new Date( item.room.startDate.getTime() + 1000 * 60 * 60 * item.unitLength * item.timeAmount)
                 this.modifyRooms([item]);
 
             },
@@ -706,23 +709,23 @@ export default {
                 http.get('/room/canReserveCountAndTotalPrice', params)
                     .then(res => {
                         // 嘻嘻
-                        const flag = (Math.random() > 0.5);
-                        const mockDate = {
-                            data: {
-                                list: [{
-                                    canReserveCount: 100,
-                                    originTotalPrice: Math.random() * 1000,
-                                    showDiscount: flag,
-                                    totalFee: Math.random() * 1000
-                                }]
-                            }
-                        }
-                        mockDate.data.list[0].hasHourRoom = true
-                        mockDate.data.list[0].startLength = (Math.random() * 10).toFixed(0)
-                        mockDate.data.list[0].maxLength = (Math.random() * 100).toFixed(0)
-                        mockDate.data.list[0].startPrice = (Math.random() * 100).toFixed(0)
-                        mockDate.data.list[0].unitLength = (Math.random() * 10).toFixed(0)
-                        res = mockDate;
+                        // const flag = (Math.random() > 0.5);
+                        // const mockDate = {
+                        //     data: {
+                        //         list: [{
+                        //             canReserveCount: 100,
+                        //             originTotalPrice: Math.random() * 1000,
+                        //             showDiscount: flag,
+                        //             totalFee: Math.random() * 1000
+                        //         }]
+                        //     }
+                        // }
+                        // mockDate.data.list[0].hasHourRoom = true
+                        // mockDate.data.list[0].startLength = (Math.random() * 10).toFixed(0)
+                        // mockDate.data.list[0].maxLength = (Math.random() * 100).toFixed(0)
+                        // mockDate.data.list[0].startPrice = (Math.random() * 100).toFixed(0)
+                        // mockDate.data.list[0].unitLength = (Math.random() * 10).toFixed(0)
+                        // res = mockDate;
                         // mockDate
                         res.data.list.map((item, index) => {
                             const currentRoom = rooms[index];
