@@ -883,7 +883,7 @@ export default {
             }
 
             this.rooms.map(item => {
-                if (item.showTip) {
+                if (item.showTip && item.checkRoomType === 1) {
                     valid = false;
                 }
                 if ((this.checkState === 'quick' || this.checkState === 'team') && !item.categoryType) {
@@ -996,10 +996,10 @@ export default {
                     sub: true,
                     roomeName: room.categories.filter(function(el) {
                         return el.typeId === room.categoryType;
-                    }).name,
+                    })[0].name,
                     checktypeName: room.checkType.filter(function(el) {
                         return el.id === room.checkRoomType;
-                    }).name,
+                    })[0].name,
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: room.moreDiscount === 0 || !room.priceModified
                 };

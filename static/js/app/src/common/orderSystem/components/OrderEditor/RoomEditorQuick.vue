@@ -20,8 +20,7 @@
             </dd-group-option>
             </dd-select>
             </span>
-            </span>
-        </p>
+            </span>    </p>
         <div class="registerRoom-items">
             <div class="registerRoom-container" v-for="(item,index) in rooms">
                 <span class="room-icon"></span>
@@ -394,7 +393,7 @@ export default {
                             startDate: util.dateFormatLong(newValue.startDate),
                         })
                         .then(res => {
-                            if (this.checkState === 'team' && this.rooms.length > 0) {
+                            if (this.checkState === 'team') {
                                 this.RoomsList = res.data.list;
                                 this.rooms.forEach(function(room) {
                                     // room.room.endDate = newValue.endDate;
@@ -659,7 +658,7 @@ export default {
 
                 if (duration < 1 && room.checkRoomType !== 1) {
                     const toDate = new Date(room.room.endDate);
-                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getData() + 1 , 12, 0,0);
+                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate() + 1 , 12, 0,0);
                     return false;
                 }
                 if (new Date(room.room.startDate) > new Date(room.room.endDate)) {

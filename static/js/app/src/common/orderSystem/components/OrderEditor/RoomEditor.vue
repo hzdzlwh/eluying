@@ -856,7 +856,7 @@ export default {
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1 && room.checkType !== 1) {
                     const toDate = new Date(room.room.endDate);
-                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getData() + 1 , 12, 0,0);
+                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate() + 1 , 12, 0,0);
                     return false;
                 }
                 if (new Date(room.room.startDate) > new Date(room.room.endDate)) {

@@ -23,7 +23,7 @@
                         </div>
                         <div class="room-date">
                             <label class="label-text">到达</label>
-                            <span class="startDate " :class='{roomTomeOut: item.startTimeOut}'>{{item.startDate || item.roomInfo.checkInDate}}
+                            <span class="startDate " :class='{roomTimeOut: item.startTimeOut}'>{{item.startDate || item.roomInfo.checkInDate}}
                             <span class="timeOut" v-if='item.startTimeOut'>已超时</span> 
                             </span>
                             <span>~</span>
@@ -111,7 +111,7 @@
         top: 20px;
         left: 75px;
     }
-    .roomTImeOut{
+    .roomTimeOut{
         color: red
     }
     .room-fix {
