@@ -60,7 +60,7 @@
                 </dd-select>
             </div>
             <div style="margin-right:20px;width: 120px;" class="fr" >
-                <dd-select v-model="roomCheckType" >
+                <dd-select v-model="checkType" >
                     <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
@@ -84,6 +84,9 @@
 }
 </style>
 <style lang="scss" scoped>
+.fontRed{
+  color:red
+}
 .foot small{
   color:#999;
 
@@ -226,7 +229,7 @@ default {
        data() {
            return {
                checkTypeAll,
-               roomCheckType: -1,
+               checkType: -1,
                timeTypeList: [
                    {
                        id: 1,
@@ -321,20 +324,20 @@ default {
                    },
                    {
                        title: '房号',
-                       render: (h, row) => row.rooms && row.rooms.map(function(room) {
+                       render: (h, row) => row.subOrderList && row.subOrderList.map(function(room) {
                            return <div >{room.roomName}</div>;
                        })
                    },
                    {
                        title: '入住时间',
-                       render: (h, row) => row.rooms.map(function(room) {
-                           return <div >{room.startDate}</div>;
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div class ={room.startTimeOverFlag ? '' : 'fontRed'}>{room.startDate}</div>;
                        })
                    },
                    {
                        title: '退房时间',
-                       render: (h, row) => row.rooms.map(function(room) {
-                           return <div >{room.endDate}</div>;
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div class ={room.endTimeOverFlag ? '' : 'fontRed'}>{room.endDate}</div>;
                        })
                    },
                    {
@@ -356,11 +359,13 @@ default {
                    {
                        title: '订单状态',
                        render: (h, row) =>
+                       row.subOrderList.map(function(room) {
                             <span>
                             {ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
-                                return Number(el.id) === row.orderState;
+                                return Number(el.id) === room.state;
                             }).name}
                             </span>
+                          })
                    },
                    {
                        title: '创建人',
@@ -490,6 +495,9 @@ default {
                if (keyword) {
                    obj.keyword = this.searchPattern;
                }
+               if (this.checkType !== -1) {
+                   obj.checkType = this.checkType;
+               }
                // 后台要求如果为空就不传
                for (const ob in obj) {
                    if (obj[ob] === undefined || obj[ob] === '') {
@@ -546,6 +554,9 @@ default {
                };
                if (this.searchPattern) {
                    paramsObj.keyword = this.searchPattern;
+               }
+               if (this.checkType !== -1) {
+                   paramsObj.checkType = this.checkType;
                }
                // 后台要求如果为空就不传
                for (const ob in paramsObj) {
