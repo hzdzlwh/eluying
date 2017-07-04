@@ -197,6 +197,10 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder && getRoomsState.transform"
+                                        >
+                                        转正常入住
+                                    </div>
                                     <div class="dd-btn dd-btn-primary order-btn" v-if="order.cancelSelectRoomsAble"
                                          @click="cancelSelectRooms">
                                         取消排房
@@ -1213,10 +1217,14 @@
                 const roomsState = {
                     checkOutAdAble: false,
                     checkOutAble: false,
-                    checkInAble: false
+                    checkInAble: false,
+                    transform: false
                 };
 
                 function checkState(room) {
+                    if (room.checkType === 1) {
+                        roomsState.transform = true;
+                    }
                     if (room.state === 0) {
                         roomsState.checkInAble = true;
                     } else if (room.state === 1) {

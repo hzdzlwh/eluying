@@ -258,6 +258,7 @@
     color: #fff;
     font-size: 16px;
     padding-top: 4px;
+    font-weight:300;
 }
 .taday-status-title {
     font-size: 24px;
