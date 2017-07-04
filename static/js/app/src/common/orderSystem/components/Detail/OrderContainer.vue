@@ -205,7 +205,7 @@
                                          @click="cancelSelectRooms">
                                         取消排房
                                     </div>
-                                    <div class="dd-btn dd-btn-primary order-btn" @click="autoSelectRooms"
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="editOrder('auto')"
                                          v-if="order.autoSelectRoomsAble">
                                         自动排房
                                     </div>
@@ -1230,7 +1230,7 @@
                     } else if (room.state === 1) {
                         const today = new Date();
                         const endDate = new Date(room.checkOutDate || room.endDate);
-                        if (endDate > today && !util.isSameDay(endDate, today)) {
+                        if (endDate > today && !util.isSameDay(endDate, today) && room.checkType !== 1) {
                             roomsState.checkOutAdAble = true;
                         } else {
                             roomsState.checkOutAble = true;
@@ -1305,12 +1305,16 @@
             closeCashDetail() {
                 this.cashDetailShow = false;
             },
-            editOrder() {
+            editOrder(type) {
                 this.hideModal();
                 bus.$emit('changeBack', this.show);
                 bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
+                if (type === 'auto') {
+                    this.order.timeRoomAuto = true;
+                }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
+                
             },
             cancelOrder() {
                 this.hideModal();
