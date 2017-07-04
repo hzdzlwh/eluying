@@ -651,7 +651,7 @@ export default {
                 //     return false;
                 // }
                 if (type === 'endDate' && room.checkRoomType === 1) {
-                    return
+                    return;
                 }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
@@ -660,9 +660,13 @@ export default {
                     room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
                     return false;
                 }
-                if (new Date(room.room.startDate) > new Date(room.room.endDate) && room.checkRoomType === 1) {
-                    room.room.startDate = new Date(room.room.endDate);
-                    return false;
+                if (new Date(room.room.startDate) > new Date(room.room.endDate)) {
+                    if (room.checkRoomType === 1) {
+
+                    } else {
+                        room.room.startDate = new Date(room.room.endDate);
+                        return false;
+                    }
                 }
                 // 最多400天
                 // if (duration > 400) {
