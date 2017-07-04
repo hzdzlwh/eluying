@@ -29,7 +29,7 @@
                     <div class="registerRoom-item">
                         <span class="room-icon"></span>
                         <div class="shop-item-content">
-                            <span class="useless-tip error" v-if="item.showTip">该钟点房不在开放时段</span>
+                            <span class="useless-tip error" v-if="item.showTip && item.checkType === 1">该钟点房不在开放时段</span>
                             <div style="display: flex;align-items: center;">
                                 <label class="label-text">房间&nbsp;</label>
                                 <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item, index, 'room')">
@@ -241,7 +241,8 @@ import {
     DatePicker
 } from 'element-ui';
 import {
-    checkType
+    checkType,
+    roomCheckType
 } from '../../roomCheckType';
 export default {
     data() {
@@ -255,7 +256,8 @@ export default {
                 currentSelectOtherRoom: undefined,
                 initCategories: {},
                 whenCheckInDeleteRooms: [],
-                checkType
+                checkType,
+                roomCheckType
             };
         },
         created() {
@@ -644,7 +646,8 @@ export default {
                         showDiscount: undefined,
                         moreDiscount: 0,
                         extraItems: [],
-                        checkType: 0
+                        checkType: 0,
+                        checkTypes: this.checkType.slice(0)
                     };
                     this.getRoomsList(r);
                     return r;
@@ -689,7 +692,8 @@ export default {
                         priceScale: [],
                         showDiscount: undefined,
                         isCheckIn: this.checkState === 'checkIn',
-                        extraItems: []
+                        extraItems: [],
+                        checkTypes: this.checkState === 'book' ? this.checkType : this.roomCheckType
                     };
                 } else {
                     // 新增房间，房型时间同上一间
@@ -701,6 +705,7 @@ export default {
                     room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
+                    room.checkTypes = JSON.parse(JSON.stringify(this.rooms[len - 1].checkTypes));
                     if (room.roomOrderId) {
                         delete room.roomOrderId;
                         delete room.state;
@@ -721,6 +726,22 @@ export default {
                 return util.DateDiff(d1, d2);
             },
             changeRoomType(item, index, type) {
+                if (type === 'endDate' && item.roomCheckType === 1) {
+                    return;
+                }
+                if (type === 'roomType') {
+                    if (item.checkType === 1) {
+                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
+                    }
+                    http.get('/room/getRoomsList', {
+                        checkType: item.checkType,
+                        endDate: util.dateFormatLong(item.room.endDate),
+                        startDate: util.dateFormatLong(item.room.startDate)
+                    })
+                    .then(res => {
+                        item.categories = res.data.list;
+                    });
+                }
                 this.getRoomsList(item);
                 this.$nextTick(function() {
                     item.roomType = 0;
@@ -832,11 +853,19 @@ export default {
                 }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
-                if (duration < 1) {
-                    room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
+                if (duration < 1 && room.checkType !== 1) {
+                    const toDate = new Date(room.room.endDate);
+                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getData() + 1 , 12, 0,0);
                     return false;
                 }
-
+                if (new Date(room.room.startDate) > new Date(room.room.endDate)) {
+                    if (room.checkType === 1) {
+                        room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * room.timeAmount);
+                    } else {
+                        room.room.startDate = new Date(room.room.endDate);
+                        return false;
+                    }
+                }
                 // 最多400天
                 if (duration > 400) {
                     const currentTime = +new Date();
@@ -939,6 +968,7 @@ export default {
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalFee;
                             currentRoom.timestamp = res.data.timestamp;
+                            if (this.checkState !== 'book') {
                             if (item.hasHourRoom) {
                                 if (!currentRoom.checkTypes.some(el => {
                                         return el.id === 1;
@@ -957,6 +987,7 @@ export default {
                                 if (currentRoom.checkType === 1) {
                                     currentRoom.checkType = 0;
                                 }
+                            }
                             }
                             if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType')) {
                                 currentRoom.unitLength = Number(item.unitLength);
