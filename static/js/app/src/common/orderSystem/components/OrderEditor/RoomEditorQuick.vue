@@ -27,7 +27,7 @@
                 <span class="room-icon"></span>
                 <div class="registerRoom-content">
                     <div class="shop-item-content">
-                        <!-- <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span> -->
+                        <span class="useless-tip error" v-if="item.showTip && item.checkRoomType === 1">该钟点房不在开放时段</span>
                         <div style="display: flex;line-height: 24px;">
                             房间
                             <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
@@ -573,17 +573,18 @@ export default {
                     return;
                 }
                 if (type === 'roomType') {
-                    http.get('/room/getRoomsList', {
-                            checkType: item.checkRoomType,
-                            endDate: util.dateFormatLong(item.room.endDate),
-                            startDate: util.dateFormatLong(item.room.startDate)
-                        })
-                        .then(res => {
-                            item.categories = res.data.list;
-                        });
                     if (item.checkRoomType === 1) {
-                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1))
+                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
                     }
+                    http.get('/room/getRoomsList', {
+                        checkType: item.checkRoomType,
+                        endDate: util.dateFormatLong(item.room.endDate),
+                        startDate: util.dateFormatLong(item.room.startDate)
+                    })
+                    .then(res => {
+                        item.categories = res.data.list;
+                    });
+
                 }
                 this.$nextTick(function() {
                     // item.roomType = this.getRoomsList(item.categoryType)[0].id;
@@ -657,12 +658,13 @@ export default {
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
 
                 if (duration < 1 && room.checkRoomType !== 1) {
-                    room.room.endDate = util.diffDate(new Date(room.room.endDate), 1);
+                    const toDate = new Date(room.room.endDate);
+                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getData() + 1 , 12, 0,0);
                     return false;
                 }
                 if (new Date(room.room.startDate) > new Date(room.room.endDate)) {
                     if (room.checkRoomType === 1) {
-
+                        room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * room.timeAmount);
                     } else {
                         room.room.startDate = new Date(room.room.endDate);
                         return false;
@@ -783,7 +785,7 @@ export default {
                             //         showInput: false
                             //     };
                             // });
-                            // currentRoom.showTip = !item.available;
+                            currentRoom.showTip = !item.isOpenTime;
                             currentRoom.price = item.totalFee;
                             // 每日房价分配比例
                             // currentRoom.priceScale = item.datePriceList.map(i => {
