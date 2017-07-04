@@ -1134,6 +1134,7 @@ export default {
             handleRoomNumChange(item, index, num) {
                 this.$set(item, 'timeAmount', Number(num));
                 item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 *  item.timeAmount);
+                this.modifyRooms([item]);
             }
         }
 };
