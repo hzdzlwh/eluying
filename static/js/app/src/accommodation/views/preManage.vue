@@ -97,43 +97,43 @@ import {
 
 export default {
     data() {
-            return {
-                defaultStartDate: undefined,
-                date: new Date(),
-                orderLists: [],
-                selectRoomLists: [],
-                checkTypes: roomCheckType,
-                showSelectHouse: false,
-                roomInfo: {},
-                orderRoomNum: 0
-            };
-        },
-        created() {
-            bus.$on('refreshView', this.refreshView);
-        },
-        beforeDestroy() {
-            bus.$off('refreshView', this.refreshView);
-        },
-        computed: {
-            ...mapState({
-                order: state => state.orderSystem.orderDetail
-            }),
-            selectRoomNum() {
-                var num = 0;
-                this.selectRoomLists.forEach(res => {
-                    res.rooms.forEach(r => {
-                        if (r.checked === true) {
-                            num++;
-                        }
-                    });
+        return {
+            defaultStartDate: undefined,
+            date: new Date(),
+            orderLists: [],
+            selectRoomLists: [],
+            checkTypes: roomCheckType,
+            showSelectHouse: false,
+            roomInfo: {},
+            orderRoomNum: 0
+        };
+    },
+    created() {
+        bus.$on('refreshView', this.refreshView);
+    },
+    beforeDestroy() {
+        bus.$off('refreshView', this.refreshView);
+    },
+    computed: {
+        ...mapState({
+            order: state => state.orderSystem.orderDetail
+        }),
+        selectRoomNum() {
+            var num = 0;
+            this.selectRoomLists.forEach(res => {
+                res.rooms.forEach(r => {
+                    if (r.checked === true) {
+                        num ++;
+                    }
                 });
-                return num;
-            }
-        },
-        components: {
-            dayOrderLeft,
-            DateSelect
-        },
+            });
+            return num;
+        }
+    },
+    components: {
+        dayOrderLeft,
+        DateSelect
+    },
         // filters: {
         //     getCheckType: function(value) {
         //         const name =  roomCheckType.filter(function(el) {
@@ -142,102 +142,102 @@ export default {
         //         return name
         //     }
         // },
-        methods: {
-            ...mapActions([types.LOAD_ORDER_DETAIL]),
-            getCheckType(val){
-                const name =  this.checkTypes.filter(function(el) {
-                    return el.id === val
-                })[0].name
-                return name
-            },
-            changeDate(date) {
-                this.date = date;
-            },
-            getLists() {
-                http.get('/room/getBookListByDate', {
-                    date: this.date
-                }).then(res => {
-                    if (res.code === 1) {
-                        this.orderLists = res.data.list;
-                    }
-                });
-            },
-            showOrder(item) {
-                bus.$emit('onShowDetail', {
-                    type: item.orderType,
-                    orderId: item.orderType === -1 ? item.orderId : item.roomOrderId
-                });
-            },
-            checkIn(item) {
-                this[types.LOAD_ORDER_DETAIL]({
-                    orderId: item.orderId
-                }).then(res => {
-                    bus.$emit('editOrder', 'checkIn', this.order, 'hidePreStep');
-                });
-            },
-            arrangeHouse(event, item, index) {
-                this.orderRoomNum = item.roomTypes[index].count;
-                this.roomInfo.checkType = item.roomTypes[index].checkType;
-                this.roomInfo.endTime = item.roomTypes[index].endTime;
-                this.roomInfo.startTime = item.roomTypes[index].startTime;
-                this.roomInfo.orderId = item.orderType === -1 ? item.orderId : item.roomOrderId;
-                this.roomInfo.orderType = item.orderType;
-                this.roomInfo.typeId = item.roomTypes[index].typeId;
-                http.get('/room/getSelectRoomList', {
-                    checkType: item.roomTypes[index].checkType,
-                    date: this.date,
-                    endTime: item.roomTypes[index].endTime,
-                    orderId: item.orderType === -1 ? item.orderId : item.roomOrderId,
-                    orderType: item.orderType,
-                    startTime: item.roomTypes[index].startTime,
-                    typeId: item.roomTypes[index].typeId
-                }).then(res => {
-                    if (res.code === 1) {
-                        this.selectRoomLists = res.data.list;
-                        this.$refs.selectableHouse.style.top = (event.pageY - 48) + 'px';
-                        this.$refs.selectableHouse.style.left = (event.pageX - 500) + 'px';
-                        this.showSelectHouse = true;
-                    }
-                });
-            },
-            changeSelect(room) {
-                room.checked = !room.checked;
-                if (this.selectRoomNum > this.orderRoomNum) {
-                    modal.warn('所选房间数量大于需排房房间数量');
-                    room.checked = !room.checked;
+    methods: {
+        ...mapActions([types.LOAD_ORDER_DETAIL]),
+        getCheckType(val) {
+            const name = this.checkTypes.filter(function(el) {
+                return el.id === val;
+            })[0].name;
+            return name;
+        },
+        changeDate(date) {
+            this.date = date;
+        },
+        getLists() {
+            http.get('/room/getBookListByDate', {
+                date: this.date
+            }).then(res => {
+                if (res.code === 1) {
+                    this.orderLists = res.data.list;
                 }
-            },
-            setSelectRoom() {
-                const sendData = {...this.roomInfo,
-                    date: this.date
-                };
-                const temp = [];
-                this.selectRoomLists.map((area) => {
-                    for (const i in area.rooms) {
-                        temp.push({
-                            checked: area.rooms[i].checked,
-                            roomId: area.rooms[i].roomId,
-                            roomOrderId: area.rooms[i].roomOrderId
-                        });
-                    }
-                });
-                sendData.rooms = JSON.stringify(temp);
-                http.get('/room/setSelectRoomList', sendData).then(res => {
-                    if (res.code === 1) {
-                        this.showSelectHouse = false;
-                        this.getLists();
-                    }
-                });
-            },
-            refreshView() {
-                this.getLists();
+            });
+        },
+        showOrder(item) {
+            bus.$emit('onShowDetail', {
+                type: item.orderType,
+                orderId: item.orderType === -1 ? item.orderId : item.roomOrderId
+            });
+        },
+        checkIn(item) {
+            this[types.LOAD_ORDER_DETAIL]({
+                orderId: item.orderId
+            }).then(res => {
+                bus.$emit('editOrder', 'checkIn', this.order, 'hidePreStep');
+            });
+        },
+        arrangeHouse(event, item, index) {
+            this.orderRoomNum = item.roomTypes[index].count;
+            this.roomInfo.checkType = item.roomTypes[index].checkType;
+            this.roomInfo.endTime = item.roomTypes[index].endTime;
+            this.roomInfo.startTime = item.roomTypes[index].startTime;
+            this.roomInfo.orderId = item.orderType === -1 ? item.orderId : item.roomOrderId;
+            this.roomInfo.orderType = item.orderType;
+            this.roomInfo.typeId = item.roomTypes[index].typeId;
+            http.get('/room/getSelectRoomList', {
+                checkType: item.roomTypes[index].checkType,
+                date: this.date,
+                endTime: item.roomTypes[index].endTime,
+                orderId: item.orderType === -1 ? item.orderId : item.roomOrderId,
+                orderType: item.orderType,
+                startTime: item.roomTypes[index].startTime,
+                typeId: item.roomTypes[index].typeId
+            }).then(res => {
+                if (res.code === 1) {
+                    this.selectRoomLists = res.data.list;
+                    this.$refs.selectableHouse.style.top = (event.pageY - 48) + 'px';
+                    this.$refs.selectableHouse.style.left = (event.pageX - 500) + 'px';
+                    this.showSelectHouse = true;
+                }
+            });
+        },
+        changeSelect(room) {
+            room.checked = !room.checked;
+            if (this.selectRoomNum > this.orderRoomNum) {
+                modal.warn('所选房间数量大于需排房房间数量');
+                room.checked = !room.checked;
             }
         },
-        watch: {
-            date() {
-                this.getLists();
-            }
+        setSelectRoom() {
+            const sendData = { ...this.roomInfo,
+                date: this.date
+            };
+            const temp = [];
+            this.selectRoomLists.map((area) => {
+                for (const i in area.rooms) {
+                    temp.push({
+                        checked: area.rooms[i].checked,
+                        roomId: area.rooms[i].roomId,
+                        roomOrderId: area.rooms[i].roomOrderId
+                    });
+                }
+            });
+            sendData.rooms = JSON.stringify(temp);
+            http.get('/room/setSelectRoomList', sendData).then(res => {
+                if (res.code === 1) {
+                    this.showSelectHouse = false;
+                    this.getLists();
+                }
+            });
+        },
+        refreshView() {
+            this.getLists();
         }
+    },
+    watch: {
+        date() {
+            this.getLists();
+        }
+    }
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>

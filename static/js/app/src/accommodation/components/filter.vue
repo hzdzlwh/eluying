@@ -324,21 +324,17 @@ export default {
     methods: {
         getCheckTypeNum(type) {
             switch (type) {
+                // eslint-disabeld
                 case 0:
                     return this.roomTypeCount.normalCheckType;
-                    break;
                 case 1:
                     return this.roomTypeCount.hourRoomCheckType;
-                    break;
                 case 2:
                     return this.roomTypeCount.freedomCheckType;
-                    break;
                 case 3:
                     return this.roomTypeCount.freeCheckType;
-                    break;
                 default:
-                    return 0
-                    break;
+                    return 0;
             }
         },
         setSelect(item) {

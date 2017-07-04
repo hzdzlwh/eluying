@@ -331,24 +331,25 @@ default {
                    {
                        title: '入住类型',
                        render: (h, row) => row.subOrderList.map(function(room) {
-                            <span>
-                            {checkTypeAll.find(function(el) {
-                                return Number(el.id) === room.state;
-                            }).name}
-                            </span>
-                          })
+                           return <div> { checkTypeAll.find(function(el) {
+                               return Number(el.id) === room.checkType;
+                           }).name }
+                            </div>;
+                       })
                    },
                    {
                        title: '入住时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
                            return <div class ={room.startTimeOverFlag ? '' : 'fontRed'}>{room.startDate}</div>;
-                       })
+                       }),
+                       width: 120
                    },
                    {
                        title: '退房时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
                            return <div class ={room.endTimeOverFlag ? '' : 'fontRed'}>{room.endDate}</div>;
-                       })
+                       }),
+                       width: 120
                    },
                    {
                        title: '联系人',
@@ -368,14 +369,12 @@ default {
                    },
                    {
                        title: '订单状态',
-                       render: (h, row) =>
-                       row.subOrderList.map(function(room) {
-                            <span>
-                            {ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
-                                return Number(el.id) === room.state;
-                            }).name}
-                            </span>
-                          })
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div> { ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
+                               return Number(el.id) === room.state;
+                           }).name }
+                            </div>;
+                       })
                    },
                    {
                        title: '创建人',
@@ -446,7 +445,14 @@ default {
                if (this.flag) {
                    this.fetchDate();
                }
+           },
+           checkType() {
+               this.pageNo = 1;
+               if (this.flag) {
+                   this.fetchDate();
+               }
            }
+           // 我也忘了为啥这么写了
        },
        methods: {
            changeTag(id) {
