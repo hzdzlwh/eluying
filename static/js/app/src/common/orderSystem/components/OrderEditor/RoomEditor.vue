@@ -29,7 +29,7 @@
                     <div class="registerRoom-item">
                         <span class="room-icon"></span>
                         <div class="shop-item-content">
-                            <span class="useless-tip error" v-if="item.showTip">该房间已被占用</span>
+                            <span class="useless-tip error" v-if="item.showTip">该钟点房不在开放时段</span>
                             <div style="display: flex;align-items: center;">
                                 <label class="label-text">房间&nbsp;</label>
                                 <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item, index, 'room')">
@@ -913,7 +913,7 @@ export default {
                                     showInput: false
                                 };
                             });
-                            currentRoom.showTip = !item.available;
+                            currentRoom.showTip = !item.isOpenTime;
                             currentRoom.price = item.totalFee;
                             // 每日房价分配比例
                             currentRoom.priceScale = item.datePriceList.map(i => {
