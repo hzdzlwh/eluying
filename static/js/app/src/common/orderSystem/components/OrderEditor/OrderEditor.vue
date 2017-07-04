@@ -1228,6 +1228,8 @@ export default {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+            } else {
+                callback()
             }
 
         },
@@ -1246,6 +1248,17 @@ export default {
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin()
             };
+            const str = util.dateFormat(new Date());
+            const arr = str.split('-');
+            rooms.forEach(function(el) {
+            if(el.endDate > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
+                    this.checkState = 'ing';
+                }
+            })
+            const roomsBak = rooms.slice(0);
+            roomsBak.sort(function(a, b) {
+                return new Date(b.endDate) - new Date(a.endDate);
+            });
             if (this.checkState === 'ing') {
                 params.type = 0;
             } else if (this.checkState === 'finish') {

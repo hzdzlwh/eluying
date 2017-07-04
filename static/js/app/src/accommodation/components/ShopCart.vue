@@ -61,7 +61,7 @@
 </style>
 <script>
     import util from '../../common/util';
-    import modal from '../../common/modal';
+    // import modal from '../../common/modal';
     import bus from '../../common/eventBus';
     export default{
         props: {
@@ -74,8 +74,8 @@
              */
             selectedRooms() {
                 const today = new Date();
-                const finstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23);
-                const yesDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+                // const finstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23);
+                // const yesDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
                 let p = false;
                 let t = false;
                 let f = false;
@@ -84,17 +84,9 @@
                     // 直接抄的浇浇代码
                     const date = new Date(e.date);
                     if (
-                        util.isSameDay(date, today) ||
-                        (
-                            (today < finstDay) &&
-                            util.isSameDay(date, yesDay)
-                        )) {
+                        util.isSameDay(date, today)) {
                         t = true;
-                    } else if (date > today ||
-                        (
-                            (today < finstDay) &&
-                            util.isSameDay(date, yesDay)
-                        )) {
+                    } else if (date > today) {
                         f = true;
                     } else if (date < today) {
                         p = true;
@@ -103,8 +95,8 @@
                     temp[e.id] = `${e.cName}-${e.rName}`;
                 });
                 this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
-                this.ingShow = p && t && !f || p && t && f || !p && t && !f || !p && t && f;
-                this.bookShow = p && !t && f || !p && t && !f || !p && t && f || !p && !t && f;
+                this.ingShow = (p && t && !f || p && t && f || !p && t && !f || !p && t && f) && !p;
+                this.bookShow = (p && !t && f || !p && t && !f || !p && t && f || !p && !t && f) && !p;
                 this.t = t;
                 this.p = p;
                 this.f = f;
@@ -159,7 +151,6 @@
                 //         return false;
                 //     }
                 // }
-
                 bus.$emit('changeCheckState', type, this.getRoomsWithDate());
             },
             clear(type) {

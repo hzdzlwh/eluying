@@ -241,7 +241,8 @@ import {
     DatePicker
 } from 'element-ui';
 import {
-    checkType
+    checkType,
+    roomCheckType
 } from '../../roomCheckType';
 export default {
     data() {
@@ -689,7 +690,8 @@ export default {
                         priceScale: [],
                         showDiscount: undefined,
                         isCheckIn: this.checkState === 'checkIn',
-                        extraItems: []
+                        extraItems: [],
+                        checktypes: this.checkState === 'book' ? this.checkType : this.roomCheckType
                     };
                 } else {
                     // 新增房间，房型时间同上一间
@@ -701,6 +703,7 @@ export default {
                     room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
+                    room.checktypes = JSON.parse(JSON.stringify(this.rooms[len - 1].checktypes));
                     if (room.roomOrderId) {
                         delete room.roomOrderId;
                         delete room.state;
