@@ -33,7 +33,7 @@
                             <div style="display: flex;align-items: center;">
                                 <label class="label-text">房间&nbsp;</label>
                                 <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item, index, 'room')">
-                                    <dd-option v-for="category in categories" :value="category.typeId" :key="category.typeId"
+                                    <dd-option v-for="category in item.categories" :value="category.typeId" :key="category.typeId"
                                                :label="category.name">
                                     </dd-option>
                                 </dd-select>
@@ -89,17 +89,20 @@
                                 <label class="label-text">离开</label>
                                 <div class="enterDate">
                                     <DatePicker v-model='item.room.endDate'
-                                                @change='()=>handleRoomChange(item, index)'
+                                                @change='()=>handleRoomChange(item, index, "endDate")'
                                                 :clearable='false'
-                                                :disabled='order.orderState === 8'
+                                                :disabled='order.orderState === 8 || item.checkType === 1'
                                                 :picker-options='{disabledDate:disabledEndDate(item.room.endDate)}'
                                                 type="datetime"
                                                 placeholder="选择日期时间"
                                                 format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
                                 </div>
-                                <label class="label-text">
+                                <label class="label-text" v-if="item.checkType !== 1">
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
+                                </label>
+                                <label class="label-text" v-else>
+                                    共{{item.timeAmount}}小时
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -611,7 +614,8 @@
                         extraItems: [...order.extraItems],
                         checkType: order.checkType,
                         checkTypes: [...checkType],
-                        isCheckIn: this.checkState === 'checkIn'
+                        isCheckIn: this.checkState === 'checkIn',
+                        categories: this.categories
                     };
 
                     this.rooms = [room];
@@ -793,7 +797,8 @@
                 http.get('/room/getRoomsList', {
                     startDate: util.dateFormat(room.room.startDate),
                     endDate: util.dateFormat(room.room.endDate),
-                    roomOrderId: room.roomOrderId
+                    roomOrderId: room.roomOrderId,
+                    checkType: room.checkType
                 })
                     .then(res => {
                         const categories = res.data.list;
@@ -808,6 +813,7 @@
                             });
                         }
                         this.$set(room, 'roomList', rooms);
+                        this.$set(room, 'categories', res.data.list);
                     });
             },
             checkIsToday(date) {
@@ -828,7 +834,9 @@
                 if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                     return false;
                 }
-
+                if (type === 'endDate' && room.checkType === 1) {
+                    return
+                }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1) {
@@ -958,7 +966,8 @@
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
-                                currentRoom.timeAmount = Number(item.maxLength);
+                                this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                currentRoom.price = item.startPrice;
                             }
                         });
                     });
@@ -1125,6 +1134,8 @@
                 }
             },
             handleRoomNumChange(item, index, num) {
+                this.$set(item, 'timeAmount', Number(num));
+                item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 *  item.timeAmount);
             }
         }
     };
