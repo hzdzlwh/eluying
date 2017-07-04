@@ -329,6 +329,16 @@ default {
                        })
                    },
                    {
+                       title: '入住类型',
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                            <span>
+                            {checkTypeAll.find(function(el) {
+                                return Number(el.id) === room.state;
+                            }).name}
+                            </span>
+                          })
+                   },
+                   {
                        title: '入住时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
                            return <div class ={room.startTimeOverFlag ? '' : 'fontRed'}>{room.startDate}</div>;

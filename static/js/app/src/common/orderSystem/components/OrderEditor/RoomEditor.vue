@@ -760,7 +760,8 @@ export default {
                         return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() && date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
                     };
                 } else if (this.checkState === 'checkIn') {
-                    return date => false;
+                    // return date => false;
+                    return date => date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                 } else {
                     return (date) => {
                         return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
@@ -989,12 +990,16 @@ export default {
                                 }
                             }
                             }
+
                             if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType')) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
                                 this.$set(currentRoom,'timeAmount',Number(item.startLength));
                                 currentRoom.price = item.startPrice;
+                            }
+                            if (currentRoom.checkType === 1) {
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * currentRoom.timeAmount)
                             }
                         });
                     });

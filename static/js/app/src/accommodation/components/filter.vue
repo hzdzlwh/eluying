@@ -16,7 +16,7 @@
             </ul>
         </div>
         <!-- roomType -->
-        <div class="calendar-room-filter-box" @click="roomCheckTypeVisible = !tagVisible">
+        <div class="calendar-room-filter-box" @click="roomCheckTypeVisible = !roomCheckTypeVisible">
             <div class="calendar-icon calendar-icon-tag"></div>
             <span style="cursor: pointer">入住类型</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: tagVisible}' class='calendar-room-filter-toggle'>
@@ -25,9 +25,8 @@
             <ul>
                 <li v-for="r in roomCheckType">
                 <label >
-                   <span class="calendar-tag-color" >{{r.name}}</span>
-                   <!-- <span>({{roomTypeCount}})</span> -->
-                    <input name="room" class="dd-checkbox" type="checkbox" :value='r.id' @change="setSelect(r)" />
+                    <span>{{r.name}}({{roomTypeCount && getCheckTypeNum[r.id]}})</span>
+                    <input name="room" class="dd-checkbox" type="checkbox" :value='r.select' @change="setSelect(r)" />
                     </label>
                 </li>
             </ul>
@@ -265,6 +264,7 @@ export default {
             const tagList = [];
             const areaList = [];
             const customList = [];
+            const checkTypes = [];
             this.categoriesList.forEach(function(el, index) {
                 if (el.select) {
                     categoriesParms.push(Number(el.id));
@@ -290,12 +290,18 @@ export default {
                     customList.push(Number(el.id));
                 }
             });
+            this.roomCheckType.forEach(function(el, index) {
+                if (el.select) {
+                    checkTypes.push(Number(el.id));
+                }
+            });
             return {
                 roomTypes: JSON.stringify(categoriesParms),
                 states: JSON.stringify(roomTypeList),
                 tags: JSON.stringify(tagList),
                 origins: JSON.stringify(customList),
-                zones: JSON.stringify(areaList)
+                zones: JSON.stringify(areaList),
+                checkTypes: JSON.stringify(roomCheckType)
             };
         }
     },
@@ -316,6 +322,25 @@ export default {
         }
     },
     methods: {
+        getCheckTypeNum(type) {
+            switch (type) {
+                case 0:
+                    return this.roomTypeCount.normalCheckType;
+                    break;
+                case 1:
+                    return this.roomTypeCount.hourRoomCheckType;
+                    break;
+                case 2:
+                    return this.roomTypeCount.freedomCheckType;
+                    break;
+                case 3:
+                    return this.roomTypeCount.freeCheckType;
+                    break;
+                default:
+                    return 0
+                    break;
+            }
+        },
         setSelect(item) {
             this.$set(item, 'select', !item.select);
         },
@@ -354,6 +379,11 @@ export default {
             this.customList.forEach(function(el, index) {
                 if (el.select) {
                     customList.push(Number(el.id));
+                }
+            });
+            this.categoriesList.forEach(function(el, index) {
+                if (el.select) {
+                    categoriesParms.push(Number(el.id));
                 }
             });
             return {
