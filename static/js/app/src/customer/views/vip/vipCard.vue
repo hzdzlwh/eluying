@@ -48,8 +48,8 @@ export default {
                 });
         },
         select(nodes, type) {
+            this.type = { discountItems: 'discount', consumeItems: 'consume', payableItems: 'pay' }[type];
             this.nodes = nodes;
-            this.type = { discountInfoList: 'discount', consumeItems: 'consume', payableItems: 'pay' }[type];
             $('#categorySelectModal').modal('show');
         },
         handleCategorySelect(list) {

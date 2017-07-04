@@ -76,7 +76,7 @@
             </div>
         </div>
     </div>
-    <categorySelect :onConfirm="handleCategorySelect" :type="selectType" :list="nodes" />
+    <categorySelect :onConfirm="handleCategorySelect" type="discount" :list="nodes" />
     </div>
 </template>
 <style scoped>

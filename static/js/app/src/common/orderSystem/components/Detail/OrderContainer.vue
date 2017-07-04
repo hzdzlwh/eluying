@@ -197,11 +197,15 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder && getRoomsState.transform"
+                                        >
+                                        转正常入住
+                                    </div>
                                     <div class="dd-btn dd-btn-primary order-btn" v-if="order.cancelSelectRoomsAble"
                                          @click="cancelSelectRooms">
                                         取消排房
                                     </div>
-                                    <div class="dd-btn dd-btn-primary order-btn" @click="autoSelectRooms"
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="editOrder('auto')"
                                          v-if="order.autoSelectRoomsAble">
                                         自动排房
                                     </div>
@@ -1213,16 +1217,20 @@
                 const roomsState = {
                     checkOutAdAble: false,
                     checkOutAble: false,
-                    checkInAble: false
+                    checkInAble: false,
+                    transform: false
                 };
 
                 function checkState(room) {
+                    if (room.checkType === 1) {
+                        roomsState.transform = true;
+                    }
                     if (room.state === 0) {
                         roomsState.checkInAble = true;
                     } else if (room.state === 1) {
                         const today = new Date();
                         const endDate = new Date(room.checkOutDate || room.endDate);
-                        if (endDate > today && !util.isSameDay(endDate, today)) {
+                        if (endDate > today && !util.isSameDay(endDate, today) && room.checkType !== 1) {
                             roomsState.checkOutAdAble = true;
                         } else {
                             roomsState.checkOutAble = true;
@@ -1297,12 +1305,16 @@
             closeCashDetail() {
                 this.cashDetailShow = false;
             },
-            editOrder() {
+            editOrder(type) {
                 this.hideModal();
                 bus.$emit('changeBack', this.show);
                 bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
+                if (type === 'auto') {
+                    this.order.timeRoomAuto = true;
+                }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
+                
             },
             cancelOrder() {
                 this.hideModal();

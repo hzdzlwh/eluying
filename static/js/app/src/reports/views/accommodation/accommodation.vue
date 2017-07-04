@@ -58,10 +58,10 @@
 </style>
 <script>
     import { mapState } from 'vuex';
-    import http from '../../common/http';
-    import { getTableData } from '../utils/tableHelper';
+    import http from '../../../common/http';
+    import { getTableData } from '../../utils/tableHelper';
     import { DdTable } from 'dd-vue-component';
-    import { setLine } from '../utils/chartHelper';
+    import { setLine } from '../../utils/chartHelper';
     export default{
         data() {
             return {
