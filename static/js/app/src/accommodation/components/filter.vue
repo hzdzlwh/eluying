@@ -26,7 +26,7 @@
                 <li v-for="r in roomCheckType">
                 <label >
                     <span>{{r.name}}
-                    <!-- ({{roomTypeCount && getCheckTypeNum[r.id]}}) -->
+                    ({{roomTypeCount && getCheckTypeNum(r.id)}})
                     </span>
                     <input name="room" class="dd-checkbox" type="checkbox" :value='r.select' @change="setSelect(r)" />
                     </label>

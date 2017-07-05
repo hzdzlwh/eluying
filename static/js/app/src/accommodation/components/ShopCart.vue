@@ -5,7 +5,7 @@
             <div class="shopcart-room" v-for="room in selectedRooms">{{room}}</div>
         </div>
         <div class="shopcart-action">
-            <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button>
+        <!--     <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button> -->
             <button class="dd-btn shopcart-book" v-if="bookShow" @click="check('book')">预订</button>
             <button class="dd-btn shopcart-live" v-if="ingShow" @click="check('ing')">直接入住</button>
         </div>
@@ -80,9 +80,10 @@
                 let t = false;
                 let f = false;
                 const temp = {};
-                this.selectedEntries.map(e => {
+                const roomDate = this.getRoomsWithDate();
+                roomDate.map(e => {
                     // 直接抄的浇浇代码
-                    const date = new Date(e.date);
+                    const date = new Date(e.startDate);
                     if (
                         util.isSameDay(date, today)) {
                         t = true;
@@ -94,9 +95,11 @@
 
                     temp[e.id] = `${e.cName}-${e.rName}`;
                 });
-                this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
-                this.ingShow = (p && t && !f || p && t && f || !p && t && !f || !p && t && f) && !p;
-                this.bookShow = (p && !t && f || !p && t && !f || !p && t && f || !p && !t && f) && !p;
+                // this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
+                // this.ingShow = (p && t && !f || p && t && f || !p && t && !f || !p && t && f) && !p;
+                // this.bookShow = (p && !t && f || !p && t && !f || !p && t && f || !p && !t && f) && !p;
+                this.bookShow = (!f && !p) || !p;
+                this.ingShow = p || (!f && !p);
                 this.t = t;
                 this.p = p;
                 this.f = f;
@@ -125,20 +128,20 @@
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
                 const today = new Date();
-                const dialogConfig = {
-                    showTitle: false,
-                    okText: '清除'
-                };
-                const callback = () => {
-                    this.clear(type);
-                    bus.$emit('changeCheckState', type, this.getRoomsWithDate());
-                };
+                // const dialogConfig = {
+                //     showTitle: false,
+                //     okText: '清除'
+                // };
+                // const callback = () => {
+                //     this.clear(type);
+                //     bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+                // };
                 let flag = true;
                 const roomDate = this.getRoomsWithDate();
                 if (roomDate.length > 1) {
-                    if (type === 'ing' || type === 'finish') {
-                        this.selectedEntries.map(e => {
-                            if (new Date(e.date) > today) {
+                    if (type === 'ing') {
+                        roomDate.map(e => {
+                            if (new Date(e.startDate) > today) {
                                 modal.alert('未来的房间不可直接入住');
                                 flag = false;
                             }

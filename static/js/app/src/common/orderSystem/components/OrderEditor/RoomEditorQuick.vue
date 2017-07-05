@@ -37,7 +37,7 @@
                         </div>
                         <div class="room-count" style="display: inline-block; position: relative;">
                             数量
-                            <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined || item.checkRoomType === 1'>可预订数 {{item.canReserveCount}}</span>
+                            <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined && item.checkRoomType !== 1'>可预订数 {{item.canReserveCount}}</span>
                         </div>
                         <div class="room-type" v-if='checkState === "quick"'>
                             入住类型：

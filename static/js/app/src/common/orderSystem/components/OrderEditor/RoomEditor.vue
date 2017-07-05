@@ -629,7 +629,8 @@ export default {
                     room.endDate.setHours(12);
                     room.endDate.setMinutes(0);
                     if (this.checkState === 'ing') {
-                        room.startDate = new Date();
+                        room.startDate.setHours(new Date().getHours());
+                        room.startDate.setMinutes(new Date().getMinutes());
                     }
                     const r = {
                         categoryType: room.categoryType,
@@ -760,7 +761,8 @@ export default {
                     };
                 } else if (this.checkState === 'ing') {
                     return (date) => {
-                        return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() && date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        // return date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() && date.valueOf() !== (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        return date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
                 } else if (this.checkState === 'checkIn') {
                     // return date => false;
