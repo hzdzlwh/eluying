@@ -10,7 +10,7 @@
                     <div class="roomModals-body">
                         <div class="content-item">
                             <p class="content-item-title"><span>房间信息</span></p>
-                            <div v-for="room in roomBusinessInfo.roomOrderInfoList">
+                            <div v-for="(room, index) in roomBusinessInfo.roomOrderInfoList">
                                 <div class="room-info">
                                     <div class="room-name">
                                         <span class="room-select-icon" :class="room.selected ? 'selected-icon' : 'notSelect-icon'" @click="toggleRoomSelectedState(room)">
@@ -24,11 +24,21 @@
                                         <span class="startDate">{{room.checkInTime}}</span>
                                         <span>~</span>
                                         <span class="endDate">{{room.checkOutTime}}</span>
-                                        <label class="label-text">{{`共${room.night}晚`}}</label>
+                                        <label class="label-text" v-if="room.checkType === 1">{{`共${hourLength[index].hour}小时${hourLength[index].minute}分钟`}}</label>
+                                        <label class="label-text" v-else>{{`共${room.night}晚`}}</label>
+                                        <div v-if="room.checkType === 1">
+                                            <label>起步价格：</label>
+                                            <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
+                                            <label>收费标准：</label>
+                                            <span>￥{{`${room.hourRoomSetting.unitPrice}/1小时`}}</span>
+                                        </div>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
                                         <label class="label-text">订单金额</label>
                                         <span>{{`¥${room.totalPrice}`}}</span>
+                                        <div>
+                                            <label>实际房费￥</label><input type="text">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -171,6 +181,16 @@ export default {
                     }
                 );
                 return sum;
+            },
+            hourLength() {
+                let res = [];
+                this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
+                    res.push({ 
+                        hour : Math.floor((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())/3600000),
+                        minute: Math.floor(((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())%3600000)/60000)
+                    }); 
+                });
+                return res;
             }
         },
         watch: {
