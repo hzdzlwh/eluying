@@ -36,7 +36,7 @@
                                         <img @click="deleteOpenHours(room, index)" style="cursor: pointer;margin-left: 16px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAS1BMVEUAAACbm5uampqampqampqbm5uhoaGampqbm5uampqbm5ucnJyZmZmampqampqZmZmampqampqbm5uZmZmbm5uampqhoaGampqZmZltaZz8AAAAGHRSTlMAa6uhi3Ubl4SlYyXx0JiAW0tJQT41E+/1WhRoAAAAWklEQVQY08XI2RGAIBAE0V4PVg5vUPKPVJQqUvB99QyfGHK+Y+1VVZfgjHFhKbkiU7FT7G8JXDR1WMchbBty4CzQCWPPMNCPSPfr4U9S4vT1UGsaq4CfczN7HnrMBOywZ/dgAAAAAElFTkSuQmCC" alt="">
                                     </div>
                                 </div>
-                                <span @click="addOpenHours(room)" style="cursor: pointer;color: #178ce6">新增时间段</span>
+                                <span v-if="room.openHours && room.openHours.length < 5" @click="addOpenHours(room)" style="cursor: pointer;color: #178ce6">新增时间段</span>
                             </div>
                         </div>
                         <div style="padding-left: 64px">
