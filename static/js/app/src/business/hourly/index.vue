@@ -17,15 +17,15 @@
                     </div>
                     <div style="padding: 16px 20px" v-if="!room.settingId || room.edit">
                         <div class="line">
-                            <span class="slabel">起步时长<span class="msg" v-if="msg.startDuration">{{msg.startDuration}}</span></span><input type="text" class="dd-input" v-model="room.startDuration">
-                            <span class="slabel" style="margin-left: 32px">起步价格<span class="msg" v-if="msg.startPrice">{{msg.startPrice}}</span></span>￥<input type="text" class="dd-input" v-model="room.startPrice">
+                            <span class="slabel">起步时长<span class="msg" v-if="msg.startDuration">{{msg.startDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.startDuration" @input="handleInput(1, $event)">
+                            <span class="slabel" style="margin-left: 32px">起步价格<span class="msg" v-if="msg.startPrice">{{msg.startPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lazy="room.startPrice">
                         </div>
                         <div class="line">
-                            <span class="slabel">单位时长<span class="msg" v-if="msg.unitDuration">{{msg.unitDuration}}</span></span><input type="text" class="dd-input" v-model="room.unitDuration">
-                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input type="text" class="dd-input" v-model="room.unitPrice">
+                            <span class="slabel">单位时长<span class="msg" v-if="msg.unitDuration">{{msg.unitDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.unitDuration" @input="handleInput(1, $event)">
+                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lavy="room.unitPrice">
                         </div>
                         <div class="line">
-                            <span class="slabel">最大时长<span class="msg" v-if="msg.maxDuration">{{msg.maxDuration}}</span></span><input type="text" class="dd-input" v-model="room.maxDuration">
+                            <span class="slabel">最大时长<span class="msg" v-if="msg.maxDuration">{{msg.maxDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.maxDuration" @input="handleInput(1, $event)">
                         </div>
                         <div class="line" style="display: flex">
                             <span class="slabel">开放时段</span>
@@ -197,6 +197,12 @@
             },
             edit(room) {
                 this.$set(room, 'edit', true);
+            },
+            handleInput(length, ev) {
+                const input = ev.target;
+                if (input.value.split('.')[1] && input.value.split('.')[1].length > length) {
+                    input.value = input.value.slice(0, -1);
+                }
             }
         },
         components: {
