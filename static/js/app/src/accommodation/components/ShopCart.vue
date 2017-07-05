@@ -169,7 +169,6 @@
                 //         return false;
                 //     }
                 // }
-
             },
             clear(type) {
                 const today = new Date();
