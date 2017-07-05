@@ -20,10 +20,10 @@
                                         <span class="state-icon blue">已入住</span>
                                     </div>
                                     <div class="room-date">
-                                        <label class="label-text">入住</label>
-                                        <span class="startDate">{{room.checkInDate.slice(5)}}</span>
+                                        <label class="label-text">{{room.checkTypeStr}}</label>
+                                        <span class="startDate">{{room.checkInTime}}</span>
                                         <span>~</span>
-                                        <span class="endDate">{{room.checkOutDate.slice(5)}}</span>
+                                        <span class="endDate">{{room.checkOutTime}}</span>
                                         <label class="label-text">{{`共${room.night}晚`}}</label>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
@@ -236,7 +236,7 @@ export default {
                 }, 500);
             },
             changeTotalFeefn() {
-                this.tadayFeeType = undefined;
+                // this.tadayFeeType = undefined;
                 // const subOrderIds = [];
                 this.subOrderIds = [];
                 if (!this.backroomBusinessInfo) {
