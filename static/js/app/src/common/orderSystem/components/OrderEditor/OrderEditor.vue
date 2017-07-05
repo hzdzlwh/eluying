@@ -1251,7 +1251,7 @@ export default {
             };
             const str = util.dateFormat(new Date());
             const arr = str.split('-');
-            const stateChange = false;
+            let stateChange = false;
             rooms.forEach(el => {
             if(new Date(el.endDate) > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
                     this.checkState = 'ing';
