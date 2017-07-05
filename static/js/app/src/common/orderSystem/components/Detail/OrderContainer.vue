@@ -197,7 +197,7 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
-                                    <div class="dd-btn dd-btn-primary order-btn" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder && getRoomsState.transform"
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder && getRoomsState.transform" @click='editOrder("transform")'
                                         >
                                         转正常入住
                                     </div>
@@ -1312,6 +1312,9 @@
                 // 这里有个顺序问题，所以这样写了
                 if (type === 'auto') {
                     this.order.timeRoomAuto = true;
+                }
+                if (type === 'transform') {
+                    this.order.timeRoomTransform = true;
                 }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
                 

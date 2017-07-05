@@ -9,9 +9,9 @@
                     <span class="checkType">{{getcheckType(item.checkType)}}</span>
                 </div>
                 <div class="glyph-detail-time">
-                    <div class="start">{{item.startDate.slice(2,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '开始': '到达' }}</span></div>
-                    <div class="end">{{item.endDate.slice(2,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '结束': '离开' }}</span></div>
-                    <div class="glyph-label" v-if='!(item.type === 1 || item.type === 2 || item.type === 3)'>共<span>{{item.nights}}</span>晚</div>
+                    <div class="start">{{item.startDate.slice(5,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '开始': '到达' }}</span></div>
+                    <div class="end">{{item.endDate.slice(5,16)}}<span class="glyph-label">&nbsp;{{(item.type === 1 || item.type === 2 || item.type === 3) ? '结束': '离开' }}</span></div>
+                    <div class="glyph-label" v-if='!(item.type === 1 || item.type === 2 || item.type === 3)'>共<span>{{item.checkType === 1 ? getHAndMs(item.nights) : item.nights + '晚'}}</span></div>
                     <div class="glyph-label glyph-status" :style='{"background-color" : colorList[item.type]}' :date-type='item.type'>{{nameList[item.type]}}</div>
                 </div>
                 <div class="remark" v-if='!(item.type === 1 || item.type === 2 || item.type === 3)'>
@@ -76,6 +76,7 @@ import {
 import {
     checkType
 } from '../../common/orderSystem/roomCheckType.js';
+import { getHAndMs } from '../../common/util.js';
 export default {
     props: {
         date: {
@@ -105,6 +106,7 @@ export default {
 
     },
     methods: {
+        getHAndMs,
         getcheckType(type) {
             if (type === 1) {
                 return '钟点房';

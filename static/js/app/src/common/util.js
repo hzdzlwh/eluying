@@ -66,6 +66,11 @@ var util = {
         s = s < 10 ? '0' + s : s;
         return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
     },
+    getHAndMs(val) {
+        const h = parseInt(val);
+        const m = val - h;
+        return `${h}小时${m * 60}分钟`;
+    },
     timeFormat: function(dateArg) {
         let date = new Date(dateArg);
         let m = date.getMonth() + 1;

@@ -70,7 +70,7 @@
                                 </span>
                                 <label class="label-text">到达</label>
                                 <div class="enterDate">
-                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index)' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index,"startDate")' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto || order.timeRoomTransform' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
                                 </div>
                                 <span>~</span>
@@ -114,9 +114,9 @@
                         </div>
                         <span v-if="item.state === 1" class="delete-icon-like"></span>
                         <span class="discount-info">
-                            <span v-if="item.showDiscount && !item.priceModified">
-                                <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                        <span class="discount-num" v-if="item.showDiscount">
+                            <span >
+                                <span v-if="(item.showDiscount && !item.priceModified) || (item.checkType === 2 || item.checkType === 3)">原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                        <span class="discount-num" v-if="item.showDiscount && !item.priceModified">
                                     {{item.showDiscount}}
                                 </span>
                         </span>
@@ -572,6 +572,7 @@ export default {
                 if (order.roomInfo) {
                     const roomInfo = order.roomInfo;
                     const RoomEndDate = new Date(roomInfo.checkOutDate);
+                    const RoomStartDate = new Date(roomInfo.checkInDate);
                     const room = {
                         categoryType: roomInfo.subTypeId,
                         roomType: roomInfo.roomId || 0,
@@ -581,7 +582,7 @@ export default {
                         room: {
                             roomId: roomInfo.roomId || 0,
                             startDate: this.checkState === 'checkIn' ? new Date() : new Date(roomInfo.checkInDate),
-                            endDate: order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : new Date(roomInfo.checkOutDate)
+                            endDate: order.timeRoomTransform ? new Date(RoomStartDate.getFullYear(), RoomStartDate.getMonth(), RoomStartDate.getDate() + 1, 12, 0, 0) : (order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : new Date(roomInfo.checkOutDate))
                         },
                         idCardList: order.idCardsList,
                         datePriceList: order.datePriceList.map(dat => {
@@ -604,7 +605,7 @@ export default {
                         showDiscount: roomInfo.showDiscount,
                         moreDiscount: getMoreDiscount(order),
                         extraItems: [...order.extraItems],
-                        checkType: order.timeRoomAuto ? 0 : order.checkType,
+                        checkType: order.timeRoomTransform ? 0 : (order.timeRoomAuto ? 0 : order.checkType),
                         checkTypes: [...checkType],
                         isCheckIn: this.checkState === 'checkIn',
                         categories: this.categories
@@ -739,7 +740,9 @@ export default {
                         startDate: util.dateFormatLong(item.room.startDate)
                     })
                     .then(res => {
-                        item.categories = res.data.list;
+                        if (this.checkState !== 'finish') {
+                            item.categories = res.data.list;
+                        }
                     });
                 }
                 this.getRoomsList(item);
@@ -867,6 +870,9 @@ export default {
                         return false;
                     }
                 }
+                // if (type === 'startDate' && room.checkRoomType === 1) {
+                //     room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * room.timeAmount);
+                // }
                 // 最多400天
                 if (duration > 400) {
                     const currentTime = +new Date();
@@ -969,7 +975,7 @@ export default {
                             currentRoom.priceModified = false;
                             currentRoom.originPrice = item.originTotalFee;
                             currentRoom.timestamp = res.data.timestamp;
-                            if (this.checkState !== 'book') {
+                            if (this.checkState !== 'book' && this.checkState !== 'finish') {
                             if (item.hasHourRoom) {
                                 if (!currentRoom.checkTypes.some(el => {
                                         return el.id === 1;

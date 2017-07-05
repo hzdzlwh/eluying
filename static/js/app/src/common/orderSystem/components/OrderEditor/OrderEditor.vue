@@ -980,7 +980,8 @@ export default {
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: room.moreDiscount === 0 || !room.priceModified,
                     extraItems: room.extraItems,
-                    isCheckIn: room.isCheckIn
+                    isCheckIn: room.isCheckIn,
+                    checkType: room.checkType
                 };
             });
         },
@@ -1250,15 +1251,11 @@ export default {
             };
             const str = util.dateFormat(new Date());
             const arr = str.split('-');
-            rooms.forEach(function(el) {
-            if(el.endDate > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
+            rooms.forEach(el => {
+            if(new Date(el.endDate) > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
                     this.checkState = 'ing';
                 }
             })
-            const roomsBak = rooms.slice(0);
-            roomsBak.sort(function(a, b) {
-                return new Date(b.endDate) - new Date(a.endDate);
-            });
             if (this.checkState === 'ing') {
                 params.type = 0;
             } else if (this.checkState === 'finish') {
@@ -1266,8 +1263,8 @@ export default {
             } else if (this.checkState === 'book') {
                 params.type = 2;
             }
-
-            http.post('/room/confirmOrder', params)
+            const callback = function() {
+                http.post('/room/confirmOrder', params)
                 .then(res => {
                     this.hideModal();
                     const business = {};
@@ -1303,6 +1300,16 @@ export default {
                         });
                     }
                 });
+            }.bind(this);
+            const outRome = this.checkoutTimeOut(rooms);
+            if (outRome.length) {
+                const name = outRome[0].roomeName;
+                const roomeType = outRome[0].checktypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+            } else {
+                callback()
+            }
+            
         },
         submitInfo() {
             // 获取 shopGoodsItems enterItems rooms

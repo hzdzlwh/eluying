@@ -26,7 +26,7 @@
                                 <div class="taday-status-item-tag taday-status-item-dirty" v-if='it.isDirty'>脏房</div>
                                 <div class="taday-status-item-tag taday-status-item-arrival" v-if='it.isArrival'>预抵</div>
                             </div>
-                            <div v-if='it.checkType !== null' class="taday-status-roomCheckType">{{it.checkType === 1 ? '钟点房' : checkType[it.checkType].name}}</div>
+                            <div v-if='it.checkType !== null' class="taday-status-roomCheckType">{{getCheckType(it.checkType)}}</div>
                         </div>
                     </div>
                 </div>
@@ -277,7 +277,7 @@ import util from 'util';
 import http from '../../common/http';
 import bus from '../../common/eventBus';
 import type from '../../common/orderSystem/store/types';
-import { checkType } from '../../common/orderSystem/roomCheckType.js';
+import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
 import {
     colorList
 } from '../colorList';
@@ -302,7 +302,7 @@ export default {
     },
     data() {
         return {
-            checkType,
+            checkType: roomCheckType,
             scrollTicking: false,
             lastScrollTop: 0,
             lastScrollLeft: 0,
@@ -377,6 +377,9 @@ export default {
                     this.openForm(0, 0);
                     break;
             }
+        },
+        getCheckType(val) {
+            return this.checkType.find(el => el.id === val).name;
         },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);

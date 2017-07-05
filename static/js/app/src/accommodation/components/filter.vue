@@ -301,7 +301,7 @@ export default {
                 tags: JSON.stringify(tagList),
                 origins: JSON.stringify(customList),
                 zones: JSON.stringify(areaList),
-                checkTypes: JSON.stringify(roomCheckType)
+                checkTypes: JSON.stringify(checkTypes)
             };
         }
     },

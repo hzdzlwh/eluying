@@ -91,7 +91,7 @@
                             </span>
                             <label class="label-text">到达</label>
                             <div class="enterDate">
-                                <DatePicker v-model="item.room.startDate" :clearable='false' @change="handleRoomChange(item, index)" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                <DatePicker v-model="item.room.startDate" :clearable='false' @change="handleRoomChange(item, index,'startDate')" :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                 </DatePicker>
                                 <!--  <dd-datepicker placeholder="选择时间" v-model="item.room.startDate"
                                                @input="handleRoomChange(item, index)"
@@ -118,9 +118,9 @@
                                 <input class="dd-input fee-input" v-model.number="item.price" @input="changeRoomFee(item)" />
                             </p>
                             <span class="discount-info">
-                        <span v-if="item.showDiscount && !item.priceModified">
-                            <span>原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
-                            <span class="discount-num" v-if="item.showDiscount">
+                        <span >
+                            <span v-if="(item.showDiscount && !item.priceModified) || (item.checkRoomType === 2 || item.checkRoomType === 3)">原价<span class="origin-price">¥{{ item.originPrice }}</span></span>
+                            <span class="discount-num" v-if="item.showDiscount && !item.priceModified">
                                 {{item.showDiscount}}
                             </span>
                             </span>
@@ -669,6 +669,9 @@ export default {
                         return false;
                     }
                 }
+                // if (type === 'startDate' && room.checkRoomType === 1) {
+                //     room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * room.timeAmount);
+                // }
                 // 最多400天
                 // if (duration > 400) {
                 //     const currentTime = +new Date();
