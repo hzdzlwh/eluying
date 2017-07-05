@@ -1251,9 +1251,11 @@ export default {
             };
             const str = util.dateFormat(new Date());
             const arr = str.split('-');
+            const stateChange = false;
             rooms.forEach(el => {
             if(new Date(el.endDate) > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
                     this.checkState = 'ing';
+                    stateChange = true;
                 }
             })
             if (this.checkState === 'ing') {
@@ -1302,12 +1304,12 @@ export default {
                 });
             }.bind(this);
             const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length) {
+            if (outRome.length && this.checkState !== 'finish' && stateChange) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
             } else {
-                callback()
+                callback();
             }
             
         },
