@@ -61,7 +61,7 @@
 </style>
 <script>
     import util from '../../common/util';
-    // import modal from '../../common/modal';
+    import modal from '../../common/modal';
     import bus from '../../common/eventBus';
     export default{
         props: {
@@ -124,6 +124,7 @@
         methods: {
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
+                const today = new Date();
                 const dialogConfig = {
                     showTitle: false,
                     okText: '清除'
@@ -132,7 +133,23 @@
                     this.clear(type);
                     bus.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
-                if (type === 'ing') {}
+                let flag = true;
+                const roomDate = this.getRoomsWithDate();
+                if (roomDate.length > 1) {
+                    if (type === 'ing' || type === 'finish') {
+                        this.selectedEntries.map(e => {
+                            if (new Date(e.date) > today) {
+                                modal.alert('未来的房间不可直接入住');
+                                flag = false;
+                            }
+                        });
+                    }
+                }
+                if (flag) {
+                    bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+                } else {
+                    return false;
+                }
                 // if (type === 'finish') {
                 //     if (this.t || this.f) {
                 //         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
@@ -152,7 +169,7 @@
                 //         return false;
                 //     }
                 // }
-                bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+
             },
             clear(type) {
                 const today = new Date();
