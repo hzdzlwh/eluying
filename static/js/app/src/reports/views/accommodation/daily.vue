@@ -34,11 +34,12 @@
                 <tr>
                     <td>入住类型</td>
                 </tr>
-                <tr v-for="r in checkTypeDayStat">
+                <tr v-for="r in checkTypeDayStat" :class="{b: r.name === '合计'}">
                     <td>{{r.name}}</td>
                 </tr>
-                <tr></tr>
-                <tr v-for="r in roomTypeDayStat">
+                <tr><td></td></tr>
+                <tr><td>房间类型</td></tr>
+                <tr v-for="r in roomTypeDayStat" :class="{b: r.name === '合计'}">
                     <td>{{r.name}}</td>
                 </tr>
                 </tbody>
@@ -53,7 +54,7 @@
                     </colgroup>
                     <thead>
                     <tr>
-                        <th colspan="4" style="text-align: center">本日</th>
+                        <th colspan="4">本日</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,14 +64,25 @@
                         <td>平均房价</td>
                         <td>出租率</td>
                     </tr>
-                    <tr v-for="r in checkTypeDayStat">
+                    <tr v-for="r in checkTypeDayStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
                         <td>{{r.rate}}</td>
                     </tr>
-                    <tr></tr>
-                    <tr v-for="r in roomTypeDayStat">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>间夜量</td>
+                        <td>房费</td>
+                        <td>平均房价</td>
+                        <td>出租率</td>
+                    </tr>
+                    <tr v-for="r in roomTypeDayStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
@@ -89,7 +101,7 @@
                     </colgroup>
                     <thead>
                     <tr>
-                        <th colspan="4" style="text-align: center">本月</th>
+                        <th colspan="4">本月</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -99,14 +111,25 @@
                         <td>平均房价</td>
                         <td>出租率</td>
                     </tr>
-                    <tr v-for="r in checkTypeMonStat">
+                    <tr v-for="r in checkTypeMonStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
                         <td>{{r.rate}}</td>
                     </tr>
-                    <tr></tr>
-                    <tr v-for="r in roomTypeMonStat">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>间夜量</td>
+                        <td>房费</td>
+                        <td>平均房价</td>
+                        <td>出租率</td>
+                    </tr>
+                    <tr v-for="r in roomTypeMonStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
@@ -134,7 +157,7 @@
         }
     }
     .c, .r {
-        td {
+        td, th {
             text-align: center;
         }
     }
@@ -165,6 +188,9 @@
     }
     .ic:hover .i {
         display: block;
+    }
+    .b {
+        font-weight: bold;
     }
 </style>
 <script>
