@@ -17,7 +17,7 @@
         </div>
         <!-- roomType -->
         <div class="calendar-room-filter-box" @click="roomCheckTypeVisible = !roomCheckTypeVisible">
-            <div class="calendar-icon calendar-icon-tag"></div>
+            <div class="calendar-icon calendar-icon-roomCheckType"></div>
             <span style="cursor: pointer">入住类型</span>
             <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomCheckTypeVisible}' class='calendar-room-filter-toggle'>
         </div>
@@ -170,7 +170,9 @@
 .calendar-icon-custom {
     background-image: url('/static/image/icon/ico5.png')
 }
-
+.calendar-icon-roomCheckType{
+    background-image: url('/static/image/icon/ico12.png')
+}
 .calendar-room-filter-toggle {
     float: right;
     margin-top: 7px;
