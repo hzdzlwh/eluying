@@ -82,11 +82,12 @@
 #roomsOrderTable .dd-table tbody tr {
     cursor: pointer;
 }
+.fontRed{
+  color:red;
+}
 </style>
 <style lang="scss" scoped>
-.fontRed{
-  color:red
-}
+
 .foot small{
   color:#999;
 
@@ -340,14 +341,14 @@ default {
                    {
                        title: '入住时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
-                           return <div class ={room.startTimeOverFlag ? '' : 'fontRed'}>{room.startDate}</div>;
+                           return <div class ={room.startTimeOverFlag ? 'fontRed' : '' }>{room.startDate}</div>;
                        }),
                        width: 120
                    },
                    {
                        title: '退房时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
-                           return <div class ={room.endTimeOverFlag ? '' : 'fontRed'}>{room.endDate}</div>;
+                           return <div class ={room.endTimeOverFlag ? 'fontRed' : ''}>{room.endDate}</div>;
                        }),
                        width: 120
                    },
