@@ -134,7 +134,7 @@
                         <span class="calendar-glyph-channel">{{g.channelName}}</span>
                         
                     </div>
-                    <div class="calendar-glyph-type"><span>{{(g && g.checkType !== undefined && g.checkType === 1)   ? '钟点房' : checkType[g.checkType]}}</span>
+                    <div class="calendar-glyph-type"><span>{{ getCheckType(g.checkType)}}</span>
                         <img class="" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
                         <img class="" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
                         <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2"></div>
@@ -662,7 +662,7 @@
     import modal from '../../common/modal';
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
-    import { checkType } from '../../common/orderSystem/roomCheckType.js';
+    import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
 
     export default{
         props: {
@@ -677,7 +677,7 @@
         },
         data() {
             return {
-                checkType,
+                checkType: roomCheckType,
                 scrollTicking: false,
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
@@ -814,6 +814,11 @@
             }
         },
         methods: {
+            getCheckType(type) {
+                return this.checkType.find(function(el) {
+                    return el.id === type;
+                }).name;
+            },
             handleStatusScroll(ev) {
                 if (!this.scrollTicking) {
                     this.$refs.calendarLeftHeader.scrollTop = ev.target.scrollTop;

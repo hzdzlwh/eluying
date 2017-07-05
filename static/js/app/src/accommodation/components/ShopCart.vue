@@ -132,6 +132,7 @@
                     this.clear(type);
                     bus.$emit('changeCheckState', type, this.getRoomsWithDate());
                 };
+                if (type === 'ing') {}
                 // if (type === 'finish') {
                 //     if (this.t || this.f) {
                 //         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
