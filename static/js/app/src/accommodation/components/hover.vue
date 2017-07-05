@@ -74,7 +74,7 @@ import {
     nameList
 } from '../colorList';
 import {
-    checkType
+    roomCheckType
 } from '../../common/orderSystem/roomCheckType.js';
 import { getHAndMs } from '../../common/util.js';
 export default {
@@ -92,7 +92,7 @@ export default {
         return {
             colorList,
             nameList,
-            checkType
+            checkType: roomCheckType
         };
     },
     computed: {
@@ -108,12 +108,9 @@ export default {
     methods: {
         getHAndMs,
         getcheckType(type) {
-            if (type === 1) {
-                return '钟点房';
-            }
-            return this.checkType.filter(function(el) {
+            return this.checkType.find(function(el) {
                 return el.id === type;
-            })[0].name;
+            }).name;
         },
         tadayClick(it) {
             const date = {

@@ -19,7 +19,7 @@
         <div class="calendar-room-filter-box" @click="roomCheckTypeVisible = !roomCheckTypeVisible">
             <div class="calendar-icon calendar-icon-tag"></div>
             <span style="cursor: pointer">入住类型</span>
-            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: tagVisible}' class='calendar-room-filter-toggle'>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomCheckTypeVisible}' class='calendar-room-filter-toggle'>
         </div>
         <div v-show="roomCheckTypeVisible" class="calendar-room-filter-select">
             <ul>

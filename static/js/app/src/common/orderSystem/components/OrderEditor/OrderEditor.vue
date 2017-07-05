@@ -112,7 +112,7 @@
                         </div>
                         <div class="dd-btn dd-btn-primary" @click="submitInfo" v-if='this.checkState !== "team" && this.checkState !== "quick"'>{{titleAndBtn.btn}}</div>
                         <div v-else>
-                            <div class="dd-btn dd-btn-primary" @click="handleQuickTeamBusiness('auto')">预订并自动排房</div>
+                            <div class="dd-btn dd-btn-primary" @click="handleQuickTeamBusiness('auto')" v-if='ExtInDate.roomCheckType !== 1'>预订并自动排房</div>
                             <div class="dd-btn dd-btn-primary" @click="handleQuickTeamBusiness">完成预订</div>
                         </div>
                     </div>
