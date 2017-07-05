@@ -147,7 +147,7 @@
                     this.msg.startDuration = '↑请输入0.1-24之间的数字';
                     return false;
                 }
-                if (room.startPrice === '' || Number.isNaN(Number(room.startPrice)) || (room.startPrice < 0.01 && room.startPrice > 20000000) || (room.startPrice.split('.')[1] && room.startPrice.split('.')[1].length > 2)) {
+                if (room.startPrice === '' || Number.isNaN(Number(room.startPrice)) || (room.startPrice < 0.01 && room.startPrice > 20000000) || (room.startPrice * 100 % 1 !== 0)) {
                     this.msg.startPrice = '↑请输入0.01-20,000,000之间的数字';
                     return false;
                 }
@@ -155,7 +155,7 @@
                     this.msg.unitDuration = '↑请输入0.1-24之间的数字';
                     return false;
                 }
-                if (room.unitPrice === '' || Number.isNaN(Number(room.unitPrice)) || (room.unitPrice < 0.01 && room.unitPrice > 20000000) || (room.unitPrice.split('.')[1] && room.unitPrice.split('.')[1].length > 2)) {
+                if (room.unitPrice === '' || Number.isNaN(Number(room.unitPrice)) || (room.unitPrice < 0.01 && room.unitPrice > 20000000) || (room.unitPrice * 100 % 1 !== 0)) {
                     this.msg.unitPrice = '↑请输入0.01-20,000,000之间的数字';
                     return false;
                 }
