@@ -37,7 +37,7 @@
                                                :label="category.name">
                                     </dd-option>
                                 </dd-select>
-                                <div class="room-category">
+                                <div class="room-category" >
                                     <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)">
                                         <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
@@ -749,7 +749,9 @@ export default {
                 }
                 this.getRoomsList(item);
                 this.$nextTick(function() {
-                    item.roomType = 0;
+                    if (type !== 'roomType') {
+                        item.roomType = 0;
+                    }
                     this.handleRoomChange(item, index, type);
                 });
             },

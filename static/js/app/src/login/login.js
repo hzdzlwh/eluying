@@ -398,6 +398,8 @@ $(document).ready(function(){
                     }
                     auth.saveUserInfo(data.data);
                     localStorage.removeItem('maintenanceClosed');
+                    window.sessionStorage.setItem('clostTipsShow', false);
+                    // roomtips重新登录的重置
                 })
                 .catch(data => {
                     $("#loginModal .log .errorTips").html(data.msg);

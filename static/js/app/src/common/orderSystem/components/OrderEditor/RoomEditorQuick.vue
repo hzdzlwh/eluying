@@ -405,9 +405,9 @@ export default {
                                 this.modifyRooms(this.rooms, 'roomType');
                             }
                         })
-                    if (newValue.roomCheckType === 1) {
-                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1))
-                    }
+                    // if (newValue.roomCheckType === 1) {
+                    //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1))
+                    // }
 
                 },
                 deep: true
@@ -572,9 +572,9 @@ export default {
                     return;
                 }
                 if (type === 'roomType') {
-                    if (item.checkRoomType === 1) {
-                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
-                    }
+                    // if (item.checkRoomType === 1) {
+                    //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
+                    // }
                     http.get('/room/getRoomsList', {
                         checkType: item.checkRoomType,
                         endDate: util.dateFormatLong(item.room.endDate),
