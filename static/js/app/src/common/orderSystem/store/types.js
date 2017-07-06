@@ -17,5 +17,8 @@ export default {
     'GET_ENTER_ORDER_DETAIL': 'getEnterOrderDetail',
     'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail',
     'GET_ORDER_DETAIL': 'getOrderDetail',
-    'SET_ROOM_EXITINFO': 'setRoomExitInfo'
+    'SET_ROOM_EXITINFO': 'setRoomExitInfo',
+    'LOAD_ROOMTIP': 'loadroomtip',
+    'SET_ROOMTIP': 'setroomtip',
+    'SET_TIPSSHOW': 'settipsshow'
 };

@@ -9,5 +9,5 @@ export default {
     'SET_SHOP_LIST': 'setShopList',
     'LOAD_SHOP_LIST': 'loadShopList',
     'SET_ENTER_LIST': 'setEnterList',
-    'LOAD_ENTER_LIST': 'loadEnterList'
-}
+    'LOAD_ENTER_LIST': 'loadEnterList',
+};

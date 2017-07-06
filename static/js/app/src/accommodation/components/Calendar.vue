@@ -1,5 +1,5 @@
 <template>
-    <div class="calendar">
+    <div class="calendar" :class='{haveRoomOutTip: this.$store.state.orderSystem.roomTipStatus.show}'>
         <div class="legend-box">
             <span class="room-legend">
                 <span class="room-legend-icon blue"></span>
@@ -209,6 +209,14 @@
     .calendar {
         height: 100%;
         width: 100%;
+    }
+    .haveRoomOutTip{
+        .calendar-picker, .calendar-header{
+            top:72px;
+        }
+        .calendar-body{
+            top:152px;
+        }
     }
     .legend-box {
         position: absolute;

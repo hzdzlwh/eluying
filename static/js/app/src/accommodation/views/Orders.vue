@@ -224,7 +224,7 @@ from 'dd-vue-component';
 import http from '../../common/http';
 import eventbus from '../../common/eventBus';
 import { checkTypeAll } from '../../common/orderSystem/roomCheckType';
-import { ORDER_STATE_LIST, ORDER_TYPE } from '../../ordersManage/constant';
+import { ORDER_STATE_LIST, ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant';
 export
 default {
        data() {
@@ -267,28 +267,24 @@ default {
                        name: '全部订单状态'
                    },
                    {
-                       id: 2,
+                       id: 0,
                        name: '已预订'
                    },
                    {
-                       id: 3,
+                       id: 1,
                        name: '已入住'
                    },
                    {
-                       id: 4,
-                       name: '已取消 '
-                   },
-                   {
-                       id: 5,
+                       id: 2,
                        name: '已退房'
                    },
                    {
-                       id: 6,
-                       name: '过期未入住'
+                       id: 3,
+                       name: '已取消 '
                    },
                    {
-                       id: 7,
-                       name: '过期未退房 '
+                       id: 6,
+                       name: '已撤销'
                    },
                    {
                        id: 8,

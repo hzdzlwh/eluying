@@ -1,5 +1,5 @@
 <template>
-    <div class="taday-calendar">
+    <div class="taday-calendar" :class='{haveRoomOutTip: this.$store.state.orderSystem.roomTipStatus.show}'>
         <div class="taday-calendar-picker">
             <dayOrderLeft>
                 <DateSelect slot="timePicker" :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
@@ -87,6 +87,14 @@
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.haveRoomOutTip{
+    .taday-calendar-picker, .taday-calendar-header{
+        top:72px;
+    }
+    .taday-calendar-body{
+        top:152px;
+    }
+}
 .datFixMenu{
     position:fixed;
     bottom:100px;
@@ -345,7 +353,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL]),
+        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL, type.LOAD_ROOMTIP]),
         hoverShow(e, it) {
             this.hoverEvent = e;
             it.hover = true;
@@ -383,6 +391,7 @@ export default {
         },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
+            // this[type.LOAD_ROOMTIP]();
         },
         closeDayForm() {
             this.dayOrderFormVisible = false;
