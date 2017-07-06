@@ -29,15 +29,15 @@
                                         <div v-if="room.checkType === 1">
                                             <label>起步价格：</label>
                                             <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
-                                            <label>收费标准：</label>
+                                            <label style="margin-left:20px;">收费标准：</label>
                                             <span>￥{{`${room.hourRoomSetting.unitPrice}/1小时`}}</span>
                                         </div>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
                                         <label class="label-text">订单金额</label>
                                         <span>{{`¥${room.totalPrice}`}}</span>
-                                        <div>
-                                            <label>实际房费￥</label><input type="text">
+                                        <div v-if="room.checkType === 1">
+                                            <label>实际房费￥</label><input type="text" v-model.number="room.roomHoursPrice" @input="changeHourRoomPrice(room)">
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +323,7 @@ export default {
             },
             checkOut() {
                 const rooms = [] 
-                this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
                      this.backroomBusinessInfo.roomOrderInfoList.map(item => {
                         if (room.selected && room.roomId === item.roomId) {
                             rooms.push({
@@ -380,7 +380,7 @@ export default {
                     business.functionType = 1;
                     const todayFeeMap = [];
                     this.roomBusinessInfo.roomOrderInfoList.map(
-                        room => {
+                        (room, index) => {
                             this.backroomBusinessInfo.roomOrderInfoList.map(
                                 item => {
                                     if (item.roomId === room.roomId && room.selected) {
@@ -407,6 +407,9 @@ export default {
                     // });
                     bus.$emit('changeBack', this.show);
                 }
+            },
+            changeHourRoomPrice(room) {
+                room.totalPrice = Number(room.roomHoursPrice) + room.extraPrice;
             }
         },
         components: {}
