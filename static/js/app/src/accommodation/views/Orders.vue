@@ -339,14 +339,14 @@ default {
                        })
                    },
                    {
-                       title: '入住时间',
+                       title: '到达时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
                            return <div class ={room.startTimeOverFlag ? 'fontRed' : '' }>{room.startDate}</div>;
                        }),
                        width: 120
                    },
                    {
-                       title: '退房时间',
+                       title: '离开时间',
                        render: (h, row) => row.subOrderList.map(function(room) {
                            return <div class ={room.endTimeOverFlag ? 'fontRed' : ''}>{room.endDate}</div>;
                        }),
@@ -358,7 +358,8 @@ default {
                    },
                    {
                        title: '手机号',
-                       dataIndex: 'customerPhone'
+                       dataIndex: 'customerPhone',
+                       width: 120
                    },
                    {
                        title: '客源渠道',
