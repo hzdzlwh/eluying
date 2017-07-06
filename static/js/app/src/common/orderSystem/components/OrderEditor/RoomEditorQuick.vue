@@ -28,7 +28,7 @@
                     <div class="shop-item-content">
                         <span class="useless-tip error" v-if="item.showTip && item.checkRoomType === 1">该钟点房不在开放时段</span>
                         <div style="display: flex;line-height: 24px;">
-                            房间
+                            房型&nbsp;&nbsp;
                             <span class="roomErrTip" v-if='item.checkRoomTypeErr && checkState === "team"'>该房间不能办理钟点房</span>
                             <dd-select v-model="item.categoryType" placeholder="请选择房型" @input="changeRoomType(item ,index,'room')">
                                 <dd-option v-for="category in item.categories" :value="category.typeId" :key="category.typeId" :label="category.name">
@@ -39,7 +39,7 @@
                             数量
                             <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined && item.checkRoomType !== 1'>可预订数 {{item.canReserveCount}}</span>
                         </div>
-                        <div class="room-type" v-if='checkState === "quick"'>
+                        <div class="room-type"  :style='{visibility: (checkState === "team" ? "hidden" : "visible")}'>
                             入住类型：
                             <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index,'roomType')">
                                 <dd-option v-for="check in item.checkType" :value="check.id" :key="check.id" :label="check.name">
