@@ -205,7 +205,7 @@
                                          @click="cancelSelectRooms">
                                         取消排房
                                     </div>
-                                    <div class="dd-btn dd-btn-primary order-btn" @click="editOrder('auto')"
+                                    <div class="dd-btn dd-btn-primary order-btn" @click="autoSelectRooms"
                                          v-if="order.autoSelectRoomsAble">
                                         自动排房
                                     </div>
