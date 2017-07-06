@@ -61,7 +61,7 @@
                 <div slot="show">
                     <ul>
                         <li><span>钟点房间夜量基数:</span><span style="margin-left:16px;">{{intervalBase}}</span></li>
-                        <li style="display:flex;align-items:center;"><span style="display:inline-block;width:116px;text-align:right">间夜量计算时刻:</span><span style="margin:0 16px;">{{intervalTime}}</span><span style="font-size:12px;color:#999999;line-height:18px;width:168px;text-align:center;">每跨过一个计算时刻算一个房晚(正常入住、自用房、免费房)</span></li>
+                        <!--<li style="display:flex;align-items:center;"><span style="display:inline-block;width:116px;text-align:right">间夜量计算时刻:</span><span style="margin:0 16px;">{{intervalTime}}</span><span style="font-size:12px;color:#999999;line-height:18px;width:168px;text-align:center;">每跨过一个计算时刻算一个房晚(正常入住、自用房、免费房)</span></li>-->
                     </ul>
                 </div>
                 <div slot="edit" style="padding-bottom: 20px;">
@@ -69,9 +69,9 @@
                         <li>
                             <span>钟点房间夜量基数:</span><input type="text" class="dd-input" style="width:56px;margin:0 10px 0 23px;" v-model="intervalBase"><span>请输入0.1-1之间的数字</span>
                         </li>
-                        <li style="display:flex;align-items:center;">
+                        <!--<li style="display:flex;align-items:center;">
                             <span style="display:inline-block;width:116px;text-align:right">间夜量计算时刻:</span><input type="text" class="dd-input" style="width:56px;margin: 0 10px 0 23px;" v-model="intervalTime"><span style="font-size:12px;color:#999999;line-height:18px;width:168px;text-align:center;">每跨过一个计算时刻算一个房晚(正常入住、自用房、免费房)</span>
-                        </li>
+                        </li>-->
                     </ul>
                     <btn style="padding-left:20px;" @save="saveIntervalNight" @cancel="intervalNightView = !intervalNightView"></btn>
                 </div>
@@ -161,7 +161,7 @@
                 })
             },
             saveSpecialHouse() {
-                http.get('/room/setAccountStatSetting', {
+                http.get('/room/setAccomStatSetting', {
                     freeStatEnable: this.freeHouse,
                     selfUseStatEnable: this.selfHouse
                 }).then((res) => {
@@ -169,8 +169,7 @@
                 });
             },
             saveIntervalNight() {
-                http.get('/room/setAccountStatSetting', {
-                    boundaryTime: this.intervalTime,
+                http.get('/room/setAccomStatSetting', {
                     selfUseStatEnable: this.intervalBase
                 }).then((res) => {
                     this.intervalNightView = !this.intervalNightView;
@@ -186,7 +185,7 @@
                 });
             },
             getAccountState() {
-                http.get('/room/getAccountStatSetting',{}).then((res) => {
+                http.get('/room/getAccomStatSetting',{}).then((res) => {
                     if (res.code === 1) {
                         this.freeHouse = res.data.freeStatEnable;
                         this.selfHouse = res.data.selfUseStatEnable;

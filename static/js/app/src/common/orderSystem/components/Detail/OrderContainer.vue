@@ -399,7 +399,7 @@
         }
         .room-info, .room-name, .room-user, .play-item, .food-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
         .room-user {
             margin-top: 12px;
