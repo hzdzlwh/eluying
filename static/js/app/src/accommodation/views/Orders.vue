@@ -372,7 +372,7 @@ default {
                    {
                        title: '订单状态',
                        render: (h, row) => row.subOrderList.map(function(room) {
-                           return <div> { ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
+                           return <div> { ORDER_STATE_LIST[ORDER_TYPE.ACCOMMODATION].find(function(el) {
                                return Number(el.id) === room.state;
                            }).name }
                             </div>;

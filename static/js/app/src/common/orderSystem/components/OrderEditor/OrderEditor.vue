@@ -1249,15 +1249,15 @@ export default {
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin()
             };
-            const str = util.dateFormat(new Date());
-            const arr = str.split('-');
-            let stateChange = false;
-            rooms.forEach(el => {
-            if(new Date(el.endDate) > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
-                    this.checkState = 'ing';
-                    stateChange = true;
-                }
-            })
+            // const str = util.dateFormat(new Date());
+            // const arr = str.split('-');
+            // let stateChange = false;
+            // rooms.forEach(el => {
+            // if(new Date(el.endDate) > new Date(arr[0], arr[1] - 1, arr[2] - 1)) {
+            //         this.checkState = 'ing';
+            //         stateChange = true;
+            //     }
+            // })
             if (this.checkState === 'ing') {
                 params.type = 0;
             } else if (this.checkState === 'finish') {
@@ -1276,16 +1276,6 @@ export default {
                     business.orderDetail = {...res.data
                     };
                     business.cashierType = this.checkState;
-                    // if (this.checkState === 'ing') {
-                    //     http.post('/order/modifyRoomOrder', params)
-                    //     .then(res => {
-                    //         this.hideModal();
-                    //         bus.$emit('refreshView');
-                    //         bus.$emit('onShowDetail', { ...this.order, orderId: getOrderId(this.order) });
-                    //     });
-                    //     bus.$emit('refreshView');
-                    //     bus.$emit('onShowDetail', { type: res.data.orderType, orderId: res.data.orderId });
-                    // }
                     if (this.checkState === 'ing') {
                         bus.$emit('refreshView');
                     }
@@ -1304,7 +1294,7 @@ export default {
                 });
             }.bind(this);
             const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length && this.checkState !== 'finish' && stateChange) {
+            if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
