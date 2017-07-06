@@ -93,8 +93,9 @@
                         p = true;
                     }
 
-                    temp[e.id] = `${e.cName}-${e.rName}`;
+                    // temp[e.id] = `${e.cName}-${e.rName}`;
                 });
+                this.selectedEntries.map(e => temp[e.id] = `${e.cName}-${e.rName}`);
                 // this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
                 // this.ingShow = (p && t && !f || p && t && f || !p && t && !f || !p && t && f) && !p;
                 // this.bookShow = (p && !t && f || !p && t && !f || !p && t && f || !p && !t && f) && !p;
