@@ -748,7 +748,9 @@ export default {
                 }
                 this.getRoomsList(item);
                 this.$nextTick(function() {
-                    item.roomType = 0;
+                    if (type !== 'roomType') {
+                        item.roomType = 0;
+                    }
                     this.handleRoomChange(item, index, type);
                 });
             },
