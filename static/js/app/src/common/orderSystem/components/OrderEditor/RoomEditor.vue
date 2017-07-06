@@ -563,7 +563,8 @@ export default {
                             moreDiscount: getMoreDiscount(item),
                             extraItems: [...item.extraItems],
                             checkType: item.checkType,
-                            isCheckIn: this.checkState === 'checkIn'
+                            isCheckIn: this.checkState === 'checkIn',
+                            checkTypes: [...checkType],
                         };
                     });
                 }
