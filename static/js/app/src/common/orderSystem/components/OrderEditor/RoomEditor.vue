@@ -70,7 +70,7 @@
                                 </span>
                                 <label class="label-text">到达</label>
                                 <div class="enterDate">
-                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index,"startDate")' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto || order.timeRoomTransform' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index,"startDate")' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto || order.timeRoomTransform || item.state === 1' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
                                 </div>
                                 <span>~</span>
