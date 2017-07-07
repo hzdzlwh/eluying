@@ -143,7 +143,7 @@ export default {
         //     }
         // },
     methods: {
-        ...mapActions([types.LOAD_ORDER_DETAIL]),
+        ...mapActions([types.GET_ORDER_DETAIL]),
         getCheckType(val) {
             const name = this.checkTypes.filter(function(el) {
                 return el.id === val;
@@ -169,8 +169,9 @@ export default {
             });
         },
         checkIn(item) {
-            this[types.LOAD_ORDER_DETAIL]({
-                orderId: item.orderId
+            this[types.GET_ORDER_DETAIL]({
+                orderId: item.orderType === -1 ? item.orderId : item.roomOrderId,
+                orderType: item.orderType
             }).then(res => {
                 bus.$emit('editOrder', 'checkIn', this.order, 'hidePreStep');
             });

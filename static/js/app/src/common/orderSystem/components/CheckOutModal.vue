@@ -9,8 +9,8 @@
                     </div>
                     <div class="roomModals-body">
                         <div class="content-item">
-                            <p class="content-item-title"><span>房间信息</span></p>
-                            <div v-for="(room, index) in roomBusinessInfo.roomOrderInfoList">
+                            <p class="content-item-title" style="margin-bottom:0;"><span>房间信息</span></p>
+                            <div v-for="(room, index) in roomBusinessInfo.roomOrderInfoList" class="add-bottom">
                                 <div class="room-info">
                                     <div class="room-name">
                                         <span class="room-select-icon" :class="room.selected ? 'selected-icon' : 'notSelect-icon'" @click="toggleRoomSelectedState(room)">
@@ -20,24 +20,24 @@
                                         <span class="state-icon blue">已入住</span>
                                     </div>
                                     <div class="room-date">
-                                        <label class="label-text">{{room.checkTypeStr}}</label>
+                                        <label class="label-text" style="font-size:14px;color:#999999;">{{room.checkTypeStr}}</label>
                                         <span class="startDate">{{room.checkInTime}}</span>
                                         <span>~</span>
                                         <span class="endDate">{{room.checkOutTime}}</span>
-                                        <label class="label-text" v-if="room.checkType === 1">{{`共${hourLength[index].hour}小时${hourLength[index].minute}分钟`}}</label>
-                                        <label class="label-text" v-else>{{`共${room.night}晚`}}</label>
-                                        <div v-if="room.checkType === 1">
+                                        <label class="label-text" v-if="room.checkType === 1" style="font-size:14px;color:#999999;">{{`共${hourLength[index].hour}小时${hourLength[index].minute}分钟`}}</label>
+                                        <label class="label-text" v-else style="font-size:14px;color:#999999;">{{`共${room.night}晚`}}</label>
+                                        <div v-if="room.checkType === 1" style="font-size:12px;color:#999999;padding-top:10px;">
                                             <label>起步价格：</label>
                                             <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
-                                            <label style="margin-left:20px;">收费标准：</label>
+                                            <label style="margin-left:40px;">收费标准：</label>
                                             <span>￥{{`${room.hourRoomSetting.unitPrice}/1小时`}}</span>
                                         </div>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
-                                        <label class="label-text">订单金额</label>
+                                        <label class="label-text" style="font-size:14px;color:#999999;">订单金额</label>
                                         <span>{{`¥${room.totalPrice}`}}</span>
-                                        <div v-if="room.checkType === 1">
-                                            <label>实际房费￥</label><input type="text" v-model.number="room.roomHoursPrice" @input="changeHourRoomPrice(room)">
+                                        <div v-if="room.checkType === 1" style="padding-top:10px;">
+                                            <label style="font-size:14px;color:#999999;">实际房费</label>￥<input type="text" v-model.number="room.roomHoursPrice" @input="changeHourRoomPrice(room)" style="width:50px;height:24px;" class="dd-input">
                                         </div>
                                     </div>
                                 </div>
@@ -72,10 +72,18 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style scoped lang="scss" rel="stylesheet/scss">
 .content-item .dd-btn {
     border: 1px solid #178ce6;
     border-radius: 2px;
+}
+.add-bottom{
+    padding: 18px 0;
+    border-bottom: 1px dashed #e6e6e6;
+    &:last-child{
+        border-bottom: none;
+        padding-bottom: 0;
+    }
 }
 </style>
 <script>
