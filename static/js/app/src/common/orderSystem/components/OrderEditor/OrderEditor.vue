@@ -1070,7 +1070,8 @@ export default {
                 useDiscount: !room.priceModified,
                 extraItems: JSON.stringify(room.extraItems),
                 whenCheckIn: this.checkState === 'checkIn',
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                checkType: room.checkType
             };
             http.post('/order/modifyRoomOrder', params)
                 .then(res => {

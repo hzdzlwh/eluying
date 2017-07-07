@@ -73,7 +73,7 @@
                             <span style="display:inline-block;width:116px;text-align:right">间夜量计算时刻:</span><input type="text" class="dd-input" style="width:56px;margin: 0 10px 0 23px;" v-model="intervalTime"><span style="font-size:12px;color:#999999;line-height:18px;width:168px;text-align:center;">每跨过一个计算时刻算一个房晚(正常入住、自用房、免费房)</span>
                         </li>-->
                     </ul>
-                    <btn style="padding-left:20px;" @save="saveIntervalNight" @cancel="intervalNightView = !intervalNightView"></btn>
+                    <btn style="padding-left:20px;" @save="saveIntervalNight" @cancel="intervalNightCancel"></btn>
                 </div>
             </inner-container>
         </outer-container>
@@ -169,6 +169,12 @@
                 });
             },
             saveIntervalNight() {
+                if (this.intervalBase >= 0 && this.intervalBase <= 10) {
+                    if (this.intervalBase.toString().split('.')[1].length > 2) {
+                        modal.warn('请输入两位小数');
+                        return
+                    }
+                }
                 http.get('/room/setAccomStatSetting', {
                     hrNightBase: this.intervalBase
                 }).then((res) => {
@@ -195,11 +201,15 @@
             intervalNightProcess() {
                 if (this.intervalBase >= 0 && this.intervalBase <= 10) {
                     if (this.intervalBase.toString().split('.')[1].length > 2) {
-                        modal.warn('精确到0.01');
+                        modal.warn('请输入两位小数');
                     }
                 } else {
                     modal.warn('请输入0-10之间的数字');
                 }
+            },
+            intervalNightCancel() {
+                this.intervalNightView = !this.intervalNightView;
+                this.intervalBase = 0.5;
             }
         }
     }

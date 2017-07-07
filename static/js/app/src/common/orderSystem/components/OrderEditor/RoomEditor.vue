@@ -38,7 +38,7 @@
                                     </dd-option>
                                 </dd-select>
                                 <div class="room-category" >
-                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)">
+                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="item.disabled">
                                         <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
                                     </dd-select>
@@ -611,7 +611,7 @@ export default {
                         moreDiscount: getMoreDiscount(order),
                         extraItems: [...order.extraItems],
                         checkType: order.timeRoomTransform ? 0 : (order.timeRoomAuto ? 0 : order.checkType),
-                        checkTypes: [...checkType],
+                        checkTypes: order.roomInfo.hasHourRoom? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
                         isCheckIn: this.checkState === 'checkIn',
                         categories: this.categories,
                         timeAmount: roomInfo.checkInLength
@@ -751,6 +751,13 @@ export default {
                             item.categories = res.data.list;
                         }
                     });
+                    // set new property to item for disable and none manage house (when item.state === 0)
+                    if (item.state === 0 && item.checkType === 1) {
+                        this.$set(item, 'disabled', true);
+                        item.roomType = 0;
+                    } else {
+                        this.$set(item, 'disabled', false);
+                    }
                 }
                 this.getRoomsList(item);
                 this.$nextTick(function() {
