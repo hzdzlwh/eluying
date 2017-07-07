@@ -33,8 +33,8 @@
                             </span>
                             <label class="label-text">共{{item.checkType === 1 ? getHAndMs (item.checkInLength || item.roomInfo.checkInLength) : (item.duration + '晚')}}</label>
                         </div>
-                        <div class="room-time roomTimeOut" v-if='item.startTimeOut || item.endTimeOut || item.roomInfo.startTimeOut || item.roomInfo.endTimeOut' >
-                            超时未{{(item.startTimeOut || item.roomInfo.startTimeOut) ? '入住' : ''}}{{(item.endTimeOut || item.roomInfo.endTimeOut) ? '退房' : ''}}
+                        <div class="room-time roomTimeOut" v-if='item.startTimeOut || item.endTimeOut || (item.roomInfo && item.roomInfo.startTimeOut) || (item.roomInfo && item.roomInfo.endTimeOut)' >
+                            超时未{{(item.startTimeOut || (item.roomInfo && item.roomInfo.startTimeOut)) ? '入住' : ''}}{{(item.endTimeOut || (item.roomInfo && item.roomInfo.endTimeOut)) ? '退房' : ''}}
                         </div>
                         <div style="display: flex">
                             <span class="single-order-btn" @click='modalShow(item.serviceId)'
