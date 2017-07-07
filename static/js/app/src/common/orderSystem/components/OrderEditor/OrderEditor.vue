@@ -978,6 +978,12 @@ export default {
                     sub: true,
                     roomOrderId: room.roomOrderId,
                     quickDiscountId: room.quickDiscountId,
+                    roomeName: room.categories.filter(function(el) {
+                        return el.typeId === room.categoryType;
+                    })[0].name,
+                    checktypeName: room.checkTypes.filter(function(el) {
+                        return el.id === room.checkType;
+                    })[0].name,
                     useDiscount: room.moreDiscount === 0 || !room.priceModified,
                     extraItems: room.extraItems,
                     isCheckIn: room.isCheckIn,
@@ -1206,15 +1212,15 @@ export default {
             } else {
                 params.type = 0;
             }
-            const callback = function () {
-                            http.post('/room/quickOrTeamReserveOrder', params)
+            const callback = function() {
+                http.post('/room/quickOrTeamReserveOrder', params)
                 .then(res => {
                     this.hideModal();
                     const business = {};
                     business.businessJson = JSON.parse(JSON.stringify(params));
                     business.businessJson.functionType = 1;
                     business.businessJson.orderId = res.data.orderId;
-                    business.orderDetail = {...res.data
+                    business.orderDetail = { ...res.data
                     };
                     business.cashierType = this.checkState;
                     bus.$emit('refreshView');
@@ -1224,15 +1230,22 @@ export default {
                     });
                 });
             }.bind(this);
-            const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length) {
-                const name = outRome[0].roomeName;
-                const roomeType = outRome[0].checktypeName;
-                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
-            } else {
-                callback()
-            }
+            const outHandel = function() {
+                const outRome = this.checkoutTimeOut(rooms);
+                if (outRome.length) {
+                    const name = outRome[0].roomeName;
+                    const roomeType = outRome[0].checktypeName;
+                    modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+                } else {
+                    callback();
+                }
+            }.bind(this);
 
+            if (type === 'auto' && rooms.filter((room) => room.checkRoomType === 1)) {
+                modal.confirm({ title: '提示', message: '钟点房需要手动办理入住，是否保存' }, outHandel);
+            } else {
+                outHandel()
+            }
         },
         handleRoomBusiness() {
             this.getSubmitGoods();
