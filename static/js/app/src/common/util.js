@@ -69,7 +69,10 @@ var util = {
     getHAndMs(val) {
         const h = parseInt(val);
         const m = val - h;
-        return `${h}小时${m * 60}分钟`;
+        if (m) {
+            return `${h}小时${m * 60}分钟`;
+        }
+        return `${h}小时`;
     },
     timeFormat: function(dateArg) {
         let date = new Date(dateArg);
