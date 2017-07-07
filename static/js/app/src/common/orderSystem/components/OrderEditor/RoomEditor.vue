@@ -1008,7 +1008,7 @@ export default {
                             }
                             }
 
-                            if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType')) {
+                            if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
