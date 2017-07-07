@@ -90,7 +90,7 @@
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                                 </label>
                                 <label class="label-text" v-else>
-                                    共{{getHAndMs(item.timeAmount || item.hour)}}小时
+                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}小时
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -541,7 +541,7 @@ export default {
                             room: {
                                 roomId: item.roomId || 0,
                                 startDate: this.checkState === 'checkIn' ? new Date() : new Date(item.startDate),
-                                endDate: (item.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + item.hour * 60 * 60 * 1000) : new Date(item.endDate)
+                                endDate: (item.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + item.checkInLength * 60 * 60 * 1000) : new Date(item.endDate)
                             },
                             idCardList: item.idCardList,
                             datePriceList: item.datePriceList.map(dat => {
@@ -566,8 +566,8 @@ export default {
                             extraItems: [...item.extraItems],
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn',
-                            checkTypes: item.checkType === 1 ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
-                            timeAmount: item.hour
+                            checkTypes: item.hasHourRoom ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
+                            timeAmount: item.checkInLength
                         };
                     });
                 }
@@ -611,7 +611,7 @@ export default {
                         moreDiscount: getMoreDiscount(order),
                         extraItems: [...order.extraItems],
                         checkType: order.timeRoomTransform ? 0 : (order.timeRoomAuto ? 0 : order.checkType),
-                        checkTypes: [...checkType],
+                        checkTypes: roomInfo.hasHourRoom ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
                         isCheckIn: this.checkState === 'checkIn',
                         categories: this.categories,
                         timeAmount: roomInfo.checkInLength
