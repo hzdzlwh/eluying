@@ -11,7 +11,7 @@
                <router-link to="/orders">住宿订单</router-link>
             </span>
         </div>
-        <div class="roomOutTip" v-if='roomTipStatus && roomTipStatus.show'>{{roomTipStatus.tips + '已定满'}}<span class="close-icon" @click='closeTip'>+</span></div>
+        <div class="roomOutTip" v-if='roomTipStatus && roomTipStatus.show && ($route.path === "/nowOrders/houseMap" || $route.path === "/calendar")'>{{roomTipStatus.tips + '已定满'}}<span class="close-icon" @click='closeTip'>+</span></div>
         <router-view></router-view>
         <OrderSystem></OrderSystem>
     </div>

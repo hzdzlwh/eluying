@@ -10,10 +10,10 @@
                     <div class="room-info">
                         <div class="room-name">
                             <span class="room-icon"></span>
-                            <span>{{type === ORDER_TYPE.ACCOMMODATION ? item.roomInfo.roomNum : item.serialNum}}</span>
-                            <span v-if="!((type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum))">({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
-                            <span v-if="(type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">{{item.name || (item.roomInfo && item.roomInfo.roomName)}}</span>&nbsp;
-                            <span style="color: #2bb267" v-if="(type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">未排房</span>
+                            <span>{{type === ORDER_TYPE.ACCOMMODATION ? (item.roomInfo && item.roomInfo.roomNum) : item.serialNum}}</span>
+                            <span v-if="!((type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum))">({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
+                            <span v-if="(type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">{{item.name || (item.roomInfo && item.roomInfo.roomName)}}</span>&nbsp;
+                            <span style="color: #2bb267" v-if="(type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">未排房</span>
                             <span style="color: #999;margin: 0 32px" v-if="(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr">{{(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr}}</span>
                             <span class="state-icon"
                                   :class="getOrderState(item, 'color')"

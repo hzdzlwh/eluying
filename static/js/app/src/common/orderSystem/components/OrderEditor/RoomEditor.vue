@@ -90,7 +90,7 @@
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                                 </label>
                                 <label class="label-text" v-else>
-                                    共{{item.timeAmount}}小时
+                                    共{{getHAndMs(item.timeAmount || item.hour)}}小时
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -439,6 +439,7 @@ export default {
             }
         },
         methods: {
+            getHAndMs: util.getHAndMs,
             handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
                 if ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange) {
@@ -531,7 +532,7 @@ export default {
                             (room.state === 0 && (util.isSameDay(new Date(room.startDate), new Date()) || new Date(room.startDate) <= new Date())));
                     this.rooms = filterRooms.map(item => {
                         return {
-                            ...item,
+                            // ...item,
                             categoryType: item.typeId,
                             roomType: item.roomId || 0,
                             originPrice: item.originPrice,
@@ -540,7 +541,7 @@ export default {
                             room: {
                                 roomId: item.roomId || 0,
                                 startDate: this.checkState === 'checkIn' ? new Date() : new Date(item.startDate),
-                                endDate: new Date(item.endDate)
+                                endDate: (item.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + item.hour * 60 * 60 * 1000) : new Date(item.endDate)
                             },
                             idCardList: item.idCardList,
                             datePriceList: item.datePriceList.map(dat => {
@@ -565,7 +566,8 @@ export default {
                             extraItems: [...item.extraItems],
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn',
-                            checkTypes: [...checkType],
+                            checkTypes: item.checkType === 1 ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
+                            timeAmount: item.hour
                         };
                     });
                 }
@@ -576,7 +578,7 @@ export default {
                     const RoomEndDate = new Date(roomInfo.checkOutDate);
                     const RoomStartDate = new Date(roomInfo.checkInDate);
                     const room = {
-                        ...roomInfo,
+                        // ...roomInfo,
                         categoryType: roomInfo.subTypeId,
                         roomType: roomInfo.roomId || 0,
                         originPrice: roomInfo.originPrice,
@@ -585,7 +587,7 @@ export default {
                         room: {
                             roomId: roomInfo.roomId || 0,
                             startDate: this.checkState === 'checkIn' ? new Date() : new Date(roomInfo.checkInDate),
-                            endDate: order.timeRoomTransform ? new Date(RoomStartDate.getFullYear(), RoomStartDate.getMonth(), RoomStartDate.getDate() + 1, 12, 0, 0) : (order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : new Date(roomInfo.checkOutDate))
+                            endDate: order.timeRoomTransform ? new Date(RoomStartDate.getFullYear(), RoomStartDate.getMonth(), RoomStartDate.getDate() + 1, 12, 0, 0) : (order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : (roomInfo.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + roomInfo.checkInLength * 60 * 60 * 1000) : new Date(roomInfo.checkOutDate))
                         },
                         idCardList: order.idCardsList,
                         datePriceList: order.datePriceList.map(dat => {
@@ -611,7 +613,8 @@ export default {
                         checkType: order.timeRoomTransform ? 0 : (order.timeRoomAuto ? 0 : order.checkType),
                         checkTypes: [...checkType],
                         isCheckIn: this.checkState === 'checkIn',
-                        categories: this.categories
+                        categories: this.categories,
+                        timeAmount: roomInfo.checkInLength
                     };
 
                     this.rooms = [room];
@@ -1010,7 +1013,7 @@ export default {
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
                                 this.$set(currentRoom,'timeAmount',Number(item.startLength));
-                                currentRoom.price = item.startPrice;
+                                // currentRoom.price = item.totalFee;
                             }
                             if (currentRoom.checkType === 1) {
                                 currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength))
