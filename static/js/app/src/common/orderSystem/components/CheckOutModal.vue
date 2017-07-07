@@ -26,7 +26,7 @@
                                         <span class="endDate">{{room.checkOutTime}}</span>
                                         <label class="label-text" v-if="room.checkType === 1" style="font-size:14px;color:#999999;">{{`共${hourLength[index].hour}小时${hourLength[index].minute}分钟`}}</label>
                                         <label class="label-text" v-else style="font-size:14px;color:#999999;">{{`共${room.night}晚`}}</label>
-                                        <div v-if="room.checkType === 1" style="font-size:12px;color:#999999;padding-top:10px;">
+                                        <div v-if="room.checkType === 1 && room.hourRoomSetting" style="font-size:12px;color:#999999;padding-top:10px;">
                                             <label>起步价格：</label>
                                             <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
                                             <label style="margin-left:40px;">收费标准：</label>

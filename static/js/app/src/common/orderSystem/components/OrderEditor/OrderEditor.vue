@@ -1242,10 +1242,10 @@ export default {
                 }
             }.bind(this);
 
-            if (type === 'auto' && rooms.filter((room) => room.checkRoomType === 1)) {
+            if (type === 'auto' && rooms.filter((room) => (room.checkRoomType === 1 || room.checkType === 1))) {
                 modal.confirm({ title: '提示', message: '钟点房需要手动办理入住，是否保存' }, outHandel);
             } else {
-                outHandel()
+                outHandel();
             }
         },
         handleRoomBusiness() {
