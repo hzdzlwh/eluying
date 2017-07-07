@@ -531,6 +531,7 @@ export default {
                             (room.state === 0 && (util.isSameDay(new Date(room.startDate), new Date()) || new Date(room.startDate) <= new Date())));
                     this.rooms = filterRooms.map(item => {
                         return {
+                            ...item,
                             categoryType: item.typeId,
                             roomType: item.roomId || 0,
                             originPrice: item.originPrice,
@@ -575,6 +576,7 @@ export default {
                     const RoomEndDate = new Date(roomInfo.checkOutDate);
                     const RoomStartDate = new Date(roomInfo.checkInDate);
                     const room = {
+                        ...roomInfo,
                         categoryType: roomInfo.subTypeId,
                         roomType: roomInfo.roomId || 0,
                         originPrice: roomInfo.originPrice,
@@ -970,12 +972,7 @@ export default {
                                     showInput: false
                                 };
                             });
-                            if (!item.isOpenTime) {
-                                currentRoom.showTip = 2;
-                            }
-                            if (!item.available) {
-                                currentRoom.showTip = 1;
-                            }
+                            currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
                             // currentRoom.showTip = !item.isOpenTime;
                             currentRoom.price = item.totalFee;
                             // 每日房价分配比例
@@ -1016,7 +1013,7 @@ export default {
                                 currentRoom.price = item.startPrice;
                             }
                             if (currentRoom.checkType === 1) {
-                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * currentRoom.timeAmount)
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength))
                             }
                         });
                     });
