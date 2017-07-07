@@ -393,7 +393,7 @@ export default {
                                 item => {
                                     if (item.roomId === room.roomId && room.selected) {
                                         todayFeeMap.push({
-                                            fee: (room.totalPrice - item.totalPrice).toFixed(2),
+                                            fee: room.checkType === 1? room.roomHoursPrice : (room.totalPrice - item.totalPrice).toFixed(2),
                                             subOrderId: item.roomOrderId
                                         });
                                     }
