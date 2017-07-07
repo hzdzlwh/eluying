@@ -435,20 +435,20 @@ export default {
                 });
             } else {
                 bus.$emit('onShowDetail', {
-                    type: this.menuData.data.roomOrderId ? 3 : -1,
-                    orderId: this.menuData.data.roomOrderId || this.menuData.data.orderId
+                    type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
+                    orderId: this.menuData.data.reserveRoomOrderId || this.menuData.data.reserveOrderId
                 });
             }
         },
         showCheckOut(types) {
             // const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
-                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
-                orderType: this.menuData.data.roomOrderId ? 3 : -1
+                orderId: this.menuData.data.reserveRoomOrderId ? this.menuData.data.reserveRoomOrderId : this.menuData.data.reserveOrderId,
+                orderType: this.menuData.data.reserveRoomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
                     businessType: this.menuData.data.roomState === 12 ? 1 : 2,
-                    orderId: this.menuData.data.orderId
+                    orderId: this.menuData.data.reserveOrderId
                 }).then(
                     $('#checkOut').modal({
                         backdrop: 'static'
@@ -459,12 +459,12 @@ export default {
         showCheckIn(types) {
             // const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
-                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
-                orderType: this.menuData.data.roomOrderId ? 3 : -1
+                orderId: this.menuData.data.reserveRoomOrderId ? this.menuData.data.reserveRoomOrderId : this.menuData.data.reserveOrderId,
+                orderType: this.menuData.data.reserveRoomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
                     businessType: 0,
-                    orderId: this.menuData.data.orderId
+                    orderId: this.menuData.data.reserveOrderId
                 }).then(
 
                     $('#checkIn').modal({
