@@ -572,6 +572,9 @@ export default {
                     return;
                 }
                 if (type === 'roomType') {
+                    if (item.checkType === 1) {
+                        item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
+                    }
                     // if (item.checkRoomType === 1) {
                     //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
                     // }
@@ -827,7 +830,7 @@ export default {
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
                                 this.$set(currentRoom, 'timeAmount', Number(item.startLength))
-                                currentRoom.price = item.startPrice;
+                                // currentRoom.price = item.startPrice;
 
                             }
                             if (currentRoom.checkRoomType === 1) {
