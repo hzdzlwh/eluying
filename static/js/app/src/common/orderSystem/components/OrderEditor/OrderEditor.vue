@@ -1243,7 +1243,7 @@ export default {
             }.bind(this);
 
             if (type === 'auto' && rooms.filter((room) => (room.checkRoomType === 1 || room.checkType === 1))) {
-                modal.confirm({ title: '提示', message: '钟点房需要手动办理入住，是否保存' }, outHandel);
+                modal.confirm({ title: '提示', message: '预订钟点房不会自动排房，确认提交预订吗？' }, outHandel);
             } else {
                 outHandel();
             }
