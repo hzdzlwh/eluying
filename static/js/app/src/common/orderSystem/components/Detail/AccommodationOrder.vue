@@ -23,12 +23,12 @@
                         </div>
                         <div class="room-date">
                             <label class="label-text">到达</label>
-                            <span class="startDate " :class='{roomTimeOut: item.startTimeOut}'>{{item.startDate || item.roomInfo.checkInDate}}
+                            <span class="startDate " :class='{roomTimeOut: item.startTimeOut || item.roomInfo.startTimeOut}'>{{item.startDate || item.roomInfo.checkInDate}}
                             <!-- <span class="timeOut" v-if='item.startTimeOut'>已超时</span>  -->
                             </span>
                             <span>~</span>
                             <label class="label-text">离开</label>
-                            <span class="endDate " :class='{roomTimeOut: item.endTimeOut}'>{{item.endDate || item.roomInfo.checkOutDate}}
+                            <span class="endDate " :class='{roomTimeOut: item.endTimeOut || item.roomInfo.endTimeOut}'>{{item.endDate || item.roomInfo.checkOutDate}}
                             <!-- <span class="timeOut" v-if='item.endTimeOut'>已超时</span>    -->
                             </span>
                             <label class="label-text">共{{item.checkType === 1 ? getHAndMs (item.checkInLength || item.roomInfo.checkInLength) : (item.duration + '晚')}}</label>
