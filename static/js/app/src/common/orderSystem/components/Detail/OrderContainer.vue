@@ -1310,6 +1310,9 @@
                 bus.$emit('changeBack', this.show);
                 bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
+                this.order.timeRoomAuto = false;
+                this.order.timeRoomTransform = false;
+                // 返回的时候重制
                 if (type === 'auto') {
                     this.order.timeRoomAuto = true;
                 }
