@@ -653,9 +653,9 @@ export default {
                 // if (JSON.stringify(room) === this.lastRoomsToken[index]) {
                 //     return false;
                 // }
-                if (type === 'endDate' && room.checkRoomType === 1) {
-                    return;
-                }
+                // if (type === 'endDate' && room.checkRoomType === 1) {
+                //     return;
+                // }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = this.dateDiff(room.room.startDate, room.room.endDate);
 
