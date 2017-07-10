@@ -292,7 +292,8 @@ import {
 import contextmenu from '../../common/components/contextmenu';
 import dayOrderLeft from './dayOrderLeft';
 import {
-    mapActions
+    mapActions,
+    mapState
 } from 'vuex';
 export default {
     props: {
@@ -350,7 +351,8 @@ export default {
         },
         isTaday() {
             return util.isSameDay(new Date(), new Date(this.date));
-        }
+        },
+        ...mapState({ order: state => state.orderSystem.orderDetail })
     },
     methods: {
         ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL, type.LOAD_ROOMTIP]),
@@ -427,7 +429,7 @@ export default {
 
             this.$emit('changeEnter', temp);
         },
-        showOrder(type) {
+     showOrder(type) {
             if (type === 'reserve') {
                 bus.$emit('onShowDetail', {
                     type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
@@ -435,20 +437,20 @@ export default {
                 });
             } else {
                 bus.$emit('onShowDetail', {
-                    type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
-                    orderId: this.menuData.data.reserveRoomOrderId || this.menuData.data.reserveOrderId
+                    type: this.menuData.data.roomOrderId ? 3 : -1,
+                    orderId: this.menuData.data.roomOrderId || this.menuData.data.orderId
                 });
             }
         },
         showCheckOut(types) {
             // const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
-                orderId: this.menuData.data.reserveRoomOrderId ? this.menuData.data.reserveRoomOrderId : this.menuData.data.reserveOrderId,
-                orderType: this.menuData.data.reserveRoomOrderId ? 3 : -1
+                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
+                orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
                     businessType: this.menuData.data.roomState === 12 ? 1 : 2,
-                    orderId: this.menuData.data.reserveOrderId
+                    orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
                         backdrop: 'static'
@@ -466,11 +468,7 @@ export default {
                     businessType: 0,
                     orderId: this.menuData.data.reserveOrderId
                 }).then(
-
-                    $('#checkIn').modal({
-                        backdrop: 'static'
-                    }),
-                    bus.$emit('changeOutOrInSelect', this.menuData.data.roomId),
+                   bus.$emit('editOrder', 'checkIn', this.order)
                 )
             );
         },
