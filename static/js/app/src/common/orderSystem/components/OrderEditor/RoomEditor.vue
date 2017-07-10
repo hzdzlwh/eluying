@@ -38,7 +38,7 @@
                                     </dd-option>
                                 </dd-select>
                                 <div class="room-category" >
-                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="item.disabled">
+                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="item.disabled && checkState !== 'checkIn'">
                                         <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
                                     </dd-select>
@@ -90,7 +90,7 @@
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                                 </label>
                                 <label class="label-text" v-else>
-                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}小时
+                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -567,7 +567,10 @@ export default {
                             checkType: item.checkType,
                             isCheckIn: this.checkState === 'checkIn',
                             checkTypes: item.hasHourRoom ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
-                            timeAmount: item.checkInLength
+                            timeAmount: item.checkInLength,
+                            unitLength: item.unitLength,
+                            maxLength: item.maxLength,
+                            startLength: item.startLength
                         };
                     });
                 }
@@ -614,7 +617,11 @@ export default {
                         checkTypes: roomInfo.hasHourRoom ? checkType.concat({id : 1, name: "钟点房" }) : [...checkType],
                         isCheckIn: this.checkState === 'checkIn',
                         categories: this.categories,
-                        timeAmount: roomInfo.checkInLength
+                        timeAmount: roomInfo.checkInLength,
+                        unitLength: roomInfo.unitLength,
+                        maxLength: roomInfo.maxLength,
+                        startLength: roomInfo.startLength
+
                     };
 
                     this.rooms = [room];
@@ -1015,7 +1022,7 @@ export default {
                             }
                             }
 
-                            if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) {
+                            if ((currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkType === 1)) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
@@ -1046,16 +1053,18 @@ export default {
             },
             // 误差处理，将误差加至第一天
             setFirstDayFee(room) {
-                const price = room.price;
-                if (price === undefined || price === '') {
-                    return false;
-                }
+                if (this.checkState !== 'ing') {
+                    const price = room.price;
+                    if (price === undefined || price === '') {
+                        return false;
+                    }
 
-                // 每日房价相加
-                const totalPrice = room.datePriceList.reduce((a, b) => {
-                    return a + Number(b.dateFee);
-                }, 0);
-                room.datePriceList[0].dateFee = Number((room.datePriceList[0].dateFee + price - totalPrice).toFixed(2));
+                    // 每日房价相加
+                    const totalPrice = room.datePriceList.reduce((a, b) => {
+                        return a + Number(b.dateFee);
+                    }, 0);
+                    room.datePriceList[0].dateFee = Number((room.datePriceList[0].dateFee + price - totalPrice).toFixed(2));
+                }
             },
             showPriceList(id) {
                 this.rooms.forEach((item, index) => {

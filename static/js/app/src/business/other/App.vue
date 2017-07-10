@@ -170,7 +170,7 @@
             },
             saveIntervalNight() {
                 if (this.intervalBase >= 0 && this.intervalBase <= 10) {
-                    if (this.intervalBase.toString().split('.')[1].length > 2) {
+                    if (this.intervalBase.toString().split('.')[1] && this.intervalBase.toString().split('.')[1].length > 2) {
                         modal.warn('请输入两位小数');
                         return
                     }
@@ -200,7 +200,7 @@
             },
             intervalNightProcess() {
                 if (this.intervalBase >= 0 && this.intervalBase <= 10) {
-                    if (this.intervalBase.toString().split('.')[1].length > 2) {
+                    if (this.intervalBase.toString().split('.')[1] && this.intervalBase.toString().split('.')[1].length > 2) {
                         modal.warn('请输入两位小数');
                     }
                 } else {
