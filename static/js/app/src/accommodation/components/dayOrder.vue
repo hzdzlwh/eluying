@@ -342,7 +342,7 @@ export default {
     },
     beforeDestroy() {
         bus.$off('refreshView', this.refreshView);
-        bus.$on('tadayClick', this.tadayClick);
+        bus.$off('tadayClick', this.tadayClick);
     },
     computed: {
         finalRoomStatus() {

@@ -311,9 +311,9 @@ export default {
             },
             hideModal() {
                 this.penalty = undefined;
-                this.totalFee = undefined;
+                this.totalFee = 0;
                 this.tadayFeeType = 1;
-                this.subOrderIds = []
+                this.subOrderIds = [];
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
