@@ -35,12 +35,14 @@
                     <td>入住类型</td>
                 </tr>
                 <tr v-for="r in checkTypeDayStat" :class="{b: r.name === '合计'}">
-                    <td>{{r.name}}</td>
+                    <td class="ellipsis">
+                        {{r.name}}
+                    </td>
                 </tr>
                 <tr><td></td></tr>
                 <tr><td>房间类型</td></tr>
                 <tr v-for="r in roomTypeDayStat" :class="{b: r.name === '合计'}">
-                    <td>{{r.name}}</td>
+                    <td class="ellipsis">{{r.name}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -154,6 +156,7 @@
     .l {
         td, th {
             padding-left: 14px;
+            max-width: 98px;
         }
     }
     .c, .r {

@@ -90,7 +90,7 @@
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                                 </label>
                                 <label class="label-text" v-else>
-                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}小时
+                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -1022,7 +1022,7 @@ export default {
                             }
                             }
 
-                            if (currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) {
+                            if ((currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkType === 1)) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);

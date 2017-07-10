@@ -82,12 +82,14 @@ import {
     mapActions
 } from 'vuex';
 import type from '../common/orderSystem/store/types';
+import bus from '../common/eventBus';
 export default {
     created() {
         this[type.LOAD_ROOMTIP]();
+        bus.$on('refreshView', this[type.LOAD_ROOMTIP]);
     },
     beforeDestroy() {
-
+        bus.$off('refreshView', this.refreshView);
     },
     computed: {
         roomTipStatus() {
