@@ -46,7 +46,7 @@
                             </div>
                             <div class="room-type">
                                 入住类型：
-                                <dd-select v-model='item.checkType' placeholder="请选择入住类型" @input="changeRoomType(item, index, 'roomType')">
+                                <dd-select v-model='item.checkType' placeholder="请选择入住类型" @input="changeRoomType(item, index, 'roomType')" :disabled="item.state === 8">
                                     <dd-option v-for="check in item.checkTypes" :value="check.id" :key="check.id" :label="check.name">
                                     </dd-option>
                                 </dd-select>
@@ -631,6 +631,10 @@ export default {
                     this.initCategories[room.categoryType] = this.initCategories[room.categoryType] ? this.initCategories[room.categoryType] + 1 : 1;
                     this.getRoomsList(room);
                 });
+                // 单独的住宿订单钟点房转正常入住时从新拉取房费
+                if (this.order.timeRoomTransform) {
+                    this.modifyRooms(this.rooms);
+                }
             },
             initRegisterRooms(rooms) {
                 this.forceChangePrice = false;
@@ -720,7 +724,7 @@ export default {
                     room.roomType = 0;
                     room.extraItems = [];
                     room.idCardList = [];
-                    room.checkTypes = JSON.parse(JSON.stringify(this.rooms[len - 1].checkTypes));
+                    room.checkTypes = this.rooms[len - 1].state === 8 ? this.checkType : JSON.parse(JSON.stringify(this.rooms[len - 1].checkTypes));
                     if (room.roomOrderId) {
                         delete room.roomOrderId;
                         delete room.state;

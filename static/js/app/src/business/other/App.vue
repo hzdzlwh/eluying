@@ -195,6 +195,7 @@
                     if (res.code === 1) {
                         this.freeHouse = res.data.freeStatEnable;
                         this.selfHouse = res.data.selfUseStatEnable;
+                        this.intervalBase = res.data.hrNightBase;
                     }
                 });
             },
@@ -209,7 +210,7 @@
             },
             intervalNightCancel() {
                 this.intervalNightView = !this.intervalNightView;
-                this.intervalBase = 0.5;
+                this.getAccountState();
             }
         }
     }
