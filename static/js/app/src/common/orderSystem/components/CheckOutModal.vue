@@ -330,6 +330,18 @@ export default {
                 this.tadayFeeType = 1;
             },
             checkOut() {
+                let night = null;
+                switch(this.tadayFeeType) {
+                    case 1:
+                        night = 1;
+                        break;
+                    case 0.5:
+                        night = 2
+                        break;
+                    case 0:
+                        night = 0;
+                        break;
+                }
                 const rooms = [] 
                 this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
                      this.backroomBusinessInfo.roomOrderInfoList.map(item => {
@@ -340,7 +352,8 @@ export default {
                                 idCardList: room.idCardList,
                                 roomId: room.roomId,
                                 roomOrderId: room.roomOrderId,
-                                fee: room.totalPrice - item.totalPrice
+                                fee: room.totalPrice - item.totalPrice,
+                                night: night
                             });
                         }
                     });
