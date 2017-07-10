@@ -108,7 +108,7 @@
                                 共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                             </label>
                             <label class="label-text" v-else>
-                                共{{item.timeAmount}}小时
+                                共{{getHAndMs(item.timeAmount || item.checkInLength)}}
                             </label>
                         </div>
                         <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
@@ -458,6 +458,7 @@ export default {
             }
         },
         methods: {
+            getHAndMs: util.getHAndMs,
             handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
                 if (this.checkState !== 'editOrder' || forceChange) {

@@ -90,7 +90,7 @@
                                     共{{dateDiff(item.room.startDate, item.room.endDate)}}晚
                                 </label>
                                 <label class="label-text" v-else>
-                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}小时
+                                    共{{getHAndMs(item.timeAmount || item.checkInLength)}}
                                 </label>
                             </div>
                             <div class="registerInfoModal-roomPrice" @click.stop="()=>{}">
