@@ -449,7 +449,7 @@ export default {
                 orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
-                    businessType: this.menuData.data.roomState === 12 ? 1 : 2,
+                    businessType: (this.menuData.data.roomState === 12 || this.menuData.data.checkType === 1) ? 1 : 2,
                     orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
