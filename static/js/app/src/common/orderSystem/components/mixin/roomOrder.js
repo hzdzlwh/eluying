@@ -2,75 +2,63 @@ import http from '../../../http';
 import util from '../../../util';
 export default {
     methods: {
-        getRoomType(id) {
-            http.get('/room/getStopInfo',
-                id: id
-            ).then(res => {
-                return res.data.list;
-            });
-        },
-        disabledStartDate(endDate) {
-            const str = util.dateFormat(new Date(endDate));
-            const arr = str.split('-');
-            if (this.checkState === 'finish' || this.checkState === 'quick' || this.checkState === 'team') {
-                return (date) => {
-                    return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
+        handleVipCardChange(id, forceChange) {
+            // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
+            if (this.checkState !== 'editOrder' || forceChange) {
+                this.rooms.map(r => {
+                    r.moreDiscount = id;
+                });
             }
-            if (this.checkState === 'ing' || this.checkState === 'checkIn') {
-                return (date) => {
-                    return date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
+            if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder' || forceChange)) {
+                this.rooms.map(r => {
+                    r.moreDiscount = 0;
+                });
             }
-            if (this.checkState === 'book' || this.checkState === 'editOrder') {
-                return (date) => {
-                    return date.valueOf() >= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
-            }
-            return (date) => {
-                return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-            };
-        },
-        disabledEndDate(startDate, type) {
-            if (this.checkState === 'quick' || this.checkState === 'team') {
-                const str = util.dateFormat(new Date(startDate));
-                const arr = str.split('-');
-                return (date) => {
-                    return (date.valueOf() < (new Date(arr[0], arr[1], arr[2])).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
-                };
-            }
-            if (this.checkState === 'finish') {
-                if (util.isSameDay(new Date(startDate), new Date())) {
-                    const str1 = util.dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        return (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                    };
-                } else {
-                    const str = util.dateFormat(new Date(startDate));
-                    const arr = str.split('-');
-                    const str1 = util.dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        return (date.valueOf() <= (new Date(arr[0], arr[1] - 1, arr[2])).valueOf()) || (date.valueOf() > (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf());
-                    };
+            if (this.rooms.length > 0) {
+                if (forceChange) {
+                    this.forceChangePrice = true;
                 }
-            } else {
-                const str = util.dateFormat(new Date(startDate));
-                const arr = str.split('-');
-                return (date) => {
-                    return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
-                };
+                // 更改渠道
+                this.modifyRooms(this.rooms);
             }
         },
-        dateDiff(date1, date2) {
-            http.get('/room/getStopInfo',
-                startDate: date1,
-                endDate: date2
-            ).then(res => {
-                return res.data
-            })
+        handleMoreDiscountClick(index, ev) {
+            ev.stopPropagation();
+            document.querySelector(`#js-more-discount-${index} .dd-select-input`).click();
         },
+         getQuickDiscounts() {
+                http.get('/quickDiscount/getList', {
+                        nodeId: 0,
+                        nodeType: 0
+                    })
+                    .then(res => {
+                        this.quickDiscounts = res.data.list.map(item => {
+                            return {
+                                ...item,
+                                label: item.description + '  ' + item.discount + '折'
+                            };
+                        });
+                        this.discountPlans = [];
+                        this.discountPlans.push({
+                            label: '快捷折扣',
+                            discounts: res.data.list.map(item => {
+                                return {
+                                    id: item.id,
+                                    name: item.description,
+                                    discount: item.discount
+                                };
+                            })
+                        });
+                    });
+            },
+            quickDiscountIdChange(room) {
+                this.forceChangePrice = true;
+                this.modifyRooms([room]);
+            },
+            // 计算vip折扣价，如果没有vip折扣价返回原价
+            getVipPrice(room) {
+                return Number((room.originPrice * this.vipDiscount).toFixed(2));
+            },
     }
 
 }

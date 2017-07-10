@@ -429,7 +429,7 @@ export default {
 
             this.$emit('changeEnter', temp);
         },
-     showOrder(type) {
+        showOrder(type) {
             if (type === 'reserve') {
                 bus.$emit('onShowDetail', {
                     type: this.menuData.data.reserveRoomOrderId ? 3 : -1,
