@@ -464,13 +464,13 @@ export default {
                 orderId: this.menuData.data.reserveRoomOrderId ? this.menuData.data.reserveRoomOrderId : this.menuData.data.reserveOrderId,
                 orderType: this.menuData.data.reserveRoomOrderId ? 3 : -1
             }).then(
-                this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
+                res => this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
                     businessType: 0,
                     orderId: this.menuData.data.reserveOrderId
-                }).then(
-                   bus.$emit('editOrder', 'checkIn', this.order)
-                )
-            );
+                })
+            ).then(res => {
+                bus.$emit('editOrder', 'checkIn', this.order);
+            });
         },
         hideCheckout() {
             $('#checkOut').modal('hide');
