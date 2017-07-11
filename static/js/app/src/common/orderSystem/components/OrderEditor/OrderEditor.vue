@@ -864,8 +864,8 @@ export default {
             this.userOriginType = this.getOrigin(-4);
         },
         checkoutTimeOut(room) {
-            const outRoom = room.filter(function(room) {
-                return (new Date(room.endDate) < new Date());
+            const outRoom = room.filter(function(el) {
+                return (new Date(el.endDate) < new Date());
             });
             return outRoom;
         },
@@ -1073,7 +1073,8 @@ export default {
                 ...this.getDiscountRelatedIdAndOrigin(),
                 checkType: room.checkType
             };
-            http.post('/order/modifyRoomOrder', params)
+            const callback = function() {
+                http.post('/order/modifyRoomOrder', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
@@ -1081,6 +1082,16 @@ export default {
                         orderId: getOrderId(this.order)
                     });
                 });
+            }.bind(this);
+            const outRome = this.checkoutTimeOut([room]);
+            if (outRome.length ) {
+                const name = outRome[0].roomeName;
+                const roomeType = outRome[0].checktypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+            } else {
+                callback();
+            }
+            
         },
         modifyFoodOrder() {
             const params = {
@@ -1180,7 +1191,9 @@ export default {
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
                 ...this.getDiscountRelatedIdAndOrigin()
             };
-            http.post('/order/modify', params)
+            
+            const callback = function() {
+                http.post('/order/modify', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
@@ -1188,6 +1201,15 @@ export default {
                         orderId: getOrderId(this.order)
                     });
                 });
+            }.bind(this);
+            const outRome = this.checkoutTimeOut(rooms);
+            if (outRome.length ) {
+                const name = outRome[0].roomeName;
+                const roomeType = outRome[0].checktypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+            } else {
+                callback();
+            }
         },
         handleQuickTeamBusiness(type) {
             bus.$emit('submitOrder');
@@ -1308,7 +1330,7 @@ export default {
                 });
             }.bind(this);
             const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length) {
+            if (outRome.length && this.checkState === 'ing') {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);

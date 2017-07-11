@@ -1338,49 +1338,30 @@
                 bus.$emit('showCashier', { type: 'resetOrder' });
             },
             checkInOrCheckOut(type) {
-                  const callback = function() {
-                    this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
-                        .then(res => {
-                            if (type === 0) {
-                                // 办理入住
-                                const haveToday = res.data.roomOrderInfoList.some((room) => {
-                                    return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
-                                });
-                                if (haveToday) {
-                                    // this.hideModal();
-                                    // $('#orderDetail').modal('hidden');
-                                    // $('#checkIn').modal({ backdrop: 'static' });
-                                    bus.$emit('changeBack', this.show);
-                                    bus.$emit('editOrder', 'checkIn', this.order);
-                                } else {
-                                    modal.warn('未到办理入住的时间，无法入住！');
-                                    return false;
-                                }
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: type })
+                    .then(res => {
+                        if (type === 0) {
+                            // 办理入住
+                            const haveToday = res.data.roomOrderInfoList.some((room) => {
+                                return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
+                            });
+                            if (haveToday) {
+                                // this.hideModal();
+                                // $('#orderDetail').modal('hidden');
+                                // $('#checkIn').modal({ backdrop: 'static' });
+                                bus.$emit('changeBack', this.show);
+                                bus.$emit('editOrder', 'checkIn', this.order);
                             } else {
-                                // 退房
-                                $('#checkOut').modal({ backdrop: 'static' });
+                                modal.warn('未到办理入住的时间，无法入住！');
+                                return false;
                             }
-                            bus.$emit('changeBack', this.show);
-                            this.hideModal();
-                    });
-                }.bind(this);
-                const outRome = this.checkoutTimeOut(this.order.rooms || [this.order]);
-                if (outRome.length) {
-                    const firstRoom = outRome[0]
-                    let name = '';
-                    let roomeType = '';
-                    if (this.order.rooms) {
-                        name = firstRoom.fullName;
-                        roomeType = firstRoom.checkTypeStr;
-                    }
-                    if (this.order.roomInfo) {
-                        name = firstRoom.roomInfo.roomName;
-                        roomeType = firstRoom.checkTypeStr;
-                    }
-                    modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
-                } else {
-                    callback();
-                }
+                        } else {
+                            // 退房
+                            $('#checkOut').modal({ backdrop: 'static' });
+                        }
+                        bus.$emit('changeBack', this.show);
+                        this.hideModal();
+                });
             },
             checkoutTimeOut(room) {
                 const outRoom = room.filter(function(room) {
