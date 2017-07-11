@@ -1012,6 +1012,27 @@ export default {
                 };
             });
         },
+        getOverTimeRooms() {
+            return this.rooms.map(room => {
+                return {
+                    amount: room.amount,
+                    checkType: room.checkType,
+                    endDate: util.dateFormatLong(room.room.endDate),
+                    startDate: util.dateFormatLong(room.room.startDate),
+                    id: room.categoryType,
+                    fee: room.price,
+                    sub: true,
+                    roomeName: room.categories.filter(el => {
+                        return el.typeId === room.categoryType;
+                    })[0].name,
+                    checktypeName: room.checkTypes.filter(el => {
+                        return el.id === room.checkType;
+                    })[0].name,
+                    quickDiscountId: room.quickDiscountId,
+                    useDiscount: room.moreDiscount === 0 || !room.priceModified
+                };
+            });
+        },
         getSubmitGoods() {
             this.newGoodItems = this.shopItems.items.map(item => {
                 return {
@@ -1325,35 +1346,48 @@ export default {
                 return false;
             }
 
+            const rooms = this.getOverTimeRooms();
             // 编辑订单根据不同的type调用不同的接口
-            if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
-                // 住宿订单
-                if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
-                    this.modifyRoomOrder();
-                }
+            const callback = function() {
+                if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
+                    // 住宿订单
+                    if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
+                        this.modifyRoomOrder();
+                    }
 
-                // 餐饮订单
-                if (this.order.type === ORDER_TYPE.CATERING) {
-                    this.modifyFoodOrder();
-                }
+                    // 餐饮订单
+                    if (this.order.type === ORDER_TYPE.CATERING) {
+                        this.modifyFoodOrder();
+                    }
 
-                // 娱乐订单
-                if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
-                    this.modifyEntertainmentOrder();
-                }
+                    // 娱乐订单
+                    if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+                        this.modifyEntertainmentOrder();
+                    }
 
-                // 商超订单
-                if (this.order.type === ORDER_TYPE.RETAIL) {
-                    this.modifyShopOrder();
-                }
+                    // 商超订单
+                    if (this.order.type === ORDER_TYPE.RETAIL) {
+                        this.modifyShopOrder();
+                    }
 
-                // 住宿独立订单使用组合订单编辑接口
-                if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
-                    this.modifyCombinationOrder();
+                    // 住宿独立订单使用组合订单编辑接口
+                    if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
+                        this.modifyCombinationOrder();
+                    }
+                } else {
+                    // 住宿业务
+                    this.handleRoomBusiness();
                 }
+            }.bind(this);
+
+            // 判断钟点房时是否超时
+            const outRome = this.checkoutTimeOut(rooms);
+            if (outRome.length) {
+                const name = outRome[0].roomeName;
+                const roomeType = outRome[0].checktypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
             } else {
-                // 住宿业务
-                this.handleRoomBusiness();
+                callback();
             }
         },
         handleRoomChange(rooms) {
