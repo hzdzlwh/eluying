@@ -38,7 +38,7 @@
                                     </dd-option>
                                 </dd-select>
                                 <div class="room-category" >
-                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="item.disabled && checkState !== 'checkIn'">
+                                    <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="(item.disabled && checkState !== 'checkIn') || (!item.isCheckIn && item.checkType === 1)">
                                         <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
                                     </dd-select>
@@ -749,9 +749,9 @@ export default {
                 return util.DateDiff(d1, d2);
             },
             changeRoomType(item, index, type) {
-                if (type === 'endDate' && item.roomCheckType === 1) {
-                    return;
-                }
+                // if (type === 'endDate' && item.roomCheckType === 1) {
+                //     return;
+                // }
                 if (type === 'roomType') {
                     if (item.checkType === 1) {
                         item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
@@ -881,12 +881,12 @@ export default {
                 this.vipList = [];
             },
             handleRoomChange(room, index, type) {
-                if (JSON.stringify(room) === this.lastRoomsToken[index]) {
+                if (JSON.stringify(room) === this.lastRoomsToken[index] && room.checkType !== 1) {
                     return false;
                 }
-                if (type === 'endDate' && room.checkType === 1) {
-                    return
-                }
+                // if (type === 'endDate' && room.checkType === 1) {
+                //     return
+                // }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1 && room.checkType !== 1) {
@@ -1038,7 +1038,7 @@ export default {
                                 // currentRoom.price = item.totalFee;
                             }
                             if (currentRoom.checkType === 1) {
-                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength))
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength || item.startLength))
                             }
                         });
                     });
@@ -1206,6 +1206,9 @@ export default {
                 } else {
                     room.room.startDate = room.originStartDate;
                     room.extraItems = [];
+                    if (room.checkType === 1) {
+                        room.roomType = 0;
+                    }
                 }
             },
             handleRoomNumChange(item, index, num) {
