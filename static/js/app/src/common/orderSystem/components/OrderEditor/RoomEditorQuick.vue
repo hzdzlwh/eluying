@@ -20,7 +20,8 @@
             </dd-group-option>
             </dd-select>
             </span>
-            </span>    </p>
+            </span>
+        </p>
         <div class="registerRoom-items">
             <div class="registerRoom-container" v-for="(item,index) in rooms">
                 <span class="room-icon"></span>
@@ -39,7 +40,7 @@
                             数量
                             <counter :onNumChange="(a,b,num) => handleRoomAmountChange(item, index,num)" :num='item.amount' :id="index" :type="3" /> <span class="room-vailble" v-if='item.canReserveCount != undefined && item.checkRoomType !== 1'>可预订数 {{item.canReserveCount}}</span>
                         </div>
-                        <div class="room-type"  :style='{visibility: (checkState === "team" ? "hidden" : "visible")}'>
+                        <div class="room-type" :style='{visibility: (checkState === "team" ? "hidden" : "visible")}'>
                             入住类型：
                             <dd-select v-model="item.checkRoomType" placeholder="请选择入住类型" @input="changeRoomType(item ,index,'roomType')">
                                 <dd-option v-for="check in item.checkType" :value="check.id" :key="check.id" :label="check.name">
@@ -397,17 +398,21 @@ export default {
                                 this.RoomsList = res.data.list;
                                 this.rooms.forEach(function(room) {
                                     // room.room.endDate = newValue.endDate;
-                                    room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * (room.timeAmount || 1))
+                                    if (newValue.roomCheckType === 1) {
+                                        room.room.endDate = new Date(room.room.startDate.getTime() + 1000 * 60 * 60 * (room.timeAmount || 1))
+                                    } else {
+                                        room.room.endDate = newValue.endDate;
+                                    }
                                     room.room.startDate = newValue.startDate;
                                     room.checkRoomType = newValue.roomCheckType;
-                                    room.categories = res.data.list
+                                    room.categories = res.data.list;
                                 })
                                 this.modifyRooms(this.rooms, 'roomType');
                             }
                         })
-                    // if (newValue.roomCheckType === 1) {
-                    //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1))
-                    // }
+                        // if (newValue.roomCheckType === 1) {
+                        //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1))
+                        // }
 
                 },
                 deep: true
@@ -580,13 +585,13 @@ export default {
                     //     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
                     // }
                     http.get('/room/getRoomsList', {
-                        checkType: item.checkRoomType,
-                        endDate: util.dateFormatLong(item.room.endDate),
-                        startDate: util.dateFormatLong(item.room.startDate)
-                    })
-                    .then(res => {
-                        item.categories = res.data.list;
-                    });
+                            checkType: item.checkRoomType,
+                            endDate: util.dateFormatLong(item.room.endDate),
+                            startDate: util.dateFormatLong(item.room.startDate)
+                        })
+                        .then(res => {
+                            item.categories = res.data.list;
+                        });
 
                 }
                 this.$nextTick(function() {
@@ -662,7 +667,7 @@ export default {
 
                 if (duration < 1 && room.checkRoomType !== 1) {
                     const toDate = new Date(room.room.endDate);
-                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate() + 1 , 12, 0,0);
+                    room.room.endDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate() + 1, 12, 0, 0);
                     return false;
                 }
                 if (new Date(room.room.startDate) > new Date(room.room.endDate)) {
@@ -826,12 +831,12 @@ export default {
                                 }
                             }
 
-                            if ((currentRoom.checkRoomType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' &&  currentRoom.checkRoomType === 1)) {
+                            if ((currentRoom.checkRoomType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkRoomType === 1)) {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
                                 this.$set(currentRoom, 'timeAmount', Number(item.startLength))
-                                // currentRoom.price = item.startPrice;
+                                    // currentRoom.price = item.startPrice;
 
                             }
                             if (currentRoom.checkRoomType === 1) {
