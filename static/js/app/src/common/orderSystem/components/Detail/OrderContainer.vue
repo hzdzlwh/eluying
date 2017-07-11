@@ -197,7 +197,7 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
-                                    <div class="dd-btn dd-btn-primary order-btn" v-if="((order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder) || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder)) && getRoomsState.transform" @click='editOrder("transform")'
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.transform" @click='editOrder("transform")'
                                         >
                                         转正常入住
                                     </div>
