@@ -70,7 +70,7 @@ var util = {
         const h = parseInt(val);
         const m = val - h;
         if (m) {
-            return `${h}小时${m * 60}分钟`;
+            return `${h}小时${parseInt(m * 60)}分钟`;
         }
         return `${h}小时`;
     },
