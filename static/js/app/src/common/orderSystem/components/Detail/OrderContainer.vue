@@ -1371,14 +1371,21 @@
                     });
             },
             autoSelectRooms() {
-                http.post('/room/autoSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
-                    .then(res => {
-                        if (res.msg) {
-                            modal.warn(res.msg);
-                        }
-                        this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
-                        bus.$emit('refreshView');
-                    });
+                const callback = function() {
+                    http.post('/room/autoSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
+                        .then(res => {
+                            if (res.msg) {
+                                modal.warn(res.msg);
+                            }
+                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
+                            bus.$emit('refreshView');
+                        });
+                }.bind(this);
+                if (this.order.rooms && this.order.rooms.filter((room) => (room.checkType === 1)).length) {
+                    modal.confirm({ title: '提示', message: '预订钟点房不会自动排房' }, callback);
+                } else {
+                    callback();
+                }
             },
             cancelSelectRooms() {
                 http.post('/room/cancelSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
