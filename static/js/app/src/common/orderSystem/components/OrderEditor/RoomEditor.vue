@@ -635,6 +635,10 @@ export default {
                 if (this.order.timeRoomTransform) {
                     this.modifyRooms(this.rooms);
                 }
+                // disabled 钟点房编辑时未排房
+                this.rooms.map((room, index) => {
+                    this.changeRoomType(room, index, 'roomType');
+                });
             },
             initRegisterRooms(rooms) {
                 this.forceChangePrice = false;
