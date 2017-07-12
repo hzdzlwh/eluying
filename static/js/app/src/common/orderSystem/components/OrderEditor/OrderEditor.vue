@@ -1286,8 +1286,7 @@ export default {
                 if (outRome.length) {
                     const name = outRome[0].roomeName;
                     const roomeType = outRome[0].checktypeName;
-                    const roomTypeName = outRome[0].roomTypeName;
-                    modal.confirm({ title: '提示', message: roomeType + '[' + name + roomTypeName + ']已超时，确定保存订单吗？' }, callback);
+                    modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
                 } else {
                     callback();
                 }
