@@ -202,6 +202,9 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
+        <change-room-dialog>
+            <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
+        </change-room-dialog>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
@@ -671,6 +674,7 @@
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
     import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
+    import changeRoomDialog from './changeRoomDialog';
 
     export default{
         props: {
@@ -697,14 +701,16 @@
                 formNumber: 0,
                 outOrIn: 0,
                 date: new Date(),
-                roomdata: undefined
+                roomdata: undefined,
+                changePrice: true
             };
         },
         components: {
             DateSelect,
             RoomFilter,
             contextmenu,
-            dayOrderForm
+            dayOrderForm,
+            changeRoomDialog
         },
         computed: {
             dateRange() {
@@ -1031,7 +1037,7 @@
                                         top: offsetTop * height + 2 + 'px',
                                         left: offsetLeft * width + 2 + 'px'
                                     });
-                                    modal.confirm({ title: '换房', message: '确定要换房吗？' },
+                                    /* modal.confirm({ title: '换房', message: '确定要换房吗？' },
                                         function() {
                                             http.post('/room/dragChangeRoom', {
                                                 checkRoomOnly: false,
@@ -1045,7 +1051,26 @@
                                                 .catch(rest);
                                         },
                                         rest
-                                    );
+                                    ); */
+                                    $('#changeRoomDialog').modal('show');
+                                    $('#changeRoomOk').click(function() {
+                                        $('#changeRoomDialog').modal('hide');
+                                        http.post('/room/dragChangeRoom', {
+                                            checkRoomOnly: false,
+                                            roomId: room,
+                                            startDate: date,
+                                            roomOrderId: ui.helper.attr('roomOrderId'),
+                                            updatePrice: that.changePrice
+                                        })
+                                            .then(res => {
+                                                bus.$emit('refreshView');
+                                            })
+                                            .catch(rest);
+                                    });
+                                    $('#changeRoomCancel').click(function() {
+                                        rest();
+                                        $('#changeRoomDialog').modal('hide');
+                                    });
                                 })
                                 .catch(rest);
                         }

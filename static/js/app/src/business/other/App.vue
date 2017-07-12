@@ -22,7 +22,7 @@
                 <div slot="show">
                     <ul>
                         <li><span>处理方式:</span><span style="margin-left:16px;">{{processMethods[processMethodsValue]}}</span></li>
-                        <li><span style="display:inline-block;width:60px;text-align:right;">精确到:</span><span style="margin-left:16px;">{{accurateArray[accurateValue]}}</span></li>
+                        <li v-if="processMethodsValue !== 0"><span style="display:inline-block;width:60px;text-align:right;">精确到:</span><span style="margin-left:16px;">{{accurateArray[accurateValue]}}</span></li>
                     </ul>
                 </div>
                 <div slot="edit" style="padding-bottom: 20px;">
@@ -30,7 +30,7 @@
                         <li>
                             <span>处理方式:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model="processMethod"> 不处理</label><label style="margin-left:12px;"><input type="radio" value="1" v-model="processMethod"> 四舍五入</label><label style="margin-left:12px;"><input type="radio" value="2" v-model="processMethod"> 元后抹零</label>
                         </li>
-                        <li><span style="display:inline-block;width:60px;text-align:right;">精确到:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model="accurate"> 角</label><label style="margin-left:12px;"><input type="radio" value="1" v-model="accurate"> 元</label><label style="margin-left:12px;"><input type="radio" value="2" v-model="accurate"> 十元</label></li>
+                        <li v-if="processMethod !== 0"><span style="display:inline-block;width:60px;text-align:right;">精确到:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model="accurate"> 角</label><label style="margin-left:12px;"><input type="radio" value="1" v-model="accurate"> 元</label><label style="margin-left:12px;"><input type="radio" value="2" v-model="accurate"> 十元</label></li>
                     </ul>
                     <btn style="padding-left:20px;" @save="saveChangeProcess" @cancel="changeView = !changeView"></btn>
                 </div>
@@ -66,8 +66,9 @@
                 </div>
                 <div slot="edit" style="padding-bottom: 20px;">
                     <ul>
-                        <li>
-                            <span>钟点房间夜量基数:</span><input type="text" class="dd-input" style="width:56px;margin:0 10px 0 23px;" v-model="intervalBase" @input="intervalNightProcess"><span>请输入0-10之间的数字</span>
+                        <li style="line-height:0; height:24px;margin: 12px 0;">
+                            <span>钟点房间夜量基数:</span><input type="text" class="dd-input" style="width:56px;margin:0 10px 0 23px;" v-model="intervalBase" @input="intervalNightProcess" maxlength="4"><span>请输入0-10之间的数字</span><br>
+                            <span v-if="intervalBaseAlert" style="color:red;font-size:12px;display:inline-block;margin: 10px 0 0 140px;">请输入0-10之间的数字</span>
                         </li>
                         <!--<li style="display:flex;align-items:center;">
                             <span style="display:inline-block;width:116px;text-align:right">间夜量计算时刻:</span><input type="text" class="dd-input" style="width:56px;margin: 0 10px 0 23px;" v-model="intervalTime"><span style="font-size:12px;color:#999999;line-height:18px;width:168px;text-align:center;">每跨过一个计算时刻算一个房晚(正常入住、自用房、免费房)</span>
@@ -111,7 +112,8 @@
                 accurateValue: null,
                 newDiscounts: [],
                 intervalTime: null,
-                intervalBase: 0.5
+                intervalBase: 0.5,
+                intervalBaseAlert: false
             }
         },
         components: {
@@ -201,11 +203,9 @@
             },
             intervalNightProcess() {
                 if (this.intervalBase >= 0 && this.intervalBase <= 10) {
-                    if (this.intervalBase.toString().split('.')[1] && this.intervalBase.toString().split('.')[1].length > 2) {
-                        modal.warn('请输入两位小数');
-                    }
+                    this.intervalBaseAlert = false;
                 } else {
-                    modal.warn('请输入0-10之间的数字');
+                    this.intervalBaseAlert = true;
                 }
             },
             intervalNightCancel() {
