@@ -56,7 +56,7 @@
                             </div>
                             <div class="room-count" v-if="item.checkType === 1">
                                 入住时长
-                                <counter-step :onNumChange="(a, b, num) => handleRoomNumChange(item, index, num)" :max='item.maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id='index' :type='3'></counter-step>
+                                <counter-step :onNumChange="(a, b, num) => handleRoomNumChange(item, index, num)" :max='item.maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id='index' :type='3' :disabled='item.state === 8'></counter-step>
                             </div>
                             <span class="delete-icon" @click="deleteRoom(index)" v-if="!item.state || ((item.state !== 1 && item.state !== 8) && ((order.roomInfo && !order.isCombinationOrder) || order.rooms))">
                             </span>
@@ -729,6 +729,10 @@ export default {
                     room.extraItems = [];
                     room.idCardList = [];
                     room.checkTypes = this.rooms[len - 1].state === 8 ? this.checkType : JSON.parse(JSON.stringify(this.rooms[len - 1].checkTypes));
+                    // 如果是反结账订单新增房间时，房间为未排房
+                    if (this.rooms[len - 1].state === 8) {
+                        room.roomList.unshift({ id: 0, name: '未排房' });
+                    }
                     if (room.roomOrderId) {
                         delete room.roomOrderId;
                         delete room.state;

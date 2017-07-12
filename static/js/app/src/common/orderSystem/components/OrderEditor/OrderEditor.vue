@@ -1370,7 +1370,7 @@ export default {
 
             const rooms = this.getOverTimeRooms();
             // 编辑订单根据不同的type调用不同的接口
-            const callback = function() {
+            
                 if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     // 住宿订单
                     if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
@@ -1400,17 +1400,16 @@ export default {
                     // 住宿业务
                     this.handleRoomBusiness();
                 }
-            }.bind(this);
 
             // 判断钟点房时是否超时
-            const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length) {
+            // const outRome = this.checkoutTimeOut(rooms);
+            /*if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
             } else {
                 callback();
-            }
+            }*/
         },
         handleRoomChange(rooms) {
             this.rooms = rooms;
