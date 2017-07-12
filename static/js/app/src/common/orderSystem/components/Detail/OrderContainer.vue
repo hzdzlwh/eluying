@@ -1222,7 +1222,7 @@
                 };
 
                 function checkState(room) {
-                    if (room.checkType === 1 && room.state !== 2 && room.state !== 8) {
+                    if (room.checkType === 1 && room.state === 1) {
                         roomsState.transform = true;
                     }
                     if (room.state === 0) {
