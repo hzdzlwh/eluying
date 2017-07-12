@@ -171,6 +171,7 @@
     padding: 8px 16px;
     position: absolute;
     right: 0;
+    z-index:1;
 }
 
 .user-group-company {
