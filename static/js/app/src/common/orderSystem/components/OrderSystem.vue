@@ -56,7 +56,8 @@
     import CheckInModal from './CheckInModal.vue';
     import CheckOutModal from './CheckOutModal.vue';
     import CancelOrderModal from './CancelOrderModal.vue';
-    import CashierModal from './CashierModal.vue';
+    // import CashierModal from './CashierModal.vue';
+    import CashierModal from './newCashModal.vue';
     import GetMoneyWithCode from './GetMoneyWithCode.vue';
     import bus from '../../eventBus';
     import http from '../../http';
