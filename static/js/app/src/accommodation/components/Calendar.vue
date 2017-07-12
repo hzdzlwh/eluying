@@ -1056,16 +1056,16 @@
                                     $('#changeRoomOk').click(function() {
                                         $('#changeRoomDialog').modal('hide');
                                         http.post('/room/dragChangeRoom', {
-                                                checkRoomOnly: false,
-                                                roomId: room,
-                                                startDate: date,
-                                                roomOrderId: ui.helper.attr('roomOrderId'),
-                                                updatePrice: that.changePrice
+                                            checkRoomOnly: false,
+                                            roomId: room,
+                                            startDate: date,
+                                            roomOrderId: ui.helper.attr('roomOrderId'),
+                                            updatePrice: that.changePrice
+                                        })
+                                            .then(res => {
+                                                bus.$emit('refreshView');
                                             })
-                                                .then(res => {
-                                                    bus.$emit('refreshView');
-                                                })
-                                                .catch(rest);
+                                            .catch(rest);
                                     });
                                     $('#changeRoomCancel').click(function() {
                                         rest();
