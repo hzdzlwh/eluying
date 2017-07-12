@@ -30,7 +30,7 @@
                                             <label>起步价格：</label>
                                             <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
                                             <label style="margin-left:40px;">收费标准：</label>
-                                            <span>￥{{`${room.hourRoomSetting.unitPrice}/1小时`}}</span>
+                                            <span>￥{{`${room.hourRoomSetting.unitPrice}/${room.hourRoomSetting.unitDuration}小时`}}</span>
                                         </div>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
@@ -93,6 +93,9 @@ import {
     mapState
 } from 'vuex';
 import bus from '../../eventBus';
+import { mapActions } from 'vuex';
+import type from '../store/types';
+import types from '../store/types';
 export default {
     data() {
             return {
@@ -254,6 +257,7 @@ export default {
             }
         },
         methods: {
+            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
             changeTadayFeeType(TadayFeeType) {
                 this.tadayFeeType = TadayFeeType;
             },
@@ -300,9 +304,12 @@ export default {
                     });
             },
             show() {
-                $('#checkOut').modal({
-                    backdrop: 'static'
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: 2 }).then(res => {
+                    $('#checkOut').modal({
+                        backdrop: 'static'
+                    });
                 });
+                
             },
             returnPreStep() {
                 this.hideModal();
