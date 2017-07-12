@@ -28,7 +28,7 @@
                 <div slot="edit" style="padding-bottom: 20px;">
                     <ul>
                         <li>
-                            <span>处理方式:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model="processMethod"> 不处理</label><label style="margin-left:12px;"><input type="radio" value="1" v-model="processMethod"> 四舍五入</label><label style="margin-left:12px;"><input type="radio" value="2" v-model="processMethod"> 元后抹零</label>
+                            <span>处理方式:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model.number="processMethod"> 不处理</label><label style="margin-left:12px;"><input type="radio" value="1" v-model.number="processMethod"> 四舍五入</label><label style="margin-left:12px;"><input type="radio" value="2" v-model.number="processMethod"> 元后抹零</label>
                         </li>
                         <li v-if="processMethod !== 0"><span style="display:inline-block;width:60px;text-align:right;">精确到:</span><label style="margin-left:12px;"><input type="radio" value="0" v-model="accurate"> 角</label><label style="margin-left:12px;"><input type="radio" value="1" v-model="accurate"> 元</label><label style="margin-left:12px;"><input type="radio" value="2" v-model="accurate"> 十元</label></li>
                     </ul>
@@ -188,6 +188,7 @@
                     if (res.code === 1) {
                         this.discountLists = res.data.list;
                         this.processMethodsValue = res.data.oddSetting.oddType;
+                        this.processMethod = res.data.oddSetting.oddType;
                         this.accurateValue = res.data.oddSetting.unit;
                     }
                 });
