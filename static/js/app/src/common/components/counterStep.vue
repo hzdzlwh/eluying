@@ -88,7 +88,7 @@ export default {
             if (this.disabled) {
                 return false;
             }
-            if (this.value <= this.min || this.value <= this.step) {
+            if (this.value <= this.min || this.value <= this.step || (this.value - this.step) < this.min) {
                 return false;
             }
             this.value -= this.step;
@@ -108,7 +108,7 @@ export default {
             if (this.disabled) {
                 return false;
             }
-            if (this.value >= this.max) {
+            if (this.value >= this.max || (this.value + this.step) > this.max) {
                 return;
             }
             this.value += this.step;
