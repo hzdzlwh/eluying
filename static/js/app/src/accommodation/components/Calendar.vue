@@ -1052,7 +1052,7 @@
                                         },
                                         rest
                                     );
-                                    /*$('#changeRoomDialog').modal('show');
+                                    /* $('#changeRoomDialog').modal('show');
                                     $('#changeRoomOk').click(function() {
                                         $('#changeRoomDialog').modal('hide');
                                         http.post('/room/dragChangeRoom', {
@@ -1070,7 +1070,7 @@
                                     $('#changeRoomCancel').click(function() {
                                         rest();
                                         $('#changeRoomDialog').modal('hide');
-                                    });*/
+                                    }); */
                                 })
                                 .catch(rest);
                         }
