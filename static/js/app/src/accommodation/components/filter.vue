@@ -16,6 +16,24 @@
             </ul>
         </div>
         <!-- roomType -->
+        <div class="calendar-room-filter-box" @click="roomCheckTypeVisible = !roomCheckTypeVisible">
+            <div class="calendar-icon calendar-icon-roomCheckType"></div>
+            <span style="cursor: pointer">入住类型</span>
+            <img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" :class='{calendarChange: roomCheckTypeVisible}' class='calendar-room-filter-toggle'>
+        </div>
+        <div v-show="roomCheckTypeVisible" class="calendar-room-filter-select">
+            <ul>
+                <li v-for="r in roomCheckType">
+                <label >
+                    <span>{{r.name}}
+                    ({{roomTypeCount && getCheckTypeNum(r.id)}})
+                    </span>
+                    <input name="room" class="dd-checkbox" type="checkbox" :value='r.select' @change="setSelect(r)" />
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <!-- roomCheckType -->
         <div class="calendar-room-filter-box" @click="tagVisible = !tagVisible">
             <div class="calendar-icon calendar-icon-tag"></div>
             <span style="cursor: pointer">标签</span>
@@ -154,7 +172,9 @@
 .calendar-icon-custom {
     background-image: url('/static/image/icon/ico5.png')
 }
-
+.calendar-icon-roomCheckType{
+    background-image: url('/static/image/icon/ico12.png')
+}
 .calendar-room-filter-toggle {
     float: right;
     margin-top: 7px;
@@ -181,6 +201,7 @@
 import {
     colorList
 } from '../colorList';
+import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
 export default {
     props: {
         categories: Array,
@@ -197,9 +218,11 @@ export default {
             roomVisible: false,
             customVisible: false,
             areaVisible: false,
+            roomCheckTypeVisible: false,
             categoriesTemp: [],
             customTemp: [],
             areaTemp: [],
+            roomCheckType,
             roomTypeList: [{
                 name: '空房',
                 id: '0',
@@ -245,6 +268,7 @@ export default {
             const tagList = [];
             const areaList = [];
             const customList = [];
+            const checkTypes = [];
             this.categoriesList.forEach(function(el, index) {
                 if (el.select) {
                     categoriesParms.push(Number(el.id));
@@ -270,12 +294,18 @@ export default {
                     customList.push(Number(el.id));
                 }
             });
+            this.roomCheckType.forEach(function(el, index) {
+                if (el.select) {
+                    checkTypes.push(Number(el.id));
+                }
+            });
             return {
                 roomTypes: JSON.stringify(categoriesParms),
                 states: JSON.stringify(roomTypeList),
                 tags: JSON.stringify(tagList),
                 origins: JSON.stringify(customList),
-                zones: JSON.stringify(areaList)
+                zones: JSON.stringify(areaList),
+                checkTypes: JSON.stringify(checkTypes)
             };
         }
     },
@@ -296,6 +326,21 @@ export default {
         }
     },
     methods: {
+        getCheckTypeNum(type) {
+            switch (type) {
+                // eslint-disabeld
+                case 0:
+                    return this.roomTypeCount.normalCheckType;
+                case 1:
+                    return this.roomTypeCount.hourRoomCheckType;
+                case 2:
+                    return this.roomTypeCount.freedomCheckType;
+                case 3:
+                    return this.roomTypeCount.freeCheckType;
+                default:
+                    return 0;
+            }
+        },
         setSelect(item) {
             this.$set(item, 'select', !item.select);
         },
@@ -305,6 +350,7 @@ export default {
             const tagList = [];
             const areaList = [];
             const customList = [];
+            const roomCheckTypeList = [];
             this.categoriesList.forEach(function(el, index) {
                 if (el.select) {
                     categoriesParms.push(Number(el.id));
@@ -313,6 +359,11 @@ export default {
             this.roomTypeList.forEach(function(el, index) {
                 if (el.select) {
                     roomTypeList.push(Number(el.id));
+                }
+            });
+            this.roomCheckType.forEach(function(el, index) {
+                if (el.select) {
+                    roomCheckTypeList.push(Number(el.id));
                 }
             });
             this.tagList.forEach(function(el, index) {
@@ -330,12 +381,18 @@ export default {
                     customList.push(Number(el.id));
                 }
             });
+            this.categoriesList.forEach(function(el, index) {
+                if (el.select) {
+                    categoriesParms.push(Number(el.id));
+                }
+            });
             return {
                 roomTypes: JSON.stringify(categoriesParms),
                 states: JSON.stringify(roomTypeList),
                 tags: JSON.stringify(tagList),
                 origins: JSON.stringify(customList),
-                zones: JSON.stringify(areaList)
+                zones: JSON.stringify(areaList),
+                roomCheckTypeList: JSON.stringify(roomCheckTypeList)
             };
         },
         toggleSelect() {

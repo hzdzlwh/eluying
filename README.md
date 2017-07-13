@@ -148,4 +148,6 @@ install(store);
 
 // 事件
 bus.$on('refreshView')
+bus.$off('refreshView')
+bus.$emit('refreshView')
 ```

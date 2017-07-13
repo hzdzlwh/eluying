@@ -1,5 +1,5 @@
 <template>
-    <div class="taday-calendar">
+    <div class="taday-calendar" :class='{haveRoomOutTip: this.$store.state.orderSystem.roomTipStatus.show}'>
         <div class="taday-calendar-picker">
             <dayOrderLeft>
                 <DateSelect slot="timePicker" :defaultDate="defaultStartDate" @change='changeDate' :width='185' :disabledDate='true' />
@@ -26,6 +26,7 @@
                                 <div class="taday-status-item-tag taday-status-item-dirty" v-if='it.isDirty'>脏房</div>
                                 <div class="taday-status-item-tag taday-status-item-arrival" v-if='it.isArrival'>预抵</div>
                             </div>
+                            <div v-if='it.checkType !== null' class="taday-status-roomCheckType">{{getCheckType(it.checkType)}}</div>
                         </div>
                     </div>
                 </div>
@@ -82,10 +83,18 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :date='String(date)' :room='roomdata'></dayOrderForm>
-        <div class="datFixMenu"><span @click="check('team')">团队预订</span><span @click="check('quick')">快速预订</span></div>
+        <div class="datFixMenu"><span @click="check('team')">团队<br/>预订</span><span @click="check('quick')">快速<br/>预订</span></div>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.haveRoomOutTip{
+    .taday-calendar-picker, .taday-calendar-header{
+        top:72px;
+    }
+    .taday-calendar-body{
+        top:152px;
+    }
+}
 .datFixMenu{
     position:fixed;
     bottom:100px;
@@ -137,7 +146,7 @@
     flex: 1;
     margin: 0 -4px;
     .taday-status-item {
-        padding: 8px;
+        padding: 4px 8px;
         border-radius: 4px;
         width: 130px;
         height: 82px;
@@ -158,7 +167,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
-            line-height: 20px;
             text-align: left;
             font-weight: bold;
             float: left;
@@ -166,7 +174,6 @@
         .taday-status-item-title3 {
             display: inline-block;
             font-size: 14px;
-            line-height: 20px;
             text-align: right;
             font-weight: bold;
             width: 40px;
@@ -177,14 +184,22 @@
         }
         .taday-status-item-name {
             width: 100%;
-            display: inline-block;
+            display: inline-table;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 12px;
-            line-height: 20px;
             text-align: left;
-            height: 20px;
+        }
+        .taday-status-roomCheckType{
+            position: absolute;
+            background: rgba(255, 255, 255, 0.23);
+            height: 16px;
+            width: 130px;
+            left: 0;
+            bottom: 4px;
+            font-size: 12px;
+            padding-left: 8px;
         }
         .taday-status-item-tag {
             display: inline;
@@ -214,6 +229,7 @@
     background-position: center;
     border: 2px solid #178ce6;
     border-radius: 4px;
+    top:8px;
 }
 
 .day-calendar-status-inner {
@@ -238,16 +254,19 @@
     margin-bottom:20px;
 }
 .datFixMenu span{
-        width: 80px;
-    height: 80px;
-    line-height: 80px;
+    width: 56px;
+    height: 56px;
+    line-height: 24px;
     background-color: #ff9326;
     display: inline-block;
-    border-radius: 40px;
+    border-radius: 28px;
     text-align: center;
     margin-right: 10px;
-    cursor:pointer;
-    color:#fff;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    padding-top: 4px;
+    font-weight:300;
 }
 .taday-status-title {
     font-size: 24px;
@@ -266,13 +285,15 @@ import util from 'util';
 import http from '../../common/http';
 import bus from '../../common/eventBus';
 import type from '../../common/orderSystem/store/types';
+import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
 import {
     colorList
 } from '../colorList';
 import contextmenu from '../../common/components/contextmenu';
 import dayOrderLeft from './dayOrderLeft';
 import {
-    mapActions
+    mapActions,
+    mapState
 } from 'vuex';
 export default {
     props: {
@@ -290,6 +311,7 @@ export default {
     },
     data() {
         return {
+            checkType: roomCheckType,
             scrollTicking: false,
             lastScrollTop: 0,
             lastScrollLeft: 0,
@@ -321,7 +343,7 @@ export default {
     },
     beforeDestroy() {
         bus.$off('refreshView', this.refreshView);
-        bus.$on('tadayClick', this.tadayClick);
+        bus.$off('tadayClick', this.tadayClick);
     },
     computed: {
         finalRoomStatus() {
@@ -329,10 +351,11 @@ export default {
         },
         isTaday() {
             return util.isSameDay(new Date(), new Date(this.date));
-        }
+        },
+        ...mapState({ order: state => state.orderSystem.orderDetail })
     },
     methods: {
-        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL]),
+        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO_DAYORDER, type.GET_ORDER_DETAIL, type.LOAD_ROOMTIP]),
         hoverShow(e, it) {
             this.hoverEvent = e;
             it.hover = true;
@@ -365,8 +388,12 @@ export default {
                     break;
             }
         },
+        getCheckType(val) {
+            return this.checkType.find(el => el.id === val).name;
+        },
         roomFilterHander(parms) {
             bus.$emit('refreshView', parms);
+            // this[type.LOAD_ROOMTIP]();
         },
         closeDayForm() {
             this.dayOrderFormVisible = false;
@@ -422,7 +449,7 @@ export default {
                 orderType: this.menuData.data.roomOrderId ? 3 : -1
             }).then(
                 this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
-                    businessType: this.menuData.data.roomState === 12 ? 1 : 2,
+                    businessType: (this.menuData.data.roomState === 12 || this.menuData.data.checkType === 1) ? 1 : 2,
                     orderId: this.menuData.data.orderId
                 }).then(
                     $('#checkOut').modal({
@@ -434,20 +461,16 @@ export default {
         showCheckIn(types) {
             // const handel = this.hideCheckout;
             this[type.GET_ORDER_DETAIL]({
-                orderId: this.menuData.data.roomOrderId ? this.menuData.data.roomOrderId : this.menuData.data.orderId,
-                orderType: this.menuData.data.roomOrderId ? 3 : -1
+                orderId: this.menuData.data.reserveRoomOrderId ? this.menuData.data.reserveRoomOrderId : this.menuData.data.reserveOrderId,
+                orderType: this.menuData.data.reserveRoomOrderId ? 3 : -1
             }).then(
-                this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
+                res => this[type.LOAD_ROOM_BUSINESS_INFO_DAYORDER]({
                     businessType: 0,
-                    orderId: this.menuData.data.orderId
-                }).then(
-
-                    $('#checkIn').modal({
-                        backdrop: 'static'
-                    }),
-                    bus.$emit('changeOutOrInSelect', this.menuData.data.roomId),
-                )
-            );
+                    orderId: this.menuData.data.reserveOrderId
+                })
+            ).then(res => {
+                bus.$emit('editOrder', 'checkIn', this.order);
+            });
         },
         hideCheckout() {
             $('#checkOut').modal('hide');

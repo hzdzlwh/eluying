@@ -9,8 +9,8 @@
                     </div>
                     <div class="roomModals-body">
                         <div class="content-item">
-                            <p class="content-item-title"><span>房间信息</span></p>
-                            <div v-for="room in roomBusinessInfo.roomOrderInfoList">
+                            <p class="content-item-title" style="margin-bottom:0;"><span>房间信息</span></p>
+                            <div v-for="(room, index) in roomBusinessInfo.roomOrderInfoList" class="add-bottom">
                                 <div class="room-info">
                                     <div class="room-name">
                                         <span class="room-select-icon" :class="room.selected ? 'selected-icon' : 'notSelect-icon'" @click="toggleRoomSelectedState(room)">
@@ -20,15 +20,25 @@
                                         <span class="state-icon blue">已入住</span>
                                     </div>
                                     <div class="room-date">
-                                        <label class="label-text">入住</label>
-                                        <span class="startDate">{{room.checkInDate.slice(5)}}</span>
+                                        <label class="label-text" style="font-size:14px;color:#999999;">{{room.checkTypeStr}}</label>
+                                        <span class="startDate">{{room.checkInTime}}</span>
                                         <span>~</span>
-                                        <span class="endDate">{{room.checkOutDate.slice(5)}}</span>
-                                        <label class="label-text">{{`共${room.night}晚`}}</label>
+                                        <span class="endDate">{{room.checkOutTime}}</span>
+                                        <label class="label-text" v-if="room.checkType === 1" style="font-size:14px;color:#999999;">{{`共${hourLength[index].hour}小时${hourLength[index].minute}分钟`}}</label>
+                                        <label class="label-text" v-else style="font-size:14px;color:#999999;">{{`共${room.night}晚`}}</label>
+                                        <div v-if="room.checkType === 1 && room.hourRoomSetting" style="font-size:12px;color:#999999;padding-top:10px;">
+                                            <label>起步价格：</label>
+                                            <span>￥{{`${room.hourRoomSetting.startPrice}/${room.hourRoomSetting.startDuration}小时`}}</span>
+                                            <label style="margin-left:40px;">收费标准：</label>
+                                            <span>￥{{`${room.hourRoomSetting.unitPrice}/${room.hourRoomSetting.unitDuration}小时`}}</span>
+                                        </div>
                                     </div>
                                     <div class="room-fee" style="margin-right: 81px">
-                                        <label class="label-text">订单金额</label>
+                                        <label class="label-text" style="font-size:14px;color:#999999;">订单金额</label>
                                         <span>{{`¥${room.totalPrice}`}}</span>
+                                        <div v-if="room.checkType === 1" style="padding-top:10px;">
+                                            <label style="font-size:14px;color:#999999;">实际房费</label>￥<input type="text" v-model.number="room.roomHoursPrice" @input="changeHourRoomPrice(room)" style="width:50px;height:24px;" class="dd-input">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -62,10 +72,18 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style scoped lang="scss" rel="stylesheet/scss">
 .content-item .dd-btn {
     border: 1px solid #178ce6;
     border-radius: 2px;
+}
+.add-bottom{
+    padding: 18px 0;
+    border-bottom: 1px dashed #e6e6e6;
+    &:last-child{
+        border-bottom: none;
+        padding-bottom: 0;
+    }
 }
 </style>
 <script>
@@ -75,6 +93,9 @@ import {
     mapState
 } from 'vuex';
 import bus from '../../eventBus';
+import { mapActions } from 'vuex';
+import type from '../store/types';
+import types from '../store/types';
 export default {
     data() {
             return {
@@ -171,6 +192,16 @@ export default {
                     }
                 );
                 return sum;
+            },
+            hourLength() {
+                let res = [];
+                this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
+                    res.push({ 
+                        hour : Math.floor((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())/3600000),
+                        minute: Math.floor(((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())%3600000)/60000)
+                    }); 
+                });
+                return res;
             }
         },
         watch: {
@@ -226,6 +257,7 @@ export default {
             }
         },
         methods: {
+            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
             changeTadayFeeType(TadayFeeType) {
                 this.tadayFeeType = TadayFeeType;
             },
@@ -236,7 +268,7 @@ export default {
                 }, 500);
             },
             changeTotalFeefn() {
-                this.tadayFeeType = undefined;
+                // this.tadayFeeType = undefined;
                 // const subOrderIds = [];
                 this.subOrderIds = [];
                 if (!this.backroomBusinessInfo) {
@@ -272,9 +304,12 @@ export default {
                     });
             },
             show() {
-                $('#checkOut').modal({
-                    backdrop: 'static'
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: this.roomBusinessInfo.businessType }).then(res => {
+                    $('#checkOut').modal({
+                        backdrop: 'static'
+                    });
                 });
+                
             },
             returnPreStep() {
                 this.hideModal();
@@ -283,9 +318,9 @@ export default {
             },
             hideModal() {
                 this.penalty = undefined;
-                this.totalFee = undefined;
+                this.totalFee = 0;
                 this.tadayFeeType = 1;
-                this.subOrderIds = []
+                this.subOrderIds = [];
                 $('#checkOut').modal('hide');
             },
             toggleRoomSelectedState(room) {
@@ -302,8 +337,20 @@ export default {
                 this.tadayFeeType = 1;
             },
             checkOut() {
+                let night = null;
+                switch(this.tadayFeeType) {
+                    case 1:
+                        night = 1;
+                        break;
+                    case 0.5:
+                        night = 2
+                        break;
+                    case 0:
+                        night = 0;
+                        break;
+                }
                 const rooms = [] 
-                this.roomBusinessInfo.roomOrderInfoList.map(room => {
+                this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
                      this.backroomBusinessInfo.roomOrderInfoList.map(item => {
                         if (room.selected && room.roomId === item.roomId) {
                             rooms.push({
@@ -312,7 +359,8 @@ export default {
                                 idCardList: room.idCardList,
                                 roomId: room.roomId,
                                 roomOrderId: room.roomOrderId,
-                                fee: room.totalPrice - item.totalPrice
+                                fee: room.checkType === 1 ? room.roomHoursPrice : room.totalPrice - item.totalPrice,
+                                night: night
                             });
                         }
                     });
@@ -351,7 +399,7 @@ export default {
                             this.hideModal();
                             modal.success('退房成功');
                             bus.$emit('refreshView');
-                            bus.$emit('showOrder', this.orderDetail.orderId);
+                           // bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.roomOrderId });
                         });
                 } else {
                     if (this.penalty) {
@@ -360,12 +408,12 @@ export default {
                     business.functionType = 1;
                     const todayFeeMap = [];
                     this.roomBusinessInfo.roomOrderInfoList.map(
-                        room => {
+                        (room, index) => {
                             this.backroomBusinessInfo.roomOrderInfoList.map(
                                 item => {
                                     if (item.roomId === room.roomId && room.selected) {
                                         todayFeeMap.push({
-                                            fee: (room.totalPrice - item.totalPrice).toFixed(2),
+                                            fee: room.checkType === 1? room.roomHoursPrice : (room.totalPrice - item.totalPrice).toFixed(2),
                                             subOrderId: item.roomOrderId
                                         });
                                     }
@@ -387,6 +435,9 @@ export default {
                     // });
                     bus.$emit('changeBack', this.show);
                 }
+            },
+            changeHourRoomPrice(room) {
+                room.totalPrice = Number(room.roomHoursPrice) + room.extraPrice;
             }
         },
         components: {}

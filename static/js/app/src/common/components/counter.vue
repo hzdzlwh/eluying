@@ -123,7 +123,11 @@
                 }
             },
             changeNum() {
-                this.value = Number(this.value);
+                window.console.log(this.value)
+                if (!this.value || this.value == 0) {
+                    this.value = 1
+                }
+                this.value = Math.abs(parseInt(this.value));
                 if (this.orderId === -1) {
                     this.$emit('numChange', this.type, this.id, this.value);
                 } else {

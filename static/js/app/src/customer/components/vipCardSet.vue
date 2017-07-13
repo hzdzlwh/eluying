@@ -456,7 +456,7 @@ export default {
         },
         // type:可支付项目或优惠折扣，item
         openSelectNode(type) {
-            this.$emit('select', this.vipCard[type]);
+            this.$emit('select', this.vipCard[type], type);
             bus.$on('vipCardCategory', this.handleCategorySelect);
             this.selectType = type;
         }

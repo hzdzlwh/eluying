@@ -10,11 +10,14 @@
                     <div class="room-info">
                         <div class="room-name">
                             <span class="room-icon"></span>
-                            <span>{{type === ORDER_TYPE.ACCOMMODATION ? item.roomInfo.roomNum : item.serialNum}}</span>
-                            <span v-if="!((type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum))">({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
-                            <span v-if="(type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">{{item.name || (item.roomInfo && item.roomInfo.roomName)}}</span>&nbsp;
-                            <span style="color: #2bb267" v-if="(type === ORDER_TYPE.ACCOMMODATION && !item.roomInfo.roomNum) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">未排房</span>
-                            <span style="color: #999;margin: 0 32px" v-if="(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr">{{(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr}}</span>
+                            <span class="roomWordOver" :title='((type === ORDER_TYPE.ACCOMMODATION ? (item.roomInfo && item.roomInfo.roomNum) : item.serialNum) || "") + (item.name || (item.roomInfo && item.roomInfo.roomName))'>
+                            <span>{{type === ORDER_TYPE.ACCOMMODATION ? (item.roomInfo && item.roomInfo.roomNum) : item.serialNum}}</span>
+                            <span v-if="!((type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum))">({{item.name || (item.roomInfo && item.roomInfo.roomName)}})</span>
+                            <span v-if="(type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">{{item.name || (item.roomInfo && item.roomInfo.roomName)}}</span>
+                            </span>
+                            &nbsp;
+                            <span style="color: #2bb267" v-if="(type === ORDER_TYPE.ACCOMMODATION && !(item.roomInfo && item.roomInfo.roomNum)) || (type === ORDER_TYPE.COMBINATION && !item.serialNum)">未排房</span>
+                            <span style="color: #999;margin: 0 10px" v-if="(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr">{{(item.roomInfo && item.roomInfo.checkTypeStr) || item.checkTypeStr}}</span>
                             <span class="state-icon"
                                   :class="getOrderState(item, 'color')"
                             >
@@ -23,11 +26,18 @@
                         </div>
                         <div class="room-date">
                             <label class="label-text">到达</label>
-                            <span class="startDate">{{item.startDate || item.roomInfo.checkInDate}}</span>
+                            <span class="startDate " :class='{roomTimeOut: item.startTimeOut || (item.roomInfo && item.roomInfo.startTimeOut)}'>{{item.startDate || item.roomInfo.checkInDate}}
+                            <!-- <span class="timeOut" v-if='item.startTimeOut'>已超时</span>  -->
+                            </span>
                             <span>~</span>
                             <label class="label-text">离开</label>
-                            <span class="endDate">{{item.endDate || item.roomInfo.checkOutDate}}</span>
-                            <label class="label-text">共{{item.duration}}晚</label>
+                            <span class="endDate " :class='{roomTimeOut: item.endTimeOut || (item.roomInfo && item.roomInfo.endTimeOut)}'>{{item.endDate || item.roomInfo.checkOutDate}}
+                            <!-- <span class="timeOut" v-if='item.endTimeOut'>已超时</span>    -->
+                            </span>
+                            <label class="label-text">共{{item.checkType === 1 ? getHAndMs (item.checkInLength || (item.roomInfo && item.roomInfo.checkInLength)) : (item.duration + '晚')}}</label>
+                        </div>
+                        <div class="room-time roomTimeOut" v-if='item.startTimeOut || item.endTimeOut || (item.roomInfo && item.roomInfo.startTimeOut) || (item.roomInfo && item.roomInfo.endTimeOut)' >
+                            超时未{{(item.startTimeOut || (item.roomInfo && item.roomInfo.startTimeOut)) ? '入住' : ''}}{{(item.endTimeOut || (item.roomInfo && item.roomInfo.endTimeOut)) ? '退房' : ''}}
                         </div>
                         <div style="display: flex">
                             <span class="single-order-btn" @click='modalShow(item.serviceId)'
@@ -48,10 +58,10 @@
                             </div>
                         </div>
                         <span class="discount-info"
-                              v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))"
+                              
                               style="position: static;">
-                            <span>原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
-                        <span class="discount-num">
+                            <span v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)) || (item.checkType === 2 || item.checkType === 3)">原价<span class="origin-price">¥{{ item.originPrice || item.roomInfo.originPrice}}</span></span>
+                        <span class="discount-num" v-if="(item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount))">
                             {{ item.showDiscount || (item.roomInfo && item.roomInfo.showDiscount)}}
                         </span>
                         </span>
@@ -98,6 +108,12 @@
     </div>
 </template>
 <style scoped>
+    .endDate, .startDate{
+        position: relative;
+    }
+    .roomTimeOut{
+        color: red
+    }
     .room-fix {
         display: inline-block;
         cursor: pointer;
@@ -106,6 +122,12 @@
         color: #4a90e2;
         cursor: pointer;
         margin-left: 12px;
+    }
+    .roomWordOver{
+        max-width:170px;
+        overflow:hidden; 
+        white-space:nowrap;
+        text-overflow:ellipsis;
     }
 </style>
 <script>
@@ -116,6 +138,7 @@
     } from '../../../../ordersManage/constant';
     import bus from '../../../eventBus';
     import personsDetail from '../personsDetail.vue';
+    import { getHAndMs } from '../../../util.js';
     export default {
         props: {
             order: {
@@ -149,6 +172,7 @@
             }
         },
         methods: {
+            getHAndMs,
             getOrderState(room, prop) {
                 const state = room.roomInfo ? room.roomInfo.state : room.state;
                 if (state === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.ACCOMMODATION][state]) {

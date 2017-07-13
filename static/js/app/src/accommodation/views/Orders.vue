@@ -16,7 +16,7 @@
                 </DdSelect>
             </div>
              
-            <div style="margin-right:183px;" v-show='tag === 0'>
+            <div  v-show='tag === 0'>
                 <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate"/>
                 <span style="color:#999;font-size:14px;">～</span>
                 <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
@@ -59,6 +59,11 @@
                     <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
+            <div style="margin-right:20px;width: 120px;" class="fr" >
+                <dd-select v-model="checkType" >
+                    <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+                </dd-select>
+            </div>
         </div>
         <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='roomsOrderTable'></dd-table>
         <div class="foot footfix">
@@ -77,8 +82,12 @@
 #roomsOrderTable .dd-table tbody tr {
     cursor: pointer;
 }
+.fontRed{
+  color:red;
+}
 </style>
 <style lang="scss" scoped>
+
 .foot small{
   color:#999;
 
@@ -214,11 +223,14 @@
 from 'dd-vue-component';
 import http from '../../common/http';
 import eventbus from '../../common/eventBus';
-import { ORDER_STATE_LIST, ORDER_TYPE } from '../../ordersManage/constant';
+import { checkTypeAll } from '../../common/orderSystem/roomCheckType';
+import { ORDER_STATE_LIST, ORDER_TYPE, ROOM_ORDER_STATE } from '../../ordersManage/constant';
 export
 default {
        data() {
            return {
+               checkTypeAll,
+               checkType: -1,
                timeTypeList: [
                    {
                        id: 1,
@@ -276,7 +288,7 @@ default {
                    },
                    {
                        id: 7,
-                       name: '过期未退房 '
+                       name: '过期未退房'
                    },
                    {
                        id: 8,
@@ -285,6 +297,7 @@ default {
                ],
                ORDER_STATE_LIST,
                ORDER_TYPE,
+               ROOM_ORDER_STATE,
                state: -1,
                userOriginType: '-2~',
                userOrigins: [],
@@ -313,21 +326,32 @@ default {
                    },
                    {
                        title: '房号',
-                       render: (h, row) => row.rooms && row.rooms.map(function(room) {
+                       render: (h, row) => row.subOrderList && row.subOrderList.map(function(room) {
                            return <div >{room.roomName}</div>;
                        })
                    },
                    {
-                       title: '入住时间',
-                       render: (h, row) => row.rooms.map(function(room) {
-                           return <div >{room.startDate}</div>;
+                       title: '入住类型',
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div> { checkTypeAll.find(function(el) {
+                               return Number(el.id) === room.checkType;
+                           }).name }
+                            </div>;
                        })
                    },
                    {
-                       title: '退房时间',
-                       render: (h, row) => row.rooms.map(function(room) {
-                           return <div >{room.endDate}</div>;
-                       })
+                       title: '到达时间',
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div class ={room.startTimeOverFlag ? 'fontRed' : '' }>{room.startDate}</div>;
+                       }),
+                       width: 120
+                   },
+                   {
+                       title: '离开时间',
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div class ={room.endTimeOverFlag ? 'fontRed' : ''}>{room.endDate}</div>;
+                       }),
+                       width: 120
                    },
                    {
                        title: '联系人',
@@ -335,7 +359,8 @@ default {
                    },
                    {
                        title: '手机号',
-                       dataIndex: 'customerPhone'
+                       dataIndex: 'customerPhone',
+                       width: 120
                    },
                    {
                        title: '客源渠道',
@@ -347,12 +372,12 @@ default {
                    },
                    {
                        title: '订单状态',
-                       render: (h, row) =>
-                            <span>
-                            {ORDER_STATE_LIST[ORDER_TYPE.COMBINATION].find(function(el) {
-                                return Number(el.id) === row.orderState;
-                            }).name}
-                            </span>
+                       render: (h, row) => row.subOrderList.map(function(room) {
+                           return <div> { ROOM_ORDER_STATE.find(function(el) {
+                               return Number(el.id) === room.state;
+                           }).name }
+                            </div>;
+                       })
                    },
                    {
                        title: '创建人',
@@ -423,7 +448,14 @@ default {
                if (this.flag) {
                    this.fetchDate();
                }
+           },
+           checkType() {
+               this.pageNo = 1;
+               if (this.flag) {
+                   this.fetchDate();
+               }
            }
+           // 我也忘了为啥这么写了
        },
        methods: {
            changeTag(id) {
@@ -482,6 +514,9 @@ default {
                if (keyword) {
                    obj.keyword = this.searchPattern;
                }
+               if (this.checkType !== -1) {
+                   obj.checkType = this.checkType;
+               }
                // 后台要求如果为空就不传
                for (const ob in obj) {
                    if (obj[ob] === undefined || obj[ob] === '') {
@@ -538,6 +573,9 @@ default {
                };
                if (this.searchPattern) {
                    paramsObj.keyword = this.searchPattern;
+               }
+               if (this.checkType !== -1) {
+                   paramsObj.checkType = this.checkType;
                }
                // 后台要求如果为空就不传
                for (const ob in paramsObj) {
