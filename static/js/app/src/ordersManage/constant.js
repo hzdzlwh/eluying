@@ -80,7 +80,15 @@ export const ORDER_STATE_TEXT = {
         '8': { text: '反结账', color: 'red' }
     }
 };
-
+export const ROOM_ORDER_STATE = [
+        { id: '-1', name: '全部状态'},
+        { id: '0', name: '已预订' },
+        { id: '1', name: '已入住' },
+        { id: '2', name: '已退房' },
+        { id: '3', name: '已取消' },
+        { id: '6', name: '已撤销' },
+        { id: '8', name: '反结账' }
+];
 // 订单列表中使用
 export const ORDER_STATE_LIST = {
     '-1': [{ id: '-1', name: '全部状态' },
@@ -92,21 +100,21 @@ export const ORDER_STATE_LIST = {
         { id: '5', name: '已结束' },
         { id: '8', name: '反结账' }],
 
-    // '3': [{ id: '-1', name: '全部状态' },
-    //     { id: '2', name: '已预订' },
-    //     { id: '3', name: '已入住' },
-    //     { id: '4', name: '已取消' },
-    //     { id: '5', name: '已退房' },
-    //     { id: '6', name: '过期未入住' },
-    //     { id: '7', name: '过期未退房' },
-    //     { id: '8', name: '反结账' }],
     '3': [{ id: '-1', name: '全部状态' },
-        { id: '0', name: '已预订' },
-        { id: '1', name: '已入住' },
-        { id: '2', name: '已退房' },
-        { id: '3', name: '已取消' },
-        { id: '6', name: '已撤销' },
+        { id: '2', name: '已预订' },
+        { id: '3', name: '已入住' },
+        { id: '4', name: '已取消' },
+        { id: '5', name: '已退房' },
+        { id: '6', name: '过期未入住' },
+        { id: '7', name: '过期未退房' },
         { id: '8', name: '反结账' }],
+    // '3': [{ id: '-1', name: '全部状态' },
+    //     { id: '0', name: '已预订' },
+    //     { id: '1', name: '已入住' },
+    //     { id: '2', name: '已退房' },
+    //     { id: '3', name: '已取消' },
+    //     { id: '6', name: '已撤销' },
+    //     { id: '8', name: '反结账' }],
 
     '0': [{ id: '-1', name: '全部状态' },
         { id: '2', name: '已预订' },
