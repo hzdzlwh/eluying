@@ -23,7 +23,7 @@
                             <span class="header-tools"
                                   v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                   @click="showCombinationOrder">查看组合订单</span>
-                            <a class="header-tools" target="_blank" :href="printUrl">打印</a>
+                            <a class="header-tools" target="_blank" :href="prinurl">打印</a>
                             <span class="header-tools"
                                   v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
@@ -1112,7 +1112,8 @@
                     '1': 'resettleEnterOrder',
                     '2': 'resettleGoodsOrder',
                     '0': 'resettleCaterOrder'
-                }
+                },
+                prinurl: ''
             };
         },
         components: {
@@ -1149,7 +1150,9 @@
                 let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
-                return http.getUrl('/printer/getOrderDetailJsp?') + params;
+                const url = http.getUrl('/printer/getOrderDetailJsp?') + params;
+                this.prinurl = url;
+                return url;
             },
             orderState() {
                 return this.order.orderState === undefined ? this.order.state : this.order.orderState;
