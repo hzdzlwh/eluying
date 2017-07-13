@@ -623,7 +623,6 @@ export default {
                         startLength: roomInfo.startLength
 
                     };
-
                     this.rooms = [room];
                 }
                 this.rooms.map((room, index) => {
@@ -637,7 +636,9 @@ export default {
                 }
                 // disabled 钟点房编辑时未排房
                 this.rooms.map((room, index) => {
-                    this.changeRoomType(room, index, 'roomType');
+                    if (room.checkType === 1) {
+                        this.changeRoomType(room, index, 'roomType');
+                    }
                 });
             },
             initRegisterRooms(rooms) {
@@ -1065,7 +1066,7 @@ export default {
             },
             // 误差处理，将误差加至第一天
             setFirstDayFee(room) {
-                if (this.checkState !== 'ing') {
+                if (this.checkState !== 'ing' && room.checkType !== 1) {
                     const price = room.price;
                     if (price === undefined || price === '') {
                         return false;
