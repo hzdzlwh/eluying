@@ -81,7 +81,7 @@ export const ORDER_STATE_TEXT = {
     }
 };
 export const ROOM_ORDER_STATE = [
-        { id: '-1', name: '全部状态'},
+        { id: '-1', name: '全部状态' },
         { id: '0', name: '已预订' },
         { id: '1', name: '已入住' },
         { id: '2', name: '已退房' },
