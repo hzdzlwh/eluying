@@ -968,6 +968,9 @@ export default {
         },
         getSubmitRooms() {
             return this.rooms.map(room => {
+                const roomTypeName = room.roomList.filter(function(el) {
+                    return el.id === room.roomType;
+                });
                 return {
                     datePriceList: room.datePriceList,
                     endDate: util.dateFormatLong(room.room.endDate),
@@ -985,9 +988,7 @@ export default {
                     checktypeName: room.checkTypes.filter(function(el) {
                         return el.id === room.checkType;
                     })[0].name,
-                    roomTypeName: room.roomList.filter(function(el) {
-                        return el.id === room.roomType;
-                    })[0].name,
+                    roomTypeName: (roomTypeName.length && roomTypeName[0].name) ? roomTypeName[0].name : '',
                     useDiscount: room.moreDiscount === 0 || !room.priceModified,
                     extraItems: room.extraItems,
                     isCheckIn: room.isCheckIn,
