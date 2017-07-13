@@ -30,7 +30,7 @@
                     <th>分类</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="td-body-color">
                 <tr>
                     <td>入住类型</td>
                 </tr>
@@ -60,7 +60,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr class="td-body-color">
                         <td>间夜量</td>
                         <td>房费</td>
                         <td>平均房价</td>
@@ -78,7 +78,7 @@
                         <td></td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr class="td-body-color">
                         <td>间夜量</td>
                         <td>房费</td>
                         <td>平均房价</td>
@@ -107,7 +107,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr class="td-body-color">
                         <td>间夜量</td>
                         <td>房费</td>
                         <td>平均房价</td>
@@ -125,7 +125,7 @@
                         <td></td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr class="td-body-color">
                         <td>间夜量</td>
                         <td>房费</td>
                         <td>平均房价</td>
@@ -145,6 +145,9 @@
     </div>
 </template>
 <style scoped lang="scss">
+    .td-body-color{
+        background:#eee;
+    }
     th {
         background:#60758d;
         color: #fff;
