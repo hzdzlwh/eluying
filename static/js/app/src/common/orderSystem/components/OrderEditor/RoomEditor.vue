@@ -54,7 +54,7 @@
                                     已预订
                                 </span>
                             </div>
-                            <div class="room-count" v-if="item.checkType === 1">
+                            <div class="room-count" v-if="item.checkType === 1 && item.state !== 8">
                                 入住时长
                                 <counter-step :onNumChange="(a, b, num) => handleRoomNumChange(item, index, num)" :max='item.maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id='index' :type='3' :disabled='item.state === 8'></counter-step>
                             </div>
