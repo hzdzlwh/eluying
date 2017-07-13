@@ -359,7 +359,7 @@ export default {
                                 idCardList: room.idCardList,
                                 roomId: room.roomId,
                                 roomOrderId: room.roomOrderId,
-                                fee: room.totalPrice - item.totalPrice,
+                                fee: room.checkType === 1 ? room.roomHoursPrice : room.totalPrice - item.totalPrice,
                                 night: night
                             });
                         }
@@ -399,7 +399,7 @@ export default {
                             this.hideModal();
                             modal.success('退房成功');
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.orderDetail.orderId);
+                            bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.orderId });
                         });
                 } else {
                     if (this.penalty) {
