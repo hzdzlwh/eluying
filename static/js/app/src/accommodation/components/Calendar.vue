@@ -202,7 +202,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
-        <change-room-dialog>
+        <change-room-dialog :confirmDrag="confirmDragChangeRoom" :restDrag="rest">
             <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
         </change-room-dialog>
     </div>
@@ -702,7 +702,9 @@
                 outOrIn: 0,
                 date: new Date(),
                 roomdata: undefined,
-                changePrice: true
+                changePrice: true,
+                dragStopDate: undefined,
+                dragStopRoom: undefined
             };
         },
         components: {
@@ -991,9 +993,11 @@
                             const tr = $('.calendar-status-row').eq(offsetTop);
                             const td = tr.find('td').eq(offsetLeft);
                             const date = td.attr('date');
+                            that.dragStopDate = date;
                             const room = td.attr('room');
+                            that.dragStopRoom = room;
 
-                            function rest() {
+                            const rest = function() {
                                 ui.helper.css({
                                     top: startY + 'px',
                                     left: startX + 'px'
@@ -1002,7 +1006,7 @@
                                     top: targetStartY + 'px',
                                     left: targetStartX + 'px'
                                 });
-                            }
+                            }.bind(that);
                             if (offsetLeft === originalOffsetLeft && offsetTop === originalOffsetTop) {
                                 rest();
                                 return;
@@ -1052,7 +1056,7 @@
                                         },
                                         rest
                                     ); */
-                                    $('#changeRoomDialog').modal('show');
+                                    /* $('#changeRoomDialog').modal('show');
                                     $('#changeRoomOk').click(function() {
                                         $('#changeRoomDialog').modal('hide');
                                         http.post('/room/dragChangeRoom', {
@@ -1070,12 +1074,25 @@
                                     $('#changeRoomCancel').click(function() {
                                         rest();
                                         $('#changeRoomDialog').modal('hide');
-                                    });
+                                    }); */
                                 })
                                 .catch(rest);
                         }
                     });
                 });
+            },
+            confirmDragChangeRoom() {
+                http.post('/room/dragChangeRoom', {
+                    checkRoomOnly: false,
+                    roomId: this.room,
+                    startDate: this.date,
+                    roomOrderId: ui.helper.attr('roomOrderId'),
+                    updatePrice: this.changePrice
+                })
+                    .then(res => {
+                        bus.$emit('refreshView');
+                    })
+                    .catch(this.rest);
             }
         },
         directives: {

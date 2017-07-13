@@ -10,7 +10,7 @@
                         <slot></slot>
                     </div>
                     <div class="item-modal-footer">
-                       <button class="dd-btn dd-btn-primary" id="changeRoomOk">确定</button><button class="dd-btn dd-btn-ghost" id="changeRoomCancel">取消</button>
+                       <button class="dd-btn dd-btn-primary" @click="confirmDrag">确定</button><button class="dd-btn dd-btn-ghost" @click="restDrag">取消</button>
                     </div>
                 </div>
             </div>
@@ -21,8 +21,8 @@
 <script>
     export default {
         props: {
-        },
-        methods: {
+            confirmDrag: Function,
+            restDrag: Function
         }
     };
 </script>
