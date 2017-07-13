@@ -202,7 +202,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
-        <change-room-dialog :confirmDrag="confirmDragChangeRoom" :restDrag="rest">
+        <change-room-dialog :clearAllSelectedProps="clearAllSelected" :changePriceProps="changePrice" @changeDragState="changeIsDrag">
             <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
         </change-room-dialog>
     </div>
@@ -704,7 +704,8 @@
                 roomdata: undefined,
                 changePrice: true,
                 dragStopDate: undefined,
-                dragStopRoom: undefined
+                dragStopRoom: undefined,
+                outerUi: undefined
             };
         },
         components: {
@@ -962,7 +963,7 @@
                 $(document).on('mousedown', '.calendar-glyph', function() {
                     that.isDrag = false;
                 });
-                $(document).on('mouseover', '.calendar-glyph.draggable', function() {
+                /* $(document).on('mouseover', '.calendar-glyph.draggable', function() {
                     const $element = $(this);
                     let startX = 0;
                     let startY = 0;
@@ -996,6 +997,7 @@
                             that.dragStopDate = date;
                             const room = td.attr('room');
                             that.dragStopRoom = room;
+                            that.outerUi = ui;
 
                             const rest = function() {
                                 ui.helper.css({
@@ -1011,9 +1013,9 @@
                                 rest();
                                 return;
                             }
-                            let targetOrder;
-                            let targetStartX;
-                            let targetStartY;
+                            var targetOrder;
+                            var targetStartX;
+                            var targetStartY;
                             // 第一次先检验能否拖拽，可以的话预览，并提示确认框，不行的话重置
                             http.post('/room/dragChangeRoom', {
                                 checkRoomOnly: true,
@@ -1041,7 +1043,7 @@
                                         top: offsetTop * height + 2 + 'px',
                                         left: offsetLeft * width + 2 + 'px'
                                     });
-                                    /* modal.confirm({ title: '换房', message: '确定要换房吗？' },
+                                    modal.confirm({ title: '换房', message: '确定要换房吗？' },
                                         function() {
                                             http.post('/room/dragChangeRoom', {
                                                 checkRoomOnly: false,
@@ -1055,8 +1057,8 @@
                                                 .catch(rest);
                                         },
                                         rest
-                                    ); */
-                                    /* $('#changeRoomDialog').modal('show');
+                                    );
+                                    $('#changeRoomDialog').modal('show');
                                     $('#changeRoomOk').click(function() {
                                         $('#changeRoomDialog').modal('hide');
                                         http.post('/room/dragChangeRoom', {
@@ -1074,25 +1076,15 @@
                                     $('#changeRoomCancel').click(function() {
                                         rest();
                                         $('#changeRoomDialog').modal('hide');
-                                    }); */
+                                    });
                                 })
                                 .catch(rest);
                         }
                     });
-                });
+                }); */
             },
-            confirmDragChangeRoom() {
-                http.post('/room/dragChangeRoom', {
-                    checkRoomOnly: false,
-                    roomId: this.room,
-                    startDate: this.date,
-                    roomOrderId: ui.helper.attr('roomOrderId'),
-                    updatePrice: this.changePrice
-                })
-                    .then(res => {
-                        bus.$emit('refreshView');
-                    })
-                    .catch(this.rest);
+            changeIsDrag() {
+                this.isDrag = true;
             }
         },
         directives: {
