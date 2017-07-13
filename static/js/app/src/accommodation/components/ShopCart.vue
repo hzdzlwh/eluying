@@ -128,7 +128,8 @@
         methods: {
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
-                const today = new Date();
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
                 // const dialogConfig = {
                 //     showTitle: false,
                 //     okText: '清除'
