@@ -783,6 +783,7 @@ export default {
                 this.$nextTick(function() {
                     if (type !== 'roomType') {
                         item.roomType = 0;
+                        // item.roomList.unshift({ id: 0, name: '未排房' });
                     }
                     this.handleRoomChange(item, index, type);
                 });
@@ -861,7 +862,7 @@ export default {
                                     name: r.serialNum
                                 };
                             });
-                        if (!room.state) {
+                        if (!room.state || this.checkState === 'editOrder') {
                             rooms.unshift({
                                 id: 0,
                                 name: '未排房'

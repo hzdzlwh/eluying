@@ -399,7 +399,7 @@ export default {
                             this.hideModal();
                             modal.success('退房成功');
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.orderId });
+                           // bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.roomOrderId });
                         });
                 } else {
                     if (this.penalty) {
