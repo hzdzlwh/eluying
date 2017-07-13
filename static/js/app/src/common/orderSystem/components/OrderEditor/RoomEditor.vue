@@ -1040,7 +1040,9 @@ export default {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
-                                this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                if (currentRoom.state !== 8) {
+                                    this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                }
                                 // currentRoom.price = item.totalFee;
                             }
                             if (currentRoom.checkType === 1) {
