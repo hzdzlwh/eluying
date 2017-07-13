@@ -23,7 +23,7 @@
                             <span class="header-tools"
                                   v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                   @click="showCombinationOrder">查看组合订单</span>
-                            <a class="header-tools" target="_blank" :href="prinurl">打印</a>
+                            <a class="header-tools" target="_blank" :href="printUrl">打印</a>
                             <span class="header-tools"
                                   v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
@@ -1144,7 +1144,7 @@
             },
             printUrl() {
                 if (!this.id) {
-                    return '';
+                    return this.prinurl || '';
                 }
 
                 let params = { orderId: this.id, orderType: this.type };
