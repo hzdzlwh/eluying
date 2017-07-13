@@ -643,7 +643,7 @@
         font-size: $font-size-base;
         color: $gary-daker;
         .modal-dialog {
-            width: 908px;
+            width: 980px;
         }
         .modal-content {
             border-top: 4px solid #178ce6;
@@ -688,7 +688,7 @@
             width: 120px;
         }
         .room-category {
-            width: 60px;
+            width: 66px;
             margin-left: 4px;
             input {
                 width: 100%;

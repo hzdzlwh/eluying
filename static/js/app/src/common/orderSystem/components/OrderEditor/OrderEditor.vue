@@ -171,6 +171,7 @@
     padding: 8px 16px;
     position: absolute;
     right: 0;
+    z-index:1;
 }
 
 .user-group-company {
@@ -883,7 +884,7 @@ export default {
             }
 
             this.rooms.map(item => {
-                if (item.showTip && item.checkRoomType === 1) {
+                if ((item.showTip === 2 && item.checkRoomType === 1) || item.showTip === 1) {
                     valid = false;
                 }
                 if ((this.checkState === 'quick' || this.checkState === 'team') && !item.categoryType) {
@@ -967,6 +968,9 @@ export default {
         },
         getSubmitRooms() {
             return this.rooms.map(room => {
+                const roomTypeName = room.roomList.filter(function(el) {
+                    return el.id === room.roomType;
+                });
                 return {
                     datePriceList: room.datePriceList,
                     endDate: util.dateFormatLong(room.room.endDate),
@@ -984,6 +988,7 @@ export default {
                     checktypeName: room.checkTypes.filter(function(el) {
                         return el.id === room.checkType;
                     })[0].name,
+                    roomTypeName: (roomTypeName.length && roomTypeName[0].name) ? roomTypeName[0].name : '',
                     useDiscount: room.moreDiscount === 0 || !room.priceModified,
                     extraItems: room.extraItems,
                     isCheckIn: room.isCheckIn,
@@ -993,6 +998,9 @@ export default {
         },
         getQuickOrTeamRooms() {
             return this.rooms.map(room => {
+                const checkTypeName = room.checkType.filter(function(el) {
+                    return el.id === room.checkRoomType;
+                });
                 return {
                     amount: room.amount,
                     checkType: room.checkRoomType,
@@ -1004,9 +1012,7 @@ export default {
                     roomeName: room.categories.filter(function(el) {
                         return el.typeId === room.categoryType;
                     })[0].name,
-                    checktypeName: room.checkType.filter(function(el) {
-                        return el.id === room.checkRoomType;
-                    })[0].name,
+                    checktypeName: checkTypeName.length ? checkTypeName[0].name : '',
                     quickDiscountId: room.quickDiscountId,
                     useDiscount: room.moreDiscount === 0 || !room.priceModified
                 };
@@ -1105,10 +1111,11 @@ export default {
                 });
             }.bind(this);
             const outRome = this.checkoutTimeOut([room]);
-            if (outRome.length ) {
+            if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
-                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+                const roomTypeName = outRome[0].roomTypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + roomTypeName + ']已超时，确定保存订单吗？' }, callback);
             } else {
                 callback();
             }
@@ -1224,10 +1231,11 @@ export default {
                 });
             }.bind(this);
             const outRome = this.checkoutTimeOut(rooms);
-            if (outRome.length ) {
+            if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
-                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+                const roomTypeName = outRome[0].roomTypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + roomTypeName + ']已超时，确定保存订单吗？' }, callback);
             } else {
                 callback();
             }
@@ -1354,7 +1362,8 @@ export default {
             if (outRome.length && this.checkState === 'ing') {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
-                modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
+                const roomTypeName = outRome[0].roomTypeName;
+                modal.confirm({ title: '提示', message: roomeType + '[' + name + roomTypeName + ']已超时，确定保存订单吗？' }, callback);
             } else {
                 callback();
             }
