@@ -11,19 +11,19 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>订单信息</span></p>
                             <div class="cashier-order-item">
-                            <div>
-                                <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
-                                <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
-                            </div>
+                                <div>
+                                    <span class="cashier-money-text">订单金额:<span>¥{{type === 'cancel' ? 0 : orderPayment.payableFee}}</span></span>
+                                    <span class="cashier-money-text" v-if="penalty && penalty > 0">违约金:<span>¥{{penalty}}</span></span>
+                                </div>
                                 <div>
                                     <span class="cashier-money-text">星球币已抵扣:<span>¥{{1000.00}}</span></span>
-                                <span class="cashier-money-text" v-if="penalty && penalty > 0">余额已抵扣:<span>¥{{2000.00}}</span></span>
-                                <span class="cashier-money-text">现金已收:<span>¥{{ 2000.00 }}</span></span>
+                                    <span class="cashier-money-text" v-if="penalty && penalty > 0">余额已抵扣:<span>¥{{2000.00}}</span></span>
+                                    <span class="cashier-money-text">现金已收:<span>¥{{ 2000.00 }}</span></span>
                                 </div>
                                 <!-- <span class="cashier-money-text">已收金额:<span>¥{{ paiedMoney }}</span></span> -->
                                 <!-- <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span> -->
                             </div>
-                            <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
+<!--                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
                                 <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
                                     <div class="cashier-getMoney-channel" v-for="(log, index) in paylogs" :key="log.payId">
                                         <span>金额:</span>
@@ -51,30 +51,36 @@
                                     <span class="cashier-addBtn-icon"></span>
                                     <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="content-item">
                             <p class="content-item-title"><span>星球币抵扣</span></p>
                             <div class="cashier-order-item">
-                            收取账户共7005个星球币  本次最多可使用6000个
- 
-                            本次使用<input type="text" value="5000">个 抵扣￥500.00
+                                <dd-select v-model="orderPayment.code ">
+                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                                    </dd-option>
+                                </dd-select>
+                                <span class="cashier-tip-text">
+                                账户共750000个星球币，本次最多可使用600000个
+                                </span>
+                                <span>本次使用: <input type="text" value="5000">个</span>
+                                 <span class="cashier-tip-text">
+                                抵扣￥500.00
+                                </span>
                             </div>
                         </div>
-                         <div class="content-item">
+                        <div class="content-item"> 
                             <p class="content-item-title"><span>企业余额抵扣</span></p>
                             <div class="cashier-order-item">
-                            收取账户共7005个星球币  本次最多可使用6000个
- 
-                            本次使用<input type="text" value="5000">个 抵扣￥500.00
+                                收取账户共7005个星球币 本次最多可使用6000个 本次使用
+                                <input type="text" value="5000">个 抵扣￥500.00
                             </div>
                         </div>
-                         <div class="content-item">
+                        <div class="content-item">
                             <p class="content-item-title"><span>现金收款</span></p>
                             <div class="cashier-order-item">
-                            收取账户共7005个星球币  本次最多可使用6000个
- 
-                            本次使用<input type="text" value="5000">个 抵扣￥500.00
+                                收取账户共7005个星球币 本次最多可使用6000个 本次使用
+                                <input type="text" value="5000">个 抵扣￥500.00
                             </div>
                         </div>
                     </div>
@@ -104,6 +110,11 @@
     </div>
 </template>
 <style lang="scss" scoped>
+.cashier-tip-text{
+font-size:14px;
+color:#999999;
+line-height:14px;
+}
 .cashier-money-text {
     margin-right: 24px;
 }
@@ -134,10 +145,12 @@
         margin-bottom: 16px;
     }
 }
-.content-item-title{
+
+.content-item-title {
     border-bottom: 1px dotted #e6e6e6;
     margin-bottom: 0;
 }
+
 .cashier-deposit-info {
     display: flex;
     align-items: center;
@@ -203,6 +216,13 @@ export default {
     data() {
         return {
             // showDeposit: false,
+            getOrReturn: [{
+                val: 0,
+                name: '收取'
+            }, {
+                val: 0,
+                name: '退还'
+            }],
             payments: [],
             deleteIds: [],
             paylogs: [],
@@ -616,7 +636,7 @@ export default {
                 this.payments.forEach(payment => {
                     if (payment.fee < 0) {
                         numvaild = true;
-                        
+
                     }
                     if (!payment.payChannelId) {
                         invalid = true;
