@@ -5,7 +5,7 @@
             <div class="shopcart-room" v-for="room in selectedRooms">{{room}}</div>
         </div>
         <div class="shopcart-action">
-            <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button>
+        <!--     <button class="dd-btn shopcart-addition" v-if="finishShow" @click="check('finish')">补录</button> -->
             <button class="dd-btn shopcart-book" v-if="bookShow" @click="check('book')">预订</button>
             <button class="dd-btn shopcart-live" v-if="ingShow" @click="check('ing')">直接入住</button>
         </div>
@@ -74,14 +74,18 @@
              */
             selectedRooms() {
                 const today = new Date();
+                // const finstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23);
+                // const yesDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
                 let p = false;
                 let t = false;
                 let f = false;
                 const temp = {};
-                this.selectedEntries.map(e => {
+                const roomDate = this.getRoomsWithDate();
+                roomDate.map(e => {
                     // 直接抄的浇浇代码
-                    const date = new Date(e.date);
-                    if (util.isSameDay(date, today)) {
+                    const date = new Date(e.startDate);
+                    if (
+                        util.isSameDay(date, today)) {
                         t = true;
                     } else if (date > today) {
                         f = true;
@@ -89,11 +93,14 @@
                         p = true;
                     }
 
-                    temp[e.id] = `${e.cName}-${e.rName}`;
+                    // temp[e.id] = `${e.cName}-${e.rName}`;
                 });
-                this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
-                this.ingShow = p && t && !f || p && t && f || !p && t && !f || !p && t && f;
-                this.bookShow = p && !t && f || !p && t && !f || !p && t && f || !p && !t && f;
+                this.selectedEntries.map(e => temp[e.id] = `${e.cName}-${e.rName}`);
+                // this.finishShow = p && !t && !f || p && t && !f || p && t && f || p && !t && f;
+                // this.ingShow = (p && t && !f || p && t && f || !p && t && !f || !p && t && f) && !p;
+                // this.bookShow = (p && !t && f || !p && t && !f || !p && t && f || !p && !t && f) && !p;
+                this.bookShow = (!f && !p) || !p;
+                this.ingShow = p || (!f && !p);
                 this.t = t;
                 this.p = p;
                 this.f = f;
@@ -121,35 +128,52 @@
         methods: {
             check(type) {
                 // 根据操作行为，弹出确认框，清除不合适的日期
-                const dialogConfig = {
-                    showTitle: false,
-                    okText: '清除'
-                };
-                const callback = () => {
-                    this.clear(type);
-                    bus.$emit('changeCheckState', type, this.getRoomsWithDate());
-                };
-                if (type === 'finish') {
-                    if (this.t || this.f) {
-                        dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
-                    }
-                } else if (type === 'ing') {
-                    if (this.p) {
-                        dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
-                    }
-                } else if (type === 'book') {
-                    if (this.p) {
-                        dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
-                        modal.confirm(dialogConfig, callback);
-                        return false;
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+                // const dialogConfig = {
+                //     showTitle: false,
+                //     okText: '清除'
+                // };
+                // const callback = () => {
+                //     this.clear(type);
+                //     bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+                // };
+                let flag = true;
+                const roomDate = this.getRoomsWithDate();
+                if (roomDate.length > 1) {
+                    if (type === 'ing') {
+                        roomDate.map(e => {
+                            if (new Date(e.startDate) > today) {
+                                modal.alert('未来的房间不可直接入住');
+                                flag = false;
+                            }
+                        });
                     }
                 }
-
-                bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+                if (flag) {
+                    bus.$emit('changeCheckState', type, this.getRoomsWithDate());
+                } else {
+                    return false;
+                }
+                // if (type === 'finish') {
+                //     if (this.t || this.f) {
+                //         dialogConfig.message = '选择补录，系统将自动清除今天及以后的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // } else if (type === 'ing') {
+                //     if (this.p) {
+                //         dialogConfig.message = '选择直接入住，系统将自动清除今天以前的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // } else if (type === 'book') {
+                //     if (this.p) {
+                //         dialogConfig.message = '选择预定，系统将自动清除今天以前的房态格子。';
+                //         modal.confirm(dialogConfig, callback);
+                //         return false;
+                //     }
+                // }
             },
             clear(type) {
                 const today = new Date();

@@ -21,10 +21,31 @@ const orderSystemModule = {
             startDate: new Date(now.year, now.mouth, now.day, 18, 0, 0, 0),
             endDate: new Date(now.year, now.mouth, now.day + 1, 12, 0, 0, 0),
             roomCheckType: 0
+        },
+        roomTipStatus: {
+            tips: '',
+            show: false
         }
     },
 
     mutations: {
+        [types.SET_ROOMTIP](state, { roomTipStatus }) {
+            if (state.roomTipStatus.tips !== roomTipStatus.tips) {
+                state.roomTipStatus = {
+                    tips: roomTipStatus.tips,
+                    show: true
+                };
+                window.sessionStorage.setItem('clostTipsShow', false);
+            } else {
+                if (window.sessionStorage.getItem('clostTipsShow') === '1') {
+                    state.roomTipStatus.show = false;
+                }
+            }
+        },
+        [types.SET_TIPSSHOW](state, tipsShow) {
+            window.sessionStorage.setItem('clostTipsShow', !tipsShow ? 1 : 0);
+            state.roomTipStatus.show = tipsShow;
+        },
         [types.SET_ROOM_EXITINFO](state, { key, val }) {
             state.roomExtinfo[key] = val;
         },
@@ -217,6 +238,16 @@ const orderSystemModule = {
                     });
             });
         },
+        [types.LOAD_ROOMTIP]({ commit }) {
+            http.get('/room/getTips')
+                .then((res) => {
+                    if (!res.data.tips) {
+                        commit(types.SET_TIPSSHOW, false);
+                    } else {
+                        commit(types.SET_ROOMTIP, { roomTipStatus: { tips: res.data.tips } });
+                    }
+                });
+        }
     }
 };
 

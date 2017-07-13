@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="//www.w3.org/1999/xhtml">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>订单来了——住宿管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>订单来了-其他设置</title>
     <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/dist/main.min.css">
@@ -11,53 +13,11 @@
     <script src="/static/js/app/dist/other/room.js"></script>
 </head>
 <body>
-    <div class="mainContainer clearfloat" id='otherSetting'>
-    <div class="content">
-    <div class="title clearfloat topMenu">
-                <span class="campName"></span>
-        <div class="restaurant-container">
-                       <div class="modal-content clearfloat v-modal" style="width: 437px">
-                <p class="rest-title" style="margin-bottom: 18px;">
-                    其他设置
-                </p>
-                <p class="sub-line"></p>
-                <div style="display: flex;margin-bottom: 20px   ">
-                    <span class="setting-label">快捷折扣：</span>
-                    <div>
-                        <p v-for="discount in discounts" v-if="!discount.deleted">
-                            <span style="width: 130px;display: inline-block">{{discount.description}}</span>
-                            <span style="width: 78px;margin: 0 20px;display: inline-block">{{discount.discount}}折</span>
-                            <img src="/static/image/modal/room_modal_delete.png" @click="remove(discount)" style="cursor: pointer">
-                        </p>
-                        <div v-for="discount in newDiscounts" style="margin-bottom: 10px">
-                            <input class="dd-input" type="text" placeholder="折扣名称" v-model="discount.description" maxlength="8" style="width: 130px">
-                            <span style="margin: 0 20px"><input class="dd-input" type="text" placeholder="优惠" v-model="discount.discount" maxlength="3" style="width: 60px;margin-right: 4px">折</span>
-                            <img src="/static/image/modal/room_modal_delete.png" @click="remove(discount)" style="cursor: pointer">
-                        </div>
-                        <p style="margin: -5px 0 10px;font-size: 12px" v-if="newDiscounts.length > 0">注：请输入0.1~9.9之间的数字</p>
-                        <span v-if="newDiscounts.length+discounts.length<10" @click="addDiscount" style="cursor: pointer"><img src="//static.dingdandao.com/vipAdditional.png" style="margin-right: 4px">新增折扣</span>
-                    </div>
-                </div>
-                <p class="sub-line"></p>
-                <div>
-                    <div>
-                        <span class="setting-label">零头处理：</span>
-                        <input name="oddType" type="radio" class="dd-radio" id="zero-none" value="0" v-model="oddType"><label for="zero-none">不处理</label>
-                        <input name="oddType" type="radio" class="dd-radio" id="zero-round" value="1" v-model="oddType"><label for="zero-round">四舍五入</label>
-                        <input name="oddType" type="radio" class="dd-radio" id="zero-fixed" value="2" v-model="oddType"><label for="zero-fixed">元后抹零</label>
-                    </div>
-                    <div v-if="oddType == 1 || oddType == 2">
-                        <span class="setting-label">精确到：</span>
-                        <input name="unit" type="radio" class="dd-radio" id="zero-jiao" value="1" v-model="unit"><label for="zero-jiao">角</label>
-                        <input name="unit" type="radio" class="dd-radio" id="zero-yuan" value="2" v-model="unit"><label for="zero-yuan">元</label>
-                        <input name="unit" type="radio" class="dd-radio" id="zero-ten" value="3" v-model="unit"><label for="zero-ten">十元</label>
-                    </div>
-                </div>
-                <div class="v-btn-group" style="padding-left: 60px">
-                    <button class="v-btn v-blue-btn" @click="confirm">确定</button>
-                </div>
-            </div>
-    </div>
+    <div class="mainContainer clearfloat">
+        <div class="content clearfloat">
+            <div class="topMenu"></div>
+            <div id="app"></div>
+        </div>
     </div>
 </body>
 </html>

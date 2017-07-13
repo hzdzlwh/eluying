@@ -197,6 +197,10 @@
                         <div style="width: 100%;">
                             <div class="order-btns">
                                 <span v-if="this.order.roomInfo || this.order.rooms && this.order.rooms.length > 0">
+                                    <div class="dd-btn dd-btn-primary order-btn" v-if="getRoomsState.transform && order.type === ORDER_TYPE.ACCOMMODATION" @click='editOrder("transform")'
+                                        >
+                                        转正常入住
+                                    </div>
                                     <div class="dd-btn dd-btn-primary order-btn" v-if="order.cancelSelectRoomsAble"
                                          @click="cancelSelectRooms">
                                         取消排房
@@ -395,7 +399,7 @@
         }
         .room-info, .room-name, .room-user, .play-item, .food-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
         .room-user {
             margin-top: 12px;
@@ -639,7 +643,7 @@
         font-size: $font-size-base;
         color: $gary-daker;
         .modal-dialog {
-            width: 908px;
+            width: 980px;
         }
         .modal-content {
             border-top: 4px solid #178ce6;
@@ -684,7 +688,7 @@
             width: 120px;
         }
         .room-category {
-            width: 60px;
+            width: 66px;
             margin-left: 4px;
             input {
                 width: 100%;
@@ -1108,7 +1112,8 @@
                     '1': 'resettleEnterOrder',
                     '2': 'resettleGoodsOrder',
                     '0': 'resettleCaterOrder'
-                }
+                },
+                prinurl: ''
             };
         },
         components: {
@@ -1139,13 +1144,15 @@
             },
             printUrl() {
                 if (!this.id) {
-                    return '';
+                    return this.prinurl || '';
                 }
 
                 let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
-                return http.getUrl('/printer/getOrderDetailJsp?') + params;
+                const url = http.getUrl('/printer/getOrderDetailJsp?') + params;
+                this.prinurl = url;
+                return url;
             },
             orderState() {
                 return this.order.orderState === undefined ? this.order.state : this.order.orderState;
@@ -1213,16 +1220,20 @@
                 const roomsState = {
                     checkOutAdAble: false,
                     checkOutAble: false,
-                    checkInAble: false
+                    checkInAble: false,
+                    transform: false
                 };
 
                 function checkState(room) {
+                    if (room.checkType === 1 && room.state === 1) {
+                        roomsState.transform = true;
+                    }
                     if (room.state === 0) {
                         roomsState.checkInAble = true;
                     } else if (room.state === 1) {
                         const today = new Date();
                         const endDate = new Date(room.checkOutDate || room.endDate);
-                        if (endDate > today && !util.isSameDay(endDate, today)) {
+                        if (endDate > today && !util.isSameDay(endDate, today) && room.checkType !== 1) {
                             roomsState.checkOutAdAble = true;
                         } else {
                             roomsState.checkOutAble = true;
@@ -1297,12 +1308,22 @@
             closeCashDetail() {
                 this.cashDetailShow = false;
             },
-            editOrder() {
+            editOrder(type) {
                 this.hideModal();
                 bus.$emit('changeBack', this.show);
                 bus.$emit('setBack', this.show);
                 // 这里有个顺序问题，所以这样写了
+                this.order.timeRoomAuto = false;
+                this.order.timeRoomTransform = false;
+                // 返回的时候重制
+                if (type === 'auto') {
+                    this.order.timeRoomAuto = true;
+                }
+                if (type === 'transform') {
+                    this.order.timeRoomTransform = true;
+                }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
+                
             },
             cancelOrder() {
                 this.hideModal();
@@ -1343,7 +1364,13 @@
                         }
                         bus.$emit('changeBack', this.show);
                         this.hideModal();
-                    });
+                });
+            },
+            checkoutTimeOut(room) {
+                const outRoom = room.filter(function(room) {
+                    return (new Date(room.endDate) < new Date() || (room.roomInfo && (new Date(room.roomInfo.checkOutDate) < new Date())));
+                });
+                return outRoom;
             },
             resetOrder() {
                 http.get('/order/' + this.reseturl[this.type + ''], { orderId: this.id, orderType: this.type })
@@ -1353,14 +1380,21 @@
                     });
             },
             autoSelectRooms() {
-                http.post('/room/autoSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
-                    .then(res => {
-                        if (res.msg) {
-                            modal.warn(res.msg);
-                        }
-                        this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
-                        bus.$emit('refreshView');
-                    });
+                const callback = function() {
+                    http.post('/room/autoSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })
+                        .then(res => {
+                            if (res.msg) {
+                                modal.warn(res.msg);
+                            }
+                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.type });
+                            bus.$emit('refreshView');
+                        });
+                }.bind(this);
+                if (this.order.rooms && this.order.rooms.filter((room) => (room.checkType === 1)).length) {
+                    modal.confirm({ title: '提示', message: '预订钟点房不会自动排房' }, callback);
+                } else {
+                    callback();
+                }
             },
             cancelSelectRooms() {
                 http.post('/room/cancelSelectRooms', { orderId: getOrderId(this.order), orderType: this.type })

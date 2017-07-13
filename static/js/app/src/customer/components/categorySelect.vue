@@ -3,10 +3,16 @@
         <div class="modal-dialog" style="width: 400px">
             <div class="modal-content">
                 <button type="button" class="close" @click="close"><span>&times;</span></button>
-                <h2 style="margin-bottom: 21px">{{type === 'consume' ? '选择消费累计项目' : '选择优惠项目'}}</h2>
+                <h2 style="margin-bottom: 21px">{{title}}</h2>
                 <div style="padding-left: 21px">
                     <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="all"><span>全部</span></div>
-                    <div class="select-category"><input type="checkbox" class="dd-checkbox" v-model="room"><span>住宿</span></div>
+                    <div class="select-category">
+                        <span class="select-category-name"><input type="checkbox" class="dd-checkbox" v-model="room">住宿</span>
+                        <span class="select-category-nodes">
+                            <span class="select-category-node" :key="node.id" v-for="node in roomNodeList">
+                                <input v-model="node.selected" type="checkbox" class="dd-checkbox">{{node.nodeName}}</span>
+                        </span>
+                    </div>
                     <div class="select-category" v-if="restNodeList.length > 0">
                         <span class="select-category-name"><input type="checkbox" class="dd-checkbox" v-model="food">餐饮</span>
                         <span class="select-category-nodes">
@@ -85,7 +91,36 @@
             return {
                 enterNodeList: [],
                 restNodeList: [],
-                room: undefined,
+                roomAllNodeList: [
+                    {
+                        nodeName: '正常入住',
+                        nodeType: 0,
+                        id: 0,
+                        selected: false,
+                        discount: undefined
+                    },
+                    {
+                        nodeName: '钟点房',
+                        nodeType: 0,
+                        id: 1,
+                        selected: false,
+                        discount: undefined
+                    },
+                    {
+                        nodeName: '自用房',
+                        nodeType: 0,
+                        id: 2,
+                        selected: false,
+                        discount: undefined
+                    },
+                    {
+                        nodeName: '免费房',
+                        nodeType: 0,
+                        id: 3,
+                        selected: false,
+                        discount: undefined
+                    }
+                ],
                 shop: undefined
             };
         },
@@ -95,6 +130,14 @@
             }
         },
         computed: {
+            room: {
+                get() {
+                    return this.roomNodeList.every(i => i.selected);
+                },
+                set(v) {
+                    this.roomNodeList.map(i => i.selected = v);
+                }
+            },
             food: {
                 get() {
                     return this.restNodeList.every(i => i.selected);
@@ -122,6 +165,22 @@
                     this.et = v;
                     this.food = v;
                 }
+            },
+            roomNodeList() {
+                if (this.type === 'discount') {
+                    return this.roomAllNodeList.filter(i => i.id === 0 || i.id === 1);
+                }
+
+                if (this.type === 'consume' || this.type === 'pay') {
+                    return this.roomAllNodeList;
+                }
+            },
+            title() {
+                return {
+                    discount: '选择优惠项目',
+                    consume: '选择消费累计项目',
+                    pay: '选择可支付项目'
+                }[this.type];
             }
         },
         created() {
@@ -145,15 +204,11 @@
             },
             confirmSelect() {
                 const list = [];
-                if (this.room) {
-                    list.push({
-                        id: 0,
-                        nodeType: 0,
-                        nodeName: '住宿',
-                        selected: true
-                    });
-                }
-
+                this.roomNodeList.map(i => {
+                    if (i.selected) {
+                        list.push({ ...i });
+                    }
+                });
                 this.enterNodeList.map(i => {
                     if (i.selected) {
                         list.push({ ...i });
@@ -186,8 +241,10 @@
                     const node = list.find(item => item.id === i.id);
                     i.selected = !!node;
                 });
-                const room = list.find(item => item.nodeType === 0);
-                this.room = !!room;
+                this.roomNodeList.map(i => {
+                    const node = list.find(item => item.id === i.id);
+                    i.selected = !!node;
+                });
                 const shop = list.find(item => item.nodeType === 3);
                 this.shop = !!shop;
             },

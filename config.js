@@ -17,7 +17,7 @@ module.exports = {
         'category/foodEntry': './static/js/app/src/business/category/food/foodEntry.js',
         'category/ETEntry': './static/js/app/src/business/category/entertainment/ETEntry.js',
         'category/shopEntry': './static/js/app/src/business/category/shop/shopEntry.js',
-        'other/room': './static/js/app/src/business/other/other.js',
+        'other/room': './static/js/app/src/business/other/main.js',
         'consume/room': './static/js/app/src/business/consume/main.js',
         'salesite/info': './static/js/app/src/salesite/info/info.js',
         'salesite/operation': './static/js/app/src/salesite/operation/operation.js',
@@ -38,7 +38,8 @@ module.exports = {
         'salesite/detail': './static/js/app/src/salesite/detail/detail.js',
         'reports/reports': './static/js/app/src/reports/main.js',
         'customer/customer': './static/js/app/src/customer/main.js',
-        'block/room': './static/js/app/src/business/block/room.js'
+        'block/room': './static/js/app/src/business/block/room.js',
+        'hourly/room': './static/js/app/src/business/hourly/room.js'
     },
     html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,

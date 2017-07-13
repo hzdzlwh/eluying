@@ -1,5 +1,5 @@
 <template>
-    <div class="calendar">
+    <div class="calendar" :class='{haveRoomOutTip: this.$store.state.orderSystem.roomTipStatus.show}'>
         <div class="legend-box">
             <span class="room-legend">
                 <span class="room-legend-icon blue"></span>
@@ -132,10 +132,12 @@
                     <b class="calendar-glyph-name">{{g.customerName}}</b>
                     <div class="calendar-glyph-info">
                         <span class="calendar-glyph-channel">{{g.channelName}}</span>
+                        
+                    </div>
+                    <div class="calendar-glyph-type"><span>{{ getCheckType(g.checkType)}}</span>
                         <img class="" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
                         <img class="" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
-                        <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2">
-                    </div>
+                        <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2"></div>
                     <div class="calendar-glyph-detail ing up">
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
@@ -200,6 +202,9 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
+        <change-room-dialog>
+            <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
+        </change-room-dialog>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
@@ -207,6 +212,14 @@
     .calendar {
         height: 100%;
         width: 100%;
+    }
+    .haveRoomOutTip{
+        .calendar-picker, .calendar-header{
+            top:72px;
+        }
+        .calendar-body{
+            top:152px;
+        }
     }
     .legend-box {
         position: absolute;
@@ -307,7 +320,7 @@
         width: 100%;
         text-align: center;
         border-bottom: solid thin #e6e6e6;
-        height: 48px;
+        height: 69px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -413,7 +426,7 @@
     .calendar-status {
         position: relative;
         width: 100px;
-        height: 48px;
+        height: 69px;
         background: white;
         border-right: solid thin #e6e6e6;
         border-bottom: solid thin #e6e6e6;
@@ -439,7 +452,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         width: 96px;
-        height: 44px;
+        height: 65px;
         margin: auto;
         margin-top: 2px;
         font-size: 12px;
@@ -459,7 +472,7 @@
             &::after {
                 content: '';
                 position: absolute;
-                 top: 1px;
+                 top: 8px;
                  left: 40px;
                  width: 16px;
                  height: 32px;
@@ -514,7 +527,7 @@
     .calendar-status-close {
         background: #878787;
         width: 96px;
-        height: 44px;
+        height: 64px;
         margin: auto;
         margin-top: 2px;
         color: #fff;
@@ -523,7 +536,7 @@
     }
     .calendar-glyph {
         position: absolute;
-        height: 44px;
+        height: 65px;
         color: white;
         padding-left: 8px;
         cursor: pointer;
@@ -552,6 +565,19 @@
         background: #a6a6a6;
         &.glyph-start {
              border-left: 6px solid #8c8c8c;
+        }
+    }
+    .calendar-glyph-type{
+        span{
+            width: 48px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 12px;
+        }
+        img{
+            margin-top: -15px;
         }
     }
     .calendar-glyph-name, .calendar-glyph-info {
@@ -647,6 +673,8 @@
     import modal from '../../common/modal';
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
+    import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
+    import changeRoomDialog from './changeRoomDialog';
 
     export default{
         props: {
@@ -661,6 +689,7 @@
         },
         data() {
             return {
+                checkType: roomCheckType,
                 scrollTicking: false,
                 lastScrollTop: 0,
                 lastScrollLeft: 0,
@@ -672,14 +701,16 @@
                 formNumber: 0,
                 outOrIn: 0,
                 date: new Date(),
-                roomdata: undefined
+                roomdata: undefined,
+                changePrice: true
             };
         },
         components: {
             DateSelect,
             RoomFilter,
             contextmenu,
-            dayOrderForm
+            dayOrderForm,
+            changeRoomDialog
         },
         computed: {
             dateRange() {
@@ -749,7 +780,7 @@
                 // 生成订单图元
                 const glyphs = [];
                 const GRID_WIDTH = 100;
-                const GRID_HEIGHT = 48;
+                const GRID_HEIGHT = 69;
                 const startDate = this.startDate;
                 this.orderList.map(order => {
                     // 过滤未选中的房型
@@ -797,6 +828,11 @@
             }
         },
         methods: {
+            getCheckType(type) {
+                return this.checkType.find(function(el) {
+                    return el.id === type;
+                }).name;
+            },
             handleStatusScroll(ev) {
                 if (!this.scrollTicking) {
                     this.$refs.calendarLeftHeader.scrollTop = ev.target.scrollTop;
@@ -1016,6 +1052,25 @@
                                         },
                                         rest
                                     );
+                                    /* $('#changeRoomDialog').modal('show');
+                                    $('#changeRoomOk').click(function() {
+                                        $('#changeRoomDialog').modal('hide');
+                                        http.post('/room/dragChangeRoom', {
+                                            checkRoomOnly: false,
+                                            roomId: room,
+                                            startDate: date,
+                                            roomOrderId: ui.helper.attr('roomOrderId'),
+                                            updatePrice: that.changePrice
+                                        })
+                                            .then(res => {
+                                                bus.$emit('refreshView');
+                                            })
+                                            .catch(rest);
+                                    });
+                                    $('#changeRoomCancel').click(function() {
+                                        rest();
+                                        $('#changeRoomDialog').modal('hide');
+                                    }); */
                                 })
                                 .catch(rest);
                         }

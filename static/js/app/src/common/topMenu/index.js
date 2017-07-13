@@ -21,12 +21,15 @@ var topMenu = {
             consumeDisplay: (option && option.showConsume === false) ? 'none' : 'block',
             block: '住宿分区',
             blockDisplay: (option && option.showBlock === false) ? 'none' : 'block',
+            hourly: '钟点房',
+            hourlyDisplay: (option && option.showBlock === false) ? 'none' : 'block',
             categoryPath: '/view/settings/business/category/' + path + '.html',
             inventoryPath: '/view/settings/business/inventory/' + path + '.html',
             pricePath: '/view/settings/business/price/' + path + '.html',
             otherPath: '/view/settings/business/other/' + path + '.html',
             consumePath: '/view/settings/business/consume/' + path + '.html',
-            blockPath: '/view/settings/business/block/' + path + '.html'
+            blockPath: '/view/settings/business/block/' + path + '.html',
+            hourlyPath: '/view/settings/business/hourly/' + path + '.html'
         };
         if (path === 'food') {
             data.categoryPath = '/view/settings/business/restaurant/dishes.html?' + query;

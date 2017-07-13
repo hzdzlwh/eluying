@@ -4,7 +4,7 @@
         <div class="vipCardParnet"><span>最多可以创建10种卡</span><span class="dd-btn dd-btn-sm dd-btn-primary" @click='add' style="float:right;">新增会员卡</span></div>
         <vipCardSet @select='select' v-for='(dd ,index) in data' :data='dd' :key="dd" :editor='dd.addType === 1' :toggleShow='!(dd.addType === 1)' @delet='deletCard(index)' @addCard='fetchDate'></vipCardSet>
         <div v-if="data.length === 0" style="text-aligin:center;margin-top:200px;">您还没有会员卡</div>
-        <categorySelect :onConfirm="handleCategorySelect" :type="'discount'" :list="nodes" />
+        <categorySelect :onConfirm="handleCategorySelect" :type="type" :list="nodes" />
     </div>
     <!-- </div> -->
 </template>
@@ -28,7 +28,8 @@ export default {
     data() {
         return {
             data: [],
-            nodes: []
+            nodes: [],
+            type: 'discount'
         };
     },
     components: {
@@ -46,7 +47,8 @@ export default {
                     }
                 });
         },
-        select(nodes) {
+        select(nodes, type) {
+            this.type = { discountItems: 'discount', consumeItems: 'consume', payableItems: 'pay' }[type];
             this.nodes = nodes;
             $('#categorySelectModal').modal('show');
         },

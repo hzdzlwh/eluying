@@ -7,7 +7,8 @@ import dailyReport from './views/overview/operation/dailyReport.vue';
 import container from './views/container.vue';
 import channel from './views/overview/channel.vue';
 import sale from './views/overview/sale.vue';
-import accommodation from './views/accommodation.vue';
+import accommodation from './views/accommodation/accommodation.vue';
+import accommodationDaily from './views/accommodation/daily.vue';
 import childContainer from './views/childContainer.vue';
 import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
@@ -124,7 +125,24 @@ export const routes = [
         meta: {
             name: '住宿'
         },
-        component: accommodation
+        redirect: '/accommodation/statistics',
+        children: [
+            {
+                path: '/accommodation/statistics',
+                component: accommodation,
+                meta: {
+                    name: '统计'
+                }
+            },
+            {
+                path: '/accommodation/daily',
+                component: accommodationDaily,
+                meta: {
+                    name: '日报'
+                }
+            }
+        ],
+        component: container
     },
     {
         path: '/catering',
