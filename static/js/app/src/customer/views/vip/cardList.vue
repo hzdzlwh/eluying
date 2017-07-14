@@ -28,7 +28,7 @@
                         :channels="payChannels"
                         @refreshView="getCardList">
         </main-card-form>
-        <vip-card-detail></vip-card-detail>
+        <vip-card-detail :card="card"></vip-card-detail>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
