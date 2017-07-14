@@ -78,12 +78,20 @@
                 </div>
             </inner-container>
         </outer-container>
+        <outer-container :title="channel" style="margin-bottom: 20px;">
+            <inner-container :title="microOfficeWeb">
+                <div slot="show" style="display:flex;padding: 20px;">
+                    <span style="display:inline-block;margin-right:16px;height:33px;line-height:33px;">线上订单自动排放</span><switchbtn @click.native="setAutoManageHouse" v-model="autoManageHouse"></switchbtn>
+                </div>
+            </inner-container>
+        </outer-container>
     </div>
 </template>
 
 <script>
     import outerContainer from './components/outerContainer';
     import innerContainer from './components/innerContainer';
+    import switchbtn from '../../common/components/switch.vue';;
     import btn from './components/button';
     import http from '../../common/http';
     import modal from '../../common/modal';
@@ -97,6 +105,9 @@
                 changeProcess: '零头处理',
                 specialHouse: '特殊房统计',
                 intervalNight: '间夜量计算',
+                channel: '渠道',
+                microOfficeWeb: '微官网',
+                microOfficeWebEdit: false,
                 shortcutView: true,
                 changeView: true,
                 specialView: true,
@@ -113,17 +124,20 @@
                 newDiscounts: [],
                 intervalTime: null,
                 intervalBase: 0.5,
-                intervalBaseAlert: false
+                intervalBaseAlert: false,
+                autoManageHouse: null
             }
         },
         components: {
             outerContainer,
             innerContainer,
-            btn
+            btn,
+            switchbtn
         },
         created() {
             this.getDiscountLists();
             this.getAccountState();
+            this.getAutoManageHouse();
         },
         methods: {
             addDiscount() {
@@ -212,6 +226,18 @@
             intervalNightCancel() {
                 this.intervalNightView = !this.intervalNightView;
                 this.getAccountState();
+            },
+            getAutoManageHouse() {
+                http.get('/room/getDirectRoomAutoSelectStatus', {}).then(res => {
+                    if (res.code === 1) {
+                        this.autoManageHouse = res.data ? 1 : 0;
+                    }
+                });
+            },
+            setAutoManageHouse() {
+                http.get('/room/setDirectRoomAutoSelectStatus', { status: !!this.autoManageHouse }).then(res => {
+
+                });
             }
         }
     }

@@ -1008,7 +1008,7 @@
                                     top: targetStartY + 'px',
                                     left: targetStartX + 'px'
                                 });
-                            }.bind(that);
+                            };
                             if (offsetLeft === originalOffsetLeft && offsetTop === originalOffsetTop) {
                                 rest();
                                 return;
@@ -1058,25 +1058,6 @@
                                         },
                                         rest
                                     );
-                                    $('#changeRoomDialog').modal('show');
-                                    $('#changeRoomOk').click(function() {
-                                        $('#changeRoomDialog').modal('hide');
-                                        http.post('/room/dragChangeRoom', {
-                                            checkRoomOnly: false,
-                                            roomId: room,
-                                            startDate: date,
-                                            roomOrderId: ui.helper.attr('roomOrderId'),
-                                            updatePrice: that.changePrice
-                                        })
-                                            .then(res => {
-                                                bus.$emit('refreshView');
-                                            })
-                                            .catch(rest);
-                                    });
-                                    $('#changeRoomCancel').click(function() {
-                                        rest();
-                                        $('#changeRoomDialog').modal('hide');
-                                    });
                                 })
                                 .catch(rest);
                         }

@@ -95,5 +95,17 @@ export default [
                 title: '网站运营'
             }
         ]
+    },
+    {
+        name: 'rights',
+        path: '/view/settings/rights/virtual/virtual.html',
+        title: '权益设置',
+        children: [
+            {
+                name: 'virtual',
+                path: '/view/settings/rights/virtual/virtual.html',
+                title: '虚拟币'
+            }
+        ]
     }
 ]

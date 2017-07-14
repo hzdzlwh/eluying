@@ -78,7 +78,6 @@
                             const td = tr.find('td').eq(offsetLeft);
                             const date = td.attr('date');
                             that.outerDate = date;
-                            console.log(that.outerDate);
                             const room = td.attr('room');
                             that.outerRoom = room;
                             that.outerUi = ui;
