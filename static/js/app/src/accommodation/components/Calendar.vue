@@ -202,7 +202,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
-        <change-room-dialog>
+        <change-room-dialog :clearAllSelectedProps="clearAllSelected" :changePriceProps="changePrice" @changeDragState="changeIsDrag">
             <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
         </change-room-dialog>
     </div>
@@ -702,7 +702,10 @@
                 outOrIn: 0,
                 date: new Date(),
                 roomdata: undefined,
-                changePrice: true
+                changePrice: true,
+                dragStopDate: undefined,
+                dragStopRoom: undefined,
+                outerUi: undefined
             };
         },
         components: {
@@ -960,7 +963,7 @@
                 $(document).on('mousedown', '.calendar-glyph', function() {
                     that.isDrag = false;
                 });
-                $(document).on('mouseover', '.calendar-glyph.draggable', function() {
+                /* $(document).on('mouseover', '.calendar-glyph.draggable', function() {
                     const $element = $(this);
                     let startX = 0;
                     let startY = 0;
@@ -991,9 +994,12 @@
                             const tr = $('.calendar-status-row').eq(offsetTop);
                             const td = tr.find('td').eq(offsetLeft);
                             const date = td.attr('date');
+                            that.dragStopDate = date;
                             const room = td.attr('room');
+                            that.dragStopRoom = room;
+                            that.outerUi = ui;
 
-                            function rest() {
+                            const rest = function() {
                                 ui.helper.css({
                                     top: startY + 'px',
                                     left: startX + 'px'
@@ -1002,14 +1008,14 @@
                                     top: targetStartY + 'px',
                                     left: targetStartX + 'px'
                                 });
-                            }
+                            }.bind(that);
                             if (offsetLeft === originalOffsetLeft && offsetTop === originalOffsetTop) {
                                 rest();
                                 return;
                             }
-                            let targetOrder;
-                            let targetStartX;
-                            let targetStartY;
+                            var targetOrder;
+                            var targetStartX;
+                            var targetStartY;
                             // 第一次先检验能否拖拽，可以的话预览，并提示确认框，不行的话重置
                             http.post('/room/dragChangeRoom', {
                                 checkRoomOnly: true,
@@ -1037,7 +1043,7 @@
                                         top: offsetTop * height + 2 + 'px',
                                         left: offsetLeft * width + 2 + 'px'
                                     });
-                                    /* modal.confirm({ title: '换房', message: '确定要换房吗？' },
+                                    modal.confirm({ title: '换房', message: '确定要换房吗？' },
                                         function() {
                                             http.post('/room/dragChangeRoom', {
                                                 checkRoomOnly: false,
@@ -1051,7 +1057,7 @@
                                                 .catch(rest);
                                         },
                                         rest
-                                    ); */
+                                    );
                                     $('#changeRoomDialog').modal('show');
                                     $('#changeRoomOk').click(function() {
                                         $('#changeRoomDialog').modal('hide');
@@ -1075,7 +1081,10 @@
                                 .catch(rest);
                         }
                     });
-                });
+                }); */
+            },
+            changeIsDrag() {
+                this.isDrag = true;
             }
         },
         directives: {
