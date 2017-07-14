@@ -1,3 +1,4 @@
+<!-- 这文件不是我写的=-=代码太💩一堆bug，改不下去了 -->
 <template>
     <div>
         <div style="box-shadow:0 0 5px 0 rgba(0,0,0,0.15);border-radius:2px;width:506px;border-top:4px solid #178ce6">
@@ -22,7 +23,7 @@
                         </div>
                         <div class="line">
                             <span class="slabel">单位时长<span class="msg" v-if="msg.unitDuration">{{msg.unitDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.unitDuration" @input="handleInput(1, $event)">小时
-                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lavy="room.unitPrice">
+                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lazy="room.unitPrice">
                         </div>
                         <div class="line">
                             <span class="slabel">最大时长<span class="msg" v-if="msg.maxDuration">{{msg.maxDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.maxDuration" @input="handleInput(1, $event)">小时
