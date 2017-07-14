@@ -890,9 +890,6 @@ export default {
                 if (JSON.stringify(room) === this.lastRoomsToken[index] && room.checkType !== 1) {
                     return false;
                 }
-                // if (type === 'endDate' && (this.checkState === 'checkIn' || this.checkState === 'ing') && new Date(room.endDate) > new Date()) {
-                //     room.showTip = 3;
-                // }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1 && room.checkType !== 1) {
@@ -1003,6 +1000,9 @@ export default {
                                     showInput: false
                                 };
                             });
+                            if (type === 'endDate' && (this.checkState === 'checkIn' || this.checkState === 'ing') && new Date(room.endDate) > new Date()) {
+                                room.showTip = 3;
+                            }
                             currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
                             // currentRoom.showTip = !item.isOpenTime;
                             currentRoom.price = item.totalFee;
