@@ -884,7 +884,7 @@ export default {
             }
 
             this.rooms.map(item => {
-                if ((item.showTip === 2 && item.checkRoomType === 1) || item.showTip === 1) {
+                if ((item.showTip === 2 && item.checkRoomType === 1) || item.showTip === 1 || (item.showTip === 2 && item.checkType === 1)) {
                     valid = false;
                 }
                 if ((this.checkState === 'quick' || this.checkState === 'team') && !item.categoryType) {

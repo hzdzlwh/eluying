@@ -623,7 +623,6 @@ export default {
                         startLength: roomInfo.startLength
 
                     };
-
                     this.rooms = [room];
                 }
                 this.rooms.map((room, index) => {
@@ -637,7 +636,9 @@ export default {
                 }
                 // disabled 钟点房编辑时未排房
                 this.rooms.map((room, index) => {
-                    this.changeRoomType(room, index, 'roomType');
+                    if (room.checkType === 1) {
+                        this.changeRoomType(room, index, 'roomType');
+                    }
                 });
             },
             initRegisterRooms(rooms) {
@@ -782,6 +783,7 @@ export default {
                 this.$nextTick(function() {
                     if (type !== 'roomType') {
                         item.roomType = 0;
+                        // item.roomList.unshift({ id: 0, name: '未排房' });
                     }
                     this.handleRoomChange(item, index, type);
                 });
@@ -860,7 +862,7 @@ export default {
                                     name: r.serialNum
                                 };
                             });
-                        if (!room.state) {
+                        if (!room.state || this.checkState === 'editOrder') {
                             rooms.unshift({
                                 id: 0,
                                 name: '未排房'
@@ -1038,7 +1040,9 @@ export default {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
-                                this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                if (currentRoom.state !== 8) {
+                                    this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                }
                                 // currentRoom.price = item.totalFee;
                             }
                             if (currentRoom.checkType === 1) {
@@ -1065,7 +1069,7 @@ export default {
             },
             // 误差处理，将误差加至第一天
             setFirstDayFee(room) {
-                if (this.checkState !== 'ing') {
+                if (this.checkState !== 'ing' && room.checkType !== 1) {
                     const price = room.price;
                     if (price === undefined || price === '') {
                         return false;
