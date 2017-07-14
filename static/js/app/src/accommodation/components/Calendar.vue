@@ -1076,7 +1076,7 @@
                                     $('#changeRoomCancel').click(function() {
                                         rest();
                                         $('#changeRoomDialog').modal('hide');
-                                    }); */
+                                    });
                                 })
                                 .catch(rest);
                         }

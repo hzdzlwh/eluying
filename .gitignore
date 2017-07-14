@@ -17,6 +17,5 @@ npm-debug.log*
 /.happypack/*
 /.vscode/*
 /view/home/
-/login.html
 yarn-error.log
 *.zip
