@@ -7,3 +7,11 @@ var auth = require('../../common/auth');
 init({
     id: auth.BUSINESS_ID,
 });
+
+$(function() {
+	const virtualContent = new Vue({
+		el: "#virtualContent",
+		data: {
+		}
+	})
+})

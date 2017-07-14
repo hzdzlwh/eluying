@@ -28,6 +28,7 @@
                         :channels="payChannels"
                         @refreshView="getCardList">
         </main-card-form>
+        <vip-card-detail></vip-card-detail>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
@@ -222,6 +223,7 @@
 </style>
 <script type="text/jsx">
     import { DdTable, DdPagination } from 'dd-vue-component';
+    import vipCardDetail from '../../components/vipCardDetail.vue';
     import mainCardForm from '../../components/mainCardForm.vue';
     import additionalCardForm from '../../components/additionalCardForm.vue';
     import repairCardForm from '../../components/repairCardForm.vue';
@@ -293,6 +295,7 @@
                         title: '操作',
                         render: (h, row) =>
                             <span>
+                                {<span class="list-action-button card-operation-btn" onClick={() => this.openDetail(row)}>详情</span>}
                                 {row.rechargeAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'recharge')}>充值</span>}
                                 {row.status === 0 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失</span>}
                                 {row.givingAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'given')}>转赠</span>}
@@ -363,6 +366,13 @@
                 this.payWithCodeInterfaceUrl = params.url;
                 this.modalList['payCode'] = true;
             },
+            openDetail(card) {
+                http.get('/vipCard/getVipCardDetail', { vipCardId: card.id }).then(res => {
+                    if (res.code === 1) {
+                        this.card = res.data;
+                    }
+                });
+            },
             openModal(card, type) {
                 this.card = card;
                 this.modalList[type] = true;
@@ -391,7 +401,8 @@
             rechargeCardForm,
             givenCardForm,
             simpleCardForm,
-            payWithCode
+            payWithCode,
+            vipCardDetail
         }
     };
 </script>
