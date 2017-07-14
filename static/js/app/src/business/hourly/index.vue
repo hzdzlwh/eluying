@@ -1,3 +1,4 @@
+<!-- 这文件不是我写的=-=代码太💩一堆bug，改不下去了 -->
 <template>
     <div>
         <div style="box-shadow:0 0 5px 0 rgba(0,0,0,0.15);border-radius:2px;width:506px;border-top:4px solid #178ce6">
@@ -17,22 +18,37 @@
                     </div>
                     <div style="padding: 16px 20px" v-if="!room.settingId || room.edit">
                         <div class="line">
-                            <span class="slabel">起步时长<span class="msg" v-if="msg.startDuration">{{msg.startDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.startDuration" @input="handleInput(1, $event)">
+                            <span class="slabel">起步时长<span class="msg" v-if="msg.startDuration">{{msg.startDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.startDuration" @input="handleInput(1, $event)">小时
                             <span class="slabel" style="margin-left: 32px">起步价格<span class="msg" v-if="msg.startPrice">{{msg.startPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lazy="room.startPrice">
                         </div>
                         <div class="line">
-                            <span class="slabel">单位时长<span class="msg" v-if="msg.unitDuration">{{msg.unitDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.unitDuration" @input="handleInput(1, $event)">
-                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lavy="room.unitPrice">
+                            <span class="slabel">单位时长<span class="msg" v-if="msg.unitDuration">{{msg.unitDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.unitDuration" @input="handleInput(1, $event)">小时
+                            <span class="slabel" style="margin-left: 32px">单位价格<span class="msg" v-if="msg.unitPrice">{{msg.unitPrice}}</span></span>￥<input @input="handleInput(2, $event)" type="text" class="dd-input" v-model.lazy="room.unitPrice">
                         </div>
                         <div class="line">
-                            <span class="slabel">最大时长<span class="msg" v-if="msg.maxDuration">{{msg.maxDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.maxDuration" @input="handleInput(1, $event)">
+                            <span class="slabel">最大时长<span class="msg" v-if="msg.maxDuration">{{msg.maxDuration}}</span></span><input type="text" class="dd-input" v-model.lazy="room.maxDuration" @input="handleInput(1, $event)">小时
                         </div>
                         <div class="line" style="display: flex">
                             <span class="slabel">开放时段</span>
                             <div>
                                 <div>
                                     <div v-for="(h, index) in room.openHours" class="line">
-                                        <input type="text" class="dd-input" v-model="h.start"> - <input type="text" class="dd-input" v-model="h.end"><span></span>
+                                     <el-time-select
+                                        placeholder="起始时间"
+                                        v-model="h.startDate"
+                                        format='HH:mm'
+                                        :clearable=false
+                                        >
+                                      </el-time-select>
+                                      <el-time-select
+                                        placeholder="结束时间"
+                                        v-model="h.endDate"
+                                        format='HH:mm'
+                                        :clearable=false
+                                        >
+                                      </el-time-select>
+                                       <!--  <input type="text" class="dd-input" v-model="h.start"> - <input type="text" class="dd-input" v-model="h.end">
+                                        <span></span> -->
                                         <img @click="deleteOpenHours(room, index)" style="cursor: pointer;margin-left: 16px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAS1BMVEUAAACbm5uampqampqampqbm5uhoaGampqbm5uampqbm5ucnJyZmZmampqampqZmZmampqampqbm5uZmZmbm5uampqhoaGampqZmZltaZz8AAAAGHRSTlMAa6uhi3Ubl4SlYyXx0JiAW0tJQT41E+/1WhRoAAAAWklEQVQY08XI2RGAIBAE0V4PVg5vUPKPVJQqUvB99QyfGHK+Y+1VVZfgjHFhKbkiU7FT7G8JXDR1WMchbBty4CzQCWPPMNCPSPfr4U9S4vT1UGsaq4CfczN7HnrMBOywZ/dgAAAAAElFTkSuQmCC" alt="">
                                     </div>
                                 </div>
@@ -46,15 +62,15 @@
                     </div>
                     <div style="padding: 16px 20px" v-if="room.settingId && !room.edit">
                         <div class="line">
-                            <span class="slabel">起步时长</span><span class="word">{{room.startDuration}}</span>
+                            <span class="slabel">起步时长</span><span class="word">{{room.startDuration}}小时</span>
                             <span class="slabel" style="margin-left: 32px">起步价格</span>￥<span class="word">{{room.startPrice}}</span>
                         </div>
                         <div class="line">
-                            <span class="slabel">单位时长</span><span class="word">{{room.unitDuration}}</span>
+                            <span class="slabel">单位时长</span><span class="word">{{room.unitDuration}}小时</span>
                             <span class="slabel" style="margin-left: 32px">单位价格</span>￥<span class="word">{{room.unitPrice}}</span>
                         </div>
                         <div class="line">
-                            <span class="slabel">最大时长</span><span class="word">{{room.maxDuration}}</span>
+                            <span class="slabel">最大时长</span><span class="word">{{room.maxDuration}}小时</span>
                         </div>
                         <div class="line" style="display: flex">
                             <span class="slabel">开放时段</span>
@@ -82,12 +98,21 @@
         display: block;
         width: 200px;
     }
+    .line .el-input{
+        width: 105px!important;
+        height: 24px;
+    }
+    .line .el-input input {
+        height: 24px;
+    }
 </style>
 <script>
     import http from 'http';
     import modal from 'modal';
     import { DdSelect, DdOption } from 'dd-vue-component';
-
+import {
+    TimePicker
+} from 'element-ui';
     export default {
         created() {
             this.getHourRoomSetting();
@@ -105,6 +130,14 @@
                 http.get('/room/getHourRoomSetting')
                     .then(res => {
                         this.rooms = res.data.list;
+                        this.rooms.forEach(element => {
+                            element.openHours.forEach(el => {
+                                const dateEnd = el.end.split(':');
+                                const dateStart = el.start.split(':');
+                                this.$set(el, 'endDate',new Date(2017, 8, 8, dateEnd[0], dateEnd[1]));
+                                this.$set(el, 'startDate',new Date(2017, 8, 8, dateStart[0], dateStart[1]));
+                            });
+                        });
                     });
             },
             create() {
@@ -130,6 +163,8 @@
             },
             addOpenHours(room) {
                 room.openHours.push({
+                    startDate: '',
+                    endDate: '',
                     start: '',
                     end: ''
                 });
@@ -139,6 +174,10 @@
             },
             save(room) {
                 this.msg = {};
+                room.openHours.forEach(el => {
+                    el.start = el.startDate.getHours() + ':' + el.startDate.getMinutes();
+                    el.end = el.endDate.getHours() + ':' + el.endDate.getMinutes();
+                });
                 if (!room.subTypeId) {
                     modal.warn('请选择房型');
                     return false;
@@ -207,7 +246,8 @@
         },
         components: {
             DdSelect,
-            DdOption
+            DdOption,
+            'el-time-select' : TimePicker
         }
     };
 </script>
