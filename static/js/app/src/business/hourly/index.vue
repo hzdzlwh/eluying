@@ -98,7 +98,7 @@
         width: 200px;
     }
     .line .el-input{
-        width: 100px!important;
+        width: 105px!important;
         height: 24px;
     }
     .line .el-input input {
@@ -162,6 +162,8 @@ import {
             },
             addOpenHours(room) {
                 room.openHours.push({
+                    startDate: '',
+                    endDate: '',
                     start: '',
                     end: ''
                 });
