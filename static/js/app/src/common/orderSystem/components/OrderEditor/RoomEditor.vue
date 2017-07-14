@@ -890,8 +890,8 @@ export default {
                 if (JSON.stringify(room) === this.lastRoomsToken[index] && room.checkType !== 1) {
                     return false;
                 }
-                // if (type === 'endDate' && room.checkType === 1) {
-                //     return
+                // if (type === 'endDate' && (this.checkState === 'checkIn' || this.checkState === 'ing') && new Date(room.endDate) > new Date()) {
+                //     room.showTip = 3;
                 // }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
