@@ -993,16 +993,12 @@ export default {
                             if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
                                 return;
                             }
-
                             currentRoom.datePriceList = item.datePriceList.map(i => {
                                 return {
                                     ...i,
                                     showInput: false
                                 };
                             });
-                            if (type === 'endDate' && (this.checkState === 'checkIn' || this.checkState === 'ing') && new Date(room.endDate) > new Date()) {
-                                room.showTip = 3;
-                            }
                             currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
                             // currentRoom.showTip = !item.isOpenTime;
                             currentRoom.price = item.totalFee;
