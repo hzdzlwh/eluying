@@ -1112,7 +1112,8 @@
                     '1': 'resettleEnterOrder',
                     '2': 'resettleGoodsOrder',
                     '0': 'resettleCaterOrder'
-                }
+                },
+                prinurl: ''
             };
         },
         components: {
@@ -1143,13 +1144,15 @@
             },
             printUrl() {
                 if (!this.id) {
-                    return '';
+                    return this.prinurl || '';
                 }
 
                 let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
-                return http.getUrl('/printer/getOrderDetailJsp?') + params;
+                const url = http.getUrl('/printer/getOrderDetailJsp?') + params;
+                this.prinurl = url;
+                return url;
             },
             orderState() {
                 return this.order.orderState === undefined ? this.order.state : this.order.orderState;

@@ -304,7 +304,7 @@ export default {
                     });
             },
             show() {
-                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: 2 }).then(res => {
+                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: this.roomBusinessInfo.businessType }).then(res => {
                     $('#checkOut').modal({
                         backdrop: 'static'
                     });
@@ -359,7 +359,7 @@ export default {
                                 idCardList: room.idCardList,
                                 roomId: room.roomId,
                                 roomOrderId: room.roomOrderId,
-                                fee: room.totalPrice - item.totalPrice,
+                                fee: room.checkType === 1 ? room.roomHoursPrice : room.totalPrice - item.totalPrice,
                                 night: night
                             });
                         }
@@ -399,7 +399,7 @@ export default {
                             this.hideModal();
                             modal.success('退房成功');
                             bus.$emit('refreshView');
-                            bus.$emit('showOrder', this.orderDetail.orderId);
+                           // bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.roomOrderId });
                         });
                 } else {
                     if (this.penalty) {

@@ -54,7 +54,7 @@
                                     已预订
                                 </span>
                             </div>
-                            <div class="room-count" v-if="item.checkType === 1">
+                            <div class="room-count" v-if="item.checkType === 1 && item.state !== 8">
                                 入住时长
                                 <counter-step :onNumChange="(a, b, num) => handleRoomNumChange(item, index, num)" :max='item.maxLength' :min='item.startLength' :step='item.unitLength' :num='item.timeAmount' :id='index' :type='3' :disabled='item.state === 8'></counter-step>
                             </div>
@@ -623,7 +623,6 @@ export default {
                         startLength: roomInfo.startLength
 
                     };
-
                     this.rooms = [room];
                 }
                 this.rooms.map((room, index) => {
@@ -637,7 +636,9 @@ export default {
                 }
                 // disabled 钟点房编辑时未排房
                 this.rooms.map((room, index) => {
-                    this.changeRoomType(room, index, 'roomType');
+                    if (room.checkType === 1) {
+                        this.changeRoomType(room, index, 'roomType');
+                    }
                 });
             },
             initRegisterRooms(rooms) {
@@ -782,6 +783,7 @@ export default {
                 this.$nextTick(function() {
                     if (type !== 'roomType') {
                         item.roomType = 0;
+                        // item.roomList.unshift({ id: 0, name: '未排房' });
                     }
                     this.handleRoomChange(item, index, type);
                 });
@@ -860,7 +862,7 @@ export default {
                                     name: r.serialNum
                                 };
                             });
-                        if (!room.state) {
+                        if (!room.state || this.checkState === 'editOrder') {
                             rooms.unshift({
                                 id: 0,
                                 name: '未排房'
@@ -888,9 +890,6 @@ export default {
                 if (JSON.stringify(room) === this.lastRoomsToken[index] && room.checkType !== 1) {
                     return false;
                 }
-                // if (type === 'endDate' && room.checkType === 1) {
-                //     return
-                // }
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 const duration = util.DateDiff(room.room.startDate, room.room.endDate);
                 if (duration < 1 && room.checkType !== 1) {
@@ -994,7 +993,6 @@ export default {
                             if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
                                 return;
                             }
-
                             currentRoom.datePriceList = item.datePriceList.map(i => {
                                 return {
                                     ...i,
@@ -1038,7 +1036,9 @@ export default {
                                 currentRoom.unitLength = Number(item.unitLength);
                                 currentRoom.maxLength = Number(item.maxLength);
                                 currentRoom.startLength = Number(item.startLength);
-                                this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                if (currentRoom.state !== 8) {
+                                    this.$set(currentRoom,'timeAmount',Number(item.startLength));
+                                }
                                 // currentRoom.price = item.totalFee;
                             }
                             if (currentRoom.checkType === 1) {
@@ -1065,7 +1065,7 @@ export default {
             },
             // 误差处理，将误差加至第一天
             setFirstDayFee(room) {
-                if (this.checkState !== 'ing') {
+                if (this.checkState !== 'ing' && room.checkType !== 1) {
                     const price = room.price;
                     if (price === undefined || price === '') {
                         return false;
