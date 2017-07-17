@@ -81,7 +81,7 @@
         <outer-container :title="channel" style="margin-bottom: 20px;">
             <inner-container :title="microOfficeWeb">
                 <div slot="show" style="display:flex;padding: 20px;">
-                    <span style="display:inline-block;margin-right:16px;height:33px;line-height:33px;">线上订单自动排放</span><switchbtn @click.native="setAutoManageHouse" v-model="autoManageHouse"></switchbtn>
+                    <span style="display:inline-block;margin-right:16px;height:33px;line-height:33px;">线上订单自动排放</span><switchbtn v-model="autoManageHouse"></switchbtn>
                 </div>
             </inner-container>
         </outer-container>
@@ -125,7 +125,7 @@
                 intervalTime: null,
                 intervalBase: 0.5,
                 intervalBaseAlert: false,
-                autoManageHouse: null
+                autoManageHouse: 1
             }
         },
         components: {
@@ -229,8 +229,10 @@
             },
             getAutoManageHouse() {
                 http.get('/room/getDirectRoomAutoSelectStatus', {}).then(res => {
-                    if (res.code === 1) {
-                        this.autoManageHouse = res.data ? 1 : 0;
+                    if (res.data) {
+                        this.autoManageHouse = 1;
+                    } else {
+                        this.autoManageHouse = 0;
                     }
                 });
             },
