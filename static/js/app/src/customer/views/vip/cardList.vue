@@ -30,8 +30,14 @@
         </main-card-form>
         <vip-card-detail :propsCard="card"
                          :visible="modalList['detail']"
-                         @closeModal="hideModal">                        
+                         @closeModal="hideModal"
+                         @openModal="openModal">                        
         </vip-card-detail>
+        <vip-card-edit :visible="modalList['edit']"
+                       @closeModal="hideModal"
+                       :propsCard="card"
+                       @refreshView="getCardList">
+        </vip-card-edit>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
@@ -227,6 +233,7 @@
 <script type="text/jsx">
     import { DdTable, DdPagination } from 'dd-vue-component';
     import vipCardDetail from '../../components/vipCardDetail.vue';
+    import vipCardEdit from '../../components/vipCardEdit.vue';
     import mainCardForm from '../../components/mainCardForm.vue';
     import additionalCardForm from '../../components/additionalCardForm.vue';
     import repairCardForm from '../../components/repairCardForm.vue';
@@ -257,7 +264,8 @@
                     given: false,
                     operate: false,
                     payCode: false,
-                    detail: false
+                    detail: false,
+                    edit: false
                 },
                 col: [
                     {
@@ -300,15 +308,8 @@
                         render: (h, row) =>
                             <span>
                                 {<span class="list-action-button card-operation-btn" onClick={() => this.openDetail(row)}>详情</span>}
-                                {row.rechargeAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'recharge')}>充值</span>}
-                                {row.status === 0 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失</span>}
-                                {row.givingAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'given')}>转赠</span>}
-                                {row.viceAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
-                                {row.reapplyAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'repair')}>补办</span>}
-                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'recover'; }}>恢复</span>}
-                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'useless'; }}>失效</span>}
                             </span>,
-                        width: 200
+                        width: 80
                     }
                 ],
                 cardList: []
@@ -378,8 +379,9 @@
                     }
                 });
             },
-            openModal(card, type) {
-                this.card = card;
+            openModal(type) {
+                // this.card = card;
+                this.hideModal();
                 this.modalList[type] = true;
             },
             search() {
@@ -407,7 +409,8 @@
             givenCardForm,
             simpleCardForm,
             payWithCode,
-            vipCardDetail
+            vipCardDetail,
+            vipCardEdit
         }
     };
 </script>
