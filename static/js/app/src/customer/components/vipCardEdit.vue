@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="edit-info">
-                            <div style="width: 33%;"><span style="font-size:14px;">卡号</span> <input style="width:169px;" class="dd-input" v-model="card.vipCardNum"></div>
+                            <div style="width: 33%;"><span style="font-size:14px;">卡号</span> <input style="width:169px;" class="dd-input" v-model="card.vipCardNum" maxlength="18"></div>
                             <div style="width: 33%;"><span style="font-size:14px;">办理日期</span> <input style="width:110px;" class="dd-input" :value="card.creationTime" disabled="true"></div>
                         </div>
                     </div>

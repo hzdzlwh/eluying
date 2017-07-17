@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import 'bootstrap';
 import init from '../../common/init';
+import App from './App';
 var header = require("header");
 var auth = require('../../common/auth');
 
@@ -10,8 +11,7 @@ init({
 
 $(function() {
 	const virtualContent = new Vue({
-		el: "#virtualContent",
-		data: {
-		}
+		el: "#app",
+		...App
 	})
 })
