@@ -23,134 +23,137 @@
                                 <!-- <span class="cashier-money-text">已收金额:<span>¥{{ paiedMoney }}</span></span> -->
                                 <!-- <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span> -->
                             </div>
-<!--                             <div class="cashier-getMoney-container" v-if="type === 'resetOrder'">
-                                <div class="cashier-getMoney-channels" style="padding-bottom: 16px" v-if="paylogs.length > 0">
-                                    <div class="cashier-getMoney-channel" v-for="(log, index) in paylogs" :key="log.payId">
-                                        <span>金额:</span>
-                                        <input type="number" class="dd-input" :value="Math.abs(log.fee)" disabled />
-                                        <span style="margin-left: 24px" :class="log.type === 0 ? 'green' : 'red'">{{log.type === 0 ? '收款' : '退款'}}方式:</span>
-                                        <input type="text" class="dd-input" :value="log.payChannel" disabled />
-                                        <span class="cashier-delBtn-icon" @click="deletePayLog(index)"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cashier-getMoney-container">
-                                <div class="cashier-getMoney-channels" v-if="payments.length > 0">
-                                    <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                                        <span>金额:</span>
-                                        <input type="number" class="dd-input" v-model="payment.fee">
-                                        <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
-                                        <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
-                                            </dd-option>
-                                        </dd-select>
-                                        <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
-                                    </div>
-                                </div>
-                                <div class="cashier-addBtn" @click="addPayMent">
-                                    <span class="cashier-addBtn-icon"></span>
-                                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="content-item" v-if='orderPayment.game'>
-                            <p class="content-item-title"><span>星球币抵扣</span></p>
-                            <div class="cashier-order-item" v-for='ga in orderPayment.game'>
-                                <dd-select v-model="ga.type ">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                                    </dd-option>
-                                </dd-select>
-                                <span class="cashier-tip-text">
+                            <p class="content-item-title"><span>星球币抵扣<div>
+                                        <span class="company-origin-tipImg"></span>
+                                <div class="company-origin-tips">
+                                    最多可抵扣¥1000元
+                                </div>
+                        </div>
+                        </span>
+                        </p>
+                        <div class="cashier-order-item" v-for='ga in orderPayment.game'>
+                            <dd-select v-model="ga.type ">
+                                <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                                </dd-option>
+                            </dd-select>
+                            <span class="cashier-tip-text">
                                 账户共{{ga.ableNum}}个星球币，本次最多可使用{{ga.ableNum}}个
                                 </span>
-                                <span>本次使用: <input type="text" v-model='ga.paidNum'>个</span>
-                                 <span class="cashier-tip-text">
-                                抵扣￥{{ga.paidNum * ga.rate}}
+                            <span>本次使用: <inputVaild v-model='ga.fee' :max='ga.ableNum' :isInt=true />个</span>
+                            <span class="cashier-tip-text">
+                                抵扣￥{{ga.fee * ga.rate}}
                                 </span>
-                            </div>
-                        </div>
-                        <div class="content-item" v-if='orderPayment.company'> 
-                            <p class="content-item-title"><span>企业余额抵扣</span></p>
-                            <div class="cashier-order-item" v-for='co in orderPayment.company'>
-                             <dd-select v-model="co.type ">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                            </dd-option>
-                                </dd-select>
-                                <span v-if='co.type === 0'>余额¥{{co.lastFee}}，最多可收取¥{{co.ableFee}}</span>
-                                <span v-if='co.type === 2'>已收取¥{{co.paidFee}}</span>
-                                本次{{co.type === 0 ? '收取' : '退还'}}：
-                                <input type="text" v-model='co.paidFee'>
-                            </div>
-                        </div>
-                        <div class="content-item" v-if='orderPayment.member'> 
-                            <p class="content-item-title"><span>会员余额抵扣</span></p>
-                            <div class="cashier-order-item" v-for='me in orderPayment.company'>
-                             <dd-select v-model="me.type ">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                            </dd-option>
-                                </dd-select>
-                                <span v-if='me.type === 0'>余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
-                                <span v-if='me.type === 2'>已收取¥{{me.paidFee}}</span>
-                                本次{{me.type === 0 ? '收取' : '退还'}}：
-                                <input type="text" v-model='me.paidFee'>
-                            </div>
-                        </div>
-<!--                         <div class="content-item" v-if='orderPayment.company'> 
-                            <p class="content-item-title"><span>会员卡余额抵扣</span></p>
-                            <div class="cashier-order-item" v-if='ca in orderPayment.card'>
-                             <dd-select v-model="ca.type ">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                            </dd-option>
-                                </dd-select>
-                                <dd-select v-model="co.type ">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                                    </dd-option>
-                                </dd-select>
-                                余额¥999999.00，最多可收取¥999999.00
-                                已收取¥999999.00
-                                本次收取：
-                                <input type="text" v-model='co.paidFee'>
-                            </div>
-                        </div> -->
-                        <div class="content-item">
-                            <p class="content-item-title"><span>现金收款</span></p>
-                            <div class="cashier-getMoney-channels" v-if="payments.length > 0">
-                                    <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                                     <dd-select v-model="payment.type">
-                                    <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
-                                    </dd-option>
-                                       </dd-select>
-                                        <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
-                                        <dd-select v-model="payment.payChannelId" :placeholder="`请选择${orderState ? '收款' : '退款'}方式`">
-                                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
-                                            </dd-option>
-                                        </dd-select>
-                                         <span>金额:</span>
-                                        <input type="number" class="dd-input" v-model="payment.fee">
-                                        <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
-                                    </div>
-                                </div>
-                                <div class="cashier-addBtn" @click="addPayMent">
-                                    <span class="cashier-addBtn-icon"></span>
-                                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
-                                </div>
-                        </div>
-                        <div class="content-item">
-                        <div class="cashier-all">
-                            <div><span>本次应收:</span><span>¥30000.00</span></div>
-                            <div><span>星球币抵扣:</span><span>¥30000.00</span></div>
-                            <div><span>会员卡余额抵扣:</span><span>¥30000.00</span></div>
-                            <div><span>现金收款:</span><span>¥30000.00</span></div>
-                            <div><span>还需收款:</span><span>¥30000.00</span></div>
                         </div>
                     </div>
+                    <div class="content-item" v-if='orderPayment.company'>
+                        <p class="content-item-title"><span>企业余额抵扣<div>
+                                        <span class="company-origin-tipImg"></span>
+                            <div class="company-origin-tips">
+                                最多可抵扣¥1000元
+                            </div>
                     </div>
-
-                    <div class="roomModals-footer">
-                        <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
-                        <div @click="returnPreStep" v-else class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
-                        
-<!--                             <span class="footer-label">
+                    </span>
+                    </p>
+                    <div class="cashier-order-item" v-for='co in orderPayment.company'>
+                        <dd-select v-model="co.type ">
+                            <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                            </dd-option>
+                        </dd-select>
+                        <span v-if='co.type === 0' class="cashier-tip-text">余额¥{{co.lastFee}}，最多可收取¥{{co.ableFee}}</span>
+                        <span v-if='co.type === 2'>已收取¥{{co.paidFee}}</span> 本次{{co.type === 0 ? '收取' : '退还'}}：
+                        <inputVaild v-model='co.fee' :max='co.ableFee' />
+                    </div>
+                </div>
+                <div class="content-item" v-if='orderPayment.member'>
+                    <p class="content-item-title"><span>会员余额抵扣<div>
+                                        <span class="company-origin-tipImg"></span>
+                        <div class="company-origin-tips">
+                            最多可抵扣¥1000元
+                        </div>
+                </div>
+                </span>
+                </p>
+                <div class="cashier-order-item" v-for='me in orderPayment.member'>
+                    <dd-select v-model="me.type ">
+                        <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                        </dd-option>
+                    </dd-select>
+                    <span v-if='me.type === 0' class="cashier-tip-text">余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
+                    <span v-if='me.type === 2'>已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
+                    <inputVaild v-model='me.fee' :max='me.ableFee' />
+                </div>
+            </div>
+            <div class="content-item" v-if='orderPayment.company'>
+                <p class="content-item-title"><span>会员卡余额抵扣</span></p>
+                <div class="reaminder-getMoney-container">
+                    <div class="reaminder-getMoney-channels">
+                        <div class="reaminder-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
+                            <dd-select v-model="payment.type ">
+                                <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                                </dd-option>
+                            </dd-select>
+                            <dd-select class='reaminder-mr20' v-model='payment.accountId' @input='changePaycard'>
+                                <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
+                                    <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
+                                </dd-option>
+                            </dd-select>
+                            <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{payment.lastFee}}，最多可收取¥{{payment.ableFee}}</span>
+                            <span v-if='payment.type === 2'>已收取¥{{payment.paidFee}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
+                            <inputVaild v-model="payment.fee" :max='payment.ableFee' />
+                            <span class="reaminder-delBtn-icon" @click="deletePayMent(index)" v-if='paycard.type === 0'></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="reaminder-addBtn" @click="addPayCard">
+                            <span class="reaminder-addBtn-icon"></span>
+                            <span style="cursor: pointer">添加卡</span>
+                        </div>
+                        <!--     <div class="reaminder-addBtn" v-else>卡已用完</div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="content-item">
+                <p class="content-item-title"><span>现金收款</span></p>
+                <div class="cashier-getMoney-channels" v-if="payments.length > 0">
+                    <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
+                        <dd-select v-model="payment.type">
+                            <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                            </dd-option>
+                        </dd-select>
+                        <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
+                        <dd-select v-model="payment.payChannelId">
+                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
+                            </dd-option>
+                        </dd-select>
+                        <span>金额:</span>
+                        <inputVaild v-model="payment.fee" />
+                        <input type="number" class="dd-input" v-model="payment.fee">
+                        <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
+                    </div>
+                </div>
+                <div class="cashier-addBtn" @click="addPayMent">
+                    <span class="cashier-addBtn-icon"></span>
+                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
+                </div>
+            </div>
+            <div class="content-item">
+                <div class="cashier-all">
+                    <div><span>本次应收:</span><span>¥30000.00</span></div>
+                    <div><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
+                    <div><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
+                    <div><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
+                    <div><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
+                    <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
+                    <div><span>还需收款:</span><span>¥{{200}}</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="roomModals-footer">
+            <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
+            <div @click="returnPreStep" v-else class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
+            <!--                             <span class="footer-label">
                                 {{orderState ? '需补金额:' : '需退金额:'}}
                                 <span class="order-price-num" :class="orderState ? 'green' : 'red'">
                                     ¥{{ notPay }}
@@ -162,25 +165,25 @@
                                     ¥{{ needPayed }}
                                 </span>
                             </span> -->
-                            <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
-                        
-                    </div>
-                </div>
-            </div>
+            <div class="dd-btn dd-btn-primary" @click="payMoney">完成</div>
         </div>
-        <remainder :show='ramainShow' :data='remainderDate' @hideReaminder='hideReaminder' @getReaminderParams='getReaminderParams'></remainder>
+    </div>
+    </div>
+    </div>
     </div>
 </template>
 <style lang="scss" scoped>
-.cashier-all{
-    width:210px;
-    float:right;
+.cashier-all {
+    width: 210px;
+    float: right;
 }
-.cashier-tip-text{
-font-size:14px;
-color:#999999;
-line-height:14px;
+
+.cashier-tip-text {
+    font-size: 14px;
+    color: #999999;
+    line-height: 14px;
 }
+
 .cashier-money-text {
     margin-right: 24px;
 }
@@ -213,8 +216,18 @@ line-height:14px;
 }
 
 .content-item-title {
-    border-bottom: 1px dotted #e6e6e6;
     margin-bottom: 0;
+    span {
+        & > div {
+            position: relative;
+            display: inline-block;
+            .company-origin-tips {
+                width: 175px;
+                bottom: 20px;
+                right: inherit;
+            }
+        }
+    }
 }
 
 .cashier-deposit-info {
@@ -258,8 +271,8 @@ import modal from 'modal';
 import {
     mapState
 } from 'vuex';
+import inputVaild from '../../components/inputVaild.vue';
 import bus from '../../eventBus';
-import remainder from './remainder.vue';
 import {
     getOrderId
 } from '../utils/order';
@@ -308,7 +321,9 @@ export default {
             ReaminderParams: {}, // 余额付款传来的参数,
             ramainShow: false,
             remainderDate: undefined,
-            companyName: ''
+            companyName: '',
+            paycard: [],
+            cardList: []
         };
     },
     computed: {
@@ -326,6 +341,55 @@ export default {
                 return income >= 0;
             }
             return false;
+        },
+        gameTotal() {
+            let sum = 0 
+            if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
+                this.orderPayment.game.forEach(el => {
+                    if (el.type == 0) {
+                        sum += (el.fee || 0)
+                    } else {
+                        sum -= (el.fee || 0)
+                    }
+                })
+            }
+            return sum
+        },
+        memberTotal() {
+            let sum = 0 
+            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
+                this.orderPayment.member.forEach(el => {
+                    sum += (el.fee || 0)
+                })
+            }
+            return sum
+        },
+        companyTotal() {
+            let sum = 0 
+            if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
+                this.orderPayment.company.forEach(el => {
+                    sum += (el.fee || 0)
+                })
+            }
+            return sum
+        },
+        cardsTotal(){
+            let sum = 0 
+            if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                this.orderPayment.card.forEach(el => {
+                    sum += (el.fee || 0)
+                })
+            }
+            return sum
+        },
+        cashTotal() {
+            let sum = 0 
+            if (this.payments  && this.payments.length) {
+                this.payments.forEach(el => {
+                    sum += (el.fee || 0)
+                })
+            }
+            return sum
         },
         // totalDeposit() {
         //     return Number((this.deposit || 0).toFixed(2));
@@ -370,18 +434,18 @@ export default {
             this.hideModal();
             bus.$emit('back');
         },
-        getReaminderParams(params) {
-            if (params) {
-                this.ReaminderParams = {};
-                this.ReaminderParams.params = params.paycard;
-                this.ReaminderParams.type = params.type;
-                this.ReaminderParams.total = params.payTotal;
-            } else {
-                this.ReaminderParams = undefined;
-            }
-            this.ramainShow = false;
-            this.cashierShow();
-        },
+        // getReaminderParams(params) {
+        //     if (params) {
+        //         this.ReaminderParams = {};
+        //         this.ReaminderParams.params = params.paycard;
+        //         this.ReaminderParams.type = params.type;
+        //         this.ReaminderParams.total = params.payTotal;
+        //     } else {
+        //         this.ReaminderParams = undefined;
+        //     }
+        //     this.ramainShow = false;
+        //     this.cashierShow();
+        // },
         hideReaminder() {
             this.ramainShow = false;
             this.hideModal();
@@ -570,82 +634,103 @@ export default {
             //     });
             return http.get('/room/getTips')
                 .then(res => {
-                res.data = {
-                    card:[{
-                        ableFee : 3000,
-                        cards: [{
-                            accountId: 123,
-                            accountName: '123123',
-                            lastFee: 6345,
-                            paidFee: 100
+                    res.data = {
+                        card: [{
+                            ableFee: 8900,
+                            cards: [{
+                                accountId: 123,
+                                accountName: '123123',
+                                lastFee: 6000,
+                                paidFee: 100
+                            }],
+                            paidFee: 100,
+                            type: 0
+                        }, {
+                            ableFee: 8900,
+                            cards: [{
+                                accountId: 12323123,
+                                accountName: 'ass2123123',
+                                lastFee: 5000,
+                                paidFee: 0
+                            }],
+                            paidFee: 0,
+                            type: 0
                         }],
-                        paidFee: 100,
-                        type: 2
-                    },
-                    {
-                        ableFee : 2000,
-                        cards: [{
-                            accountId: 12323123,
-                            accountName: 'ass2123123',
-                            lastFee: 123432,
-                            paidFee: 0
+                        company: [{
+                            ableFee: 8900,
+                            accountId: 22222,
+                            accountName: '23123',
+                            lastFee: 2000,
+                            paidFee: 400,
+                            type: 2
+                        }, {
+                            ableFee: 8900,
+                            accountId: 33333,
+                            accountName: '23123',
+                            lastFee: 3000,
+                            paidFee: 0,
+                            type: 0
                         }],
-                        paidFee: 0,
-                        type: 0
-                    }
-                    ],
-                    company: [{
-                        ableFee: 436524,
-                        accountId: 22222,
-                        accountName: '23123',
-                        lastFee: 30000,
-                        paidFee: 3000,
-                        type: 2
-                    },{
-                        ableFee: 53436524,
-                        accountId: 33333,
-                        accountName: '23123',
-                        lastFee: 60000,
-                        paidFee: 0,
-                        type: 0
-                    }],
-                    dateTime: new Date().getMilliseconds(),
-                    game: [{
-                        ableFee: 123333,
-                        ableNum: 4000,
-                        accountId: 22222,
-                        accountName: '1231234',
-                        lastFee: 5000,
-                        paidFee: 1000,
-                        paidNum: 200,
-                        rate: 30,
-                        type: 0
-                    }],
-                    member: [{
-                        ableFee: 12222,
-                        accountId: 123123,
-                        accountName: 'sadasd',
-                        lastFee: 20000,
-                        paidFee: 1000,
-                        type: 2
-                    }],
-                    need: {
-                        penalty: 200,
-                        total: 30000
-                    },
-                    paid: {
-                        balance:4000,
-                        game: 1000,
-                        normal: 1000
-                    },
-                    price: 666
-                };
-                this.orderPayment = res.data;
-                const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
-                this.onePassAmount = res.data.onePassAmount || 0;
-                this.companyAmount = res.data.companyAmount || 0;
-                this.paiedMoney = paiedFee.toFixed(2);
-            });
+                        dateTime: new Date().getMilliseconds(),
+                        game: [{
+                            ableFee: 9000,
+                            ableNum: 900,
+                            accountId: 22222,
+                            accountName: '1231234',
+                            lastFee: 1000,
+                            paidFee: 100,
+                            paidNum: 10,
+                            rate: 10,
+                            type: 0
+                        }],
+                        member: [{
+                            ableFee: 8900,
+                            accountId: 123123,
+                            accountName: 'sadasd',
+                            lastFee: 2000,
+                            paidFee: 0,
+                            type: 0
+                        }],
+                        need: {
+                            penalty: 2000,
+                            total: 10000
+                        },
+                        paid: {
+                            balance: 1000,
+                            game: 1000,
+                            normal: 1000
+                        },
+                        price: 9200
+                    };
+                    this.orderPayment = res.data;
+                    this.orderPayment.game && this.orderPayment.game.forEach(el => {
+                        this.$set(el, 'fee', 0);
+                    });
+                    this.orderPayment.card && this.orderPayment.card.forEach(el => {
+                        this.$set(el, 'fee', 0);
+                    });
+                    this.orderPayment.company && this.orderPayment.company.forEach(el => {
+                        this.$set(el, 'fee', 0);
+                    });
+                    this.orderPayment.member && this.orderPayment.member.forEach(el => {
+                        this.$set(el, 'fee', 0);
+                    });
+                    const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
+                    this.onePassAmount = res.data.onePassAmount || 0;
+                    this.companyAmount = res.data.companyAmount || 0;
+                    this.paiedMoney = paiedFee.toFixed(2);
+                    const cardHash = {};
+                    const cardList = [];
+                    res.data.card.forEach(element => {
+                        element.cards.forEach(el => {
+                            if (!cardHash[el.accountId]) {
+                                cardList.push(el);
+                                cardHash[el.accountId] = true;
+                            }
+                        });
+                    });
+                    this.cardList = cardList;
+                });
         },
         getChannels(params) {
             return http.get('/user/getChannels', params)
@@ -666,6 +751,23 @@ export default {
                     this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
                     this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
                 });
+        },
+        getSelect(index) {
+            // const serialNum = this.paycard[index].serialNum;
+            const paycard = this.paycard;
+            const selectCards = this.cardList.filter(function(item) {
+                return !paycard.filter(function(it) {
+                    return it.accountId === item.accountId;
+                }).length || item.accountId === paycard[index].accountId;
+            });
+            return selectCards;
+        },
+        deletePayMent(index) {
+            this.paycard.splice(index, 1);
+            this.changePaycard();
+        },
+        changePaycard() {
+
         },
         hideModal() {
             this.resetData();
@@ -701,6 +803,16 @@ export default {
                 payChannelId: undefined,
                 type: this.orderState ? 0 : 2,
                 uniqueId: this.uniqueId
+            });
+        },
+        addPayCard() {
+            this.paycard.push({
+                type: 0,
+                accountId: undefined,
+                ableFee: 0,
+                paidFee: 0,
+                lastFee: 0,
+                fee: 0
             });
         },
         deletePayMent(index) {
@@ -741,6 +853,12 @@ export default {
         //     this.depositPayChannel = undefined;
         //     this.showDeposit = false;
         // },
+        vaild(max) {
+            let value = event.target.value;
+            if (Number(value) > Number(max)) {
+                event.target.value = max;
+            }
+        },
         payMoney() {
             let invalid = false;
             let numvaild = false;
@@ -939,7 +1057,7 @@ export default {
     components: {
         DdSelect,
         DdOption,
-        remainder
+        inputVaild
     }
 };
 </script>
