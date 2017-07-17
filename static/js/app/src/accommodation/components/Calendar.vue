@@ -134,10 +134,11 @@
                         <span class="calendar-glyph-channel">{{g.channelName}}</span>
                         
                     </div>
-                    <div class="calendar-glyph-type"><span>{{ getCheckType(g.checkType)}}</span>
-                        <img class="" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
-                        <img class="" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
-                        <img class="" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2"></div>
+                    <div class="calendar-glyph-type"><span v-if='g.checkType !== 1' >{{ getCheckType(g.checkType)}}</span>
+                    <span v-else class='timeRoomCalendar'><img src='/static/image/icon/timeRoom.png' alt="" style="margin:0 2px 1px 0;">钟点房</span>
+                        <img class="" width="20px" src="//static.dingdandao.com/book.png" v-if="g.roomState === 0">
+                        <img class="" width="20px" src="//static.dingdandao.com/ing.png" v-if="g.roomState === 1">
+                        <img class="" width="20px" src="//static.dingdandao.com/finish.png" v-if="g.roomState === 2"></div>
                     <div class="calendar-glyph-detail ing up">
                         <div class="glyph-arrow-up"></div>
                         <div class="glyph-arrow-down"></div>
@@ -208,6 +209,16 @@
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
+    .timeRoomCalendar{
+        background: #e65f5f;
+        border-radius: 100px;
+        width: 55px!important;
+        text-align: center;
+        color: #fff;
+        line-height: 17px;
+        height: 17px;
+        margin-left: -5px;
+    }
     @import "~dd-common-css/src/variables";
     .calendar {
         height: 100%;
@@ -538,7 +549,7 @@
         position: absolute;
         height: 65px;
         color: white;
-        padding-left: 8px;
+        padding: 2px 0px 2px 8px;
         cursor: pointer;
         user-select: none;
         transition: transform 0.2s;
@@ -568,6 +579,7 @@
         }
     }
     .calendar-glyph-type{
+        margin-top:4px;
         span{
             width: 48px;
             text-overflow: ellipsis;
@@ -575,14 +587,15 @@
             white-space: nowrap;
             display: inline-block;
             font-size: 12px;
+            font-weight:100;
         }
         img{
             margin-top: -15px;
         }
     }
     .calendar-glyph-name, .calendar-glyph-info {
-        height: 22px;
-        line-height: 22px;
+        height: 19px;
+        line-height: 19px;
         display: block;
         width: 90%;
         text-overflow: ellipsis;
