@@ -81,7 +81,7 @@
         <outer-container :title="channel" style="margin-bottom: 20px;">
             <inner-container :title="microOfficeWeb">
                 <div slot="show" style="display:flex;padding: 20px;">
-                    <span style="display:inline-block;margin-right:16px;height:33px;line-height:33px;">线上订单自动排放</span><switchbtn v-model="autoManageHouse"></switchbtn>
+                    <span style="display:inline-block;margin-right:16px;height:33px;line-height:33px;">线上订单自动排房</span><switchbtn @input="setAutoManageHouse" v-model="autoManageHouse"></switchbtn>
                 </div>
             </inner-container>
         </outer-container>
