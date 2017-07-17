@@ -28,7 +28,10 @@
                         :channels="payChannels"
                         @refreshView="getCardList">
         </main-card-form>
-        <vip-card-detail :card="card"></vip-card-detail>
+        <vip-card-detail :propsCard="card"
+                         :visible="modalList['detail']"
+                         @closeModal="hideModal">                        
+        </vip-card-detail>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
@@ -253,7 +256,8 @@
                     recharge: false,
                     given: false,
                     operate: false,
-                    payCode: false
+                    payCode: false,
+                    detail: false
                 },
                 col: [
                     {
@@ -370,6 +374,7 @@
                 http.get('/vipCard/getVipCardDetail', { vipCardId: card.id }).then(res => {
                     if (res.code === 1) {
                         this.card = res.data;
+                        this.modalList['detail'] = true;
                     }
                 });
             },
