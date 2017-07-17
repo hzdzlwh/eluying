@@ -109,6 +109,9 @@ export default {
         // value(val) {
         //     this.inputValue = val;
         // },
+        value(val) {
+            this.inputValue = !this.value;
+        },
         inputValue(val, newval) {
             const value = newval ? 1 : 0;
             this.$emit('input', value);
