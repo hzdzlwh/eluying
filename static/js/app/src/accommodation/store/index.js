@@ -37,7 +37,7 @@ const store = new Vuex.Store({
                 http.get('/shop/list', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let shopList = [];
+                            const shopList = [];
                             res.data.list.forEach((d) => {
                                 shopList.push(d);
                             });
@@ -47,14 +47,14 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ENTER_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
-                http.get('/entertainment/getCategoryListPC' , {})
+                http.get('/entertainment/getCategoryListPC', {})
                     .then(res => {
                         if (res.code === 1) {
-                            let enterList = [];
+                            const enterList = [];
                             res.data.list.map(el => {
                                 if (el.categoryList && el.categoryList.length > 0) {
                                     el.categoryList.map(item => {
@@ -71,7 +71,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ORDER_DETAIL]({ commit }, { orderId }) {
             return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
+            });
         },
         [types.LOAD_ROOM_BUSINESS_INFO]({ state, commit }, { businessType }) {
             return new Promise((resolve, reject) => {
@@ -98,8 +98,8 @@ const store = new Vuex.Store({
                             reject(res);
                         }
                     });
-            })
-        },
+            });
+        }
     }
 });
 
