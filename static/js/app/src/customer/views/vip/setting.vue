@@ -242,7 +242,11 @@ export default {
             this.settings.unshift({
                 consumeItems: [],
                 discountInfoList: [],
-                addType: 1
+                addType: 1,
+                weekLimit: [],
+                virCurrencyRechargeItems: [],
+                vipPayItems: [],
+                vipRechargeItems: []
             });
         },
         selectSystem() {

@@ -171,7 +171,7 @@
                     return this.roomAllNodeList.filter(i => i.id === 0 || i.id === 1);
                 }
 
-                if (this.type === 'consume' || this.type === 'pay') {
+                if (this.type === 'consume' || this.type === 'pay' || this.type === undefined) {
                     return this.roomAllNodeList;
                 }
             },
@@ -179,7 +179,8 @@
                 return {
                     discount: '选择优惠项目',
                     consume: '选择消费累计项目',
-                    pay: '选择可支付项目'
+                    pay: '选择可支付项目',
+                    vipPayItems: '储值账户可支付项目'
                 }[this.type];
             }
         },

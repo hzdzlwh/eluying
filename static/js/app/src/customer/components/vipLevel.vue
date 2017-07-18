@@ -67,22 +67,22 @@
                                     <th>六</th>
                                 </tr>
                                 <tr v-if="edit">
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
-                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[0]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[1]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[2]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[3]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[4]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[5]"></td>
+                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[6]"></td>
                                 </tr>
                                 <tr v-else>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
+                                    <td>{{vipLevel.weekLimit[0]}}</td>
+                                    <td>{{vipLevel.weekLimit[1]}}</td>
+                                    <td>{{vipLevel.weekLimit[2]}}</td>
+                                    <td>{{vipLevel.weekLimit[3]}}</td>
+                                    <td>{{vipLevel.weekLimit[4]}}</td>
+                                    <td>{{vipLevel.weekLimit[5]}}</td>
+                                    <td>{{vipLevel.weekLimit[6]}}</td>
                                 </tr>
                             </table>
                         </div>
@@ -90,9 +90,9 @@
                     <div class="charge currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">星球币充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;">充<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个，送<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['virCurrencyRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeNum"><span v-else>{{item.rechargeNum}}</span>个，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeNum"><span v-else>{{item.freeNum}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('virCurrencyRechargeItems', index)"></div>
                         </div>
-                       <div class="vipLevelChose" v-if='edit'>添加规则</div>
+                       <div class="vipLevelChose" v-if='edit' @click="addRule('virCurrencyRechargeItems')">添加规则</div>
                     </div>
                 </div>
             </div>
@@ -102,17 +102,16 @@
                     <div class="currency-item">
                         <div class="currency-sub-title">储值账户可支付项目</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;">住宿<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:300px;" v-if="edit"></div>
-                            <div style="height: 32px;line-height:32px;">商超<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:300px;" v-if="edit"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipPayItems']"><span style="display:inline-block;width:300px;">{{item.nodeName}}</span><img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;" v-if="edit" @click="deleteNode('vipPayItems', index)"></div>
                         </div>
-                        <div class="vipLevelChose" v-if='edit' @click='openSelectNode("")'>选择项目</div>
+                        <div class="vipLevelChose" v-if='edit' @click='openSelectNode("vipPayItems")'>选择项目</div>
                     </div>
                     <div class="currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">储值账户充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;">充<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个，送<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeFee"><span v-else>{{item.rechargeFee}}</span>个，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeFee"><span v-else>{{item.freeFee}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
                         </div>
-                        <div class="vipLevelChose" v-if='edit'>添加规则</div>
+                        <div class="vipLevelChose" v-if='edit' @click="addRule('vipRechargeItems')">添加规则</div>
                     </div>
                 </div>
             </div>
@@ -419,6 +418,10 @@ export default {
             const data = Object.assign({}, this.vipLevel);
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
+            data.vipPayItems = JSON.stringify(data.vipPayItems);
+            data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
+            data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
+            data.weekLimit = JSON.stringify(data.weekLimit);
             if (this.type) {
                 data.consumeListReq = JSON.stringify(data.consumeItems);
                 delete data.consumeItems;
@@ -458,6 +461,13 @@ export default {
             bus.$on('vipLevelCategory', this.handleCategorySelect);
             this.selectType = type;
             // this.nodes = item[type];
+        },
+        addRule(type) {
+            if (type === 'virCurrencyRechargeItems') {
+                this.vipLevel[type].push({ rechargeNum: '', freeNum: '' });
+            } else if (type === 'vipRechargeItems') {
+                this.vipLevel[type].push({ rechargeFee: '', freeFee: '' });
+            }
         }
     }
 };
