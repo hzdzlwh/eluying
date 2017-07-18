@@ -49,6 +49,73 @@
                     </div>
                 </div>
             </div>
+            <div class="vipLevelBox">
+                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">星球币</div>
+                <div style="padding:15px 20px;" class="vipLevelBoxContent">
+                    <div class="topLimit currency-item">
+                        <div class="currency-sub-title">使用上限</div>
+                        <div class="currency-sub-content">
+                            <p style="height:32px;line-height:32px;">每日使用上限<span style="margin-left:30px;color:#999999;">不填表示没有上限</span></p>
+                            <table border="1" width="100%">
+                                <tr style="background:#f0f0f0;">
+                                    <th>日</th>
+                                    <th>一</th>
+                                    <th>二</th>
+                                    <th>三</th>
+                                    <th>四</th>
+                                    <th>五</th>
+                                    <th>六</th>
+                                </tr>
+                                <tr v-if="edit">
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                    <td><input type="text" style="width:87px;border:none;"></td>
+                                </tr>
+                                <tr v-else>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="charge currency-item" style="margin-top:16px;">
+                        <div class="currency-sub-title">星球币充值</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;">充<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个，送<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit"></div>
+                        </div>
+                       <div class="vipLevelChose" v-if='edit'>添加规则</div>
+                    </div>
+                </div>
+            </div>
+            <div class="vipLevelBox">
+                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">储值账户</div>
+                <div style="padding:15px 20px;" class="vipLevelBoxContent">
+                    <div class="currency-item">
+                        <div class="currency-sub-title">储值账户可支付项目</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;">住宿<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:300px;" v-if="edit"></div>
+                            <div style="height: 32px;line-height:32px;">商超<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:300px;" v-if="edit"></div>
+                        </div>
+                        <div class="vipLevelChose" v-if='edit' @click='openSelectNode("")'>选择项目</div>
+                    </div>
+                    <div class="currency-item" style="margin-top:16px;">
+                        <div class="currency-sub-title">储值账户充值</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;">充<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个，送<input type="text" style="width:102px;" v-if="edit"><span v-else>100</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit"></div>
+                        </div>
+                        <div class="vipLevelChose" v-if='edit'>添加规则</div>
+                    </div>
+                </div>
+            </div>
             <div v-if='edit' style="text-align:right">
                 <div class="dd-btn  dd-btn-ghost" style="margin-right:20px;" @click='canel'>取消</div>
                 <div class="dd-btn  dd-btn-primary" @click='subDate'>保存</div>
@@ -185,6 +252,36 @@
                     font-size: 14px;
                     color: #178ce6;
                 }
+            }
+            .vipLevelBoxContent{
+                .currency-item{
+                    box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
+                    border-radius: 2px 2px 0 2px;
+                    .currency-sub-title{
+                        height: 32px;
+                        line-height: 32px;
+                        background: #f0f0f0;
+                        padding-left: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+                    .currency-sub-content{
+                        padding: 4px 20px;
+                        table{
+                            tr{
+                                height: 32px;
+                                th{
+                                    text-align: center;
+                                }
+                                td{
+                                    text-align: center;
+                                    line-height: 32px;
+                                }
+                            }
+                        }
+                    }
+                }
+                
             }
         }
     }
