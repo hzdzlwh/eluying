@@ -15,7 +15,7 @@
                                     <span class="cashier-money-text">订单金额:<span>¥{{(type === 'cancel' || !orderPayment.need) ? 0 : orderPayment.need.total}}</span></span>
                                     <span class="cashier-money-text" v-if="orderPayment.need.penalty">违约金:<span>¥{{orderPayment.need.penalty}}</span></span>
                                 </div>
-                                <div>
+                                <div style='margin-top:12px;'>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.game'>星球币已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
                                     <span class="cashier-money-text">现金已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
@@ -25,16 +25,16 @@
                             </div>
                         </div>
                         <div class="content-item" v-if='orderPayment.game'>
-                            <p class="content-item-title"><span>星球币抵扣<div>
+                            <p class="content-item-title"><span>星球币抵扣<div v-if='gameShowtip !== undefined'>
                                         <span class="company-origin-tipImg"></span>
                                 <div class="company-origin-tips">
-                                    最多可抵扣¥1000元
+                                    最多可抵扣¥{{gameShowtip}}元
                                 </div>
                         </div>
                         </span>
                         </p>
                         <div class="cashier-order-item" v-for='ga in orderPayment.game'>
-                            <dd-select v-model="ga.type " @change='changeAbeldFee'>
+                            <dd-select v-model="ga.type " @change='changeAbeldFee' class='dd-select-with'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
@@ -52,16 +52,16 @@
                         </div>
                     </div>
                     <div class="content-item" v-if='orderPayment.company'>
-                        <p class="content-item-title"><span>企业余额抵扣<div>
+                        <p class="content-item-title"><span>企业余额抵扣<div v-if='campanyShowtip !== undefined'>
                                         <span class="company-origin-tipImg"></span>
                             <div class="company-origin-tips">
-                                最多可抵扣¥1000元
+                                最多可抵扣¥{{campanyShowtip}}元
                             </div>
                     </div>
                     </span>
                     </p>
                     <div class="cashier-order-item" v-for='co in orderPayment.company'>
-                        <dd-select v-model="co.type" @change='changeAbeldFee'>
+                        <dd-select v-model="co.type" @change='changeAbeldFee' class='dd-select-with'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
@@ -72,16 +72,16 @@
                     </div>
                 </div>
                 <div class="content-item" v-if='orderPayment.member'>
-                    <p class="content-item-title"><span>会员余额抵扣<div>
+                    <p class="content-item-title"><span>会员余额抵扣<div v-if='memberShowtip !== undefined'>
                                         <span class="company-origin-tipImg"></span>
                         <div class="company-origin-tips">
-                            最多可抵扣¥1000元
+                            最多可抵扣¥{{memberShowtip}}元
                         </div>
                 </div>
                 </span>
                 </p>
                 <div class="cashier-order-item" v-for='me in orderPayment.member'>
-                    <dd-select v-model="me.type " @change='changeAbeldFee'>
+                    <dd-select v-model="me.type " @change='changeAbeldFee' class='dd-select-with'>
                         <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                         </dd-option>
                     </dd-select>
@@ -92,24 +92,29 @@
                 </div>
             </div>
             <div class="content-item" v-if='orderPayment.card'>
-                <p class="content-item-title"><span>会员卡余额抵扣</span></p>
+                <p class="content-item-title"><span>会员卡余额抵扣<div v-if='cardShowtip !== undefined'>
+                                        <span class="company-origin-tipImg"></span>
+                        <div class="company-origin-tips">
+                            最多可抵扣¥{{cardShowtip}}元
+                        </div>
+                </div></span></p>
                 <div class="reaminder-getMoney-container">
                     <div class="reaminder-getMoney-channels">
                         <div class="cashier-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
-                            <dd-select v-model="payment.type " @change='changeAbeldFee'>
+                            <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with' :disabled='payment.disabled'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
-                            <dd-select class='reaminder-mr20' v-model='payment.accountId' @input='changeAbeldFee'>
+                            <dd-select class='cashier-card' v-model='payment.accountId' @input='changeAbeldFee' :disabled='payment.disabled'>
                                 <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
                                     <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
                                 </dd-option>
                             </dd-select>
                             <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
                             <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
-                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0' />
-                            <inputVaild v-model="payment.fee" :min='getCardPaied(payment.accountId)' @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
-                            <span class="cashier-delBtn-icon" @click="deleteCard(index)"></span>
+                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0' :disabled='payment.disabled'/>
+                            <inputVaild v-model="payment.fee" :min='getCardPaied(payment.accountId)' @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else :disabled='payment.disabled'/>
+                            <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span>
                         </div>
                     </div>
                     <div>
@@ -126,11 +131,11 @@
                 <p class="content-item-title"><span>现金收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                        <dd-select v-model="payment.type">
+                        <dd-select v-model="payment.type" class='dd-select-with'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
-                        <span style="margin-left: 24px">{{orderState ? '收款' : '退款'}}方式:</span>
+                        <span>{{orderState ? '收款' : '退款'}}方式:</span>
                         <dd-select v-model="payment.payChannelId">
                             <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
                             </dd-option>
@@ -179,6 +184,17 @@
     </div>
     </div>
 </template>
+<style>
+#cashier .dd-select{
+    margin-right:5px;
+}
+.dd-select-with .dd-input  {
+    width:60px!important;
+}
+.cashier-card .dd-input{
+    width:250px!important;
+}
+</style>
 <style lang="scss" scoped>
 #cashier .modal-dialog {
     width: 820px;
@@ -206,16 +222,17 @@
     font-size: 14px;
     color: #999999;
     line-height: 14px;
+    margin-right: 15px;
 }
 
 .cashier-money-text {
-    margin-right: 24px;
+    color:#999;
+    margin-right: 28px;
 }
 
 .cashier-order-item {
-    margin-top: 16px;
+    margin-bottom: 8px;
 }
-
 .cashier-getMoney-container {
     display: flex;
     align-items: flex-end;
@@ -240,7 +257,7 @@
 }
 
 .content-item-title {
-    margin-bottom: 0;
+    margin-bottom: 18px;
     span {
         & > div {
             position: relative;
@@ -264,6 +281,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    margin-top:6px;
 }
 
 .cashier-addBtn-icon {
@@ -347,7 +365,11 @@ export default {
             remainderDate: undefined,
             companyName: '',
             paycard: [],
-            cardList: []
+            cardList: [],
+            gameShowtip : undefined,
+            cardShowtip : undefined,
+            campanyShowtip : undefined,
+            memberShowtip : undefined
 
         };
     },
@@ -786,7 +808,7 @@ export default {
                                 paidFee: 100
                             }],
                             paidFee: 100,
-                            type: 0
+                            type: 2
                         }, {
                             ableFee: 8900,
                             cards: [{
@@ -844,18 +866,34 @@ export default {
                         },
                         price: 9900
                     };
+                    this.gameShowtip = undefined;
+                    this.cardShowtip = undefined;
+                    this.campanyShowtip = undefined;
+                    this.memberShowtip = undefined;
                     this.orderPayment = res.data;
                     this.orderPayment.game && this.orderPayment.game.forEach(el => {
+                        if (el.type === 2) {
+                            this.gameShowtip = el.ableFee
+                        }                       
                         this.$set(el, 'fee', 0);
                     });
                     this.orderPayment.card && this.orderPayment.card.forEach(el => {
+                        if (el.type === 2) {
+                            this.cardShowtip = el.ableFee
+                        }
                         this.$set(el, 'fee', 0);
                         el.cards.forEach(card => this.$set(card, 'fee', Math.min(card.lastFee, el.ableFee)));
                     });
                     this.orderPayment.company && this.orderPayment.company.forEach(el => {
+                        if (el.type === 2) {
+                            this.campanyShowtip = el.ableFee
+                        }
                         this.$set(el, 'fee', 0);
                     });
                     this.orderPayment.member && this.orderPayment.member.forEach(el => {
+                        if (el.type === 2) {
+                           this.memberShowtip = el.ableFee
+                        }
                         this.$set(el, 'fee', 0);
                     });
                     const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
@@ -867,6 +905,11 @@ export default {
                     res.data.card.forEach(element => {
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
+                                if (element.type === 2) {
+                                    el.disabled = true
+                                    el.type = 2;
+                                    this.paycard.push(el)
+                                }
                                 cardList.push(el);
                                 cardHash[el.accountId] = true;
                             }

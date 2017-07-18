@@ -1,7 +1,14 @@
 <template>
-     <input class="dd-input" v-model='num' type='Number' @input='changeNum' ></input>
+     <input class="dd-input inputVaild" v-model='num' onKeyUp="this.value=(parseInt(this.value.replace(/\D/g,''),10))" type='Number' @input='changeNum' :disabled='disabled'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
+.inputVaild{
+    background:#ffffff;
+border:1px solid #cccccc;
+border-radius:2px;
+width:80px!important;
+height:23px;
+}
 </style>
 <script>
     export default{
@@ -52,10 +59,12 @@
                     this.$emit('input', this.max);
                     this.num = this.max;
                 } else {
-                    if (this.min && this.num < this.min) {
+                    if (this.num < this.min) {
+                        this.num =  Number(this.min);
                         this.$emit('input', this.min);
                     } else {
-                        this.$emit('input', this.num);
+                        this.num =  Number(this.num);
+                        this.$emit('input', Number(this.num));
                     }
                 }
             }
