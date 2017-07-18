@@ -368,69 +368,69 @@ export default {
             return false;
         },
         gameTotal() {
-            let sum = 0
+            let sum = 0;
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
-                    if (el.type == 0) {
-                        sum += (el.fee * el.rate || 0)
+                    if (el.type === 0) {
+                        sum += (el.fee * el.rate || 0);
                     } else {
-                        sum -= (el.fee * el.rate || 0)
+                        sum -= (el.fee * el.rate || 0);
                     }
-                })
+                });
             }
-            return sum
+            return sum;
         },
         memberTotal() {
-            let sum = 0
+            let sum = 0;
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
-                    if (el.type == 0) {
-                        sum += (el.fee || 0)
+                    if (el.type === 0) {
+                        sum += (el.fee || 0);
                     } else {
-                        sum -= (el.fee || 0)
-                    }
-                })
+                        sum -= (el.fee || 0);
+                    };
+                });
             }
-            return sum
+            return sum;
         },
         companyTotal() {
-            let sum = 0
+            let sum = 0;
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
-                    if (el.type == 0) {
-                        sum += (el.fee || 0)
+                    if (el.type === 0) {
+                        sum += (el.fee || 0);
                     } else {
-                        sum -= (el.fee || 0)
+                        sum -= (el.fee || 0);
                     }
-                })
+                });
             }
-            return sum
+            return sum;
         },
         cardsTotal() {
-            let sum = 0
+            let sum = 0;
             if (this.paycard && this.paycard.length) {
                 this.paycard.forEach(el => {
-                    if (el.type == 0) {
-                        sum += (el.fee || 0)
+                    if (el.type === 0) {
+                        sum += (el.fee || 0);
                     } else {
-                        sum -= (el.fee || 0)
+                        sum -= (el.fee || 0);
                     }
-                })
+                });
             }
-            return sum
+            return sum;
         },
         cashTotal() {
-            let sum = 0
+            let sum = 0;
             if (this.payments && this.payments.length) {
                 this.payments.forEach(el => {
-                    if (el.type == 0) {
-                        sum += (el.fee || 0)
+                    if (el.type === 0) {
+                        sum += (el.fee || 0);
                     } else {
-                        sum -= (el.fee || 0)
+                        sum -= (el.fee || 0);
                     }
-                })
+                });
             }
-            return sum
+            return sum;
         },
         // totalDeposit() {
         //     return Number((this.deposit || 0).toFixed(2));
@@ -452,7 +452,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0)
+            return this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0);
         }
     },
     created() {
@@ -462,26 +462,26 @@ export default {
         show(val) {
             if (val) {
                 // this.getRemainder();
-                this.cashierShow()
+                this.cashierShow();
             } else {
                 $('#cashier').modal('hide');
             }
-        },
+        }
     },
     methods: {
         getCardLastFee(id) {
             const selectCard = this.cardList.find(cards => cards.accountId === id);
             if (selectCard) {
-                return selectCard.lastFee
+                return selectCard.lastFee;
             }
-            return 0
+            return 0;
         },
         getCardPaied(id) {
             const selectCard = this.cardList.find(cards => cards.accountId === id);
             if (selectCard) {
-                return selectCard.paidFee
+                return selectCard.paidFee;
             }
-            return 0
+            return 0;
         },
         changeAbeldFee() {
             let needPay = this.orderPayment.price;
@@ -636,7 +636,7 @@ export default {
             return params;
         },
         getRemainder() {
-            let params = this.getpParms();
+            const params = this.getpParms();
             if (this.business.PenaltyFee && this.business.penalty) {
                 params.balancePenaltyBtn = true;
                 params.penalty = this.business.penalty;
@@ -941,7 +941,7 @@ export default {
                 });
             }
             this.uniqueId += 1;
-            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)))
+            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
                 fee: fee,
                 payChannelId: undefined,
@@ -959,7 +959,7 @@ export default {
                 fee: 0
             });
         },
-        deletePayMent(index) {
+        deletePayMent (index) {
             this.payments.splice(index, 1);
         },
         deletePayLog(index) {
@@ -1146,6 +1146,51 @@ export default {
             if (this.type === 'collect') {
                 params.isSettle = false;
             }
+            params.tokenPayments = [];
+            if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
+                this.orderPayment.game.forEach(el => {
+                    params.tokenPayments.push({
+                        'accountId': el.accountId,
+                        'accountType': 0,
+                        fee: el.fee * el.rate,
+                        num: el.fee,
+                        type: el.type
+                    });
+                });
+            }
+            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
+                this.orderPayment.member.forEach(el => {
+                    params.tokenPayments.push({
+                        'accountId': el.accountId,
+                        'accountType': 1,
+                        fee: el.fee,
+                        type: el.type
+                    });
+                });
+            }
+            // 会员余额
+            if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                this.paycard.length && this.paycard.forEach(card => {
+                    params.tokenPayments.push({
+                        'accountId': card.accountId,
+                        'accountType': 2,
+                        fee: card.fee,
+                        type: card.type
+                    });
+                });
+            }
+            // 会员卡
+            if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
+                this.orderPayment.company.forEach(el => {
+                    params.tokenPayments.push({
+                        'accountId': el.accountId,
+                        'accountType': 3,
+                        fee: el.fee,
+                        type: el.type
+                    });
+                });
+            }
+
             // if (this.type === 'orderDetail') {
             //     params.isSettle = true;
             // }
@@ -1161,17 +1206,17 @@ export default {
                     payWithCompany += Number(pay.fee);
                 }
             });
-            if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
-                const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
-                modal.warn(payStr);
-                return false;
-            }
-            if (this.ReaminderParams) {
-                params.balancePay = JSON.stringify({
-                    cards: this.ReaminderParams.params,
-                    type: this.ReaminderParams.type
-                });
-            }
+            // if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
+            //     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
+            //     modal.warn(payStr);
+            //     return false;
+            // }
+            // if (this.ReaminderParams) {
+            //     params.balancePay = JSON.stringify({
+            //         cards: this.ReaminderParams.params,
+            //         type: this.ReaminderParams.type
+            //     });
+            // }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
                     .then(result => {
