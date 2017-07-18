@@ -34,25 +34,25 @@
             };
         },
         created() {
-            if(reg1.test(this.$route.fullPath)){
+            if (reg1.test(this.$route.fullPath)) {
                 this.routes = this.$route.matched[1].meta.children[0].children;
-            }else if(reg2.test(this.$route.fullPath)){
+            } else if (reg2.test(this.$route.fullPath)) {
                 this.routes = this.$route.matched[1].meta.children[1].children;
-            }else if(reg3.test(this.$route.fullPath)){
+            } else if (reg3.test(this.$route.fullPath)) {
                 this.routes = this.$route.matched[1].meta.children[0].children;
-            }else if(reg4.test(this.$route.fullPath)){
+            } else if (reg4.test(this.$route.fullPath)) {
                 this.routes = this.$route.matched[1].meta.children[0].children;
             }
         },
         watch: {
             '$route.path'() {
-                if(reg1.test(this.$route.fullPath)){
+                if (reg1.test(this.$route.fullPath)) {
                     this.routes = this.$route.matched[1].meta.children[0].children;
-                }else if(reg2.test(this.$route.fullPath)){
+                } else if (reg2.test(this.$route.fullPath)) {
                     this.routes = this.$route.matched[1].meta.children[1].children;
-                }else if(reg3.test(this.$route.fullPath)){
+                } else if (reg3.test(this.$route.fullPath)) {
                     this.routes = this.$route.matched[1].meta.children[0].children;
-                }else if(reg4.test(this.$route.fullPath)){
+                } else if (reg4.test(this.$route.fullPath)) {
                     this.routes = this.$route.matched[1].meta.children[0].children;
                 }
             }

@@ -428,7 +428,7 @@ export const routes = [
                 meta: {
                     name: '商超'
                 },
-                component: reportRetail,
+                component: reportRetail
             },
             {
                 path: '/reportCenter/finance',

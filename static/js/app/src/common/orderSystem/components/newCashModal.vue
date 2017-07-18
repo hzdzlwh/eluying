@@ -34,14 +34,18 @@
                         </span>
                         </p>
                         <div class="cashier-order-item" v-for='ga in orderPayment.game'>
-                            <dd-select v-model="ga.type ">
+                            <dd-select v-model="ga.type " @change='changeAbeldFee'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
-                            <span class="cashier-tip-text">
-                                账户共{{ga.ableNum}}个星球币，本次最多可使用{{ga.ableNum}}个
+                            <span class="cashier-tip-text" v-if='ga.type === 0'>
+                                账户共{{ga.lastFee}}个星球币，本次最多可使用{{ga.ableNum}}个
                                 </span>
-                            <span>本次使用: <inputVaild v-model='ga.fee' :max='ga.ableNum' :isInt=true />个</span>
+                            <span class="cashier-tip-text" v-if='ga.type === 2'>
+                                已收取{{ga.paidNum}}个
+                                </span>
+                            <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='ga.ableNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
+                            <inputVaild v-model='ga.fee' :max='ga.paidNum' :min='ga.paidNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
                             <span class="cashier-tip-text">
                                 抵扣￥{{ga.fee * ga.rate}}
                                 </span>
@@ -57,13 +61,14 @@
                     </span>
                     </p>
                     <div class="cashier-order-item" v-for='co in orderPayment.company'>
-                        <dd-select v-model="co.type ">
+                        <dd-select v-model="co.type" @change='changeAbeldFee'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
                         <span v-if='co.type === 0' class="cashier-tip-text">余额¥{{co.lastFee}}，最多可收取¥{{co.ableFee}}</span>
-                        <span v-if='co.type === 2'>已收取¥{{co.paidFee}}</span> 本次{{co.type === 0 ? '收取' : '退还'}}：
-                        <inputVaild v-model='co.fee' :max='co.ableFee' />
+                        <span v-if='co.type === 2' class="cashier-tip-text">已收取¥{{co.paidFee}}</span> 本次{{co.type === 0 ? '收取' : '退还'}}：
+                        <inputVaild v-model='co.fee' :max='co.ableFee' @input='changeAbeldFee' v-if='co.type === 0' />
+                        <inputVaild v-model='co.fee' :max='co.paidFee' :min='co.paidFee' @input='changeAbeldFee' v-if='co.type === 2' />
                     </div>
                 </div>
                 <div class="content-item" v-if='orderPayment.member'>
@@ -76,41 +81,44 @@
                 </span>
                 </p>
                 <div class="cashier-order-item" v-for='me in orderPayment.member'>
-                    <dd-select v-model="me.type ">
+                    <dd-select v-model="me.type " @change='changeAbeldFee'>
                         <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                         </dd-option>
                     </dd-select>
                     <span v-if='me.type === 0' class="cashier-tip-text">余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
                     <span v-if='me.type === 2'>已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
-                    <inputVaild v-model='me.fee' :max='me.ableFee' />
+                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.ableFee' v-if='me.type === 0' />
+                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.paidFee' :min='me.paidFee' v-if='me.type === 2' />
                 </div>
             </div>
-            <div class="content-item" v-if='orderPayment.company'>
+            <div class="content-item" v-if='orderPayment.card'>
                 <p class="content-item-title"><span>会员卡余额抵扣</span></p>
                 <div class="reaminder-getMoney-container">
                     <div class="reaminder-getMoney-channels">
-                        <div class="reaminder-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
-                            <dd-select v-model="payment.type ">
+                        <div class="cashier-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
+                            <dd-select v-model="payment.type " @change='changeAbeldFee'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
-                            <dd-select class='reaminder-mr20' v-model='payment.accountId' @input='changePaycard'>
+                            <dd-select class='reaminder-mr20' v-model='payment.accountId' @input='changeAbeldFee'>
                                 <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
                                     <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
                                 </dd-option>
                             </dd-select>
-                            <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{payment.lastFee}}，最多可收取¥{{payment.ableFee}}</span>
-                            <span v-if='payment.type === 2'>已收取¥{{payment.paidFee}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
-                            <inputVaild v-model="payment.fee" :max='payment.ableFee' />
-                            <span class="reaminder-delBtn-icon" @click="deletePayMent(index)" v-if='paycard.type === 0'></span>
+                            <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
+                            <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
+                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0' />
+                            <inputVaild v-model="payment.fee" :min='getCardPaied(payment.accountId)' @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
+                            <span class="cashier-delBtn-icon" @click="deleteCard(index)"></span>
                         </div>
                     </div>
                     <div>
-                        <div class="reaminder-addBtn" @click="addPayCard">
-                            <span class="reaminder-addBtn-icon"></span>
-                            <span style="cursor: pointer">添加卡</span>
+                        <div class="cashier-addBtn" @click="addPayCard" v-if='paycard.length < orderPayment.card.length'>
+                            <span class="cashier-addBtn-icon"></span>
+                            <span style="cursor: pointer">
+                            添加会员卡余额抵扣</span>
                         </div>
-                        <!--     <div class="reaminder-addBtn" v-else>卡已用完</div> -->
+                        <div class="reaminder-addBtn" v-else>卡已用完</div>
                     </div>
                 </div>
             </div>
@@ -129,7 +137,6 @@
                         </dd-select>
                         <span>金额:</span>
                         <inputVaild v-model="payment.fee" />
-                        <input type="number" class="dd-input" v-model="payment.fee">
                         <span class="cashier-delBtn-icon" @click="deletePayMent(index)"></span>
                     </div>
                 </div>
@@ -140,13 +147,13 @@
             </div>
             <div class="content-item">
                 <div class="cashier-all">
-                    <div><span>本次应收:</span><span>¥30000.00</span></div>
+                    <div><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
                     <div><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
                     <div><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
                     <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
-                    <div><span>还需收款:</span><span>¥{{200}}</span></div>
+                    <div><span>还需收款:</span><span>¥{{needPayed}}</span></div>
                 </div>
             </div>
         </div>
@@ -173,9 +180,26 @@
     </div>
 </template>
 <style lang="scss" scoped>
+#cashier .modal-dialog {
+    width: 820px;
+}
+
 .cashier-all {
     width: 210px;
     float: right;
+    & > div {
+        display: flex;
+        justify-content: space-between;
+        color: #999;
+        &:first-child {
+            color: #666;
+        }
+        &:last-child {
+            color: #666;
+            font-weigth: bold;
+        }
+    }
+    ;
 }
 
 .cashier-tip-text {
@@ -324,6 +348,7 @@ export default {
             companyName: '',
             paycard: [],
             cardList: []
+
         };
     },
     computed: {
@@ -343,9 +368,22 @@ export default {
             return false;
         },
         gameTotal() {
-            let sum = 0 
+            let sum = 0
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
+                    if (el.type == 0) {
+                        sum += (el.fee * el.rate || 0)
+                    } else {
+                        sum -= (el.fee * el.rate || 0)
+                    }
+                })
+            }
+            return sum
+        },
+        memberTotal() {
+            let sum = 0
+            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
+                this.orderPayment.member.forEach(el => {
                     if (el.type == 0) {
                         sum += (el.fee || 0)
                     } else {
@@ -355,38 +393,41 @@ export default {
             }
             return sum
         },
-        memberTotal() {
-            let sum = 0 
-            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
-                this.orderPayment.member.forEach(el => {
-                    sum += (el.fee || 0)
-                })
-            }
-            return sum
-        },
         companyTotal() {
-            let sum = 0 
+            let sum = 0
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
-                    sum += (el.fee || 0)
+                    if (el.type == 0) {
+                        sum += (el.fee || 0)
+                    } else {
+                        sum -= (el.fee || 0)
+                    }
                 })
             }
             return sum
         },
-        cardsTotal(){
-            let sum = 0 
-            if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
-                this.orderPayment.card.forEach(el => {
-                    sum += (el.fee || 0)
+        cardsTotal() {
+            let sum = 0
+            if (this.paycard && this.paycard.length) {
+                this.paycard.forEach(el => {
+                    if (el.type == 0) {
+                        sum += (el.fee || 0)
+                    } else {
+                        sum -= (el.fee || 0)
+                    }
                 })
             }
             return sum
         },
         cashTotal() {
-            let sum = 0 
-            if (this.payments  && this.payments.length) {
+            let sum = 0
+            if (this.payments && this.payments.length) {
                 this.payments.forEach(el => {
-                    sum += (el.fee || 0)
+                    if (el.type == 0) {
+                        sum += (el.fee || 0)
+                    } else {
+                        sum -= (el.fee || 0)
+                    }
                 })
             }
             return sum
@@ -411,9 +452,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (this.notPay - this.payments.reduce((o, n, i) => {
-                return o + Number(n.fee)
-            }, 0)).toFixed(2);
+            return this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0)
         }
     },
     created() {
@@ -427,9 +466,112 @@ export default {
             } else {
                 $('#cashier').modal('hide');
             }
-        }
+        },
     },
     methods: {
+        getCardLastFee(id) {
+            const selectCard = this.cardList.find(cards => cards.accountId === id);
+            if (selectCard) {
+                return selectCard.lastFee
+            }
+            return 0
+        },
+        getCardPaied(id) {
+            const selectCard = this.cardList.find(cards => cards.accountId === id);
+            if (selectCard) {
+                return selectCard.paidFee
+            }
+            return 0
+        },
+        changeAbeldFee() {
+            let needPay = this.orderPayment.price;
+            // 首先统计出所有要退还的
+            if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
+                this.orderPayment.game.forEach(el => {
+                    if (el.type === 2 && el.fee) {
+                        needPay = needPay + el.fee * el.rate;
+                    }
+                });
+            }
+            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
+                this.orderPayment.member.forEach(el => {
+                    if (el.type === 2 && el.fee) {
+                        needPay = needPay + el.fee;
+                    }
+                });
+            }
+            // 会员余额
+            if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                this.paycard.length && this.paycard.forEach(card => {
+                    if (card.accountId) {
+                        if (card.type === 2 && card.fee) {
+                            needPay = needPay + card.fee;
+                        }
+                    }
+                });
+            }
+            // 会员卡
+            if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
+                this.orderPayment.company.forEach(el => {
+                    if (el.type === 2 && el.fee) {
+                        needPay = needPay + el.fee;
+                    }
+                });
+            }
+            // 然后去分别俺优先级收取
+            if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
+                this.orderPayment.game.forEach(el => {
+                    if (el.type === 0) {
+                        const abelFee = Math.min(needPay, el.lastFee);
+                        const payed = Math.min(abelFee / el.rate, el.fee);
+                        el.ableNum = parseInt(abelFee / el.rate);
+                        el.fee = parseInt(payed);
+                        needPay = needPay - payed * el.rate;
+                    }
+                });
+            }
+            // 优先虚拟币
+            if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
+                this.orderPayment.member.forEach(el => {
+                    if (el.type === 0) {
+                        const abelFee = Math.min(needPay, el.lastFee);
+                        const payed = Math.min(abelFee, el.fee);
+                        el.ableFee = abelFee;
+                        el.fee = payed;
+                        needPay = needPay - payed;
+                    }
+                });
+            }
+            // 会员余额
+            if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                this.paycard.length && this.paycard.forEach(card => {
+                    if (card.accountId) {
+                        const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
+                        if (card.type === 0) {
+                            const abelFee = Math.min(needPay, selectCard.lastFee);
+                            const payed = Math.min(abelFee, card.fee);
+                            card.ableFee = abelFee;
+                            card.fee = payed;
+                            needPay = needPay - payed;
+                        }
+                    }
+                });
+            }
+            // 会员卡
+            if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
+                this.orderPayment.company.forEach(el => {
+                    if (el.type === 0) {
+                        const abelFee = Math.min(needPay, el.lastFee);
+                        const payed = Math.min(abelFee, el.fee);
+                        el.ableFee = abelFee;
+                        el.fee = payed;
+                        needPay = needPay - payed;
+                    }
+                });
+            }
+            // 企业余额
+            // this.orderPayment.price = needPay
+        },
         returnPreStep() {
             this.hideModal();
             bus.$emit('back');
@@ -677,9 +819,9 @@ export default {
                             ableNum: 900,
                             accountId: 22222,
                             accountName: '1231234',
-                            lastFee: 1000,
-                            paidFee: 100,
-                            paidNum: 10,
+                            lastFee: 9000,
+                            paidFee: 0,
+                            paidNum: 0,
                             rate: 10,
                             type: 0
                         }],
@@ -700,7 +842,7 @@ export default {
                             game: 1000,
                             normal: 1000
                         },
-                        price: 9200
+                        price: 9900
                     };
                     this.orderPayment = res.data;
                     this.orderPayment.game && this.orderPayment.game.forEach(el => {
@@ -708,6 +850,7 @@ export default {
                     });
                     this.orderPayment.card && this.orderPayment.card.forEach(el => {
                         this.$set(el, 'fee', 0);
+                        el.cards.forEach(card => this.$set(card, 'fee', Math.min(card.lastFee, el.ableFee)));
                     });
                     this.orderPayment.company && this.orderPayment.company.forEach(el => {
                         this.$set(el, 'fee', 0);
@@ -763,11 +906,12 @@ export default {
             return selectCards;
         },
         deletePayMent(index) {
-            this.paycard.splice(index, 1);
-            this.changePaycard();
+            this.payments.splice(index, 1);
+            this.changeAbeldFee();
         },
-        changePaycard() {
-
+        deleteCard(index) {
+            this.paycard.splice(index, 1);
+            this.changeAbeldFee();
         },
         hideModal() {
             this.resetData();

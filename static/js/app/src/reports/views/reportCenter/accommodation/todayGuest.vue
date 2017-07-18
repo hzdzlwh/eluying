@@ -95,215 +95,214 @@
   import http from 'http';
   import util from 'util';
   export default {
-    data() {
-      return {
-        today: undefined,
-        zoneTypeAll: [{
-            id: -1,
-            name: '全部区域'
-        },
-        {
-            id: 0,
-            name: '默认区域a'
-        },
-        {
-            id: 1,
-            name: '我我我我我我我我我我我我我我我我我我我我'
-        },
-        {
-            id: 2,
-            name: '三楼'
-        }
-        ],
-        zoneType: -1,
-        roomTypeAll: [{
-            id: -1,
-            name: '全部房型'
-        },
-        {
-          id: 0,
-          name: '神龙岛'
-        },
-        {
-          id: 1,
-          name: '侠客岛'
-        },
-        {
-          id: 2,
-          name: '桃花岛'
-        }],
-        roomType: -1,
-        checkTypeAll: [{
-            id: -1,
-            name: '全部入住类型'
-        }, {
-            id: 0,
-            name: '正常入住'
-        }, {
-            id: 2,
-            name: '自用房'
-        }, {
-            id: 3,
-            name: '免费房'
-        }, {
-            id: 1,
-            name: '钟点房'
-        }],
-        checkType: -1,
-        userOriginType: '-2~',
-        userOrigins: [],
-        userSelfOrigins: [{
-          id: '',
-          name: '全部客源渠道',
-          originType: '-2~',
-          type: 2
-        }],
-        userGroupOrigins: [],
-        vips: [],
-        vip: {},
-        pages: 0,
-        personCount: 0,
-        roomCount: 0,
-        pageNo: 1,
-        col: [
-                   {
-                       title: '订单号',
-                       dataIndex: 'serialNum',
-                       width: 180
-                   },
-                   {
+      data() {
+          return {
+              today: undefined,
+              zoneTypeAll: [{
+                  id: -1,
+                  name: '全部区域'
+              },
+              {
+                  id: 0,
+                  name: '默认区域a'
+              },
+              {
+                  id: 1,
+                  name: '我我我我我我我我我我我我我我我我我我我我'
+              },
+              {
+                  id: 2,
+                  name: '三楼'
+              }
+              ],
+              zoneType: -1,
+              roomTypeAll: [{
+                  id: -1,
+                  name: '全部房型'
+              },
+              {
+                  id: 0,
+                  name: '神龙岛'
+              },
+              {
+                  id: 1,
+                  name: '侠客岛'
+              },
+              {
+                  id: 2,
+                  name: '桃花岛'
+              }],
+              roomType: -1,
+              checkTypeAll: [{
+                  id: -1,
+                  name: '全部入住类型'
+              }, {
+                  id: 0,
+                  name: '正常入住'
+              }, {
+                  id: 2,
+                  name: '自用房'
+              }, {
+                  id: 3,
+                  name: '免费房'
+              }, {
+                  id: 1,
+                  name: '钟点房'
+              }],
+              checkType: -1,
+              userOriginType: '-2~',
+              userOrigins: [],
+              userSelfOrigins: [{
+                  id: '',
+                  name: '全部客源渠道',
+                  originType: '-2~',
+                  type: 2
+              }],
+              userGroupOrigins: [],
+              vips: [],
+              vip: {},
+              pages: 0,
+              personCount: 0,
+              roomCount: 0,
+              pageNo: 1,
+              col: [
+                  {
+                      title: '订单号',
+                      dataIndex: 'serialNum',
+                      width: 180
+                  },
+                  {
                       title: '区域',
                       dataIndex: 'zoneName',
                       width: 80
-                   },
-                   {
+                  },
+                  {
                       title: '房型',
                       dataIndex: 'roomName',
                       width: 80
-                   },
-                   {
-                       title: '房号',
-                       dataIndex: 'roomNo',
-                       width: 80
-                   },
-                   {
-                       title: '入住类型',
-                       dataIndex: 'checkInType',
-                       width: 100
-                   }, 
-                   {
-                   		title: '在住人',
-                   		dataIndex: 'residentName',
-                   		width: 80
-                   },
-                   {
-                       title: '证件号',
-                       dataIndex: 'idCardNum',
-                       width: 100
-                   },
-                   
-                   {
-                       title: '来源',
-                       dataIndex: 'origin',
-                       width: 80
-                   },
-                   {
-                       title: '到达时间',
-                       dataIndex: 'checkInTime',
-                       width: 120
-                   },
-                   {
-                       title: '离开时间',
-                       dataIndex: 'expectCheckOutTime',
-                       width: 120
-                   }
-               ],
-               flag: true
-      };
-    },
-    components: {
-      DdTable,
-      DdPagination,
-      DdDropdown,
-      DdDropdownItem,
-      DdSelect,
-      DdOption,
-      DdGroupOption
-    },
-    watch: {
-      date() {
-        date = this.today;
-        if(this.flag) {
-          this.fetchDate();
-        } 
-      },
-      userOriginType() {
-        this.pageNo = 1;
-        if (this.flag) {
-          this.fetchDate();
-        }
-      },
-      roomType() {
-        this.pageNo = 1;
-        if(this.flag) {
-          this.fetchDate();
-        }
-      },
-      pageNo() {
-        if(this.flag){
-          this.fetchDate();
-        }
-      },
-      zoneType() {
-        this.pageNo = 1;
-        if(this.flag) {
-          this.fetchDate();
-        }
-      },
-      checkType() {
-        this.pageNo = 1;
-        if(this.flag) {
-          this.fetchDate();
-        }
-      }
-    },
-    created() {
-      this.today = util.dateFormat(new Date());
-      this.getData();
-      this.getOrigin();
-    },
-    methods: {
-        exportUrl(type) {
-          const originParam = {
-            date: this.today
+                  },
+                  {
+                      title: '房号',
+                      dataIndex: 'roomNo',
+                      width: 80
+                  },
+                  {
+                      title: '入住类型',
+                      dataIndex: 'checkInType',
+                      width: 100
+                  },
+                  {
+                      title: '在住人',
+                      dataIndex: 'residentName',
+                      width: 80
+                  },
+                  {
+                      title: '证件号',
+                      dataIndex: 'idCardNum',
+                      width: 100
+                  },
+  
+                  {
+                      title: '来源',
+                      dataIndex: 'origin',
+                      width: 80
+                  },
+                  {
+                      title: '到达时间',
+                      dataIndex: 'checkInTime',
+                      width: 120
+                  },
+                  {
+                      title: '离开时间',
+                      dataIndex: 'expectCheckOutTime',
+                      width: 120
+                  }
+              ],
+              flag: true
           };
-          const paramsObj = {
-            exportType: type,
-              reportType: 18,
-              params: JSON.stringify(originParam)
-          };
-          const host = http.getUrl('/stat/exportReport');
-          const pa = http.getDataWithToken(paramsObj);
-          pa.params = JSON.parse(pa.params);
-          const params = http.paramsToString(pa);
-          return `${host}?${params}`;
-        },
-        getData() {
-          http.get(' /stat/getCurrentResident',{date:this.today})
-          .then(res=>{
-            if (res.code === 1) {
-            	console.log(res);
-              this.vips = res.data.entityList;
-              this.personCount = res.data.total;
-              this.roomCount = res.data.roomTotal || 0;
-              this.pages = Math.ceil(res.data.orderAmount / 30);
-            }
-            this.flag = true;
-          })
-        },
-        getOrigin() {
-          //获取全部客户来源渠道
-          http.get('/user/getChannels', { type: 2, isAll: true })
+      },
+      components: {
+          DdTable,
+          DdPagination,
+          DdDropdown,
+          DdDropdownItem,
+          DdSelect,
+          DdOption,
+          DdGroupOption
+      },
+      watch: {
+          date() {
+              // date = this.today;
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          },
+          userOriginType() {
+              this.pageNo = 1;
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          },
+          roomType() {
+              this.pageNo = 1;
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          },
+          pageNo() {
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          },
+          zoneType() {
+              this.pageNo = 1;
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          },
+          checkType() {
+              this.pageNo = 1;
+              if (this.flag) {
+                  this.fetchDate();
+              }
+          }
+      },
+      created() {
+          this.today = util.dateFormat(new Date());
+          this.getData();
+          this.getOrigin();
+      },
+      methods: {
+          exportUrl(type) {
+              const originParam = {
+                  date: this.today
+              };
+              const paramsObj = {
+                  exportType: type,
+                  reportType: 18,
+                  params: JSON.stringify(originParam)
+              };
+              const host = http.getUrl('/stat/exportReport');
+              const pa = http.getDataWithToken(paramsObj);
+              pa.params = JSON.parse(pa.params);
+              const params = http.paramsToString(pa);
+              return `${host}?${params}`;
+          },
+          getData() {
+              http.get(' /stat/getCurrentResident', { date: this.today })
+          .then(res => {
+              if (res.code === 1) {
+                  this.vips = res.data.entityList;
+                  this.personCount = res.data.total;
+                  this.roomCount = res.data.roomTotal || 0;
+                  this.pages = Math.ceil(res.data.orderAmount / 30);
+              }
+              this.flag = true;
+          });
+          },
+          getOrigin() {
+          // 获取全部客户来源渠道
+              http.get('/user/getChannels', { type: 2, isAll: true })
                     .then((res) => {
                         // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                         if (res.code === 1) {
@@ -335,42 +334,41 @@
                             // this.userOriginType = this.userSelfOrigins[0].originType;
                         }
                     });
-        },
-        fetchDate() {
-               const obj = {
-                   pageNo: this.pageNo,
-                   zoneType: this.zoneType,
-                   roomType: this.roomType,
-                   checkType: this.checkType,
-                   date: this.today,
-                   discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
-                   originId: this.userOriginType.split('~')[1],
-               };
-               if (this.checkType !== -1) {
-                   obj.checkType = this.checkType;
-               }
+          },
+          fetchDate() {
+              const obj = {
+                  pageNo: this.pageNo,
+                  zoneType: this.zoneType,
+                  roomType: this.roomType,
+                  checkType: this.checkType,
+                  date: this.today,
+                  discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                  originId: this.userOriginType.split('~')[1]
+              };
+              if (this.checkType !== -1) {
+                  obj.checkType = this.checkType;
+              }
                // 后台要求如果为空就不传
-               for (const ob in obj) {
-                   if (obj[ob] === undefined || obj[ob] === '') {
-                       delete obj[ob];
-                   }
-               }
-               http.get(' /stat/getCurrentResident', obj).then(res => {
-                   if (res.code === 1) {
-                      	console.log(res);
-                        this.vips = res.data.entityList || [];
-                       this.totalMany = res.data.orderTotalPrice;
-                       this.personCount = res.data.total;
-                       this.roomCount = res.data.roomTotal;
-                       this.pages = Math.ceil(res.data.orderAmount / 30);
-                   }
-                   this.flag = true;
-               });
-           },
-           handlePageChange() {
-               this.pageNo = internalCurrentPage;
-               this.fetchDate();
-           }
-    }
-  }
+              for (const ob in obj) {
+                  if (obj[ob] === undefined || obj[ob] === '') {
+                      delete obj[ob];
+                  }
+              }
+              http.get(' /stat/getCurrentResident', obj).then(res => {
+                  if (res.code === 1) {
+                      this.vips = res.data.entityList || [];
+                      this.totalMany = res.data.orderTotalPrice;
+                      this.personCount = res.data.total;
+                      this.roomCount = res.data.roomTotal;
+                      this.pages = Math.ceil(res.data.orderAmount / 30);
+                  }
+                  this.flag = true;
+              });
+          },
+          handlePageChange(internalCurrentPage) {
+              this.pageNo = internalCurrentPage;
+              this.fetchDate();
+          }
+      }
+  };
 </script>

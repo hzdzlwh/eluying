@@ -48,7 +48,7 @@
                 } else {
                     this.num = Number(Number(this.num).toFixed(2));
                 }
-                if (this.num > this.max) {
+                if (this.num >= this.max) {
                     this.$emit('input', this.max);
                     this.num = this.max;
                 } else {
@@ -67,6 +67,7 @@
             max(newVal) {
                 if (this.num > newVal) {
                     this.num = newVal;
+                    this.changeNum();
                 }
             }
         }

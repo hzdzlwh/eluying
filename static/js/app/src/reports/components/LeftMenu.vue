@@ -17,26 +17,26 @@
     }
 </style>
 <script>
-    const reg1=/^\/dataCenter/;
-    const reg2=/^\/reportCenter/;
+    const reg1 = /^\/dataCenter/;
+    const reg2 = /^\/reportCenter/;
     export default{
         data() {
             return {
                 routes: []
-            }
+            };
         },
         created() {
-            if(reg1.test(this.$route.fullPath)){
+            if (reg1.test(this.$route.fullPath)) {
                 this.routes = this.$router.options.routes[1].children;
-            }else if(reg2.test(this.$route.fullPath)){
+            } else if (reg2.test(this.$route.fullPath)) {
                 this.routes = this.$router.options.routes[2].children;
             }
         },
         watch: {
             '$route.path'() {
-                if(reg1.test(this.$route.fullPath)){
+                if (reg1.test(this.$route.fullPath)) {
                     this.routes = this.$router.options.routes[1].children;
-                }else if(reg2.test(this.$route.fullPath)){
+                } else if (reg2.test(this.$route.fullPath)) {
                     this.routes = this.$router.options.routes[2].children;
                 }
             }
