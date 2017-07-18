@@ -1,60 +1,60 @@
 <template>
-  <div>
-    <DateSelect/>
-    <h2 class="title">{{$route.meta.name}}</h2>
-    <div class="top">
-      <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
-      <div class="select-box">
-        <div style="margin-right:20px;width: 120px;" class="fr region" >
-            <dd-select v-model="zoneType" >
-              <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
-        </div>
-        <div style="margin-right:20px;width: 120px;" class="fr room" >
-            <dd-select v-model="roomType" >
-              <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
-        </div>
-        <div style="margin-right:20px;width: 140px;" class="fr check" >
-            <dd-select v-model="checkType" >
-              <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
-        </div>
-        <div style="margin-right:20px;width:140px;" class="select-component-container fr">
-          <dd-select v-model="userOriginType" >
-            <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
-                        :value="origin.originType" :label="origin.name">
-              <span :title="origin.name">{{origin.name}}</span>
-            </dd-option>
-            <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
-                              :key="item" v-if="item.origins.length > 0">
-              <dd-option  v-for="origin in item.origins" :key="origin.originType"
-                          :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
-                <div class="user-group-origin">
-                  <span class="user-group-company" :title="origin.name">
-                    {{ origin.name }}
-                  </span>
-                  <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+    <div>
+        <DateSelect/>
+        <h2 class="title">{{$route.meta.name}}</h2>
+        <div class="top">
+            <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
+            <div class="select-box">
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="zoneType" >
+                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
+                    </dd-select>
                 </div>
-              </dd-option>
-            </dd-group-option>
-          </dd-select>
+                <div style="margin-right:20px;width: 120px;" class="fr room" >
+                    <dd-select v-model="roomType" >
+                      <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="margin-right:20px;width: 140px;" class="fr check" >
+                    <dd-select v-model="checkType" >
+                      <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="margin-right:20px;width:140px;" class="select-component-container fr">
+                  <dd-select v-model="userOriginType" >
+                    <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
+                                :value="origin.originType" :label="origin.name">
+                      <span :title="origin.name">{{origin.name}}</span>
+                    </dd-option>
+                    <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
+                                      :key="item" v-if="item.origins.length > 0">
+                      <dd-option  v-for="origin in item.origins" :key="origin.originType"
+                                  :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
+                        <div class="user-group-origin">
+                          <span class="user-group-company" :title="origin.name">
+                            {{ origin.name }}
+                          </span>
+                          <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                        </div>
+                      </dd-option>
+                    </dd-group-option>
+                  </dd-select>
+                </div>
+            </div>
+            <div class="export">
+                <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
+                  <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                </dd-dropdown>
+            </div>
         </div>
-      </div>
-      <div class="export">
-        <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-          <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
-          <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
-        </dd-dropdown>
-      </div>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <div class="foot footfix">
+            <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
+            <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+        </div>
     </div>
-    <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
-    <div class="foot footfix">
-      <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
-      <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
-      <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
-    </div>
-  </div>
 </template>
 <style lang='scss' scoped>
   .title {
@@ -92,305 +92,305 @@
   }
 </style>
 <script>
-  import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
-  import http from 'http';
-  import { mapState } from 'vuex';
-  import util from 'util';
-  import DateSelect from '../../../components/DateSelect.vue';
-  export default {
-      data() {
-          return {
-              today: undefined,
-              zoneTypeAll: [{
-                  id: -1,
-                  name: '全部区域'
-              },
-              {
-                  id: 0,
-                  name: '默认区域a'
-              },
-              {
-                  id: 1,
-                  name: '我我我我我我我我我我我我我我我我我我我我'
-              },
-              {
-                  id: 2,
-                  name: '三楼'
-              }
-              ],
-              zoneType: -1,
-              roomTypeAll: [{
-                  id: -1,
-                  name: '全部房型'
-              },
-              {
-                  id: 0,
-                  name: '神龙岛'
-              },
-              {
-                  id: 1,
-                  name: '侠客岛'
-              },
-              {
-                  id: 2,
-                  name: '桃花岛'
-              }],
-              roomType: -1,
-              checkTypeAll: [{
-                  id: -1,
-                  name: '全部入住类型'
-              }, {
-                  id: 0,
-                  name: '正常入住'
-              }, {
-                  id: 2,
-                  name: '自用房'
-              }, {
-                  id: 3,
-                  name: '免费房'
-              }, {
-                  id: 1,
-                  name: '钟点房'
-              }],
-              checkType: -1,
-              userOriginType: '-2~',
-              userOrigins: [],
-              userSelfOrigins: [{
-                  id: '',
-                  name: '全部客源渠道',
-                  originType: '-2~',
-                  type: 2
-              }],
-              userGroupOrigins: [],
-              vips: [],
-              vip: {},
-              startTime: this.date.startDate,
-              toTime: this.date.endDate,
-              pages: 0,
-              personCount: 0,
-              roomCount: 0,
-              pageNo: 1,
-              col: [
-                  {
-                      title: '订单号',
-                      dataIndex: 'serialNum',
-                      width: 180
-                  },
-                  {
-                      title: '区域',
-                      dataIndex: 'zoneName',
-                      width: 80
-                  },
-                  {
-                      title: '房型',
-                      dataIndex: 'roomName',
-                      width: 80
-                  },
-                  {
-                      title: '房号',
-                      dataIndex: 'roomNo',
-                      width: 80
-                  },
-                  {
-                      title: '入住类型',
-                      dataIndex: 'checkInType',
-                      width: 100
-                  },
-                  {
-                      title: '在住人',
-                      dataIndex: 'residentName',
-                      width: 80
-                  },
-                  {
-                      title: '证件号',
-                      dataIndex: 'idCardNum',
-                      width: 100
-                  },
-  
-                  {
-                      title: '来源',
-                      dataIndex: 'origin',
-                      width: 80
-                  },
-                  {
-                      title: '到达时间',
-                      dataIndex: 'checkInTime',
-                      width: 120
-                  },
-                  {
-                      title: '离开时间',
-                      dataIndex: 'expectCheckOutTime',
-                      width: 120
-                  }
-              ],
-              flag: true
-          };
-      },
-      components: {
-          DdTable,
-          DdPagination,
-          DdDropdown,
-          DdDropdownItem,
-          DdSelect,
-          DdOption,
-          DdGroupOption,
-          DateSelect
-      },
-      watch: {
-      // date() {
-      //   start = date.startDate;
-      //   if(this.flag) {
-      //     this.fetchDate();
-      //   }
-      // },
-          startTime() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          toTime() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          userOriginType() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          roomType() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          pageNo() {
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          zoneType() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          },
-          checkType() {
-              this.pageNo = 1;
-              if (this.flag) {
-                  this.fetchDate();
-              }
-          }
-      },
-      created() {
-          this.today = util.dateFormat(new Date());
-          this.getData();
-          this.getOrigin();
-      },
-      computed: {
-          ...mapState(['date'])
-      },
-      methods: {
-          exportUrl(type) {
-              const originParam = {
-                  date: this.today
-              };
-              const paramsObj = {
-                  exportType: type,
-                  reportType: 18,
-                  params: JSON.stringify(originParam)
-              };
-              const host = http.getUrl('/stat/exportReport');
-              const pa = http.getDataWithToken(paramsObj);
-              pa.params = JSON.parse(pa.params);
-              const params = http.paramsToString(pa);
-              return `${host}?${params}`;
-          },
-          getData() {
-              http.get('/stat/getHistoryResident', { startDate: this.startTime, toDate: this.toTime })
-          .then(res => {
-              if (res.code === 1) {
-                  this.vips = res.data.entityList;
-                  this.personCount = res.data.total;
-                  this.roomCount = res.data.roomTotal || 0;
-                  this.pages = Math.ceil(res.data.orderAmount / 30);
-              }
-              this.flag = true;
-          });
-          },
-          getOrigin() {
-          // 获取全部客户来源渠道
-              http.get('/user/getChannels', { type: 2, isAll: true })
-                    .then((res) => {
-                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                        if (res.code === 1) {
-                            const originsList = res.data.list;
-                            const otherOrigins = [];
-                            this.userOrigins = originsList;
-                            originsList.forEach(origin => {
-                                if (origin.id === -1 || origin.id === -4) {
-                                    origin.originType = `${origin.id}~${origin.id}`;
-                                    this.userSelfOrigins.push(origin);
-                                } else if (origin.id === -5) {
-                                    origin.companyList.forEach(company => {
-                                        const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                        const number = `企业编号:${company.contractNum || ''}`;
-                                        const name = `联系人:${company.contactName || ''}`;
-                                        const phone = `联系人电话:${company.contactPhone || ''}`;
-                                        company.name = company.companyName;
-                                        company.originType = `${company.id}~${origin.id}`;
-                                        company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                    });
-                                    this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                } else if (origin.id > 0) {
-                                    origin.originType = `${origin.id}~${origin.id}`;
-                                    origin.info = origin.name;
-                                    otherOrigins.push(origin);
-                                }
-                            });
-                            this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                            // this.userOriginType = this.userSelfOrigins[0].originType;
-                        }
-                    });
-          },
-          fetchDate() {
-              const obj = {
-                  pageNo: this.pageNo,
-                  zoneType: this.zoneType,
-                  roomType: this.roomType,
-                  checkType: this.checkType,
-                  startDate: this.startTime,
-                  toDate: this.toTime,
-                  discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
-                  originId: this.userOriginType.split('~')[1]
-              };
-              if (this.checkType !== -1) {
-                  obj.checkType = this.checkType;
-              }
-               // 后台要求如果为空就不传
-              for (const ob in obj) {
-                  if (obj[ob] === undefined || obj[ob] === '') {
-                      delete obj[ob];
-                  }
-              }
-              http.get('/stat/getHistoryResident', obj).then(res => {
-                  if (res.code === 1) {
-                      this.vips = res.data.entityList || [];
-                      this.totalMany = res.data.orderTotalPrice;
-                      this.personCount = res.data.total;
-                      this.roomCount = res.data.roomTotal;
-                      this.pages = Math.ceil(res.data.orderAmount / 30);
-                  }
-                  this.flag = true;
-              });
-          },
-          handlePageChange(internalCurrentPage) {
-              this.pageNo = internalCurrentPage;
-              this.fetchDate();
-          }
-      }
-  };
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
+    import http from 'http';
+    import { mapState } from 'vuex';
+    import util from 'util';
+    import DateSelect from '../../../components/DateSelect.vue';
+    export default {
+        data() {
+            return {
+                today: undefined,
+                zoneTypeAll: [{
+                    id: -1,
+                    name: '全部区域'
+                },
+                {
+                    id: 0,
+                    name: '默认区域a'
+                },
+                {
+                    id: 1,
+                    name: '我我我我我我我我我我我我我我我我我我我我'
+                },
+                {
+                    id: 2,
+                    name: '三楼'
+                }
+                ],
+                zoneType: -1,
+                roomTypeAll: [{
+                    id: -1,
+                    name: '全部房型'
+                },
+                {
+                    id: 0,
+                    name: '神龙岛'
+                },
+                {
+                    id: 1,
+                    name: '侠客岛'
+                },
+                {
+                    id: 2,
+                    name: '桃花岛'
+                }],
+                roomType: -1,
+                checkTypeAll: [{
+                    id: -1,
+                    name: '全部入住类型'
+                }, {
+                    id: 0,
+                    name: '正常入住'
+                }, {
+                    id: 2,
+                    name: '自用房'
+                }, {
+                    id: 3,
+                    name: '免费房'
+                }, {
+                    id: 1,
+                    name: '钟点房'
+                }],
+                checkType: -1,
+                userOriginType: '-2~',
+                userOrigins: [],
+                userSelfOrigins: [{
+                    id: '',
+                    name: '全部客源渠道',
+                    originType: '-2~',
+                    type: 2
+                }],
+                userGroupOrigins: [],
+                vips: [],
+                vip: {},
+                startTime: this.date.startDate,
+                toTime: this.date.endDate,
+                pages: 0,
+                personCount: 0,
+                roomCount: 0,
+                pageNo: 1,
+                col: [
+                    {
+                        title: '订单号',
+                        dataIndex: 'serialNum',
+                        width: 180
+                    },
+                    {
+                        title: '区域',
+                        dataIndex: 'zoneName',
+                        width: 80
+                    },
+                    {
+                        title: '房型',
+                        dataIndex: 'roomName',
+                        width: 80
+                    },
+                    {
+                        title: '房号',
+                        dataIndex: 'roomNo',
+                        width: 80
+                    },
+                    {
+                        title: '入住类型',
+                        dataIndex: 'checkInType',
+                        width: 100
+                    },
+                    {
+                        title: '在住人',
+                        dataIndex: 'residentName',
+                        width: 80
+                    },
+                    {
+                        title: '证件号',
+                        dataIndex: 'idCardNum',
+                        width: 100
+                    },
+    
+                    {
+                        title: '来源',
+                        dataIndex: 'origin',
+                        width: 80
+                    },
+                    {
+                        title: '到达时间',
+                        dataIndex: 'checkInTime',
+                        width: 120
+                    },
+                    {
+                        title: '离开时间',
+                        dataIndex: 'expectCheckOutTime',
+                        width: 120
+                    }
+                ],
+                flag: true
+            };
+        },
+        components: {
+            DdTable,
+            DdPagination,
+            DdDropdown,
+            DdDropdownItem,
+            DdSelect,
+            DdOption,
+            DdGroupOption,
+            DateSelect
+        },
+        watch: {
+        // date() {
+        //   start = date.startDate;
+        //   if(this.flag) {
+        //     this.fetchDate();
+        //   }
+        // },
+            startTime() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            toTime() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            userOriginType() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            roomType() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            pageNo() {
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            zoneType() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            },
+            checkType() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.fetchDate();
+                }
+            }
+        },
+        created() {
+            this.today = util.dateFormat(new Date());
+            this.getData();
+            this.getOrigin();
+        },
+        computed: {
+            ...mapState(['date'])
+        },
+        methods: {
+            exportUrl(type) {
+                const originParam = {
+                    date: this.today
+                };
+                const paramsObj = {
+                    exportType: type,
+                    reportType: 18,
+                    params: JSON.stringify(originParam)
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(paramsObj);
+                pa.params = JSON.parse(pa.params);
+                const params = http.paramsToString(pa);
+                return `${host}?${params}`;
+            },
+            getData() {
+                http.get('/stat/getHistoryResident', { startDate: this.startTime, toDate: this.toTime })
+            .then(res => {
+                if (res.code === 1) {
+                    this.vips = res.data.entityList;
+                    this.personCount = res.data.total;
+                    this.roomCount = res.data.roomTotal || 0;
+                    this.pages = Math.ceil(res.data.orderAmount / 30);
+                }
+                this.flag = true;
+            });
+            },
+            getOrigin() {
+            // 获取全部客户来源渠道
+                http.get('/user/getChannels', { type: 2, isAll: true })
+                      .then((res) => {
+                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                          if (res.code === 1) {
+                              const originsList = res.data.list;
+                              const otherOrigins = [];
+                              this.userOrigins = originsList;
+                              originsList.forEach(origin => {
+                                  if (origin.id === -1 || origin.id === -4) {
+                                      origin.originType = `${origin.id}~${origin.id}`;
+                                      this.userSelfOrigins.push(origin);
+                                  } else if (origin.id === -5) {
+                                      origin.companyList.forEach(company => {
+                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                          const number = `企业编号:${company.contractNum || ''}`;
+                                          const name = `联系人:${company.contactName || ''}`;
+                                          const phone = `联系人电话:${company.contactPhone || ''}`;
+                                          company.name = company.companyName;
+                                          company.originType = `${company.id}~${origin.id}`;
+                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                      });
+                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                  } else if (origin.id > 0) {
+                                      origin.originType = `${origin.id}~${origin.id}`;
+                                      origin.info = origin.name;
+                                      otherOrigins.push(origin);
+                                  }
+                              });
+                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                              // this.userOriginType = this.userSelfOrigins[0].originType;
+                          }
+                      });
+            },
+            fetchDate() {
+                const obj = {
+                    pageNo: this.pageNo,
+                    zoneType: this.zoneType,
+                    roomType: this.roomType,
+                    checkType: this.checkType,
+                    startDate: this.startTime,
+                    toDate: this.toTime,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
+                };
+                if (this.checkType !== -1) {
+                    obj.checkType = this.checkType;
+                }
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
+                http.get('/stat/getHistoryResident', obj).then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.entityList || [];
+                        this.totalMany = res.data.orderTotalPrice;
+                        this.personCount = res.data.total;
+                        this.roomCount = res.data.roomTotal;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
+            },
+            handlePageChange(internalCurrentPage) {
+                this.pageNo = internalCurrentPage;
+                this.fetchDate();
+            }
+        }
+    };
 </script>
