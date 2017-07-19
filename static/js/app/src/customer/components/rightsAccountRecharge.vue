@@ -95,7 +95,7 @@
             channels: Array,
             title: {
                 type: String,
-                default: "会员"
+                default: '会员'
             }
         },
         data() {
