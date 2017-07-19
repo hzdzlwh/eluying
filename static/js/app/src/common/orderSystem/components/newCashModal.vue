@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-19 11:39:24
+* @Last Modified time: 2017-07-19 11:43:35
 * @email: 783384903@qq.com
 */
 <template>
@@ -766,7 +766,14 @@ export default {
                 });
             });
         },
-        resetData() {
+        /**
+         * rest data
+         * @param  {number} a card.id
+         * @param  {type} b  'in' or 'out'
+         * @param  {boolean} c 
+         * @return {[type]}   [description]
+         */
+        resetData(a,b,c) {
             this.payments = [];
             // this.showDeposit = false;
             // this.deposit = undefined;
