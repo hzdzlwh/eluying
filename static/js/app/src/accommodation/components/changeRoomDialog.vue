@@ -7,6 +7,7 @@
                         <h4>换房</h4>
                     </div>
                     <div class="item-modal-body">
+                        <p>确定要换房吗？</p>
                         <slot></slot>
                     </div>
                     <div class="item-modal-footer">
@@ -203,18 +204,27 @@
     #changeRoomDialog{
         .modal-dialog{
             width: 300px;
-            h4{
-                color: #178ce6;
-                font-size: 16px;
-                margin-bottom:10px;
-                border-bottom: 1px solid #e5e5e5;
-            }
-            .item-modal-body{
-                margin-bottom: 20px;
-            }
-            .item-modal-footer{
-                display: flex;
-                justify-content: space-between;
+            .modal-content{
+                border-top: 2px solid #178ce6;
+                h4{
+                    color: #178ce6;
+                    font-size: 16px;
+                    margin-bottom:23px;
+                }
+                .item-modal-body{
+                    margin-bottom: 20px;
+                    p{
+                        margin-bottom: 16px;
+                    }
+                    label{
+                        color: #999999;
+                    }
+                    
+                }
+                .item-modal-footer{
+                    display: flex;
+                    justify-content: space-between;
+                }
             }
         }
     }

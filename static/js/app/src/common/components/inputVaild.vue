@@ -1,12 +1,12 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-07-19 11:04:41
+* @Last Modified by:   linxinjian
+* @Last Modified time: 2017-07-19 16:00:01
 * @email: 783384903@qq.com
 */
 <template>
-     <input class="dd-input inputVaild" v-model='num' onKeyUp="this.value=(parseInt(this.value.replace(/\D/g,''),10))" type='Number' @input='changeNum' :disabled='disabled'></input>
+     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
 .inputVaild{

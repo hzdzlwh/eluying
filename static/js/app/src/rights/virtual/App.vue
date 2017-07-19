@@ -60,7 +60,7 @@ export default {
 	},
 	methods: {
 		getVirtualCurrency() {
-			http.get('/vipCurrency/getVirtualCurrencySetting', {}).then(res => {
+			http.get('/virCurrency/getVirtualCurrencySetting', {}).then(res => {
 				if (res.code === 1) {
 					this.currencyName = res.data.name;
 					this.rate = res.data.rate;
@@ -81,7 +81,7 @@ export default {
             param.name = this.currencyName;
             param.rate = this.rate;
             param.vipAccountStatus = this.editMember? 1 : 0;
-            http.get('/vipCurrency/editVirtualCurrencySetting', param).then(res => {
+            http.get('/virCurrency/editVirtualCurrencySetting', param).then(res => {
             	if (res.code === 1) {
             		this.taggleView();
             		this.getVirtualCurrency();
