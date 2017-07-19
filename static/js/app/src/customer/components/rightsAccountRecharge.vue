@@ -20,8 +20,8 @@
                                  :class="{ 'recharge-type-selected': type.selected }"
                                  @click="selectRechargeType(type)"
                                  v-for="type in rechargeTypes">
-                                <span>{{ type.rechargeFee }}元</span>
-                                <span class="giving-money">送{{ type.freeFee }}元</span>
+                                <span>{{title === '储值账户'? type.rechargeFee : type.rechargeNum }}<span v-if="title === '储值账户'">元</span><span v-else>个</span></span>
+                                <span class="giving-money">送{{title === '储值账户'? type.freeFee : type.freeNum}}<span v-if="title === '储值账户'">元</span><span v-else>个</span></span>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                                        class="dd-input"
                                        style="width: 133px"
                                        v-model="rechargeMoney" />
-                                元
+                                <span v-if="title === '储值账户'">元</span><span v-else>个</span>
                             </span>
                             <div>
                                 <span class="giving-money">送</span>
@@ -43,7 +43,7 @@
                                        style="width: 115px"
                                        v-model="givingMoney"
                                        class="dd-input" />
-                                <span class="giving-money">元</span>
+                                <span class="giving-money" v-if="title === '储值账户'">元</span><span class="giving-money" v-else>个</span>
                             </div>
                         </div>
                     </div>
@@ -107,12 +107,17 @@
                 payChannel: undefined,
                 rechargeTypes: undefined,
                 rechargeStrategyId: undefined,
-                rechargeInfo: {}
+                rechargeInfo: {},
+                virtualCurrencyRate: undefined
             };
         },
         computed: {
             sellPrice() {
-                return this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : (this.rechargeMoney ? this.rechargeMoney : 0);
+                if (this.title === '储值账户') {
+                    return this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : (this.rechargeMoney ? this.rechargeMoney : 0);
+                } else {
+                    return this.rechargeStrategyId ? Math.round(this.rechargeInfo.rechargeNum / this.virtualCurrencyRate) : (this.rechargeMoney ? Math.round(this.rechargeMoney / this.virtualCurrencyRate) : 0);
+                }
             }
         },
         methods: {
@@ -127,6 +132,7 @@
                 this.payChannelId = undefined;
                 this.payChannel = undefined;
                 this.rechargeStrategyId = undefined;
+                this.virtualCurrencyRate = undefined;
                 this.rechargeInfo = {};
                 if (this.rechargeTypes && this.rechargeTypes.length > 0) {
                     this.rechargeTypes.map(type => {
@@ -135,10 +141,21 @@
                 }
             },
             getRechargeTypes() {
-                http.get('/vipUser/getVipRechargeStrategyItems', { vipLevelId: this.vip.vipLevelId })
+                var url = '';
+                if (this.title === '储值账户') {
+                    url = '/vipUser/getVipRechargeStrategyItems';
+                } else {
+                    url = '/virCurrency/getVirCurrencyRechargeStrategyItems';
+                }
+                http.get(url, { vipLevelId: this.vip.vipLevelId })
                     .then(res => {
                         if (res.code === 1) {
-                            this.rechargeTypes = res.data.list;
+                            if (this.title === '储值账户') {
+                                this.rechargeTypes = res.data.list;
+                            } else {
+                                this.rechargeTypes = res.data.rechargeStrategyItems;
+                                this.virtualCurrencyRate = res.data.rate;
+                            }
                             this.rechargeTypes.map(type => {
                                 this.$set(type, 'selected', false);
                             });
@@ -164,25 +181,32 @@
                 }
             },
             rechargeCard() {
-                const params = {
-                    vipCardId: this.card.id,
-                    payChannel: this.payChannel,
-                    payChannelId: this.payChannelId
-                };
-                if (this.rechargeStrategyId) {
-                    params.rechargeStrategyId = this.rechargeStrategyId;
-                    params.rechargeFee = this.rechargeInfo.rechargeFee;
-                    params.freeFee = this.rechargeInfo.freeFee;
+                const params = { vipId: this.vip.vipUserId };
+                if (this.title === '储值账户') {
+                    params.freeFee = this.rechargeStrategyId ? this.rechargeInfo.freeFee : this.givingMoney;
+                    params.payChannel = this.payChannel;
+                    params.payChannelId = this.payChannelId;
+                    params.rechargeFee = this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : this.rechargeMoney;
+                    if (this.rechargeStrategyId) {
+                        params.rechargeStrategyId = this.rechargeStrategyId;
+                    }
                 } else {
-                    params.rechargeFee = this.rechargeMoney;
-                    params.freeFee = this.givingMoney;
+                    params.freeNum = this.rechargeStrategyId ? this.rechargeInfo.freeNum : this.givingMoney;
+                    params.payChannel = this.payChannel;
+                    params.payChannelId = this.payChannelId;
+                    params.rechargeNum = this.rechargeStrategyId ? this.rechargeInfo.rechargeNum : this.rechargeMoney;
+                    params.salePrice = this.sellPrice;
+                    if (this.rechargeStrategyId) {
+                        params.this.rechargeStrategyId = this.this.rechargeStrategyId;
+                    }
                 }
                 const id = this.payChannelId;
+                const url = this.title === '储值账户' ? '/vipUser/rechargeVip' : 'virCurrency/rechargeVirCurrency';
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     params.totalPrice = this.sellPrice;
-                    this.$emit('changeParams', { params, url: '/vipCard/rechargeVipCard' });
+                    this.$emit('changeParams', { params, url: url });
                 } else {
-                    http.get('/vipCard/rechargeVipCard', params)
+                    http.get(url, params)
                         .then(res => {
                             if (res.code === 1) {
                                 this.hideModal();

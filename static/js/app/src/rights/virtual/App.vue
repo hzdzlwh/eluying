@@ -21,7 +21,7 @@
 					</div>
 				</inner-container>
 				<inner-container :title="openAccount" style="margin-top:17px;">
-					<p v-if="showOrEdit"><span v-if="vipAccountStatus === 1">会员</span></p>
+					<p v-if="showOrEdit" style="height:40px;line-height:40px;"><span v-if="vipAccountStatus === 1">会员</span></p>
 					<label v-else><input type="checkbox" v-model="editMember">会员</label>
 				</inner-container>
 				<div slot="saveOrCancel" v-if="!showOrEdit" style="text-align:right;padding:0 20px 16px 0;">

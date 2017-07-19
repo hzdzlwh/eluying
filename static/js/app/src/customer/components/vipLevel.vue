@@ -49,8 +49,8 @@
                     </div>
                 </div>
             </div>
-            <div class="vipLevelBox">
-                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">星球币</div>
+            <div class="vipLevelBox" v-if="isShowVirturlCurrency">
+                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">{{data.virtualCurrencyName}}</div>
                 <div style="padding:15px 20px;" class="vipLevelBoxContent">
                     <div class="topLimit currency-item">
                         <div class="currency-sub-title">使用上限</div>
@@ -58,37 +58,18 @@
                             <p style="height:32px;line-height:32px;">每日使用上限<span style="margin-left:30px;color:#999999;">不填表示没有上限</span></p>
                             <table border="1" width="100%">
                                 <tr style="background:#f0f0f0;">
-                                    <th>日</th>
-                                    <th>一</th>
-                                    <th>二</th>
-                                    <th>三</th>
-                                    <th>四</th>
-                                    <th>五</th>
-                                    <th>六</th>
+                                    <th v-for="item in week">{{item}}</th>
                                 </tr>
-                                <tr v-if="edit">
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[0]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[1]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[2]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[3]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[4]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[5]"></td>
-                                    <td><input type="text" style="width:87px;border:none;text-align:center;" v-model="vipLevel.weekLimit[6]"></td>
-                                </tr>
-                                <tr v-else>
-                                    <td>{{vipLevel.weekLimit[0]}}</td>
-                                    <td>{{vipLevel.weekLimit[1]}}</td>
-                                    <td>{{vipLevel.weekLimit[2]}}</td>
-                                    <td>{{vipLevel.weekLimit[3]}}</td>
-                                    <td>{{vipLevel.weekLimit[4]}}</td>
-                                    <td>{{vipLevel.weekLimit[5]}}</td>
-                                    <td>{{vipLevel.weekLimit[6]}}</td>
+                                <tr>
+                                    <td v-for="(item, index) in vipLevel.weekLimit">
+                                        <input type="text" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit"><span v-else>{{vipLevel.weekLimit[index]}}</span>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                     <div class="charge currency-item" style="margin-top:16px;">
-                        <div class="currency-sub-title">星球币充值</div>
+                        <div class="currency-sub-title">{{data.virtualCurrencyName}}充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
                             <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['virCurrencyRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeNum"><span v-else>{{item.rechargeNum}}</span>个，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeNum"><span v-else>{{item.freeNum}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('virCurrencyRechargeItems', index)"></div>
                         </div>
@@ -109,7 +90,7 @@
                     <div class="currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">储值账户充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeFee"><span v-else>{{item.rechargeFee}}</span>个，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeFee"><span v-else>{{item.freeFee}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeFee"><span v-else>{{item.rechargeFee}}</span>元，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeFee"><span v-else>{{item.freeFee}}</span>元<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
                         </div>
                         <div class="vipLevelChose" v-if='edit' @click="addRule('vipRechargeItems')">添加规则</div>
                     </div>
@@ -304,6 +285,10 @@ export default {
         type: {
             type: Number,
             default: 0
+        },
+        isShowVirturlCurrency: {
+            type: Boolean,
+            default: true
         }
 
     },
@@ -336,7 +321,8 @@ export default {
                 2: 0,
                 3: 0
             },
-            url: this.type ? '/vipUser/createEditVipLevel' : ' /vipUser/createEditVipLevelNotAuto'
+            url: this.type ? '/vipUser/createEditVipLevel' : ' /vipUser/createEditVipLevelNotAuto',
+            week: ['日', '一', '二', '三', '四', '五', '六']
         };
     },
     components: {
@@ -363,6 +349,11 @@ export default {
                     }
                 }
             }
+            cardData.weekLimit.forEach((i, index) => {
+                if (i === -1) {
+                    cardData.weekLimit[index] = '';
+                }
+            });
             return cardData;
         },
         editChange() {
@@ -419,6 +410,11 @@ export default {
             const data = Object.assign({}, this.vipLevel);
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
+            data.weekLimit.forEach((i, index) => {
+                if (i === '') {
+                    data.weekLimit[index] = -1;
+                }
+            });
             data.vipPayItems = JSON.stringify(data.vipPayItems);
             data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
             data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
