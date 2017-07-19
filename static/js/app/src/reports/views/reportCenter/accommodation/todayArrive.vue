@@ -304,7 +304,6 @@
                             this.roomTypeAll.push(room);
                         });
                     }
-                    console.log(this.roomTypeAll);
                 });
             },
             getData() {
@@ -374,7 +373,6 @@
                 }
                 http.get('/stat/getReserveStat', obj).then(res => {
                     if (res.code === 1) {
-                        window.console.log(res);
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
                         this.count = res.data.total;

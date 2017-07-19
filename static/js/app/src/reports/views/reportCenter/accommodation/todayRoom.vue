@@ -94,7 +94,6 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
-    import ZoneType from '../common/zoneType.vue';
     export default {
         data() {
             return {
@@ -215,7 +214,6 @@
             };
         },
         components: {
-            ZoneType,
             DdTable,
             DdPagination,
             DdDropdown,
@@ -288,7 +286,6 @@
                 http.get('/stat/getCurrentCheckedInRoom', { date: this.today })
                 .then(res => {
                     if (res.code === 1) {
-                        window.console.log(res);
                         this.vips = res.data.entityList;
                         this.count = res.data.total;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
@@ -324,7 +321,6 @@
                             this.roomTypeAll.push(room);
                         });
                     }
-                    console.log(this.roomTypeAll);
                 });
             },
             getOrigin() {
@@ -383,7 +379,6 @@
                 }
                 http.get('/stat/getCurrentCheckedInRoom', obj).then(res => {
                     if (res.code === 1) {
-                        window.console.log(res);
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
                         this.count = res.data.total;

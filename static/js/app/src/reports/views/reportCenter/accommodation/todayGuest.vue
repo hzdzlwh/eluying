@@ -269,7 +269,6 @@
                 http.get('/stat/getCurrentResident', { date: this.today })
             .then(res => {
                 if (res.code === 1) {
-                    window.console.log(res);
                     this.vips = res.data.entityList;
                     this.personCount = res.data.total;
                     this.roomCount = res.data.roomTotal || 0;
@@ -299,7 +298,6 @@
                 }
                 http.get('/stat/getCurrentResident', obj).then(res => {
                     if (res.code === 1) {
-                        window.console.log(res);
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
                         this.personCount = res.data.total;
