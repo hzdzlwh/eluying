@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-19 11:43:35
+* @Last Modified time: 2017-07-19 17:22:14
 * @email: 783384903@qq.com
 */
 <template>
@@ -108,7 +108,7 @@
                 <div class="reaminder-getMoney-container">
                     <div class="reaminder-getMoney-channels">
                         <div class="cashier-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
-                            <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with' :disabled='payment.disabled'>
+                           <!--  <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with' :disabled='payment.disabled'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
@@ -121,11 +121,25 @@
                             <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
                             <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0' :disabled='payment.disabled'/>
                             <inputVaild v-model="payment.fee" :min='getCardPaied(payment.accountId)' @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else :disabled='payment.disabled'/>
+                            <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span> -->
+                             <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with'>
+                                <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                                </dd-option>
+                            </dd-select>
+                            <dd-select class='cashier-card' v-model='payment.accountId' @input='changeAbeldFee'>
+                                <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
+                                    <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
+                                </dd-option>
+                            </dd-select>
+                            <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
+                            <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
+                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0'/>
+                            <inputVaild v-model="payment.fee" @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
                             <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span>
                         </div>
                     </div>
                     <div>
-                        <div class="cashier-addBtn" @click="addPayCard" v-if='paycard.length < orderPayment.card.length'>
+                        <div class="cashier-addBtn" @click="addPayCard" v-if='paycard.length < cardList.length'>
                             <span class="cashier-addBtn-icon"></span>
                             <span style="cursor: pointer">
                             添加会员卡余额抵扣</span>
@@ -142,9 +156,9 @@
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
-                        <span>{{orderState ? '收款' : '退款'}}方式:</span>
+                        <span>{{payment.type ? '收款' : '退款'}}方式:</span>
                         <dd-select v-model="payment.payChannelId">
-                            <dd-option v-for="payChannel in getPayChannels(index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
+                            <dd-option v-for="payChannel in getPayChannels(payment, index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
                             </dd-option>
                         </dd-select>
                         <span>金额:</span>
@@ -154,7 +168,7 @@
                 </div>
                 <div class="cashier-addBtn" @click="addPayMent">
                     <span class="cashier-addBtn-icon"></span>
-                    <span style="cursor: pointer">添加{{orderState ? '收款' : '退款'}}</span>
+                    <span style="cursor: pointer">添加现金收款</span>
                 </div>
             </div>
             <div class="content-item">
@@ -415,7 +429,7 @@ export default {
                     }
                 });
             }
-            return sum;
+            return Number(sum.toFixed(2));
         },
         memberTotal() {
             let sum = 0;
@@ -428,7 +442,7 @@ export default {
                     };
                 });
             }
-            return sum;
+            return Number(sum.toFixed(2));
         },
         companyTotal() {
             let sum = 0;
@@ -441,7 +455,7 @@ export default {
                     }
                 });
             }
-            return sum;
+            return Number(sum.toFixed(2));
         },
         cardsTotal() {
             let sum = 0;
@@ -454,7 +468,7 @@ export default {
                     }
                 });
             }
-            return sum;
+            return Number(sum.toFixed(2));
         },
         cashTotal() {
             let sum = 0;
@@ -467,7 +481,7 @@ export default {
                     }
                 });
             }
-            return sum;
+            return Number(sum.toFixed(2));
         },
         // totalDeposit() {
         //     return Number((this.deposit || 0).toFixed(2));
@@ -489,7 +503,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0);
+            return Number(this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0)).toFixed(2);
         }
     },
     created() {
@@ -736,44 +750,12 @@ export default {
                 }
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
-                if (!this.orderState) {
-                    this.payChannels = this.payChannels.filter(function(element) {
-                        return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
-                    });
-                }
-                // 退款没有支付宝和微信
-                if (this.orderState && this.isCompany && this.companyCityLedger) {
-                    this.payChannels = [{
-                        channelId: -14,
-                        name: `企业挂帐(${this.companyName || ''})`
-                    }, {
-                        channelId: -15,
-                        name: `企业扣款(${this.companyName || ''})`
-                    }].concat(this.payChannels);
-                } else if (this.orderState && this.isCompany && !this.companyCityLedger) {
-                    this.payChannels = [{
-                        channelId: -15,
-                        name: `企业扣款(${this.companyName || ''})`
-                    }].concat(this.payChannels);
-                } else if (!this.orderState && this.companyCityLedger) {
-                    this.payChannels = [{
-                        channelId: -15,
-                        name: `退款至企业(${this.companyName || ''})`
-                    }].concat(this.payChannels);
-                }
                 $('#cashier').modal({
                     backdrop: 'static'
                 });
             });
         },
-        /**
-         * rest data
-         * @param  {number} a card.id
-         * @param  {type} b  'in' or 'out'
-         * @param  {boolean} c 
-         * @return {[type]}   [description]
-         */
-        resetData(a,b,c) {
+        resetData() {
             this.payments = [];
             // this.showDeposit = false;
             // this.deposit = undefined;
@@ -785,26 +767,44 @@ export default {
             this.ReaminderParams = {}; // 余额参数,
             this.ramainShow = false;
             this.remainderDate = undefined;
+            this.cardList = [];
+            this.paycard = [];
+            this.orderPayment = [];
             // this.business = {};
         },
-        getPayChannels(index) {
+        getPayChannels(item, index) {
             // this.type === 'register' && this.business.cashierType === 'finish') 补录
             // if (!this.orderState) {
             //     return this.depositPayChannels;
             // }
-            if (this.payments.length <= 1) {
-                return this.payChannels;
+            let payBack = JSON.parse(JSON.stringify(this.payChannels));
+            if (item.type === 2) {
+                if (item.payChannelId === -14) {
+                    item.payChannelId = undefined;
+                }
+                payBack = payBack.filter(function(element) {
+                    return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
+                });
+            }
+            if (item.type === 0 && this.isCompany && this.companyCityLedger) {
+                payBack = [{
+                    channelId: -14,
+                    name: `企业挂帐(${this.companyName || ''})`
+                }].concat(payBack);
+            }
+            if (payBack.length <= 1) {
+                return payBack;
             } else {
                 let own = false; // 判断是否已存在订单钱包的支付方式
-                let arr = this.payChannels;
-                this.payments.forEach((pay, num) => {
+                let arr = payBack;
+                payBack.forEach((pay, num) => {
                     const id = pay.payChannelId;
                     if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
                         own = true;
                     }
                 });
                 if (own) {
-                    arr = this.payChannels.filter(item => {
+                    arr = payBack.filter(item => {
                         const index = item.channelId;
                         return index !== -6 && index !== -7 && index !== -11 && index !== -12;
                     });
@@ -828,84 +828,13 @@ export default {
                 params.isSettle = false;
             }
             // 今日房费
-            // return http.get('/order/getOrderPayment', params)
-            //     .then(res => {
-            //         this.orderPayment = res.data;
-            //         const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
-            //         this.onePassAmount = res.data.onePassAmount || 0;
-            //         this.companyAmount = res.data.companyAmount || 0;
-            //         this.paiedMoney = paiedFee.toFixed(2);
-            //     });
-            return http.get('/room/getTips')
+            return http.get('/order/getOrderPayment', params)
                 .then(res => {
-                    res.data = {
-                        card: [{
-                            ableFee: 8900,
-                            cards: [{
-                                accountId: 123,
-                                accountName: '123123',
-                                lastFee: 6000,
-                                paidFee: 100
-                            }],
-                            paidFee: 100,
-                            type: 2
-                        }, {
-                            ableFee: 8900,
-                            cards: [{
-                                accountId: 12323123,
-                                accountName: 'ass2123123',
-                                lastFee: 5000,
-                                paidFee: 0
-                            }],
-                            paidFee: 0,
-                            type: 0
-                        }],
-                        company: [{
-                            ableFee: 8900,
-                            accountId: 22222,
-                            accountName: '23123',
-                            lastFee: 2000,
-                            paidFee: 400,
-                            type: 2
-                        }, {
-                            ableFee: 8900,
-                            accountId: 33333,
-                            accountName: '23123',
-                            lastFee: 3000,
-                            paidFee: 0,
-                            type: 0
-                        }],
-                        dateTime: new Date().getMilliseconds(),
-                        game: [{
-                            ableFee: 9000,
-                            ableNum: 900,
-                            accountId: 22222,
-                            accountName: '1231234',
-                            lastFee: 9000,
-                            paidFee: 0,
-                            paidNum: 0,
-                            rate: 10,
-                            type: 0
-                        }],
-                        member: [{
-                            ableFee: 8900,
-                            accountId: 123123,
-                            accountName: 'sadasd',
-                            lastFee: 2000,
-                            paidFee: 0,
-                            type: 0
-                        }],
-                        need: {
-                            penalty: 2000,
-                            total: 10000
-                        },
-                        paid: {
-                            balance: 1000,
-                            game: 1000,
-                            normal: 1000
-                        },
-                        price: 9900
-                    };
+                    // this.orderPayment = res.data;
+                    // const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
+                    // this.onePassAmount = res.data.onePassAmount || 0;
+                    // this.companyAmount = res.data.companyAmount || 0;
+                    // this.paiedMoney = paiedFee.toFixed(2);
                     this.gameShowtip = undefined;
                     this.cardShowtip = undefined;
                     this.campanyShowtip = undefined;
@@ -942,7 +871,7 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
-                    res.data.card.forEach(element => {
+                    res.data.card && res.data.card.forEach(element => {
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2) {
@@ -957,6 +886,76 @@ export default {
                     });
                     this.cardList = cardList;
                 });
+            // return http.get('/room/getTips')
+            //     .then(res => {
+            //         res.data = {
+            //             card: [{
+            //                 ableFee: 8900,
+            //                 cards: [{
+            //                     accountId: 123,
+            //                     accountName: '123123',
+            //                     lastFee: 6000,
+            //                     paidFee: 100
+            //                 }],
+            //                 paidFee: 100,
+            //                 type: 2
+            //             }, {
+            //                 ableFee: 8900,
+            //                 cards: [{
+            //                     accountId: 12323123,
+            //                     accountName: 'ass2123123',
+            //                     lastFee: 5000,
+            //                     paidFee: 0
+            //                 }],
+            //                 paidFee: 0,
+            //                 type: 0
+            //             }],
+            //             company: [{
+            //                 ableFee: 8900,
+            //                 accountId: 22222,
+            //                 accountName: '23123',
+            //                 lastFee: 2000,
+            //                 paidFee: 400,
+            //                 type: 2
+            //             }, {
+            //                 ableFee: 8900,
+            //                 accountId: 33333,
+            //                 accountName: '23123',
+            //                 lastFee: 3000,
+            //                 paidFee: 0,
+            //                 type: 0
+            //             }],
+            //             dateTime: new Date().getMilliseconds(),
+            //             game: [{
+            //                 ableFee: 9000,
+            //                 ableNum: 900,
+            //                 accountId: 22222,
+            //                 accountName: '1231234',
+            //                 lastFee: 9000,
+            //                 paidFee: 0,
+            //                 paidNum: 0,
+            //                 rate: 10,
+            //                 type: 0
+            //             }],
+            //             member: [{
+            //                 ableFee: 8900,
+            //                 accountId: 123123,
+            //                 accountName: 'sadasd',
+            //                 lastFee: 2000,
+            //                 paidFee: 0,
+            //                 type: 0
+            //             }],
+            //             need: {
+            //                 penalty: 2000,
+            //                 total: 10000
+            //             },
+            //             paid: {
+            //                 balance: 1000,
+            //                 game: 1000,
+            //                 normal: 1000
+            //             },
+            //             price: 9900
+            //         };
         },
         /**
          * 获取支付列表
@@ -1025,8 +1024,9 @@ export default {
             }
         },
         addPayMent() {
-            const collectPayMany = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
-            const payMoney = Math.abs(collectPayMany);
+            // const collectPayMany = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
+            
+            const payMoney = Math.abs(this.needPayed);
             let paidMoney = 0;
             if (this.payments.length > 0) {
                 this.payments.forEach(pay => {
@@ -1034,11 +1034,11 @@ export default {
                 });
             }
             this.uniqueId += 1;
-            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
+            // const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
-                fee: fee,
+                fee: payMoney,
                 payChannelId: undefined,
-                type: this.orderState ? 0 : 2,
+                type: this.needPayed > 0 ? 0 : 2,
                 uniqueId: this.uniqueId
             });
         },
@@ -1123,30 +1123,36 @@ export default {
                 return false;
             }
             // 功能一次结清，现在改为允许多次收款
-            const receiveMoney = this.payments.reduce((a, b) => {
-                return a + Number(b.fee);
-            }, 0);
-            const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
+            // const receiveMoney = this.payments.reduce((a, b) => {
+            //     return a + Number(b.fee);
+            // }, 0);
+            // const shouldPayMoney = Math.abs((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
             // 订单详情允许多次收银条件
             // const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
             const allowGetMoneyTimes = (this.type === 'collect');
-            if (Number(receiveMoney.toFixed(2)) !== Number(shouldPayMoney) && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
+            if (this.isCompany && this.companyCityLedger) {
+                this.payChannels = [{
+                    channelId: -14,
+                    name: `企业挂帐(${this.companyName || ''})`
+                }].concat(this.payChannels);
+            }
+            if (Number(this.needPayed) !== 0 && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
                 modal.warn('订单未结清，无法完成收银！');
                 return false;
             }
-            if (this.type === 'resetOrder') {
-                this.payments.map(pay => {
-                    pay.type = this.orderState ? 0 : 2;
-                });
-                const newReceiveMoney = this.payments.reduce((a, b) => {
-                    return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
-                }, 0);
-                const shouldReceiveMoney = this.orderPayment.payableFee + this.penalty;
-                if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney.toFixed(2))) {
-                    modal.warn('订单未结清!');
-                    return false;
-                }
-            }
+            // if (this.type === 'resetOrder') {
+            //     this.payments.map(pay => {
+            //         pay.type = this.orderState ? 0 : 2;
+            //     });
+            //     const newReceiveMoney = this.payments.reduce((a, b) => {
+            //         return a + (b.type === 0 ? Number(b.fee) : Number(-b.fee));
+            //     }, 0);
+            //     const shouldReceiveMoney = this.orderPayment.payableFee + this.penalty;
+            //     if (Number((Number(this.paiedMoney) + newReceiveMoney).toFixed(2)) !== Number(shouldReceiveMoney.toFixed(2))) {
+            //         modal.warn('订单未结清!');
+            //         return false;
+            //     }
+            // }
             // const shouldDeposit = this.orderPayment.deposit - (this.orderPayment.refundDeposit || 0);
             // if (this.deposit > shouldDeposit && this.type !== 'checkIn' && this.type !== 'register') {
             //     modal.warn('退款押金无法大于已付押金！');
@@ -1205,9 +1211,9 @@ export default {
                     payments: JSON.stringify(payments),
                     businessJson: JSON.stringify(businessJson)
                 };
-                if (this.business.PenaltyFee) {
-                    params.balancePenaltyBtn = true;
-                }
+                // if (this.business.PenaltyFee) {
+                //     params.balancePenaltyBtn = true;
+                // }
             } else if (this.type === 'resetOrder') { // 反结账
                 params = {
                     orderId: getOrderId(this.orderDetail),
@@ -1239,10 +1245,10 @@ export default {
             if (this.type === 'collect') {
                 params.isSettle = false;
             }
-            params.tokenPayments = [];
+            const tokenPayments = [];
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
-                    params.tokenPayments.push({
+                    tokenPayments.push({
                         'accountId': el.accountId,
                         'accountType': 0,
                         fee: el.fee * el.rate,
@@ -1253,7 +1259,7 @@ export default {
             }
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
-                    params.tokenPayments.push({
+                    tokenPayments.push({
                         'accountId': el.accountId,
                         'accountType': 1,
                         fee: el.fee,
@@ -1264,7 +1270,7 @@ export default {
             // 会员余额
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
                 this.paycard.length && this.paycard.forEach(card => {
-                    params.tokenPayments.push({
+                    tokenPayments.push({
                         'accountId': card.accountId,
                         'accountType': 2,
                         fee: card.fee,
@@ -1275,7 +1281,7 @@ export default {
             // 会员卡
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
-                    params.tokenPayments.push({
+                    tokenPayments.push({
                         'accountId': el.accountId,
                         'accountType': 3,
                         fee: el.fee,
@@ -1283,7 +1289,7 @@ export default {
                     });
                 });
             }
-
+            params.tokenPayments = JSON.stringify(tokenPayments);
             // if (this.type === 'orderDetail') {
             //     params.isSettle = true;
             // }

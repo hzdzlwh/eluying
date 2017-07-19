@@ -164,8 +164,8 @@
                 userGroupOrigins: [],
                 vips: [],
                 vip: {},
-                startTime: this.date.startDate,
-                toTime: this.date.endDate,
+                startTime: date.startDate,
+                toTime: date.endDate,
                 pages: 0,
                 personCount: 0,
                 roomCount: 0,
@@ -311,15 +311,15 @@
             },
             getData() {
                 http.get('/stat/getHistoryResident', { startDate: this.startTime, toDate: this.toTime })
-            .then(res => {
-                if (res.code === 1) {
-                    this.vips = res.data.entityList;
-                    this.personCount = res.data.total;
-                    this.roomCount = res.data.roomTotal || 0;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
+                .then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.entityList;
+                        this.personCount = res.data.total;
+                        this.roomCount = res.data.roomTotal || 0;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
             },
             getOrigin() {
             // 获取全部客户来源渠道

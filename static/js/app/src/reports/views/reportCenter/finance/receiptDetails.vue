@@ -6,44 +6,24 @@
       <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
       <div class="select-box">
         <div style="margin-right:20px;width: 120px;" class="fr region" >
-            <dd-select v-model="zoneType" >
-              <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
+            <dd-select v-model="orderType" >
+              <dd-option :key="item.id" v-for="item in orderTypeAll" :value="item.id" :label="item.name"></dd-option>
             </dd-select>
         </div>
         <div style="margin-right:20px;width: 120px;" class="fr room" >
-            <dd-select v-model="roomType" >
-              <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
+            <dd-select v-model="channelId" >
+              <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.id" :label="item.name"></dd-option>
             </dd-select>
         </div>
         <div style="margin-right:20px;width: 140px;" class="fr check" >
-            <dd-select v-model="checkType" >
-              <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+            <dd-select v-model="operatorId" >
+              <dd-option :key="item.id" v-for="item in operator" :value="item.id" :label="item.name"></dd-option>
             </dd-select>
         </div>
-        <!-- <div style="margin-right:20px;width:140px;" class="select-component-container fr">
-          <dd-select v-model="userOriginType" >
-            <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
-                        :value="origin.originType" :label="origin.name">
-              <span :title="origin.name">{{origin.name}}</span>
-            </dd-option>
-            <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
-                              :key="item" v-if="item.origins.length > 0">
-              <dd-option  v-for="origin in item.origins" :key="origin.originType"
-                          :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
-                <div class="user-group-origin">
-                  <span class="user-group-company" :title="origin.name">
-                    {{ origin.name }}
-                  </span>
-                  <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
-                </div>
-              </dd-option>
-            </dd-group-option>
-          </dd-select>
-        </div> -->
       </div>
       <div class="export">
         <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-          <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+          <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
           <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
         </dd-dropdown>
       </div>
@@ -100,10 +80,9 @@
     export default {
         data() {
             return {
-                today: undefined,
-                zoneTypeAll: [{
-                    id: -1,
-                    name: '全部区域'
+                orderTypeAll: [{
+                    id: -2,
+                    name: '全部'
                 },
                 {
                     id: 0,

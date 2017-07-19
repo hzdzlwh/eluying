@@ -6,29 +6,29 @@
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="zoneType" >
-                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
-                      </dd-select>
+                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.zoneType" :label="item.name"></dd-option>
+                    </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr room" >
                     <dd-select v-model="roomType" >
-                        <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.roomType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 140px;" class="fr check" >
                     <dd-select v-model="checkType" >
-                        <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.checkType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width:140px;" class="select-component-container fr">
                     <dd-select v-model="userOriginType" >
                         <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
-                                    :value="origin.originType" :label="origin.name">
+                            :value="origin.originType" :label="origin.name">
                             <span :title="origin.name">{{origin.name}}</span>
                         </dd-option>
                         <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
-                                          :key="item" v-if="item.origins.length > 0">
+                            :key="item" v-if="item.origins.length > 0">
                             <dd-option  v-for="origin in item.origins" :key="origin.originType"
-                                      :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
+                                :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
                                 <div class="user-group-origin">
                                     <span class="user-group-company" :title="origin.name">
                                         {{ origin.name }}
@@ -42,7 +42,7 @@
             </div>
             <div class="export">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                    <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                    <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -98,56 +98,40 @@
         data() {
             return {
                 today: undefined,
+                zoneType: '-1~',
+                zoneTypeOther: [],
                 zoneTypeAll: [{
                     id: -1,
-                    name: '全部区域'
-                },
-                {
-                    id: 0,
-                    name: '默认区域a'
-                },
-                {
-                    id: 1,
-                    name: '我我我我我我我我我我我我我我我我我我我我'
-                },
-                {
-                    id: 2,
-                    name: '三楼'
-                }
-                ],
-                zoneType: -1,
+                    name: '全部区域',
+                    zoneType: '-1~'
+                }],
+                roomType: '-1~',
+                roomTypeOther: [],
                 roomTypeAll: [{
                     id: -1,
-                    name: '全部房型'
-                },
-                {
-                    id: 0,
-                    name: '神龙岛'
-                },
-                {
-                    id: 1,
-                    name: '侠客岛'
-                },
-                {
-                    id: 2,
-                    name: '桃花岛'
+                    name: '全部房型',
+                    roomType: '-1~'
                 }],
-                roomType: -1,
                 checkTypeAll: [{
                     id: -1,
-                    name: '全部入住类型'
+                    name: '全部入住类型',
+                    checkType: -1
                 }, {
                     id: 0,
-                    name: '正常入住'
+                    name: '正常入住',
+                    checkType: 0
                 }, {
                     id: 2,
-                    name: '自用房'
+                    name: '自用房',
+                    checkType: 2
                 }, {
                     id: 3,
-                    name: '免费房'
+                    name: '免费房',
+                    checkType: 3
                 }, {
                     id: 1,
-                    name: '钟点房'
+                    name: '钟点房',
+                    checkType: 1
                 }],
                 checkType: -1,
                 userOriginType: '-2~',
@@ -230,14 +214,12 @@
             DdOption,
             DdGroupOption
         },
+        created() {
+            this.today = util.dateFormat(new Date());
+            this.getData();
+        },
         watch: {
             date() {
-                // date = this.today;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            userOriginType() {
                 this.pageNo = 1;
                 if (this.flag) {
                     this.fetchDate();
@@ -267,11 +249,6 @@
                 }
             }
         },
-        created() {
-            this.today = util.dateFormat(new Date());
-            this.getData();
-            this.getOrigin();
-        },
         methods: {
             exportUrl(type) {
                 const originParam = {
@@ -289,7 +266,7 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get(' /stat/getCurrentResident', { date: this.today })
+                http.get('/stat/getCurrentResident', { date: this.today })
             .then(res => {
                 if (res.code === 1) {
                     this.vips = res.data.entityList;
@@ -299,41 +276,6 @@
                 }
                 this.flag = true;
             });
-            },
-            getOrigin() {
-            // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: true })
-                      .then((res) => {
-                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                          if (res.code === 1) {
-                              const originsList = res.data.list;
-                              const otherOrigins = [];
-                              this.userOrigins = originsList;
-                              originsList.forEach(origin => {
-                                  if (origin.id === -1 || origin.id === -4) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      this.userSelfOrigins.push(origin);
-                                  } else if (origin.id === -5) {
-                                      origin.companyList.forEach(company => {
-                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                          const number = `企业编号:${company.contractNum || ''}`;
-                                          const name = `联系人:${company.contactName || ''}`;
-                                          const phone = `联系人电话:${company.contactPhone || ''}`;
-                                          company.name = company.companyName;
-                                          company.originType = `${company.id}~${origin.id}`;
-                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                      });
-                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                  } else if (origin.id > 0) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      origin.info = origin.name;
-                                      otherOrigins.push(origin);
-                                  }
-                              });
-                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                              // this.userOriginType = this.userSelfOrigins[0].originType;
-                          }
-                      });
             },
             fetchDate() {
                 const obj = {
@@ -354,7 +296,7 @@
                         delete obj[ob];
                     }
                 }
-                http.get(' /stat/getCurrentResident', obj).then(res => {
+                http.get('/stat/getCurrentResident', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
