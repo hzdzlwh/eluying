@@ -15,7 +15,7 @@
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">姓名</span> <span>{{card.vipName}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">手机号</span> <span>{{card.phone}}</span></div>
                             <div style="width: 25%;" v-if="card.type !== 1"><span style="display:inline-block;width:48px;text-align:right;font-size:12px;color:#999999;">余额</span> <span>{{card.balanceFee}}</span></div>
-                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">类型</span> <span>{{card.type === 0? '主卡' : '副卡'}}</span></div>
+                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">类型</span> <span>{{card.type === 0? card.categoryName : '副卡'}}</span></div>
                         </div>
                         <div class="customer-info">
                             <div style="width: 50%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>

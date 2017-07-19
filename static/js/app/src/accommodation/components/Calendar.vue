@@ -715,7 +715,7 @@
                 outOrIn: 0,
                 date: new Date(),
                 roomdata: undefined,
-                changePrice: true,
+                changePrice: false,
                 dragStopDate: undefined,
                 dragStopRoom: undefined,
                 outerUi: undefined

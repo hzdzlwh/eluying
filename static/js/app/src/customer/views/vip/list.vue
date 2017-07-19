@@ -21,6 +21,13 @@
                             @changeParams="modifyParams"
                             @refreshView="getVipsAndDetail">
         </recharge-card-form>
+        <rights-account-recharge :visible="rightsAccountRechargeVisible"
+                                 :vip="vip"
+                                 :title="rightsAccountTitle"
+                                 @closeModal="hideModel"
+                                 :channels="payChannels"
+                                 @refreshView="getVipsAndDetail">
+        </rights-account-recharge>
         <main-card-form :visible="mainCardVisible"
                         :oldPhone="vip.phone"
                         :oldName="vip.name"
@@ -107,6 +114,14 @@
                             <span class="vip-detail-filed">会员等级</span>
                             <span>{{vip.levelName}}</span>
                         </div>
+                    </div>
+                </div>
+                <div class="bottom-line">
+                    <div class="vip-detail-header">权益账户</div>
+                    <div class="vip-detail-row" v-for="(item, index) in vip.accountLIst">
+                        <div style="width: 18%;"><span>{{item.accName}}</span></div>
+                        <div style="width: 18%;"><span>{{item.accBalance}}</span></div>
+                        <div style="width: 18%;"><a @click="rechargeRightsAccount(index)">充值</a></div>
                     </div>
                 </div>
                 <div class="bottom-line">
@@ -255,6 +270,7 @@
     import detail from '../../components/detail.vue';
     import modal from '../../../common/modal';
     import rechargeCardForm from '../../components/rechargeCardForm.vue';
+    import rightsAccountRecharge from '../../components/rightsAccountRecharge.vue';
     import mainCardForm from '../../components/mainCardForm.vue';
     import payWithCode from '../../components/payWithCode.vue';
     const idCardType = [
@@ -330,10 +346,12 @@
                 detailId: undefined,
                 detailTitle: undefined,
                 rechargeVisible: false,
+                rightsAccountRechargeVisible: false,
                 card: null,
                 mainCardVisible: false,
                 payCodeVisible: false,
-                isAutoUpgrade: undefined
+                isAutoUpgrade: undefined,
+                rightsAccountTitle: ''
             };
         },
         created() {
@@ -444,6 +462,10 @@
                 this.card = { vipCardNum: card.vipCardNum, categoryName: card.name, categoryId: card.categoryId, id: card.vipCardId };
                 this.rechargeVisible = true;
             },
+            rechargeRightsAccount(index) {
+                this.rightsAccountRechargeVisible = true;
+                this.rightsAccountTitle = this.vip.accountLIst[index].accName;
+            },
             checkCard() {
                 this.mainCardVisible = true;
             },
@@ -451,6 +473,7 @@
                 this.rechargeVisible = false;
                 this.mainCardVisible = false;
                 this.payCodeVisible = false;
+                this.rightsAccountRechargeVisible = false;
                 this.vip.phone = '';
             }
         },
@@ -461,7 +484,8 @@
             detail,
             rechargeCardForm,
             mainCardForm,
-            payWithCode
+            payWithCode,
+            rightsAccountRecharge
         }
     };
 </script>

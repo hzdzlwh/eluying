@@ -52,7 +52,6 @@
             return {
                 card: Object,
                 types: [
-                    { id: 0, name: '主卡' },
                     { id: 1, name: '副卡' }
                 ]
             };
@@ -71,6 +70,7 @@
             },
             propsCard(newVal) {
                 this.card = { ...newVal };
+                this.types.push({ id: 0, name: this.card.categoryName });
             }
         },
         methods: {

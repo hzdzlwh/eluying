@@ -267,6 +267,7 @@
                     .currency-sub-content{
                         padding: 4px 20px;
                         table{
+                            border: 1px solid #ccc;
                             tr{
                                 height: 32px;
                                 th{
