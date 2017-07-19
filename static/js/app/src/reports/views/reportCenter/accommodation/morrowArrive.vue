@@ -177,7 +177,7 @@
                     },
                     {
                         title: '总房费',
-                        dataIndex: 'tatalPrice',
+                        dataIndex: 'totalPrice',
                         width: 100
                     },
                     {
@@ -377,9 +377,8 @@
                 }
                 http.get('/stat/getReserveStat', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.count = res.data.total;
+                        this.vips = res.data.list || [];
+                        this.count = res.data.count;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                         // if (keyword) {
                         //     this.originId = -2;

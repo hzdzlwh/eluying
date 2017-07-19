@@ -477,7 +477,7 @@ export const routes = [
                         path: '/reportCenter/finance/ARGather',
                         component: ARGather,
                         meta: {
-                            name: 'AR转账汇总表'
+                            name: 'AR结算汇总表'
                         }
                     },
                     {

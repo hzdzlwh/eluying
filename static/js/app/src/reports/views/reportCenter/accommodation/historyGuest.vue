@@ -7,38 +7,38 @@
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="zoneType" >
-                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.zoneType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr room" >
                     <dd-select v-model="roomType" >
-                      <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.roomType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 140px;" class="fr check" >
                     <dd-select v-model="checkType" >
-                      <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.checkType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width:140px;" class="select-component-container fr">
-                  <dd-select v-model="userOriginType" >
-                    <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
-                                :value="origin.originType" :label="origin.name">
-                      <span :title="origin.name">{{origin.name}}</span>
-                    </dd-option>
-                    <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
-                                      :key="item" v-if="item.origins.length > 0">
-                      <dd-option  v-for="origin in item.origins" :key="origin.originType"
-                                  :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
-                        <div class="user-group-origin">
-                          <span class="user-group-company" :title="origin.name">
-                            {{ origin.name }}
-                          </span>
-                          <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
-                        </div>
-                      </dd-option>
-                    </dd-group-option>
-                  </dd-select>
+                    <dd-select v-model="userOriginType" >
+                        <dd-option  :key="origin.originType" v-for="origin in userSelfOrigins"
+                            :value="origin.originType" :label="origin.name">
+                            <span :title="origin.name">{{origin.name}}</span>
+                        </dd-option>
+                        <dd-group-option  v-for="item in userGroupOrigins" :label="item.label"
+                            :key="item" v-if="item.origins.length > 0">
+                            <dd-option  v-for="origin in item.origins" :key="origin.originType"
+                                :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
+                                <div class="user-group-origin">
+                                    <span class="user-group-company" :title="origin.name">
+                                        {{ origin.name }}
+                                    </span>
+                                    <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                </div>
+                            </dd-option>
+                        </dd-group-option>
+                    </dd-select>
                 </div>
             </div>
             <div class="export">
@@ -50,8 +50,7 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
+            <p style="font-size:16px;"><small style='width:16px;'>总人次 : </small> {{personCount}}</p>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
         </div>
     </div>
@@ -98,59 +97,47 @@
     import util from 'util';
     import DateSelect from '../../../components/DateSelect.vue';
     export default {
+        props: {
+            startDate: String,
+            endDate: String
+        },
         data() {
             return {
                 today: undefined,
+                zoneType: '-1~',
+                zoneTypeOther: [],
                 zoneTypeAll: [{
                     id: -1,
-                    name: '全部区域'
-                },
-                {
-                    id: 0,
-                    name: '默认区域a'
-                },
-                {
-                    id: 1,
-                    name: '我我我我我我我我我我我我我我我我我我我我'
-                },
-                {
-                    id: 2,
-                    name: '三楼'
-                }
-                ],
-                zoneType: -1,
+                    name: '全部区域',
+                    zoneType: '-1~'
+                }],
+                roomType: '-1~',
+                roomTypeOther: [],
                 roomTypeAll: [{
                     id: -1,
-                    name: '全部房型'
-                },
-                {
-                    id: 0,
-                    name: '神龙岛'
-                },
-                {
-                    id: 1,
-                    name: '侠客岛'
-                },
-                {
-                    id: 2,
-                    name: '桃花岛'
+                    name: '全部房型',
+                    roomType: '-1~'
                 }],
-                roomType: -1,
                 checkTypeAll: [{
                     id: -1,
-                    name: '全部入住类型'
+                    name: '全部入住类型',
+                    checkType: -1
                 }, {
                     id: 0,
-                    name: '正常入住'
+                    name: '正常入住',
+                    checkType: 0
                 }, {
                     id: 2,
-                    name: '自用房'
+                    name: '自用房',
+                    checkType: 2
                 }, {
                     id: 3,
-                    name: '免费房'
+                    name: '免费房',
+                    checkType: 3
                 }, {
                     id: 1,
-                    name: '钟点房'
+                    name: '钟点房',
+                    checkType: 1
                 }],
                 checkType: -1,
                 userOriginType: '-2~',
@@ -164,11 +151,8 @@
                 userGroupOrigins: [],
                 vips: [],
                 vip: {},
-                startTime: date.startDate,
-                toTime: date.endDate,
                 pages: 0,
                 personCount: 0,
-                roomCount: 0,
                 pageNo: 1,
                 col: [
                     {
@@ -237,13 +221,7 @@
             DateSelect
         },
         watch: {
-        // date() {
-        //   start = date.startDate;
-        //   if(this.flag) {
-        //     this.fetchDate();
-        //   }
-        // },
-            startTime() {
+            date() {
                 this.pageNo = 1;
                 if (this.flag) {
                     this.fetchDate();
@@ -289,6 +267,8 @@
             this.today = util.dateFormat(new Date());
             this.getData();
             this.getOrigin();
+            this.getRoomType();
+            this.getZoneType();
         },
         computed: {
             ...mapState(['date'])
@@ -310,15 +290,32 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getHistoryResident', { startDate: this.startTime, toDate: this.toTime })
+                http.get('/stat/getHistoryResident', {
+                    startDate: this.date.startDate,
+                    toDate: this.date.endDate
+                })
                 .then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
                         this.personCount = res.data.total;
-                        this.roomCount = res.data.roomTotal || 0;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                     }
                     this.flag = true;
+                });
+            },
+            getZoneType() {
+                http.get('/room/getZoneList')
+                .then(res => {
+                    if (res.code === 1) {
+                        const zoneList = res.data.list;
+                        this.zoneTypeOther = zoneList;
+                        zoneList.forEach(zone => {
+                            zone.id = zone.zoneId;
+                            zone.name = zone.zoneName;
+                            zone.zoneType = `-1~${zone.zoneId}`;
+                            this.zoneTypeAll.push(zone);
+                        });
+                    }
                 });
             },
             getOrigin() {
@@ -356,14 +353,29 @@
                           }
                       });
             },
+            getRoomType() {
+                http.get('/room/getRoomCategories')
+                .then(res => {
+                    if (res.code === 1) {
+                        const roomList = res.data.list;
+                        this.roomTypeOther = roomList;
+                        roomList.forEach(room => {
+                            room.id = room.cId;
+                            room.name = room.cName;
+                            room.roomType = `-1~${room.cId}`;
+                            this.roomTypeAll.push(room);
+                        });
+                    }
+                });
+            },
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    zoneType: this.zoneType,
-                    roomType: this.roomType,
-                    checkType: this.checkType,
-                    startDate: this.startTime,
-                    toDate: this.toTime,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    startDate: this.date.startDate,
+                    toDate: this.date.endDate,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
                 };
@@ -378,11 +390,19 @@
                 }
                 http.get('/stat/getHistoryResident', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.personCount = res.data.total;
-                        this.roomCount = res.data.roomTotal;
+                        this.vips = res.data.list || [];
+                        this.count = res.data.total;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
+                        // if (keyword) {
+                        //     this.originId = -2;
+                        //     this.endTime = undefined;
+                        //     this.pageNo = 1;
+                        //     this.searchPattern = undefined;
+                        //     this.startTime = undefined;
+                        //     this.state = -1;
+                        //     this.timeType = 1;
+                        //     $("#search").val('');
+                        // }
                     }
                     this.flag = true;
                 });

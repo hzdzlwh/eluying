@@ -1,40 +1,40 @@
 <template>
-  <div>
-    <DateSelect/>
-    <h2 class="title">{{$route.meta.name}}</h2>
-    <div class="top">
-      <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
-      <div class="select-box">
-        <div style="margin-right:20px;width: 120px;" class="fr region" >
-            <dd-select v-model="orderType" >
-              <dd-option :key="item.id" v-for="item in orderTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
+    <div>
+        <DateSelect/>
+        <h2 class="title">{{$route.meta.name}}</h2>
+        <div class="top">
+            <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
+            <div class="select-box">
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="orderType" >
+                        <dd-option :key="item.id" v-for="item in orderTypeAll" :value="item.orderType" :label="item.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="margin-right:20px;width: 120px;" class="fr room" >
+                    <dd-select v-model="channelType" >
+                        <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.channelType" :label="item.name"></dd-option>
+                    </dd-select>
+                </div>
+                <div style="margin-right:20px;width: 140px;" class="fr check" >
+                    <dd-select v-model="operatorType" >
+                        <dd-option :key="item.id" v-for="item in operatorTypeAll" :value="item.operatorType" :label="item.name"></dd-option>
+                    </dd-select>
+                </div>
+            </div>
+            <div class="export">
+                <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
+                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
+                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                </dd-dropdown>
+            </div>
         </div>
-        <div style="margin-right:20px;width: 120px;" class="fr room" >
-            <dd-select v-model="channelId" >
-              <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <div class="foot footfix">
+            <p style="font-size:16px;"><small style='width:16px;'>总收款笔数 : </small> {{receiptNum}}</p>
+            <p style="font-size:16px;"><small style='width:16px;'>总收款金额 : </small> {{receiptFree}}</p>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
         </div>
-        <div style="margin-right:20px;width: 140px;" class="fr check" >
-            <dd-select v-model="operatorId" >
-              <dd-option :key="item.id" v-for="item in operator" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
-        </div>
-      </div>
-      <div class="export">
-        <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-          <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
-          <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
-        </dd-dropdown>
-      </div>
     </div>
-    <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
-    <div class="foot footfix">
-      <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
-      <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
-      <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
-    </div>
-  </div>
 </template>
 <style lang='scss' scoped>
   .title {
@@ -75,130 +75,108 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import util from 'util';
     import DateSelect from '../../../components/DateSelect.vue';
     export default {
+        props: {
+            startDate: String,
+            endDate: String
+        },
         data() {
             return {
                 orderTypeAll: [{
                     id: -2,
-                    name: '全部'
-                },
-                {
-                    id: 0,
-                    name: '默认区域a'
-                },
-                {
-                    id: 1,
-                    name: '我我我我我我我我我我我我我我我我我我我我'
-                },
-                {
-                    id: 2,
-                    name: '三楼'
-                }
-                ],
-                zoneType: -1,
-                roomTypeAll: [{
+                    name: '全部订单类型',
+                    orderType: -2
+                }, {
                     id: -1,
-                    name: '全部房型'
-                },
-                {
-                    id: 0,
-                    name: '神龙岛'
-                },
-                {
-                    id: 1,
-                    name: '侠客岛'
-                },
-                {
-                    id: 2,
-                    name: '桃花岛'
-                }],
-                roomType: -1,
-                checkTypeAll: [{
-                    id: -1,
-                    name: '全部入住类型'
+                    name: '组合订单',
+                    orderType: -1
                 }, {
                     id: 0,
-                    name: '正常入住'
+                    name: '餐饮',
+                    orderType: 0
+                }, {
+                    id: 1,
+                    name: '娱乐',
+                    orderType: 1
                 }, {
                     id: 2,
-                    name: '自用房'
+                    name: '商超',
+                    orderType: 2
                 }, {
                     id: 3,
-                    name: '免费房'
-                }, {
-                    id: 1,
-                    name: '钟点房'
+                    name: '住宿',
+                    orderType: 3
                 }],
-                checkType: -1,
-                userOriginType: '-2~',
-                userOrigins: [],
-                userSelfOrigins: [{
-                    id: '',
-                    name: '全部客源渠道',
-                    originType: '-2~',
-                    type: 2
+                orderType: -2,
+                channelTypeAll: [{
+                    id: -1,
+                    name: '全部付款方式',
+                    channelType: '-1~'
                 }],
-                userGroupOrigins: [],
+                channelType: '-1~',
+                operatorTypeAll: [{
+                    id: -1,
+                    name: '全部操作人',
+                    operatorType: '-1~'
+                }],
+                operatorType: '-1~',
                 vips: [],
                 vip: {},
-                startTime: this.date.startDate,
-                toTime: this.date.endDate,
                 pages: 0,
-                personCount: 0,
-                roomCount: 0,
+                receiptNum: 0,
+                receiptFree: 0,
                 pageNo: 1,
                 col: [
                     {
                         title: '订单号',
-                        dataIndex: 'serialNum',
+                        dataIndex: 'orderNum',
                         width: 180
                     },
                     {
-                        title: '区域',
-                        dataIndex: 'zoneName',
+                        title: '订单类型',
+                        dataIndex: 'orderType',
                         width: 80
                     },
                     {
-                        title: '房型',
-                        dataIndex: 'roomName',
+                        title: '订单内容',
+                        dataIndex: 'orderContent',
+                        width: 120
+                    },
+                    {
+                        title: '联系人',
+                        dataIndex: 'customerName',
                         width: 80
                     },
                     {
-                        title: '房号',
-                        dataIndex: 'roomNo',
-                        width: 80
-                    },
-                    {
-                        title: '入住类型',
-                        dataIndex: 'checkInType',
+                        title: '手机号',
+                        dataIndex: 'customerPhone',
                         width: 100
                     },
                     {
-                        title: '在住人',
-                        dataIndex: 'residentName',
+                        title: '下单时间',
+                        dataIndex: 'creationTime',
                         width: 80
                     },
                     {
-                        title: '证件号',
-                        dataIndex: 'idCardNum',
+                        title: '收款金额',
+                        dataIndex: 'amount',
                         width: 100
                     },
     
                     {
-                        title: '来源',
-                        dataIndex: 'origin',
+                        title: '收款时间',
+                        dataIndex: 'payTime',
                         width: 80
                     },
                     {
-                        title: '到达时间',
-                        dataIndex: 'checkInTime',
+                        title: '收款方式',
+                        dataIndex: 'payChannel',
                         width: 120
                     },
                     {
-                        title: '离开时间',
-                        dataIndex: 'expectCheckOutTime',
+                        title: '操作人',
+                        dataIndex: 'operator',
                         width: 120
                     }
                 ],
@@ -216,25 +194,7 @@
             DateSelect
         },
         watch: {
-            startTime() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            toTime() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            userOriginType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            roomType() {
+            date() {
                 this.pageNo = 1;
                 if (this.flag) {
                     this.fetchDate();
@@ -245,13 +205,7 @@
                     this.fetchDate();
                 }
             },
-            zoneType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            checkType() {
+            orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
                     this.fetchDate();
@@ -259,9 +213,7 @@
             }
         },
         created() {
-            this.today = util.dateFormat(new Date());
             this.getData();
-            this.getOrigin();
         },
         computed: {
             ...mapState(['date'])
@@ -283,66 +235,30 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getHistoryResident', { startDate: this.startTime, toDate: this.toTime })
-            .then(res => {
-                if (res.code === 1) {
-                    console.log(res);
-                    this.vips = res.data.entityList;
-                    this.personCount = res.data.total;
-                    this.roomCount = res.data.roomTotal || 0;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
-            },
-            getOrigin() {
-            // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: true })
-                      .then((res) => {
-                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                          if (res.code === 1) {
-                              const originsList = res.data.list;
-                              const otherOrigins = [];
-                              this.userOrigins = originsList;
-                              originsList.forEach(origin => {
-                                  if (origin.id === -1 || origin.id === -4) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      this.userSelfOrigins.push(origin);
-                                  } else if (origin.id === -5) {
-                                      origin.companyList.forEach(company => {
-                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                          const number = `企业编号:${company.contractNum || ''}`;
-                                          const name = `联系人:${company.contactName || ''}`;
-                                          const phone = `联系人电话:${company.contactPhone || ''}`;
-                                          company.name = company.companyName;
-                                          company.originType = `${company.id}~${origin.id}`;
-                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                      });
-                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                  } else if (origin.id > 0) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      origin.info = origin.name;
-                                      otherOrigins.push(origin);
-                                  }
-                              });
-                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                              // this.userOriginType = this.userSelfOrigins[0].originType;
-                          }
-                      });
+                http.get('/stat/getPaymentList', {
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate
+                })
+                .then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.items;
+                        this.receiptNum = res.data.totalCount;
+                        this.receiptFree = res.data.totalAmount;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
             },
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    zoneType: this.zoneType,
-                    roomType: this.roomType,
-                    checkType: this.checkType,
-                    startDate: this.startTime,
-                    toDate: this.toTime,
-                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
-                    originId: this.userOriginType.split('~')[1]
+                    // zoneId: this.zoneType.split('~')[1],
+                    // roomType: this.roomType.split('~')[1],
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate
                 };
-                if (this.checkType !== -1) {
-                    obj.checkType = this.checkType;
+                if (this.orderType !== -2) {
+                    obj.orderType = this.orderType;
                 }
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -350,14 +266,22 @@
                         delete obj[ob];
                     }
                 }
-                http.get('/stat/getHistoryResident', obj).then(res => {
+                http.get('/stat/getPaymentList', obj).then(res => {
                     if (res.code === 1) {
-                        console.log(res);
-                        this.vips = res.data.entityList || [];
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.personCount = res.data.total;
-                        this.roomCount = res.data.roomTotal;
+                        this.vips = res.data.items || [];
+                        this.receiptNum = res.data.totalCount;
+                        this.receiptFree = res.data.totalAmount;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
+                        // if (keyword) {
+                        //     this.originId = -2;
+                        //     this.endTime = undefined;
+                        //     this.pageNo = 1;
+                        //     this.searchPattern = undefined;
+                        //     this.startTime = undefined;
+                        //     this.state = -1;
+                        //     this.timeType = 1;
+                        //     $("#search").val('');
+                        // }
                     }
                     this.flag = true;
                 });

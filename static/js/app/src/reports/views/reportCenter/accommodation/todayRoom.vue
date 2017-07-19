@@ -49,8 +49,8 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small></p>
+            <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
+            <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
         </div>
     </div>
@@ -146,7 +146,8 @@
                 vips: [],
                 vip: {},
                 pages: 0,
-                count: 0,
+                roomCount: 0,
+                freeCount: 0,
                 pageNo: 1,
                 col: [
                     {
@@ -181,7 +182,7 @@
                     },
                     {
                         title: '总房费',
-                        dataIndex: 'tatalPrice',
+                        dataIndex: 'totalPrice',
                         width: 100
                     },
                     {
@@ -287,7 +288,8 @@
                 .then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
-                        this.count = res.data.total;
+                        this.roomCount = res.data.totalRoom;
+                        this.freeCount = res.data.totalFee;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                     }
                     this.flag = true;
@@ -381,7 +383,8 @@
                     if (res.code === 1) {
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
-                        this.count = res.data.total;
+                        this.roomCount = res.data.totalRoom;
+                        this.freeCount = res.data.totalFee;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                         // if (keyword) {
                         //     this.originId = -2;

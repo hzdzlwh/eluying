@@ -217,6 +217,9 @@
         created() {
             this.today = util.dateFormat(new Date());
             this.getData();
+            this.getZoneType();
+            this.getRoomType();
+            this.getOrigin();
         },
         watch: {
             date() {
@@ -265,25 +268,90 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
+            getZoneType() {
+                http.get('/room/getZoneList')
+                .then(res => {
+                    if (res.code === 1) {
+                        const zoneList = res.data.list;
+                        this.zoneTypeOther = zoneList;
+                        zoneList.forEach(zone => {
+                            zone.id = zone.zoneId;
+                            zone.name = zone.zoneName;
+                            zone.zoneType = `-1~${zone.zoneId}`;
+                            this.zoneTypeAll.push(zone);
+                        });
+                    }
+                });
+            },
+            getOrigin() {
+            // 获取全部客户来源渠道
+                http.get('/user/getChannels', { type: 2, isAll: true })
+                      .then((res) => {
+                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                          if (res.code === 1) {
+                              const originsList = res.data.list;
+                              const otherOrigins = [];
+                              this.userOrigins = originsList;
+                              originsList.forEach(origin => {
+                                  if (origin.id === -1 || origin.id === -4) {
+                                      origin.originType = `${origin.id}~${origin.id}`;
+                                      this.userSelfOrigins.push(origin);
+                                  } else if (origin.id === -5) {
+                                      origin.companyList.forEach(company => {
+                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                          const number = `企业编号:${company.contractNum || ''}`;
+                                          const name = `联系人:${company.contactName || ''}`;
+                                          const phone = `联系人电话:${company.contactPhone || ''}`;
+                                          company.name = company.companyName;
+                                          company.originType = `${company.id}~${origin.id}`;
+                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                      });
+                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                  } else if (origin.id > 0) {
+                                      origin.originType = `${origin.id}~${origin.id}`;
+                                      origin.info = origin.name;
+                                      otherOrigins.push(origin);
+                                  }
+                              });
+                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                              // this.userOriginType = this.userSelfOrigins[0].originType;
+                          }
+                      });
+            },
+            getRoomType() {
+                http.get('/room/getRoomCategories')
+                .then(res => {
+                    if (res.code === 1) {
+                        const roomList = res.data.list;
+                        this.roomTypeOther = roomList;
+                        roomList.forEach(room => {
+                            room.id = room.cId;
+                            room.name = room.cName;
+                            room.roomType = `-1~${room.cId}`;
+                            this.roomTypeAll.push(room);
+                        });
+                    }
+                });
+            },
             getData() {
                 http.get('/stat/getCurrentResident', { date: this.today })
-            .then(res => {
-                if (res.code === 1) {
-                    this.vips = res.data.entityList;
-                    this.personCount = res.data.total;
-                    this.roomCount = res.data.roomTotal || 0;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
+                .then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.entityList || [];
+                        this.personCount = res.data.totalResident;
+                        this.roomCount = res.data.totalRoom;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
             },
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    zoneType: this.zoneType,
-                    roomType: this.roomType,
-                    checkType: this.checkType,
-                    date: this.today,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    date: this.morrow,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
                 };
@@ -298,11 +366,19 @@
                 }
                 http.get('/stat/getCurrentResident', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.personCount = res.data.total;
-                        this.roomCount = res.data.roomTotal;
+                        this.vips = res.data.list || [];
+                        this.count = res.data.total;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
+                        // if (keyword) {
+                        //     this.originId = -2;
+                        //     this.endTime = undefined;
+                        //     this.pageNo = 1;
+                        //     this.searchPattern = undefined;
+                        //     this.startTime = undefined;
+                        //     this.state = -1;
+                        //     this.timeType = 1;
+                        //     $("#search").val('');
+                        // }
                     }
                     this.flag = true;
                 });
