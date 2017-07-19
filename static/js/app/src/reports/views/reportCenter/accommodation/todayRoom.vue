@@ -6,17 +6,17 @@
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="zoneType" >
-                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in zoneTypeAll" :value="item.zoneType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr room" >
                     <dd-select v-model="roomType" >
-                        <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in roomTypeAll" :value="item.roomType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 140px;" class="fr check" >
                     <dd-select v-model="checkType" >
-                        <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.id" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in checkTypeAll" :value="item.checkType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width:140px;" class="select-component-container fr">
@@ -42,7 +42,7 @@
             </div>
             <div class="export">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                    <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                    <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -94,60 +94,45 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
+    import ZoneType from '../common/zoneType.vue';
     export default {
         data() {
             return {
                 today: undefined,
+                zoneType: '-1~',
+                zoneTypeOther: [],
                 zoneTypeAll: [{
                     id: -1,
-                    name: '全部区域'
-                },
-                {
-                    id: 0,
-                    name: '默认区域a'
-                },
-                {
-                    id: 1,
-                    name: '我我我我我我我我我我我我我我我我我我我我'
-                },
-                {
-                    id: 2,
-                    name: '三楼'
-                }
-                ],
-                zoneType: -1,
+                    name: '全部区域',
+                    zoneType: '-1~'
+                }],
+                roomType: '-1~',
+                roomTypeOther: [],
                 roomTypeAll: [{
                     id: -1,
-                    name: '全部房型'
-                },
-                {
-                    id: 0,
-                    name: '神龙岛'
-                },
-                {
-                    id: 1,
-                    name: '侠客岛'
-                },
-                {
-                    id: 2,
-                    name: '桃花岛'
+                    name: '全部房型',
+                    roomType: '-1~'
                 }],
-                roomType: -1,
                 checkTypeAll: [{
                     id: -1,
-                    name: '全部入住类型'
+                    name: '全部入住类型',
+                    checkType: -1
                 }, {
                     id: 0,
-                    name: '正常入住'
+                    name: '正常入住',
+                    checkType: 0
                 }, {
                     id: 2,
-                    name: '自用房'
+                    name: '自用房',
+                    checkType: 2
                 }, {
                     id: 3,
-                    name: '免费房'
+                    name: '免费房',
+                    checkType: 3
                 }, {
                     id: 1,
-                    name: '钟点房'
+                    name: '钟点房',
+                    checkType: 1
                 }],
                 checkType: -1,
                 userOriginType: '-2~',
@@ -230,6 +215,7 @@
             };
         },
         components: {
+            ZoneType,
             DdTable,
             DdPagination,
             DdDropdown,
@@ -278,6 +264,8 @@
         created() {
             this.today = util.dateFormat(new Date());
             this.getData();
+            this.getZoneType();
+            this.getRoomType();
             this.getOrigin();
         },
         methods: {
@@ -298,15 +286,46 @@
             },
             getData() {
                 http.get('/stat/getCurrentCheckedInRoom', { date: this.today })
-            .then(res => {
-                if (res.code === 1) {
-                    window.console.log();
-                    this.vips = res.data.entityList;
-                    this.count = res.data.total;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
+                .then(res => {
+                    if (res.code === 1) {
+                        window.console.log(res);
+                        this.vips = res.data.entityList;
+                        this.count = res.data.total;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
+            },
+            getZoneType() {
+                http.get('/room/getZoneList')
+                .then(res => {
+                    if (res.code === 1) {
+                        const zoneList = res.data.list;
+                        this.zoneTypeOther = zoneList;
+                        zoneList.forEach(zone => {
+                            zone.id = zone.zoneId;
+                            zone.name = zone.zoneName;
+                            zone.zoneType = `-1~${zone.zoneId}`;
+                            this.zoneTypeAll.push(zone);
+                        });
+                    }
+                });
+            },
+            getRoomType() {
+                http.get('/room/getRoomCategories')
+                .then(res => {
+                    if (res.code === 1) {
+                        const roomList = res.data.list;
+                        this.roomTypeOther = roomList;
+                        roomList.forEach(room => {
+                            room.id = room.cId;
+                            room.name = room.cName;
+                            room.roomType = `-1~${room.cId}`;
+                            this.roomTypeAll.push(room);
+                        });
+                    }
+                    console.log(this.roomTypeAll);
+                });
             },
             getOrigin() {
             // 获取全部客户来源渠道
@@ -346,9 +365,9 @@
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    zoneType: this.zoneType,
-                    roomType: this.roomType,
-                    checkType: this.checkType,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
                     date: this.today,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
@@ -364,6 +383,7 @@
                 }
                 http.get('/stat/getCurrentCheckedInRoom', obj).then(res => {
                     if (res.code === 1) {
+                        window.console.log(res);
                         this.vips = res.data.entityList || [];
                         this.totalMany = res.data.orderTotalPrice;
                         this.count = res.data.total;
