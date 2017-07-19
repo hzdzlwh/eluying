@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-19 11:05:31
+* @Last Modified time: 2017-07-19 11:35:31
 * @email: 783384903@qq.com
 */
 <template>
@@ -385,6 +385,10 @@ export default {
             orderDetail: state => state.orderSystem.orderDetail,
             roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
         }),
+        /**
+         * [orderState description]
+         * @return {[type]} [description]
+         */
         orderState() {
             if (this.type === 'collect') {
                 return true;
@@ -396,6 +400,10 @@ export default {
             }
             return false;
         },
+        /**
+         * [gameTotal description]
+         * @return {[type]} [description]
+         */
         gameTotal() {
             let sum = 0;
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
@@ -498,6 +506,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取余额
+         * @param  {number} id card`s accountId
+         * @return {[number]}    [card lastfee]
+         */
         getCardLastFee(id) {
             const selectCard = this.cardList.find(cards => cards.accountId === id);
             if (selectCard) {
@@ -505,6 +518,11 @@ export default {
             }
             return 0;
         },
+        /**
+         * get card paidFee
+         * @param  {[type]} id [description]
+         * @return {[type]}    [description]
+         */
         getCardPaied(id) {
             const selectCard = this.cardList.find(cards => cards.accountId === id);
             if (selectCard) {
@@ -512,6 +530,10 @@ export default {
             }
             return 0;
         },
+        /**
+         * 每次变动后要变动所有的abeldFee
+         * @return {[type]} [description]
+         */
         changeAbeldFee() {
             let needPay = this.orderPayment.price;
             // 首先统计出所有要退还的
@@ -783,6 +805,10 @@ export default {
                 return arr;
             }
         },
+        /**
+         * 初始化的时候获取收银台详情内容，同时进行初始化
+         * @return {[type]} [description]
+         */
         getOrderPayment() {
             const params = this.getpParms();
             // if (this.business.PenaltyFee) {
@@ -925,6 +951,11 @@ export default {
                     this.cardList = cardList;
                 });
         },
+        /**
+         * 获取支付列表
+         * @param  {[type]} params [description]
+         * @return {[type]}        [description]
+         */
         getChannels(params) {
             return http.get('/user/getChannels', params)
                 .then(res => {
@@ -945,6 +976,11 @@ export default {
                     this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
                 });
         },
+        /**
+         * 获取可选择的card，自动去处已选择的card
+         * @param  {number} index 
+         * @return {[type]}       [description]
+         */
         getSelect(index) {
             // const serialNum = this.paycard[index].serialNum;
             const paycard = this.paycard;
@@ -1053,6 +1089,10 @@ export default {
                 event.target.value = max;
             }
         },
+        /**
+         * 发起支付 主要参数位this.orderPayment
+         * @return {[type]} [description]
+         */
         payMoney() {
             let invalid = false;
             let numvaild = false;
