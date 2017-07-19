@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-19 17:14:29
+* @Last Modified time: 2017-07-19 17:22:14
 * @email: 783384903@qq.com
 */
 <template>
@@ -108,7 +108,7 @@
                 <div class="reaminder-getMoney-container">
                     <div class="reaminder-getMoney-channels">
                         <div class="cashier-getMoney-channel" v-for="(payment, index) in paycard" :key="payment.accountId">
-                            <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with' :disabled='payment.disabled'>
+                           <!--  <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with' :disabled='payment.disabled'>
                                 <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                                 </dd-option>
                             </dd-select>
@@ -121,6 +121,20 @@
                             <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
                             <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0' :disabled='payment.disabled'/>
                             <inputVaild v-model="payment.fee" :min='getCardPaied(payment.accountId)' @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else :disabled='payment.disabled'/>
+                            <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span> -->
+                             <dd-select v-model="payment.type " @change='changeAbeldFee' class='dd-select-with'>
+                                <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
+                                </dd-option>
+                            </dd-select>
+                            <dd-select class='cashier-card' v-model='payment.accountId' @input='changeAbeldFee'>
+                                <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
+                                    <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
+                                </dd-option>
+                            </dd-select>
+                            <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
+                            <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
+                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0'/>
+                            <inputVaild v-model="payment.fee" @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
                             <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span>
                         </div>
                     </div>
