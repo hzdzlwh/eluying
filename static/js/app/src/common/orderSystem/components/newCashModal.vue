@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-07-19 11:35:31
+* @Last Modified by:   linxinjian
+* @Last Modified time: 2017-07-19 11:39:24
 * @email: 783384903@qq.com
 */
 <template>
@@ -373,10 +373,10 @@ export default {
             companyName: '',
             paycard: [],
             cardList: [],
-            gameShowtip : undefined,
-            cardShowtip : undefined,
-            campanyShowtip : undefined,
-            memberShowtip : undefined
+            gameShowtip: undefined,
+            cardShowtip: undefined,
+            campanyShowtip: undefined,
+            memberShowtip: undefined
 
         };
     },
@@ -906,26 +906,26 @@ export default {
                     this.orderPayment = res.data;
                     this.orderPayment.game && this.orderPayment.game.forEach(el => {
                         if (el.type === 2) {
-                            this.gameShowtip = el.ableFee
-                        }                       
+                            this.gameShowtip = el.ableFee;
+                        }
                         this.$set(el, 'fee', 0);
                     });
                     this.orderPayment.card && this.orderPayment.card.forEach(el => {
                         if (el.type === 2) {
-                            this.cardShowtip = el.ableFee
+                            this.cardShowtip = el.ableFee;
                         }
                         this.$set(el, 'fee', 0);
                         el.cards.forEach(card => this.$set(card, 'fee', Math.min(card.lastFee, el.ableFee)));
                     });
                     this.orderPayment.company && this.orderPayment.company.forEach(el => {
                         if (el.type === 2) {
-                            this.campanyShowtip = el.ableFee
+                            this.campanyShowtip = el.ableFee;
                         }
                         this.$set(el, 'fee', 0);
                     });
                     this.orderPayment.member && this.orderPayment.member.forEach(el => {
                         if (el.type === 2) {
-                           this.memberShowtip = el.ableFee
+                            this.memberShowtip = el.ableFee;
                         }
                         this.$set(el, 'fee', 0);
                     });
@@ -939,9 +939,9 @@ export default {
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2) {
-                                    el.disabled = true
+                                    el.disabled = true;
                                     el.type = 2;
-                                    this.paycard.push(el)
+                                    this.paycard.push(el);
                                 }
                                 cardList.push(el);
                                 cardHash[el.accountId] = true;
@@ -978,7 +978,7 @@ export default {
         },
         /**
          * 获取可选择的card，自动去处已选择的card
-         * @param  {number} index 
+         * @param  {number} index
          * @return {[type]}       [description]
          */
         getSelect(index) {
@@ -1045,9 +1045,6 @@ export default {
                 fee: 0
             });
         },
-        deletePayMent (index) {
-            this.payments.splice(index, 1);
-        },
         deletePayLog(index) {
             const log = this.paylogs[index];
             if (log['payChannelId'] === -15) { // 支付方式为企业挂帐，删除后企业账户余额要变化
@@ -1084,7 +1081,7 @@ export default {
         //     this.showDeposit = false;
         // },
         vaild(max) {
-            let value = event.target.value;
+            const value = event.target.value;
             if (Number(value) > Number(max)) {
                 event.target.value = max;
             }
@@ -1100,7 +1097,6 @@ export default {
                 this.payments.forEach(payment => {
                     if (payment.fee < 0) {
                         numvaild = true;
-
                     }
                     if (!payment.payChannelId) {
                         invalid = true;
