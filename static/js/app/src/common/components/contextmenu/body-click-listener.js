@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-07-19 11:03:41
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:04:29
+* @email: 783384903@qq.com
+*/
 /**
  * When listening for an outside click, we set useCapture = true.
  * This way, we can prevent other click listeners from firing when performing the 'click-out'.
