@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-07-19 09:56:55
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:05:31
+* @email: 783384903@qq.com
+*/
 <template>
     <div>
         <div class="modal fade roomModals" id="cashier" role="dialog">

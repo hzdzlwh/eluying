@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-07-18 19:49:19
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:04:41
+* @email: 783384903@qq.com
+*/
 <template>
      <input class="dd-input inputVaild" v-model='num' onKeyUp="this.value=(parseInt(this.value.replace(/\D/g,''),10))" type='Number' @input='changeNum' :disabled='disabled'></input>
 </template>
