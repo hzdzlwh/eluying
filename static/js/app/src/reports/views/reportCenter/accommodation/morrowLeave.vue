@@ -2,7 +2,7 @@
     <div>
         <h2 class="title">{{$route.meta.name}}</h2>
         <div class="top">
-            <div class="date">日期 : <i>{{today}}</i></div>
+            <div class="date">日期 : <i>{{morrow}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="zoneType" >
@@ -97,6 +97,7 @@
         data() {
             return {
                 today: undefined,
+                morrow: undefined,
                 zoneType: '-1~',
                 zoneTypeOther: [],
                 zoneTypeAll: [{
@@ -254,7 +255,9 @@
             }
         },
         created() {
-            this.today = util.dateFormat(new Date());
+            this.today = new Date();
+            const tomorrow = util.tomorrow(this.today);
+            this.morrow = util.dateFormat(tomorrow);
             this.getData();
             this.getZoneType();
             this.getRoomType();
@@ -307,7 +310,7 @@
                 });
             },
             getData() {
-                http.post('/stat/getDueoutStat', { date: this.today })
+                http.post('/stat/getDueoutStat', { date: this.morrow })
                 .then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list;

@@ -2,7 +2,7 @@
     <div>
         <h2 class="title">{{$route.meta.name}}</h2>
         <div class="top">
-            <div class="date">日期 : <i>{{today}}</i></div>
+            <div class="date">日期 : <i>{{morrow}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="zoneType" >
@@ -92,11 +92,13 @@
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
+    // import util from '../../../../common/util.js';
     import util from 'util';
     export default {
         data() {
             return {
                 today: undefined,
+                morrow: undefined,
                 zoneType: '-1~',
                 zoneTypeOther: [],
                 zoneTypeAll: [{
@@ -254,7 +256,9 @@
             }
         },
         created() {
-            this.today = util.dateFormat(new Date());
+            this.today = new Date();
+            const tomorrow = util.tomorrow(this.today);
+            this.morrow = util.dateFormat(tomorrow);
             this.getData();
             this.getZoneType();
             this.getRoomType();
@@ -307,15 +311,15 @@
                 });
             },
             getData() {
-                http.get('/stat/getReserveStat', { date: this.today })
-            .then(res => {
-                if (res.code === 1) {
-                    this.vips = res.data.list;
-                    this.count = res.data.count;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
+                http.get('/stat/getReserveStat', { date: this.morrow })
+                .then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.list;
+                        this.count = res.data.count;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
             },
             getOrigin() {
             // 获取全部客户来源渠道
@@ -358,7 +362,7 @@
                     zoneId: this.zoneType.split('~')[1],
                     roomType: this.roomType.split('~')[1],
                     // checkType: this.checkType,
-                    date: this.today,
+                    date: this.morrow,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
                 };
