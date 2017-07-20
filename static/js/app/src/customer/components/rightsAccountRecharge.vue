@@ -116,7 +116,7 @@
                 if (this.title === '储值账户') {
                     return this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : (this.rechargeMoney ? this.rechargeMoney : 0);
                 } else {
-                    return this.rechargeStrategyId ? Math.round(this.rechargeInfo.rechargeNum / this.virtualCurrencyRate) : (this.rechargeMoney ? Math.round(this.rechargeMoney / this.virtualCurrencyRate) : 0);
+                    return this.rechargeStrategyId ? (this.rechargeInfo.rechargeNum / this.virtualCurrencyRate).toFixed(2) : (this.rechargeMoney ? (this.rechargeMoney / this.virtualCurrencyRate).toFixed(2) : 0);
                 }
             }
         },
@@ -183,6 +183,7 @@
             rechargeCard() {
                 const params = { vipId: this.vip.vipUserId };
                 if (this.title === '储值账户') {
+                    // 储值账户充值请求参数
                     params.freeFee = this.rechargeStrategyId ? this.rechargeInfo.freeFee : this.givingMoney;
                     params.payChannel = this.payChannel;
                     params.payChannelId = this.payChannelId;
@@ -191,18 +192,20 @@
                         params.rechargeStrategyId = this.rechargeStrategyId;
                     }
                 } else {
+                    // 星球币充值请求参数
                     params.freeNum = this.rechargeStrategyId ? this.rechargeInfo.freeNum : this.givingMoney;
                     params.payChannel = this.payChannel;
                     params.payChannelId = this.payChannelId;
                     params.rechargeNum = this.rechargeStrategyId ? this.rechargeInfo.rechargeNum : this.rechargeMoney;
                     params.salePrice = this.sellPrice;
                     if (this.rechargeStrategyId) {
-                        params.this.rechargeStrategyId = this.this.rechargeStrategyId;
+                        params.rechargeStrategyId = this.rechargeStrategyId;
                     }
                 }
                 const id = this.payChannelId;
                 const url = this.title === '储值账户' ? '/vipUser/rechargeVip' : 'virCurrency/rechargeVirCurrency';
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
+                    // -6: 支付宝  -7：微信
                     params.totalPrice = this.sellPrice;
                     this.$emit('changeParams', { params, url: url });
                 } else {

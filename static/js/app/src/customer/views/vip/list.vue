@@ -26,6 +26,7 @@
                                  :title="rightsAccountTitle"
                                  @closeModal="hideModel"
                                  :channels="payChannels"
+                                 @changeParams="modifyParams"
                                  @refreshView="getVipsAndDetail">
         </rights-account-recharge>
         <main-card-form :visible="mainCardVisible"
