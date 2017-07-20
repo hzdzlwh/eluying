@@ -361,7 +361,7 @@
                     zoneId: this.zoneType.split('~')[1],
                     roomType: this.roomType.split('~')[1],
                     // checkType: this.checkType,
-                    date: this.today,
+                    date: this.morrow,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
                 };

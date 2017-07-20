@@ -169,7 +169,7 @@
                                 </span>
                                 <span class="order-price-text">
                                     {{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}
-                                    <span class="order-price-num red">
+                                    <span class="order-price-num red" :class="{green : !Number(findTypePrice(order.payments, 15))}" >
                                         ¥{{Math.abs(findTypePrice(order.payments, 15))}}
                                     </span>
                                 </span>
@@ -292,7 +292,7 @@
             color: #666666;
         }
         .green {
-            color: #00af10;
+            color: #00af10!important;
         }
         .red {
             color: #f24949;
