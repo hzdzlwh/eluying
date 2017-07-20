@@ -175,7 +175,7 @@
                     },
                     {
                         title: '总房费',
-                        dataIndex: 'tatalPrice',
+                        dataIndex: 'totalPrice',
                         width: 100
                     },
                     {

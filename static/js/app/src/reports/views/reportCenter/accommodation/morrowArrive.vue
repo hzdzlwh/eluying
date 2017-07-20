@@ -267,7 +267,7 @@
         methods: {
             exportUrl(type) {
                 const originParam = {
-                    date: this.today
+                    date: this.morrow
                 };
                 const paramsObj = {
                     exportType: type,
