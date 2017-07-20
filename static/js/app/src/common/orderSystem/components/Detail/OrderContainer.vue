@@ -161,6 +161,35 @@
                                         ¥{{findTypePrice(order.payments, 4)}}
                                     </span>
                                 </span>
+
+                               <!--  <span class="order-price-text">
+                                    需退押金:
+                                    <span class="order-price-num green">
+                                        ¥{{findTypePrice(order.payments, 16)}}
+                                    </span>
+                                </span> -->
+                            </div>
+                            <div class="footer-price" style="color:#999;">
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 19)'>
+                                    {{order.payments.find(pay => pay.type === 19).payChannel}}抵扣:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 19)}}
+                                    </span>
+                                </span>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 20)'>
+                                    余额已抵扣:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 20)}}
+                                    </span>
+                                </span>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 18)'>
+                                    现金已收:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 18)}}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="footer-price">
                                 <span class="order-price-text">
                                     {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
                                     <span class="order-price-num grey">
@@ -173,12 +202,6 @@
                                         ¥{{Math.abs(findTypePrice(order.payments, 15))}}
                                     </span>
                                 </span>
-                               <!--  <span class="order-price-text">
-                                    需退押金:
-                                    <span class="order-price-num green">
-                                        ¥{{findTypePrice(order.payments, 16)}}
-                                    </span>
-                                </span> -->
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
@@ -292,7 +315,7 @@
             color: #666666;
         }
         .green {
-            color: #00af10!important;
+            color: #2ab367!important;
         }
         .red {
             color: #f24949;
@@ -588,7 +611,6 @@
             }
         }
         .order-price-text {
-            color: $gary-daker;
             font-size: $font-size-base;
             margin-right: 24px;
         }
