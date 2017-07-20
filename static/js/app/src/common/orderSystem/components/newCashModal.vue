@@ -2,9 +2,10 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-20 14:48:06
+* @Last Modified time: 2017-07-20 17:33:33
 * @email: 783384903@qq.com
 */
+<!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
 <template>
     <div>
         <div class="modal fade roomModals" id="cashier" role="dialog">
@@ -32,7 +33,7 @@
                             </div>
                         </div>
                         <div class="content-item" v-if='orderPayment.game'>
-                            <p class="content-item-title"><span>星球币抵扣<div v-if='gameShowtip !== undefined'>
+                            <p class="content-item-title"><span>{{orderPayment.game[0].accountName}}抵扣<div v-if='gameShowtip !== undefined'>
                                         <span class="company-origin-tipImg"></span>
                                 <div class="company-origin-tips">
                                     最多可抵扣¥{{gameShowtip}}元
@@ -46,12 +47,12 @@
                                 </dd-option>
                             </dd-select>
                             <span class="cashier-tip-text" v-if='ga.type === 0'>
-                                账户共{{ga.lastNum}}个星球币，本次最多可使用{{ga.ableNum}}个
+                                账户共{{ga.lastNum}}个{{ga.accountName}}，本次最多可使用{{ga.ableNum}}个
                                 </span>
                             <span class="cashier-tip-text" v-if='ga.type === 2'>
                                 已收取{{ga.paidNum}}个
                                 </span>
-                            <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='ga.ableNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
+                            <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='Math.min(ga.ableNum, ga.lastNum)' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
                             <inputVaild v-model='ga.fee' :max='ga.paidNum' :min='ga.paidNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
                             <span class="cashier-tip-text">
                                 抵扣￥{{(ga.fee / ga.rate).toFixed(2)}}
@@ -74,7 +75,7 @@
                         </dd-select>
                         <span v-if='co.type === 0' class="cashier-tip-text">余额¥{{co.lastFee}}，最多可收取¥{{co.ableFee}}</span>
                         <span v-if='co.type === 2' class="cashier-tip-text">已收取¥{{co.paidFee}}</span> 本次{{co.type === 0 ? '收取' : '退还'}}：
-                        <inputVaild v-model='co.fee' :max='co.ableFee' @input='changeAbeldFee' v-if='co.type === 0' />
+                        <inputVaild v-model='co.fee' :max='Math.min(co.ableFee, co.lastFee)' @input='changeAbeldFee' v-if='co.type === 0' />
                         <inputVaild v-model='co.fee' :max='co.paidFee' :min='co.paidFee' @input='changeAbeldFee' v-if='co.type === 2' />
                     </div>
                 </div>
@@ -94,7 +95,7 @@
                     </dd-select>
                     <span v-if='me.type === 0' class="cashier-tip-text">余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
                     <span v-if='me.type === 2'>已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
-                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.ableFee' v-if='me.type === 0' />
+                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='Math.min(me.ableFee, me.lastFee)' v-if='me.type === 0' />
                     <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.paidFee' :min='me.paidFee' v-if='me.type === 2' />
                 </div>
             </div>
@@ -133,7 +134,7 @@
                             </dd-select>
                             <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
                             <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
-                            <inputVaild v-model="payment.fee" :max='payment.ableFee' @input='changeAbeldFee' v-if='payment.type === 0'/>
+                            <inputVaild v-model="payment.fee" :max='Math.min(payment.ableFee, getCardLastFee(payment.accountId))' @input='changeAbeldFee' v-if='payment.type === 0'/>
                             <inputVaild v-model="payment.fee" @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
                             <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span>
                         </div>
@@ -592,7 +593,8 @@ export default {
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
-                        const abelFee = Math.min(needPay, el.lastFee);
+                        // const abelFee = Math.min(needPay, el.lastFee);
+                        const abelFee = needPay;
                         const payed = Math.min(abelFee * el.rate, el.fee);
                         el.ableNum = parseInt(abelFee * el.rate);
                         el.fee = parseInt(payed);
@@ -605,7 +607,8 @@ export default {
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
-                        const abelFee = Math.min(needPay, el.lastFee);
+                        // const abelFee = Math.min(needPay, el.lastFee);
+                        const abelFee = needPay;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableNum = abelFee;
                         el.fee = payed;
@@ -619,7 +622,8 @@ export default {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
-                            const abelFee = Math.min(needPay, selectCard.lastFee);
+                            // const abelFee = Math.min(needPay, selectCard.lastFee);
+                            const abelFee = needPay;
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -632,7 +636,8 @@ export default {
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 0) {
-                        const abelFee = Math.min(needPay, el.lastFee);
+                        // const abelFee = Math.min(needPay, el.lastFee);
+                        const abelFee = needPay;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
