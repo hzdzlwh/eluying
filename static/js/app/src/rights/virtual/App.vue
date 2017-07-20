@@ -3,7 +3,16 @@
 		<div>
 			<outer-container @taggleView="taggleView">
 				<div slot="currency" style="display:flex;justify-content: space-between;align-items: center;" v-if="showOrEdit">
-					<h4>{{currencyName}}</h4>
+					<h4 class="virtual-currency-name">
+						{{currencyName}}
+						<div class="info-icon">
+                            <div class="info-detail">
+                                <p>1、虚拟币兑换比例可自由设置，抵扣时“0.01元”以下部分采用四舍五入的方案</p>
+								<p style="height: 40px;">2、更改比例时，如果选择保持账户中虚拟币价值不变，则账户中虚拟币新数量=账户中虚拟币原数量/原兑换比例*新兑换比例</p>
+								<p>3、目前虚拟币只能用于正常入住</p>    
+                            </div>
+                        </div>
+					</h4>
 					<span style="cursor:pointer;color:#178ce6;" @click="taggleView">编辑</span>
 				</div>
 				<div slot="currency" style="height:49px;line-height:49px;position:relative;" v-else>
@@ -21,7 +30,7 @@
 					</div>
 				</inner-container>
 				<inner-container :title="openAccount" style="margin-top:17px;">
-					<p v-if="showOrEdit" style="height:40px;line-height:40px;"><span v-if="vipAccountStatus === 1">会员</span></p>
+					<p v-if="showOrEdit" style="height:40px;line-height:40px;"><input type="checkbox" disabled="false" :checked="vipAccountStatus === 1">会员</p>
 					<label v-else><input type="checkbox" v-model="editMember">会员</label>
 				</inner-container>
 				<div slot="saveOrCancel" v-if="!showOrEdit" style="text-align:right;padding:0 20px 16px 0;">
@@ -43,16 +52,16 @@ import http from '../../common/http';
 export default {
 	data() {
 		return {
-			currencyName: '',
+			currencyName: '虚拟币',
 			showOrEdit: true,
 			exchangeScale: '兑换比例',
 			openAccount: '开启账户',
-			rate: 0,
+			rate: 100,
 			vipAccountStatus: 0,
 			keepValue: 0,
 			id: null,
 			editKeepValue: false,
-			editMember: false
+			editMember: false,
 		};
 	},
 	created() {
@@ -62,17 +71,20 @@ export default {
 		getVirtualCurrency() {
 			http.get('/virCurrency/getVirtualCurrencySetting', {}).then(res => {
 				if (res.code === 1) {
-					this.currencyName = res.data.name;
-					this.rate = res.data.rate;
-					this.vipAccountStatus = res.data.vipAccountStatus;
-					this.editMember = res.data.vipAccountStatus === 1? 1 : 0;
-					this.editKeepValue = res.data.keepValue === 1? 1 : 0;
-					this.id = res.data.id;
+					if (res.data.id !== null) {
+						this.currencyName = res.data.name;
+						this.rate = res.data.rate;
+						this.vipAccountStatus = res.data.vipAccountStatus;
+						this.editMember = res.data.vipAccountStatus === 1? 1 : 0;
+						this.editKeepValue = res.data.keepValue === 1? 1 : 0;
+						this.id = res.data.id;
+					}
 				}
 			});
 		},
 		taggleView() {
 			this.showOrEdit = !this.showOrEdit;
+			this.getVirtualCurrency();
 		},
 		save() {
             var param = {};
@@ -97,5 +109,37 @@ export default {
 </script>
 
 <style lang="scss" type="text/css" rel="stylesheet/scss">
+	.virtual-currency-name{
+		display: flex;
+		.info-icon{
+	        position: relative;
+	        top: 16px;
+	        cursor: pointer;
+	        width: 16px;
+	        height: 16px;
+	        background: url("/static/image/modal/room_modal_info.png");
+	        background-size: contain;
+	        .info-detail{
+	            display: none;
+	            position: absolute;
+	            width: 500px;
+	            background: #fafafa;
+	            top: -10px;
+	            left: 20px;
+	            padding: 8px;
+	            z-index: 999;
+	            p{
+	            	height: 20px;
+	            	line-height: 20px;
+	            	font-size: 12px;
+	            }
+	        }
+	        &:hover{
+	            .info-detail{
+	                display: block;
+	            }
+	        }
+	    }
+	}
 	
 </style>

@@ -204,7 +204,7 @@
                     }
                 }
                 const id = this.payChannelId;
-                const url = this.title === '储值账户' ? '/vipUser/rechargeVip' : 'virCurrency/rechargeVirCurrency';
+                const url = this.title === '储值账户' ? '/vipUser/rechargeVip' : '/virCurrency/rechargeVirCurrency';
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     // -6: 支付宝  -7：微信
                     params.totalPrice = this.sellPrice;

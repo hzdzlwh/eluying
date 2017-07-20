@@ -47,8 +47,18 @@ var monthManage = {
                         id: result.data[name][0].channelId
                     });
                 }
+                // 新增虚拟币tab
+                channelArray.push({ name: '虚拟币', id: 2 });
                 $(".monthCategory").html("月份管理-" + result.data["0"][0].name);
                 monthManage.tab(channelArray);
+                // 获取虚拟币的数据,再和之前的数据合并
+                http.get('/virCurrency/getVirtualCurrencyMonthLimitList', {
+                    startDate: startDate,
+                    endDate: endDate,
+                    categoryId: $('#editMonth').attr('data-category-id')
+                }).then(res => {
+                    console.log(res);
+                });
                 monthManage.priceGrid(result.data);
             });
     },

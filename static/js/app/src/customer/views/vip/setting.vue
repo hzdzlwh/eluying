@@ -190,7 +190,8 @@ export default {
             id: undefined,
             nodes: [],
             selectType: 'discount',
-            isShowVirtualCurrency: true
+            isShowVirtualCurrency: true,
+            virtualCurrencyName: undefined
         };
     },
     components: {
@@ -234,6 +235,7 @@ export default {
                         if (res.code === 1) {
                             this.settings = res.data.vipSettingItemList;
                             this.isShowVirtualCurrency = res.data.isOpenVirtualCurrency;
+                            this.virtualCurrencyName = res.data.virtualCurrencyName;
                             this.settings.forEach(i => {
                                 if (i.weekLimit.length === 0) {
                                     i.weekLimit = [-1, -1, -1, -1, -1, -1, -1];
@@ -253,7 +255,8 @@ export default {
                 weekLimit: [-1, -1, -1, -1, -1, -1, -1],
                 virCurrencyRechargeItems: [],
                 vipPayItems: [],
-                vipRechargeItems: []
+                vipRechargeItems: [],
+                virtualCurrencyName: this.virtualCurrencyName
             });
         },
         selectSystem() {
