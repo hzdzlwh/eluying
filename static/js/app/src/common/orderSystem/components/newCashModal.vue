@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-20 11:55:53
+* @Last Modified time: 2017-07-20 14:48:06
 * @email: 783384903@qq.com
 */
 <template>
@@ -46,7 +46,7 @@
                                 </dd-option>
                             </dd-select>
                             <span class="cashier-tip-text" v-if='ga.type === 0'>
-                                账户共{{ga.lastFee}}个星球币，本次最多可使用{{ga.ableNum}}个
+                                账户共{{ga.lastNum}}个星球币，本次最多可使用{{ga.ableNum}}个
                                 </span>
                             <span class="cashier-tip-text" v-if='ga.type === 2'>
                                 已收取{{ga.paidNum}}个
@@ -54,7 +54,7 @@
                             <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='ga.ableNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
                             <inputVaild v-model='ga.fee' :max='ga.paidNum' :min='ga.paidNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
                             <span class="cashier-tip-text">
-                                抵扣￥{{ga.fee * ga.rate}}
+                                抵扣￥{{(ga.fee / ga.rate).toFixed(2)}}
                                 </span>
                         </div>
                     </div>
@@ -428,9 +428,9 @@ export default {
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
-                        sum += (el.fee * el.rate || 0);
+                        sum += (el.fee / el.rate || 0);
                     } else {
-                        sum -= (el.fee * el.rate || 0);
+                        sum -= (el.fee / el.rate || 0);
                     }
                 });
             }
@@ -559,14 +559,14 @@ export default {
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = needPay + el.fee * el.rate;
+                        needPay = (needPay + el.fee / el.rate).toFixed(2);
                     }
                 });
             }
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = needPay + el.fee;
+                        needPay = (needPay + el.fee).toFixed(2);
                     }
                 });
             }
@@ -575,7 +575,7 @@ export default {
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         if (card.type === 2 && card.fee) {
-                            needPay = needPay + card.fee;
+                            needPay = (needPay + card.fee).toFixed(2);
                         }
                     }
                 });
@@ -584,7 +584,7 @@ export default {
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = needPay + el.fee;
+                        needPay = (needPay + el.fee).toFixed(2);
                     }
                 });
             }
@@ -593,10 +593,11 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         const abelFee = Math.min(needPay, el.lastFee);
-                        const payed = Math.min(abelFee / el.rate, el.fee);
-                        el.ableNum = parseInt(abelFee / el.rate);
+                        const payed = Math.min(abelFee * el.rate, el.fee);
+                        el.ableNum = parseInt(abelFee * el.rate);
                         el.fee = parseInt(payed);
-                        needPay = needPay - payed * el.rate;
+                        needPay = (needPay - (payed / el.rate).toFixed(2)).toFixed(2);
+                        // 为了和显示一致
                     }
                 });
             }
@@ -606,9 +607,9 @@ export default {
                     if (el.type === 0) {
                         const abelFee = Math.min(needPay, el.lastFee);
                         const payed = Math.min(abelFee, el.fee);
-                        el.ableFee = abelFee;
+                        el.ableNum = abelFee;
                         el.fee = payed;
-                        needPay = needPay - payed;
+                        needPay = (needPay - payed).toFixed(2);
                     }
                 });
             }
@@ -622,7 +623,7 @@ export default {
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
-                            needPay = needPay - payed;
+                            needPay = (needPay - payed).toFixed(2);
                         }
                     }
                 });
@@ -635,7 +636,7 @@ export default {
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
-                        needPay = needPay - payed;
+                        needPay = (needPay - payed).toFixed(2);
                     }
                 });
             }
@@ -1256,7 +1257,7 @@ export default {
                     tokenPayments.push({
                         'accountId': el.accountId,
                         'accountType': 0,
-                        fee: el.fee * el.rate,
+                        fee: el.fee / el.rate,
                         num: el.fee,
                         type: el.type
                     });
