@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-19 17:22:14
+* @Last Modified time: 2017-07-20 11:55:53
 * @email: 783384903@qq.com
 */
 <template>
@@ -156,10 +156,10 @@
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
-                        <span>{{payment.type ? '收款' : '退款'}}方式:</span>
+                        <span>{{payment.type ? '退款' : '收款'}}方式:</span>
                         <dd-select v-model="payment.payChannelId">
                             <dd-option v-for="payChannel in getPayChannels(payment, index)" :key="payChannel.channelId" :value="payChannel.channelId" :label="payChannel.name" :title='payChannel.name'>
-                            </dd-option>
+                            </dd-option>    
                         </dd-select>
                         <span>金额:</span>
                         <inputVaild v-model="payment.fee" />
@@ -174,12 +174,12 @@
             <div class="content-item">
                 <div class="cashier-all">
                     <div><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
-                    <div><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
-                    <div><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
-                    <div><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
-                    <div><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
+                    <div v-if='orderPayment.game'><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
+                    <div v-if='orderPayment.company'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
+                    <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
+                    <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
                     <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
-                    <div><span>还需收款:</span><span>¥{{needPayed}}</span></div>
+                    <div><span>还需{{needPayed >0 ? '收款' : '还款'}}:</span><span>¥{{Math.abs(needPayed)}}</span></div>
                 </div>
             </div>
         </div>
@@ -233,7 +233,12 @@
         }
         &:last-child {
             color: #666;
-            font-weigth: bold;
+            font-weight: bold;
+            span {
+                &:last-child {
+                    color: #f24949;
+                }
+            }
         }
     }
     ;
@@ -522,7 +527,7 @@ export default {
     methods: {
         /**
          * 获取余额
-         * @param  {number} id card`s accountId
+         * @param  {number} id [card accountId]
          * @return {[number]}    [card lastfee]
          */
         getCardLastFee(id) {
@@ -545,7 +550,7 @@ export default {
             return 0;
         },
         /**
-         * 每次变动后要变动所有的abeldFee
+         * 每次变动后要变动所有的abeldFee,感觉每个的处理方式会变而且不同，就分开写了
          * @return {[type]} [description]
          */
         changeAbeldFee() {
@@ -1038,7 +1043,7 @@ export default {
             this.payments.push({
                 fee: payMoney,
                 payChannelId: undefined,
-                type: this.needPayed > 0 ? 0 : 2,
+                type: Number(this.needPayed) >= 0 ? 0 : 2,
                 uniqueId: this.uniqueId
             });
         },
