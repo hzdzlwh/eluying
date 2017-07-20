@@ -175,7 +175,7 @@
                     },
                     {
                         title: '总房费',
-                        dataIndex: 'tatalPrice',
+                        dataIndex: 'totalPrice',
                         width: 100
                     },
                     {
@@ -308,14 +308,14 @@
             },
             getData() {
                 http.get('/stat/getReserveStat', { date: this.today })
-            .then(res => {
-                if (res.code === 1) {
-                    this.vips = res.data.list;
-                    this.count = res.data.count;
-                    this.pages = Math.ceil(res.data.orderAmount / 30);
-                }
-                this.flag = true;
-            });
+                .then(res => {
+                    if (res.code === 1) {
+                        this.vips = res.data.list;
+                        this.count = res.data.count;
+                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                    }
+                    this.flag = true;
+                });
             },
             getOrigin() {
             // 获取全部客户来源渠道
@@ -373,9 +373,8 @@
                 }
                 http.get('/stat/getReserveStat', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.count = res.data.total;
+                        this.vips = res.data.list || [];
+                        this.count = res.data.count;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                         // if (keyword) {
                         //     this.originId = -2;
