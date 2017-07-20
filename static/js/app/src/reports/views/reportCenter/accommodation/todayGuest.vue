@@ -366,7 +366,7 @@
                 }
                 http.get('/stat/getCurrentResident', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list || [];
+                        this.vips = res.data.entityList || [];
                         this.count = res.data.total;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
                         // if (keyword) {
