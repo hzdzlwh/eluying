@@ -17,7 +17,7 @@
                     <th rowspan="2">营业日期</th>
                     <th colspan="3">在住</th>
                     <th colspan="3">预抵</th>
-                    <th colspan="2">预留</th>
+                    <th colspan="2">预离</th>
                     <th rowspan="2">停用维修</th>
                     <th rowspan="2">房间存量</th>
                 </tr>
@@ -121,7 +121,6 @@
         data() {
             return {
                 vips: [],
-                vip: {},
                 pages: 0,
                 count: 0,
                 totalMany: 0,
@@ -133,31 +132,26 @@
         components: {
             DdDatepicker
         },
-        watch: {
-            endTime() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            },
-            startTime() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.fetchDate();
-                }
-            }
-        },
         created() {
             const startTime = new Date();
             this.startTime = util.dateFormat(startTime);
             this.endTime = util.dateFormat(util.diffDate(startTime, 30));
-            console.log(this.startTime, this.endTime);
             this.getData();
+        },
+        watch: {
+            endTime() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            startTime() {
+                this.pageNo = 1;
+                this.getData();
+            }
         },
         methods: {
             disableStartDate(date) {
                 if (this.startDate !== '') {
-                    const arr1 = this.startTime.split('-');
+                    const arr1 = util.dateFormat(new Date()).split('-');
                     const arr2 = this.endTime.split('-');
                     return date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2])).valueOf() || date.valueOf() > (new Date(arr2[0], arr2[1] - 1, arr2[2]));
                 } else {
