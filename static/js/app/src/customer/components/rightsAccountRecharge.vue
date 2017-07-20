@@ -116,7 +116,7 @@
                 if (this.title === '储值账户') {
                     return this.rechargeStrategyId ? this.rechargeInfo.rechargeFee : (this.rechargeMoney ? this.rechargeMoney : 0);
                 } else {
-                    return this.rechargeStrategyId ? (this.rechargeInfo.rechargeNum / this.virtualCurrencyRate).toFixed(2) : (this.rechargeMoney ? (this.rechargeMoney / this.virtualCurrencyRate).toFixed(2) : 0);
+                    return this.rechargeStrategyId ? (this.rechargeInfo.rechargeNum / this.vip.rate).toFixed(2) : (this.rechargeMoney ? (this.rechargeMoney / this.vip.rate).toFixed(2) : 0);
                 }
             }
         },
@@ -135,9 +135,10 @@
                 this.virtualCurrencyRate = undefined;
                 this.rechargeInfo = {};
                 if (this.rechargeTypes && this.rechargeTypes.length > 0) {
-                    this.rechargeTypes.map(type => {
+                    /* this.rechargeTypes.map(type => {
                         type.selected = false;
-                    });
+                    }); */
+                    this.rechargeTypes = undefined;
                 }
             },
             getRechargeTypes() {
@@ -240,7 +241,7 @@
             },
             rechargeMoney(newVal) {
                 if (newVal) {
-                    this.rechargeTypes.map(type => {
+                    this.rechargeTypes && this.rechargeTypes.map(type => {
                         type.selected = false;
                     });
                     this.rechargeInfo = undefined;
