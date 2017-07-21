@@ -190,16 +190,16 @@
                                 </span>
                             </div>
                             <div class="footer-price">
-                                <span class="order-price-text">
+                              <!--   <span class="order-price-text">
                                     {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
                                     <span class="order-price-num grey">
                                         ¥{{Math.abs(findTypePrice(order.payments, 14))}}
                                     </span>
-                                </span>
+                                </span> -->
                                 <span class="order-price-text">
-                                    {{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}
+                                    还需收款:
                                     <span class="order-price-num red" :class="{green : !Number(findTypePrice(order.payments, 15))}" >
-                                        ¥{{Math.abs(findTypePrice(order.payments, 15))}}
+                                        ¥{{findTypePrice(order.payments, 15)}}
                                     </span>
                                 </span>
                             </div>
