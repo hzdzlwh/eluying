@@ -98,12 +98,20 @@
                             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
                         })}</div>
                     }
+                    // {
+                    //     title: '菜品名称',
+                    //     render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
+                    //         item.dishType && item.dishType.map(function(dish) {
+                    //             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={dish.dishName} key={item.dishName}>{item.dishName}</div>;
+                    //         });
+                    //     })}</div>
+                    // }
                 ]
             };
         },
         created() {
             this.getRestType();
-            this.getDishType();
+            // this.getDishType();
             this.getData();
         },
         components: {
@@ -133,24 +141,24 @@
                     }
                 });
             },
-            getDishType() {
-                http.get('/dish/getDishTypes')
-                .then(res => {
-                    if (res.code === 1) {
-                        const dishType = res.data.list;
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            this.dishTypeAll.forEach(item => {
-                                if (dish.name !== item.name) {
-                                    this.dishTypeAll.push(dish);
-                                } else {
-                                    console.log(1);
-                                }
-                            });
-                        });
-                    }
-                });
-            },
+            // getDishType() {
+            //     http.get('/dish/getDishTypes')
+            //     .then(res => {
+            //         if (res.code === 1) {
+            //             const dishType = res.data.list;
+            //             dishType.forEach(dish => {
+            //                 dish.name = dish.dishType;
+            //                 this.dishTypeAll.forEach(item => {
+            //                     if (dish.name !== item.name) {
+            //                         this.dishTypeAll.push(dish);
+            //                     } else {
+            //                         console.log(1);
+            //                     }
+            //                 });
+            //             });
+            //         }
+            //     });
+            // },
             exportUrl(type) {
                 const originParam = {
                     date: this.today

@@ -19,13 +19,132 @@
                     3、出租率=间夜量/(总客房数-维修房数-停用房数)；<br>
                     4、平均房价=房费/间夜数；<br>
                     5、合计数据中是否包含自用房、免费房，将根据系统设置进行统计；<br>
-                    6、钟点房间夜量按系统设置计算（默认0.5）。
+                    6、钟点房间夜量按系统设置计算（默认0.5); <br>
+                    7、RevPAR=平均房价*出租率，即房均收益。
                 </div>
             </span>
-        </p> 
+        </p>
+        <div class="report-business-top">
+            <div class="date">{{date}}</div>
+            <div style="margin-right:20px;width: 120px;" class="fr report-business-select" >
+                <dd-select v-model="statType" >
+                    <dd-option :key="item.id" v-for="item in statTypeAll" :value="item.statType" :label="item.name"></dd-option>
+                </dd-select>
+            </div>
+        </div>
+        <div style="display: flex;margin:10px auto;">
+            <table style="width: 98px" class="l">
+                <thead>
+                <tr>
+                    <th>分类</th>
+                </tr>
+                </thead>
+                <tbody class="td-body-color">
+                <tr>
+                    <td>入住类型</td>
+                </tr>
+                <tr v-for="r in dayStat" :class="{b: r.name === '合计'}">
+                    <td class="ellipsis">
+                        {{r.name}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div style="flex: 1;">
+                <table style="width: 100%" class="c">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="25%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th colspan="4">本日</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="td-body-color">
+                        <td>间夜量</td>
+                        <td>房费</td>
+                        <td>平均房价</td>
+                        <td>出租率</td>
+                    </tr>
+                    <tr v-for="r in dayStat" :class="{b: r.name === '合计'}">
+                        <td>{{r.night}}</td>
+                        <td>{{r.fee}}</td>
+                        <td>{{r.avg}}</td>
+                        <td>{{r.rate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="flex: 1">
+                <table style="width: 100%" class="r">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="25%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th colspan="4">本月</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="td-body-color">
+                        <td>间夜量</td>
+                        <td>房费</td>
+                        <td>平均房价</td>
+                        <td>出租率</td>
+                    </tr>
+                    <tr v-for="r in monStat" :class="{b: r.name === '合计'}">
+                        <td>{{r.night}}</td>
+                        <td>{{r.fee}}</td>
+                        <td>{{r.avg}}</td>
+                        <td>{{r.rate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 </template>
 <style lang="scss" scoped>
+    .report-business-top{
+        height:24px;
+        .date{
+            float:left;
+            margin-right:20px;
+        }
+        .report-business-select{
+            float:left;
+        }
+    }
+    .td-body-color{
+        background:#eee;
+    }
+    th {
+        background:#60758d;
+        color: #fff;
+    }
+    th, td {
+        height:32px;
+        border:1px solid #e6e6e6;
+    }
+    .l {
+        td, th {
+            padding-left: 14px;
+            max-width: 98px;
+        }
+    }
+    .c, .r {
+        td, th {
+            text-align: center;
+        }
+    }
     .ic {
         line-height: 14px;
         border:1px solid #178ce6;
@@ -54,24 +173,55 @@
     .ic:hover .i {
         display: block;
     }
+    .b {
+        font-weight: bold;
+    }
 </style>
 <script>
-    import { DdDatepicker, DdDropdown, DdDropdownItem } from 'dd-vue-component';
+    import { DdDatepicker, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
     export default {
         data() {
             return {
-                date: new Date()
+                date: '',
+                statTypeAll: [{
+                    id: 0,
+                    name: '入住类型',
+                    statType: 0
+                }, {
+                    id: 1,
+                    name: '房间类型',
+                    statType: 1
+                }, {
+                    id: 2,
+                    name: '客源渠道',
+                    statType: 2
+                }],
+                statType: 0,
+                showTypeAll: [],
+                dayStat: [],
+                monStat: []
             };
         },
         created() {
-
+            this.date = util.dateFormat(new Date());
+            this.getData();
+        },
+        watch: {
+            date() {
+                this.getData();
+            },
+            statType() {
+                this.getData();
+            }
         },
         components: {
             DdDatepicker,
             DdDropdown,
-            DdDropdownItem
+            DdDropdownItem,
+            DdSelect,
+            DdOption
         },
         beforeRouteEnter(to, from, next) {
             next(() => {
@@ -100,6 +250,22 @@
             },
             disabledDate(date) {
                 return util.DateDiff(date, new Date()) < 0;
+            },
+            getData() {
+                http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {
+                    if (res.code === 1) {
+                        if (this.statType === 0) {
+                            this.dayStat = res.data.checkTypeDayStat;
+                            this.monStat = res.data.checkTypeMonStat;
+                        } else if (this.statType === 1) {
+                            this.dayStat = res.data.roomTypeDayStat;
+                            this.monStat = res.data.roomTypeMonStat;
+                        } else if (this.statType === 2) {
+                            this.dayStat = res.data.originDayStat;
+                            this.monStat = res.data.originMonStat;
+                        }
+                    }
+                });
             }
         }
     };
