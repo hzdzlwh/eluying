@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 14:08:47
+* @Last Modified time: 2017-07-21 15:47:44
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -153,7 +153,7 @@
                 <p class="content-item-title"><span>现金收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                        <dd-select v-model="payment.type" class='dd-select-with'>
+                        <dd-select v-model="payment.type" class='dd-select-with' :disabled='type === "collect"'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
@@ -174,9 +174,9 @@
             </div>
             <div class="content-item">
                 <div class="cashier-all">
-                    <div><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
+                    <div v-if='type !== "collect"'><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
                     <div v-if='orderPayment.game'><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
-                    <div v-if='orderPayment.company'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
+                    <div v-if='orderPayment.member'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
                     <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
@@ -305,7 +305,7 @@
 
 .cashier-addBtn {
     height: 24px;
-    display: flex;
+    display: inline-flex;;
     align-items: center;
     cursor: pointer;
     margin-top:6px;
@@ -594,7 +594,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);
                         const payed = Math.min(abelFee * el.rate, el.fee);
                         el.ableNum = parseInt(abelFee * el.rate);
                         el.fee = parseInt(payed);
@@ -608,7 +608,7 @@ export default {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableNum = abelFee;
                         el.fee = payed;
@@ -623,7 +623,7 @@ export default {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = needPay;
+                            const abelFee = Math.max(0, needPay);;
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -637,7 +637,7 @@ export default {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -797,18 +797,18 @@ export default {
                     return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
                 });
             }
-            if (item.type === 0 && this.isCompany && this.companyCityLedger) {
+            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === 14)) {
                 payBack = [{
                     channelId: -14,
                     name: `企业挂帐(${this.companyName || ''})`
                 }].concat(payBack);
             }
-            if (payBack.length <= 1) {
+            if (this.payments.length <= 1) {
                 return payBack;
             } else {
                 let own = false; // 判断是否已存在订单钱包的支付方式
                 let arr = payBack;
-                payBack.forEach((pay, num) => {
+                this.payments.forEach((pay, num) => {
                     const id = pay.payChannelId;
                     if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
                         own = true;
@@ -1047,9 +1047,9 @@ export default {
             this.uniqueId += 1;
             // const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
-                fee: payMoney,
+                fee: this.type === 'collect' ? Math.max(this.needPayed, 0) : payMoney,
                 payChannelId: undefined,
-                type: Number(this.needPayed) >= 0 ? 0 : 2,
+                type: (Number(this.needPayed) >= 0 || this.type === 'collect') ? 0 : 2,
                 uniqueId: this.uniqueId
             });
         },
