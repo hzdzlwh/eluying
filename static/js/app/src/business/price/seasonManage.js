@@ -199,14 +199,22 @@ var seasonManage = {
         if ($('#editSeason .nav-tabs-li.active').find('a').html() === '虚拟币') {
             const type = $('.netPrice.selected').parents('.grid').hasClass('busyGrid')? 1 : 0;
             const weekLimit = [];
-            const weekday = JSON.parse(data.items)[0].weekday - 1;
-            const newLimit = JSON.parse(data.items)[0].newNetPrice;
-            for (let i = 0; i < 7; i++) {
-                if (i === weekday) {
-                    weekLimit.push(newLimit);
-                } else {
-                    weekLimit.push(0);
-                }
+            if (type === 1) {
+                $('#editSeason').find('.tab-pane.active').find('.busyGrid').find('tbody td').each(function(index,element) {
+                    if (index > 0 && index < 7) {
+                        weekLimit.push($(this).find('p').html());
+                    } else if(index === 7) {
+                        weekLimit.unshift($(this).find('p').html());
+                    }
+                });
+            } else {
+                $('#editSeason').find('.tab-pane.active').find('.slackGrid').find('tbody td').each(function(index,element) {
+                    if (index > 0 && index < 7) {
+                        weekLimit.push($(this).find('p').html());
+                    } else if (index === 7) {
+                        weekLimit.unshift($(this).find('p').html());
+                    }
+                });
             }
             http.get('/virCurrency/setPeriodLimitOfWeek', { categoryId: data.categoryId, type: type, weekLimit: JSON.stringify(weekLimit) }).then(res => {
                 accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
