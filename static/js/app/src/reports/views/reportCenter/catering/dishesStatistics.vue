@@ -140,11 +140,14 @@
                         const dishType = res.data.list;
                         dishType.forEach(dish => {
                             dish.name = dish.dishType;
-                            this.dishTypeAll.forEach(item => {
-                                if (dish.name !== item.name) {
-                                    this.dishTypeAll.push(dish);
-                                } else {
-                                    console.log(1);
+                            this.dishTypeAll.forEach((item, index) => {
+                                if (index <= 100) {
+                                    if (dish.name !== item.name) {
+                                        this.dishTypeAll.push(dish);
+                                        window.console.log(this.dishTypeAll.length + '/n' + index);
+                                    } else {
+                                        console.log(1);
+                                    }
                                 }
                             });
                         });
