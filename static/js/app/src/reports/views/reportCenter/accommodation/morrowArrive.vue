@@ -267,17 +267,32 @@
         methods: {
             exportUrl(type) {
                 const originParam = {
-                    date: this.morrow
+                    pageNo: this.pageNo,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    date: this.morrow,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
+                };
+                if (this.checkType !== -1) {
+                    originParam.checkType = this.checkType;
+                };
+                // 后台要求如果为空就不传
+                for (const ob in originParam) {
+                    if (originParam[ob] === undefined || originParam[ob] === '') {
+                        delete originParam[ob];
+                    }
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
+                    reportType: 23,
                     params: JSON.stringify(originParam)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
+                console.log(`${host}?${params}`);
                 return `${host}?${params}`;
             },
             getZoneType() {
@@ -380,16 +395,6 @@
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

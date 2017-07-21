@@ -1,8 +1,8 @@
 <template>
     <div>
         <DateSelect/>
-        <h2 class="title">{{$route.meta.name}}</h2>
-        <div class="top">
+        <h2 class="report-reportCenter-title">{{$route.meta.name}}</h2>
+        <div class="report-reportCenter-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -56,7 +56,7 @@
     </div>
 </template>
 <style lang='scss' scoped>
-  .title {
+  .report-reportCenter-title {
     width: 100%;
     line-height: 56px;
     font-size: 1.5em;
@@ -64,7 +64,7 @@
     text-align: center;
     font-family: border;
   }
-  .top {
+  .report-reportCenter-top {
     width: 100%;
     height: 32px;
     padding: 5px 0;
