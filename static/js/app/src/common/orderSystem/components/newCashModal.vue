@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 14:49:34
+* @Last Modified time: 2017-07-21 15:17:37
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -594,7 +594,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);
                         const payed = Math.min(abelFee * el.rate, el.fee);
                         el.ableNum = parseInt(abelFee * el.rate);
                         el.fee = parseInt(payed);
@@ -608,7 +608,7 @@ export default {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableNum = abelFee;
                         el.fee = payed;
@@ -623,7 +623,7 @@ export default {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = needPay;
+                            const abelFee = Math.max(0, needPay);;
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -637,7 +637,7 @@ export default {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = needPay;
+                        const abelFee = Math.max(0, needPay);;
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
