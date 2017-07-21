@@ -141,40 +141,18 @@
                     }
                 });
             },
-<<<<<<< HEAD
-            // getDishType() {
-            //     http.get('/dish/getDishTypes')
-            //     .then(res => {
-            //         if (res.code === 1) {
-            //             const dishType = res.data.list;
-            //             dishType.forEach(dish => {
-            //                 dish.name = dish.dishType;
-            //                 this.dishTypeAll.forEach(item => {
-            //                     if (dish.name !== item.name) {
-            //                         this.dishTypeAll.push(dish);
-            //                     } else {
-            //                         console.log(1);
-            //                     }
-            //                 });
-            //             });
-            //         }
-            //     });
-            // },
-=======
             getDishType() {
                 http.get('/dish/getDishTypes')
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            this.dishTypeAll.forEach((item, index) => {
+                        this.dishTypeAll.forEach((item, index) => {
+                            dishType.forEach(dish => {
+                                dish.name = dish.dishType;
                                 if (index <= 100) {
                                     if (dish.name !== item.name) {
                                         this.dishTypeAll.push(dish);
                                         window.console.log(this.dishTypeAll.length + '/n' + index);
-                                    } else {
-                                        console.log(1);
                                     }
                                 }
                             });
@@ -182,7 +160,6 @@
                     }
                 });
             },
->>>>>>> 5091a18e7ab36dd3def8df17eec0798ea3ca790d
             exportUrl(type) {
                 const originParam = {
                     date: this.today
