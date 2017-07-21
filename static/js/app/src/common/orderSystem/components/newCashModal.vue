@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-20 17:33:33
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-21 13:48:58
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -180,7 +180,7 @@
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
                     <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
-                    <div><span>还需{{needPayed >0 ? '收款' : '还款'}}:</span><span>¥{{Math.abs(needPayed)}}</span></div>
+                    <div><span>还需还款:</span><span>¥{{needPayed}}</span></div>
                 </div>
             </div>
         </div>
