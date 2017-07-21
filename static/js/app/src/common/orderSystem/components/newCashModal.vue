@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 15:17:37
+* @Last Modified time: 2017-07-21 15:25:39
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -176,7 +176,7 @@
                 <div class="cashier-all">
                     <div><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
                     <div v-if='orderPayment.game'><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
-                    <div v-if='orderPayment.company'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
+                    <div v-if='orderPayment.member'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
                     <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
@@ -797,7 +797,7 @@ export default {
                     return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
                 });
             }
-            if (item.type === 0 && this.isCompany && this.companyCityLedger) {
+            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === 14)) {
                 payBack = [{
                     channelId: -14,
                     name: `企业挂帐(${this.companyName || ''})`
