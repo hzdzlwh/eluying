@@ -41,7 +41,7 @@
                 </thead>
                 <tbody class="td-body-color">
                 <tr>
-                    <td>入住类型</td>
+                    <td>{{statTypeAll[statType].name}}</td>
                 </tr>
                 <tr v-for="r in dayStat" :class="{b: r.name === '合计'}">
                     <td class="ellipsis">

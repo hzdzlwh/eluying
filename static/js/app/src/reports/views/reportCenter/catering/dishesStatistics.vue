@@ -21,10 +21,63 @@
                 </div>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <table class="report-dishesStat" border="1">
+            <thead>
+                <tr>
+                    <th>餐厅名称</th>
+                    <th>菜品种类</th>
+                    <th>菜名</th>
+                    <th>总数</th>
+                    <th>售卖数量</th>
+                    <th>赠送数量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(rest, index) in restAll">
+                    <td>{{rest.restName}}</td>
+                    <td>
+                        <div v-for="(dishType, i) in rest.dishTypeList">{{dishType.dishType}}</div>
+                    </td>
+                    <!-- <td>
+                        <div v-for="(dish, j) in rest.dishTypeList[i].dishList">{{dish.dishName}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(dish, index) in dishesAll">{{dish.totalAmount}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(dish, index) in dishesAll">{{dish.sellNum}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(dish, index) in dishesAll">{{dish.sendNum}}</div>
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+        <!-- <dd-table :columns="col1" :data-source="vips" :bordered="true" id="report-table-1"></dd-table>
+        <dd-table :columns="col2" :data-source="dishesAll" :bordered="true" id="report-table-2"></dd-table> -->
+
     </div>
 </template>
 <style lang="scss">
+    .report-dishesStat{
+        border:1px solid #ccc;
+        width: 1000px;
+        margin: 0 auto;
+        thead{
+            background: #99CCFF;
+        }
+        tr{
+            height: 24px;
+        }
+        td{
+            div{
+                height: 20px;
+                box-sizing:border-box;
+                border-bottom:1px solid #ccc;
+            }  
+        }
+        
+    }
     .report-reportCenter-title {
         width: 100%;
         line-height: 56px;
@@ -59,7 +112,7 @@
     import http from 'http';
     import { mapState } from 'vuex';
     import DateSelect from '../../../components/DateSelect.vue';
-    import { DdDropdown, DdDropdownItem, DdSelect, DdOption , DdTable } from 'dd-vue-component';
+    import { DdDropdown, DdDropdownItem, DdSelect, DdOption, DdTable } from 'dd-vue-component';
     export default {
         props: {
             startDate: String,
@@ -81,37 +134,56 @@
                 }],
                 dishTypeOther: [],
                 dishType: '-1~',
-                vips: [],
-                vip: {},
                 pages: 0,
                 personCount: 0,
                 pageNo: 1,
-                col: [
-                    {
-                        title: '餐厅名称',
-                        dataIndex: 'restName',
-                        width: 100
-                    },
-                    {
-                        title: '菜品种类',
-                        render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
-                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
-                        })}</div>
-                    }
-                    // {
-                    //     title: '菜品名称',
-                    //     render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
-                    //         item.dishType && item.dishType.map(function(dish) {
-                    //             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={dish.dishName} key={item.dishName}>{item.dishName}</div>;
-                    //         });
-                    //     })}</div>
-                    // }
-                ]
+                vips: [],
+                restAll: [],
+                dishesNum: [],
+                showDishType: [],
+                dishesAll: [],
+                restNum: [],
+                dishTypeNum: []
+                // col1: [
+                //     {
+                //         title: '餐厅名称',
+                //         dataIndex: 'restName',
+                //         width: 100
+                //     },
+                //     {
+                //         title: '菜品种类',
+                //         render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
+                //             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
+                //         })}</div>
+                //     }
+                // ],
+                // col2: [
+                //     {
+                //         title: '菜品名称',
+                //         dataIndex: 'dishName',
+                //         width: 100
+                //     },
+                //     {
+                //         title: '总数',
+                //         dataIndex: 'totalAmount',
+                //         width: 80
+                //     },
+                //     {
+                //         title: '售卖数量',
+                //         dataIndex: 'sellNum',
+                //         width: 80
+                //     },
+                //     {
+                //         title: '赠送数量',
+                //         dataIndex: 'sendNum',
+                //         width: 80
+                //     }
+                // ]
             };
         },
         created() {
             this.getRestType();
-            // this.getDishType();
+            this.getDishType();
             this.getData();
         },
         components: {
@@ -146,16 +218,13 @@
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;
-                        this.dishTypeAll.forEach((item, index) => {
-                            dishType.forEach(dish => {
-                                dish.name = dish.dishType;
-                                if (index <= 100) {
-                                    if (dish.name !== item.name) {
-                                        this.dishTypeAll.push(dish);
-                                        window.console.log(this.dishTypeAll.length + '/n' + index);
-                                    }
-                                }
-                            });
+                        const dict = {};
+                        dishType.forEach(dish => {
+                            dish.name = dish.dishType;
+                            if (!dict[dish.name]) {
+                                this.dishTypeAll.push(dish);
+                                dict[dish.name] = 1;
+                            }
                         });
                     }
                 });
@@ -181,7 +250,24 @@
                 http.get('/stat/getDishGather', { startDate: this.date.startDate, endDate: this.date.endDate, showPackageDish: 0 }).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list;
-                        console.log(this.vips);
+                        let index = 0;
+                        res.data.list.forEach(rest => {
+                            this.restAll.push(rest);
+                            rest.dishTypeList.forEach(dishType => {
+                                dishType.restName = rest.restName;
+                                this.showDishType.push(dishType);
+                                dishType.dishList.forEach(dish => {
+                                    dish.restName = rest.restName;
+                                    dish.dishType = dishType.dishType;
+                                    this.dishesAll.push(dish);
+                                    console.log(this.dishesAll);
+                                    index ++;
+                                });
+                                 console.log(this.showDishType);
+                                console.log(index);
+                            });
+                            console.log(this.restAll);
+                        });
                     };
                 });
             }

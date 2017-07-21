@@ -206,13 +206,25 @@
         },
         methods: {
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNo: this.pageNo,
+                    operatorId: this.operatorType.split('~')[1],
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate
                 };
+                if (this.orderType !== -2) {
+                    obj.orderType = this.orderType;
+                }
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 403,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
@@ -239,8 +251,7 @@
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    // zoneId: this.zoneType.split('~')[1],
-                    // roomType: this.roomType.split('~')[1],
+                    operatorId: this.operatorType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -255,21 +266,11 @@
                 }
                 http.get('/stat/getTransferReceivable', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.items || [];
+                        this.vips = res.data.items;
                         this.receiptNum = res.data.totalCount;
                         this.orderFree = res.data.totalOrderAmount;
                         this.receiptFree = res.data.totalIncomeAmount;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

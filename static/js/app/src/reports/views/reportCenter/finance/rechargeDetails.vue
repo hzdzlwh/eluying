@@ -217,13 +217,26 @@
         },
         methods: {
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNo: this.pageNo,
+                    categoryId: this.categoryType.split('~')[1],
+                    channelId: this.channelType.split('~')[1],
+                    startDate: this.date.startDate,
+                    toDate: this.date.endDate
                 };
+                if (this.type !== -1) {
+                    obj.type = this.type;
+                };
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 305,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
@@ -250,8 +263,8 @@
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    // zoneId: this.zoneType.split('~')[1],
-                    // roomType: this.roomType.split('~')[1],
+                    categoryId: this.categoryType.split('~')[1],
+                    channelId: this.channelType.split('~')[1],
                     startDate: this.date.startDate,
                     toDate: this.date.endDate
                 };
@@ -271,16 +284,6 @@
                         this.priceFree = res.data.totalFreeFee;
                         this.receiptFree = res.data.totalChargeFee;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

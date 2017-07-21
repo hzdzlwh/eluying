@@ -269,18 +269,34 @@
         },
         methods: {
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNo: this.pageNo,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    date: this.today,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
                 };
+                if (this.checkType !== -1) {
+                    obj.checkType = this.checkType;
+                }
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 301,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
+                console.log(`${host}?${params}`);
                 return `${host}?${params}`;
             },
             getData() {

@@ -172,7 +172,7 @@
                     },
                     {
                         title: '入住类型',
-                        dataIndex: 'checkInType',
+                        dataIndex: 'checkType',
                         width: 100
                     },
                     {
@@ -254,13 +254,28 @@
         },
         methods: {
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNum: this.pageNo,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    date: this.today,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
+                };
+                if (this.checkType !== -1) {
+                    obj.checkType = this.checkType;
+                }
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 302,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
@@ -347,11 +362,11 @@
             },
             fetchDate() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    pageNum: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
                     roomType: this.roomType.split('~')[1],
                     // checkType: this.checkType,
-                    date: this.morrow,
+                    date: this.today,
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     originId: this.userOriginType.split('~')[1]
                 };
@@ -366,19 +381,10 @@
                 }
                 http.get('/stat/getCurrentResident', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.count = res.data.total;
+                        this.vips = res.data.entityList;
+                        this.personCount = res.data.totalResident;
+                        this.roomCount = res.data.totalRoom;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

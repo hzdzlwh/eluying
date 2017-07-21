@@ -127,8 +127,6 @@
             fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
-                    // zoneId: this.zoneType.split('~')[1],
-                    // roomType: this.roomType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };

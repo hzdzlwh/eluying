@@ -43,7 +43,7 @@
             </div>
             <div class="export">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                  <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                   <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -177,7 +177,7 @@
                     },
                     {
                         title: '入住类型',
-                        dataIndex: 'checkInType',
+                        dataIndex: 'checkType',
                         width: 100
                     },
                     {
@@ -203,7 +203,7 @@
                     },
                     {
                         title: '离开时间',
-                        dataIndex: 'expectCheckOutTime',
+                        dataIndex: 'checkOutTime',
                         width: 120
                     }
                 ],
@@ -275,13 +275,29 @@
         },
         methods: {
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNum: this.pageNo,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    startDate: this.date.startDate,
+                    toDate: this.date.endDate,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
                 };
+                if (this.checkType !== -1) {
+                    obj.checkType = this.checkType;
+                }
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 303,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
@@ -370,7 +386,7 @@
             },
             fetchDate() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    pageNum: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
                     roomType: this.roomType.split('~')[1],
                     // checkType: this.checkType,
@@ -390,19 +406,9 @@
                 }
                 http.get('/stat/getHistoryResident', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list || [];
-                        this.count = res.data.total;
+                        this.vips = res.data.entityList;
+                        this.personCount = res.data.total;
                         this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

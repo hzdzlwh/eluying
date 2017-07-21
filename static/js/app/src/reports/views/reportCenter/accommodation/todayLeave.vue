@@ -265,17 +265,33 @@
         methods: {
             exportUrl(type) {
                 const originParam = {
-                    date: this.today
+                    pageNo: this.pageNo,
+                    zoneId: this.zoneType.split('~')[1],
+                    roomType: this.roomType.split('~')[1],
+                    // checkType: this.checkType,
+                    date: this.today,
+                    discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
+                };
+                if (this.checkType !== -1) {
+                    originParam.checkType = this.checkType;
+                };
+                // 后台要求如果为空就不传
+                for (const ob in originParam) {
+                    if (originParam[ob] === undefined || originParam[ob] === '') {
+                        delete originParam[ob];
+                    }
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
+                    reportType: 20,
                     params: JSON.stringify(originParam)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
+                console.log(`${host}?${params}`);
                 return `${host}?${params}`;
             },
             getZoneType() {
