@@ -10,7 +10,7 @@
                     <div class="cardList-body-item">
                         <span class="cardList-body-itemLeft">会员：</span>
                         <div class="cardList-body-itemRight repairModal-body-itemRight">
-                            {{vip.name}} 手机号{{vip.phone}}
+                            {{vip.name}} {{vip.phone}}
                         </div>
                     </div>
                     <div class="cardList-body-item" v-if="rechargeTypes && rechargeTypes.length > 0">

@@ -54,7 +54,7 @@
                         <div class="content-item" >
                             <p class="content-item-title"><span>订单总结</span></p>
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
-                            <span style="margin-left: 24px">已收金额:<span>¥{{payed}}</span></span>
+                            <span style="margin-left: 24px">已收金额:<span>¥{{payed.toFixed(0)}}</span></span>
                         </div>
                     </div>
                     <div class="roomModals-footer">

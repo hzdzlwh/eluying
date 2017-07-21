@@ -62,7 +62,7 @@
                                 </tr>
                                 <tr>
                                     <td v-for="(item, index) in vipLevel.weekLimit">
-                                        <input type="text" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit"><span v-else>{{vipLevel.weekLimit[index]}}</span>
+                                        <input type="number" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit" @input="weekLimitInt(index)"><span v-else>{{vipLevel.weekLimit[index]}}</span>
                                     </td>
                                 </tr>
                             </table>
@@ -71,7 +71,7 @@
                     <div class="charge currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">{{data.virtualCurrencyName}}充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['virCurrencyRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeNum"><span v-else>{{item.rechargeNum}}</span>个，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeNum"><span v-else>{{item.freeNum}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('virCurrencyRechargeItems', index)"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['virCurrencyRechargeItems']">充<input type="number" style="width:102px;" v-if="edit" v-model="item.rechargeNum" @input="inputValide('virCurrencyRechargeItems', 'rechargeNum', index)"><span v-else>{{item.rechargeNum}}</span>个，送<input type="number" style="width:102px;" v-if="edit" v-model="item.freeNum" @input="inputValide('virCurrencyRechargeItems', 'freeNum', index)"><span v-else>{{item.freeNum}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('virCurrencyRechargeItems', index)"></div>
                         </div>
                        <div class="vipLevelChose" v-if='edit' @click="addRule('virCurrencyRechargeItems')">添加规则</div>
                     </div>
@@ -90,7 +90,7 @@
                     <div class="currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">储值账户充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">
-                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="text" style="width:102px;" v-if="edit" v-model="item.rechargeFee"><span v-else>{{item.rechargeFee}}</span>元，送<input type="text" style="width:102px;" v-if="edit" v-model="item.freeFee"><span v-else>{{item.freeFee}}</span>元<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="number" style="width:102px;" v-if="edit" v-model="item.rechargeFee" @input="inputValide('vipRechargeItems', 'rechargeFee', index)"><span v-else>{{item.rechargeFee}}</span>元，送<input type="number" style="width:102px;" v-if="edit" v-model="item.freeFee" @input="inputValide('vipRechargeItems', 'freeFee', index)"><span v-else>{{item.freeFee}}</span>元<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
                         </div>
                         <div class="vipLevelChose" v-if='edit' @click="addRule('vipRechargeItems')">添加规则</div>
                     </div>
@@ -271,6 +271,7 @@
 <script>
 import http from '../../common/http';
 import switchbtn from '../../common/components/switch.vue';
+import inputValid from '../../common/components/inputVaild.vue';
 import modal from '../../common/modal';
 import bus from '../event.js';
 export default {
@@ -326,7 +327,8 @@ export default {
         };
     },
     components: {
-        switchbtn
+        switchbtn,
+        inputValid
     },
     methods: {
         canel() {
@@ -461,10 +463,21 @@ export default {
         },
         addRule(type) {
             if (type === 'virCurrencyRechargeItems') {
-                this.vipLevel[type].push({ rechargeNum: '', freeNum: '' });
+                this.vipLevel[type].push({ rechargeNum: undefined, freeNum: undefined });
             } else if (type === 'vipRechargeItems') {
                 this.vipLevel[type].push({ rechargeFee: '', freeFee: '' });
             }
+        },
+        inputValide(type, field, index) {
+            this.vipLevel[type][index][field] = parseInt(this.vipLevel[type][index][field]);
+        },
+        weekLimitInt(index) {
+            this.vipLevel.weekLimit[index] = parseInt(this.vipLevel.weekLimit[index]);
+        }
+    },
+    watch: {
+        data(newValue) {
+            this.vipLevel = this.getdata();
         }
     }
 };

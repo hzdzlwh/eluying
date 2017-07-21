@@ -476,7 +476,8 @@
                 this.mainCardVisible = false;
                 this.payCodeVisible = false;
                 this.rightsAccountRechargeVisible = false;
-                this.vip.phone = '';
+                // 不知道为什么要写这一句，先去掉
+                // this.vip.phone = '';
             }
         },
         components: {

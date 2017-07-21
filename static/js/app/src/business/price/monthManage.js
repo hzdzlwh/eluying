@@ -361,6 +361,13 @@ var monthManage = {
             }
         },
         "click #editMonthNetPriceButton": function(){
+            if ($('#editMonth .nav-tabs-li.active').find('a').html() === '虚拟币') {
+                $('#editMonthNetPrice').find('h1').html('修改虚拟币上限');
+                $('#editMonthNetPrice').find('label').html('使用上限');
+            } else {
+                $('#editMonthNetPrice').find('h1').html('修改微官网价');
+                $('#editMonthNetPrice').find('label').html('微官网价');
+            }
             if ($("#editMonth .selected").length === 1) {
                 /*$("#monthCommissionPrice").val($("#editMonth .selected").find("p:eq(0)").html());*/
                 $("#monthNetPrice").val($("#editMonth .selected").find("p:eq(0)").html());
