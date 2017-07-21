@@ -62,7 +62,7 @@
                                 </tr>
                                 <tr>
                                     <td v-for="(item, index) in vipLevel.weekLimit">
-                                        <input type="text" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit"><span v-else>{{vipLevel.weekLimit[index]}}</span>
+                                        <input type="number" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit" @input="weekLimitInt(index)"><span v-else>{{vipLevel.weekLimit[index]}}</span>
                                     </td>
                                 </tr>
                             </table>
@@ -470,6 +470,14 @@ export default {
         },
         inputValide(type, field, index) {
             this.vipLevel[type][index][field] = parseInt(this.vipLevel[type][index][field]);
+        },
+        weekLimitInt(index) {
+            this.vipLevel.weekLimit[index] = parseInt(this.vipLevel.weekLimit[index]);
+        }
+    },
+    watch: {
+        data(newValue) {
+            this.vipLevel = this.getdata();
         }
     }
 };

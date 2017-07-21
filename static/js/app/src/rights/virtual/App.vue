@@ -22,7 +22,7 @@
 					<p v-if="showOrEdit" style="height:40px;line-height:40px;">{{rate}}虚拟币等值1人民币</p>
 					<div v-else>
 						<div style="height:32px;line-height:32px;">
-							<input type="text" class="dd-input" style="width:51px;" v-model="rate"><span>虚拟币等值1人民币</span><span>(请输入0.01-100之间的数字)</span>
+							<input type="number" class="dd-input" style="width:51px;" v-model.number="rate" @input="inputValide"><span>虚拟币等值1人民币</span><span>(请输入0.01-100之间的数字)</span>
 						</div>
 						<div style="height:32px;line-height:32px;">
 							<label><input type="checkbox" v-model="editKeepValue">保持账户中虚拟币价值不变</label>
@@ -99,6 +99,9 @@ export default {
             		this.getVirtualCurrency();
             	}
             });
+        },
+        inputValide() {
+        	this.rate = this.rate.toFixed(2);
         }
 	},
 	components: {
