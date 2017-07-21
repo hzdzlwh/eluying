@@ -317,6 +317,13 @@ var seasonManage = {
         "click .editSeasonNetPriceButton": function(){
             /*$("#seasonCommissionPrice").val($(".netPrice.selected").find("p:eq(0)").html());*/
             $("#seasonNetPrice").val($(".netPrice.selected").find("p:eq(0)").html());
+            if ($('#editSeason .nav-tabs-li.active').find('a').html() === '虚拟币') {
+                $('#editSeasonNetPrice').find('h1').html('修改虚拟币使用上限');
+                $('#editSeasonNetPrice').find('label').html('使用上限');
+            } else {
+                $('#editSeasonNetPrice').find('h1').html('修改微官网价');
+                $('#editSeasonNetPrice').find('label').html('微官网价');
+            }
         },
         "click #editSeasonSalePriceOk": function(){
             if (!$("#editSeasonSalePrice form").valid()) {
