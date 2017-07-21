@@ -67,7 +67,7 @@ var seasonManage = {
                 });
             })
             .then(function(result) {
-                // 拉取虚拟币旺季数据再和其他两个数据合并
+                // 拉取虚拟币淡季数据再和其他两个数据合并
                 http.get('/virCurrency/getVirtualCurrencyPeriodLimit', { categoryId: $("td.selected").attr("category-id"), type: 0 }).then(res => {
                     seasonManage.priceGrid({ ...result.data, 1: res.data.list }, false);
                 });
