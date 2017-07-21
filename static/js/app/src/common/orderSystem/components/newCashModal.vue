@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 15:47:44
+* @Last Modified time: 2017-07-21 20:22:10
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -560,14 +560,14 @@ export default {
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = (needPay + el.fee / el.rate).toFixed(2);
+                        needPay = (needPay + el.fee / el.rate).toFixed(2) * 1;
                     }
                 });
             }
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = (needPay + el.fee).toFixed(2);
+                        needPay = (needPay + el.fee).toFixed(2) * 1;
                     }
                 });
             }
@@ -576,7 +576,7 @@ export default {
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         if (card.type === 2 && card.fee) {
-                            needPay = (needPay + card.fee).toFixed(2);
+                            needPay = (needPay + card.fee).toFixed(2) * 1;
                         }
                     }
                 });
@@ -585,7 +585,7 @@ export default {
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 2 && el.fee) {
-                        needPay = (needPay + el.fee).toFixed(2);
+                        needPay = (needPay + el.fee).toFixed(2) * 1;
                     }
                 });
             }
@@ -598,7 +598,7 @@ export default {
                         const payed = Math.min(abelFee * el.rate, el.fee);
                         el.ableNum = parseInt(abelFee * el.rate);
                         el.fee = parseInt(payed);
-                        needPay = (needPay - (payed / el.rate).toFixed(2)).toFixed(2);
+                        needPay = (needPay - (payed / el.rate).toFixed(2)).toFixed(2) * 1;
                         // 为了和显示一致
                     }
                 });
@@ -612,7 +612,7 @@ export default {
                         const payed = Math.min(abelFee, el.fee);
                         el.ableNum = abelFee;
                         el.fee = payed;
-                        needPay = (needPay - payed).toFixed(2);
+                        needPay = (needPay - payed).toFixed(2) * 1;
                     }
                 });
             }
@@ -627,7 +627,7 @@ export default {
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
-                            needPay = (needPay - payed).toFixed(2);
+                            needPay = (needPay - payed).toFixed(2) * 1;
                         }
                     }
                 });
@@ -637,11 +637,11 @@ export default {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);;
+                        const abelFee = Math.max(0, needPay);
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
-                        needPay = (needPay - payed).toFixed(2);
+                        needPay = (needPay - payed).toFixed(2) * 1;
                     }
                 });
             }
