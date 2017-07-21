@@ -32,12 +32,12 @@
                 <div class="modal-foot">
                     <div style="padding: 15px; 20px;text-align: right;">
                         <button class="dd-btn dd-btn-primary" v-if="card.rechargeAble" @click="openModal('recharge')">充值</button>
-                        <button class="dd-btn dd-btn-primary" v-if="card.status === 0" @click="openModal('operate')">挂失</button>
+                        <button class="dd-btn dd-btn-primary" v-if="card.status === 0" @click="openModal('operate', 'lose')">挂失</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.givingAble" @click="openModal('given')">转增</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.viceAble" @click="openModal('additional')">办理副卡</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.reapplyAble" @click="openModal('repair')">补办</button>
-                        <button class="dd-btn dd-btn-primary" v-if="card.status === 1" @click="openModal('operate')">恢复</button>
-                        <button class="dd-btn dd-btn-primary" v-if="card.status === 1" @click="openModal('operate')">失效</button>
+                        <button class="dd-btn dd-btn-primary" v-if="card.status === 1" @click="openModal('operate', 'recover')">恢复</button>
+                        <button class="dd-btn dd-btn-primary" v-if="card.status === 1" @click="openModal('operate', 'useless')">失效</button>
                     </div>
                 </div>
             </div>
@@ -79,8 +79,8 @@
         hideModal() {
             this.$emit('closeModal');
         },
-        openModal(type) {
-            this.$emit('openModal', type);
+        openModal(type, loseOrrecoverOruseless) {
+            this.$emit('openModal', type, loseOrrecoverOruseless);
         }
     }
 	};

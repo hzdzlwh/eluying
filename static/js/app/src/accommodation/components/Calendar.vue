@@ -203,7 +203,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
-        <change-room-dialog :clearAllSelectedProps="clearAllSelected" :changePriceProps="changePrice" @changeDragState="changeIsDrag">
+        <change-room-dialog :clearAllSelectedProps="clearAllSelected" :changePriceProps="changePrice" @changeDragState="changeIsDrag" @resetChangePrice="resetChangePrice">
             <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
         </change-room-dialog>
     </div>
@@ -1079,6 +1079,9 @@
             },
             changeIsDrag() {
                 this.isDrag = true;
+            },
+            resetChangePrice() {
+                this.changePrice = false;
             }
         },
         directives: {

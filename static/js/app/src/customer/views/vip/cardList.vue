@@ -379,10 +379,13 @@
                     }
                 });
             },
-            openModal(type) {
+            openModal(type, loseOrrecoverOruseless) {
                 // this.card = card;
                 this.hideModal();
                 this.modalList[type] = true;
+                if (loseOrrecoverOruseless) {
+                    this.type = loseOrrecoverOruseless;
+                }
             },
             search() {
                 this.pageNo = 1;

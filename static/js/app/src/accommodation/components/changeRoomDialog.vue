@@ -181,6 +181,7 @@
                     updatePrice: this.changePriceProps
                 })
                     .then(res => {
+                        this.$emit('resetChangePrice');
                         bus.$emit('refreshView');
                     })
                     .catch(this.rest);
@@ -195,6 +196,7 @@
                     top: this.outerTargetStartY + 'px',
                     left: this.outerTargetStartX + 'px'
                 });
+                this.$emit('resetChangePrice');
             }
         }
     };
