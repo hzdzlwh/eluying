@@ -5,12 +5,12 @@ import Router from 'vue-router';
 import dataCenter from './views/dataCenter.vue';
 import reportCenter from './views/reportCenter/reportCenter.vue';
 import operation from './views/overview/operation/operation.vue';
-import dailyReport from './views/overview/operation/dailyReport.vue';
+// import dailyReport from './views/overview/operation/dailyReport.vue';
 import container from './views/container.vue';
 import channel from './views/overview/channel.vue';
 import sale from './views/overview/sale.vue';
 import accommodation from './views/accommodation/accommodation.vue';
-import accommodationDaily from './views/accommodation/daily.vue';
+// import accommodationDaily from './views/accommodation/daily.vue';
 import childContainer from './views/childContainer.vue';
 import food from './views/catering/operation/food.vue';
 import restaurant from './views/catering/operation/restaurant.vue';
@@ -35,24 +35,24 @@ import morrowLeave from './views/reportCenter/accommodation/morrowLeave.vue';
 import morrowArrive from './views/reportCenter/accommodation/morrowArrive.vue';
 import forecastRoom from './views/reportCenter/accommodation/forecastRoom.vue';
 import businessRoom from './views/reportCenter/accommodation/businessRoom.vue';
-import clearRoom from './views/reportCenter/accommodation/clearRoom.vue';
+// import clearRoom from './views/reportCenter/accommodation/clearRoom.vue';
 import reportCatering from './views/reportCenter/catering/catering.vue';
 import dishesStatistics from './views/reportCenter/catering/dishesStatistics.vue';
 import dishesPresent from './views/reportCenter/catering/dishesPresent.vue';
-import reportEntertainment from './views/reportCenter/entertainment/entertainment.vue';
-import reportRetail from './views/reportCenter/retail/retail.vue';
+// import reportEntertainment from './views/reportCenter/entertainment/entertainment.vue';
+// import reportRetail from './views/reportCenter/retail/retail.vue';
 import reportFinance from './views/reportCenter/finance/finance.vue';
 import receiptDetails from './views/reportCenter/finance/receiptDetails.vue';
 import receiptGather from './views/reportCenter/finance/receiptGather.vue';
-import recordedDetails from './views/reportCenter/finance/recordedDetails.vue';
+// import recordedDetails from './views/reportCenter/finance/recordedDetails.vue';
 import transferDetails from './views/reportCenter/finance/transferDetails.vue';
-import ARDetails from './views/reportCenter/finance/ARDetails.vue';
+// import ARDetails from './views/reportCenter/finance/ARDetails.vue';
 import ARGather from './views/reportCenter/finance/ARGather.vue';
 import rechargeDetails from './views/reportCenter/finance/rechargeDetails.vue';
 import reportManage from './views/reportCenter/manage/manage.vue';
 import reportDaily from './views/reportCenter/manage/dailyReport.vue';
-import reportBazaar from './views/reportCenter/bazaar/bazaar.vue';
-import reportMember from './views/reportCenter/member/member.vue';
+// import reportBazaar from './views/reportCenter/bazaar/bazaar.vue';
+// import reportMember from './views/reportCenter/member/member.vue';
 import auth from '../common/auth';
 
 const insuranceAuth = auth.checkSwitch(auth.INSURANCE_ID);
@@ -94,14 +94,14 @@ export const routes = [
                                 meta: {
                                     name: '统计'
                                 }
-                            },
-                            {
-                                path: '/dataCenter/overview/operation/dailyReport',
-                                component: dailyReport,
-                                meta: {
-                                    name: '日报'
-                                }
                             }
+                            // {
+                            //     path: '/dataCenter/overview/operation/dailyReport',
+                            //     component: dailyReport,
+                            //     meta: {
+                            //         name: '日报'
+                            //     }
+                            // }
                         ]
                     },
                     {
@@ -172,14 +172,14 @@ export const routes = [
                         meta: {
                             name: '统计'
                         }
-                    },
-                    {
-                        path: '/dataCenter/accommodation/daily',
-                        component: accommodationDaily,
-                        meta: {
-                            name: '日报'
-                        }
                     }
+                    // {
+                    //     path: '/dataCenter/accommodation/daily',
+                    //     component: accommodationDaily,
+                    //     meta: {
+                    //         name: '日报'
+                    //     }
+                    // }
                 ]
             },
             {
@@ -382,14 +382,14 @@ export const routes = [
                             name: '客房营业统计表'
                         },
                         component: businessRoom
-                    },
-                    {
-                        path: '/reportCenter/accommodation/clearRoom',
-                        meta: {
-                            name: '客房清洁工作任务表'
-                        },
-                        component: clearRoom
                     }
+                    // {
+                    //     path: '/reportCenter/accommodation/clearRoom',
+                    //     meta: {
+                    //         name: '客房清洁工作任务表'
+                    //     },
+                    //     component: clearRoom
+                    // }
                 ]
             },
             {
@@ -416,20 +416,20 @@ export const routes = [
                     }
                 ]
             },
-            {
-                path: '/reportCenter/entertainment',
-                meta: {
-                    name: '娱乐'
-                },
-                component: reportEntertainment
-            },
-            {
-                path: '/reportCenter/retail',
-                meta: {
-                    name: '商超'
-                },
-                component: reportRetail
-            },
+            // {
+            //     path: '/reportCenter/entertainment',
+            //     meta: {
+            //         name: '娱乐'
+            //     },
+            //     component: reportEntertainment
+            // },
+            // {
+            //     path: '/reportCenter/retail',
+            //     meta: {
+            //         name: '商超'
+            //     },
+            //     component: reportRetail
+            // },
             {
                 path: '/reportCenter/finance',
                 meta: {
@@ -452,13 +452,13 @@ export const routes = [
                             name: '收款汇总表'
                         }
                     },
-                    {
-                        path: '/reportCenter/finance/recordedDetails',
-                        component: recordedDetails,
-                        meta: {
-                            name: '入账明细表'
-                        }
-                    },
+                    // {
+                    //     path: '/reportCenter/finance/recordedDetails',
+                    //     component: recordedDetails,
+                    //     meta: {
+                    //         name: '入账明细表'
+                    //     }
+                    // },
                     {
                         path: '/reportCenter/finance/transferDetails',
                         component: transferDetails,
@@ -466,13 +466,13 @@ export const routes = [
                             name: '转应收账明细表'
                         }
                     },
-                    {
-                        path: '/reportCenter/finance/ARDetails',
-                        component: ARDetails,
-                        meta: {
-                            name: 'AR收款明细表'
-                        }
-                    },
+                    // {
+                    //     path: '/reportCenter/finance/ARDetails',
+                    //     component: ARDetails,
+                    //     meta: {
+                    //         name: 'AR收款明细表'
+                    //     }
+                    // },
                     {
                         path: '/reportCenter/finance/ARGather',
                         component: ARGather,
@@ -505,21 +505,21 @@ export const routes = [
                         component: reportDaily
                     }
                 ]
-            },
-            {
-                path: '/reportCenter/bazaar',
-                meta: {
-                    name: '市场'
-                },
-                component: reportBazaar
-            },
-            {
-                path: '/reportCenter/member',
-                meta: {
-                    name: '会员'
-                },
-                component: reportMember
             }
+            // {
+            //     path: '/reportCenter/bazaar',
+            //     meta: {
+            //         name: '市场'
+            //     },
+            //     component: reportBazaar
+            // },
+            // {
+            //     path: '/reportCenter/member',
+            //     meta: {
+            //         name: '会员'
+            //     },
+            //     component: reportMember
+            // }
         ]
     }
 ];
