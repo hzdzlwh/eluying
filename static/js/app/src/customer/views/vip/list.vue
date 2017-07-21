@@ -375,6 +375,7 @@
                             this.count = res.data.vipUserListSize;
                             this.isAutoUpgrade = res.data.isAutoUpgrade;
                             this.pages = Math.ceil(res.data.vipUserListSize / 30);
+                            console.log(this.vips);
                         }
                     });
             },
