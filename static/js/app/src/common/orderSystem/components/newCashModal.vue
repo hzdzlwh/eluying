@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 15:25:39
+* @Last Modified time: 2017-07-21 15:27:46
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -305,7 +305,7 @@
 
 .cashier-addBtn {
     height: 24px;
-    display: flex;
+    display: inline-block;
     align-items: center;
     cursor: pointer;
     margin-top:6px;
