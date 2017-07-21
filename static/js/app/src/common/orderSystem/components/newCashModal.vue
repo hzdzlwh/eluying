@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 14:08:47
+* @Last Modified time: 2017-07-21 14:49:34
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -153,7 +153,7 @@
                 <p class="content-item-title"><span>现金收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                        <dd-select v-model="payment.type" class='dd-select-with'>
+                        <dd-select v-model="payment.type" class='dd-select-with' :disabled='type === "collect"'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
@@ -803,12 +803,12 @@ export default {
                     name: `企业挂帐(${this.companyName || ''})`
                 }].concat(payBack);
             }
-            if (payBack.length <= 1) {
+            if (this.payments.length <= 1) {
                 return payBack;
             } else {
                 let own = false; // 判断是否已存在订单钱包的支付方式
                 let arr = payBack;
-                payBack.forEach((pay, num) => {
+                this.payments.forEach((pay, num) => {
                     const id = pay.payChannelId;
                     if ((id === -6 || id === -7 || id === -11 || id === -12) && (num !== index)) {
                         own = true;
@@ -1047,9 +1047,9 @@ export default {
             this.uniqueId += 1;
             // const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
-                fee: payMoney,
+                fee: this.type === 'collect' ? Math.max(this.needPayed, 0) : payMoney,
                 payChannelId: undefined,
-                type: Number(this.needPayed) >= 0 ? 0 : 2,
+                type: (Number(this.needPayed) >= 0 || this.type === 'collect') ? 0 : 2,
                 uniqueId: this.uniqueId
             });
         },
