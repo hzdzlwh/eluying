@@ -50,10 +50,15 @@ var seasonManage = {
                         id: result.data[name][0].channelId
                     });
                 }
+                // 增加虚拟币tab
+                channelArray.push({ id: 1, name: '虚拟币' });
                 $(".seasonCategory").html("淡旺季管理-" + result.data["0"][0].name);
                 seasonManage.tab(channelArray);
 
-                seasonManage.priceGrid(result.data, true);
+                // 拉取虚拟币旺季数据再和其他两个数据合并
+                http.get('/virCurrency/getVirtualCurrencyPeriodLimit', { categoryId: $("td.selected").attr("category-id"), type: 1 }).then(res => {
+                    seasonManage.priceGrid({ ...result.data, 1: res.data.list }, true);
+                });
                 //拉淡季价格
                 return http.get("getAccommodationPeriodicalPrice",{
                     categoryId: $("td.selected").attr("category-id"),
@@ -62,7 +67,10 @@ var seasonManage = {
                 });
             })
             .then(function(result) {
-                seasonManage.priceGrid(result.data, false);
+                // 拉取虚拟币旺季数据再和其他两个数据合并
+                http.get('/virCurrency/getVirtualCurrencyPeriodLimit', { categoryId: $("td.selected").attr("category-id"), type: 0 }).then(res => {
+                    seasonManage.priceGrid({ ...result.data, 1: res.data.list }, false);
+                });
             });
     },
 
@@ -140,6 +148,16 @@ var seasonManage = {
                 }
                 tbody += "<td class='netPrice' channel-id='" + data[name][0].channelId + "' week='1''>" + "<p>" + data[name][0].netPrice + "</p></td></tbody>";
 
+            } else if (name === "1") {
+                tbody += "<tbody>" +
+                    "<tr>" +
+                    "<td>" +
+                    "<p>每间夜<br>使用上限</p>" +
+                    "</td>";
+                for (var i = 1; i < 7; i++) {
+                    tbody += "<td class='netPrice' channel-id='" + data[name][i].channelId + "' week='" + (i + 1) + "'><p>" + data[name][i] + "</p></td>";
+                }
+                tbody += "<td class='netPrice' channel-id='" + data[name][0].channelId + "' week='1''><p>" + data[name][0] + "</p></td></tbody>";
             }
              else {
                 tbody += "<tbody>" +
@@ -178,13 +196,33 @@ var seasonManage = {
                 }
             }
         })*/
-        http.post("modifyAccommodationPeriodicalPrice", data)
+        if ($('#editSeason .nav-tabs-li.active').find('a').html() === '虚拟币') {
+            const type = $('.netPrice.selected').parents('.grid').hasClass('busyGrid')? 1 : 0;
+            const weekLimit = [];
+            const weekday = JSON.parse(data.items)[0].weekday - 1;
+            const newLimit = JSON.parse(data.items)[0].newNetPrice;
+            for (let i = 0; i < 7; i++) {
+                if (i === weekday) {
+                    weekLimit.push(newLimit);
+                } else {
+                    weekLimit.push(0);
+                }
+            }
+            http.get('/virCurrency/setPeriodLimitOfWeek', { categoryId: data.categoryId, type: type, weekLimit: JSON.stringify(weekLimit) }).then(res => {
+                accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
+                $('.priceOperate .second').addClass('hide');
+                $('.priceOperate .first .operateItem ').addClass('hide');
+                modal.clearModal(that)
+            });
+        } else {
+            http.post("modifyAccommodationPeriodicalPrice", data)
             .then(function(result) {
                 accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
                 $('.priceOperate .second').addClass('hide');
                 $('.priceOperate .first .operateItem ').addClass('hide');
                 modal.clearModal(that)
             });
+        }
     },
 
     setDaySelect: function(monthSelect, daySelect){
