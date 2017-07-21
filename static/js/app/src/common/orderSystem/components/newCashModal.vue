@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 15:41:31
+* @Last Modified time: 2017-07-21 15:47:44
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -174,7 +174,7 @@
             </div>
             <div class="content-item">
                 <div class="cashier-all">
-                    <div><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
+                    <div v-if='type !== "collect"'><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
                     <div v-if='orderPayment.game'><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
                     <div v-if='orderPayment.member'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
